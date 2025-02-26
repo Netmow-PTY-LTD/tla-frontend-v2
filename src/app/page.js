@@ -1,14 +1,9 @@
-import Footer from "@/components/main/common/footer/Footer";
-import Header from "@/components/main/common/header/Header";
-
+import MainLayout from "@/components/main/common/layout";
+import HeroHome from "@/components/main/home/HeroHome";
 export default function Home() {
   return (
-    <>
-      <Header />
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <h1>Welcome to The LawAppOnline</h1>
-      </main>
-      <Footer />
-    </>
+    <MainLayout>
+      <HeroHome />
+    </MainLayout>
   );
 }
