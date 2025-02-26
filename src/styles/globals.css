@@ -4,6 +4,10 @@
 
 :root {
   --font-inter: "Inter", sans-serif;
+  --primary-color: #00c3c0;
+  --secondary-color: #ff8602;
+  --color-black: #0b1c2d;
+  --color-white: #ffffff;
 }
 
 body {
@@ -13,4 +17,110 @@ body {
 .container {
   max-width: 1800px;
   margin: 0 auto;
+}
+
+.red {
+  color: green;
+}
+
+/* HeroHome */
+
+.hero-home {
+  padding: 70px 0;
+  text-align: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+
+.hero-content h3 {
+  border-radius: 82px;
+  background: var(--brand-brand-primary-action, #00c3c0);
+  display: flex;
+  padding: 4px 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: var(--brand-surface-1-text-on-light, #0b1c2d);
+  text-align: center;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 27px; /* 168.75% */
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 1000px;
+  margin: 0 auto;
+  gap: 20px;
+}
+
+.hero-content h1 {
+  color: var(--Brand-Secondary-Text, #34495e);
+  text-align: center;
+  font-family: Inter;
+  font-size: 66px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 110%; /* 72.6px */
+  letter-spacing: -0.5px;
+}
+
+/* Footer */
+
+.main-footer {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+
+.footer-top {
+  border: 1px solid #dce2ea;
+  background: var(--Brand-Surface-3---Input-Field, #edf0f4);
+  display: flex;
+  width: 100%;
+  padding: 10px 0;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.footer-top p {
+  color: var(--brand-surface-1-text-on-light, #0b1c2d);
+  text-align: center;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px; /* 114.286% */
+}
+
+.footer-middle {
+  padding: 30px 0;
+}
+
+.footer-middle-widgets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-widget {
+  width: calc(20% - 10px);
+}
+.btn-pricing {
+  border-radius: 4px;
+  background: var(--brand-surface-2-text-on-dark, #fff);
+  display: flex;
+  padding: 8px 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 }

@@ -1,14 +1,24 @@
-.red {
-  color: red;
-}
-
 .main_header {
   background-color: #fff;
   padding: 10px 0;
+  border-bottom: 1px solid #dce2ea;
+}
+
+.nav_link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--color-black);
+  text-align: center;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 21px;
 }
 
 .btn_register {
-  background-color: #0b1c2d;
+  background-color: var(--color-black);
   padding: 16px 20px;
   border: none;
   border-radius: 5px;
