@@ -6,7 +6,7 @@ import Image from "next/image";
 export default function Header() {
   return (
     <header className={styles.main_header}>
-      <div className="container">
+      <div className="container-lg">
         <div className="flex items-center justify-between">
           <Link href="/">
             <Image
@@ -16,7 +16,7 @@ export default function Header() {
               height={40}
             />
           </Link>
-          <nav>
+          <nav className="hidden lg:flex">
             <ul className="flex items-center gap-6">
               <li>
                 <Link href="/services" className={styles.nav_link}>
