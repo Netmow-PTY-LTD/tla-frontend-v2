@@ -29,7 +29,6 @@ export default function AuthHeader() {
                 <span>Log In</span>
               </Link>
             )}
-
             <Link href="/register" className="btn_register">
               <span>Register With TLA</span>
             </Link>

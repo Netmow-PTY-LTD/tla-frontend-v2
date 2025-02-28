@@ -57,7 +57,7 @@ export default function HomeServices() {
           paragraph={sectionHeading.paragraph}
         />
 
-        <div className="flex flex-wrap justify-between gap-5 w-full mt-10 suggestion-area">
+        <div className="flex flex-wrap xl:flex-nowrap justify-between gap-5 w-full mt-10 suggestion-area">
           {data.map((item) => (
             <Link
               href="#"
@@ -74,6 +74,11 @@ export default function HomeServices() {
               <h5>{item.title}</h5>
             </Link>
           ))}
+        </div>
+        <div className="flex justify-center gap-5 mt-10">
+          <Link href="#" className="btn-brand">
+            Get Started - Explore All Services
+          </Link>
         </div>
       </div>
     </section>
