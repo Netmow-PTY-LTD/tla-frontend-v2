@@ -9,7 +9,7 @@ export default function AuthLayout({ children }) {
   return (
     <>
       <AuthHeader />
-      <main className="main-content">{children}</main>
+      <main>{children}</main>
     </>
   );
 }
