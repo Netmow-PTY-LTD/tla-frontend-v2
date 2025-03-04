@@ -59,11 +59,11 @@ export default function Login() {
                 </div>
               </div>
               <div className="w-full md:w-2/3">
-                <div className="tla-auth-form auth-form-login">
-                  <h2 className="tla-auth-title mb-2">
+                <div className="tla-auth-form tla-auth-form-login">
+                  <h2 className="tla-auth-title mb-2 text-center">
                     Explore the opportunities
                   </h2>
-                  <p className="tla-auth-subtitle">
+                  <p className="tla-auth-subtitle text-center">
                     1000’s of local and remote clients & lawyers are already
                     waiting for your services
                   </p>
@@ -125,7 +125,7 @@ export default function Login() {
                       </Form>
                     )}
                   </Formik>
-                  <div className="tla-auth-footer">
+                  <div className="tla-auth-footer text-center">
                     <span>Offering a service? </span>
                     <Link href="/register">
                       <b>Register as a professional</b>

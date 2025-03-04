@@ -19,7 +19,7 @@ export default function AuthHeader() {
                 height={40}
               />
             </Link>
-            <Link href="/">
+            <Link href="/" className="underline">
               <span>Back to home</span>
             </Link>
           </div>

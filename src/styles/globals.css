@@ -126,6 +126,11 @@ input:focus {
   line-height: 27px;
 }
 
+.tla-form-control::placeholder {
+  font-size: 14px;
+  font-weight: 400;
+}
+
 /* Auth Header */
 
 .auth_header {
@@ -160,10 +165,14 @@ input:focus {
   border-radius: 20px;
 }
 
-.tla-auth-form {
+.tla-auth-form-login {
   max-width: 544px;
   width: 100%;
   margin: 0 auto;
+}
+
+.tla-auth-form-register {
+  padding: 30px 0 30px 50px;
 }
 
 .tla-auth-form h2 {
@@ -172,15 +181,13 @@ input:focus {
   font-weight: 700;
   line-height: 110%;
   letter-spacing: -0.5px;
-  text-align: center;
 }
 
 .tla-auth-form p {
   color: var(--color-text);
-  text-align: center;
   font-size: clamp(12px, 0.8vw, 16px);
   font-weight: 400;
-  line-height: 27px;
+  line-height: 18px;
 }
 
 .tla-auth-form h3 {
@@ -198,6 +205,30 @@ input:focus {
   font-style: normal;
   font-weight: 500;
   line-height: 27px; /* 150% */
+}
+
+.popular-services h4 {
+  color: var(--color-black);
+  font-size: clamp(14px, 0.8vw, 18px);
+  font-weight: 500;
+  line-height: 27px;
+}
+
+.popular-services h5 {
+  color: var(--color-text);
+  font-size: clamp(13px, 0.8vw, 16px);
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.service-box {
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.selected {
+  border: 2px solid var(--primary-color);
+  border-radius: 10px;
 }
 
 .btn-auth-login {
@@ -222,12 +253,96 @@ input:focus {
   font-weight: 400;
   line-height: 20px;
   margin-top: 50px;
-  text-align: center;
 }
 
 .tla-auth-footer a {
   text-decoration: underline;
 }
+
+.btn-auth-register {
+  background-color: var(--primary-color);
+  padding: 20px 40px;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-black);
+  font-size: clamp(13px, 0.8vw, 16px);
+  font-weight: 600;
+  line-height: 12px;
+  cursor: pointer;
+}
+
+.btn-outline {
+  border-radius: 8px;
+  border: 1px solid var(--color-black);
+  display: flex;
+  padding: 20px 30px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-black);
+  font-size: clamp(13px, 0.8vw, 16px);
+  font-weight: 600;
+  line-height: 12px;
+}
+
+.info-text {
+  color: var(--color-black);
+  font-size: clamp(13px, 0.8vw, 16px);
+  font-weight: 400;
+  line-height: 27px;
+}
+
+.company-size label {
+  color: var(--color-black);
+  font-size: clamp(13px, 0.8vw, 16px);
+  font-weight: 500;
+  line-height: 27px;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+.company-size button {
+  display: flex;
+  padding: 4px 20px;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-black);
+  text-align: center;
+  font-size: clamp(13px, 0.8vw, 16px);
+  font-weight: 500;
+  line-height: 27px;
+  border: 1px solid var(--color-black);
+  border-radius: 41px;
+}
+
+.company-size .selected {
+  background-color: var(--primary-color);
+  color: #fff;
+  border: 1px solid transparent;
+}
+
+@media (max-width: 1199px) {
+  .tla-auth-form-register {
+    padding: 20px 0 20px 30px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .tla-auth-form-register {
+    padding: 20px 10px;
+  }
+}
+
+@media (max-width: 575px) {
+  .tla-auth-form-register {
+    padding: 20px 0;
+  }
+}
+
 /* Auth End */
 
 .nav_link {
