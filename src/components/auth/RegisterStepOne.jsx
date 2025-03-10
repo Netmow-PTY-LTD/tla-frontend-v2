@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import Link from "next/link";
 import TextInput from "../Form/TextInput";
 import Image from "next/image";
-import { popularServices } from "@/app/data/data";
+import { popularServices } from "@/data/data";
 
 export default function RegisterStepOne({ handleStep }) {
   const [selectedService, setSelectedService] = useState("");

@@ -22,17 +22,17 @@ export default function Header() {
                 <Link href="/services" className={styles.nav_link}>
                   <span>Find Clients</span>
                   <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="11"
-                    height="7"
-                    viewBox="0 0 11 7"
-                    fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="11"
+                      height="7"
+                      viewBox="0 0 11 7"
+                      fill="none"
                   >
                     <path
-                      d="M1.5 1L5.5 5L9.5 1"
-                      stroke="#0B1C2D"
-                      strokeWidth="2"
-                      strokeLinecap="round"
+                        d="M1.5 1L5.5 5L9.5 1"
+                        stroke="#0B1C2D"
+                        strokeWidth="2"
+                        strokeLinecap="round"
                     />
                   </svg>
                 </Link>
@@ -41,28 +41,33 @@ export default function Header() {
                 <Link href="/services" className={styles.nav_link}>
                   <span>Find Lawyers</span>
                   <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="11"
-                    height="7"
-                    viewBox="0 0 11 7"
-                    fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="11"
+                      height="7"
+                      viewBox="0 0 11 7"
+                      fill="none"
                   >
                     <path
-                      d="M1.5 1L5.5 5L9.5 1"
-                      stroke="#0B1C2D"
-                      strokeWidth="2"
-                      strokeLinecap="round"
+                        d="M1.5 1L5.5 5L9.5 1"
+                        stroke="#0B1C2D"
+                        strokeWidth="2"
+                        strokeLinecap="round"
                     />
                   </svg>
                 </Link>
               </li>
               <li>
                 <Link href="/services" className={styles.nav_link}>
+                  <span>Services</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/pricing" className={styles.nav_link}>
                   <span>Pricing</span>
                 </Link>
               </li>
               <li>
-                <Link href="/services" className={styles.nav_link}>
+                <Link href="/about" className={styles.nav_link}>
                   <span>About Us</span>
                 </Link>
               </li>
