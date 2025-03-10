@@ -191,7 +191,7 @@ input:focus {
 }
 
 .tla-auth-form h3 {
-  color: var(--brand-surface-1-text-on-light, #0b1c2d);
+  color: var(--color-black);
   text-align: center;
   font-size: clamp(16px, 1vw, 24px);
   font-weight: 600;
@@ -410,9 +410,8 @@ input:focus {
 }
 
 .hero-content h1 {
-  color: var(--Brand-Secondary-Text, #34495e);
+  color: var(--color-text);
   text-align: center;
-  font-family: Inter;
   font-size: clamp(36px, 3.5vw, 66px);
   font-style: normal;
   font-weight: 700;
@@ -471,6 +470,87 @@ input:focus {
 .home-services {
   padding: 0 0 70px;
 }
+
+/*Home Features*/
+
+.home-features-grid {
+  padding: 80px;
+  border-radius: 80px 80px 0px 0px;
+  border: 1px solid #DCE2EA;
+  background: linear-gradient(180deg, #EDF0F4 0%, rgba(255, 255, 255, 0.00) 100%);
+}
+
+.feature-heading {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.feature-heading h3 {
+  border-radius: 82px;
+  background: var(--primary-color);
+  display: flex;
+  padding: 4px 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-black);
+  text-align: center;
+  font-size: clamp(13px, 0.9vw, 16px);
+  font-weight: 500;
+  line-height: 27px;
+}
+
+.feature-heading h2 {
+  color: #34495e;
+  font-size: clamp(24px, 2vw, 36px);
+  font-weight: 700;
+  line-height: 130%;
+  letter-spacing: -0.5px;
+}
+
+.feature-heading .feature-heading-text {
+  color: #34495e;
+  font-size: clamp(12px, 0.9vw, 16px);
+  font-weight: 400;
+  line-height: 170%;
+}
+
+.feature-heading .feature-heading-text ul {
+  margin-top: 20px;
+  padding-left: 20px;
+}
+
+.feature-heading .feature-heading-text ul li {
+  list-style-type: disc;
+  margin-bottom: 15px;
+}
+
+@media(max-width: 1024px){
+  .home-features-grid{
+    padding: 50px 20px;
+    border-radius: 40px 40px 0 0;
+  }
+}
+
+/*Home Testimonials*/
+
+.home-testimonials {
+  padding: 150px 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+
+
+.home-testimonials .feature-heading h2 {
+  color: #fff;
+}
+
+.home-testimonials .feature-heading-text {
+  color: #fff;
+}
 /* Footer */
 
 .main-footer {
@@ -484,7 +564,7 @@ input:focus {
   background: var(--Brand-Surface-3---Input-Field, #edf0f4);
   display: flex;
   width: 100%;
-  padding: 10px 0;
+  padding: 15px 0;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -493,13 +573,10 @@ input:focus {
 }
 
 .footer-top p {
-  color: var(--brand-surface-1-text-on-light, #0b1c2d);
-  text-align: center;
-  font-family: Inter;
+  color: var(--color-black);
   font-size: 14px;
-  font-style: normal;
   font-weight: 500;
-  line-height: 16px; /* 114.286% */
+  line-height: 24px; /* 114.286% */
 }
 
 .btn-pricing {

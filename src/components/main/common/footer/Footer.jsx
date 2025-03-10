@@ -11,7 +11,7 @@ export default function Footer() {
     >
       <div className="footer-top">
         <div className="container">
-          <div className="footer-top-row flex flex-wrap justify-between items-center gap-4">
+          <div className="footer-top-row flex flex-wrap justify-between items-center gap-6">
             <div className="footer-top-col">
               <Link href="/">
                 <Image

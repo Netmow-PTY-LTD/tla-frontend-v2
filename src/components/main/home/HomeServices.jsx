@@ -76,7 +76,7 @@ export default function HomeServices() {
           ))}
         </div>
         <div className="flex justify-center gap-5 mt-10">
-          <Link href="#" className="btn-brand">
+          <Link href="/services" className="btn-brand">
             Get Started - Explore All Services
           </Link>
         </div>
