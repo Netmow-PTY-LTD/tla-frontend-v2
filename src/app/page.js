@@ -3,6 +3,7 @@ import HeroHome from "@/components/main/home/HeroHome";
 import HomeServices from "@/components/main/home/HomeServices";
 import HomeFeatures from "@/components/main/home/HomeFeatures";
 import HomeTestimonials from "@/components/main/home/HomeTestimonials";
+import HomeCTA from "@/components/main/home/HomeCTA";
 export default function Home() {
   return (
     <MainLayout>
@@ -10,6 +11,7 @@ export default function Home() {
       <HomeServices />
       <HomeFeatures />
       <HomeTestimonials />
+      <HomeCTA />
     </MainLayout>
   );
 }
