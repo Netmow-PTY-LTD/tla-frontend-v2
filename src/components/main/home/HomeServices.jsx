@@ -57,7 +57,7 @@ export default function HomeServices() {
           paragraph={sectionHeading.paragraph}
         />
 
-        <div className="flex flex-wrap xl:flex-nowrap justify-between gap-5 w-full mt-10 suggestion-area">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-5 justify-center w-full mt-10 suggestion-area">
           {data.map((item) => (
             <Link
               href="#"
@@ -68,7 +68,7 @@ export default function HomeServices() {
                 src={item.icon}
                 width={180}
                 height={180}
-                className="object-cover rounded-lg"
+                className="object-cover rounded-lg w-full"
                 alt={item.title}
               />
               <h5>{item.title}</h5>
