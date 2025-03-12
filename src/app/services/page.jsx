@@ -1,5 +1,6 @@
 import LawCard from "@/components/main/common/card/LawCard";
 import MainLayout from "@/components/main/common/layout";
+import { lawServices } from "@/data/data";
 
 const ServicesPage = () => {
   return (
@@ -14,14 +15,9 @@ const ServicesPage = () => {
           </h1>
         </div>
         <div className="grid grid-cols-4 gap-[30px] mx-[153px] ">
-          <LawCard />
-          <LawCard />
-          <LawCard />
-          <LawCard />
-          <LawCard />
-          <LawCard />
-          <LawCard />
-          <LawCard />
+          {lawServices?.map((service) => (
+            <LawCard key={service._id} service={service} />
+          ))}
         </div>
       </section>
     </MainLayout>

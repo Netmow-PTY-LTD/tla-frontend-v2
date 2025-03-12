@@ -1,13 +1,14 @@
 import Image from "next/image";
 import React from "react";
 
-const LawCard = () => {
+const LawCard = ({ service }) => {
+  console.log(service);
   return (
     <div className="law-card">
       <figure style={{ position: "relative", height: "400px" }}>
         <Image
           alt="law-picture"
-          src="/assets/img/services/img1.png"
+          src={service?.image}
           fill
           sizes="(min-width: 808px) 50vw, 100vw"
           className="rounded-xl"
@@ -21,15 +22,17 @@ const LawCard = () => {
           <p>
             {" "}
             <span className="text-[#34495E] ">Case Listed:</span>{" "}
-            <span className="font-semibold">125</span>
+            <span className="font-semibold">{service?.caseListed} </span>
           </p>
           <p>
             {" "}
             <span className="text-[#34495E] ">Lawyer Available:</span>{" "}
-            <span className="font-semibold">85</span>
+            <span className="font-semibold">{service?.lawyerAvailable} </span>
           </p>
         </div>
-        <h1 className="card-title font-medium text-[27px] mt-2 ">Family Law</h1>
+        <h1 className="card-title font-medium text-[27px] mt-2 ">
+          {service?.lawName}{" "}
+        </h1>
       </div>
     </div>
   );
