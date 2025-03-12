@@ -45,3 +45,86 @@ export const popularServices = [
     image: "/assets/img/service-1.png",
   },
 ];
+
+export const lawServices = [
+  {
+    _id: 1,
+    caseListed: 101,
+    lawyerAvailable: 201,
+    lawName: "Contract Law",
+    lawTitle: "Breach of Contract Dispute",
+    description:
+      "A legal dispute where John Doe claims XYZ Corp violated the terms of their business contract.",
+    image: "/assets/img/services/img1.png",
+  },
+  {
+    _id: 2,
+    caseListed: 102,
+    lawyerAvailable: 202,
+    lawName: "Criminal Law",
+    lawTitle: "Criminal Defense Case",
+    description:
+      "Michael Brown is facing charges related to financial fraud under criminal law regulations.",
+    image: "/assets/img/services/img2.png",
+  },
+  {
+    _id: 3,
+    caseListed: 103,
+    lawyerAvailable: 203,
+    lawName: "Insurance Law",
+    lawTitle: "Insurance Claim Dispute",
+    description:
+      "Jane Wilson is suing ABC Insurance for denial of a legitimate insurance claim.",
+    image: "/assets/img/services/img3.png",
+  },
+  {
+    _id: 4,
+    caseListed: 104,
+    lawyerAvailable: 204,
+    lawName: "Civil Rights Law",
+    lawTitle: "Civil Rights Violation Case",
+    description:
+      "Robert Lee claims that his constitutional rights were violated by the local authorities.",
+    image: "/assets/img/services/img4.png",
+  },
+  {
+    _id: 5,
+    caseListed: 105,
+    lawyerAvailable: 205,
+    lawName: "Banking Law",
+    lawTitle: "Bank Fraud Dispute",
+    description:
+      "Mark Robinson alleges that Global Bank mismanaged funds, leading to financial losses.",
+    image: "/assets/img/services/img5.png",
+  },
+  {
+    _id: 6,
+    caseListed: 106,
+    lawyerAvailable: 206,
+    lawName: "Federal Law",
+    lawTitle: "Federal Crime Investigation",
+    description:
+      "Liam Carter is under investigation for involvement in federal financial crimes.",
+    image: "/assets/img/services/img6.png",
+  },
+  {
+    _id: 7,
+    caseListed: 107,
+    lawyerAvailable: 207,
+    lawName: "Property Law",
+    lawTitle: "Property Ownership Dispute",
+    description:
+      "Sarah Thomas is contesting ownership rights over a disputed real estate property.",
+    image: "/assets/img/services/img7.png",
+  },
+  {
+    _id: 8,
+    caseListed: 108,
+    lawyerAvailable: 208,
+    lawName: "Real Estate Law",
+    lawTitle: "Land Acquisition Dispute",
+    description:
+      "Patel Ltd. is challenging a government land acquisition decision affecting their business.",
+    image: "/assets/img/services/img8.png",
+  },
+];
