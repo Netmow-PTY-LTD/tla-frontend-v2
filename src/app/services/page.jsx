@@ -1,5 +1,6 @@
 import LawCard from "@/components/main/common/card/LawCard";
 import MainLayout from "@/components/main/common/layout";
+import WorkingSteps from "@/components/main/WorkingSteps";
 import { lawServices } from "@/data/data";
 
 const ServicesPage = () => {
@@ -20,6 +21,7 @@ const ServicesPage = () => {
           ))}
         </div>
       </section>
+      <WorkingSteps />
     </MainLayout>
   );
 };

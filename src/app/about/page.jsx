@@ -1,4 +1,5 @@
 import Faq from "@/components/main/about/Faq";
+import CallToAction from "@/components/main/CallToAction";
 import MainLayout from "@/components/main/common/layout";
 import SectionHeading from "@/components/main/home/SectionHeading";
 import WorkingSteps from "@/components/main/WorkingSteps";
@@ -206,6 +207,49 @@ const AboutPage = () => {
       </section>
       <WorkingSteps />
       <Faq />
+      <section className="home-cta">
+        <div className="container">
+          <div className="home-cta-content">
+            <div className="flex flex-wrap">
+              <div className="w-full md:w-1/2 lg:w-5/12">
+                <div className="home-cta-text md:pr-5 lg:pr-20">
+                  <h2>Take the Next Step – Get Legal Help Today!</h2>
+                  <div className="cta-text">
+                    <ul>
+                      <li>
+                        <b>For Clients: </b>Need help with family law? Post your
+                        case and receive free bids from top-rated lawyers!
+                      </li>
+                      <li>
+                        <b>For Lawyers: </b>Looking for clients in family law?
+                        Join now and start receiving cases instantly!
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="home-cta-button flex gap-2">
+                    <Link href="/register" className="btn-brand">
+                      Join as Client
+                    </Link>
+                    <Link href="/register" className="btn-outline">
+                      Join as Lawyer
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              <div className="w-full md:w-1/2 lg:w-7/12">
+                <div className="home-cta-images">
+                  <div className="cta-shape"></div>
+                  <img
+                    src="/assets/img/cta-img.png"
+                    alt="home cta"
+                    className="cta-img-2"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </MainLayout>
   );
 };

@@ -587,7 +587,7 @@ Home Testimonials
   padding: 50px 0 50px 70px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 30px;
 }
 
 .home-cta-text h2 {
@@ -603,6 +603,15 @@ Home Testimonials
   font-size: clamp(12px, 0.9vw, 16px);
   font-weight: 400;
   line-height: 170%;
+}
+
+.home-cta-text .cta-text ul {
+  padding-left: 20px;
+  list-style: disc;
+}
+
+.home-cta-text .cta-text ul li {
+  margin-bottom: 10px;
 }
 
 .home-cta-images {
