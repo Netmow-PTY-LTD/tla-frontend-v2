@@ -14,7 +14,7 @@ const ServicesPage = () => {
             Find From Wide Range of Legal Services
           </h1>
         </div>
-        <div className="grid grid-cols-4 gap-[30px] mx-[153px] ">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-4 sm:px-6 md:px-12 lg:mx-[153px] ">
           {lawServices?.map((service) => (
             <LawCard key={service._id} service={service} />
           ))}
