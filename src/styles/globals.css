@@ -686,6 +686,139 @@ Home Testimonials
   flex-direction: column;
   gap: 20px;
 }
+
+@media (max-width: 1024px) {
+  .about-section {
+    padding: 50px 0;
+  }
+  .about-showcase {
+    padding: 30px 0;
+  }
+}
+
+/* Faq section */
+
+.tla-faq {
+  padding: 50px 0 100px;
+}
+
+.tla-faq-accordion {
+  max-width: 1004px;
+  margin: 0 auto;
+  margin-top: 20px;
+}
+
+.tla-faq-accordion-item:not(:last-child) {
+  margin-bottom: 8px;
+}
+
+.tla-faq-accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 30px;
+  border-radius: 12px;
+  border: 1px solid var(--squad-deck-color-surface-light-normal-active, #ebeef2);
+  background: var(--SquadDeck-Color-Surface_Light-Light, #fcfdfd);
+  cursor: pointer;
+}
+
+.tla-faq-accordion-header h2 {
+  color: #212121;
+  font-size: clamp(14px, 0.9vw, 22px);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.tla-faq-accordion-body {
+  /* background: #fcfdfd; */
+  padding: 16px 20px 8px;
+  display: none;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.tla-faq-accordion-body.active {
+  max-height: 1000px !important;
+  display: block;
+}
+
+.tla-faq-accordion-header svg {
+  transition: transform 0.3s ease;
+}
+
+.tla-faq-accordion-header svg.rotate {
+  transform: rotate(45deg);
+}
+.tla-faq-accordion-header svg.rotate path {
+  fill: red;
+}
+
+@media (max-width: 1024px) {
+  .tla-faq {
+    padding: 50px 0;
+  }
+}
+
+/* working steps */
+
+.working-steps {
+  padding: 50px 0 100px;
+  border-radius: 80px 80px 0px 0px;
+  /* border: 1px solid #dce2ea;
+  border-bottom: none; */
+  background: linear-gradient(180deg, #edf0f4 0%, rgba(255, 255, 255, 0) 100%);
+  margin: 0 60px;
+}
+
+.working-step-item {
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid #dce2ea;
+  background: #fff;
+}
+
+.working-step-number {
+  display: flex;
+  width: 50px;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  aspect-ratio: 1/1;
+  background: var(--secondary-color);
+  border-radius: 50%;
+  margin-bottom: 15px;
+}
+
+.working-step-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.working-step-content h3 {
+  color: #0b1c2d;
+  text-align: justify;
+  font-size: clam(14px, 0.9vw, 20px);
+  font-weight: 600;
+  line-height: 24px;
+}
+.working-steps-paragraph {
+  color: #34495e;
+  font-family: Inter;
+  font-size: clamp(12px, 0.9vw, 16px);
+  font-weight: 400;
+  line-height: 170%;
+}
+
+@media (max-width: 1024px) {
+  .working-steps {
+    margin: 0;
+    padding: 50px 0 30px;
+  }
+}
 /* ===================
       Footer 
 ======================*/
