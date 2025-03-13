@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function HomeTestimonials() {
@@ -31,8 +32,26 @@ export default function HomeTestimonials() {
                 </div>
               </div>
             </div>
-            <div className="w-full lg:w-8/12">
-              <div className="testimonial-sliders"></div>
+            <div className="w-full lg:w-8/12 lg:pl-28">
+              <div className="testimonial-images flex justify-between mt-10 lg:mt-0">
+                <div className="mt-32 lg:mt-40">
+                  <Image
+                    src="/assets/img/testimonial-1.png"
+                    alt="testimonial"
+                    width={386}
+                    height={325}
+                  />
+                </div>
+                <div className="div">
+                  <Image
+                    src="/assets/img/testimonial-2.png"
+                    alt="testimonial"
+                    width={386}
+                    height={325}
+                    className="flex-shrink-0"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
