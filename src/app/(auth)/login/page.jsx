@@ -1,42 +1,38 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import { Form, Formik, useField } from "formik";
-import * as Yup from "yup";
 import Link from "next/link";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+
+const formSchema = z.object({
+  username: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }),
+});
 
 export default function Login() {
-  const TextInput = ({ label, ...props }) => {
-    const [field, meta] = useField(props);
-    return (
-      <>
-        <label
-          htmlFor={props.id || props.name}
-          className="tla-form-label mb-2 inline-block"
-        >
-          {label}
-        </label>
-        <input className="tla-form-control" {...field} {...props} />
-        {meta.touched && meta.error ? (
-          <div className="error mt-2 text-sm text-red-400">{meta.error}</div>
-        ) : null}
-      </>
-    );
-  };
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+    },
+  });
 
-  const Checkbox = ({ children, ...props }) => {
-    const [field, meta] = useField({ ...props, type: "checkbox" });
-    return (
-      <div>
-        <label className="checkbox-input flex gap-2 tla-form-label">
-          <input type="checkbox" {...field} {...props} />
-          {children}
-        </label>
-        {meta.touched && meta.error ? (
-          <div className="error">{meta.error}</div>
-        ) : null}
-      </div>
-    );
+  const onSubmit = (data) => {
+    console.log(data); // Handle form submission
   };
 
   return (
@@ -48,6 +44,7 @@ export default function Login() {
         <div className="tla-auth-wrapper">
           <div className="tla-auth-box">
             <div className="flex flex-wrap items-center">
+              {/* Image Section (Hidden on mobile) */}
               <div className="hidden md:block md:w-1/3">
                 <div className="tla-auth-image">
                   <Image
@@ -58,6 +55,8 @@ export default function Login() {
                   />
                 </div>
               </div>
+
+              {/* Form Section */}
               <div className="w-full md:w-2/3">
                 <div className="tla-auth-form tla-auth-form-login">
                   <h2 className="tla-auth-title mb-2 text-center">
@@ -67,64 +66,56 @@ export default function Login() {
                     1000’s of local and remote clients & lawyers are already
                     waiting for your services
                   </p>
-                  <h3 className="my-6">Login</h3>
-                  <Formik
-                    initialValues={{
-                      email: "",
-                      password: "",
-                    }}
-                    validationSchema={Yup.object({
-                      email: Yup.string()
-                        .email("Invalid email address")
-                        .required("Required"),
-                      password: Yup.string()
-                        .min(4, "Password must be at least 4 characters")
-                        .required("Password is required"),
-                    })}
-                    onSubmit={(values, { setSubmitting }) => {
-                      console.log(values);
-                      setSubmitting(true);
-                    }}
-                  >
-                    {({ isSubmitting }) => (
-                      <Form>
-                        <div className="mb-4">
-                          <TextInput
-                            label="Email"
-                            name="email"
-                            type="email"
-                            placeholder="John@example.com"
-                          />
-                        </div>
+                  <h3 className="my-6 text-center">Login</h3>
 
-                        <div className="mb-4">
-                          <TextInput
-                            label="Password"
-                            name="password"
-                            type="password"
-                            placeholder="1234****"
-                          />
-                        </div>
-                        <div className="flex flex-wrap justify-between gap-4 mb-8">
-                          <div className="remember-me">
-                            <Checkbox name="acceptedTerms">
-                              Remember me
-                            </Checkbox>
-                          </div>
-                          <div className="forget-password">
-                            <Link href="#">Forgot Password?</Link>
-                          </div>
-                        </div>
-                        <button
-                          type="submit"
-                          className="btn-auth-login"
-                          disabled={isSubmitting}
-                        >
-                          Log In
-                        </button>
-                      </Form>
-                    )}
-                  </Formik>
+                  {/* Form Wrapper */}
+                  <Form {...form}>
+                    <form
+                      onSubmit={form.handleSubmit(onSubmit)}
+                      className="space-y-6"
+                    >
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="John@example.com"
+                                {...field}
+                                className="tla-form-control"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Password</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="******"
+                                {...field}
+                                className="tla-form-control"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <button type="submit" className="btn-auth-login">
+                        Submit
+                      </button>
+                    </form>
+                  </Form>
+
+                  {/* Footer with Register Link */}
                   <div className="tla-auth-footer text-center">
                     <span>Offering a service? </span>
                     <Link href="/register">
