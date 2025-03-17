@@ -26,7 +26,7 @@ import { NavMain } from "./NavMain";
 import Link from "next/link";
 
 // This is sample data.
-const data = {
+export const data = {
   user: {
     name: "shadcn",
     email: "m@example.com",
@@ -158,6 +158,7 @@ const data = {
 export function AppSidebar(props) {
   return (
     <Sidebar collapsible="icon" {...props}>
+      <SidebarHeader />
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
