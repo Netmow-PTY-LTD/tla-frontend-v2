@@ -1,11 +1,11 @@
-"use client";
-import React from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
+'use client';
+import React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -14,21 +14,21 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import TextInput from "@/components/form/TextInput";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import TextInput from '@/components/form/TextInput';
 
 const formSchema = z.object({
   email: z
     .string()
     .min(2, {
-      message: "Email must be at least 2 characters.",
+      message: 'Email must be at least 2 characters.',
     })
     .email({
-      message: "Please enter a valid email address.",
+      message: 'Please enter a valid email address.',
     }),
   password: z.string().min(4, {
-    message: "Password must be at least 4 characters.",
+    message: 'Password must be at least 4 characters.',
   }),
 });
 
@@ -36,10 +36,15 @@ export default function Login() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
+
+  const handleChange = (e) => {
+    // Example of custom logic
+    console.log(`Input changed for ${e.target.name}: ${e.target.value}`);
+  };
 
   const onSubmit = (data) => {
     console.log(data); // Handle form submission
@@ -86,25 +91,19 @@ export default function Login() {
                     >
                       <TextInput
                         label="Email"
-                        name="name"
+                        type="email"
+                        control={form.control}
+                        name="email"
                         placeholder="John@example.com"
+                        onChange={handleChange}
                       />
-                      <FormField
+                      <TextInput
+                        label="Password"
+                        type="password"
                         control={form.control}
                         name="password"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Password</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="******"
-                                {...field}
-                                className="tla-form-control"
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
+                        placeholder="********"
+                        onChange={handleChange}
                       />
 
                       <button type="submit" className="btn-auth-login">
