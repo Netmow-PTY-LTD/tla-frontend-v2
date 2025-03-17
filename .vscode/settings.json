@@ -1,0 +1,41 @@
+{
+  "editor.fontSize": 14,
+  "editor.lineHeight": 22,
+  "editor.insertSpaces": true,
+  "editor.wordWrap": "on",
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+  "files.trimTrailingWhitespace": true,
+  "files.eol": "\n",
+  "files.defaultLanguage": "javascript",
+  "terminal.integrated.fontSize": 14,
+  "search.followSymlinks": true,
+  "editor.smoothScrolling": true,
+  "git.autorefresh": true,
+  "git.enableSmartCommit": true,
+  "workbench.colorTheme": "Learn with Sumit - Peace of the eye - Dracula version",
+  "workbench.iconTheme": "vs-seti",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "javascript.suggest.autoImports": true,
+  "typescript.suggest.autoImports": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "editor.snippetSuggestions": "top",
+  "editor.tabCompletion": "on",
+  "eslint.enable": true,
+  "typescript.format.enable": true,
+  "editor.formatOnSaveMode": "file",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "git.confirmSync": false,
+  "editor.minimap.renderCharacters": false,
+  "explorer.confirmDelete": false,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "editor.formatOnSave": true
+}

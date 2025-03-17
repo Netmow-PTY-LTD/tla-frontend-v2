@@ -16,10 +16,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import TextInput from "@/components/form/TextInput";
 
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+  email: z
+    .string()
+    .min(2, {
+      message: "Email must be at least 2 characters.",
+    })
+    .email({
+      message: "Please enter a valid email address.",
+    }),
+  password: z.string().min(4, {
+    message: "Password must be at least 4 characters.",
   }),
 });
 
@@ -27,7 +36,8 @@ export default function Login() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      email: "",
+      password: "",
     },
   });
 
@@ -74,22 +84,10 @@ export default function Login() {
                       onSubmit={form.handleSubmit(onSubmit)}
                       className="space-y-6"
                     >
-                      <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="John@example.com"
-                                {...field}
-                                className="tla-form-control"
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
+                      <TextInput
+                        label="Email"
+                        name="name"
+                        placeholder="John@example.com"
                       />
                       <FormField
                         control={form.control}
