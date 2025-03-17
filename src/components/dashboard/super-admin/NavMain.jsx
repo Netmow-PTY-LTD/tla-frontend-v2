@@ -17,13 +17,15 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { data } from "./Sidebar";
 
 export function NavMain({ items }) {
+  console.log(data?.navMain);
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) => (
+        {data?.navMain?.map((item) => (
           <Collapsible
             key={item.title}
             asChild
