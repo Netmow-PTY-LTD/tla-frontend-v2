@@ -1,23 +1,28 @@
+"use client";
 import PencilIcon from "@/assets/icon";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { PencilLine } from "lucide-react";
+import StatusCard from "@/components/dashboard/lawyer-dashboard/components/StatusCard";
+import { Card } from "@/components/ui/card";
+
+import DropdownMenu from "@/components/UIComponents/DropdownMenu";
+
 import Image from "next/image";
 import React from "react";
 
 const MyStatsPage = () => {
+  const menuLinks = [
+    { label: "All Time", href: "#/all-time" },
+    { label: "Today", href: "#/today" },
+    { label: "This Week", href: "#/this-week" },
+    { label: "This Month", href: "#/this-month" },
+  ];
+
   return (
     <div>
       <h1 className="font-bold text-2xl border-b-2 text-[#0B1C2D] ">
         Overview of Your Stats
       </h1>
 
-      <div className="mt-5">
+      <div className="mt-5 flex gap-5">
         <div className="w-1/3">
           <Card>
             <div className="p-3 space-y-5">
@@ -84,8 +89,15 @@ const MyStatsPage = () => {
             </div>
           </Card>
         </div>
-        <div className="w-1/3"></div>
-        <div className="w-1/3"></div>
+        <div className="w-1/3">
+          <div>
+            <StatusCard status="pending" count={24} menuItems={menuLinks} />
+            <StatusCard status="hired" count={24} menuItems={menuLinks} />
+          </div>
+        </div>
+        <div className="w-1/3">
+          <Card></Card>
+        </div>
       </div>
     </div>
   );
