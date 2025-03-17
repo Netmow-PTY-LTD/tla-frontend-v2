@@ -2,45 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import HeroShowcase from "./HeroShowcase";
+import { data } from "@/data/data";
 
 export default function HeroHome() {
-  const data = [
-    {
-      id: 1,
-      title: "Family Law",
-      icon: "/assets/img/img-1.png",
-    },
-    {
-      id: 2,
-      title: "Divorce Law",
-      icon: "/assets/img/img-2.png",
-    },
-    {
-      id: 3,
-      title: "Taxation Law",
-      icon: "/assets/img/img-3.png",
-    },
-    {
-      id: 4,
-      title: "Child Law",
-      icon: "/assets/img/img-4.png",
-    },
-    {
-      id: 5,
-      title: "Aged Care Law",
-      icon: "/assets/img/img-5.png",
-    },
-    {
-      id: 6,
-      title: "Property Law",
-      icon: "/assets/img/img-6.png",
-    },
-    {
-      id: 7,
-      title: "Traffic Violence",
-      icon: "/assets/img/img-7.png",
-    },
-  ];
   return (
     <section
       className="hero-home"

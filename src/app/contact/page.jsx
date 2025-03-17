@@ -4,18 +4,9 @@ import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Form } from "@/components/ui/form";
+import TextInput from "@/components/form/TextInput";
+import TextArea from "@/components/form/TextArea";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -40,6 +31,13 @@ export default function ContactPage() {
     },
   });
 
+  const { control, handleSubmit, setValue } = form;
+
+  const handleChange = (e) => {
+    // Example of custom logic
+    console.log(`Input changed for ${e.target.name}: ${e.target.value}`);
+  };
+
   const onSubmit = (data) => {
     console.log(data);
   };
@@ -62,151 +60,37 @@ export default function ContactPage() {
                     practice, we’re here to support you every step of the way.
                   </div>
                 </div>
-                {/* <Formik
-                  initialValues={{
-                    name: "",
-                    phone: "",
-                    email: "",
-                    message: "",
-                  }}
-                  validationSchema={Yup.object({
-                    name: Yup.string().required("Name is required"),
-                    email: Yup.string()
-                      .email("Invalid email address")
-                      .required("Email is required"),
-                    message: Yup.string().required("Message is required"),
-                  })}
-                  onSubmit={(values, { setSubmitting }) => {
-                    console.log(values);
-                    setSubmitting(true);
-                  }}
-                >
-                  {({ isSubmitting, values }) => (
-                    <Form>
-                      <div className="mb-4">
-                        <TextInput
-                          label="Name"
-                          name="name"
-                          type="text"
-                          value={values?.name}
-                          placeholder="Enter your name"
-                        />
-                      </div>
-                      <div className="mb-4">
-                        <TextInput
-                          label="Phone(Optional)"
-                          name="phone"
-                          type="text"
-                          value={values?.phone}
-                          placeholder="Enter your phone number"
-                        />
-                      </div>
-                      <div className="mb-4">
-                        <TextInput
-                          label="Email"
-                          name="email"
-                          type="email"
-                          value={values?.email}
-                          placeholder="John@example.com"
-                        />
-                      </div>
-
-                      <div className="mb-4">
-                        <TextArea
-                          label="Message"
-                          id="message"
-                          name="message"
-                          value={values?.message}
-                          placeholder="Type message here..."
-                        />
-                      </div>
-                      <div className="flex items-start">
-                        <button
-                          type="submit"
-                          className="btn-auth-login"
-                          disabled={isSubmitting}
-                        >
-                          Send Message
-                        </button>
-                      </div>
-                    </Form>
-                  )}
-                </Formik> */}
                 <Form {...form}>
-                  <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-7"
-                  >
-                    {/* Username Field */}
-                    <FormField
-                      control={form.control}
+                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-7">
+                    <TextInput
+                      label="Name"
                       name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Name</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="Enter your name"
-                              {...field}
-                              className="tla-form-control"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+                      control={control}
+                      placeholder="Enter your name"
+                      onChange={handleChange}
                     />
-                    <FormField
-                      control={form.control}
+                    <TextInput
+                      label="Email"
                       name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Email</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="email"
-                              placeholder="Enter your email address"
-                              {...field}
-                              className="tla-form-control"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+                      control={control}
+                      placeholder="Enter your email address"
+                      onChange={handleChange}
                     />
-                    <FormField
-                      control={form.control}
+                    <TextInput
+                      label="Phone(Optional)"
                       name="phone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Phone(Optional)</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="Enter your phone number"
-                              {...field}
-                              className="tla-form-control"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+                      control={control}
+                      placeholder="Enter your phone number"
+                      onChange={handleChange}
                     />
-                    <FormField
-                      control={form.control}
+                    <TextArea
+                      label="Message"
                       name="message"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Message</FormLabel>
-                          <FormControl>
-                            <Textarea
-                              placeholder="Type message here..."
-                              {...field}
-                              className="tla-form-textarea"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+                      control={control}
+                      placeholder="Type your message here..."
+                      onChange={handleChange}
                     />
+
                     <button type="submit" className="btn-auth-register">
                       Send Message
                     </button>
