@@ -3,6 +3,7 @@ import StatusCard from "@/components/dashboard/lawyer-dashboard/components/Statu
 import ProfileCard from "@/components/dashboard/lawyer-dashboard/module/MyStats/ProfileCard";
 import { Card } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
+import Image from "next/image";
 
 import React from "react";
 
@@ -15,7 +16,7 @@ const MyStatsPage = () => {
   ];
 
   return (
-    <div>
+    <div className="mb-5">
       <h1 className="font-bold text-2xl border-b-2 text-[#0B1C2D] ">
         Overview of Your Stats
       </h1>
@@ -50,7 +51,7 @@ const MyStatsPage = () => {
                   You'll receive leads in these categories
                 </p>
 
-                <div className=" inline-flex">
+                <div className=" inline-flex gap-2">
                   <button className="text-sm px-3 py-1 bg-[#FF86021A] rounded-[29px] ">
                     Child Custody Law
                   </button>
@@ -109,8 +110,169 @@ const MyStatsPage = () => {
             </Card>
           </div>
         </div>
-        <div className="w-1/3">
-          <Card></Card>
+        <div className="w-1/3 space-y-5">
+          <Card>
+            <div className="m-3">
+              <h2 className="font-medium text-[18px] mb-3">Messages</h2>
+              <hr className="tet-[#F3F3F3] border" />
+
+              <div className="flex flex-wrap items-center gap-4 my-2">
+                <figure className="w-10 h-10 rounded-full overflow-hidden">
+                  <Image
+                    src="/assets/img/auth-step1.png"
+                    alt="User profile picture"
+                    width={40}
+                    height={40}
+                    priority
+                    className="rounded-full object-cover"
+                  />
+                </figure>
+
+                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 w-full sm:w-auto">
+                  <div>
+                    <h2 className="font-medium text-sm sm:text-base">
+                      Jerome Bell
+                    </h2>
+                    <p className="text-xs sm:text-sm text-gray-500">
+                      Maplewood Ave, Sunnyvale, California 94086
+                    </p>
+                  </div>
+
+                  <p className="font-medium text-xs sm:text-sm text-gray-600 sm:ml-4 mt-2 sm:mt-0">
+                    11.43 AM
+                  </p>
+                </div>
+              </div>
+
+              <hr className="tet-[#F3F3F3] border" />
+
+              <div className="flex flex-wrap items-center gap-4 my-2">
+                <figure className="w-10 h-10 rounded-full overflow-hidden">
+                  <Image
+                    src="/assets/img/auth-step1.png"
+                    alt="User profile picture"
+                    width={40}
+                    height={40}
+                    priority
+                    className="rounded-full object-cover"
+                  />
+                </figure>
+
+                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 w-full sm:w-auto">
+                  <div>
+                    <h2 className="font-medium text-sm sm:text-base">
+                      Jerome Bell
+                    </h2>
+                    <p className="text-xs sm:text-sm text-gray-500">
+                      Maplewood Ave, Sunnyvale, California 94086
+                    </p>
+                  </div>
+
+                  <p className="font-medium text-xs sm:text-sm text-gray-600 sm:ml-4 mt-2 sm:mt-0">
+                    11.43 AM
+                  </p>
+                </div>
+              </div>
+
+              <hr className="tet-[#F3F3F3] border" />
+
+              <div className="flex flex-wrap items-center gap-4 my-2">
+                <figure className="w-10 h-10 rounded-full overflow-hidden">
+                  <Image
+                    src="/assets/img/auth-step1.png"
+                    alt="User profile picture"
+                    width={40}
+                    height={40}
+                    priority
+                    className="rounded-full object-cover"
+                  />
+                </figure>
+
+                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 w-full sm:w-auto">
+                  <div>
+                    <h2 className="font-medium text-sm sm:text-base">
+                      Jerome Bell
+                    </h2>
+                    <p className="text-xs sm:text-sm text-gray-500">
+                      Maplewood Ave, Sunnyvale, California 94086
+                    </p>
+                  </div>
+
+                  <p className="font-medium text-xs sm:text-sm text-gray-600 sm:ml-4 mt-2 sm:mt-0">
+                    11.43 AM
+                  </p>
+                </div>
+              </div>
+
+              <hr className="tet-[#F3F3F3] border" />
+
+              <div className="flex flex-wrap items-center gap-4 my-2">
+                <figure className="w-10 h-10 rounded-full overflow-hidden">
+                  <Image
+                    src="/assets/img/auth-step1.png"
+                    alt="User profile picture"
+                    width={40}
+                    height={40}
+                    priority
+                    className="rounded-full object-cover"
+                  />
+                </figure>
+
+                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 w-full sm:w-auto">
+                  <div>
+                    <h2 className="font-medium text-sm sm:text-base">
+                      Jerome Bell
+                    </h2>
+                    <p className="text-xs sm:text-sm text-gray-500">
+                      Maplewood Ave, Sunnyvale, California 94086
+                    </p>
+                  </div>
+
+                  <p className="font-medium text-xs sm:text-sm text-gray-600 sm:ml-4 mt-2 sm:mt-0">
+                    11.43 AM
+                  </p>
+                </div>
+              </div>
+
+              <hr className="tet-[#F3F3F3] border" />
+              <div className="flex flex-wrap items-center gap-4 my-2">
+                <figure className="w-10 h-10 rounded-full overflow-hidden">
+                  <Image
+                    src="/assets/img/auth-step1.png"
+                    alt="User profile picture"
+                    width={40}
+                    height={40}
+                    priority
+                    className="rounded-full object-cover"
+                  />
+                </figure>
+
+                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 w-full sm:w-auto">
+                  <div>
+                    <h2 className="font-medium text-sm sm:text-base">
+                      Jerome Bell
+                    </h2>
+                    <p className="text-xs sm:text-sm text-gray-500">
+                      Maplewood Ave, Sunnyvale, California 94086
+                    </p>
+                  </div>
+
+                  <p className="font-medium text-xs sm:text-sm text-gray-600 sm:ml-4 mt-2 sm:mt-0">
+                    11.43 AM
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Card>
+          <Card>
+            <div className="m-3 flex justify-between items-center flex-wrap">
+              <h2 className="font-medium text-lg">Lead Settings</h2>
+              <h2 className="text-sm sm:text-base">
+                <span>456</span> New Leads
+              </h2>
+            </div>
+            <hr className="tet-[#F3F3F3] border" />
+          </Card>
         </div>
       </div>
     </div>
