@@ -20,7 +20,7 @@ export default function SuperAdminDashboardLayout({ children }) {
     <>
       <DashboardHeader />
       <SidebarProvider>
-        <Sidebar collapsible="icon" className="w-64 ">
+        <Sidebar collapsible="icon" className="w-64">
           <SidebarHeader />
           <SidebarContent>
             <NavMain />
