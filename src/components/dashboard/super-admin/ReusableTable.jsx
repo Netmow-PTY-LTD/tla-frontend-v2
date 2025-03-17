@@ -9,15 +9,8 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { ChevronDown } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import {
   Table,
@@ -28,11 +21,12 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-export function ReusableTable({ data, columns, filterPlaceholder, pageSize }) {
+export function ReusableTable({ data, columns, pageSize }) {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [currentPage, setCurrentPage] = React.useState(0);
 
   const table = useReactTable({
     data,
@@ -50,46 +44,32 @@ export function ReusableTable({ data, columns, filterPlaceholder, pageSize }) {
       columnFilters,
       columnVisibility,
       rowSelection,
+      pagination: {
+        pageIndex: currentPage,
+        pageSize, // dynamic page size
+      },
     },
   });
+
+  // Handling page change
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    table.setPageIndex(page);
+  };
+
+  const { pageIndex } = table.getState().pagination;
 
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
+          placeholder="Search..."
           value={table.getColumn('email')?.getFilterValue() ?? ''}
           onChange={(event) =>
             table.getColumn('email')?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -150,15 +130,18 @@ export function ReusableTable({ data, columns, filterPlaceholder, pageSize }) {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.previousPage()}
+            onClick={() => handlePageChange(currentPage - 1)}
             disabled={!table.getCanPreviousPage()}
           >
             Previous
           </Button>
+          <Button variant="outline" size="sm">
+            {pageIndex}
+          </Button>
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.nextPage()}
+            onClick={() => handlePageChange(currentPage + 1)}
             disabled={!table.getCanNextPage()}
           >
             Next
