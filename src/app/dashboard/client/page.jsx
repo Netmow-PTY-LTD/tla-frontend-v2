@@ -1,5 +1,5 @@
 import React from "react";
-import DashboardLayout from "../layout";
+import DashboardLayout from "./layout";
 
 export default function ClientDashboard() {
   return (

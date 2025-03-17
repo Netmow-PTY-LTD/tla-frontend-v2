@@ -5,8 +5,8 @@ import React from "react";
 const LawCard = ({ service }) => {
   return (
     <Link href={`/services/${service._id}`}>
-      <div className="law-card max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto">
-        <figure style={{ position: "relative", height: "400px" }}>
+      <div className="law-card ">
+        <figure className="relative h-[277px]">
           <Image
             alt="law-picture"
             src={service?.image}
