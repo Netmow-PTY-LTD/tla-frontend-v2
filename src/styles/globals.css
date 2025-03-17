@@ -21,6 +21,11 @@ input:focus {
   outline: none;
 }
 
+.inset-y-0 {
+  top: 74px !important;
+  bottom: 74px !important;
+}
+
 .container {
   max-width: 1600px;
   margin: 0 auto;
@@ -491,7 +496,7 @@ input:focus {
 }
 
 /*===================================
- Home Services 
+ Home Services
  ====================================*/
 
 .home-services {
@@ -692,7 +697,7 @@ Home Testimonials
 }
 
 /* ====================
-      About Page 
+      About Page
 ======================*/
 
 .about-section {
@@ -791,7 +796,7 @@ Home Testimonials
 }
 
 /* ====================
-      Working Steps 
+      Working Steps
 ======================*/
 .working-steps {
   padding: 50px 0 100px;
@@ -851,7 +856,7 @@ Home Testimonials
 }
 
 /* ====================
-      Contact Page 
+      Contact Page
 ======================*/
 
 .contact-section {
@@ -891,7 +896,7 @@ Home Testimonials
 }
 
 /* ===================
-      Footer 
+      Footer
 ======================*/
 
 .main-footer {
