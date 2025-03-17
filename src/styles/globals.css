@@ -414,7 +414,7 @@ input:focus {
 
 .hero-content h3 {
   border-radius: 82px;
-  background: var(--brand-brand-primary-action, #00c3c0);
+  background: var(--secondary-color);
   display: flex;
   padding: 4px 20px;
   justify-content: center;
@@ -451,7 +451,7 @@ input:focus {
 
 .tla-btn-search {
   border-radius: 8px;
-  background: var(--secondary-color);
+  background: var(--primary-color);
   color: var(--color-black);
   display: flex;
   padding: 8px 20px;
