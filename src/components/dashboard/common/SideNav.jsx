@@ -10,7 +10,7 @@ export default function SideNav() {
             <a href="#">Lead Boards</a>
           </li>
           <li>
-            <a href="#">My Stats</a>
+            <a href="/dashboard/lawyer/my-stats">My Stats</a>
           </li>
           <li>
             <a href="#">Response</a>
@@ -24,7 +24,7 @@ export default function SideNav() {
             <a href="#">Lead Boards</a>
           </li>
           <li>
-            <a href="#">My Stats</a>
+            <a href="/dashboard/lawyer/my-stats">My Stats</a>
           </li>
           <li>
             <a href="#">Response</a>
