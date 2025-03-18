@@ -48,7 +48,6 @@ export default function Login() {
     if (!token || !role) {
       Cookies.remove('token');
       Cookies.remove('role');
-      setIsAuthCheck(true);
     } else {
       const dashboardPath = role === 'super_admin' ? 'super-admin' : role;
       if (appEnvironment === 'development') {
