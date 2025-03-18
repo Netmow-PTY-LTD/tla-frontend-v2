@@ -21,13 +21,10 @@ export default function SideNav() {
         <h2>Helps</h2>
         <ul>
           <li>
-            <a href="/dashboard/lawyer/lead-board">Lead Boards</a>
+            <a href="#">General FAQ’s</a>
           </li>
           <li>
-            <a href="/dashboard/lawyer/my-stats">My Stats</a>
-          </li>
-          <li>
-            <a href="/dashboard/lawyer/my-response">Response</a>
+            <a href="#">Tutorials</a>
           </li>
         </ul>
       </nav>
