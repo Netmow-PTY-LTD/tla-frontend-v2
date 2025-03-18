@@ -1,22 +1,19 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Form } from '@/components/ui/form';
 import TextInput from '@/components/form/TextInput';
+import { useAuthLoginMutation } from '@/store/slices/public/authSlice';
+import { LoaderSpinner } from '@/components/common/LoaderSpinner';
+import { toast } from 'sonner';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import Cookies from 'js-cookie';
+
+const appEnvironment = process.env.NEXT_PUBLIC_APP_ENVIRONMENT;
 
 const formSchema = z.object({
   email: z
@@ -33,6 +30,9 @@ const formSchema = z.object({
 });
 
 export default function Login() {
+  const [authLogin, { isLoading }] = useAuthLoginMutation();
+  const [loading, setLoading] = useState(false);
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,13 +41,68 @@ export default function Login() {
     },
   });
 
+  useEffect(() => {
+    const token = Cookies.get('token');
+    const role = Cookies.get('role');
+
+    if (!token || !role) {
+      Cookies.remove('token');
+      Cookies.remove('role');
+      setIsAuthCheck(true);
+    } else {
+      const dashboardPath = role === 'super_admin' ? 'super-admin' : role;
+      if (appEnvironment === 'development') {
+        window.location.assign(
+          `${
+            window.location.protocol
+          }//${'localhost:3000'}/dashboard/${dashboardPath}`
+        );
+      } else {
+        window.location.assign(
+          `${window.location.protocol}//${process.env.NEXT_PUBLIC_REDIRECT_URL}/dashboard/${dashboardPath}`
+        );
+      }
+    }
+  }, []);
+
   const handleChange = (e) => {
-    // Example of custom logic
     console.log(`Input changed for ${e.target.name}: ${e.target.value}`);
   };
 
-  const onSubmit = (data) => {
-    console.log(data); // Handle form submission
+  const onSubmit = async (data) => {
+    console.log(data);
+    try {
+      const res = await authLogin(data).unwrap();
+      console.log(res);
+
+      if (res?.success === true) {
+        showSuccessToast(res?.message || 'Login successful');
+        console.log(res?.data?.token);
+        console.log(res?.data?.role);
+
+        if (res?.data?.token && res?.data?.role === 'super_admin') {
+          Cookies.set('token', res?.data?.token, { expires: 7 });
+          Cookies.set('role', res?.data?.role, { expires: 7 });
+
+          if (appEnvironment === 'development') {
+            window.location.assign(
+              `${
+                window.location.protocol
+              }//${'localhost:3000'}/dashboard/super-admin`
+            );
+          } else {
+            window.location.assign(
+              `${window.location.protocol}//${process.env.NEXT_PUBLIC_REDIRECT_URL}/dashboard/super-admin`
+            );
+          }
+        }
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -105,9 +160,17 @@ export default function Login() {
                         placeholder="********"
                         onChange={handleChange}
                       />
-
-                      <button type="submit" className="btn-auth-login">
-                        Submit
+                      <button
+                        type="submit"
+                        className="btn-auth-login"
+                        style={{ cursor: 'pointer' }}
+                        disabled={loading || isLoading}
+                      >
+                        {loading || isLoading ? (
+                          <LoaderSpinner />
+                        ) : (
+                          <span>Submit</span>
+                        )}
                       </button>
                     </form>
                   </Form>
