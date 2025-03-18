@@ -24,12 +24,12 @@ export const data = {
       items: [
         {
           title: 'Add Service',
-          url: '/dashboard/super-admin/add-service',
+          url: '/dashboard/super-admin/services/add-service',
           icon: Plus,
         },
         {
           title: 'List Of Services',
-          url: '/dashboard/super-admin/list-of-services',
+          url: '/dashboard/super-admin/services/list-of-services',
           icon: List,
         },
       ],
