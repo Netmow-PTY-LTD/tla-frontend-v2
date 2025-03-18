@@ -1,303 +1,85 @@
-import PencilIcon from "@/assets/icon";
-import StatusCard from "@/components/dashboard/lawyer-dashboard/components/StatusCard";
-import ProfileCard from "@/components/dashboard/lawyer-dashboard/module/MyStats/ProfileCard";
-import { Card } from "@/components/ui/card";
-import { MapPin } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import LeadSettingNotificationCard from '@/components/dashboard/lawyer-dashboard/components/LeadSettingNotificationCard';
+import LeadSettings from '@/components/dashboard/lawyer-dashboard/components/LeadSettings';
+import MessageCard from '@/components/dashboard/lawyer-dashboard/components/MessageCard';
+import StatusCard from '@/components/dashboard/lawyer-dashboard/components/StatusCard';
+import ProfileCard from '@/components/dashboard/lawyer-dashboard/module/MyStats/ProfileCard';
 
-import React from "react";
+import React from 'react';
 
 const MyStatsPage = () => {
   const menuLinks = [
-    { label: "All Time", href: "#/all-time" },
-    { label: "Today", href: "#/today" },
-    { label: "This Week", href: "#/this-week" },
-    { label: "This Month", href: "#/this-month" },
+    { label: 'All Time', href: '#/all-time' },
+    { label: 'Today', href: '#/today' },
+    { label: 'This Week', href: '#/this-week' },
+    { label: 'This Month', href: '#/this-month' },
+  ];
+
+  const messagesData = [
+    {
+      id: 1,
+      name: 'Jerome Bell',
+      message: 'Maplewood Ave, Sunnyvale, California 94086',
+      time: '11:43 AM',
+      avatar: '/assets/img/auth-step1.png',
+    },
+    {
+      id: 2,
+      name: 'Jane Cooper',
+      message: '  Maplewood Ave, Sunnyvale, California 94086',
+      time: '10:30 AM',
+      avatar: '/assets/img/auth-step1.png',
+    },
+    {
+      id: 3,
+      name: 'Cody Fisher',
+      message: '  Maplewood Ave, Sunnyvale, California 94086',
+      time: '9:15 AM',
+      avatar: '/assets/img/auth-step1.png',
+    },
+    {
+      id: 4,
+      name: 'Cody Fisher',
+      message: '  Maplewood Ave, Sunnyvale, California 94086',
+      time: '9:15 AM',
+      avatar: '/assets/img/auth-step1.png',
+    },
   ];
 
   return (
-    <div className="mb-5">
+    <div className="m-5">
       <h1 className="font-bold text-2xl border-b-2 text-[#0B1C2D] ">
         Overview of Your Stats
       </h1>
 
-      <div className="mt-5 flex gap-5">
-        <div className="w-full sm:w-1/3">
-          <ProfileCard />
+      <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-5">
+        {/* Left Section - Profile */}
+        <div className="h-full">
+          <ProfileCard className="h-full" />
         </div>
-        <div className="w-full sm:w-1/3">
-          <div className="flex gap-8">
-            <StatusCard status="pending" count={24} menuItems={menuLinks} />
-            <StatusCard status="hired" count={24} menuItems={menuLinks} />
+
+        {/* Middle Section - Status + Lead Settings */}
+        <div className="grid grid-rows-[auto_1fr] gap-5 h-full">
+          <div className="flex gap-5">
+            <StatusCard
+              status="pending"
+              count={24}
+              menuItems={menuLinks}
+              className="flex-1 h-full"
+            />
+            <StatusCard
+              status="hired"
+              count={24}
+              menuItems={menuLinks}
+              className="flex-1 h-full"
+            />
           </div>
-          <div className="mt-5">
-            <Card>
-              <div className="m-3 flex justify-between items-center flex-wrap">
-                <h2 className="font-medium text-lg">Lead Settings</h2>
-                <h2 className="text-sm sm:text-base">
-                  <span>456</span> New Leads
-                </h2>
-              </div>
-              <hr className="tet-[#F3F3F3] border" />
-
-              <div className="m-3">
-                <h1 className="font-medium flex items-center text-lg">
-                  Practice Area
-                  <button aria-label="Edit Name" className="ml-3 rounded">
-                    <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
-                  </button>
-                </h1>
-                <p className="my-2 text-sm sm:text-base">
-                  You'll receive leads in these categories
-                </p>
-
-                <div className=" inline-flex gap-2">
-                  <button className="text-sm px-3 py-1 bg-[#FF86021A] rounded-[29px] ">
-                    Child Custody Law
-                  </button>
-                  <button className="text-sm px-3 py-1 bg-[#004DA61A] rounded-[29px] ">
-                    Separation Law
-                  </button>
-                  <button className="text-sm px-3 py-1 bg-[#A600161A] rounded-[29px] ">
-                    Criminal Law
-                  </button>
-                </div>
-              </div>
-              <hr className="tet-[#F3F3F3] border" />
-
-              <div className="m-3">
-                <h1 className="font-medium flex items-center text-lg">
-                  Locations
-                  <button aria-label="Edit Name" className="ml-3 rounded">
-                    <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
-                  </button>
-                </h1>
-                <p className="my-2 text-sm sm:text-base">
-                  You're receiving customers within
-                </p>
-                <div className="space-y-2">
-                  <p className="text-[#0B1C2D] bg-[#F3F3F3] rounded-lg p-4 flex items-center">
-                    <span className="mr-1">
-                      <MapPin />
-                    </span>{" "}
-                    Cedar Boulevard, Lakeside, Florida 32123
-                  </p>
-                  <p className="text-[#0B1C2D] bg-[#F3F3F3] rounded-lg p-4">
-                    30 miles
-                  </p>
-                </div>
-              </div>
-              <hr className="tet-[#F3F3F3] border" />
-
-              <div className="m-3">
-                <h1 className="font-medium flex items-center text-lg">
-                  Lead Notifications
-                  <button aria-label="Edit Name" className="ml-3 rounded">
-                    <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
-                  </button>
-                </h1>
-                <p className="my-2 text-sm sm:text-base">
-                  Sending new leads notifications to
-                </p>
-                <p className="text-sm sm:text-base">yourmail@example.com</p>
-              </div>
-
-              <div className="m-3">
-                <button className="px-[19px] py-2 text-[#0B1C2D] font-medium bg-[#EDF0F4] rounded-full text-sm sm:text-base">
-                  View Leads
-                </button>
-              </div>
-            </Card>
-          </div>
+          <LeadSettingNotificationCard className="h-full" />
         </div>
-        <div className="w-full sm:w-1/3 space-y-5">
-          <Card>
-            <div className="m-3">
-              <h2 className="font-medium text-[18px] mb-3">Messages</h2>
-              <hr className="tet-[#F3F3F3] border" />
 
-              <div className="flex flex-wrap items-center gap-4 my-2">
-                <figure className="w-10 h-10 rounded-full overflow-hidden">
-                  <Image
-                    src="/assets/img/auth-step1.png"
-                    alt="User profile picture"
-                    width={40}
-                    height={40}
-                    priority
-                    className="rounded-full object-cover"
-                  />
-                </figure>
-
-                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 w-full sm:w-auto">
-                  <div>
-                    <h2 className="font-medium text-sm sm:text-base">
-                      Jerome Bell
-                    </h2>
-                    <p className="text-xs sm:text-sm text-gray-500">
-                      Maplewood Ave, Sunnyvale, California 94086
-                    </p>
-                  </div>
-
-                  <p className="font-medium text-xs sm:text-sm text-gray-600 sm:ml-4 mt-2 sm:mt-0">
-                    11.43 AM
-                  </p>
-                </div>
-              </div>
-
-              <hr className="tet-[#F3F3F3] border" />
-
-              <div className="flex flex-wrap items-center gap-4 my-2">
-                <figure className="w-10 h-10 rounded-full overflow-hidden">
-                  <Image
-                    src="/assets/img/auth-step1.png"
-                    alt="User profile picture"
-                    width={40}
-                    height={40}
-                    priority
-                    className="rounded-full object-cover"
-                  />
-                </figure>
-
-                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 w-full sm:w-auto">
-                  <div>
-                    <h2 className="font-medium text-sm sm:text-base">
-                      Jerome Bell
-                    </h2>
-                    <p className="text-xs sm:text-sm text-gray-500">
-                      Maplewood Ave, Sunnyvale, California 94086
-                    </p>
-                  </div>
-
-                  <p className="font-medium text-xs sm:text-sm text-gray-600 sm:ml-4 mt-2 sm:mt-0">
-                    11.43 AM
-                  </p>
-                </div>
-              </div>
-
-              <hr className="tet-[#F3F3F3] border" />
-
-              <div className="flex flex-wrap items-center gap-4 my-2">
-                <figure className="w-10 h-10 rounded-full overflow-hidden">
-                  <Image
-                    src="/assets/img/auth-step1.png"
-                    alt="User profile picture"
-                    width={40}
-                    height={40}
-                    priority
-                    className="rounded-full object-cover"
-                  />
-                </figure>
-
-                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 w-full sm:w-auto">
-                  <div>
-                    <h2 className="font-medium text-sm sm:text-base">
-                      Jerome Bell
-                    </h2>
-                    <p className="text-xs sm:text-sm text-gray-500">
-                      Maplewood Ave, Sunnyvale, California 94086
-                    </p>
-                  </div>
-
-                  <p className="font-medium text-xs sm:text-sm text-gray-600 sm:ml-4 mt-2 sm:mt-0">
-                    11.43 AM
-                  </p>
-                </div>
-              </div>
-
-              <hr className="tet-[#F3F3F3] border" />
-
-              <div className="flex flex-wrap items-center gap-4 my-2">
-                <figure className="w-10 h-10 rounded-full overflow-hidden">
-                  <Image
-                    src="/assets/img/auth-step1.png"
-                    alt="User profile picture"
-                    width={40}
-                    height={40}
-                    priority
-                    className="rounded-full object-cover"
-                  />
-                </figure>
-
-                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 w-full sm:w-auto">
-                  <div>
-                    <h2 className="font-medium text-sm sm:text-base">
-                      Jerome Bell
-                    </h2>
-                    <p className="text-xs sm:text-sm text-gray-500">
-                      Maplewood Ave, Sunnyvale, California 94086
-                    </p>
-                  </div>
-
-                  <p className="font-medium text-xs sm:text-sm text-gray-600 sm:ml-4 mt-2 sm:mt-0">
-                    11.43 AM
-                  </p>
-                </div>
-              </div>
-
-              <hr className="tet-[#F3F3F3] border" />
-              <div className="flex flex-wrap items-center gap-4 my-2">
-                <figure className="w-10 h-10 rounded-full overflow-hidden">
-                  <Image
-                    src="/assets/img/auth-step1.png"
-                    alt="User profile picture"
-                    width={40}
-                    height={40}
-                    priority
-                    className="rounded-full object-cover"
-                  />
-                </figure>
-
-                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 w-full sm:w-auto">
-                  <div>
-                    <h2 className="font-medium text-sm sm:text-base">
-                      Jerome Bell
-                    </h2>
-                    <p className="text-xs sm:text-sm text-gray-500">
-                      Maplewood Ave, Sunnyvale, California 94086
-                    </p>
-                  </div>
-
-                  <p className="font-medium text-xs sm:text-sm text-gray-600 sm:ml-4 mt-2 sm:mt-0">
-                    11.43 AM
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Card>
-
-          <Card>
-            <div className="m-3 flex flex-wrap justify-between items-center">
-              <h2 className="font-medium text-lg">Lead Settings</h2>
-              <button className="text-sm px-3 py-1 rounded bg-[#F3F3F3] text-[#34495E]">
-                Current plan: Free
-              </button>
-            </div>
-
-            <hr className="border-[#F3F3F3]" />
-
-            <div className="m-3">
-              <p>Unlock more opportunities and increase your reach.</p>
-              <button className="rounded-lg p-4 w-full bg-[#F3F3F3] my-2">
-                Get 20% Off in Premium Plan
-              </button>
-              <p>
-                Get your desired lawyer or client within a reasonable cost.
-                Respond to up to 10 customers and get hired guarantee.
-              </p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row justify-between items-center m-3">
-              <button className="btn-brand mb-2 sm:mb-0">Upgrade plan</button>
-              <p className="text-sm">
-                Visit{" "}
-                <span>
-                  <Link href="#">help centre</Link>
-                </span>{" "}
-                for more info
-              </p>
-            </div>
-          </Card>
+        {/* Right Section - Messages + Lead Settings */}
+        <div className="grid grid-rows-2 gap-5 h-full">
+          <MessageCard messages={messagesData} />
+          <LeadSettings className="h-full" />
         </div>
       </div>
     </div>
