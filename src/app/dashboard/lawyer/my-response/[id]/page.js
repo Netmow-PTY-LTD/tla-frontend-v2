@@ -1,5 +1,6 @@
 import StatusDropdwon from '@/components/dashboard/lawyer-dashboard/components/StatusDropdwon';
 import TagButton from '@/components/dashboard/lawyer-dashboard/components/TagButton';
+import Chat from '@/components/dashboard/lawyer-dashboard/module/chat/Chat';
 import {
   ArrowDownToLine,
   AtSign,
@@ -8,6 +9,7 @@ import {
   FileText,
   MoveLeft,
   PhoneOutgoing,
+  SendHorizontal,
   Zap,
 } from 'lucide-react';
 import Image from 'next/image';
@@ -31,8 +33,8 @@ const page = async ({ params }) => {
           <StatusDropdwon status="pending" menuItems={menuLinks} />
         </div>
       </section>
-      <section className="mt-3 flex ">
-        <div className="bg-white rounded w-1/2 ">
+      <section className="mt-3 lg:flex lg:gap-5 ">
+        <div className="bg-white rounded w-full lg:w-1/2 ">
           <div className="flex flex-col  items-start gap-4 ">
             <figure className="w-20 h-20 rounded-full overflow-hidden">
               <Image
@@ -116,8 +118,8 @@ const page = async ({ params }) => {
             </div>
           </div>
         </div>
-        <div className="w-1/2">
-          <h2>Chat Section</h2>
+        <div className="w-full lg:w-1/2 border-s-2">
+          <Chat />
         </div>
       </section>
     </div>
