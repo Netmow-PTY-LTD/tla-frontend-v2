@@ -1,8 +1,6 @@
 import { Card } from '@/components/ui/card';
 import React from 'react';
-
 import Image from 'next/image';
-import PencilIcon from '@/assets/icon';
 import TagButton from './TagButton';
 import { BadgeCheck, CircleAlert, Zap } from 'lucide-react';
 
