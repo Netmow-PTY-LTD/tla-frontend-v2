@@ -13,7 +13,7 @@ const LeadSettingNotificationCard = () => {
           <span>456</span> New Leads
         </h2>
       </div>
-      <hr className="tet-[#F3F3F3] border" />
+      <hr className="border-[#F3F3F3] border" />
 
       <div className="m-3">
         <h1 className="font-medium flex items-center text-lg">
@@ -32,7 +32,7 @@ const LeadSettingNotificationCard = () => {
           <TagButton text="Criminal Law" bgColor="#A600161A" />
         </div>
       </div>
-      <hr className="tet-[#F3F3F3] border" />
+      <hr className="border-[#F3F3F3] border" />
 
       <div className="m-3">
         <h1 className="font-medium flex items-center text-lg">
@@ -54,7 +54,7 @@ const LeadSettingNotificationCard = () => {
           <p className="text-[#0B1C2D] bg-[#F3F3F3] rounded-lg p-4">30 miles</p>
         </div>
       </div>
-      <hr className="tet-[#F3F3F3] border" />
+      <hr className="border-[#F3F3F3] border" />
 
       <div className="m-3">
         <h1 className="font-medium flex items-center text-lg">

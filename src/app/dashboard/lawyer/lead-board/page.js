@@ -1,10 +1,6 @@
+import LeadCard from '@/components/dashboard/lawyer-dashboard/components/LeadCard';
 import TagButton from '@/components/dashboard/lawyer-dashboard/components/TagButton';
-import {
-  Database,
-  DatabaseBackupIcon,
-  FilterIcon,
-  SlidersVertical,
-} from 'lucide-react';
+import { Database, SlidersVertical } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
@@ -49,6 +45,11 @@ const LeadBoardPage = () => {
         </div>
 
         <hr className="border border-[#F3F3F3]" />
+      </section>
+
+      {/* lead card section */}
+      <section>
+        <LeadCard />
       </section>
     </div>
   );
