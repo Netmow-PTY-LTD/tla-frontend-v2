@@ -1,15 +1,15 @@
-import { Card } from "@/components/ui/card";
-import DropdownMenu from "@/components/UIComponents/DropdownMenu";
-import PropTypes from "prop-types";
+import { Card } from '@/components/ui/card';
+import DropdownMenu from '@/components/UIComponents/DropdownMenu';
+import PropTypes from 'prop-types';
 
 const statusColors = {
-  pending: "bg-yellow-500",
-  hired: "bg-green-500",
-  rejected: "bg-red-500",
-  default: "bg-gray-400",
+  pending: 'bg-yellow-500',
+  hired: 'bg-green-500',
+  rejected: 'bg-red-500',
+  default: 'bg-gray-400',
 };
 
-const StatusCard = ({ status = "pending", count, menuItems }) => {
+const StatusCard = ({ status = 'pending', count, menuItems }) => {
   return (
     <Card className="w-full max-w-md md:max-w-lg lg:max-w-xl mx-auto bg-white shadow-md rounded-lg">
       {/* Card Header */}
@@ -29,13 +29,19 @@ const StatusCard = ({ status = "pending", count, menuItems }) => {
       <hr className="border-t border-gray-200" />
 
       {/* Card Content */}
-      <div className="bg-[#F5F6F9] flex flex-col justify-center items-center p-5 rounded-lg mx-4 my-3">
-        <div className="flex items-center gap-2">
-          <div>📈</div> {/* Replace with an actual icon if needed */}
-          <h4 className="text-2xl font-bold text-black">{count}</h4>
-        </div>
-        <p className="text-sm text-gray-600 mt-1">{status} responses</p>
-      </div>
+      {count ? (
+        <>
+          <div className="bg-[#F5F6F9] flex flex-col justify-center items-center p-5 rounded-lg mx-4 my-3">
+            <div className="flex items-center gap-2">
+              <div>📈</div> {/* Replace with an actual icon if needed */}
+              <h4 className="text-2xl font-bold text-black">{count}</h4>
+            </div>
+            <p className="text-sm text-gray-600 mt-1">{status} responses</p>
+          </div>
+        </>
+      ) : (
+        <></>
+      )}
     </Card>
   );
 };

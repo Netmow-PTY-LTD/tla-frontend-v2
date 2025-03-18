@@ -48,7 +48,7 @@ const LeadBoardPage = () => {
       </section>
 
       {/* lead card section */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-5 px-4 mt-4">
+      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-5 px-4 mt-4 mb-10">
         <LeadCard />
         <LeadCard />
         <LeadCard />

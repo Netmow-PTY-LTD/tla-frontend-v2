@@ -51,9 +51,9 @@ const MyStatsPage = () => {
         Overview of Your Stats
       </h1>
 
-      <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-5">
+      <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
         {/* Left Section - Profile */}
-        <div className="h-full">
+        <div className="h-full ">
           <ProfileCard className="h-full" />
         </div>
 
@@ -77,7 +77,7 @@ const MyStatsPage = () => {
         </div>
 
         {/* Right Section - Messages + Lead Settings */}
-        <div className="grid grid-rows-2 gap-5 h-full">
+        <div className="grid grid-rows-2 gap-5 h-full ">
           <MessageCard messages={messagesData} />
           <LeadSettings className="h-full" />
         </div>

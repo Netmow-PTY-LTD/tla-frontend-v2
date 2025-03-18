@@ -1,5 +1,5 @@
-"use client";
-import { useState } from "react";
+'use client';
+import { useState } from 'react';
 import {
   NavigationMenu,
   NavigationMenuList,
@@ -7,8 +7,8 @@ import {
   NavigationMenuTrigger,
   NavigationMenuContent,
   NavigationMenuLink,
-} from "@/components/ui/navigation-menu";
-import Link from "next/link";
+} from '@/components/ui/navigation-menu';
+import Link from 'next/link';
 
 const DropdownMenu = ({ menuItems, defaultSelected }) => {
   const [selected, setSelected] = useState(

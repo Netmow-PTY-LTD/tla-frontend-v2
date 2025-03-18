@@ -1,26 +1,3 @@
-// import DashboardFooter from '@/components/dashboard/common/DashboardFooter';
-// import DashboardHeader from '@/components/dashboard/common/DashboardHeader';
-// import SideNav from '@/components/dashboard/common/SideNav';
-// import React from 'react';
-// import '@/styles/dashboard.css';
-
-// export default function DashboardLayout({ children }) {
-//   return (
-//     <>
-//       <DashboardHeader />
-//       <div className="flex">
-//         <div className="sidebar-wrapper">
-//           <SideNav />
-//         </div>
-//         <main className="main-content bg-[#F3F3F3] ">
-//           {children}
-//           <DashboardFooter />
-//         </main>
-//       </div>
-//     </>
-//   );
-// }
-
 import React from 'react';
 import '@/styles/dashboard.css';
 import DashboardHeader from '@/components/dashboard/common/DashboardHeader';
@@ -53,7 +30,7 @@ export default function LawyerDashboardLayout({ children }) {
           }}
         >
           <div className="flex flex-col p-5 h-full">
-            <div className="flex-1">{children}</div>
+            <div className="flex-1 ">{children}</div>
             <DashboardFooter />
           </div>
         </div>
