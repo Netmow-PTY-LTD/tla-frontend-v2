@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useAllServicesQuery } from '@/store/slices/super-admin/servicesSlice';
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import React from 'react';
 
@@ -396,41 +397,25 @@ export const columns = [
     cell: ({ row }) => <div className="capitalize">{row.index + 1}</div>,
   },
   {
-    accessorKey: 'status',
-    header: 'Status',
+    accessorKey: 'title',
+    header: 'Title',
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue('status')}</div>
+      <div className="capitalize">{row.getValue('title')}</div>
     ),
   },
   {
-    accessorKey: 'email',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Email
-          <ArrowUpDown />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div className="lowercase">{row.getValue('email')}</div>,
+    accessorKey: 'buttonText',
+    header: 'Button Text',
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue('buttonText')}</div>
+    ),
   },
   {
-    accessorKey: 'amount',
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue('amount'));
-
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
+    accessorKey: 'status',
+    header: 'Button Text',
+    cell: ({ row }) => (
+      <div className="text-right font-medium">{row.getValue('status')}</div>
+    ),
   },
   {
     id: 'actions',
@@ -464,12 +449,14 @@ export const columns = [
 ];
 
 export default function Home() {
+  const { data: allServicesData } = useAllServicesQuery();
+  console.log(allServicesData?.data);
   return (
     <div>
       <h1 className="text-2xl font-semibold py-4">List Of Services</h1>
       <ReusableTable
         columns={columns}
-        data={data}
+        data={allServicesData?.data}
         filterPlaceholder="Filter..."
         pageSize={10}
       />

@@ -9,7 +9,6 @@ import { Form } from '@/components/ui/form';
 import TextInput from '@/components/form/TextInput';
 import { useAuthLoginMutation } from '@/store/slices/public/authSlice';
 import { LoaderSpinner } from '@/components/common/LoaderSpinner';
-import { toast } from 'sonner';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import Cookies from 'js-cookie';
 

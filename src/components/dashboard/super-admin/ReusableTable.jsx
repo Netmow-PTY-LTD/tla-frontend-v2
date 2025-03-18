@@ -46,12 +46,11 @@ export function ReusableTable({ data, columns, pageSize }) {
       rowSelection,
       pagination: {
         pageIndex: currentPage,
-        pageSize, // dynamic page size
+        pageSize,
       },
     },
   });
 
-  // Handling page change
   const handlePageChange = (page) => {
     setCurrentPage(page);
     table.setPageIndex(page);
@@ -64,9 +63,9 @@ export function ReusableTable({ data, columns, pageSize }) {
       <div className="flex items-center py-4">
         <Input
           placeholder="Search..."
-          value={table.getColumn('email')?.getFilterValue() ?? ''}
+          value={table.getColumn('title')?.getFilterValue() ?? ''}
           onChange={(event) =>
-            table.getColumn('email')?.setFilterValue(event.target.value)
+            table.getColumn('title')?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
