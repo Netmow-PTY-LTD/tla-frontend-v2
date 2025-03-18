@@ -12,7 +12,7 @@ export default function DashboardLayout({ children }) {
         <div className="sidebar-wrapper">
           <SideNav />
         </div>
-        <main className="main-content">
+        <main className="main-content bg-[#F3F3F3] ">
           {children}
           <DashboardFooter />
         </main>

@@ -13,7 +13,7 @@ export default function SideNav() {
             <a href="/dashboard/lawyer/my-stats">My Stats</a>
           </li>
           <li>
-            <a href="#">Response</a>
+            <a href="/dashboard/lawyer/my-response">Response</a>
           </li>
         </ul>
       </nav>
@@ -27,7 +27,7 @@ export default function SideNav() {
             <a href="/dashboard/lawyer/my-stats">My Stats</a>
           </li>
           <li>
-            <a href="#">Response</a>
+            <a href="/dashboard/lawyer/my-response">Response</a>
           </li>
         </ul>
       </nav>
