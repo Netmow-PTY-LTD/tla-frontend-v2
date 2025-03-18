@@ -1,3 +1,4 @@
+import LeadCard from '@/components/dashboard/lawyer-dashboard/components/LeadCard';
 import StatusButton from '@/components/dashboard/lawyer-dashboard/components/StatusButton';
 import React from 'react';
 
@@ -11,6 +12,14 @@ const MyResponsePage = () => {
           <StatusButton status="pending" />
           <StatusButton status="hired" />
         </div>
+      </section>
+      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-5 mt-4">
+        <LeadCard />
+        <LeadCard />
+        <LeadCard />
+        <LeadCard />
+        <LeadCard />
+        <LeadCard />
       </section>
     </div>
   );
