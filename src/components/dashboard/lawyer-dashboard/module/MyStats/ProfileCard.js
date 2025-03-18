@@ -1,8 +1,8 @@
-import PencilIcon from "@/assets/icon";
-import { Card } from "@/components/ui/card";
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
+import PencilIcon from '@/assets/icon';
+import { Card } from '@/components/ui/card';
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
 
 const ProfileCard = () => {
   return (
@@ -20,13 +20,13 @@ const ProfileCard = () => {
           />
         </figure>
         <h1 className="font-medium text-xl flex items-center">
-          Hossain Mishu{" "}
+          Hossain Mishu{' '}
           <button aria-label="Edit Name" className="ml-3 rounded ">
             <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
           </button>
         </h1>
         <h1 className="font-medium  flex items-center">
-          Personal Details{" "}
+          Personal Details{' '}
           <button aria-label="Edit Name" className="ml-3 rounded ">
             <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
           </button>
@@ -42,7 +42,7 @@ const ProfileCard = () => {
       <div className="mt-5 p-3">
         <div className="mb-4">
           <h1 className="font-medium  flex items-center">
-            About Description{" "}
+            About Description{' '}
             <button aria-label="Edit Name" className="ml-3 rounded ">
               <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
             </button>
@@ -59,7 +59,7 @@ const ProfileCard = () => {
         <hr className="tet-[#F3F3F3] border" />
         <div className="space-y-4 my-5">
           <h1 className="font-medium  flex items-center">
-            Professional Details{" "}
+            Professional Details{' '}
             <button aria-label="Edit Name" className="ml-3 rounded ">
               <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
             </button>

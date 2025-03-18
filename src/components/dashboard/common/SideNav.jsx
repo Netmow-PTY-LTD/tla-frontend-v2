@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export default function SideNav() {
   return (
@@ -7,7 +7,7 @@ export default function SideNav() {
         <h2>Main</h2>
         <ul>
           <li>
-            <a href="#">Lead Boards</a>
+            <a href="/dashboard/lawyer/lead-board">Lead Boards</a>
           </li>
           <li>
             <a href="/dashboard/lawyer/my-stats">My Stats</a>
@@ -21,7 +21,7 @@ export default function SideNav() {
         <h2>Helps</h2>
         <ul>
           <li>
-            <a href="#">Lead Boards</a>
+            <a href="/dashboard/lawyer/lead-board">Lead Boards</a>
           </li>
           <li>
             <a href="/dashboard/lawyer/my-stats">My Stats</a>
