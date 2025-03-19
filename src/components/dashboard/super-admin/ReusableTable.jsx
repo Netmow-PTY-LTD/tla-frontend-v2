@@ -21,7 +21,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-export function ReusableTable({ data, columns, pageSize }) {
+export function ReusableTable({ data, columns, pageSize, filterPlaceholder }) {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
@@ -62,10 +62,15 @@ export function ReusableTable({ data, columns, pageSize }) {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Search..."
-          value={table.getColumn('title')?.getFilterValue() ?? ''}
+          placeholder={filterPlaceholder || 'Search...'}
+          value={
+            columnFilters.find((filter) => filter.id === 'title')?.value || ''
+          }
           onChange={(event) =>
-            table.getColumn('title')?.setFilterValue(event.target.value)
+            setColumnFilters((prev) => [
+              ...prev.filter((filter) => filter.id !== 'title'),
+              { id: 'title', value: event.target.value },
+            ])
           }
           className="max-w-sm"
         />
@@ -91,7 +96,7 @@ export function ReusableTable({ data, columns, pageSize }) {
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {table.getRowModel()?.rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
