@@ -1,51 +1,49 @@
 'use client';
-import React, { useState } from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { z } from 'zod';
 import { Controller, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { CircleX } from 'lucide-react';
 import { LoaderSpinner } from '@/components/common/LoaderSpinner';
 import {
-  useAddServiceMutation,
   useAllServicesQuery,
+  useEditServicesMutation,
+  useSingleServicesQuery,
 } from '@/store/slices/super-admin/servicesSlice';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { convertImageUrlToFile } from '@/lib/helperFunctions/page';
 import { Input } from '@/components/ui/input';
 
-const formSchema = z.object({
-  serviceName: z.string().min(2, {
-    message: 'Service name must be at least 2 characters.',
-  }),
-  title: z.string().min(10, {
-    message: 'Title must be at least 10 characters.',
-  }),
-  description: z.string().min(20, {
-    message: 'Description must be at least 20 characters.',
-  }),
-  buttonText: z.string().min(3, {
-    message: 'Button text must be at least 3 characters.',
-  }),
-  image: z.any().refine((file) => file !== null && file !== undefined, {
-    message: 'Image is required.',
-  }),
-});
-
-const AddServicePageInSuperAdmin = () => {
+const EditServicePageInSuperAdmin = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const serviceId = searchParams.get('service_id');
+
   const [imagePreview, setImagePreview] = useState(null);
-  const [addService, { isLoading }] = useAddServiceMutation();
+  const [editService, { isLoading: editServiceIsLoading }] =
+    useEditServicesMutation();
+
+  const {
+    data: singleServicesData,
+    error: singleServicesError,
+    isLoading: singleServicesIsLoading,
+    refetch: singleServicesRefetch,
+  } = useSingleServicesQuery(serviceId, {
+    skip: !serviceId,
+    refetchOnMountOrArgChange: true,
+  });
+
   const { data: allServicesData, refetch: allServicesRefetch } =
     useAllServicesQuery();
+
   const {
     control,
     handleSubmit,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting },
     setValue,
     reset,
   } = useForm({
-    resolver: zodResolver(formSchema),
     defaultValues: {
       serviceName: '',
       title: '',
@@ -55,24 +53,37 @@ const AddServicePageInSuperAdmin = () => {
     },
   });
 
+  useEffect(() => {
+    const loadData = async () => {
+      if (singleServicesData?.data) {
+        reset(singleServicesData?.data);
+
+        const imageUrl = singleServicesData?.data?.image?.url;
+        if (imageUrl) {
+          const file = await convertImageUrlToFile(imageUrl);
+
+          setImagePreview(imageUrl);
+          setValue('image', file);
+        }
+      }
+    };
+
+    loadData();
+  }, [singleServicesData, reset, setValue]);
+
   const onSubmit = async (data) => {
+    const forUpdateData = { ...data, service_id: serviceId };
+    // console.log(forUpdateData);
+
     try {
       const finalData = new FormData();
-      Object.entries(data).forEach(([key, value]) => {
+      Object.entries(forUpdateData).forEach(([key, value]) => {
         finalData.append(key, value);
       });
 
-      const res = await addService(finalData).unwrap();
-
+      const res = await editService(finalData).unwrap();
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Action successful');
-        reset({
-          serviceName: '',
-          title: '',
-          description: '',
-          buttonText: '',
-          image: null,
-        });
         allServicesRefetch();
         setImagePreview(null);
         router.push('/dashboard/super-admin/services/list-of-services');
@@ -94,14 +105,27 @@ const AddServicePageInSuperAdmin = () => {
     }
   };
 
+  if (singleServicesIsLoading) {
+    return (
+      <div className="flex justify-center items-center">
+        <LoaderSpinner />
+      </div>
+    );
+  }
+
+  if (singleServicesError) {
+    return (
+      <div className="text-center text-red-600">
+        Error: {singleServicesError.message}
+      </div>
+    );
+  }
+
   return (
     <div>
       <Card>
         <CardHeader>
-          <CardTitle>Add Service</CardTitle>
-          <span className="text-red-500  text-sm">
-            All Fields Are Required *
-          </span>
+          <CardTitle>Edit Service</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -112,7 +136,6 @@ const AddServicePageInSuperAdmin = () => {
                   className="block text-sm font-medium text-gray-700"
                 >
                   Service Name
-                  <span className="text-red-500">*</span>
                 </label>
                 <Controller
                   name="serviceName"
@@ -126,11 +149,6 @@ const AddServicePageInSuperAdmin = () => {
                         placeholder="Enter Service name"
                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
                       />
-                      {errors.serviceName && (
-                        <p className="mt-1 text-xs text-red-600">
-                          {errors.serviceName.message}
-                        </p>
-                      )}
                     </>
                   )}
                 />
@@ -142,7 +160,6 @@ const AddServicePageInSuperAdmin = () => {
                   className="block text-sm font-medium text-gray-700"
                 >
                   Title
-                  <span className="text-red-500">*</span>
                 </label>
                 <Controller
                   name="title"
@@ -156,11 +173,6 @@ const AddServicePageInSuperAdmin = () => {
                         placeholder="Enter Service Title"
                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
                       />
-                      {errors.title && (
-                        <p className="mt-1 text-xs text-red-600">
-                          {errors.title.message}
-                        </p>
-                      )}
                     </>
                   )}
                 />
@@ -174,7 +186,6 @@ const AddServicePageInSuperAdmin = () => {
                   className="block text-sm font-medium text-gray-700"
                 >
                   Description
-                  <span className="text-red-500">*</span>
                 </label>
                 <Controller
                   name="description"
@@ -188,11 +199,6 @@ const AddServicePageInSuperAdmin = () => {
                         rows={4}
                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
                       />
-                      {errors.description && (
-                        <p className="mt-1 text-xs text-red-600">
-                          {errors.description.message}
-                        </p>
-                      )}
                     </>
                   )}
                 />
@@ -204,7 +210,6 @@ const AddServicePageInSuperAdmin = () => {
                   className="block text-sm font-medium text-gray-700"
                 >
                   Button Text
-                  <span className="text-red-500">*</span>
                 </label>
                 <Controller
                   name="buttonText"
@@ -218,11 +223,6 @@ const AddServicePageInSuperAdmin = () => {
                         placeholder="Enter Button Text"
                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
                       />
-                      {errors.buttonText && (
-                        <p className="mt-1 text-xs text-red-600">
-                          {errors.buttonText.message}
-                        </p>
-                      )}
                     </>
                   )}
                 />
@@ -235,27 +235,19 @@ const AddServicePageInSuperAdmin = () => {
                 className="block text-sm font-medium text-gray-700"
               >
                 Image
-                <span className="text-red-500">*</span>
               </label>
               <Controller
                 name="image"
                 className="cursor-pointer"
                 control={control}
                 render={() => (
-                  <>
-                    <Input
-                      type="file"
-                      id="image"
-                      accept="image/*"
-                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md cursor-pointer"
-                      onChange={(e) => handleImageChange(e.target.files[0])}
-                    />
-                    {errors.image && (
-                      <p className="mt-1 text-xs text-red-600">
-                        {errors.image.message}
-                      </p>
-                    )}
-                  </>
+                  <Input
+                    type="file"
+                    id="image"
+                    accept="image/*"
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md cursor-pointer"
+                    onChange={(e) => handleImageChange(e.target.files[0])}
+                  />
                 )}
               />
             </div>
@@ -292,7 +284,7 @@ const AddServicePageInSuperAdmin = () => {
                 style={{ cursor: 'pointer' }}
                 disabled={isSubmitting}
               >
-                {isSubmitting ? <LoaderSpinner /> : <span>Submit</span>}
+                {isSubmitting ? <LoaderSpinner /> : <span>Update</span>}
               </button>
             </div>
           </form>
@@ -302,4 +294,4 @@ const AddServicePageInSuperAdmin = () => {
   );
 };
 
-export default AddServicePageInSuperAdmin;
+export default EditServicePageInSuperAdmin;

@@ -158,9 +158,10 @@ export default function Login() {
                         placeholder="********"
                         onChange={handleChange}
                       />
+
                       <button
                         type="submit"
-                        className="btn-auth-login"
+                        className="btn-auth-login w-full"
                         style={{ cursor: 'pointer' }}
                         disabled={loading || isLoading}
                       >
