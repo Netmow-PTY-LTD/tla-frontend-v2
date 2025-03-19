@@ -38,9 +38,11 @@ const LeadBoardPage = () => {
           </div>
 
           <div>
-            <button className="font-medium text-[#0194EF] flex items-center gap-2">
-              <span>Filter Result</span> <SlidersVertical />
-            </button>
+            <Link href={'/dashboard/lawyer/lead-board/lead-seetings'}>
+              <button className="font-medium text-[#0194EF] flex items-center gap-2">
+                <span>Filter Result</span> <SlidersVertical />
+              </button>
+            </Link>
           </div>
         </div>
 
