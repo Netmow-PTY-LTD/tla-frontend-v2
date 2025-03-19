@@ -21,7 +21,13 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-export function ReusableTable({ data, columns, pageSize, filterPlaceholder }) {
+export function ReusableTable({
+  data,
+  columns,
+  pageSize,
+  filterPlaceholder,
+  filteredColumn,
+}) {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
@@ -64,12 +70,13 @@ export function ReusableTable({ data, columns, pageSize, filterPlaceholder }) {
         <Input
           placeholder={filterPlaceholder || 'Search...'}
           value={
-            columnFilters.find((filter) => filter.id === 'title')?.value || ''
+            columnFilters.find((filter) => filter.id === filteredColumn)
+              ?.value || ''
           }
           onChange={(event) =>
             setColumnFilters((prev) => [
-              ...prev.filter((filter) => filter.id !== 'title'),
-              { id: 'title', value: event.target.value },
+              ...prev.filter((filter) => filter.id !== filteredColumn),
+              { id: filteredColumn, value: event.target.value },
             ])
           }
           className="max-w-sm"

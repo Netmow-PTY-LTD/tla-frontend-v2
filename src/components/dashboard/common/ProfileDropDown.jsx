@@ -14,20 +14,20 @@ import {
 import Cookies from 'js-cookie';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
+import { userDummyImage } from '@/data/data';
 
 const appEnvironment = process.env.NEXT_PUBLIC_APP_ENVIRONMENT;
 
 export default function ProfileDropDown() {
   const userRoleFromCookies = Cookies.get('role')?.split('_').join('-');
-  //   console.log(userRoleFromCookies);
   return (
     <div className="flex items-center">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div className="flex items-center group gap-2">
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage src={userDummyImage} alt="user" />
+              <AvatarFallback>USER</AvatarFallback>
             </Avatar>
             <span className="ml-2 font-medium">User Name</span>
             <ChevronDown className="ml-auto" />

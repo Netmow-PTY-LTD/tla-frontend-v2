@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --font-inter: "Inter", sans-serif;
+  --font-inter: 'Inter', sans-serif;
   --primary-color: #00c3c0;
   --secondary-color: #ff8602;
   --color-black: #0b1c2d;
@@ -262,7 +262,7 @@ input:focus {
 }
 
 .btn-auth-login {
-  width: 100%;
+  /* width: 100%; */
   display: flex;
   padding: 20px 40px;
   justify-content: center;
