@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --font-inter: "Inter", sans-serif;
+  --font-inter: 'Inter', sans-serif;
   --primary-color: #00c3c0;
   --secondary-color: #ff8602;
   --color-black: #0b1c2d;
@@ -19,6 +19,11 @@ body {
 
 input:focus {
   outline: none;
+}
+
+.inset-y-0 {
+  top: 74px !important;
+  bottom: 74px !important;
 }
 
 .container {
@@ -257,7 +262,7 @@ input:focus {
 }
 
 .btn-auth-login {
-  width: 100%;
+  /* width: 100%; */
   display: flex;
   padding: 20px 40px;
   justify-content: center;
@@ -409,7 +414,7 @@ input:focus {
 
 .hero-content h3 {
   border-radius: 82px;
-  background: var(--brand-brand-primary-action, #00c3c0);
+  background: var(--secondary-color);
   display: flex;
   padding: 4px 20px;
   justify-content: center;
@@ -446,7 +451,7 @@ input:focus {
 
 .tla-btn-search {
   border-radius: 8px;
-  background: var(--secondary-color);
+  background: var(--primary-color);
   color: var(--color-black);
   display: flex;
   padding: 8px 20px;
@@ -491,7 +496,7 @@ input:focus {
 }
 
 /*===================================
- Home Services 
+ Home Services
  ====================================*/
 
 .home-services {
@@ -692,7 +697,7 @@ Home Testimonials
 }
 
 /* ====================
-      About Page 
+      About Page
 ======================*/
 
 .about-section {
@@ -791,7 +796,7 @@ Home Testimonials
 }
 
 /* ====================
-      Working Steps 
+      Working Steps
 ======================*/
 .working-steps {
   padding: 50px 0 100px;
@@ -851,7 +856,7 @@ Home Testimonials
 }
 
 /* ====================
-      Contact Page 
+      Contact Page
 ======================*/
 
 .contact-section {
@@ -891,7 +896,7 @@ Home Testimonials
 }
 
 /* ===================
-      Footer 
+      Footer
 ======================*/
 
 .main-footer {

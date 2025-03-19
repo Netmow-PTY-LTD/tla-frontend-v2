@@ -1,38 +1,106 @@
-"use client";
-import React from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+'use client';
+import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { Form } from '@/components/ui/form';
+import TextInput from '@/components/form/TextInput';
+import { useAuthLoginMutation } from '@/store/slices/public/authSlice';
+import { LoaderSpinner } from '@/components/common/LoaderSpinner';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import Cookies from 'js-cookie';
+
+const appEnvironment = process.env.NEXT_PUBLIC_APP_ENVIRONMENT;
 
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+  email: z
+    .string()
+    .min(2, {
+      message: 'Email must be at least 2 characters.',
+    })
+    .email({
+      message: 'Please enter a valid email address.',
+    }),
+  password: z.string().min(4, {
+    message: 'Password must be at least 4 characters.',
   }),
 });
 
 export default function Login() {
+  const [authLogin, { isLoading }] = useAuthLoginMutation();
+  const [loading, setLoading] = useState(false);
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      email: '',
+      password: '',
     },
   });
 
-  const onSubmit = (data) => {
-    console.log(data); // Handle form submission
+  useEffect(() => {
+    const token = Cookies.get('token');
+    const role = Cookies.get('role');
+
+    if (!token || !role) {
+      Cookies.remove('token');
+      Cookies.remove('role');
+    } else {
+      const dashboardPath = role === 'super_admin' ? 'super-admin' : role;
+      if (appEnvironment === 'development') {
+        window.location.assign(
+          `${
+            window.location.protocol
+          }//${'localhost:3000'}/dashboard/${dashboardPath}`
+        );
+      } else {
+        window.location.assign(
+          `${window.location.protocol}//${process.env.NEXT_PUBLIC_REDIRECT_URL}/dashboard/${dashboardPath}`
+        );
+      }
+    }
+  }, []);
+
+  const handleChange = (e) => {
+    console.log(`Input changed for ${e.target.name}: ${e.target.value}`);
+  };
+
+  const onSubmit = async (data) => {
+    console.log(data);
+    try {
+      const res = await authLogin(data).unwrap();
+      console.log(res);
+
+      if (res?.success === true) {
+        showSuccessToast(res?.message || 'Login successful');
+        console.log(res?.data?.token);
+        console.log(res?.data?.role);
+
+        if (res?.data?.token && res?.data?.role === 'super_admin') {
+          Cookies.set('token', res?.data?.token, { expires: 7 });
+          Cookies.set('role', res?.data?.role, { expires: 7 });
+
+          if (appEnvironment === 'development') {
+            window.location.assign(
+              `${
+                window.location.protocol
+              }//${'localhost:3000'}/dashboard/super-admin`
+            );
+          } else {
+            window.location.assign(
+              `${window.location.protocol}//${process.env.NEXT_PUBLIC_REDIRECT_URL}/dashboard/super-admin`
+            );
+          }
+        }
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -74,43 +142,34 @@ export default function Login() {
                       onSubmit={form.handleSubmit(onSubmit)}
                       className="space-y-6"
                     >
-                      <FormField
+                      <TextInput
+                        label="Email"
+                        type="email"
                         control={form.control}
                         name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="John@example.com"
-                                {...field}
-                                className="tla-form-control"
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
+                        placeholder="John@example.com"
+                        onChange={handleChange}
                       />
-                      <FormField
+                      <TextInput
+                        label="Password"
+                        type="password"
                         control={form.control}
                         name="password"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Password</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="******"
-                                {...field}
-                                className="tla-form-control"
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
+                        placeholder="********"
+                        onChange={handleChange}
                       />
 
-                      <button type="submit" className="btn-auth-login">
-                        Submit
+                      <button
+                        type="submit"
+                        className="btn-auth-login w-full"
+                        style={{ cursor: 'pointer' }}
+                        disabled={loading || isLoading}
+                      >
+                        {loading || isLoading ? (
+                          <LoaderSpinner />
+                        ) : (
+                          <span>Submit</span>
+                        )}
                       </button>
                     </form>
                   </Form>
