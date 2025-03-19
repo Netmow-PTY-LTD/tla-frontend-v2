@@ -40,9 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+.idea/
+.vscode/
 .prettierrc
-/.vscode/
-.vscode
-.idea
-/.vscode
-/.idea
