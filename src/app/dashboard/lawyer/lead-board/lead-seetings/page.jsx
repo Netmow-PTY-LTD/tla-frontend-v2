@@ -1,16 +1,19 @@
 import TagButton from '@/components/dashboard/lawyer-dashboard/components/TagButton';
 import ToggleButton from '@/components/UIComponents/ToggleButton';
 import { MapPin, MoveLeft, PencilIcon, PlusIcon, XIcon } from 'lucide-react';
+import Link from 'next/link';
 
 export default function LeadSettingsPage() {
   return (
     <div className="mb-10">
       <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg ">
         <div className="flex items-center justify-between">
-          <button className="flex py-2 items-center gap-2">
-            {' '}
-            <MoveLeft /> <span>Back to leads</span>
-          </button>
+          <Link href={'/dashboard/lawyer/lead-board'}>
+            <button className="flex py-2 items-center gap-2">
+              {' '}
+              <MoveLeft /> <span>Back to leads</span>
+            </button>
+          </Link>
         </div>
         <div className="mt-3 max-w-4xl">
           <div>
