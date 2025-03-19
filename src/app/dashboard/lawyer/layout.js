@@ -1,7 +1,7 @@
-import DashboardFooter from '@/components/dashboard/common/DashboardFooter';
-import DashboardHeader from '@/components/dashboard/common/DashboardHeader';
 import React from 'react';
 import '@/styles/dashboard.css';
+import DashboardHeader from '@/components/dashboard/common/DashboardHeader';
+import DashboardFooter from '@/components/dashboard/common/DashboardFooter';
 import {
   Sidebar,
   SidebarContent,
@@ -9,9 +9,9 @@ import {
   SidebarProvider,
   SidebarRail,
 } from '@/components/ui/sidebar';
-import { SideNav } from '@/components/dashboard/lawyer/SideNav';
+import { SideNav } from '@/components/dashboard/common/SideNav';
 
-export default function DashboardLayout({ children }) {
+export default function LawyerDashboardLayout({ children }) {
   return (
     <>
       <DashboardHeader />
@@ -30,7 +30,7 @@ export default function DashboardLayout({ children }) {
           }}
         >
           <div className="flex flex-col p-5 h-full">
-            <div className="flex-1">{children}</div>
+            <div className="flex-1 ">{children}</div>
             <DashboardFooter />
           </div>
         </div>
