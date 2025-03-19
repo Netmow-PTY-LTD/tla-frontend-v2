@@ -13,7 +13,7 @@
   "editor.smoothScrolling": true,
   "git.autorefresh": true,
   "git.enableSmartCommit": true,
-  "workbench.colorTheme": "Learn with Sumit - Peace of the eye - Dracula version",
+  "workbench.colorTheme": "Default Material Dark Theme",
   "workbench.iconTheme": "vs-seti",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "javascript.suggest.autoImports": true,
