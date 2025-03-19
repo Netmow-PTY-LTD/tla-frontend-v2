@@ -1,7 +1,5 @@
 'use client';
-
 import { ChevronRight } from 'lucide-react';
-
 import {
   Collapsible,
   CollapsibleContent,
@@ -17,15 +15,16 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
-import { data } from './SidebarItems';
-import Link from 'next/link';
 
-export function SideNav() {
+import Link from 'next/link';
+import { LawyerSidebarItem } from './LawyerSidebarItem';
+
+export function LawyerSideNav() {
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Main</SidebarGroupLabel>
       <SidebarMenu>
-        {data?.navMain?.map((item) =>
+        {LawyerSidebarItem?.navMain?.map((item) =>
           item?.items ? (
             <Collapsible
               key={item.title}

@@ -9,7 +9,7 @@ import {
   SidebarProvider,
   SidebarRail,
 } from '@/components/ui/sidebar';
-import { SideNav } from '@/components/dashboard/common/SideNav';
+import { LawyerSideNav } from '@/components/dashboard/lawyer-dashboard/layout/LawyerSideNav';
 
 export default function LawyerDashboardLayout({ children }) {
   return (
@@ -19,7 +19,7 @@ export default function LawyerDashboardLayout({ children }) {
         <Sidebar collapsible="icon" className="w-64">
           <SidebarHeader />
           <SidebarContent>
-            <SideNav />
+            <LawyerSideNav />
           </SidebarContent>
           <SidebarRail />
         </Sidebar>
