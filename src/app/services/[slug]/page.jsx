@@ -1,15 +1,36 @@
-import FamilyLawCard from "@/components/main/common/card/FamilyLawCard";
-import ServiceDetailsCard from "@/components/main/common/card/ServiceDetailsCard";
-import MainLayout from "@/components/main/common/layout";
-import SectionHeading from "@/components/main/home/SectionHeading";
-import WorkingSteps from "@/components/main/WorkingSteps";
+import FamilyLawCard from '@/components/main/common/card/FamilyLawCard';
+import ServiceDetailsCard from '@/components/main/common/card/ServiceDetailsCard';
+import MainLayout from '@/components/main/common/layout';
+import SectionHeading from '@/components/main/home/SectionHeading';
+import WorkingSteps from '@/components/main/WorkingSteps';
+import { useGetServiceBySlugQuery } from '@/store/slices/public/publicServicesSlice';
 
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
 
 const SingleServiceDetailsPage = async ({ params }) => {
-  const { id } = await params;
+  const { slug } = await params;
+  console.log(slug);
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL_PROD}/${process.env.NEXT_PUBLIC_API_VERSION_PROD}/public/services/${slug}`,
+      {
+        method: 'GET',
+      }
+    );
+    const singleService = await res.json();
+    console.log('single services', singleService);
+  } catch (error) {
+    console.log('eroror return==>', error);
+  }
+  // Check if the service exists
+  // if (!res.ok) {
+  //   throw new Error('Service not found');
+  // }
+
+  // Parse the response
 
   return (
     <MainLayout>
@@ -19,17 +40,6 @@ const SingleServiceDetailsPage = async ({ params }) => {
         </div>
 
         <div className="mt-[132px] ">
-          {/* <div className="text-center">
-            <h1 className="font-bold  text-2xl lg:text-4xl mt-5">
-              Common Family Law Issues & Solutions
-            </h1>
-            <p className="text-[#34495E] mb-10">
-              Finding legal help has never been simpler. Whether you're looking
-              for a lawyer or offering legal services, The Law App streamlines
-              the process in just three steps:
-            </p>
-          </div> */}
-
           <SectionHeading
             title="Common Family Law Issues & Solutions"
             paragraph="Finding legal help has never been simpler. Whether you're looking
