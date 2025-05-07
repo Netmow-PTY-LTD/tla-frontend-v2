@@ -6,23 +6,23 @@ import React from 'react';
 
 const LeadBoardPage = () => {
   return (
-    <div>
-      <section className="px-4">
-        <h1 className="font-bold text-lg md:text-2xl text-[#0B1C2D] text-center md:text-left">
+    <div className="continer">
+      <section className="lg:px-4">
+        <h1 className="font-bold text-lg md:text-2xl text-[#0B1C2D] text-center lg:text-left">
           Founded 40 Matching Leads
         </h1>
 
-        <div className="flex flex-wrap md:flex-nowrap justify-center md:justify-between items-center my-3 gap-4">
+        <div className="flex flex-wrap lg:flex-nowrap justify-center lg:justify-between items-center my-3 gap-4">
           <div className="flex flex-wrap items-center gap-2 text-[#34495E] justify-center">
             <Link href="#" className="flex items-center gap-2">
               <Database className="w-5 h-5" />
               <span>Showing all 40 leads -</span>
             </Link>
 
-            <span className="hidden md:inline">|</span>
+            <span className="hidden lg:inline">|</span>
 
-            <div className="flex items-center gap-2">
-              <h2>Services:</h2>
+            <div className="lg:flex items-center gap-2">
+              <h2 className="text-center lg:text-balance">Services:</h2>
               <div className="inline-flex flex-wrap gap-2">
                 <TagButton text="Family Law" bgColor="#FF86021A" />
                 <TagButton text="Divorce Law" bgColor="#004DA61A" />
@@ -30,7 +30,7 @@ const LeadBoardPage = () => {
               </div>
             </div>
 
-            <span className="hidden md:inline">|</span>
+            <span className="hidden lg:inline">|</span>
 
             <h2 className="text-center md:text-left">
               <span>Location:</span> Elgin St. Celina, Delaware...
@@ -38,9 +38,11 @@ const LeadBoardPage = () => {
           </div>
 
           <div>
-            <button className="font-medium text-[#0194EF] flex items-center gap-2">
-              <span>Filter Result</span> <SlidersVertical />
-            </button>
+            <Link href={'/dashboard/lawyer/lead-board/lead-seetings'}>
+              <button className="font-medium text-[#0194EF] flex items-center gap-2">
+                <span>Filter Result</span> <SlidersVertical />
+              </button>
+            </Link>
           </div>
         </div>
 
@@ -48,7 +50,7 @@ const LeadBoardPage = () => {
       </section>
 
       {/* lead card section */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-5 px-4 mt-4 mb-10">
+      <section className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5  5xl:grid-cols-6 6xl:grid-cols-8 gap-5 lg:px-4 mt-4 mb-10">
         <LeadCard />
         <LeadCard />
         <LeadCard />

@@ -7,7 +7,7 @@ import {
   BookText,
 } from 'lucide-react';
 
-export const lawyerDashboardSidebar = {
+export const LawyerSidebarItem = {
   navMain: [
     // {
     //   title: 'Dashboard',

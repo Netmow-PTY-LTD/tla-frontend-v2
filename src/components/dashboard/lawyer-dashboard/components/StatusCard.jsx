@@ -11,7 +11,7 @@ const statusColors = {
 
 const StatusCard = ({ status = 'pending', count, menuItems }) => {
   return (
-    <Card className="w-full max-w-md md:max-w-lg lg:max-w-xl mx-auto bg-white shadow-md rounded-lg">
+    <Card className="w-full max-w-md md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto bg-white shadow-md rounded-lg">
       {/* Card Header */}
       <div className="flex items-center justify-between p-4">
         <h2 className="flex items-center text-lg font-medium">
