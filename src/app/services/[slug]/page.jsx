@@ -10,8 +10,30 @@ import Link from 'next/link';
 import React from 'react';
 
 const SingleServiceDetailsPage = async ({ params }) => {
+  const { slug } = await params;
+  console.log(slug);
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL_PROD}/${process.env.NEXT_PUBLIC_API_VERSION_PROD}/public/services/${slug}`,
+      {
+        method: 'GET',
+      }
+    );
+    const singleService = await res.json();
+    console.log('single services', singleService);
+  } catch (error) {
+    console.log('eroror return==>', error);
+  }
+  // Check if the service exists
+  // if (!res.ok) {
+  //   throw new Error('Service not found');
+  // }
+
+  // Parse the response
+
   return (
-    <>
+    <MainLayout>
       <section className="mx-4 lg:mx-[212px] my-[58px]">
         <div>
           <ServiceDetailsCard />
@@ -77,7 +99,7 @@ const SingleServiceDetailsPage = async ({ params }) => {
           </div>
         </div>
       </section>
-    </>
+    </MainLayout>
   );
 };
 
