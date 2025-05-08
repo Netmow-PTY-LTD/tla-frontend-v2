@@ -10,7 +10,8 @@ import { verifyToken } from '@/utils/verifyToken';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 
@@ -19,6 +20,7 @@ const appEnvironment = process.env.NEXT_PUBLIC_APP_ENVIRONMENT;
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const [authLogin, { isLoading }] = useAuthLoginMutation();
+  const router = useRouter();
   const dispatch = useDispatch();
 
   const form = useForm({
@@ -29,29 +31,6 @@ const LoginForm = () => {
     },
   });
 
-  useEffect(() => {
-    const token = Cookies.get('token');
-    const role = Cookies.get('role');
-
-    if (!token || !role) {
-      Cookies.remove('token');
-      Cookies.remove('role');
-    } else {
-      const dashboardPath = role === 'super_admin' ? 'super-admin' : role;
-      if (appEnvironment === 'development') {
-        window.location.assign(
-          `${
-            window.location.protocol
-          }//${'localhost:3000'}/dashboard/${dashboardPath}`
-        );
-      } else {
-        window.location.assign(
-          `${window.location.protocol}//${process.env.NEXT_PUBLIC_REDIRECT_URL}/dashboard/${dashboardPath}`
-        );
-      }
-    }
-  }, []);
-
   const handleChange = (e) => {
     console.log(`Input changed for ${e.target.name}: ${e.target.value}`);
   };
@@ -61,26 +40,19 @@ const LoginForm = () => {
       const res = await authLogin(data).unwrap();
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Login successful');
-        if (res?.data?.accessToken && res?.data?.refreshToken) {
-          Cookies.set('accessToken', res?.data?.accessToken);
-          Cookies.set('refreshToken', res?.data?.refreshToken);
-          const user = verifyToken(res?.data?.accessToken);
-          dispatch(
-            setUser({
-              user: user,
-              token: res?.data?.accessToken,
-            })
-          );
-          console.log('user', user.role);
-          if (appEnvironment === 'development') {
-            window.location.assign(
-              `${window.location.protocol}//${'localhost:3000'}/admin`
-            );
-          } else {
-            window.location.assign(
-              `${window.location.protocol}//${process.env.NEXT_PUBLIC_REDIRECT_URL}/admin`
-            );
-          }
+        Cookies.set('accessToken', res?.token);
+        const user = verifyToken(res?.token);
+        dispatch(
+          setUser({
+            user: res?.data,
+            token: user?.token,
+          })
+        );
+
+        if (appEnvironment === 'development') {
+          router.push(`/admin`);
+        } else {
+          router.push(`https://${process.env.NEXT_PUBLIC_REDIRECT_URL}/admin`);
         }
       }
     } catch (error) {
