@@ -3,36 +3,23 @@ import { LoaderSpinner } from '@/components/common/LoaderSpinner';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import TextInput from '@/components/form/TextInput';
 import { Form } from '@/components/ui/form';
+import { loginValidationSchema } from '@/schema/auth/authValidation.schema';
 import { useAuthLoginMutation } from '@/store/api/public/authApiService';
+import { verifyToken } from '@/utils/verifyToken';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 
 const appEnvironment = process.env.NEXT_PUBLIC_APP_ENVIRONMENT;
-
-const formSchema = z.object({
-  email: z
-    .string()
-    .min(2, {
-      message: 'Email must be at least 2 characters.',
-    })
-    .email({
-      message: 'Please enter a valid email address.',
-    }),
-  password: z.string().min(6, {
-    message: 'Password must be at least 6 characters.',
-  }),
-});
 
 const LoginForm = () => {
   const [authLogin, { isLoading }] = useAuthLoginMutation();
   const [loading, setLoading] = useState(false);
 
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(loginValidationSchema),
     defaultValues: {
       email: '',
       password: '',
@@ -67,17 +54,15 @@ const LoginForm = () => {
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
     try {
       const res = await authLogin(data).unwrap();
-      console.log('res===> ', res);
-
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Login successful');
         if (res?.data?.accessToken && res?.data?.refreshToken) {
           Cookies.set('accessToken', res?.data?.accessToken);
           Cookies.set('refreshToken', res?.data?.refreshToken);
-
+          const user = verifyToken(res?.data?.accessToken);
+          console.log('user', user.role);
           if (appEnvironment === 'development') {
             window.location.assign(
               `${
