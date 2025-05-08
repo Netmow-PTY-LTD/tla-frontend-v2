@@ -11,7 +11,7 @@ export const publicApiService = createApi({
     prepareHeaders: (headers) => {
       const token = Cookies.get('token');
       if (token) {
-        headers.set('authorization', `Bearer ${token}`);
+        headers.set('authorization', token);
       }
       return headers;
     },

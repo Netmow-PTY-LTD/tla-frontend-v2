@@ -7,11 +7,11 @@ export const authApiService = createApi({
     baseUrl:
       `${process.env.NEXT_PUBLIC_BASE_URL_PROD}` +
       `${process.env.NEXT_PUBLIC_API_VERSION_PROD}` +
-      '/public',
+      '/auth',
     prepareHeaders: (headers) => {
       const token = Cookies.get('token');
       if (token) {
-        headers.set('authorization', `Bearer ${token}`);
+        headers.set('authorization', token);
       }
       return headers;
     },
@@ -24,7 +24,14 @@ export const authApiService = createApi({
         body,
       }),
     }),
+    authRegister: builder.mutation({
+      query: (body) => ({
+        url: '/register',
+        method: 'POST',
+        body,
+      }),
+    }),
   }),
 });
 
-export const { useAuthLoginMutation } = authApiService;
+export const { useAuthLoginMutation, useAuthRegisterMutation } = authApiService;
