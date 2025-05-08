@@ -9,7 +9,7 @@ import {
   useAllServicesQuery,
   useEditServicesMutation,
   useSingleServicesQuery,
-} from '@/store/API/super-admin/servicesApiService';
+} from '@/store/api/super-admin/servicesApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { convertImageUrlToFile } from '@/lib/helperFunctions/page';

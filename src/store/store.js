@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { servicesApiService } from './API/super-admin/servicesApiService';
-import { publicApiService } from '@/store/API/public/publicApiService';
-import { authApiService } from './API/public/authApiService';
+import { servicesApiService } from './api/super-admin/servicesApiService';
+import { publicApiService } from '@/store/api/public/publicApiService';
+import { authApiService } from './api/public/authApiService';
 
 export const store = configureStore({
   reducer: {
