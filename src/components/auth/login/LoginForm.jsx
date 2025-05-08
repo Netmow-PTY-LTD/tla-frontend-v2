@@ -74,13 +74,11 @@ const LoginForm = () => {
           console.log('user', user.role);
           if (appEnvironment === 'development') {
             window.location.assign(
-              `${
-                window.location.protocol
-              }//${'localhost:3000'}/dashboard/super-admin`
+              `${window.location.protocol}//${'localhost:3000'}/admin`
             );
           } else {
             window.location.assign(
-              `${window.location.protocol}//${process.env.NEXT_PUBLIC_REDIRECT_URL}/dashboard/super-admin`
+              `${window.location.protocol}//${process.env.NEXT_PUBLIC_REDIRECT_URL}/admin`
             );
           }
         }

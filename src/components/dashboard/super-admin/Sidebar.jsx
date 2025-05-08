@@ -11,8 +11,8 @@ import {
 export const data = {
   navMain: [
     {
-      title: 'Dashboard',
-      url: '/dashboard/super-admin',
+      title: 'Admin',
+      url: '/admin',
       icon: LayoutDashboard,
       isActive: true,
     },
@@ -24,12 +24,12 @@ export const data = {
       items: [
         {
           title: 'Add Service',
-          url: '/dashboard/super-admin/services/add-service',
+          url: '/admin/services/add-service',
           icon: Plus,
         },
         {
           title: 'List Of Services',
-          url: '/dashboard/super-admin/services/list-of-services',
+          url: '/admin/services/list-of-services',
           icon: List,
         },
       ],
