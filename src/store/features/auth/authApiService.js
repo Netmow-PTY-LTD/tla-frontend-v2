@@ -42,14 +42,11 @@ import { baseApi } from '@/store/baseApi/baseApi';
 const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     authLogin: builder.mutation({
-      query: (data) => {
-        console.log('dataservice', data);
-        return {
-          url: '/auth/login',
-          method: 'POST',
-          body: data,
-        };
-      },
+      query: (data) => ({
+        url: '/auth/login',
+        method: 'POST',
+        body: data,
+      }),
     }),
 
     authRegister: builder.mutation({
