@@ -3,7 +3,7 @@ import LawCard from '@/components/main/common/card/LawCard';
 import MainLayout from '@/components/main/common/layout';
 import SectionHeading from '@/components/main/home/SectionHeading';
 import WorkingSteps from '@/components/main/WorkingSteps';
-import { useGetAllServicesQuery } from '@/store/api/public/publicApiService';
+import { useGetAllServicesQuery } from '@/store/baseApi/public/publicApiService';
 
 const ServicesPage = () => {
   const { data: allServices } = useGetAllServicesQuery();

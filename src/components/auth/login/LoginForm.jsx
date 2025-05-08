@@ -4,8 +4,10 @@ import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import TextInput from '@/components/form/TextInput';
 import { Form } from '@/components/ui/form';
 import { loginValidationSchema } from '@/schema/auth/authValidation.schema';
-import { useAuthLoginMutation } from '@/store/api/public/authApiService';
-import { setUser } from '@/store/StateSlice/auth/authSlice';
+import { useAuthLoginMutation } from '@/store/features/auth/authApiService';
+import { setUser } from '@/store/features/auth/authSlice';
+// import { useAuthLoginMutation } from '@/store/features/auth/authApiService';
+// import { setUser } from '@/store/features/auth/authSlice';
 import { verifyToken } from '@/utils/verifyToken';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Cookies from 'js-cookie';
@@ -14,8 +16,6 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-
-const appEnvironment = process.env.NEXT_PUBLIC_APP_ENVIRONMENT;
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
@@ -38,22 +38,18 @@ const LoginForm = () => {
   const onSubmit = async (data) => {
     try {
       const res = await authLogin(data).unwrap();
+
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Login successful');
-        Cookies.set('accessToken', res?.token);
         const user = verifyToken(res?.token);
+
         dispatch(
           setUser({
             user: res?.data,
-            token: user?.token,
+            token: res?.token,
           })
         );
-
-        if (appEnvironment === 'development') {
-          router.push(`/admin`);
-        } else {
-          router.push(`https://${process.env.NEXT_PUBLIC_REDIRECT_URL}/admin`);
-        }
+        router.push(`/admin`);
       }
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';

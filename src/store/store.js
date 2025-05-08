@@ -1,19 +1,22 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { servicesApiService } from './api/super-admin/servicesApiService';
-import { publicApiService } from '@/store/api/public/publicApiService';
-import { authApiService } from './api/public/authApiService';
-import authSlice from './StateSlice/auth/authSlice';
+import { servicesApiService } from './baseApi/super-admin/servicesApiService';
+import { publicApiService } from '@/store/baseApi/public/publicApiService';
+// import { authApiService } from './features/auth/authApiService';
+import authSlice from './features/auth/authSlice';
+import { baseApi } from './baseApi/baseApi';
 
 export const store = configureStore({
   reducer: {
-    authReducer: authSlice,
+    [baseApi.reducerPath]: baseApi.reducer,
+    auth: authSlice,
     [servicesApiService.reducerPath]: servicesApiService.reducer,
-    [authApiService.reducerPath]: authApiService.reducer,
+    // [authApiService.reducerPath]: authApiService.reducer,
     [publicApiService.reducerPath]: publicApiService.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
-      .concat(authApiService.middleware)
+      // .concat(authApiService.middleware)
       .concat(servicesApiService.middleware)
-      .concat(publicApiService.middleware),
+      .concat(publicApiService.middleware)
+      .concat(baseApi.middleware),
 });
