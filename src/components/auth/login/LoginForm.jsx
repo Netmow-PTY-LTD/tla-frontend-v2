@@ -71,14 +71,14 @@ const LoginForm = () => {
               token: res?.data?.accessToken,
             })
           );
-          console.log('user', user.role);
+          console.log('user', user.role === 'admin');
           if (appEnvironment === 'development') {
             window.location.assign(
-              `${window.location.protocol}//${'localhost:3000'}/admin`
+              `${window.location.protocol}//${'localhost:3000'}/${user?.role}`
             );
           } else {
             window.location.assign(
-              `${window.location.protocol}//${process.env.NEXT_PUBLIC_REDIRECT_URL}/admin`
+              `${window.location.protocol}//${process.env.NEXT_PUBLIC_REDIRECT_URL}/${user?.role}`
             );
           }
         }
