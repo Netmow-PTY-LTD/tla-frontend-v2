@@ -5,18 +5,21 @@ import TextInput from '@/components/form/TextInput';
 import { Form } from '@/components/ui/form';
 import { loginValidationSchema } from '@/schema/auth/authValidation.schema';
 import { useAuthLoginMutation } from '@/store/api/public/authApiService';
+import { setUser } from '@/store/StateSlice/auth/authSlice';
 import { verifyToken } from '@/utils/verifyToken';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 
 const appEnvironment = process.env.NEXT_PUBLIC_APP_ENVIRONMENT;
 
 const LoginForm = () => {
-  const [authLogin, { isLoading }] = useAuthLoginMutation();
   const [loading, setLoading] = useState(false);
+  const [authLogin, { isLoading }] = useAuthLoginMutation();
+  const dispatch = useDispatch();
 
   const form = useForm({
     resolver: zodResolver(loginValidationSchema),
@@ -62,6 +65,12 @@ const LoginForm = () => {
           Cookies.set('accessToken', res?.data?.accessToken);
           Cookies.set('refreshToken', res?.data?.refreshToken);
           const user = verifyToken(res?.data?.accessToken);
+          dispatch(
+            setUser({
+              user: user,
+              token: res?.data?.accessToken,
+            })
+          );
           console.log('user', user.role);
           if (appEnvironment === 'development') {
             window.location.assign(
