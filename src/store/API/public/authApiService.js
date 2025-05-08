@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import Cookies from 'js-cookie';
 
-export const authSlice = createApi({
-  reducerPath: 'authSlice',
+export const authApiService = createApi({
+  reducerPath: 'authApiService',
   baseQuery: fetchBaseQuery({
     baseUrl:
       `${process.env.NEXT_PUBLIC_BASE_URL_PROD}` +
@@ -27,4 +27,4 @@ export const authSlice = createApi({
   }),
 });
 
-export const { useAuthLoginMutation } = authSlice;
+export const { useAuthLoginMutation } = authApiService;

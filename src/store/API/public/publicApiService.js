@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import Cookies from 'js-cookie';
 
-export const publicServicesSlice = createApi({
-  reducerPath: 'publicServicesSlice',
+export const publicApiService = createApi({
+  reducerPath: 'publicApiService',
   baseQuery: fetchBaseQuery({
     baseUrl:
       `${process.env.NEXT_PUBLIC_BASE_URL_PROD}` +
@@ -33,4 +33,4 @@ export const publicServicesSlice = createApi({
 });
 
 export const { useGetAllServicesQuery, useGetServiceBySlugQuery } =
-  publicServicesSlice;
+  publicApiService;

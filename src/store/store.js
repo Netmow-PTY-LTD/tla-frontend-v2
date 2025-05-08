@@ -1,17 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { servicesSlice } from './slices/super-admin/servicesSlice';
-import { publicServicesSlice } from '@/store/slices/public/publicServicesSlice';
-import { authSlice } from './slices/public/authSlice';
+import { servicesApiService } from './API/super-admin/servicesApiService';
+import { publicApiService } from '@/store/API/public/publicApiService';
+import { authApiService } from './API/public/authApiService';
 
 export const store = configureStore({
   reducer: {
-    [servicesSlice.reducerPath]: servicesSlice.reducer,
-    [authSlice.reducerPath]: authSlice.reducer,
-    [publicServicesSlice.reducerPath]: publicServicesSlice.reducer,
+    [servicesApiService.reducerPath]: servicesApiService.reducer,
+    [authApiService.reducerPath]: authApiService.reducer,
+    [publicApiService.reducerPath]: publicApiService.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
-      .concat(authSlice.middleware)
-      .concat(servicesSlice.middleware)
-      .concat(publicServicesSlice.middleware),
+      .concat(authApiService.middleware)
+      .concat(servicesApiService.middleware)
+      .concat(publicApiService.middleware),
 });

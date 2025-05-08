@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import Cookies from 'js-cookie';
 
-export const servicesSlice = createApi({
-  reducerPath: 'servicesSlice',
+export const servicesApiService = createApi({
+  reducerPath: 'servicesApiService',
   baseQuery: fetchBaseQuery({
     baseUrl:
       `${process.env.NEXT_PUBLIC_BASE_URL_PROD}` +
@@ -27,7 +27,7 @@ export const servicesSlice = createApi({
       //   try {
       //     await queryFulfilled;
 
-      //     dispatch(servicesSlice.endpoints.allServices.initiate());
+      //     dispatch(servicesApiService.endpoints.allServices.initiate());
       //   } catch (error) {
       //     console.error('Failed to add service:', error);
       //   }
@@ -68,4 +68,4 @@ export const {
   useSingleServicesQuery,
   useEditServicesMutation,
   useChangeServicesStatusMutation,
-} = servicesSlice;
+} = servicesApiService;

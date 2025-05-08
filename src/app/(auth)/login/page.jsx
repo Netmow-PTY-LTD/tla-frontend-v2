@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Form } from '@/components/ui/form';
 import TextInput from '@/components/form/TextInput';
-import { useAuthLoginMutation } from '@/store/slices/public/authSlice';
+import { useAuthLoginMutation } from '@/store/API/public/authApiService';
 import { LoaderSpinner } from '@/components/common/LoaderSpinner';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import Cookies from 'js-cookie';
