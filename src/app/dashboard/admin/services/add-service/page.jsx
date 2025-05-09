@@ -9,7 +9,7 @@ import { LoaderSpinner } from '@/components/common/LoaderSpinner';
 import {
   useAddServiceMutation,
   useAllServicesQuery,
-} from '@/store/api/super-admin/servicesApiService';
+} from '@/store/baseApi/super-admin/servicesApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';

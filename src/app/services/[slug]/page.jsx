@@ -3,7 +3,7 @@ import ServiceDetailsCard from '@/components/main/common/card/ServiceDetailsCard
 import MainLayout from '@/components/main/common/layout';
 import SectionHeading from '@/components/main/home/SectionHeading';
 import WorkingSteps from '@/components/main/WorkingSteps';
-import { useGetServiceBySlugQuery } from '@/store/api/public/publicApiService';
+import { useGetServiceBySlugQuery } from '@/store/baseApi/public/publicApiService';
 
 import Image from 'next/image';
 import Link from 'next/link';

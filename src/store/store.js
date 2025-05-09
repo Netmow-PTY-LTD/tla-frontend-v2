@@ -1,19 +1,47 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { servicesApiService } from './api/super-admin/servicesApiService';
-import { publicApiService } from '@/store/api/public/publicApiService';
-import { authApiService } from './api/public/authApiService';
-import authSlice from './StateSlice/auth/authSlice';
+import { servicesApiService } from './baseApi/super-admin/servicesApiService';
+import { publicApiService } from '@/store/baseApi/public/publicApiService';
+
+import authSlice from './features/auth/authSlice';
+import { baseApi } from './baseApi/baseApi';
+
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  persistReducer,
+  persistStore,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+
+const persistConfig = {
+  key: 'root',
+  storage,
+};
+
+const persistedAuthReducer = persistReducer(persistConfig, authSlice);
 
 export const store = configureStore({
   reducer: {
-    authReducer: authSlice,
+    [baseApi.reducerPath]: baseApi.reducer,
+    auth: persistedAuthReducer,
     [servicesApiService.reducerPath]: servicesApiService.reducer,
-    [authApiService.reducerPath]: authApiService.reducer,
     [publicApiService.reducerPath]: publicApiService.reducer,
   },
+  // middleware: (getDefaultMiddleware) =>
+  //   getDefaultMiddleware()
+  //     .concat(baseApi.middleware)
+  //     .concat(servicesApiService.middleware)
+  //     .concat(publicApiService.middleware),
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware()
-      .concat(authApiService.middleware)
-      .concat(servicesApiService.middleware)
-      .concat(publicApiService.middleware),
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }).concat(baseApi.middleware),
 });
+
+export const persistor = persistStore(store);
