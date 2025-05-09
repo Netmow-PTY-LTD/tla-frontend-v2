@@ -1,13 +1,24 @@
 import React from 'react';
-import DashboardLayout from '../client/layout';
+import WelcomeCard from './_component/home/WelcomeCard';
+import ProfileCard from './_component/home/ProfileCard';
+import LeadSettingsCard from './_component/home/LeadSettingsCard';
+import LeadsCountCard from './_component/home/LeadsCountCard';
+import GetStartedCard from './_component/home/GetStartedCard';
+import ResponsesCard from './_component/home/ResponsesCard';
+import HelpCard from './_component/home/HelpCard';
 
-export default function page() {
+export default function SellerDashboard() {
   return (
-    <div>
-      <h1>Lawyer Dashboard</h1>
-      <p>Welcome to Lawyer Dashboard</p>
-      <p>This is a placeholder for your content.</p>
-      <p>Feel free to replace this with your own content.</p>
-    </div>
+    <>
+      <WelcomeCard />
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+        <ProfileCard />
+        <LeadSettingsCard />
+        <LeadsCountCard />
+        <GetStartedCard />
+        <ResponsesCard />
+        <HelpCard />
+      </div>
+    </>
   );
 }

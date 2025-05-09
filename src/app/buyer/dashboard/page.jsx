@@ -1,15 +1,11 @@
-import React from "react";
-import DashboardLayout from "./layout";
+import React from 'react';
+import DashboardLayout from './layout';
 
-export default function ClientDashboard() {
+export default function BuyerDashboard() {
   return (
     <div>
-      <h1>Client Dashboard</h1>
-      <p>Welcome to your client dashboard.</p>
-      <p>
-        You can access your client's data, manage their appointments, and track
-        their progress.
-      </p>
+      <h1>Buyer Dashboard</h1>
+      <p>Welcome to your Buyer dashboard.</p>
     </div>
   );
 }

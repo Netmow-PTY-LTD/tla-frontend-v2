@@ -17,14 +17,14 @@ import {
 } from '@/components/ui/sidebar';
 
 import Link from 'next/link';
-import { LawyerSidebarItem } from './LawyerSidebarItem';
+import { SellerSidebarItems } from './SellerSidebarItems';
 
 export function LawyerSideNav() {
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Main</SidebarGroupLabel>
       <SidebarMenu>
-        {LawyerSidebarItem?.navMain?.map((item) =>
+        {SellerSidebarItems?.navMain?.map((item) =>
           item?.items ? (
             <Collapsible
               key={item.title}
@@ -72,6 +72,7 @@ export function LawyerSideNav() {
             </SidebarMenuSubItem>
           )
         )}
+        <Link href={'/'}>Messages</Link>
       </SidebarMenu>
     </SidebarGroup>
   );
