@@ -1,6 +1,4 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { servicesApiService } from './features/super-admin/servicesApiService';
-import { publicApiService } from '@/store/features/public/publicApiService';
 
 import authSlice from './features/auth/authSlice';
 import { baseApi } from './baseApi/baseApi';
@@ -28,14 +26,8 @@ export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
     auth: persistedAuthReducer,
-    [servicesApiService.reducerPath]: servicesApiService.reducer,
-    [publicApiService.reducerPath]: publicApiService.reducer,
   },
-  // middleware: (getDefaultMiddleware) =>
-  //   getDefaultMiddleware()
-  //     .concat(baseApi.middleware)
-  //     .concat(servicesApiService.middleware)
-  //     .concat(publicApiService.middleware),
+
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
