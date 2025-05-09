@@ -1,6 +1,6 @@
-import StatusDropdwon from '@/components/dashboard/lawyer-dashboard/components/StatusDropdwon';
-import TagButton from '@/components/dashboard/lawyer-dashboard/components/TagButton';
-import Chat from '@/components/dashboard/lawyer-dashboard/module/chat/Chat';
+import StatusDropdwon from '@/components/dashboard/seller/components/StatusDropdwon';
+import TagButton from '@/components/dashboard/seller/components/TagButton';
+import Chat from '@/components/dashboard/seller/module/chat/Chat';
 import {
   ArrowDownToLine,
   AtSign,
