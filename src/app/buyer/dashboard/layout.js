@@ -4,7 +4,7 @@ import React from 'react';
 import '@/styles/dashboard.css';
 import { SideNav } from '@/components/dashboard/common/SideNav';
 
-export default function DashboardLayout({ children }) {
+export default function BuyerDashboardLayout({ children }) {
   return (
     <>
       <DashboardHeader />

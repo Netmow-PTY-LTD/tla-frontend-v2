@@ -9,7 +9,7 @@ import {
   SidebarProvider,
   SidebarRail,
 } from '@/components/ui/sidebar';
-import { LawyerSideNav } from '@/components/dashboard/lawyer-dashboard/layout/LawyerSideNav';
+import { LawyerSideNav } from '@/components/dashboard/seller/layout/SellerSideNav';
 
 export default function SellerDashboardLayout({ children }) {
   return (

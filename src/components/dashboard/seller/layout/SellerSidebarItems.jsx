@@ -7,30 +7,24 @@ import {
   BookText,
 } from 'lucide-react';
 
-export const LawyerSidebarItem = {
+export const SellerSidebarItems = {
   navMain: [
-    // {
-    //   title: 'Dashboard',
-    //   url: '/dashboard/lawyer',
-    //   icon: LayoutDashboard,
-    //   isActive: true,
-    // },
+    {
+      title: 'Dashboard',
+      url: '/seller/dashboard',
+      icon: LayoutDashboard,
+      isActive: true,
+    },
 
     {
-      title: 'Lead Boards',
-      url: '/dashboard/lawyer/lead-board',
+      title: 'Leads',
+      url: '/seller/dashboard/leads-board',
       icon: LayoutDashboard,
       isActive: true,
     },
     {
-      title: 'My Stats',
-      url: '/dashboard/lawyer/my-stats',
-      icon: SquareKanban,
-      isActive: true,
-    },
-    {
-      title: 'Response',
-      url: '/dashboard/lawyer/my-response',
+      title: 'My Responses',
+      url: '/seller/responses',
       icon: MessagesSquare,
       isActive: true,
     },
@@ -42,13 +36,13 @@ export const LawyerSidebarItem = {
 
     {
       title: 'General FAQ’s',
-      url: '#',
+      url: '/seller/dashboard/general-faqs',
       icon: CircleHelp,
       // isActive: true,
     },
     {
       title: 'Tutorials',
-      url: '#',
+      url: '/seller/dashboard/tutorials',
       icon: BookText,
       // isActive: true,
     },

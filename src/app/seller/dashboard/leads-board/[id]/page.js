@@ -1,4 +1,4 @@
-import TagButton from '@/components/dashboard/lawyer-dashboard/components/TagButton';
+import TagButton from '@/components/dashboard/seller/components/TagButton';
 import {
   ArrowDownToLine,
   AtSign,
