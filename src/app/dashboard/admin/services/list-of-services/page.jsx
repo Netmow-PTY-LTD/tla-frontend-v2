@@ -25,7 +25,7 @@ import {
   useAllServicesQuery,
   useChangeServicesStatusMutation,
   useSingleServicesQuery,
-} from '@/store/baseApi/super-admin/servicesApiService';
+} from '@/store/features/super-admin/servicesApiService';
 import { CheckCircle, CircleX, MoreHorizontal, Pencil } from 'lucide-react';
 import React, { useState } from 'react';
 import LoaderPage from '@/components/common/LoaderPage';

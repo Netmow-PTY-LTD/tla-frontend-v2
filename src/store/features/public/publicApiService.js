@@ -1,4 +1,4 @@
-import { baseApi } from '../baseApi';
+import { baseApi } from '../../baseApi/baseApi';
 
 const publicApiService = baseApi.injectEndpoints({
   endpoints: (builder) => ({

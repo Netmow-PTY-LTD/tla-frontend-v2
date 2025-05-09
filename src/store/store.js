@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { servicesApiService } from './baseApi/super-admin/servicesApiService';
-import { publicApiService } from '@/store/baseApi/public/publicApiService';
+import { servicesApiService } from './features/super-admin/servicesApiService';
+import { publicApiService } from '@/store/features/public/publicApiService';
 
 import authSlice from './features/auth/authSlice';
 import { baseApi } from './baseApi/baseApi';
