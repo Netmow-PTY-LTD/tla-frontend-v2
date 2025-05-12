@@ -40,13 +40,24 @@ const LoginForm = () => {
         showSuccessToast(res?.message || 'Login successful');
         const user = verifyToken(res?.token);
 
-        dispatch(
-          setUser({
-            user: res?.data,
-            token: res?.token,
-          })
-        );
-        router.push(`/admin`);
+        if (user) {
+          dispatch(
+            setUser({
+              user: res?.data,
+              token: res?.token,
+            })
+          );
+        } else {
+          router.push('/login');
+        }
+
+        if (res?.data?.regUserType === 'seller') {
+          router.push(`/seller/dashboard`);
+        } else if (res?.data?.regUserType === 'buyer') {
+          router.push(`/buyer/dashboard`);
+        } else if (res?.data?.regUserType === 'admin') {
+          router.push(`/admin`);
+        }
       }
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';

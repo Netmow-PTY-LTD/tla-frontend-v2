@@ -5,6 +5,7 @@ import {
   MessagesSquare,
   CircleHelp,
   BookText,
+  Settings,
 } from 'lucide-react';
 
 export const BuyerSidebarItems = {
@@ -23,8 +24,9 @@ export const BuyerSidebarItems = {
       isActive: true,
     },
     {
-      title: 'Helps',
-      url: '#',
+      title: 'Account Settings',
+      url: '/buyer/account-settings',
+      icon: Settings,
       isActive: true,
     },
   ],
