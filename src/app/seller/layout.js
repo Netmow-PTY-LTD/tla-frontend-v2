@@ -24,9 +24,9 @@ export default function SellerDashboardLayout({ children }) {
           <SidebarRail />
         </Sidebar>
         <div
-          className="w-full "
+          className="w-full pb-10"
           style={{
-            minHeight: 'calc(100vh - 74px)',
+            minHeight: 'calc(100vh - 74px - 42px)',
           }}
         >
           <div className="flex flex-col p-5 h-full">

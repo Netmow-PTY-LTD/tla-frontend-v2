@@ -19,7 +19,11 @@ import { userDummyImage } from '@/data/data';
 const appEnvironment = process.env.NEXT_PUBLIC_APP_ENVIRONMENT;
 
 export default function ProfileDropDown() {
-  const userRoleFromCookies = Cookies.get('role')?.split('_').join('-');
+  // const userRoleFromCookies = Cookies.get('role')?.split('_').join('-');
+
+  const userRoleFromCookies = Cookies.get('regUserType');
+
+  const userType = userRoleFromCookies === 'seller' ? 'seller' : 'buyer';
   return (
     <div className="flex items-center">
       <DropdownMenu>
@@ -39,13 +43,20 @@ export default function ProfileDropDown() {
           <DropdownMenuGroup>
             <DropdownMenuItem>
               <Link
-                href={`/dashboard/${
-                  // userInfoData?.data?.role.split('_').join('-') ||
-                  userRoleFromCookies
+                href={`${
+                  userType === 'seller'
+                    ? '/seller/dashboard'
+                    : '/buyer/dashboard'
                 }`}
-              >
-                Settings
-              </Link>
+              >{`${
+                userType === 'seller' ? 'Switch to Buyer' : 'Switch to Seller'
+              }`}</Link>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem>
+              <Link href="/seller/settings">Settings</Link>
               <DropdownMenuShortcut>
                 <Settings />
               </DropdownMenuShortcut>
