@@ -5,6 +5,7 @@ import {
   MessagesSquare,
   CircleHelp,
   BookText,
+  Settings,
 } from 'lucide-react';
 
 export const SellerSidebarItems = {
@@ -26,6 +27,12 @@ export const SellerSidebarItems = {
       title: 'My Responses',
       url: '/seller/responses',
       icon: MessagesSquare,
+      isActive: true,
+    },
+    {
+      title: 'Settings',
+      url: '/seller/settings',
+      icon: Settings,
       isActive: true,
     },
     {
