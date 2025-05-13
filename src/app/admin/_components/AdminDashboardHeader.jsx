@@ -1,16 +1,13 @@
-'use client';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import ProfileDropDown from './ProfileDropDown';
-import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import AdminProfileDropDown from './AdminProfileDropDown';
 
-export default function DashboardHeader() {
-  const { data: userInfo, isLoading } = useAuthUserInfoQuery();
+export default function AdminDashboardHeader() {
   return (
     <header className="db-header">
       <div className="db-header-container">
-        <Link href="/seller/dashboard">
+        <Link href="/admin">
           <Image
             src={'/assets/img/logo.png'}
             alt="TLA Logo"
@@ -19,7 +16,7 @@ export default function DashboardHeader() {
           />
         </Link>
       </div>
-      <ProfileDropDown data={userInfo?.data} />
+      <AdminProfileDropDown />
     </header>
   );
 }

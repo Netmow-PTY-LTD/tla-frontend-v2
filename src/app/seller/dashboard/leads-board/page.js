@@ -9,7 +9,7 @@ const LeadBoardPage = () => {
     <div className="continer">
       <section className="lg:px-4">
         <h1 className="font-bold text-lg md:text-2xl text-[#0B1C2D] text-center lg:text-left">
-          Founded 40 Matching Leads
+          Found 40 Matching Leads
         </h1>
 
         <div className="flex flex-wrap lg:flex-nowrap justify-center lg:justify-between items-center my-3 gap-4">

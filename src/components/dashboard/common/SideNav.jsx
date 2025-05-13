@@ -18,13 +18,21 @@ import {
 
 import Link from 'next/link';
 import { BuyerSidebarItems } from '@/app/buyer/_components/BuyerSidebarItems';
+import { AdminSidebarItems } from '@/app/admin/_components/AdminSidebarItems';
+import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 
 export function SideNav() {
+  const { data: userInfo, isLoading } = useAuthUserInfoQuery();
+  console.log(userInfo);
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Main</SidebarGroupLabel>
       <SidebarMenu>
-        {BuyerSidebarItems?.navMain?.map((item) =>
+        {(userInfo?.role === 'admin'
+          ? AdminSidebarItems
+          : BuyerSidebarItems
+        )?.navMain?.map((item) =>
           item?.items ? (
             <Collapsible
               key={item.title}
