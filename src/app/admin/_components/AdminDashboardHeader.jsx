@@ -1,9 +1,13 @@
+'use client';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import AdminProfileDropDown from './AdminProfileDropDown';
+import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 
 export default function AdminDashboardHeader() {
+  const { data: userInfo, isLoading } = useAuthUserInfoQuery();
+  console.log(userInfo);
   return (
     <header className="db-header">
       <div className="db-header-container">
@@ -16,7 +20,7 @@ export default function AdminDashboardHeader() {
           />
         </Link>
       </div>
-      <AdminProfileDropDown />
+      <AdminProfileDropDown data={userInfo?.data} />
     </header>
   );
 }
