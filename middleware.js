@@ -1,11 +1,20 @@
-import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
+import { NextResponse, NextRequest } from 'next/server';
+export async function middleware(request) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('refreshToken')?.value;
 
-// This function can be marked `async` if using `await` inside
-export function middleware(request) {
-  return NextResponse.redirect(new URL('/home', request.url));
+  const isAuthenticated = Boolean(token);
+
+  // If not authenticated and trying to access a protected route
+  if (!isAuthenticated) {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+
+  return NextResponse.next();
 }
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: '/about/:path*',
+  matcher: ['/seller/:path*', '/buyer/:path*', '/admin/:path*'],
 };

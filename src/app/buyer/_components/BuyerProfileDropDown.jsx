@@ -15,26 +15,12 @@ import Cookies from 'js-cookie';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { userDummyImage } from '@/data/data';
-import { logOut } from '@/store/features/auth/authSlice';
-import { useDispatch } from 'react-redux';
 
 const appEnvironment = process.env.NEXT_PUBLIC_APP_ENVIRONMENT;
 
-export default function ProfileDropDown({ data }) {
-  const dispatch = useDispatch();
-  const handleLogout = () => {
-    dispatch(logOut());
-    Cookies.remove('token');
-    Cookies.remove('refreshToken');
-    const appEnvironment = process.env.NODE_ENV;
+export default function BuyerProfileDropDown({ data }) {
+  // const userRoleFromCookies = Cookies.get('role')?.split('_').join('-');
 
-    const redirectUrl =
-      appEnvironment === 'development'
-        ? `${window.location.protocol}//localhost:3000/login`
-        : `${window.location.protocol}//${process.env.NEXT_PUBLIC_REDIRECT_URL}/login`;
-
-    window.location.assign(redirectUrl);
-  };
   return (
     <div className="flex items-center">
       <DropdownMenu>
@@ -55,7 +41,7 @@ export default function ProfileDropDown({ data }) {
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
-              <Link href={`/buyer/dashboard`}>Switch to Buyer</Link>
+              <Link href={`/seller/dashboard`}>Switch to Seller</Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
@@ -72,7 +58,17 @@ export default function ProfileDropDown({ data }) {
           <DropdownMenuItem>
             <div
               className="flex items-center justify-between w-full"
-              onClick={handleLogout}
+              onClick={() => {
+                Cookies.remove('token');
+                Cookies.remove('role');
+
+                const redirectUrl =
+                  appEnvironment === 'development'
+                    ? `${window.location.protocol}//localhost:3000/login`
+                    : `${window.location.protocol}//${process.env.NEXT_PUBLIC_REDIRECT_URL}/login`;
+
+                window.location.assign(redirectUrl);
+              }}
             >
               <span>Log out</span>
               <DropdownMenuShortcut className="flex items-center">
