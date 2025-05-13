@@ -23,13 +23,13 @@ import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 
 export function SideNav() {
   const { data: userInfo, isLoading } = useAuthUserInfoQuery();
-  console.log(userInfo);
+  console.log(userInfo?.data?.role);
 
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Main</SidebarGroupLabel>
       <SidebarMenu>
-        {(userInfo?.role === 'admin'
+        {(userInfo?.data?.role === 'admin'
           ? AdminSidebarItems
           : BuyerSidebarItems
         )?.navMain?.map((item) =>

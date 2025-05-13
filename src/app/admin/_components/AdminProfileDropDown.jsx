@@ -18,7 +18,7 @@ import { userDummyImage } from '@/data/data';
 
 const appEnvironment = process.env.NEXT_PUBLIC_APP_ENVIRONMENT;
 
-export default function AdminProfileDropDown() {
+export default function AdminProfileDropDown({ data }) {
   // const userRoleFromCookies = Cookies.get('role')?.split('_').join('-');
 
   return (
@@ -30,7 +30,9 @@ export default function AdminProfileDropDown() {
               <AvatarImage src={userDummyImage} alt="user" />
               <AvatarFallback>USER</AvatarFallback>
             </Avatar>
-            <span className="ml-2 font-medium">User Name</span>
+            <span className="ml-2 font-medium">
+              {data?.user?.username || 'User Name'}
+            </span>
             <ChevronDown className="ml-auto" />
           </div>
         </DropdownMenuTrigger>

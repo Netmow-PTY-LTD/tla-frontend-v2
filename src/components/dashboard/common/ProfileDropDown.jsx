@@ -26,6 +26,7 @@ export default function ProfileDropDown({ data }) {
     dispatch(logOut());
     Cookies.remove('token');
     Cookies.remove('refreshToken');
+    console.log('Removed Refresh Token', Cookies.get('refreshToken'));
     const appEnvironment = process.env.NODE_ENV;
 
     const redirectUrl =
