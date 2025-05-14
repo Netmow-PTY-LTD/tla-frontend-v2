@@ -12,26 +12,26 @@ export const SellerSidebarItems = {
   navMain: [
     {
       title: 'Dashboard',
-      url: '/seller/dashboard',
+      url: '/lawyer/dashboard',
       icon: LayoutDashboard,
       isActive: true,
     },
 
     {
       title: 'Leads',
-      url: '/seller/dashboard/leads-board',
+      url: '/lawyer/dashboard/leads-board',
       icon: LayoutDashboard,
       isActive: true,
     },
     {
       title: 'My Responses',
-      url: '/seller/dashboard/myresponses',
+      url: '/lawyer/dashboard/myresponses',
       icon: MessagesSquare,
       isActive: true,
     },
     {
       title: 'Settings',
-      url: '/seller/settings',
+      url: '/lawyer/settings',
       icon: Settings,
       isActive: true,
     },
@@ -43,13 +43,13 @@ export const SellerSidebarItems = {
 
     {
       title: 'General FAQ’s',
-      url: '/seller/dashboard/general-faqs',
+      url: '/lawyer/dashboard/general-faqs',
       icon: CircleHelp,
       // isActive: true,
     },
     {
       title: 'Tutorials',
-      url: '/seller/dashboard/tutorials',
+      url: '/lawyer/dashboard/tutorials',
       icon: BookText,
       // isActive: true,
     },

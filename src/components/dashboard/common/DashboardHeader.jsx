@@ -4,13 +4,14 @@ import Link from 'next/link';
 import React from 'react';
 import ProfileDropDown from './ProfileDropDown';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import Cookies from 'js-cookie';
 
 export default function DashboardHeader() {
   const { data: userInfo, isLoading } = useAuthUserInfoQuery();
   return (
     <header className="db-header">
       <div className="db-header-container">
-        <Link href="/seller/dashboard">
+        <Link href="/lawyer/dashboard">
           <Image
             src={'/assets/img/logo.png'}
             alt="TLA Logo"

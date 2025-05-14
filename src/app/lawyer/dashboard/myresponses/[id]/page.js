@@ -1,4 +1,6 @@
+import StatusDropdwon from '@/components/dashboard/seller/components/StatusDropdwon';
 import TagButton from '@/components/dashboard/seller/components/TagButton';
+import Chat from '@/components/dashboard/seller/module/chat/Chat';
 import {
   ArrowDownToLine,
   AtSign,
@@ -7,22 +9,32 @@ import {
   FileText,
   MoveLeft,
   PhoneOutgoing,
+  SendHorizontal,
   Zap,
 } from 'lucide-react';
 import Image from 'next/image';
+import React from 'react';
 
-export default async function LeadDetailsPage({ params }) {
+const page = async ({ params }) => {
   const { id } = await params;
+  const menuLinks = [
+    { label: 'Pending', href: '#pending' },
+    { label: 'Hired', href: '#hired' },
+  ];
+
   return (
-    <div className="mb-10">
-      <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg ">
+    <div className="bg-white">
+      <section className="bg-[#F3F3F3] p-3 rounded-lg">
         <div className="flex items-center justify-between">
           <button className="flex py-2 items-center gap-2">
             {' '}
             <MoveLeft /> <span>Back to leads</span>
           </button>
+          <StatusDropdwon status="pending" menuItems={menuLinks} />
         </div>
-        <div className="mt-3 max-w-4xl">
+      </section>
+      <section className="mt-3 lg:flex lg:gap-5 ">
+        <div className="bg-white rounded w-full lg:w-1/2 ">
           <div className="flex flex-col  items-start gap-4 ">
             <figure className="w-20 h-20 rounded-full overflow-hidden">
               <Image
@@ -50,14 +62,10 @@ export default async function LeadDetailsPage({ params }) {
               <AtSign /> <span>Email: t*******@e********.com</span>{' '}
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row   items-center  gap-3 sm:gap-0 ">
-            <button className="px-5 py-2 w-full sm:w-auto rounded-lg font-medium bg-[#EDF0F4] hover:bg-[#00C3C0] text-[#0B1C2D]">
-              View Job Details
-            </button>
-            <p className="text-[#34495E] ml-2 flex items-center gap-2">
-              <span>49 Credits required</span>
-              <CircleAlert />
-            </p>
+          <div className="flex items-center gap-2  ">
+            <button className="btn-brand">Call Client</button>
+            <button className="btn-brand"> Send WhatsApp</button>
+            <button className="btn-brand"> Send Email</button>
           </div>
           <div className="mt-5">
             <h1 className="font-medium mb-1">Matched criteria</h1>
@@ -82,11 +90,11 @@ export default async function LeadDetailsPage({ params }) {
             <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
               <h1 className="font-medium mb-2">Position Overview</h1>
               <p className="text-sm text-[#34495E] ">
-                If you're facing a divorce, it's crucial to seek professional
+                {` If you're facing a divorce, it's crucial to seek professional
                 legal advice. Our consultations cover everything from asset
                 division to child custody arrangements, ensuring you understand
                 your rights and options. Let us help you navigate this
-                challenging time with expert guidance.
+                challenging time with expert guidance.`}
               </p>
             </div>
           </div>
@@ -109,32 +117,13 @@ export default async function LeadDetailsPage({ params }) {
               </div>
             </div>
           </div>
-          <hr className="border-[#F3F3F3] " />
-          <div className="mt-5 space-y-3 mb-5">
-            <h1 className="font-medium text-xl">
-              Answered some of selected questions
-            </h1>
-            <div>
-              <p className="text-[#34495E]">
-                What kind of Law service you need?
-              </p>
-              <h1 className="font-medium text-black"> Family Law</h1>
-            </div>
-            <div>
-              <p className="text-[#34495E]">
-                What kind of Law service you need?
-              </p>
-              <h1 className="font-medium text-black"> Family Law</h1>
-            </div>
-            <div>
-              <p className="text-[#34495E]">
-                What kind of Law service you need?
-              </p>
-              <h1 className="font-medium text-black"> Family Law</h1>
-            </div>
-          </div>
         </div>
-      </div>
+        <div className="w-full lg:w-1/2 border-s-2">
+          <Chat />
+        </div>
+      </section>
     </div>
   );
-}
+};
+
+export default page;

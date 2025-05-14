@@ -19,8 +19,6 @@ import { userDummyImage } from '@/data/data';
 const appEnvironment = process.env.NEXT_PUBLIC_APP_ENVIRONMENT;
 
 export default function AdminProfileDropDown({ data }) {
-  // const userRoleFromCookies = Cookies.get('role')?.split('_').join('-');
-
   return (
     <div className="flex items-center">
       <DropdownMenu>
@@ -41,7 +39,7 @@ export default function AdminProfileDropDown({ data }) {
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
-              <Link href="/seller/settings">Settings</Link>
+              <Link href="/lawyer/account-settings">Settings</Link>
               <DropdownMenuShortcut>
                 <Settings />
               </DropdownMenuShortcut>

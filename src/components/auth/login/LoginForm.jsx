@@ -8,6 +8,7 @@ import { useAuthLoginMutation } from '@/store/features/auth/authApiService';
 import { setUser } from '@/store/features/auth/authSlice';
 import { verifyToken } from '@/utils/verifyToken';
 import { zodResolver } from '@hookform/resolvers/zod';
+import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -36,25 +37,26 @@ const LoginForm = () => {
     try {
       const res = await authLogin(data).unwrap();
 
+      console.log(res?.data?.regUserType);
+
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Login successful');
         const user = verifyToken(res?.token);
 
         if (user) {
+          Cookies.set('token', res?.token);
           dispatch(
             setUser({
               user: res?.data,
               token: res?.token,
             })
           );
-        } else {
-          router.push('/login');
         }
 
-        if (res?.data?.regUserType === 'seller') {
-          router.push(`/seller/dashboard`);
-        } else if (res?.data?.regUserType === 'buyer') {
-          router.push(`/buyer/dashboard`);
+        if (res?.data?.regUserType === 'lawyer') {
+          router.push(`/lawyer/dashboard`);
+        } else if (res?.data?.regUserType === 'client') {
+          router.push(`/client/dashboard`);
         } else if (res?.data?.regUserType === 'admin') {
           router.push(`/admin`);
         }

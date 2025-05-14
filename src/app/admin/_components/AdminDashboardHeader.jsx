@@ -7,7 +7,7 @@ import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 
 export default function AdminDashboardHeader() {
   const { data: userInfo, isLoading } = useAuthUserInfoQuery();
-  console.log(userInfo);
+  console.log('userInfo', userInfo);
   return (
     <header className="db-header">
       <div className="db-header-container">

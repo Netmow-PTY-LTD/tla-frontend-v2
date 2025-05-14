@@ -5,7 +5,7 @@ export default function Verification() {
   return (
     <div>
       <h1>Verification Page</h1>
-      <Link href="/seller/settings/profile/verification/business">
+      <Link href="/lawyer/settings/profile/verification/business">
         Start Your Free Month
       </Link>
     </div>
