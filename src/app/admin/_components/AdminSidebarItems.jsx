@@ -18,7 +18,7 @@ export const AdminSidebarItems = {
     },
     {
       title: 'Settings',
-      url: '/seller/settings',
+      url: '/admin/settings',
       icon: Settings,
       isActive: true,
     },

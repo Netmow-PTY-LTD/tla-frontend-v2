@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/sidebar';
 
 import Link from 'next/link';
-import { BuyerSidebarItems } from '@/app/buyer/_components/BuyerSidebarItems';
+import { BuyerSidebarItems } from '@/app/client/_components/BuyerSidebarItems';
 import { AdminSidebarItems } from '@/app/admin/_components/AdminSidebarItems';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 

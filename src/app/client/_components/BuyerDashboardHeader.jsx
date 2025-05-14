@@ -11,7 +11,7 @@ export default function BuyerDashboardHeader() {
   return (
     <header className="db-header">
       <div className="db-header-container">
-        <Link href="/buyer/dashboard">
+        <Link href="/client/dashboard">
           <Image
             src={'/assets/img/logo.png'}
             alt="TLA Logo"
