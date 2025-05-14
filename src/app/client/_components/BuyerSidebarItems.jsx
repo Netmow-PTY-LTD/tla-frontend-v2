@@ -12,20 +12,20 @@ export const BuyerSidebarItems = {
   navMain: [
     {
       title: 'Dashboard',
-      url: '/buyer/dashboard',
+      url: '/client/dashboard',
       icon: LayoutDashboard,
       isActive: true,
     },
 
     {
       title: 'My Requests',
-      url: '/buyer/dashboard/my-requests',
+      url: '/client/dashboard/my-requests',
       icon: LayoutDashboard,
       isActive: true,
     },
     {
       title: 'Account Settings',
-      url: '/buyer/account-settings',
+      url: '/client/account-settings',
       icon: Settings,
       isActive: true,
     },

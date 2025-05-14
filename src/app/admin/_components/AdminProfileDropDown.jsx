@@ -15,29 +15,10 @@ import Cookies from 'js-cookie';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { userDummyImage } from '@/data/data';
-import { logOut } from '@/store/features/auth/authSlice';
-import { useDispatch } from 'react-redux';
-import { useAuthLogOutMutation } from '@/store/features/auth/authApiService';
-import { useRouter } from 'next/navigation';
 
-export default function ProfileDropDown({ data }) {
-  const dispatch = useDispatch();
+const appEnvironment = process.env.NEXT_PUBLIC_APP_ENVIRONMENT;
 
-  const router = useRouter();
-
-  /**
-   * Handles user logout functionality.
-   * - Calls the authLogout mutation to invalidate the session on the server.
-   * - Dispatches the logOut action to update the Redux store and clear user state.
-   * - Redirects the user to the login page using the Next.js router.
-   */
-  const [authLogout] = useAuthLogOutMutation();
-  const handleLogout = () => {
-    authLogout();
-    dispatch(logOut());
-    Cookies.remove('token');
-    router.push('/login');
-  };
+export default function AdminProfileDropDown({ data }) {
   return (
     <div className="flex items-center">
       <DropdownMenu>
@@ -48,7 +29,7 @@ export default function ProfileDropDown({ data }) {
               <AvatarFallback>USER</AvatarFallback>
             </Avatar>
             <span className="ml-2 font-medium">
-              {data?.username || 'User Name'}
+              {data?.user?.username || 'User Name'}
             </span>
             <ChevronDown className="ml-auto" />
           </div>
@@ -58,13 +39,7 @@ export default function ProfileDropDown({ data }) {
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
-              <Link href={`/client/dashboard`}>Switch to Client</Link>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <Link href="/lawyer/settings">Settings</Link>
+              <Link href="/lawyer/account-settings">Settings</Link>
               <DropdownMenuShortcut>
                 <Settings />
               </DropdownMenuShortcut>
@@ -75,7 +50,17 @@ export default function ProfileDropDown({ data }) {
           <DropdownMenuItem>
             <div
               className="flex items-center justify-between w-full"
-              onClick={handleLogout}
+              onClick={() => {
+                Cookies.remove('token');
+                Cookies.remove('role');
+
+                const redirectUrl =
+                  appEnvironment === 'development'
+                    ? `${window.location.protocol}//localhost:3000/login`
+                    : `${window.location.protocol}//${process.env.NEXT_PUBLIC_REDIRECT_URL}/login`;
+
+                window.location.assign(redirectUrl);
+              }}
             >
               <span>Log out</span>
               <DropdownMenuShortcut className="flex items-center">
