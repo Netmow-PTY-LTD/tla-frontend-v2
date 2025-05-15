@@ -8,6 +8,7 @@ import { useAuthLoginMutation } from '@/store/features/auth/authApiService';
 import { setUser } from '@/store/features/auth/authSlice';
 import { verifyToken } from '@/utils/verifyToken';
 import { zodResolver } from '@hookform/resolvers/zod';
+import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -36,17 +37,33 @@ const LoginForm = () => {
     try {
       const res = await authLogin(data).unwrap();
 
+      console.log('res', res);
+
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Login successful');
         const user = verifyToken(res?.token);
 
-        dispatch(
-          setUser({
-            user: res?.data,
-            token: res?.token,
-          })
-        );
-        router.push(`/admin`);
+        console.log('user', user);
+
+        if (user) {
+          const dispatchUser = dispatch(
+            setUser({
+              user: res?.data,
+              token: res?.token,
+            })
+          );
+
+          //console.log('dispatchUser', dispatchUser);
+          if (dispatchUser?.payload?.token) {
+            if (res?.data?.regUserType === 'lawyer') {
+              router.push(`/lawyer/dashboard`);
+            } else if (res?.data?.regUserType === 'client') {
+              router.push(`/client/dashboard`);
+            } else if (res?.data?.regUserType === 'admin') {
+              router.push(`/admin`);
+            }
+          }
+        }
       }
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';

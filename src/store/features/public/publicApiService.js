@@ -14,8 +14,17 @@ const publicApiService = baseApi.injectEndpoints({
         method: 'GET',
       }),
     }),
+    getCountryList: builder.query({
+      query: () => ({
+        url: `/country/list`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
-export const { useGetAllServicesQuery, useGetServiceBySlugQuery } =
-  publicApiService;
+export const {
+  useGetAllServicesQuery,
+  useGetServiceBySlugQuery,
+  useGetCountryListQuery,
+} = publicApiService;

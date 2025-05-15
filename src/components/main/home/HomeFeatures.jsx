@@ -1,5 +1,5 @@
-import Image from "next/image";
-import Link from "next/link";
+import Image from 'next/image';
+import Link from 'next/link';
 
 const HomeFeatures = () => {
   return (
@@ -35,14 +35,14 @@ const HomeFeatures = () => {
                     </ul>
                   </div>
                   <Link href="/register" className="btn-brand">
-                    Join as Seller - Post your job
+                    Join as Lawyer - Post your job
                   </Link>
                 </div>
               </div>
               <div className="w-full lg:w-1/2 lg:pl-10">
                 <div className="section-image mt-10 lg:mt-0">
                   <Image
-                    src={"/assets/img/home-feature-1.png"}
+                    src={'/assets/img/home-feature-1.png'}
                     width={735}
                     height={501}
                     alt="feature"
@@ -85,7 +85,7 @@ const HomeFeatures = () => {
               <div className="w-full lg:w-1/2 lg:pr-10">
                 <div className="section-image mt-10 lg:mt-0">
                   <Image
-                    src={"/assets/img/home-feature-1.png"}
+                    src={'/assets/img/home-feature-1.png'}
                     width={735}
                     height={501}
                     alt="feature"

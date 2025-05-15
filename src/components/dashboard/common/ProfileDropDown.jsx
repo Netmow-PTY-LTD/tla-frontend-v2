@@ -15,11 +15,29 @@ import Cookies from 'js-cookie';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { userDummyImage } from '@/data/data';
+import { logOut } from '@/store/features/auth/authSlice';
+import { useDispatch } from 'react-redux';
+import { useAuthLogOutMutation } from '@/store/features/auth/authApiService';
+import { useRouter } from 'next/navigation';
 
-const appEnvironment = process.env.NEXT_PUBLIC_APP_ENVIRONMENT;
+export default function ProfileDropDown({ data }) {
+  const dispatch = useDispatch();
 
-export default function ProfileDropDown() {
-  const userRoleFromCookies = Cookies.get('role')?.split('_').join('-');
+  const router = useRouter();
+
+  /**
+   * Handles user logout functionality.
+   * - Calls the authLogout mutation to invalidate the session on the server.
+   * - Dispatches the logOut action to update the Redux store and clear user state.
+   * - Redirects the user to the login page using the Next.js router.
+   */
+  const [authLogout] = useAuthLogOutMutation();
+  const handleLogout = () => {
+    authLogout();
+    dispatch(logOut());
+    Cookies.remove('token');
+    router.push('/login');
+  };
   return (
     <div className="flex items-center">
       <DropdownMenu>
@@ -29,7 +47,9 @@ export default function ProfileDropDown() {
               <AvatarImage src={userDummyImage} alt="user" />
               <AvatarFallback>USER</AvatarFallback>
             </Avatar>
-            <span className="ml-2 font-medium">User Name</span>
+            <span className="ml-2 font-medium">
+              {data?.username || 'User Name'}
+            </span>
             <ChevronDown className="ml-auto" />
           </div>
         </DropdownMenuTrigger>
@@ -38,14 +58,13 @@ export default function ProfileDropDown() {
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
-              <Link
-                href={`/dashboard/${
-                  // userInfoData?.data?.role.split('_').join('-') ||
-                  userRoleFromCookies
-                }`}
-              >
-                Settings
-              </Link>
+              <Link href={`/client/dashboard`}>Switch to Client</Link>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem>
+              <Link href="/lawyer/settings">Settings</Link>
               <DropdownMenuShortcut>
                 <Settings />
               </DropdownMenuShortcut>
@@ -56,17 +75,7 @@ export default function ProfileDropDown() {
           <DropdownMenuItem>
             <div
               className="flex items-center justify-between w-full"
-              onClick={() => {
-                Cookies.remove('token');
-                Cookies.remove('role');
-
-                const redirectUrl =
-                  appEnvironment === 'development'
-                    ? `${window.location.protocol}//localhost:3000/login`
-                    : `${window.location.protocol}//${process.env.NEXT_PUBLIC_REDIRECT_URL}/login`;
-
-                window.location.assign(redirectUrl);
-              }}
+              onClick={handleLogout}
             >
               <span>Log out</span>
               <DropdownMenuShortcut className="flex items-center">
