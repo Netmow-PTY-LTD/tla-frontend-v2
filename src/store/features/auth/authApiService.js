@@ -8,6 +8,7 @@ const authApi = baseApi.injectEndpoints({
         method: 'POST',
         body: data,
       }),
+      invalidatesTags: ['userInfo'],
     }),
 
     authRegister: builder.mutation({
@@ -22,12 +23,14 @@ const authApi = baseApi.injectEndpoints({
         url: '/auth/logout',
         method: 'POST',
       }),
+      invalidatesTags: ['userInfo'],
     }),
     authUserInfo: builder.query({
       query: () => ({
         url: '/user/userInfo',
         method: 'GET',
       }),
+      providesTags: ['userInfo'],
     }),
   }),
 });

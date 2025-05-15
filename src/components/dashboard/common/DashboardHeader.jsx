@@ -3,11 +3,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import ProfileDropDown from './ProfileDropDown';
-import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
-import Cookies from 'js-cookie';
+import { selectCurrentUser } from '@/store/features/auth/authSlice';
+import { useSelector } from 'react-redux';
 
 export default function DashboardHeader() {
-  const { data: userInfo, isLoading } = useAuthUserInfoQuery();
+  const userInfo = useSelector(selectCurrentUser);
   return (
     <header className="db-header">
       <div className="db-header-container">
@@ -20,7 +20,7 @@ export default function DashboardHeader() {
           />
         </Link>
       </div>
-      <ProfileDropDown data={userInfo?.data} />
+      <ProfileDropDown data={userInfo} />
     </header>
   );
 }
