@@ -2,16 +2,16 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import ProfileDropDown from './ProfileDropDown';
+import AdminProfileDropDown from './AdminProfileDropDown';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
-import Cookies from 'js-cookie';
 
-export default function DashboardHeader() {
+export default function AdminDashboardHeader() {
   const { data: userInfo, isLoading } = useAuthUserInfoQuery();
+  console.log('userInfo', userInfo);
   return (
     <header className="db-header">
       <div className="db-header-container">
-        <Link href="/lawyer/dashboard">
+        <Link href="/admin">
           <Image
             src={'/assets/img/logo.png'}
             alt="TLA Logo"
@@ -20,7 +20,7 @@ export default function DashboardHeader() {
           />
         </Link>
       </div>
-      <ProfileDropDown data={userInfo?.data} />
+      <AdminProfileDropDown data={userInfo?.data} />
     </header>
   );
 }

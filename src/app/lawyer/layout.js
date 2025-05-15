@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/sidebar';
 import { LawyerSideNav } from '@/components/dashboard/seller/layout/SellerSideNav';
 
-export default function SellerDashboardLayout({ children }) {
+export default async function SellerDashboardLayout({ children }) {
   return (
     <>
       <DashboardHeader />

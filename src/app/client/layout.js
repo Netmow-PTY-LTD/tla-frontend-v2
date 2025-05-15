@@ -1,6 +1,8 @@
 import DashboardFooter from '@/components/dashboard/common/DashboardFooter';
-import AdminDashboardHeader from './_components/AdminDashboardHeader';
+import React from 'react';
 import '@/styles/dashboard.css';
+import { SideNav } from '@/components/dashboard/common/SideNav';
+import BuyerDashboardHeader from './_components/BuyerDashboardHeader';
 import {
   Sidebar,
   SidebarContent,
@@ -8,12 +10,11 @@ import {
   SidebarProvider,
   SidebarRail,
 } from '@/components/ui/sidebar';
-import { SideNav } from '@/components/dashboard/common/SideNav';
 
-export default function AdminDashboardLayout({ children }) {
+export default function BuyerDashboardLayout({ children }) {
   return (
     <>
-      <AdminDashboardHeader />
+      <BuyerDashboardHeader />
       <SidebarProvider>
         <Sidebar collapsible="icon" className="w-64">
           <SidebarHeader />
@@ -34,7 +35,6 @@ export default function AdminDashboardLayout({ children }) {
           </div>
         </div>
       </SidebarProvider>
-      <DashboardFooter />
     </>
   );
 }

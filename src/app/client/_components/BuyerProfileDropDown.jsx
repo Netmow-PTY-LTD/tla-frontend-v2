@@ -15,16 +15,15 @@ import Cookies from 'js-cookie';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { userDummyImage } from '@/data/data';
-import { logOut } from '@/store/features/auth/authSlice';
+import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { useAuthLogOutMutation } from '@/store/features/auth/authApiService';
-import { useRouter } from 'next/navigation';
+import { logOut } from '@/store/features/auth/authSlice';
 
-export default function ProfileDropDown({ data }) {
+export default function BuyerProfileDropDown({ data }) {
   const dispatch = useDispatch();
 
   const router = useRouter();
-
   /**
    * Handles user logout functionality.
    * - Calls the authLogout mutation to invalidate the session on the server.
@@ -35,9 +34,9 @@ export default function ProfileDropDown({ data }) {
   const handleLogout = () => {
     authLogout();
     dispatch(logOut());
-    Cookies.remove('token');
     router.push('/login');
   };
+
   return (
     <div className="flex items-center">
       <DropdownMenu>
@@ -58,13 +57,13 @@ export default function ProfileDropDown({ data }) {
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
-              <Link href={`/client/dashboard`}>Switch to Client</Link>
+              <Link href={`/lawyer/dashboard`}>Switch to Lawyer</Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
-              <Link href="/lawyer/settings">Settings</Link>
+              <Link href="/client/account-settings">Settings</Link>
               <DropdownMenuShortcut>
                 <Settings />
               </DropdownMenuShortcut>
