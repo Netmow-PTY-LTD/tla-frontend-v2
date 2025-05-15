@@ -22,10 +22,10 @@ import {
 } from '@/components/ui/table';
 
 export function ReusableTable({
-  data,
-  columns,
-  pageSize,
-  filterPlaceholder,
+  data = [],
+  columns = [],
+  pageSize = 10,
+  filterPlaceholder = '',
   filteredColumn,
 }) {
   const [sorting, setSorting] = React.useState([]);
@@ -64,21 +64,26 @@ export function ReusableTable({
 
   const { pageIndex } = table.getState().pagination;
 
+  console.log('data', data);
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
           placeholder={filterPlaceholder || 'Search...'}
           value={
-            columnFilters.find((filter) => filter.id === filteredColumn)
-              ?.value || ''
+            filteredColumn
+              ? columnFilters.find((filter) => filter.id === filteredColumn)
+                  ?.value || ''
+              : ''
           }
-          onChange={(event) =>
+          onChange={(event) => {
+            if (!filteredColumn) return;
             setColumnFilters((prev) => [
               ...prev.filter((filter) => filter.id !== filteredColumn),
               { id: filteredColumn, value: event.target.value },
-            ])
-          }
+            ]);
+          }}
           className="max-w-sm"
         />
       </div>

@@ -10,8 +10,6 @@ export function middleware(request) {
     request.nextUrl.pathname.startsWith(route)
   );
 
-  console.log('is protected', isProtected);
-
   if (isProtected && !token) {
     // Redirect unauthenticated access to login
     return NextResponse.redirect(new URL('/login', request.url));
