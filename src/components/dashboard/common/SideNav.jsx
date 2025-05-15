@@ -27,7 +27,9 @@ export function SideNav() {
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Main</SidebarGroupLabel>
+      {userInfo?.data?.role !== 'admin' && (
+        <SidebarGroupLabel>Main</SidebarGroupLabel>
+      )}
       <SidebarMenu>
         {(userInfo?.data?.role === 'admin'
           ? AdminSidebarItems
