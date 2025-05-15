@@ -1,5 +1,5 @@
-import LeadCard from '@/components/dashboard/seller/components/LeadCard';
-import TagButton from '@/components/dashboard/seller/components/TagButton';
+import LeadCard from '@/components/dashboard/lawyer/components/LeadCard';
+import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import { Database, SlidersVertical } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';

@@ -1,4 +1,4 @@
-import TagButton from '@/components/dashboard/seller/components/TagButton';
+import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import ToggleButton from '@/components/UIComponents/ToggleButton';
 import { MapPin, MoveLeft, PencilIcon, PlusIcon, XIcon } from 'lucide-react';
 import Link from 'next/link';
