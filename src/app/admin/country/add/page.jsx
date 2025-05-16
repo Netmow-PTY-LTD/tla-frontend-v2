@@ -13,13 +13,17 @@ import {
 import z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAddCountryMutation } from '@/store/features/public/publicApiService';
+import { showSuccessToast, showErrorToast } from '@/components/common/toasts';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
+  const router = useRouter();
   const formSchema = z.object({
-    country: z.string().min(2, {
+    name: z.string().min(2, {
       message: 'Country name must be at least 2 characters.',
     }),
-    countryCode: z.string().min(1, {
+    slug: z.string().min(1, {
       message: 'Country code is required.',
     }),
   });
@@ -28,16 +32,26 @@ export default function Page() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      country: '',
-      countryCode: '',
+      name: '',
+      slug: '',
     },
   });
+  const [addCountry, { isLoading }] = useAddCountryMutation();
 
-  // 2. Define a submit handler.
-  function onSubmit(values) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log('Form Values', values);
+  async function onSubmit(values) {
+    //console.log('values', values);
+    try {
+      const result = await addCountry(values).unwrap();
+      // Optionally reset form or show success toast
+      showSuccessToast(result?.message);
+      setTimeout(() => {
+        router.push('/admin/country/list');
+      }, 2000);
+    } catch (error) {
+      console.error('Error adding country:', error);
+      // Optionally show error toast
+      showErrorToast(error?.data?.message);
+    }
   }
 
   return (
@@ -54,7 +68,7 @@ export default function Page() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
               <FormField
                 control={form.control}
-                name="country"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Name</FormLabel>
@@ -66,7 +80,7 @@ export default function Page() {
               />
               <FormField
                 control={form.control}
-                name="countryCode"
+                name="slug"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Code</FormLabel>
