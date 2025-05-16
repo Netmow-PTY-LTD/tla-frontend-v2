@@ -39,11 +39,12 @@ const columns = [
     enableHiding: false,
   },
   {
-    accessorKey: 'name',
+    accessorKey: 'profile.name',
     header: 'Name',
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue('profile.name')}</div>
-    ),
+    cell: ({ row }) => {
+      const profile = row.original.profile;
+      return <div className="capitalize">{profile?.name || 'N/A'}</div>;
+    },
   },
   {
     accessorKey: 'email',
@@ -56,6 +57,8 @@ const columns = [
     enableHiding: false,
     cell: ({ row }) => {
       const service = row.original;
+
+      console.log('row', row);
 
       return (
         <DropdownMenu>
