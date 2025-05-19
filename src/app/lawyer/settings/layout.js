@@ -3,7 +3,7 @@ import SettingsTabs from './_components/SettingTab';
 
 const SettingsLayout = ({ children }) => {
   return (
-    <div className="rounded-lg p-4">
+    <div className="">
       <SettingsTabs />
       {children}
     </div>

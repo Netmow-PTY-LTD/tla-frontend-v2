@@ -7,11 +7,13 @@ import Media from './_components/Media';
 import SocialMediaLinks from './_components/SocialMediaLinks';
 import Accreditations from './_components/Accreditations';
 import QuestionsAndAnswers from './_components/QnA';
+import ProfileCompletion from '../../_components/profileCompletion';
 
 export default function Page() {
   return (
     <>
-      <ProfileProgress />
+      {/* <ProfileProgress /> */}
+      <ProfileCompletion />
       <About />
       <Reviews />
       <Services />
