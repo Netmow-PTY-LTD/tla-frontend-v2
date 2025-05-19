@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChevronDown, LogOut, Settings } from 'lucide-react';
 import {
   DropdownMenu,
@@ -20,12 +20,19 @@ import { useRouter } from 'next/navigation';
 import { useAuthLogOutMutation } from '@/store/features/auth/authApiService';
 import { logOut } from '@/store/features/auth/authSlice';
 
-const appEnvironment = process.env.NEXT_PUBLIC_APP_ENVIRONMENT;
-
 export default function AdminProfileDropDown({ data }) {
   const dispatch = useDispatch();
 
   const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (typeof window === 'undefined') {
+    return null; // SSR-safe: avoid rendering dynamic content
+  }
 
   /**
    * Handles user logout functionality.
@@ -40,6 +47,11 @@ export default function AdminProfileDropDown({ data }) {
     Cookies.remove('token');
     router.push('/login');
   };
+
+  if (!isClient) {
+    return null; // or a skeleton/loading fallback
+  }
+
   return (
     <div className="flex items-center">
       <DropdownMenu>
@@ -50,7 +62,7 @@ export default function AdminProfileDropDown({ data }) {
               <AvatarFallback>USER</AvatarFallback>
             </Avatar>
             <span className="ml-2 font-medium">
-              {data?.username || 'User Name'}
+              {data?.username || 'username'}
             </span>
             <ChevronDown className="ml-auto" />
           </div>

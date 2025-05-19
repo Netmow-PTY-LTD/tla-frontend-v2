@@ -19,7 +19,6 @@ import {
 import Link from 'next/link';
 import { BuyerSidebarItems } from '@/app/client/_components/BuyerSidebarItems';
 import { AdminSidebarItems } from '@/app/admin/_components/AdminSidebarItems';
-import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import { useSelector } from 'react-redux';
 
@@ -27,7 +26,7 @@ export function SideNav() {
   const currentUser = useSelector(selectCurrentUser);
   return (
     <SidebarGroup>
-      {currentUser?.role !== 'admin' && (
+      {currentUser?.regUserType === 'client' && (
         <SidebarGroupLabel>Main</SidebarGroupLabel>
       )}
       <SidebarMenu>

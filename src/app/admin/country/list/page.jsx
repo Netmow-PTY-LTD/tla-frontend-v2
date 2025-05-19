@@ -1,5 +1,6 @@
 'use client';
 import { DataTable } from '@/components/common/DataTable';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -10,14 +11,32 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
-import { ArrowUpDown, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import {
+  useDeleteCountryMutation,
+  useGetCountryListQuery,
+} from '@/store/features/public/publicApiService';
+import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
 export default function Page() {
-  const { data: countryList } = useGetCountryListQuery();
+  const { data: countryList, refetch } = useGetCountryListQuery();
   console.log('countryList', countryList);
+
+  const [countryDelete] = useDeleteCountryMutation();
+
+  const handleDeleteCountry = async (id) => {
+    try {
+      const res = await countryDelete(id).unwrap();
+      if(res){
+        showSuccessToast(res?.message);
+        refetch();
+      }
+    } catch (error) {
+      console.error(error);
+      showErrorToast('Failed to delete country.');
+    }
+  };
   const columns = [
     {
       id: 'select',
@@ -52,7 +71,7 @@ export default function Page() {
       accessorKey: 'slug',
       header: 'Slug',
       cell: ({ row }) => (
-        <div className="capitalize">{row.getValue('slug')}</div>
+        <div className="uppercase">{row.getValue('slug')}</div>
       ),
     },
     {
@@ -76,7 +95,7 @@ export default function Page() {
               <DropdownMenuItem>
                 <Link
                   href={`/admin/country/edit/${country?._id}`}
-                  className="flex gap-2"
+                  className="flex gap-2 items-center"
                 >
                   <Pencil className="w-4 h-4" />
                   Edit
@@ -84,12 +103,12 @@ export default function Page() {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <Link
-                  href={`/admin/country/edit/${country?._id}`}
-                  className="flex gap-2"
+                <div
+                  className="flex gap-2 cursor-pointer"
+                  onClick={() => handleDeleteCountry(country?._id)}
                 >
                   <Trash2 className="w-4 h-4" /> Delete
-                </Link>
+                </div>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -101,7 +120,6 @@ export default function Page() {
   return (
     <div>
       <h1>Country List Page</h1>
-      {/* <ReusableTable data={data} columns={columns} /> */}
       <DataTable data={countryList?.data || []} columns={columns} />
     </div>
   );

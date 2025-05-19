@@ -10,6 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { useAllUsersQuery } from '@/store/features/admin/userApiService';
 import React from 'react';
@@ -39,11 +40,12 @@ const columns = [
     enableHiding: false,
   },
   {
-    accessorKey: 'name',
+    accessorKey: 'profile.name',
     header: 'Name',
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue('profile.name')}</div>
-    ),
+    cell: ({ row }) => {
+      const profile = row.original.profile;
+      return <div className="capitalize">{profile?.name || 'N/A'}</div>;
+    },
   },
   {
     accessorKey: 'email',
@@ -51,11 +53,19 @@ const columns = [
     cell: ({ row }) => <div className="lowercase">{row.getValue('email')}</div>,
   },
   {
+    accessorKey: 'regUserType',
+    header: 'Type',
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue('regUserType')}</div>
+    ),
+  },
+  {
     id: 'actions',
     header: 'Actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const service = row.original;
+      const user = row.original;
+      const userId = user._id; // Make sure _id exists in your data
 
       return (
         <DropdownMenu>
@@ -68,19 +78,23 @@ const columns = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem asChild>
               <Link
-                href={`/admin/country/edit/${service?._id}`}
-                className="flex gap-4"
+                href={`/admin/user/edit/${userId}`}
+                className="flex gap-2 items-center"
               >
                 <Pencil />
                 Edit
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href={`/admin/country/edit/${service?._id}`}>
-                <Trash2 /> Delete
+            <DropdownMenuItem asChild>
+              <Link
+                href={`/admin/user/delete/${userId}`}
+                className="flex gap-2 items-center"
+              >
+                <Trash2 />
+                Delete
               </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>

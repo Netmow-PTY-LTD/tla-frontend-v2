@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 // Success Toast
 export const showSuccessToast = (message) => {
   toast.success(message, {
-    duration: 3000,
+    duration: 2000,
     position: 'top-right',
     style: { backgroundColor: 'green', color: 'white' },
   });
