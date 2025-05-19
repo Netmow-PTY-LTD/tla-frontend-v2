@@ -1,5 +1,5 @@
-import LeadCard from '@/components/dashboard/seller/components/LeadCard';
-import StatusButton from '@/components/dashboard/seller/components/StatusButton';
+import LeadCard from '@/components/dashboard/lawyer/components/LeadCard';
+import StatusButton from '@/components/dashboard/lawyer/components/StatusButton';
 import React from 'react';
 
 const MyResponsePage = () => {

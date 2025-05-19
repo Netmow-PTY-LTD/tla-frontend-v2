@@ -20,16 +20,18 @@ import Link from 'next/link';
 import { BuyerSidebarItems } from '@/app/client/_components/BuyerSidebarItems';
 import { AdminSidebarItems } from '@/app/admin/_components/AdminSidebarItems';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import { selectCurrentUser } from '@/store/features/auth/authSlice';
+import { useSelector } from 'react-redux';
 
 export function SideNav() {
-  const { data: userInfo, isLoading } = useAuthUserInfoQuery();
-  console.log(userInfo?.data?.role);
-
+  const currentUser = useSelector(selectCurrentUser);
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Main</SidebarGroupLabel>
+      {currentUser?.role !== 'admin' && (
+        <SidebarGroupLabel>Main</SidebarGroupLabel>
+      )}
       <SidebarMenu>
-        {(userInfo?.data?.role === 'admin'
+        {(currentUser?.role === 'admin'
           ? AdminSidebarItems
           : BuyerSidebarItems
         )?.navMain?.map((item) =>

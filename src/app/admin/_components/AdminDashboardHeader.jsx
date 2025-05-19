@@ -4,10 +4,12 @@ import Link from 'next/link';
 import React from 'react';
 import AdminProfileDropDown from './AdminProfileDropDown';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '@/store/features/auth/authSlice';
 
 export default function AdminDashboardHeader() {
-  const { data: userInfo, isLoading } = useAuthUserInfoQuery();
-  console.log('userInfo', userInfo);
+  const currentUser = useSelector(selectCurrentUser);
+
   return (
     <header className="db-header">
       <div className="db-header-container">
@@ -20,7 +22,7 @@ export default function AdminDashboardHeader() {
           />
         </Link>
       </div>
-      <AdminProfileDropDown data={userInfo?.data} />
+      <AdminProfileDropDown data={currentUser} />
     </header>
   );
 }

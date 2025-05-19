@@ -37,28 +37,32 @@ const LoginForm = () => {
     try {
       const res = await authLogin(data).unwrap();
 
-      console.log(res?.data?.regUserType);
+      console.log('res', res);
 
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Login successful');
         const user = verifyToken(res?.token);
 
+        console.log('user', user);
+
         if (user) {
-          Cookies.set('token', res?.token);
-          dispatch(
+          const dispatchUser = dispatch(
             setUser({
               user: res?.data,
               token: res?.token,
             })
           );
-        }
 
-        if (res?.data?.regUserType === 'lawyer') {
-          router.push(`/lawyer/dashboard`);
-        } else if (res?.data?.regUserType === 'client') {
-          router.push(`/client/dashboard`);
-        } else if (res?.data?.regUserType === 'admin') {
-          router.push(`/admin`);
+          //console.log('dispatchUser', dispatchUser);
+          if (dispatchUser?.payload?.token) {
+            if (res?.data?.regUserType === 'lawyer') {
+              router.push(`/lawyer/dashboard`);
+            } else if (res?.data?.regUserType === 'client') {
+              router.push(`/client/dashboard`);
+            } else if (res?.data?.regUserType === 'admin') {
+              router.push(`/admin`);
+            }
+          }
         }
       }
     } catch (error) {

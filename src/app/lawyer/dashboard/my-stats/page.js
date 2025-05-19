@@ -1,8 +1,8 @@
-import LeadSettingNotificationCard from '@/components/dashboard/seller/components/LeadSettingNotificationCard';
-import LeadSettings from '@/components/dashboard/seller/components/LeadSettings';
-import MessageCard from '@/components/dashboard/seller/components/MessageCard';
-import StatusCard from '@/components/dashboard/seller/components/StatusCard';
-import ProfileCard from '@/components/dashboard/seller/module/MyStats/ProfileCard';
+import LeadSettingNotificationCard from '@/components/dashboard/lawyer/components/LeadSettingNotificationCard';
+import LeadSettings from '@/components/dashboard/lawyer/components/LeadSettings';
+import MessageCard from '@/components/dashboard/lawyer/components/MessageCard';
+import StatusCard from '@/components/dashboard/lawyer/components/StatusCard';
+import ProfileCard from '@/components/dashboard/lawyer/module/MyStats/ProfileCard';
 
 import React from 'react';
 
