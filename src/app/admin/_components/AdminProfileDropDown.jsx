@@ -30,6 +30,10 @@ export default function AdminProfileDropDown({ data }) {
     setIsClient(true);
   }, []);
 
+  if (typeof window === 'undefined') {
+    return null; // SSR-safe: avoid rendering dynamic content
+  }
+
   /**
    * Handles user logout functionality.
    * - Calls the authLogout mutation to invalidate the session on the server.

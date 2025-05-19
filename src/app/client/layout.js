@@ -1,3 +1,4 @@
+'use client';
 import DashboardFooter from '@/components/dashboard/common/DashboardFooter';
 import React from 'react';
 import '@/styles/dashboard.css';
