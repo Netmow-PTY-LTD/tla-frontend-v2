@@ -15,7 +15,7 @@ import {
   useDeleteCountryMutation,
   useGetCountryListQuery,
 } from '@/store/features/public/publicApiService';
-import { ArrowUpDown, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
@@ -26,11 +26,12 @@ export default function Page() {
   const [countryDelete] = useDeleteCountryMutation();
 
   const handleDeleteCountry = async (id) => {
-    console.log('id', id);
     try {
       const res = await countryDelete(id).unwrap();
-      showSuccessToast(res?.message);
-      refetch();
+      if(res){
+        showSuccessToast(res?.message);
+        refetch();
+      }
     } catch (error) {
       console.error(error);
       showErrorToast('Failed to delete country.');
@@ -119,7 +120,6 @@ export default function Page() {
   return (
     <div>
       <h1>Country List Page</h1>
-      {/* <ReusableTable data={data} columns={columns} /> */}
       <DataTable data={countryList?.data || []} columns={columns} />
     </div>
   );

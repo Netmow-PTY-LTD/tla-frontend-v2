@@ -30,7 +30,7 @@ const publicApiService = baseApi.injectEndpoints({
         method: 'PATCH',
         body,
       }),
-      providesTags: ['Country'],
+      invalidatesTags: ['Country'],
     }),
     deleteCountry: builder.mutation({
       query: (id) => ({

@@ -1,5 +1,6 @@
 'use client';
 import { DataTable } from '@/components/common/DataTable';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -10,12 +11,28 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useAllServicesQuery } from '@/store/features/admin/servicesApiService';
+import { useAllServicesQuery, useDeleteServiceMutation } from '@/store/features/admin/servicesApiService';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
-const columns = [
+export default function ServicesList() {
+  const { data: serviceList, refetch } = useAllServicesQuery();
+  const[deleteService] = useDeleteServiceMutation();
+
+  const handleDeleteService = async(id) =>{
+    try {
+          const res = await deleteService(id).unwrap();
+          if(res){
+            showSuccessToast(res?.message);
+            refetch();
+          }
+        } catch (error) {
+          console.error(error);
+          showErrorToast('Failed to delete country.');
+        }
+  }
+  const columns = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -46,7 +63,7 @@ const columns = [
   {
     accessorKey: 'slug',
     header: 'Slug',
-    cell: ({ row }) => <div className="capitalize">{row.getValue('slug')}</div>,
+    cell: ({ row }) => <div className="lowercase">{row.getValue('slug')}</div>,
   },
   {
     id: 'actions',
@@ -68,18 +85,18 @@ const columns = [
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <Link
-                href={`/admin/country/edit/${service?._id}`}
-                className="flex gap-4"
+                href={`/admin/service/edit/${service?._id}`}
+                className="flex items-center gap-2"
               >
-                <Pencil />
+                <Pencil className='w-4 h-4' />
                 Edit
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={`/admin/country/edit/${service?._id}`}>
-                <Trash2 /> Delete
-              </Link>
+              <div className='flex items-center gap-2 cursor-pointer' onClick={()=>handleDeleteService(service?._id)}>
+                <Trash2 className='w-4 h-4' /> Delete
+              </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -87,9 +104,6 @@ const columns = [
     },
   },
 ];
-
-export default function ServicesList() {
-  const { data: serviceList } = useAllServicesQuery();
   return (
     <div>
       <h1>Services List</h1>
