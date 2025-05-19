@@ -9,6 +9,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from '@/components/ui/form';
 import z from 'zod';
 import { useForm } from 'react-hook-form';
@@ -91,6 +92,7 @@ export default function Page() {
                     <FormControl>
                       <Input placeholder="Country Name" {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -103,6 +105,7 @@ export default function Page() {
                     <FormControl>
                       <Input placeholder="Country Code" {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
