@@ -23,8 +23,8 @@ export default function Page() {
     name: z.string().min(2, {
       message: 'Country name must be at least 2 characters.',
     }),
-    slug: z.string().min(1, {
-      message: 'Country code is required.',
+    slug: z.string().min(2).max(3, {
+      message: 'Country code must be 2 to 3 characters.',
     }),
   });
 
@@ -39,18 +39,34 @@ export default function Page() {
   const [addCountry, { isLoading }] = useAddCountryMutation();
 
   async function onSubmit(values) {
-    //console.log('values', values);
+    console.log('Original values', values);
+
+    const capitalize = (str) =>
+      str
+        .toLowerCase()
+        .split(' ')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+
+    const payload = {
+      name: capitalize(values.name), // Capitalized name
+      slug: values.slug.toLowerCase(), // Lowercase code
+    };
+
     try {
-      const result = await addCountry(values).unwrap();
-      // Optionally reset form or show success toast
+      const result = await addCountry(payload).unwrap();
       showSuccessToast(result?.message);
       setTimeout(() => {
         router.push('/admin/country/list');
       }, 2000);
     } catch (error) {
-      console.error('Error adding country:', error);
-      // Optionally show error toast
-      showErrorToast(error?.data?.message);
+      const fallbackMessage = 'An unexpected error occurred.';
+      const message =
+        error?.data?.errorSources?.[0]?.message ||
+        error?.data?.message ||
+        fallbackMessage;
+
+      showErrorToast(message);
     }
   }
 

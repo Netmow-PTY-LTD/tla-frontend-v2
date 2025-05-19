@@ -27,8 +27,8 @@ export default function Page() {
     name: z.string().min(2, {
       message: 'Country name must be at least 2 characters.',
     }),
-    slug: z.string().min(1, {
-      message: 'Country code is required.',
+    slug: z.string().min(2).max(3, {
+      message: 'Country code must be 2 to 3 characters.',
     }),
   });
 
@@ -58,18 +58,37 @@ export default function Page() {
   const [editCountry] = useEditCountryMutation();
 
   async function onSubmit(values) {
-    console.log('Form Values', values);
+    // Format values
+    const formattedValues = {
+      name: values.name
+        .toLowerCase()
+        .split(' ')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' '),
+      slug: values.slug.toLowerCase(),
+    };
+
+    console.log('Formatted Values:', formattedValues);
+
     try {
-      const res = await editCountry({ id: params.id, ...values }).unwrap();
+      const res = await editCountry({
+        id: params.id,
+        ...formattedValues,
+      }).unwrap();
       showSuccessToast(res?.message || 'Country updated successfully!');
       setTimeout(() => {
         router.push('/admin/country/list');
       }, 2000);
     } catch (error) {
-      showErrorToast('Failed to update country.');
-      console.error(error);
+      const backendMessage =
+        error?.data?.err?.errorSources?.[0]?.message ||
+        error?.data?.message ||
+        'Failed to update country.';
+      showErrorToast(backendMessage);
+      console.error('Error updating country:', error);
     }
   }
+
   return (
     <div>
       <Card className="w-1/2">
@@ -106,7 +125,7 @@ export default function Page() {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Add</Button>
+              <Button type="submit">Update</Button>
             </form>
           </Form>
         </CardContent>
