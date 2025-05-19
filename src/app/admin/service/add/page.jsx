@@ -13,8 +13,12 @@ import {
 import z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAddServiceMutation } from '@/store/features/admin/servicesApiService';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import { useRouter } from 'next/navigation';
 
 export default function AddService() {
+  const router = useRouter();
   const formSchema = z.object({
     name: z.string().min(2, {
       message: 'Service name must be at least 2 characters.',
@@ -33,11 +37,22 @@ export default function AddService() {
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log('Form Values', values);
+  const [addService, {isLoading}] = useAddServiceMutation();
+
+  async function onSubmit(values) {
+    console.log('values', values);
+    try {
+      const result = await addService(values).unwrap();
+      // Optionally reset form or show success toast
+      showSuccessToast(result?.message);
+      setTimeout(() => {
+        router.push('/admin/service/list');
+      }, 2000);
+    } catch (error) {
+      console.error('Error adding country:', error);
+      // Optionally show error toast
+      showErrorToast(error?.data?.message);
+    }
   }
 
   return (

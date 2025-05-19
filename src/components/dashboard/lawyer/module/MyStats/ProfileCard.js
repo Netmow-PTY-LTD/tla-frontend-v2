@@ -49,10 +49,10 @@ const ProfileCard = () => {
           </h1>
           <div className="p-3 bg-[#F3F3F3] mt-5 rounded-lg ">
             <p>
-              If you're facing a divorce, it's crucial to seek professional
+              {`If you're facing a divorce, it's crucial to seek professional
               legal advice. Our consultations cover everything from asset
               division to child custody arrangements, ensuring you understand
-              your rights and options.
+              your rights and options.`}
             </p>
           </div>
         </div>

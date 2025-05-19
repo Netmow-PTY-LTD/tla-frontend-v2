@@ -8,6 +8,7 @@ const servicesApiService = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
+      invalidatesTags: ['service'],
       // onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
       //   try {
       //     await queryFulfilled;
@@ -23,33 +24,51 @@ const servicesApiService = baseApi.injectEndpoints({
         url: '/service/list',
         method: 'GET',
       }),
+      providesTags: ['service'],
     }),
     singleService: builder.query({
       query: (id) => ({
         url: `/service/${id}`,
         method: 'GET',
       }),
+      providesTags: ['service'],
     }),
     editService: builder.mutation({
       query: (body) => ({
-        url: `/service/edit/${body.get('service_id')}`,
+        url: `/service/edit/${body?.id}`,
         method: 'PATCH',
         body,
       }),
+      invalidatesTags: ['service'],
     }),
     deleteService: builder.mutation({
-      query: (body) => ({
-        url: `/service/delete/${body.get('service_id')}`,
-        method: 'PATCH',
-        body,
+      query: (id) => ({
+        url: `/service/delete/${id}`,
+        method: 'DELETE',
       }),
+      invalidatesTags: ['service'],
     }),
-    changeServicesStatus: builder.mutation({
+     addCountryWiseService: builder.mutation({
       query: (body) => ({
-        url: `/service/${body.id}/status`,
-        method: 'PATCH',
+        url: '/service/add',
+        method: 'POST',
         body,
       }),
+      invalidatesTags: ['service'],
+    }),
+     allCountryWiseServices: builder.query({
+      query: () => ({
+        url: '/country-wise-service/list',
+        method: 'GET',
+      }),
+      providesTags: ['service'],
+    }),
+    getCountryWiseServices: builder.query({
+      query: (id) => ({
+        url: `/country-wise-service/${id}`,
+        method: 'GET',
+      }),
+      providesTags: ['service'],
     }),
   }),
 });
@@ -57,7 +76,10 @@ const servicesApiService = baseApi.injectEndpoints({
 export const {
   useAddServiceMutation,
   useAllServicesQuery,
-  useSingleServicesQuery,
-  useEditServicesMutation,
-  useChangeServicesStatusMutation,
+  useSingleServiceQuery,
+  useEditServiceMutation,
+  useDeleteServiceMutation,
+  useAddCountryWiseServiceMutation,
+  useAllCountryWiseServicesQuery,
+  useGetCountryWiseServicesQuery,
 } = servicesApiService;
