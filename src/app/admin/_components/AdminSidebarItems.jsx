@@ -36,26 +36,7 @@ export const AdminSidebarItems = {
         },
       ],
     },
-    {
-      title: 'Options',
-      url: '#',
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: 'Add Option',
-          url: '/admin/option/add',
-          icon: Plus,
-          isActive: true,
-        },
-        {
-          title: 'List of Options',
-          url: '/admin/option/list',
-          icon: List,
-          isActive: true,
-        },
-      ],
-    },
+
     {
       title: 'Services',
       url: '#',
@@ -76,7 +57,52 @@ export const AdminSidebarItems = {
         },
       ],
     },
-
+    {
+      title: 'Country Wise Services',
+      url: '/admin/country-wise-service/list',
+      icon: List,
+      isActive: true,
+    },
+    {
+      title: 'Questions',
+      url: '#',
+      icon: SquareTerminal,
+      isActive: true,
+      items: [
+        {
+          title: 'Add Question',
+          url: '/admin/question/add',
+          icon: Plus,
+          isActive: true,
+        },
+        {
+          title: 'List of Questions',
+          url: '/admin/question/list',
+          icon: List,
+          isActive: true,
+        },
+      ],
+    },
+    {
+      title: 'Options',
+      url: '#',
+      icon: SquareTerminal,
+      isActive: true,
+      items: [
+        {
+          title: 'Add Option',
+          url: '/admin/option/add',
+          icon: Plus,
+          isActive: true,
+        },
+        {
+          title: 'List of Options',
+          url: '/admin/option/list',
+          icon: List,
+          isActive: true,
+        },
+      ],
+    },
     {
       title: 'Subscriptions',
       url: '#',
