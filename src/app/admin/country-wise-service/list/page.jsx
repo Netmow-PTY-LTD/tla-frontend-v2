@@ -1,7 +1,7 @@
 'use client';
 
 import { DataTable } from '@/components/common/DataTable';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Select,
   SelectContent,
@@ -12,29 +12,33 @@ import {
 import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
 import {
   useAddCountryWiseServiceMutation,
-  useAllCountryWiseServicesQuery,
   useAllServicesQuery,
+  useGetAllCountryWiseServicesQuery,
   useGetCountryWiseServicesQuery,
 } from '@/store/features/admin/servicesApiService';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
 export default function Page() {
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedServices, setSelectedServices] = useState([]);
+  const [rowSelection, setRowSelection] = useState({});
 
   const { data: countryList } = useGetCountryListQuery();
   const { data: servicesList } = useAllServicesQuery();
   const { data: countrywiseServiceList, refetch } =
-    useAllCountryWiseServicesQuery();
+    useGetAllCountryWiseServicesQuery();
   const { data: countrywiseServices, isFetching } =
     useGetCountryWiseServicesQuery(selectedCountry, {
       skip: !selectedCountry, // Skip query if no country is selected
     });
 
-  console.log('Services', servicesList);
+  //console.log('countrywiseServices', countrywiseServices?.data);
 
-  const { data: addCountrywiseServices, isLoading } =
+  //console.log('Services', servicesList);
+
+  const [addCountrywiseServices, { isLoading }] =
     useAddCountryWiseServiceMutation();
 
   const columns = [
@@ -46,17 +50,56 @@ export default function Page() {
             table.getIsAllPageRowsSelected() ||
             (table.getIsSomePageRowsSelected() && 'indeterminate')
           }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          onCheckedChange={(value) => {
+            table.toggleAllPageRowsSelected(!!value);
+            const selected = table
+              .getRowModel()
+              .rows.map((row) => row.original);
+            const selectedMap = {};
+            selected.forEach((s) => {
+              selectedMap[s._id] = true;
+            });
+
+            setRowSelection(!!value ? selectedMap : {});
+            setSelectedServices(!!value ? selected : []);
+          }}
           aria-label="Select all"
         />
       ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      ),
+      cell: ({ row }) => {
+        const service = row.original;
+        const isChecked = selectedServices.some((s) => s._id === service._id);
+
+        return (
+          <Checkbox
+            checked={isChecked}
+            onCheckedChange={(value) => {
+              const newSelection = value;
+
+              setRowSelection((prev) => {
+                const updated = { ...prev };
+                if (newSelection) {
+                  updated[service._id] = true;
+                } else {
+                  delete updated[service._id];
+                }
+                return updated;
+              });
+
+              setSelectedServices((prev) => {
+                const exists = prev.find((s) => s._id === service._id);
+                if (newSelection && !exists) {
+                  return [...prev, service];
+                } else if (!newSelection && exists) {
+                  return prev.filter((s) => s._id !== service._id);
+                }
+                return prev;
+              });
+            }}
+            aria-label="Select row"
+          />
+        );
+      },
       enableSorting: false,
       enableHiding: false,
     },
@@ -69,45 +112,60 @@ export default function Page() {
     },
   ];
 
+  console.log('selected services', selectedServices);
   const handleCountryWiseServiceChange = (val) => {
     console.log('value', val);
     setSelectedCountry(val);
   };
-  // Get all serviceIds for selected country
-  const selectedCountryServices = countrywiseServices?.data?.find(
-    (entry) => entry.countryId === selectedCountry
-  );
 
-  console.log('selectedCountryServices', selectedCountryServices);
+  //console.log('selectedCountryServices', selectedCountryServices);
 
-  // Filter the services
-  const filteredServices =
-    servicesList?.data?.filter((service) =>
-      selectedCountryServices?.serviceIds?.includes(service._id)
-    ) || [];
+  //console.log('selectedCountry', selectedCountry);
 
-  console.log('selectedServices', selectedServices);
-  // const handleSave = async () => {
-  //   const selectedServiceIds = selectedServices.map((service) => service._id);
+  //console.log('selectedServices', selectedServices);
+  const handleSave = async () => {
+    const selectedServiceIds = selectedServices.map((service) => service._id);
 
-  //   if (!selectedCountry || selectedServiceIds.length === 0) {
-  //     alert('Please select a country and at least one service.');
-  //     return;
-  //   }
+    if (!selectedCountry || selectedServiceIds.length === 0) {
+      alert('Please select a country and at least one service.');
+      return;
+    }
 
-  //   try {
-  //     await addCountrywiseServices({
-  //       countryId: selectedCountry,
-  //       serviceIds: selectedServiceIds,
-  //     }).unwrap();
+    try {
+      await addCountrywiseServices({
+        countryId: selectedCountry,
+        serviceIds: selectedServiceIds,
+      }).unwrap();
 
-  //     alert('Services added successfully.');
-  //     setSelectedServices([]); // optional: reset
-  //   } catch (err) {
-  //     console.error('Error adding services:', err);
-  //     alert('Failed to add services.');
-  //   }
-  // };
+      showSuccessToast('Services added successfully.');
+      setSelectedServices([]); // optional: reset
+    } catch (err) {
+      console.error('Error adding services:', err);
+      showErrorToast('Failed to add services.');
+    }
+  };
+
+  console.log('countrywiseServices', countrywiseServices);
+
+  useEffect(() => {
+    if (!servicesList?.data || !countrywiseServices?.data) return;
+
+    // Get IDs of services already added to the country
+    const preselectedIds = new Set(countrywiseServices.data.map((s) => s._id));
+
+    // Update selectedServices with matched full service objects
+    const preselectedServices = servicesList.data.filter((service) =>
+      preselectedIds.has(service._id)
+    );
+    setSelectedServices(preselectedServices);
+
+    // Build rowSelection object: { "serviceId1": true, "serviceId2": true }
+    const preselectedRowSelection = {};
+    preselectedServices.forEach((service) => {
+      preselectedRowSelection[service._id] = true;
+    });
+    setRowSelection(preselectedRowSelection);
+  }, [servicesList, countrywiseServices]);
 
   return (
     <div>
@@ -132,13 +190,27 @@ export default function Page() {
             </SelectContent>
           </Select>
         </div>
-        <Button disabled={isLoading}>{isLoading ? 'Saving...' : 'Save'}</Button>
+        <Button onClick={handleSave} disabled={isLoading}>
+          {isLoading ? 'Saving...' : 'Save'}
+        </Button>
       </div>
       {selectedCountry && (
         <DataTable
           data={servicesList?.data || []}
           columns={columns}
-          onSelectedRowsChange={setSelectedServices}
+          rowSelection={rowSelection}
+          onRowSelectionChange={(updated) => {
+            setRowSelection(updated);
+
+            // Sync selectedServices as well
+            const selectedIds = Object.keys(updated).filter(
+              (key) => updated[key]
+            );
+            const selectedFull = servicesList.data.filter((service) =>
+              selectedIds.includes(service._id)
+            );
+            setSelectedServices(selectedFull);
+          }}
         />
       )}
     </div>

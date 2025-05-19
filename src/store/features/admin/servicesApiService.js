@@ -50,22 +50,22 @@ const servicesApiService = baseApi.injectEndpoints({
     }),
      addCountryWiseService: builder.mutation({
       query: (body) => ({
-        url: '/service/add',
+        url: '/country-wise-map/add',
         method: 'POST',
         body,
       }),
       invalidatesTags: ['service'],
     }),
-     allCountryWiseServices: builder.query({
+     getAllCountryWiseServices: builder.query({
       query: () => ({
-        url: '/country-wise-service/list',
+        url: '/country-wise-map/list',
         method: 'GET',
       }),
       providesTags: ['service'],
     }),
     getCountryWiseServices: builder.query({
       query: (id) => ({
-        url: `/country-wise-service/${id}`,
+        url: `/country-wise-map/country/${id}?type=servicelist`,
         method: 'GET',
       }),
       providesTags: ['service'],
@@ -80,6 +80,6 @@ export const {
   useEditServiceMutation,
   useDeleteServiceMutation,
   useAddCountryWiseServiceMutation,
-  useAllCountryWiseServicesQuery,
+  useGetAllCountryWiseServicesQuery,
   useGetCountryWiseServicesQuery,
 } = servicesApiService;
