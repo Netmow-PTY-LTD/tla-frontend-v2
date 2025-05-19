@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-export default function ProfileCompletion() {
+export default function ProfileProgress() {
   const completion = 27;
 
   return (

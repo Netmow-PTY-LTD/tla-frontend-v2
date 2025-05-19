@@ -14,7 +14,7 @@ import {
 const tabs = [
   {
     label: 'Profile',
-    href: '/lawyer/settings/profile/my-profile',
+    href: '/lawyer/settings/profile',
     icon: <UserIcon className="w-4 h-4" />,
   },
   {
@@ -50,8 +50,8 @@ export default function SettingsTabs() {
   const pathname = usePathname();
 
   return (
-    <div className="overflow-x-auto scrollbar-hide">
-      <div className="flex gap-2 bg-gray-100 p-2 rounded-md w-max min-w-full">
+    <div className="overflow-x-auto scrollbar-hide bg-white">
+      <div className="flex gap-4  p-4 rounded-md w-max min-w-full">
         {tabs.map((tab, index) => {
           const isActive = pathname.startsWith(tab.href);
 
@@ -63,7 +63,7 @@ export default function SettingsTabs() {
                 ${
                   isActive
                     ? 'bg-[#00C3C0] text-white'
-                    : 'bg-white text-gray-800 hover:bg-gray-200'
+                    : 'bg-[#EDF0F4] text-[#0B1C2D] hover:bg-gray-200'
                 }
               `}
             >

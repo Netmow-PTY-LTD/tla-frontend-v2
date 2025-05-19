@@ -31,7 +31,7 @@ export const SellerSidebarItems = {
     },
     {
       title: 'Settings',
-      url: '/lawyer/settings',
+      url: '/lawyer/settings/profile',
       icon: Settings,
       isActive: true,
     },

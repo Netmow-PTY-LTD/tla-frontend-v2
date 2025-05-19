@@ -3,9 +3,9 @@ import SettingsTabs from './_components/SettingTab';
 
 const SettingsLayout = ({ children }) => {
   return (
-    <div className="">
+    <div className=" border rounded-xl">
       <SettingsTabs />
-      {children}
+      <div className="p-4">{children}</div>
     </div>
   );
 };
