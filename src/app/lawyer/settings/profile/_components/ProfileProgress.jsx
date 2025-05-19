@@ -6,7 +6,7 @@ export default function ProfileProgress() {
   const completion = 27;
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 mb-5">
       <p className="text-sm text-gray-700">
         Your profile is{' '}
         <span className="text-cyan-600 font-semibold">
