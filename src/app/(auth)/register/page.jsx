@@ -5,8 +5,12 @@ import RegisterStepTwo from '@/components/auth/RegisterStepTwo';
 import RegisterStepThree from '@/components/auth/RegisterStepThree';
 import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
 import { toast } from 'sonner';
-import { showErrorToast } from '@/components/common/toasts';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { useAuthRegisterMutation } from '@/store/features/auth/authApiService';
+import { useDispatch } from 'react-redux';
+import { verifyToken } from '@/utils/verifyToken';
+import { setUser } from '@/store/features/auth/authSlice';
+import { useRouter } from 'next/navigation';
 
 export default function Register() {
   const [step, setStep] = useState(1);
@@ -31,8 +35,9 @@ export default function Register() {
   const [hasServiceError, setHasServiceError] = useState(false);
   const [areaZipValue, setAreaZipValue] = useState(false);
   const [selectedCountryCode, SetSelectedCountryCode] = useState('AU');
-
   const selectedCountry = '6825904407058a57bd0fe192';
+  const dispatch = useDispatch();
+  const router = useRouter();
 
   console.log('fullName', fullName);
   console.log('selectedService', selectedService);
@@ -101,23 +106,102 @@ export default function Register() {
         activeProfile: 'basic',
       },
     };
+
+    console.log('🔄 Submitting registration form:', formData);
+
     try {
       const result = await authRegister(formData).unwrap();
+      console.log('✅ Registration result:', result);
 
       if (result?.success && result?.token) {
-        window.location.href = `/lawyer?token=${result.token}`;
+        showSuccessToast(result?.message || 'Registration successful');
+
+        const token = result.token;
+        const userPayload = verifyToken(token);
+        console.log('🔐 Decoded user from token:', userPayload);
+
+        if (userPayload) {
+          const dispatchUser = dispatch(
+            setUser({
+              user: result?.data,
+              token: result?.token,
+            })
+          );
+
+          console.log('📦 Dispatched user to store:', dispatchUser);
+
+          if (dispatchUser?.payload?.token) {
+            const userType = result?.data?.regUserType;
+            console.log('🚦 Redirecting user based on type:', userType);
+
+            if (userType === 'lawyer') {
+              router.push(`/lawyer/dashboard`);
+            } else if (userType === 'client') {
+              router.push(`/client/dashboard`);
+            } else if (userType === 'admin') {
+              router.push(`/admin`);
+            }
+          } else {
+            console.warn('⚠️ Token not found in dispatch payload');
+          }
+        } else {
+          console.warn('⚠️ Token could not be verified');
+        }
       } else {
         const errorMessage =
           result?.errorSources?.[0]?.message ||
           result?.message ||
           'Registration failed.';
+        console.error('❌ Registration failed:', errorMessage);
         showErrorToast(errorMessage);
       }
     } catch (error) {
-      console.error('API error:', error);
+      console.error('❌ API error:', error);
       showErrorToast('Something went wrong. Please try again.');
     }
   };
+
+  // const handleFinalSubmit = async () => {
+  //   const formData = {
+  //     fullName,
+  //     selectedServiceIds,
+  //     practice,
+  //     areaZipcode,
+  //     practiceArea,
+  //     practiceInternational,
+  //     username,
+  //     email,
+  //     phone,
+  //     soloPractitioner,
+  //     companyTeam,
+  //     companyName,
+  //     companyWebsite,
+  //     companySize,
+  //     role: 'user',
+  //     regUserType: 'lawyer',
+  //     password: '123456',
+  //     profile: {
+  //       name: fullName,
+  //       activeProfile: 'basic',
+  //     },
+  //   };
+  //   try {
+  //     const result = await authRegister(formData).unwrap();
+
+  //     if (result?.success && result?.token) {
+  //       window.location.href = `/lawyer?token=${result.token}`;
+  //     } else {
+  //       const errorMessage =
+  //         result?.errorSources?.[0]?.message ||
+  //         result?.message ||
+  //         'Registration failed.';
+  //       showErrorToast(errorMessage);
+  //     }
+  //   } catch (error) {
+  //     console.error('API error:', error);
+  //     showErrorToast('Something went wrong. Please try again.');
+  //   }
+  // };
 
   return (
     <section
