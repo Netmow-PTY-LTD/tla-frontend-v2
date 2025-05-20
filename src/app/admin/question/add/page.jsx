@@ -16,7 +16,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from '@/components/ui/select';
 
 import z from 'zod';
 import { useForm } from 'react-hook-form';
@@ -31,7 +31,7 @@ export default function AddService() {
   const router = useRouter();
   const { data: serviceList, refetch } = useAllServicesQuery();
   const { data: countryList } = useGetCountryListQuery();
-  
+
   const formSchema = z.object({
     country: z.string().min(2, {
       message: 'Country name is required.',
@@ -58,21 +58,21 @@ export default function AddService() {
       service: '',
       question: '',
       slug: '',
-      questionType: ''
+      questionType: '',
     },
   });
 
-  const [addQuestion, {isLoading}] = useAddQuestionMutation();
+  const [addQuestion, { isLoading }] = useAddQuestionMutation();
 
   async function onSubmit(values) {
     console.log('values', values);
     try {
       const result = await addQuestion(values).unwrap();
       // Optionally reset form or show success toast
-      if(result){
+      if (result) {
         showSuccessToast(result?.message);
         setTimeout(() => {
-            router.push('/admin/question/list');
+          router.push('/admin/question/list');
         }, 2000);
       }
     } catch (error) {
@@ -91,53 +91,63 @@ export default function AddService() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-            <FormField
+              <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
-                    <FormItem>
+                  <FormItem>
                     <FormLabel>Country</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
                         <SelectTrigger>
-                            <SelectValue placeholder="Select a country" />
+                          <SelectValue placeholder="Select a country" />
                         </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                            {countryList?.data?.map((country, i)=>{
-                                return(
-                                    <SelectItem key={i} value={country?._id}>{country?.name}</SelectItem>
-                                )
-                            })}
-                        </SelectContent>
+                      </FormControl>
+                      <SelectContent>
+                        {countryList?.data?.map((country, i) => {
+                          return (
+                            <SelectItem key={i} value={country?._id}>
+                              {country?.name}
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectContent>
                     </Select>
-                    </FormItem>
+                  </FormItem>
                 )}
-                />
-            <FormField
+              />
+              <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
-                    <FormItem>
+                  <FormItem>
                     <FormLabel>Service</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
                         <SelectTrigger>
-                            <SelectValue placeholder="Select a service" />
+                          <SelectValue placeholder="Select a service" />
                         </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                             {serviceList?.data?.map((country, i)=>{
-                                return(
-                                    <SelectItem key={i} value={country?._id}>{country?.name}</SelectItem>
-                                )
-                            })}
-                        </SelectContent>
+                      </FormControl>
+                      <SelectContent>
+                        {serviceList?.data?.map((country, i) => {
+                          return (
+                            <SelectItem key={i} value={country?._id}>
+                              {country?.name}
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectContent>
                     </Select>
-                    </FormItem>
+                  </FormItem>
                 )}
-                />
-            <FormField
+              />
+              <FormField
                 control={form.control}
                 name="question"
                 render={({ field }) => (
@@ -165,22 +175,25 @@ export default function AddService() {
                 control={form.control}
                 name="email"
                 render={({ field }) => (
-                    <FormItem>
+                  <FormItem>
                     <FormLabel>Question Type</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
                         <SelectTrigger>
-                            <SelectValue placeholder="Select a question type" />
+                          <SelectValue placeholder="Select a question type" />
                         </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                            <SelectItem value="m@example.com">radio</SelectItem>
-                            <SelectItem value="m@google.com">checkbox</SelectItem>
-                        </SelectContent>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="m@example.com">radio</SelectItem>
+                        <SelectItem value="m@google.com">checkbox</SelectItem>
+                      </SelectContent>
                     </Select>
-                    </FormItem>
+                  </FormItem>
                 )}
-                />
+              />
               <Button type="submit">Add</Button>
             </form>
           </Form>
