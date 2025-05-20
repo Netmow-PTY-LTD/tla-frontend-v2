@@ -22,14 +22,11 @@ export default function CompanyProfile() {
             <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          {/* <FileUploader /> */}
           <FileUploader
             label="Upload Photo"
             onChange={(e) => console.log(e.target.files)}
             accept="image/*"
             multiple={false}
-            height="h-20"
-            width="max-w-xs"
           />
         </div>
         <div className="mt-[30px]">

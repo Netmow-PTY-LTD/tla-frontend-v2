@@ -8,14 +8,13 @@ import CompanyAbout from './about/CompanyAbout';
 export default function About() {
   return (
     <div>
-      <h2 className="font-bold text-lg">About</h2>
-      <div className="flex flex-col gap-3">
+      <div className="flex items-center gap-20  mb-5 ">
         <CompanyProfile />
         <PersonalProfile />
-        <CompanyContactDetails />
-        <CompanyLocation />
-        <CompanyAbout />
       </div>
+      <CompanyContactDetails />
+      <CompanyLocation />
+      <CompanyAbout />
     </div>
   );
 }
