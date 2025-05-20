@@ -5,6 +5,7 @@ import RegisterStepTwo from '@/components/auth/RegisterStepTwo';
 import RegisterStepThree from '@/components/auth/RegisterStepThree';
 import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
 import { toast } from 'sonner';
+import { showErrorToast } from '@/components/common/toasts';
 
 export default function Register() {
   const [step, setStep] = useState(1);
@@ -115,7 +116,7 @@ export default function Register() {
           data?.errorSources?.[0]?.message ||
           data?.message ||
           'Registration failed.';
-        alert(errorMessage); // Replace with toast or UI display as needed
+        showErrorToast(errorMessage); // Replace with toast or UI display as needed
         return;
       }
 
@@ -125,7 +126,7 @@ export default function Register() {
       }
     } catch (error) {
       console.error('Failed to submit:', error);
-      alert('Something went wrong. Please try again.');
+      showErrorToast('Something went wrong. Please try again.');
     }
   };
 
