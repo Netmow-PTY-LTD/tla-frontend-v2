@@ -1,3 +1,4 @@
+'use client';
 import DashboardFooter from '@/components/dashboard/common/DashboardFooter';
 import AdminDashboardHeader from './_components/AdminDashboardHeader';
 import '@/styles/dashboard.css';

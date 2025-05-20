@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -13,8 +13,13 @@ import {
 import z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAddServiceMutation } from '@/store/features/admin/servicesApiService';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import { useRouter } from 'next/navigation';
 
 export default function AddService() {
+  const router = useRouter();
+
   const formSchema = z.object({
     name: z.string().min(2, {
       message: 'Service name must be at least 2 characters.',
@@ -24,20 +29,44 @@ export default function AddService() {
     }),
   });
 
-  // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      message: '',
+      slug: '',
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log('Form Values', values);
+  const [addService, { isLoading }] = useAddServiceMutation();
+
+  // ✅ Auto-generate slug from name
+  const name = form.watch('name');
+
+  useEffect(() => {
+    const slug = name
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, '') // Remove special characters
+      .replace(/\s+/g, '-'); // Replace spaces with dashes
+    form.setValue('slug', slug);
+  }, [name, form]);
+
+  async function onSubmit(values) {
+    try {
+      const result = await addService(values).unwrap();
+      showSuccessToast(result?.message);
+      setTimeout(() => {
+        router.push('/admin/service/list');
+      }, 2000);
+    } catch (error) {
+      const backendMessage =
+        error?.data?.errorSources?.[0]?.message ||
+        error?.data?.message ||
+        'Failed to add service.';
+
+      showErrorToast(backendMessage);
+      console.error('Error adding service:', error);
+    }
   }
 
   return (
@@ -45,9 +74,6 @@ export default function AddService() {
       <Card className="w-1/2">
         <CardHeader>
           <CardTitle>Add Service</CardTitle>
-          {/* <CardDescription>
-            Deploy your new project in one-click.
-          </CardDescription> */}
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -71,12 +97,14 @@ export default function AddService() {
                   <FormItem>
                     <FormLabel>Slug</FormLabel>
                     <FormControl>
-                      <Input placeholder="Service Slug" {...field} />
+                      <Input placeholder="Slug" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
               />
-              <Button type="submit">Add</Button>
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? 'Adding...' : 'Add'}
+              </Button>
             </form>
           </Form>
         </CardContent>
@@ -84,3 +112,105 @@ export default function AddService() {
     </div>
   );
 }
+
+// 'use client';
+// import React from 'react';
+// import { Button } from '@/components/ui/button';
+// import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+// import { Input } from '@/components/ui/input';
+// import {
+//   Form,
+//   FormControl,
+//   FormField,
+//   FormItem,
+//   FormLabel,
+// } from '@/components/ui/form';
+// import z from 'zod';
+// import { useForm } from 'react-hook-form';
+// import { zodResolver } from '@hookform/resolvers/zod';
+// import { useAddServiceMutation } from '@/store/features/admin/servicesApiService';
+// import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+// import { useRouter } from 'next/navigation';
+
+// export default function AddService() {
+//   const router = useRouter();
+//   const formSchema = z.object({
+//     name: z.string().min(2, {
+//       message: 'Service name must be at least 2 characters.',
+//     }),
+//     slug: z.string().min(1, {
+//       message: 'Slug is required.',
+//     }),
+//   });
+
+//   // 1. Define your form.
+//   const form = useForm({
+//     resolver: zodResolver(formSchema),
+//     defaultValues: {
+//       name: '',
+//       message: '',
+//     },
+//   });
+
+//   const [addService, {isLoading}] = useAddServiceMutation();
+
+//   async function onSubmit(values) {
+//     console.log('values', values);
+//     try {
+//       const result = await addService(values).unwrap();
+//       // Optionally reset form or show success toast
+//       showSuccessToast(result?.message);
+//       setTimeout(() => {
+//         router.push('/admin/service/list');
+//       }, 2000);
+//     } catch (error) {
+//       console.error('Error adding country:', error);
+//       // Optionally show error toast
+//       showErrorToast(error?.data?.message);
+//     }
+//   }
+
+//   return (
+//     <div>
+//       <Card className="w-1/2">
+//         <CardHeader>
+//           <CardTitle>Add Service</CardTitle>
+//           {/* <CardDescription>
+//             Deploy your new project in one-click.
+//           </CardDescription> */}
+//         </CardHeader>
+//         <CardContent>
+//           <Form {...form}>
+//             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+//               <FormField
+//                 control={form.control}
+//                 name="name"
+//                 render={({ field }) => (
+//                   <FormItem>
+//                     <FormLabel>Name</FormLabel>
+//                     <FormControl>
+//                       <Input placeholder="Service Name" {...field} />
+//                     </FormControl>
+//                   </FormItem>
+//                 )}
+//               />
+//               <FormField
+//                 control={form.control}
+//                 name="slug"
+//                 render={({ field }) => (
+//                   <FormItem>
+//                     <FormLabel>Slug</FormLabel>
+//                     <FormControl>
+//                       <Input placeholder="Service Slug" {...field} />
+//                     </FormControl>
+//                   </FormItem>
+//                 )}
+//               />
+//               <Button type="submit">Add</Button>
+//             </form>
+//           </Form>
+//         </CardContent>
+//       </Card>
+//     </div>
+//   );
+// }

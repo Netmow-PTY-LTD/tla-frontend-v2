@@ -2,8 +2,6 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import { toast } from 'sonner';
 import { logOut, setUser } from '../features/auth/authSlice';
-import Cookies from 'js-cookie';
-import { get } from 'react-hook-form';
 
 // Basic baseQuery with auth header
 const baseQuery = fetchBaseQuery({
@@ -60,6 +58,6 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
 export const baseApi = createApi({
   reducerPath: 'baseApi',
   baseQuery: baseQueryWithRefreshToken,
-  tagTypes: ['service', 'userInfo'],
+  tagTypes: ['service', 'userInfo', 'Country', 'question'],
   endpoints: () => ({}),
 });
