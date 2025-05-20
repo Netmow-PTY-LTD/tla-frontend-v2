@@ -28,7 +28,7 @@ export default function Page() {
   const handleDeleteCountry = async (id) => {
     try {
       const res = await countryDelete(id).unwrap();
-      if(res){
+      if (res) {
         showSuccessToast(res?.message);
         refetch();
       }
@@ -120,7 +120,11 @@ export default function Page() {
   return (
     <div>
       <h1>Country List Page</h1>
-      <DataTable data={countryList?.data || []} columns={columns} />
+      <DataTable
+        data={countryList?.data || []}
+        columns={columns}
+        searchColumn={'name'}
+      />
     </div>
   );
 }

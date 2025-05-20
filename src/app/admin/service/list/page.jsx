@@ -117,7 +117,11 @@ export default function ServicesList() {
   return (
     <div>
       <h1>Services List</h1>
-      <DataTable data={serviceList?.data || []} columns={columns} />
+      <DataTable
+        data={serviceList?.data || []}
+        columns={columns}
+        searchColumn={'name'}
+      />
     </div>
   );
 }
