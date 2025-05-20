@@ -34,6 +34,7 @@ export default function RegisterStepThree({
   companySize,
   setCompanySize,
   handleFinalSubmit,
+  isLoading,
 }) {
   const [isCompany, setIsCompany] = useState(false);
 
@@ -45,9 +46,12 @@ export default function RegisterStepThree({
       email: z.string().email({
         message: 'Please enter a valid email address.',
       }),
-      phone: z.string().min(10, {
-        message: 'Phone must be at least 10 digits.',
-      }),
+      phone: z
+        .string()
+        .nonempty({ message: 'Phone number is required' })
+        .regex(/^[0-9]{10,15}$/, {
+          message: 'Phone number must be 10–15 digits',
+        }),
       soloPractitioner: z.boolean(),
       companyTeam: z.boolean(),
       company_name: z.string().optional(),
@@ -205,9 +209,14 @@ export default function RegisterStepThree({
                               {...field}
                               className="tla-form-control"
                               onChange={(e) => {
-                                field.onChange(e); // Let react-hook-form track it
-                                setPhone(e.target.value); // Your custom logic
+                                const onlyNumbers = e.target.value.replace(
+                                  /[^0-9]/g,
+                                  ''
+                                ); // Remove non-numeric chars
+                                field.onChange(onlyNumbers); // Update react-hook-form
+                                setPhone(onlyNumbers); // Your custom logic (if needed)
                               }}
+                              value={field.value}
                             />
                           </FormControl>
                           <FormMessage />
@@ -357,11 +366,12 @@ export default function RegisterStepThree({
                     Back
                   </button>
                   <button
-                    type="button" // Use type="button" so it doesn't auto-submit form
+                    type="button"
                     className="btn-auth-register"
-                    onClick={form.handleSubmit(handleFinalSubmit)} // <-- call handleStep only if form valid
+                    onClick={form.handleSubmit(handleFinalSubmit)}
+                    disabled={isLoading} // <- disable when submitting
                   >
-                    Finish & See Leads
+                    {isLoading ? 'Submitting...' : 'Finish & See Leads'}
                   </button>
 
                   {/* <button type="submit" className="btn-auth-register">

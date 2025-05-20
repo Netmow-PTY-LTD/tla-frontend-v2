@@ -6,6 +6,7 @@ import RegisterStepThree from '@/components/auth/RegisterStepThree';
 import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
 import { toast } from 'sonner';
 import { showErrorToast } from '@/components/common/toasts';
+import { useAuthRegisterMutation } from '@/store/features/auth/authApiService';
 
 export default function Register() {
   const [step, setStep] = useState(1);
@@ -73,6 +74,8 @@ export default function Register() {
     if (step > 1) setStep(step - 1);
   };
 
+  const [authRegister, { isLoading }] = useAuthRegisterMutation();
+
   const handleFinalSubmit = async () => {
     const formData = {
       fullName,
@@ -97,36 +100,20 @@ export default function Register() {
         activeProfile: 'basic',
       },
     };
-
     try {
-      const response = await fetch(
-        'https://tla-backend-v2.vercel.app/api/v1/auth/register',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        }
-      );
+      const result = await authRegister(formData).unwrap();
 
-      const data = await response.json();
-      console.log('API Response:', data);
-
-      if (!response.ok || !data.success) {
-        // Check if errorSources exist
+      if (result?.success && result?.token) {
+        window.location.href = `/lawyer?token=${result.token}`;
+      } else {
         const errorMessage =
-          data?.errorSources?.[0]?.message ||
-          data?.message ||
+          result?.errorSources?.[0]?.message ||
+          result?.message ||
           'Registration failed.';
-        showErrorToast(errorMessage); // Replace with toast or UI display as needed
-        return;
-      }
-
-      // Success case
-      if (data.success && data.token) {
-        window.location.href = `/lawyer?token=${data.token}`;
+        showErrorToast(errorMessage);
       }
     } catch (error) {
-      console.error('Failed to submit:', error);
+      console.error('API error:', error);
       showErrorToast('Something went wrong. Please try again.');
     }
   };
@@ -198,6 +185,7 @@ export default function Register() {
                 companySize={companySize}
                 setCompanySize={setCompanySize}
                 handleFinalSubmit={handleFinalSubmit}
+                isLoading={isLoading}
               />
             )}
           </div>

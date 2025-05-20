@@ -134,6 +134,7 @@ export default function RegisterStepOne({
                           className="tla-form-control"
                           value={selectedServiceNames}
                           readonly
+                          autoComplete="off"
                         />
                       </FormControl>
                       <FormMessage />
