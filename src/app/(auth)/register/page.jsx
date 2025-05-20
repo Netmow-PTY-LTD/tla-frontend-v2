@@ -87,14 +87,23 @@ export default function Register() {
       companyName,
       companyWebsite,
       companySize,
+      role: 'user',
+      regUserType: 'lawyer',
+      profile: {
+        name: fullName,
+        activeProfile: 'basic',
+      },
     };
 
     try {
-      const response = await fetch('/api/your-endpoint', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        'https://tla-backend-v2.vercel.app/api/v1/auth/register',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (!response.ok) {
         throw new Error('Network response was not ok');
