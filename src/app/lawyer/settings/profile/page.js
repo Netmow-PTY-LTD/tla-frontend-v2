@@ -13,22 +13,26 @@ import AccordionComponent from '@/components/UIComponents/AcordionComponent';
 
 export default function MyProfilePage() {
   return (
-    <>
+    <div>
       <ProfileProgress />
-
-      <AccordionComponent content={<About />} title={'About'} />
-      <AccordionComponent content={<Reviews />} title={'Reviews'} />
-      <AccordionComponent content={<Services />} title={'Services'} />
-      <AccordionComponent content={<Media />} title={'Media'} />
-      <AccordionComponent
-        content={<SocialMediaLinks />}
-        title={'Social Media Links'}
-      />
-      <AccordionComponent content={<Accreditations />} title={'Accrditaions'} />
-      <AccordionComponent
-        content={<QuestionsAndAnswers />}
-        title={'Questions And Answers'}
-      />
-    </>
+      <div className="space-y-[10px] ">
+        <AccordionComponent content={<About />} title={'About'} />
+        <AccordionComponent content={<Reviews />} title={'Reviews'} />
+        <AccordionComponent content={<Services />} title={'Services'} />
+        <AccordionComponent content={<Media />} title={'Media'} />
+        <AccordionComponent
+          content={<SocialMediaLinks />}
+          title={'Social Media Links'}
+        />
+        <AccordionComponent
+          content={<Accreditations />}
+          title={'Accrditaions'}
+        />
+        <AccordionComponent
+          content={<QuestionsAndAnswers />}
+          title={'Questions And Answers'}
+        />
+      </div>
+    </div>
   );
 }
