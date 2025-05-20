@@ -171,13 +171,9 @@ export default function RegisterStepTwo({
     ],
   };
 
-  console.log('areaZipList', areaZipList.data);
-
   const filteredZipcodes = areaZipList?.data?.filter((item) =>
     item.zip.toLowerCase().includes(query.toLowerCase())
   );
-
-  console.log('filteredZipcodes', filteredZipcodes);
 
   return (
     <>
@@ -229,92 +225,6 @@ export default function RegisterStepTwo({
                     </FormItem>
                   )}
                 />
-
-                {/* <FormField
-                  control={form.control}
-                  name="AreaZipcode"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Area Zipcode</FormLabel>
-                      <Combobox
-                        value={field.value}
-                        onChange={(val) => {
-                          field.onChange(val); // store full object
-                          setAreaZipcode(val?._id);
-                          if (val?.zip?.trim() !== '') {
-                            form.setValue('practiceWithin', true);
-                            setPractice(true);
-                          } else {
-                            // Optionally reset if cleared
-                            form.setValue('practiceWithin', false);
-                            setPractice(false);
-                            setAreaZipcode(null);
-                          }
-                        }}
-                      >
-                        <div className="relative">
-                          <Combobox.Input
-                            className="tla-form-control w-full"
-                            onChange={(event) => {
-                              setQuery(event.target.value);
-                            }}
-                            displayValue={(val) => {
-                              if (typeof val === 'string') {
-                                return val;
-                              }
-                              if (val?.zip) {
-                                return val.zip;
-                              }
-                              return '';
-                            }}
-                            placeholder="Select a Zipcode"
-                          />
-                          <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-                            <ChevronDown className="h-4 w-4 text-gray-500" />
-                          </Combobox.Button>
-
-                          {filteredZipcodes?.length > 0 && (
-                            <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                              {filteredZipcodes.map((item) => (
-                                <Combobox.Option
-                                  key={item._id}
-                                  value={item} // Pass full object
-                                  className={({ active }) =>
-                                    cn(
-                                      'cursor-pointer select-none relative py-2 pl-10 pr-4',
-                                      active
-                                        ? 'bg-blue-100 text-blue-900'
-                                        : 'text-gray-900'
-                                    )
-                                  }
-                                >
-                                  {({ selected }) => (
-                                    <>
-                                      <span
-                                        className={cn('block truncate', {
-                                          'font-medium': selected,
-                                          'font-normal': !selected,
-                                        })}
-                                      >
-                                        {item.zip}
-                                      </span>
-                                      {selected ? (
-                                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
-                                          <Check className="h-4 w-4" />
-                                        </span>
-                                      ) : null}
-                                    </>
-                                  )}
-                                </Combobox.Option>
-                              ))}
-                            </Combobox.Options>
-                          )}
-                        </div>
-                      </Combobox>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
 
                 <FormField
                   control={form.control}
