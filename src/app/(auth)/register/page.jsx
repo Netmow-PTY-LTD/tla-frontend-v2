@@ -4,6 +4,7 @@ import RegisterStepOne from '@/components/auth/RegisterStepOne';
 import RegisterStepTwo from '@/components/auth/RegisterStepTwo';
 import RegisterStepThree from '@/components/auth/RegisterStepThree';
 import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
+import { toast } from 'sonner';
 
 export default function Register() {
   const [step, setStep] = useState(1);
@@ -24,6 +25,7 @@ export default function Register() {
   const [companySize, setCompanySize] = useState('2-10');
   const [selectedServiceIds, setSelectedServiceIds] = useState([]);
   const [selectedServiceNames, setSelectedServiceNames] = useState([]);
+  const [hasServiceError, setHasServiceError] = useState(false);
 
   const selectedCountry = '6825904407058a57bd0fe192';
 
@@ -50,10 +52,19 @@ export default function Register() {
       skip: !selectedCountry, // Skip query if no country is selected
     });
 
-  console.log('countrywiseServices', countrywiseServices);
-
   const handleStep = () => {
     if (step === 1) {
+      if (selectedServiceIds.length <= 0) {
+        toast.error('Please Select Law Services');
+        setHasServiceError(true); // add error
+        return;
+      }
+      if (!fullName) {
+        toast.error('Please put your Full Name');
+        setHasServiceError(true); // add error
+        return;
+      }
+      setHasServiceError(false); // clear error
       setStep(step + 1);
     } else if (step === 2) {
       setStep(step + 1);
@@ -88,6 +99,8 @@ export default function Register() {
                 countrywiseServices={countrywiseServices}
                 selectedServiceNames={selectedServiceNames}
                 setSelectedServiceNames={setSelectedServiceNames}
+                hasServiceError={hasServiceError}
+                setHasServiceError={setHasServiceError}
               />
             )}
             {step === 2 && (

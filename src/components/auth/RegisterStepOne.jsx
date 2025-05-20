@@ -37,9 +37,12 @@ export default function RegisterStepOne({
   countrywiseServices,
   selectedServiceNames,
   setSelectedServiceNames,
+  hasServiceError,
+  setHasServiceError,
 }) {
   const handleServiceClick = (id, name) => {
     setSelectedServiceIds((prevSelected) => {
+      setHasServiceError(false);
       let newSelected;
       if (prevSelected.includes(id)) {
         newSelected = prevSelected.filter((item) => item !== id);
@@ -108,16 +111,17 @@ export default function RegisterStepOne({
                           placeholder="John Doe"
                           {...field}
                           className="tla-form-control"
+                          value={fullName}
                           onChange={(e) => {
-                            field.onChange(e); // Let react-hook-form track it
-                            setFullName(e.target.value); // Your custom logic
+                            field.onChange(e);
+                            setFullName(e.target.value);
                           }}
                         />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                />{' '}
                 <FormField
                   control={form.control}
                   name="service"
@@ -139,7 +143,13 @@ export default function RegisterStepOne({
                     </FormItem>
                   )}
                 />
-                <div className="popular-services mb-8">
+                <div
+                  className={`popular-services mb-8 ${
+                    hasServiceError
+                      ? 'border border-red-500 p-4 rounded-md'
+                      : ''
+                  }`}
+                >
                   <h4>Popular Law Services</h4>
                   <div className="flex flex-wrap gap-2 mt-4">
                     {countrywiseServices?.data?.map((service) => (
@@ -171,7 +181,6 @@ export default function RegisterStepOne({
                     ))}
                   </div>
                 </div>
-
                 <button
                   type="submit"
                   className="btn-auth-register"
