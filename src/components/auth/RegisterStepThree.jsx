@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import { isValidPhoneNumber } from 'libphonenumber-js';
 
 export default function RegisterStepThree({
   handleBack,
@@ -27,7 +28,7 @@ export default function RegisterStepThree({
   setSoloPractitioner,
   companyTeam,
   setCompanyTeam,
-  ompanyName,
+  companyName,
   setCompanyName,
   companyWebsite,
   setCompanyWebsite,
@@ -35,8 +36,11 @@ export default function RegisterStepThree({
   setCompanySize,
   handleFinalSubmit,
   isLoading,
+  selectedCountryCode,
 }) {
   const [isCompany, setIsCompany] = useState(false);
+
+  console.log('selectedCountryCode', selectedCountryCode);
 
   const formSchema = z
     .object({
@@ -49,14 +53,13 @@ export default function RegisterStepThree({
       phone: z
         .string()
         .nonempty({ message: 'Phone number is required' })
-        .regex(/^[0-9]{10,15}$/, {
-          message: 'Phone number must be 10–15 digits',
+        .refine((val) => isValidPhoneNumber(val, selectedCountryCode), {
+          message: `Invalid ${selectedCountryCode} phone number`,
         }),
       soloPractitioner: z.boolean(),
       companyTeam: z.boolean(),
       company_name: z.string().optional(),
       company_website: z.string().optional(),
-      company_size: z.string().optional(),
     })
     .superRefine((data, ctx) => {
       if (data.companyTeam) {
@@ -73,14 +76,6 @@ export default function RegisterStepThree({
             code: z.ZodIssueCode.custom,
             path: ['company_website'],
             message: 'Company website is required',
-          });
-        }
-
-        if (!data.company_size || data.company_size.trim() === '') {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ['company_size'],
-            message: 'Company size is required',
           });
         }
 
@@ -109,7 +104,6 @@ export default function RegisterStepThree({
       companyTeam: false,
       company_name: '',
       company_website: '',
-      company_size: '',
     },
   });
 

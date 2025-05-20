@@ -30,6 +30,7 @@ export default function Register() {
   const [selectedServiceNames, setSelectedServiceNames] = useState([]);
   const [hasServiceError, setHasServiceError] = useState(false);
   const [areaZipValue, setAreaZipValue] = useState(false);
+  const [selectedCountryCode, SetSelectedCountryCode] = useState('AU');
 
   const selectedCountry = '6825904407058a57bd0fe192';
 
@@ -186,6 +187,7 @@ export default function Register() {
                 setCompanySize={setCompanySize}
                 handleFinalSubmit={handleFinalSubmit}
                 isLoading={isLoading}
+                selectedCountryCode={selectedCountryCode}
               />
             )}
           </div>
