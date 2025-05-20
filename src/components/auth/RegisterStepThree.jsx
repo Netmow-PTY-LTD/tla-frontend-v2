@@ -15,18 +15,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: 'Name is required and must be at least 2 characters.',
-  }),
-  email: z.string().email({
-    message: 'Please enter a valid email address.',
-  }),
-  phone: z.string().min(1, {
-    message: 'Phone must be at least 10 characters.',
-  }),
-});
-
 export default function RegisterStepThree({
   handleBack,
   username,
@@ -45,8 +33,67 @@ export default function RegisterStepThree({
   setCompanyWebsite,
   companySize,
   setCompanySize,
+  handleFinalSubmit,
 }) {
   const [isCompany, setIsCompany] = useState(false);
+
+  const formSchema = z
+    .object({
+      username: z.string().min(2, {
+        message: 'Name is required and must be at least 2 characters.',
+      }),
+      email: z.string().email({
+        message: 'Please enter a valid email address.',
+      }),
+      phone: z.string().min(10, {
+        message: 'Phone must be at least 10 digits.',
+      }),
+      soloPractitioner: z.boolean(),
+      companyTeam: z.boolean(),
+      company_name: z.string().optional(),
+      company_website: z.string().optional(),
+      company_size: z.string().optional(),
+    })
+    .superRefine((data, ctx) => {
+      if (data.companyTeam) {
+        if (!data.company_name || data.company_name.trim() === '') {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['company_name'],
+            message: 'Company name is required',
+          });
+        }
+
+        if (!data.company_website || data.company_website.trim() === '') {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['company_website'],
+            message: 'Company website is required',
+          });
+        }
+
+        if (!data.company_size || data.company_size.trim() === '') {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['company_size'],
+            message: 'Company size is required',
+          });
+        }
+
+        if (data.company_website) {
+          try {
+            new URL(data.company_website);
+          } catch {
+            ctx.addIssue({
+              path: ['company_website'],
+              code: z.ZodIssueCode.custom,
+              message:
+                'Invalid website URL - please use full URL including https://',
+            });
+          }
+        }
+      }
+    });
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -54,6 +101,11 @@ export default function RegisterStepThree({
       username: '',
       email: '',
       phone: '',
+      soloPractitioner: false,
+      companyTeam: false,
+      company_name: '',
+      company_website: '',
+      company_size: '',
     },
   });
 
@@ -97,8 +149,18 @@ export default function RegisterStepThree({
                           {...field}
                           className="tla-form-control"
                           onChange={(e) => {
-                            field.onChange(e); // Let react-hook-form track it
-                            setUsername(e.target.value); // Your custom logic
+                            // Get raw input value
+                            let val = e.target.value;
+
+                            // Convert to unique username format:
+                            val = val
+                              .trim() // remove leading/trailing spaces
+                              .toLowerCase() // lowercase
+                              .replace(/\s+/g, '_') // replace spaces with underscores
+                              .replace(/[^a-z0-9_]/g, ''); // remove special chars except underscore and alphanumeric
+
+                            field.onChange(val); // update react-hook-form value
+                            setUsername(val); // your custom state update
                           }}
                         />
                       </FormControl>
@@ -178,19 +240,27 @@ export default function RegisterStepThree({
                 />
                 <FormField
                   control={form.control}
-                  name="name"
+                  name="companyTeam"
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
                         <Checkbox
                           {...field}
-                          onClick={() => {
-                            setIsCompany(!isCompany);
-                          }}
-                          checked={field.value} // control from react-hook-form
+                          checked={field.value}
                           onCheckedChange={(checked) => {
-                            field.onChange(checked); // update form state
-                            setCompanyTeam(checked); // update your custom state
+                            field.onChange(checked);
+                            setCompanyTeam(checked);
+                            setIsCompany(checked);
+
+                            if (!checked) {
+                              // Clear company-related values when unchecked
+                              setCompanyName('');
+                              setCompanyWebsite('');
+                              setCompanySize('2-10');
+                              form.setValue('company_name', '');
+                              form.setValue('company_website', '');
+                              form.setValue('company_size', '');
+                            }
                           }}
                         />
                       </FormControl>
@@ -258,7 +328,10 @@ export default function RegisterStepThree({
                           <button
                             type="button"
                             key={size}
-                            onClick={() => setCompanySize(size)}
+                            onClick={() => {
+                              setCompanySize(size); // your local state
+                              form.setValue('company_size', size); // sync with react-hook-form
+                            }}
                             className={`${
                               companySize === size ? 'selected' : ''
                             }`}
@@ -266,6 +339,10 @@ export default function RegisterStepThree({
                             {size}
                           </button>
                         ))}
+                        <input
+                          type="hidden"
+                          {...form.register('company_size')}
+                        />
                       </div>
                     </div>
                   </>
@@ -279,9 +356,17 @@ export default function RegisterStepThree({
                   >
                     Back
                   </button>
-                  <button type="submit" className="btn-auth-register">
+                  <button
+                    type="button" // Use type="button" so it doesn't auto-submit form
+                    className="btn-auth-register"
+                    onClick={handleFinalSubmit}
+                  >
                     Finish & See Leads
                   </button>
+
+                  {/* <button type="submit" className="btn-auth-register">
+                    Finish & See Leads
+                  </button> */}
                 </div>
               </form>
             </Form>

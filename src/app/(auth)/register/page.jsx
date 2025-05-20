@@ -14,6 +14,7 @@ export default function Register() {
   const [practice, setPractice] = useState('');
   const [practiceArea, setPracticeArea] = useState('');
   const [areaZipcode, setAreaZipcode] = useState('');
+  const [areaRange, setAreaRange] = useState('');
   const [practiceInternational, setPracticeInternational] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -55,15 +56,10 @@ export default function Register() {
   const handleStep = () => {
     if (step === 1) {
       if (selectedServiceIds.length <= 0) {
-        toast.error('Please Select Law Services');
         setHasServiceError(true); // add error
         return;
       }
-      if (!fullName) {
-        toast.error('Please put your Full Name');
-        setHasServiceError(true); // add error
-        return;
-      }
+
       setHasServiceError(false); // clear error
       setStep(step + 1);
     } else if (step === 2) {
@@ -73,6 +69,45 @@ export default function Register() {
 
   const handleBack = () => {
     if (step > 1) setStep(step - 1);
+  };
+
+  const handleFinalSubmit = async () => {
+    const formData = {
+      fullName,
+      selectedServiceIds,
+      practice,
+      areaZipcode,
+      practiceArea,
+      practiceInternational,
+      username,
+      email,
+      phone,
+      soloPractitioner,
+      companyTeam,
+      companyName,
+      companyWebsite,
+      companySize,
+    };
+
+    try {
+      const response = await fetch('/api/your-endpoint', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      console.log('API Response:', data);
+
+      // maybe advance step, show success, etc.
+    } catch (error) {
+      console.error('Failed to submit:', error);
+      // show error to user
+    }
   };
 
   return (
@@ -101,6 +136,8 @@ export default function Register() {
                 setSelectedServiceNames={setSelectedServiceNames}
                 hasServiceError={hasServiceError}
                 setHasServiceError={setHasServiceError}
+                areaRange={areaRange}
+                setAreaRange={setAreaRange}
               />
             )}
             {step === 2 && (
@@ -137,6 +174,7 @@ export default function Register() {
                 setCompanyWebsite={setCompanyWebsite}
                 companySize={companySize}
                 setCompanySize={setCompanySize}
+                handleFinalSubmit={handleFinalSubmit}
               />
             )}
           </div>

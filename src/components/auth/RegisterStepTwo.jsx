@@ -23,15 +23,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: 'Name is required and must be at least 2 characters.',
-  }),
-  // service: z.string().min(1, {
-  //   message: "Service is required.",
-  // }),
-});
-
 export default function RegisterStepTwo({
   handleStep,
   handleBack,
@@ -43,12 +34,50 @@ export default function RegisterStepTwo({
   setAreaZipcode,
   practiceInternational,
   setPracticeInternational,
+  areaRange,
+  setAreaRange,
 }) {
+  const formSchema = z
+    .object({
+      practiceWithin: z.boolean(),
+      practiceInternational: z.boolean(),
+      AreaZipcode: z.string().optional(),
+      areaRange: z.string().optional(),
+    })
+    .superRefine((data, ctx) => {
+      if (!data.practiceWithin && !data.practiceInternational) {
+        ctx.addIssue({
+          path: ['practiceWithin'], // highlights the checkbox
+          code: z.ZodIssueCode.custom,
+          message: 'You must select at least one option',
+        });
+      }
+
+      if (data.practiceWithin) {
+        if (!data.AreaZipcode || data.AreaZipcode.trim() === '') {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Area Zipcode is required when practicing within',
+            path: ['AreaZipcode'],
+          });
+        }
+        if (!data.areaRange || data.areaRange.trim() === '') {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Area Range is required when practicing within',
+            path: ['areaRange'],
+          });
+        }
+      }
+    });
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      service: '',
+      practiceWithin: false,
+      practiceInternational: false,
+      AreaZipcode: '',
+      areaRange: '',
     },
   });
 
@@ -90,10 +119,11 @@ export default function RegisterStepTwo({
                       <FormControl>
                         <Checkbox
                           {...field}
-                          checked={field.value} // control from react-hook-form
+                          checked={field.value}
                           onCheckedChange={(checked) => {
-                            field.onChange(checked); // update form state
-                            setPractice(checked); // update your custom state
+                            // Let user toggle checkbox normally
+                            field.onChange(checked);
+                            setPractice(checked);
                           }}
                         />
                       </FormControl>
@@ -104,6 +134,7 @@ export default function RegisterStepTwo({
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name="AreaZipcode"
@@ -118,6 +149,12 @@ export default function RegisterStepTwo({
                           onChange={(e) => {
                             field.onChange(e); // Let react-hook-form track it
                             setAreaZipcode(e.target.value); // Your custom logic
+
+                            // If user fills AreaZipcode, force practiceWithin checkbox to true
+                            if (e.target.value.trim() !== '') {
+                              form.setValue('practiceWithin', true);
+                              setPractice(true);
+                            }
                           }}
                         />
                       </FormControl>
@@ -127,7 +164,7 @@ export default function RegisterStepTwo({
                 />
                 <FormField
                   control={form.control}
-                  name="service"
+                  name="areaRange"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Range of Area</FormLabel>
@@ -135,6 +172,12 @@ export default function RegisterStepTwo({
                         onValueChange={(value) => {
                           field.onChange(value); // Update react-hook-form state
                           setPracticeArea(value); // Update your local state
+
+                          // If user selects a service, force practiceWithin checkbox to true
+                          if (value.trim() !== '') {
+                            form.setValue('practiceWithin', true);
+                            setPractice(true);
+                          }
                         }}
                         defaultValue={field.value}
                       >
@@ -217,9 +260,9 @@ export default function RegisterStepTwo({
                       Back
                     </button>
                     <button
-                      type="submit"
+                      type="button" // prevent default form submit here
                       className="btn-auth-register"
-                      onClick={handleStep}
+                      onClick={form.handleSubmit(handleStep)} // <-- call handleStep only if form valid
                     >
                       Next
                     </button>
