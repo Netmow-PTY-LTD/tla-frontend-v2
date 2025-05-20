@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import Image from "next/image";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import React, { useState } from 'react';
+import Image from 'next/image';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 import {
   Form,
   FormControl,
@@ -11,32 +11,49 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const formSchema = z.object({
   username: z.string().min(2, {
-    message: "Name is required and must be at least 2 characters.",
+    message: 'Name is required and must be at least 2 characters.',
   }),
   email: z.string().email({
-    message: "Please enter a valid email address.",
+    message: 'Please enter a valid email address.',
   }),
   phone: z.string().min(1, {
-    message: "Phone must be at least 10 characters.",
+    message: 'Phone must be at least 10 characters.',
   }),
 });
 
-export default function RegisterStepThree({ handleBack }) {
+export default function RegisterStepThree({
+  handleBack,
+  username,
+  setUsername,
+  email,
+  setEmail,
+  phone,
+  setPhone,
+  soloPractitioner,
+  setSoloPractitioner,
+  companyTeam,
+  setCompanyTeam,
+  ompanyName,
+  setCompanyName,
+  companyWebsite,
+  setCompanyWebsite,
+  companySize,
+  setCompanySize,
+}) {
   const [isCompany, setIsCompany] = useState(false);
-  const [selectedSize, setSelectedSize] = useState("2-10");
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
-      email: "",
-      phone: "",
+      username: '',
+      email: '',
+      phone: '',
     },
   });
 
@@ -61,7 +78,7 @@ export default function RegisterStepThree({ handleBack }) {
           <div className="tla-auth-form tla-auth-form-register">
             <h2 className="tla-auth-title mb-2">Some details about you</h2>
             <p className="tla-auth-subtitle mb-5">
-              You’re just a few steps away from viewing our Family Law leads{" "}
+              You’re just a few steps away from viewing our Family Law leads{' '}
             </p>
             <Form {...form}>
               <form
@@ -79,6 +96,10 @@ export default function RegisterStepThree({ handleBack }) {
                           placeholder="John Doe"
                           {...field}
                           className="tla-form-control"
+                          onChange={(e) => {
+                            field.onChange(e); // Let react-hook-form track it
+                            setUsername(e.target.value); // Your custom logic
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -98,6 +119,10 @@ export default function RegisterStepThree({ handleBack }) {
                               placeholder="johndoe@gmail.com"
                               {...field}
                               className="tla-form-control"
+                              onChange={(e) => {
+                                field.onChange(e); // Let react-hook-form track it
+                                setEmail(e.target.value); // Your custom logic
+                              }}
                             />
                           </FormControl>
                           <FormMessage />
@@ -117,6 +142,10 @@ export default function RegisterStepThree({ handleBack }) {
                               placeholder="phone number"
                               {...field}
                               className="tla-form-control"
+                              onChange={(e) => {
+                                field.onChange(e); // Let react-hook-form track it
+                                setPhone(e.target.value); // Your custom logic
+                              }}
                             />
                           </FormControl>
                           <FormMessage />
@@ -127,11 +156,18 @@ export default function RegisterStepThree({ handleBack }) {
                 </div>
                 <FormField
                   control={form.control}
-                  name="name"
+                  name="soloPractitioner"
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Checkbox {...field} />
+                        <Checkbox
+                          {...field}
+                          checked={field.value} // control from react-hook-form
+                          onCheckedChange={(checked) => {
+                            field.onChange(checked); // update form state
+                            setSoloPractitioner(checked); // update your custom state
+                          }}
+                        />
                       </FormControl>
                       <FormLabel className="ml-2 font-bold">
                         I will work as solo practitioner
@@ -150,6 +186,11 @@ export default function RegisterStepThree({ handleBack }) {
                           {...field}
                           onClick={() => {
                             setIsCompany(!isCompany);
+                          }}
+                          checked={field.value} // control from react-hook-form
+                          onCheckedChange={(checked) => {
+                            field.onChange(checked); // update form state
+                            setCompanyTeam(checked); // update your custom state
                           }}
                         />
                       </FormControl>
@@ -175,6 +216,10 @@ export default function RegisterStepThree({ handleBack }) {
                                   placeholder="Company"
                                   {...field}
                                   className="tla-form-control"
+                                  onChange={(e) => {
+                                    field.onChange(e); // Let react-hook-form track it
+                                    setCompanyName(e.target.value); // Your custom logic
+                                  }}
                                 />
                               </FormControl>
                               <FormMessage />
@@ -194,6 +239,10 @@ export default function RegisterStepThree({ handleBack }) {
                                   placeholder="https://"
                                   {...field}
                                   className="tla-form-control"
+                                  onChange={(e) => {
+                                    field.onChange(e); // Let react-hook-form track it
+                                    setCompanyWebsite(e.target.value); // Your custom logic
+                                  }}
                                 />
                               </FormControl>
                               <FormMessage />
@@ -205,13 +254,13 @@ export default function RegisterStepThree({ handleBack }) {
                     <div className="company-size">
                       <label>Company Size, Team Members</label>
                       <div className="flex flex-wrap gap-2">
-                        {["2-10", "11-50", "51-100", "100+"].map((size) => (
+                        {['2-10', '11-50', '51-100', '100+'].map((size) => (
                           <button
                             type="button"
                             key={size}
-                            onClick={() => setSelectedSize(size)}
+                            onClick={() => setCompanySize(size)}
                             className={`${
-                              selectedSize === size ? "selected" : ""
+                              companySize === size ? 'selected' : ''
                             }`}
                           >
                             {size}
