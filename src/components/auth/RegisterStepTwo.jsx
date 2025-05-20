@@ -39,6 +39,8 @@ export default function RegisterStepTwo({
   setPracticeInternational,
   areaRange,
   setAreaRange,
+  setAreaZipValue,
+  areaZipValue,
 }) {
   const [query, setQuery] = useState('');
   const [selectedZip, setSelectedZip] = useState('');
@@ -80,10 +82,10 @@ export default function RegisterStepTwo({
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      practiceWithin: false,
-      practiceInternational: false,
-      AreaZipcode: '',
-      areaRange: '',
+      practiceWithin: practice || false,
+      practiceInternational: practiceInternational || false,
+      AreaZipcode: areaZipValue || '',
+      areaRange: practiceArea || '',
     },
   });
 
@@ -237,6 +239,7 @@ export default function RegisterStepTwo({
                         onChange={(val) => {
                           field.onChange(val.zip); // pass string zip
                           setAreaZipcode(val._id); // save id separately
+                          setAreaZipValue(val.zip); // save id separately
                           if (val?.zip?.trim() !== '') {
                             form.setValue('practiceWithin', true);
                             setPractice(true);
@@ -244,6 +247,7 @@ export default function RegisterStepTwo({
                             form.setValue('practiceWithin', false);
                             setPractice(false);
                             setAreaZipcode(null);
+                            setAreaZipValue(null); // save id separately
                           }
                         }}
                       >

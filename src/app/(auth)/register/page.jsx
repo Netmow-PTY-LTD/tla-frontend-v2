@@ -28,6 +28,7 @@ export default function Register() {
   const [selectedServiceIds, setSelectedServiceIds] = useState([]);
   const [selectedServiceNames, setSelectedServiceNames] = useState([]);
   const [hasServiceError, setHasServiceError] = useState(false);
+  const [areaZipValue, setAreaZipValue] = useState(false);
 
   const selectedCountry = '6825904407058a57bd0fe192';
 
@@ -172,6 +173,8 @@ export default function Register() {
                 setAreaZipcode={setAreaZipcode}
                 practiceInternational={practiceInternational}
                 setPracticeInternational={setPracticeInternational}
+                areaZipValue={areaZipValue}
+                setAreaZipValue={setAreaZipValue}
               />
             )}
 
