@@ -240,18 +240,33 @@ export default function RegisterStepTwo({
                         value={field.value}
                         onChange={(val) => {
                           field.onChange(val); // store full object
-                          setAreaZipcode(val); // now val = { _id, zip }
+                          setAreaZipcode(val?._id);
                           if (val?.zip?.trim() !== '') {
                             form.setValue('practiceWithin', true);
                             setPractice(true);
+                          } else {
+                            // Optionally reset if cleared
+                            form.setValue('practiceWithin', false);
+                            setPractice(false);
+                            setAreaZipcode(null);
                           }
                         }}
                       >
                         <div className="relative">
                           <Combobox.Input
                             className="tla-form-control w-full"
-                            onChange={(event) => setQuery(event.target.value)}
-                            displayValue={(val) => val?.zip || ''}
+                            onChange={(event) => {
+                              setQuery(event.target.value);
+                            }}
+                            displayValue={(val) => {
+                              if (typeof val === 'string') {
+                                return val;
+                              }
+                              if (val?.zip) {
+                                return val.zip;
+                              }
+                              return '';
+                            }}
                             placeholder="Select a Zipcode"
                           />
                           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
@@ -263,7 +278,7 @@ export default function RegisterStepTwo({
                               {filteredZipcodes.map((item) => (
                                 <Combobox.Option
                                   key={item._id}
-                                  value={item} // Pass the full item
+                                  value={item} // Pass full object
                                   className={({ active }) =>
                                     cn(
                                       'cursor-pointer select-none relative py-2 pl-10 pr-4',
@@ -308,15 +323,14 @@ export default function RegisterStepTwo({
                     <FormItem>
                       <FormLabel>Area Zipcode</FormLabel>
                       <Combobox
-                        value={field.value}
+                        value={field.value} // string zip code
                         onChange={(val) => {
-                          field.onChange(val); // store full object
-                          setAreaZipcode(val?._id);
+                          field.onChange(val.zip); // pass string zip
+                          setAreaZipcode(val._id); // save id separately
                           if (val?.zip?.trim() !== '') {
                             form.setValue('practiceWithin', true);
                             setPractice(true);
                           } else {
-                            // Optionally reset if cleared
                             form.setValue('practiceWithin', false);
                             setPractice(false);
                             setAreaZipcode(null);
@@ -326,18 +340,8 @@ export default function RegisterStepTwo({
                         <div className="relative">
                           <Combobox.Input
                             className="tla-form-control w-full"
-                            onChange={(event) => {
-                              setQuery(event.target.value);
-                            }}
-                            displayValue={(val) => {
-                              if (typeof val === 'string') {
-                                return val;
-                              }
-                              if (val?.zip) {
-                                return val.zip;
-                              }
-                              return '';
-                            }}
+                            onChange={(event) => setQuery(event.target.value)}
+                            displayValue={(val) => val || ''}
                             placeholder="Select a Zipcode"
                           />
                           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
@@ -349,7 +353,7 @@ export default function RegisterStepTwo({
                               {filteredZipcodes.map((item) => (
                                 <Combobox.Option
                                   key={item._id}
-                                  value={item} // Pass full object
+                                  value={item} // full object for selection
                                   className={({ active }) =>
                                     cn(
                                       'cursor-pointer select-none relative py-2 pl-10 pr-4',
