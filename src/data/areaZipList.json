@@ -1,0 +1,77 @@
+[
+  {
+    "_id": "id1",
+    "zip": "2000 – Sydney, NSW",
+    "countryId": "682c4cc84c93ea5164dde92d"
+  },
+  {
+    "_id": "id2",
+    "zip": "3000 – Melbourne, VIC",
+    "countryId": "682c4cc84c93ea5164dde92d"
+  },
+  {
+    "_id": "id3",
+    "zip": "4000 – Brisbane, QLD",
+    "countryId": "682c4cc84c93ea5164dde92d"
+  },
+  {
+    "_id": "id4",
+    "zip": "5000 – Adelaide, SA",
+    "countryId": "682c4cc84c93ea5164dde92d"
+  },
+  {
+    "_id": "id5",
+    "zip": "6000 – Perth, WA",
+    "countryId": "682c4cc84c93ea5164dde92d"
+  },
+  {
+    "_id": "id6",
+    "zip": "7000 – Hobart, TAS",
+    "countryId": "682c4cc84c93ea5164dde92d"
+  },
+  {
+    "_id": "id7",
+    "zip": "0800 – Darwin, NT",
+    "countryId": "682c4cc84c93ea5164dde92d"
+  },
+  {
+    "_id": "id8",
+    "zip": "2600 – Canberra, ACT",
+    "countryId": "682c4cc84c93ea5164dde92d"
+  },
+  {
+    "_id": "id9",
+    "zip": "2010 – Darlinghurst, NSW",
+    "countryId": "682c4cc84c93ea5164dde92d"
+  },
+  {
+    "_id": "id10",
+    "zip": "4217 – Surfers Paradise, QLD",
+    "countryId": "682c4cc84c93ea5164dde92d"
+  },
+  {
+    "_id": "id11",
+    "zip": "2444 – Port Macquarie, NSW",
+    "countryId": "682c4cc84c93ea5164dde92d"
+  },
+  {
+    "_id": "id12",
+    "zip": "3350 – Ballarat, VIC",
+    "countryId": "682c4cc84c93ea5164dde92d"
+  },
+  {
+    "_id": "id13",
+    "zip": "0870 – Alice Springs, NT",
+    "countryId": "682c4cc84c93ea5164dde92d"
+  },
+  {
+    "_id": "id14",
+    "zip": "0801 – Darwin City, NT",
+    "countryId": "682c4cc84c93ea5164dde92d"
+  },
+  {
+    "_id": "id15",
+    "zip": "6150 – Fremantle, WA",
+    "countryId": "682c4cc84c93ea5164dde92d"
+  }
+]
