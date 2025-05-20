@@ -37,24 +37,25 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import Link from 'next/link';
 
-export function DataTable({ data, columns, searchColumn }) {
+export function SimpleQuestionTable({ data, setData, columns, searchColumn }) {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [draggedIndex, setDraggedIndex] = React.useState(null);
+  const [visibleRows, setVisibleRows] = React.useState([]);
 
   const table = useReactTable({
     data,
     columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
     getRowId: (row) => row._id,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     enableRowSelection: true,
@@ -66,11 +67,35 @@ export function DataTable({ data, columns, searchColumn }) {
     },
   });
 
+  // Update visibleRows whenever table row model changes
+  React.useEffect(() => {
+    setVisibleRows(table.getRowModel().rows);
+  }, [table.getRowModel().rows]);
+
+  const handleDragStart = (index) => {
+    setDraggedIndex(index);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault(); // Required to allow dropping
+  };
+
+  const handleDrop = (targetIndex) => {
+    if (draggedIndex === null || draggedIndex === targetIndex) return;
+
+    const updatedRows = [...visibleRows];
+    const [moved] = updatedRows.splice(draggedIndex, 1);
+    updatedRows.splice(targetIndex, 0, moved);
+
+    setVisibleRows(updatedRows); // Update visibleRows for visual movement
+    setDraggedIndex(null);
+  };
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter names..."
+          placeholder="Filter..."
           value={table.getColumn(searchColumn)?.getFilterValue() ?? ''}
           onChange={(event) =>
             table.getColumn(searchColumn)?.setFilterValue(event.target.value)
@@ -87,49 +112,49 @@ export function DataTable({ data, columns, searchColumn }) {
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
+              .map((column) => (
+                <DropdownMenuCheckboxItem
+                  key={column.id}
+                  className="capitalize"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                >
+                  {column.id}
+                </DropdownMenuCheckboxItem>
+              ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+            {visibleRows?.length ? (
+              visibleRows.map((row, index) => (
                 <TableRow
                   key={row.id}
+                  draggable
+                  onDragStart={() => handleDragStart(index)}
+                  onDragOver={handleDragOver}
+                  onDrop={() => handleDrop(index)}
                   data-state={row.getIsSelected() && 'selected'}
+                  className="cursor-move"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -154,6 +179,7 @@ export function DataTable({ data, columns, searchColumn }) {
           </TableBody>
         </Table>
       </div>
+
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{' '}

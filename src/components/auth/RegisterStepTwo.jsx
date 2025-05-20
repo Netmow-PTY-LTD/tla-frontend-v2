@@ -1,9 +1,9 @@
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 import {
   Form,
   FormControl,
@@ -12,32 +12,72 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from '@/components/ui/form';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
+} from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
 
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name is required and must be at least 2 characters.",
-  }),
-  // service: z.string().min(1, {
-  //   message: "Service is required.",
-  // }),
-});
+export default function RegisterStepTwo({
+  handleStep,
+  handleBack,
+  practice,
+  setPractice,
+  practiceArea,
+  setPracticeArea,
+  areaZipcode,
+  setAreaZipcode,
+  practiceInternational,
+  setPracticeInternational,
+  areaRange,
+  setAreaRange,
+}) {
+  const formSchema = z
+    .object({
+      practiceWithin: z.boolean(),
+      practiceInternational: z.boolean(),
+      AreaZipcode: z.string().optional(),
+      areaRange: z.string().optional(),
+    })
+    .superRefine((data, ctx) => {
+      if (!data.practiceWithin && !data.practiceInternational) {
+        ctx.addIssue({
+          path: ['practiceWithin'], // highlights the checkbox
+          code: z.ZodIssueCode.custom,
+          message: 'You must select at least one option',
+        });
+      }
 
-export default function RegisterStepTwo({ handleStep, handleBack }) {
+      if (data.practiceWithin) {
+        if (!data.AreaZipcode || data.AreaZipcode.trim() === '') {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Area Zipcode is required when practicing within',
+            path: ['AreaZipcode'],
+          });
+        }
+        if (!data.areaRange || data.areaRange.trim() === '') {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Area Range is required when practicing within',
+            path: ['areaRange'],
+          });
+        }
+      }
+    });
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      service: "",
+      practiceWithin: false,
+      practiceInternational: false,
+      AreaZipcode: '',
+      areaRange: '',
     },
   });
 
@@ -73,11 +113,19 @@ export default function RegisterStepTwo({ handleStep, handleBack }) {
               >
                 <FormField
                   control={form.control}
-                  name="name"
+                  name="practiceWithin"
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Checkbox {...field} />
+                        <Checkbox
+                          {...field}
+                          checked={field.value}
+                          onCheckedChange={(checked) => {
+                            // Let user toggle checkbox normally
+                            field.onChange(checked);
+                            setPractice(checked);
+                          }}
+                        />
                       </FormControl>
                       <FormLabel className="ml-2 font-bold">
                         I will practice within
@@ -86,34 +134,10 @@ export default function RegisterStepTwo({ handleStep, handleBack }) {
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
-                  name="service"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Range of Area</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl className="tla-form-control">
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select range of area" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="30">30 miles</SelectItem>
-                          <SelectItem value="20">20 miles</SelectItem>
-                          <SelectItem value="50">50 miles</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="service"
+                  name="AreaZipcode"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Area Zipcode</FormLabel>
@@ -122,6 +146,16 @@ export default function RegisterStepTwo({ handleStep, handleBack }) {
                           placeholder="zipcode"
                           {...field}
                           className="tla-form-control"
+                          onChange={(e) => {
+                            field.onChange(e); // Let react-hook-form track it
+                            setAreaZipcode(e.target.value); // Your custom logic
+
+                            // If user fills AreaZipcode, force practiceWithin checkbox to true
+                            if (e.target.value.trim() !== '') {
+                              form.setValue('practiceWithin', true);
+                              setPractice(true);
+                            }
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -130,11 +164,57 @@ export default function RegisterStepTwo({ handleStep, handleBack }) {
                 />
                 <FormField
                   control={form.control}
-                  name="name"
+                  name="areaRange"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Range of Area</FormLabel>
+                      <Select
+                        onValueChange={(value) => {
+                          field.onChange(value); // Update react-hook-form state
+                          setPracticeArea(value); // Update your local state
+
+                          // If user selects a service, force practiceWithin checkbox to true
+                          if (value.trim() !== '') {
+                            form.setValue('practiceWithin', true);
+                            setPractice(true);
+                          }
+                        }}
+                        defaultValue={field.value}
+                      >
+                        <FormControl className="tla-form-control">
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select range of area" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="20">20 miles</SelectItem>
+                          <SelectItem value="30">30 miles</SelectItem>
+                          <SelectItem value="50">50 miles</SelectItem>
+                          <SelectItem value="70">70 miles</SelectItem>
+                          <SelectItem value="100">100 miles</SelectItem>
+                          <SelectItem value="120">120 miles</SelectItem>
+                          <SelectItem value="150">150 miles</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="practiceInternational"
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Checkbox {...field} />
+                        <Checkbox
+                          {...field}
+                          checked={field.value} // control from react-hook-form
+                          onCheckedChange={(checked) => {
+                            field.onChange(checked); // update form state
+                            setPracticeInternational(checked); // update your custom state
+                          }}
+                        />
                       </FormControl>
                       <FormLabel className="ml-2 font-bold">
                         I will practice internationally all over the world
@@ -180,9 +260,9 @@ export default function RegisterStepTwo({ handleStep, handleBack }) {
                       Back
                     </button>
                     <button
-                      type="submit"
+                      type="button" // prevent default form submit here
                       className="btn-auth-register"
-                      onClick={handleStep}
+                      onClick={form.handleSubmit(handleStep)} // <-- call handleStep only if form valid
                     >
                       Next
                     </button>

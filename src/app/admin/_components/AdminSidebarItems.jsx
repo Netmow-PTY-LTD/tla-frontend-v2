@@ -65,23 +65,9 @@ export const AdminSidebarItems = {
     },
     {
       title: 'Questions',
-      url: '#',
+      url: '/admin/question/add',
       icon: SquareTerminal,
       isActive: true,
-      items: [
-        {
-          title: 'Add Question',
-          url: '/admin/question/add',
-          icon: Plus,
-          isActive: true,
-        },
-        {
-          title: 'List of Questions',
-          url: '/admin/question/list',
-          icon: List,
-          isActive: true,
-        },
-      ],
     },
     {
       title: 'Options',

@@ -1,6 +1,6 @@
 import { baseApi } from '../../baseApi/baseApi';
 
-const questionApiQuestion = baseApi.injectEndpoints({
+const questionApiService = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     addQuestion: builder.mutation({
       query: (body) => ({
@@ -10,14 +10,14 @@ const questionApiQuestion = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['question'],
     }),
-    allQuestions: builder.query({
+    getAllQuestions: builder.query({
       query: () => ({
         url: '/question/list',
         method: 'GET',
       }),
       providesTags: ['question'],
     }),
-    singleQuestion: builder.query({
+    getSingleQuestion: builder.query({
       query: (id) => ({
         url: `/question/${id}`,
         method: 'GET',
@@ -47,14 +47,22 @@ const questionApiQuestion = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['question'],
     }),
+    getServiceWiseQuestions: builder.query({
+      query: ({serviceId, countryId}) => ({
+        url: `/service-wise-questions?serviceId=${serviceId}&countryId=${countryId}`,
+        method: 'GET',      
+      }),
+      providesTags: ['question'],
+    }),
   }),
 });
 
 export const {
   useAddQuestionMutation,
-  useAllQuestionsQuery,
-  useSingleQuestionQuery,
+  useGetAllQuestionsQuery,
+  useGetSingleQuestionQuery,
   useEditQuestionMutation,
   useDeleteQuestionMutation,
   useAllCountryWiseServiceQuestionsQuery,
-} = questionApiQuestion;
+  useGetServiceWiseQuestionsQuery
+} = questionApiService;

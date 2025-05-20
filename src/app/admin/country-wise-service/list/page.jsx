@@ -21,23 +21,20 @@ import { Button } from '@/components/ui/button';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
 export default function Page() {
+  // State variables
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedServices, setSelectedServices] = useState([]);
   const [rowSelection, setRowSelection] = useState({});
 
+  //fetched api data
   const { data: countryList } = useGetCountryListQuery();
   const { data: servicesList } = useAllServicesQuery();
-  const { data: countrywiseServiceList, refetch } =
-    useGetAllCountryWiseServicesQuery();
   const { data: countrywiseServices, isFetching } =
     useGetCountryWiseServicesQuery(selectedCountry, {
       skip: !selectedCountry, // Skip query if no country is selected
     });
 
-  //console.log('countrywiseServices', countrywiseServices?.data);
-
-  //console.log('Services', servicesList);
-
+  //Api call for countrywise services
   const [addCountrywiseServices, { isLoading }] =
     useAddCountryWiseServiceMutation();
 
@@ -112,17 +109,13 @@ export default function Page() {
     },
   ];
 
-  console.log('selected services', selectedServices);
+  //countrywise service change handler
   const handleCountryWiseServiceChange = (val) => {
     console.log('value', val);
     setSelectedCountry(val);
   };
 
-  //console.log('selectedCountryServices', selectedCountryServices);
-
-  //console.log('selectedCountry', selectedCountry);
-
-  //console.log('selectedServices', selectedServices);
+  //final data save handler
   const handleSave = async () => {
     const selectedServiceIds = selectedServices.map((service) => service._id);
 
@@ -145,16 +138,18 @@ export default function Page() {
     }
   };
 
-  console.log('countrywiseServices', countrywiseServices);
+  //showing selected country's services
 
   useEffect(() => {
     if (!servicesList?.data || !countrywiseServices?.data) return;
 
     // Get IDs of services already added to the country
-    const preselectedIds = new Set(countrywiseServices.data.map((s) => s._id));
+    const preselectedIds = new Set(
+      countrywiseServices?.data?.map((s) => s._id)
+    );
 
     // Update selectedServices with matched full service objects
-    const preselectedServices = servicesList.data.filter((service) =>
+    const preselectedServices = servicesList?.data?.filter((service) =>
       preselectedIds.has(service._id)
     );
     setSelectedServices(preselectedServices);
@@ -198,6 +193,7 @@ export default function Page() {
         <DataTable
           data={servicesList?.data || []}
           columns={columns}
+          searchColumn={'name'}
           rowSelection={rowSelection}
           onRowSelectionChange={(updated) => {
             setRowSelection(updated);
