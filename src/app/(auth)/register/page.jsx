@@ -5,6 +5,7 @@ import RegisterStepTwo from '@/components/auth/RegisterStepTwo';
 import RegisterStepThree from '@/components/auth/RegisterStepThree';
 import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
 import { toast } from 'sonner';
+import { showErrorToast } from '@/components/common/toasts';
 
 export default function Register() {
   const [step, setStep] = useState(1);
@@ -27,6 +28,7 @@ export default function Register() {
   const [selectedServiceIds, setSelectedServiceIds] = useState([]);
   const [selectedServiceNames, setSelectedServiceNames] = useState([]);
   const [hasServiceError, setHasServiceError] = useState(false);
+  const [areaZipValue, setAreaZipValue] = useState(false);
 
   const selectedCountry = '6825904407058a57bd0fe192';
 
@@ -89,6 +91,7 @@ export default function Register() {
       companySize,
       role: 'user',
       regUserType: 'lawyer',
+      password: '123456',
       profile: {
         name: fullName,
         activeProfile: 'basic',
@@ -105,17 +108,26 @@ export default function Register() {
         }
       );
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
       const data = await response.json();
       console.log('API Response:', data);
 
-      // maybe advance step, show success, etc.
+      if (!response.ok || !data.success) {
+        // Check if errorSources exist
+        const errorMessage =
+          data?.errorSources?.[0]?.message ||
+          data?.message ||
+          'Registration failed.';
+        showErrorToast(errorMessage); // Replace with toast or UI display as needed
+        return;
+      }
+
+      // Success case
+      if (data.success && data.token) {
+        window.location.href = `/lawyer?token=${data.token}`;
+      }
     } catch (error) {
       console.error('Failed to submit:', error);
-      // show error to user
+      showErrorToast('Something went wrong. Please try again.');
     }
   };
 
@@ -161,6 +173,8 @@ export default function Register() {
                 setAreaZipcode={setAreaZipcode}
                 practiceInternational={practiceInternational}
                 setPracticeInternational={setPracticeInternational}
+                areaZipValue={areaZipValue}
+                setAreaZipValue={setAreaZipValue}
               />
             )}
 

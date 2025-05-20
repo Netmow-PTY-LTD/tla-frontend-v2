@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -22,6 +22,9 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Combobox } from '@headlessui/react'; // Only if using HeadlessUI
+import { Check, ChevronDown } from 'lucide-react';
+import { cn } from '@/lib/utils'; // Utility for conditional classNames
 
 export default function RegisterStepTwo({
   handleStep,
@@ -36,7 +39,12 @@ export default function RegisterStepTwo({
   setPracticeInternational,
   areaRange,
   setAreaRange,
+  setAreaZipValue,
+  areaZipValue,
 }) {
+  const [query, setQuery] = useState('');
+  const [selectedZip, setSelectedZip] = useState('');
+
   const formSchema = z
     .object({
       practiceWithin: z.boolean(),
@@ -74,16 +82,101 @@ export default function RegisterStepTwo({
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      practiceWithin: false,
-      practiceInternational: false,
-      AreaZipcode: '',
-      areaRange: '',
+      practiceWithin: practice || false,
+      practiceInternational: practiceInternational || false,
+      AreaZipcode: areaZipValue || '',
+      areaRange: practiceArea || '',
     },
   });
 
   const onSubmit = (data) => {
     console.log(data);
   };
+
+  const areaZipList = {
+    data: [
+      {
+        _id: 'id1',
+        zip: '2000 – Sydney, NSW',
+        countryId: '682c4cc84c93ea5164dde92d',
+      },
+      {
+        _id: 'id2',
+        zip: '3000 – Melbourne, VIC',
+        countryId: '682c4cc84c93ea5164dde92d',
+      },
+      {
+        _id: 'id3',
+        zip: '4000 – Brisbane, QLD',
+        countryId: '682c4cc84c93ea5164dde92d',
+      },
+      {
+        _id: 'id4',
+        zip: '5000 – Adelaide, SA',
+        countryId: '682c4cc84c93ea5164dde92d',
+      },
+      {
+        _id: 'id5',
+        zip: '6000 – Perth, WA',
+        countryId: '682c4cc84c93ea5164dde92d',
+      },
+      {
+        _id: 'id6',
+        zip: '7000 – Hobart, TAS',
+        countryId: '682c4cc84c93ea5164dde92d',
+      },
+      {
+        _id: 'id7',
+        zip: '0800 – Darwin, NT',
+        countryId: '682c4cc84c93ea5164dde92d',
+      },
+      {
+        _id: 'id8',
+        zip: '2600 – Canberra, ACT',
+        countryId: '682c4cc84c93ea5164dde92d',
+      },
+      {
+        _id: 'id9',
+        zip: '2010 – Darlinghurst, NSW',
+        countryId: '682c4cc84c93ea5164dde92d',
+      },
+      {
+        _id: 'id10',
+        zip: '4217 – Surfers Paradise, QLD',
+        countryId: '682c4cc84c93ea5164dde92d',
+      },
+      {
+        _id: 'id11',
+        zip: '2444 – Port Macquarie, NSW',
+        countryId: '682c4cc84c93ea5164dde92d',
+      },
+      {
+        _id: 'id12',
+        zip: '3350 – Ballarat, VIC',
+        countryId: '682c4cc84c93ea5164dde92d',
+      },
+      {
+        _id: 'id13',
+        zip: '0870 – Alice Springs, NT',
+        countryId: '682c4cc84c93ea5164dde92d',
+      },
+      {
+        _id: 'id14',
+        zip: '0801 – Darwin City, NT',
+        countryId: '682c4cc84c93ea5164dde92d',
+      },
+      {
+        _id: 'id15',
+        zip: '6150 – Fremantle, WA',
+        countryId: '682c4cc84c93ea5164dde92d',
+      },
+    ],
+  };
+
+  const filteredZipcodes = areaZipList?.data?.filter((item) =>
+    item.zip.toLowerCase().includes(query.toLowerCase())
+  );
+
   return (
     <>
       <div className="flex flex-wrap lg:flex-nowrap">
@@ -141,27 +234,77 @@ export default function RegisterStepTwo({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Area Zipcode</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="zipcode"
-                          {...field}
-                          className="tla-form-control"
-                          onChange={(e) => {
-                            field.onChange(e); // Let react-hook-form track it
-                            setAreaZipcode(e.target.value); // Your custom logic
+                      <Combobox
+                        value={field.value} // string zip code
+                        onChange={(val) => {
+                          field.onChange(val.zip); // pass string zip
+                          setAreaZipcode(val._id); // save id separately
+                          setAreaZipValue(val.zip); // save id separately
+                          if (val?.zip?.trim() !== '') {
+                            form.setValue('practiceWithin', true);
+                            setPractice(true);
+                          } else {
+                            form.setValue('practiceWithin', false);
+                            setPractice(false);
+                            setAreaZipcode(null);
+                            setAreaZipValue(null); // save id separately
+                          }
+                        }}
+                      >
+                        <div className="relative">
+                          <Combobox.Input
+                            className="tla-form-control w-full"
+                            onChange={(event) => setQuery(event.target.value)}
+                            displayValue={(val) => val || ''}
+                            placeholder="Select a Zipcode"
+                          />
+                          <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+                            <ChevronDown className="h-4 w-4 text-gray-500" />
+                          </Combobox.Button>
 
-                            // If user fills AreaZipcode, force practiceWithin checkbox to true
-                            if (e.target.value.trim() !== '') {
-                              form.setValue('practiceWithin', true);
-                              setPractice(true);
-                            }
-                          }}
-                        />
-                      </FormControl>
+                          {filteredZipcodes?.length > 0 && (
+                            <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                              {filteredZipcodes.map((item) => (
+                                <Combobox.Option
+                                  key={item._id}
+                                  value={item} // full object for selection
+                                  className={({ active }) =>
+                                    cn(
+                                      'cursor-pointer select-none relative py-2 pl-10 pr-4',
+                                      active
+                                        ? 'bg-blue-100 text-blue-900'
+                                        : 'text-gray-900'
+                                    )
+                                  }
+                                >
+                                  {({ selected }) => (
+                                    <>
+                                      <span
+                                        className={cn('block truncate', {
+                                          'font-medium': selected,
+                                          'font-normal': !selected,
+                                        })}
+                                      >
+                                        {item.zip}
+                                      </span>
+                                      {selected ? (
+                                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
+                                          <Check className="h-4 w-4" />
+                                        </span>
+                                      ) : null}
+                                    </>
+                                  )}
+                                </Combobox.Option>
+                              ))}
+                            </Combobox.Options>
+                          )}
+                        </div>
+                      </Combobox>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name="areaRange"
