@@ -11,7 +11,7 @@ export default function Review() {
   const onSave = () => console.log('Save clicked');
   const onCancel = () => console.log('Cancel clicked');
   return (
-    <div>
+    <div className="max-w-[900px]">
       {/* overall rating */}
       <div>
         <h2 className="text-black font-semibold">Overall rating</h2>

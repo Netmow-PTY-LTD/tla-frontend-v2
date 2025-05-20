@@ -11,7 +11,7 @@ export default function About() {
   const onSave = () => console.log('Save clicked');
   const onCancel = () => console.log('Cancel clicked');
   return (
-    <div>
+    <div className="max-w-[900px]">
       <div className="flex items-center gap-20  mb-5 ">
         <CompanyProfile />
         <PersonalProfile />

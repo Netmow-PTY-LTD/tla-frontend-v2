@@ -7,7 +7,7 @@ export default function Services() {
   const onSave = () => console.log('Save clicked');
   const onCancel = () => console.log('Cancel clicked');
   return (
-    <div>
+    <div className="max-w-[900px]">
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-black font-semibold">Services</h2>
