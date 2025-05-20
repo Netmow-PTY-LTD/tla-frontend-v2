@@ -15,15 +15,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: 'Name is required and must be at least 2 characters.',
-  }),
-  // service: z.string().min(1, {
-  //   message: "Service is required.",
-  // }),
-});
-
 export default function RegisterStepOne({
   handleStep,
   setFullName,
@@ -61,10 +52,16 @@ export default function RegisterStepOne({
     });
   };
 
+  const formSchema = z.object({
+    fullName: z.string().min(2, {
+      message: 'Name is required and must be at least 2 characters.',
+    }),
+  });
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
+      fullName: '',
       service: '',
     },
   });
@@ -102,7 +99,7 @@ export default function RegisterStepOne({
               >
                 <FormField
                   control={form.control}
-                  name="name"
+                  name="fullName"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Your Name</FormLabel>
@@ -169,7 +166,11 @@ export default function RegisterStepOne({
                           }`}
                         >
                           <Image
-                            src={service.image}
+                            src={
+                              service.image
+                                ? service.image
+                                : '/assets/img/no-image.jpg'
+                            }
                             width={50}
                             height={50}
                             className="object-cover rounded-md"
@@ -184,7 +185,7 @@ export default function RegisterStepOne({
                 <button
                   type="submit"
                   className="btn-auth-register"
-                  onClick={handleStep}
+                  onClick={form.handleSubmit(handleStep)} // <-- call handleStep only if form valid
                 >
                   Get Started
                 </button>

@@ -359,7 +359,7 @@ export default function RegisterStepThree({
                   <button
                     type="button" // Use type="button" so it doesn't auto-submit form
                     className="btn-auth-register"
-                    onClick={handleFinalSubmit}
+                    onClick={form.handleSubmit(handleFinalSubmit)} // <-- call handleStep only if form valid
                   >
                     Finish & See Leads
                   </button>
