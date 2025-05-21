@@ -9,30 +9,34 @@ import QuestionsAndAnswers from './_components/QnA';
 import Media from './_components/Media';
 import ProfileProgress from './_components/ProfileProgress';
 
-import AccordionComponent from '@/components/UIComponents/AcordionComponent';
+import { DynamicAccordion } from '@/components/UIComponents/AcordionComponent';
 
 export default function MyProfilePage() {
+  const accordionItems = [
+    { id: 'about', title: 'About', content: <About /> },
+    { id: 'reviews', title: 'Reviews', content: <Reviews /> },
+    { id: 'services', title: 'Services', content: <Services /> },
+    { id: 'media', title: 'Photos', content: <Media /> },
+    {
+      id: 'social',
+      title: 'Social Media Links',
+      content: <SocialMediaLinks />,
+    },
+    {
+      id: 'accreditations',
+      title: 'Accreditations',
+      content: <Accreditations />,
+    },
+    {
+      id: 'qa',
+      title: 'Questions And Answers',
+      content: <QuestionsAndAnswers />,
+    },
+  ];
   return (
     <div>
       <ProfileProgress />
-      <div className="space-y-[10px] ">
-        <AccordionComponent content={<About />} title={'About'} />
-        <AccordionComponent content={<Reviews />} title={'Reviews'} />
-        <AccordionComponent content={<Services />} title={'Services'} />
-        <AccordionComponent content={<Media />} title={'Photos'} />
-        <AccordionComponent
-          content={<SocialMediaLinks />}
-          title={'Social Media Links'}
-        />
-        <AccordionComponent
-          content={<Accreditations />}
-          title={'Accrditaions'}
-        />
-        <AccordionComponent
-          content={<QuestionsAndAnswers />}
-          title={'Questions And Answers'}
-        />
-      </div>
+      <DynamicAccordion items={accordionItems} />
     </div>
   );
 }

@@ -76,10 +76,10 @@ export default function Review() {
           </Form>
         </div>
       </div>
-
+      <div className="border-t border-white my-5" />
       {/*  lazy app review */}
 
-      <div className="mt-10 ">
+      <div>
         <h2 className="text-black font-semibold">LayApp Review</h2>
         <h2 className="my-[10px]">You have no reviews on LayApp yet</h2>
         <p>

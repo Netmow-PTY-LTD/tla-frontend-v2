@@ -16,9 +16,13 @@ export default function About() {
         <CompanyProfile />
         <PersonalProfile />
       </div>
+      <div className="border-t border-white" />
       <CompanyContactDetails />
+      <div className="border-t border-white" />
       <CompanyLocation />
+      <div className="border-t border-white" />
       <CompanyAbout />
+      <div className="border-t border-white" />
       {/* Footer Buttons */}
       <div className="flex justify-between items-center pt-4 ">
         <button
