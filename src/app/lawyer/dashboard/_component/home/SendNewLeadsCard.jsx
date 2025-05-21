@@ -1,7 +1,7 @@
 import { MapPin } from 'lucide-react';
 import React from 'react';
 
-export default function ResponsesCard() {
+export default function SendNewLeadsCard() {
   return (
     <div className="bg-white p-4 rounded-[10px] w-full">
       {/* Title */}
