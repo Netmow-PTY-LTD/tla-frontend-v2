@@ -17,15 +17,26 @@ import {
 } from '@/store/features/public/publicApiService';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
+import AddCountryModal from '../../_components/modal/AddCountryModal';
+import EditCountryModal from '../../_components/modal/EditCountryModal';
 
 export default function Page() {
+  const [open, setOpen] = useState(false);
+  const [editId, setEditId] = useState(null);
+
   const { data: countryList, refetch } = useGetCountryListQuery();
   console.log('countryList', countryList);
 
   const [countryDelete] = useDeleteCountryMutation();
 
   const handleDeleteCountry = async (id) => {
+    const confirmDelete = window.confirm(
+      'Are you sure you want to delete this country?'
+    );
+
+    if (!confirmDelete) return;
+
     try {
       const res = await countryDelete(id).unwrap();
       if (res) {
@@ -37,6 +48,7 @@ export default function Page() {
       showErrorToast('Failed to delete country.');
     }
   };
+
   const columns = [
     {
       id: 'select',
@@ -93,13 +105,23 @@ export default function Page() {
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <Link
+                {/* <Link
                   href={`/admin/country/edit/${country?._id}`}
                   className="flex gap-2 items-center"
                 >
                   <Pencil className="w-4 h-4" />
                   Edit
-                </Link>
+                </Link> */}
+                <button
+                  onClick={() => {
+                    setEditId(country?._id);
+                    setOpen(true);
+                  }}
+                  className="flex gap-2"
+                >
+                  <Pencil className="w-4 h-4" />
+                  Edit
+                </button>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
@@ -119,7 +141,20 @@ export default function Page() {
 
   return (
     <div>
-      <h1>Country List Page</h1>
+      <div className="flex justify-between">
+        <h1>Country List Page</h1>
+        <Button onClick={() => setOpen(true)}>Add Country</Button>
+      </div>
+      <AddCountryModal open={open} onClose={() => setOpen(false)} />
+      <EditCountryModal
+        id={editId}
+        open={open}
+        onClose={() => {
+          setOpen(false);
+          setEditId(null); // reset after close
+        }}
+      />
+
       <DataTable
         data={countryList?.data || []}
         columns={columns}
