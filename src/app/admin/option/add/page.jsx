@@ -45,8 +45,13 @@ import {
 } from '@/components/ui/accordion';
 
 import { AddOptionDialog } from '../../_components/modal/AddOptionModal';
-import { useLazyGetServiceWiseQuestionsQuery } from '@/store/features/admin/questionApiService';
-import { useGetQuestionWiseOptionsQuery } from '@/store/features/admin/optiionApiService';
+import {
+  useGetServiceWiseQuestionsQuery,
+  useLazyGetServiceWiseQuestionsQuery,
+} from '@/store/features/admin/questionApiService';
+import { useGetQuestionWiseOptionsQuery } from '@/store/features/admin/optionApiService';
+import { SelectOptionsModal } from '../../_components/modal/SelectOptionsModal';
+import { EditOptionDialog } from '../../_components/modal/EditOptionModal';
 
 export default function AddQuestionPage() {
   //state variables
@@ -54,7 +59,9 @@ export default function AddQuestionPage() {
   const [selectedService, setSelectedService] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [selectedQuestionId, setSelectedQuestionId] = useState(null);
+  const [selectOptionsModalOpen, setSelectOptionsModalOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [editOptionModalOpen, setEditOptionModalOpen] = useState(false);
 
   const router = useRouter();
 
@@ -180,24 +187,33 @@ export default function AddQuestionPage() {
     setSelectedService(val);
   };
 
-  //   console.log('selected country', selectedCountry);
-  console.log('selected service', selectedService);
+  // console.log('selected country', selectedCountry);
+  // console.log('selected service', selectedService);
 
   //single service wise questions
 
-  const [
-    singleServicewiseQuestions,
-    { data: singleServicewiseQuestionsData, isFetching: isQuestionsLoading },
-  ] = useLazyGetServiceWiseQuestionsQuery();
-
-  useEffect(() => {
-    if (selectedCountry && selectedService) {
-      singleServicewiseQuestions({
-        countryId: selectedCountry,
-        serviceId: selectedService,
-      });
+  const {
+    data: singleServicewiseQuestionsData,
+    isFetching: isQuestionsLoading,
+    refetch: singleServicewiseQuestionsRefetch,
+  } = useGetServiceWiseQuestionsQuery(
+    {
+      countryId: selectedCountry,
+      serviceId: selectedService,
+    },
+    {
+      skip: !selectedCountry || !selectedService,
     }
-  }, [selectedCountry, selectedService]);
+  );
+
+  // useEffect(() => {
+  //   if (selectedCountry && selectedService) {
+  //     singleServicewiseQuestions({
+  //       countryId: selectedCountry,
+  //       serviceId: selectedService,
+  //     });
+  //   }
+  // }, [selectedCountry, selectedService]);
 
   console.log('singleServicewiseQuestionsData', singleServicewiseQuestionsData);
 
@@ -235,15 +251,23 @@ export default function AddQuestionPage() {
     // }
   }
 
-  //   console.log('countryId', countryId);
-  //   console.log('serviceId', serviceId);
-
   //   const { data: questionWiseOptions, isLoading: isOptionsLoading } =
   //     useGetQuestionWiseOptionsQuery(selectedQuestionId, {
   //       skip: !selectedQuestionId,
   //     });
 
   //console.log('questionWiseOptions', questionWiseOptions?.data);
+
+  //handle SelectOptionsModal
+  const handleSelectOptionsModal = (id) => {
+    setSelectOptionsModalOpen(true);
+  };
+
+  //handle SelectOptionsModal
+  const handleEditOptionModal = (id) => {
+    setSelectedOption(id);
+    setSelectOptionsModalOpen(true);
+  };
 
   return (
     <>
@@ -317,7 +341,7 @@ export default function AddQuestionPage() {
 
       <div className="mt-10">
         <Accordion type="single" collapsible className="w-full">
-          {singleServicewiseQuestionsData?.data?.map((item, i) => (
+          {singleServicewiseQuestionsData?.data?.map((item, i, arr) => (
             <AccordionItem value={item?._id} key={i}>
               <AccordionTrigger>
                 {item?.question}
@@ -332,22 +356,52 @@ export default function AddQuestionPage() {
                 </div>
               </AccordionTrigger>
               <AccordionContent>
-                <table width={'100%'}>
-                  <thead>
+                <table className="w-full border border-muted rounded-md text-sm">
+                  <thead className="bg-muted/50">
                     <tr>
-                      <th className="text-left">Option Name</th>
-                      <th className="text-left">Actions</th>
+                      <th className="px-4 py-2 text-left font-medium text-muted-foreground">
+                        Option Name
+                      </th>
+                      <th className="px-4 py-2 text-left font-medium text-muted-foreground">
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {(item?.options ?? [])?.map((option, i) => (
-                      <tr key={i}>
-                        <td className="text-black font-medium">
+                    {(item?.options ?? []).map((option, j) => (
+                      <tr
+                        key={j}
+                        className="border-t border-muted transition-colors hover:bg-muted/30"
+                      >
+                        <td className="px-4 py-2 font-medium text-foreground">
                           {option?.name}
                         </td>
-                        <td>
-                          <div>
-                            <Button>Select Next Options</Button>
+                        <td className="px-4 py-2">
+                          <div className="flex items-center gap-2">
+                            {i !== arr?.length - 1 && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() =>
+                                  handleSelectOptionsModal(option?._id)
+                                }
+                              >
+                                Select Next Options
+                              </Button>
+                            )}
+                            <div
+                              className="flex items-center gap-2 cursor-pointer border border-b border-1 py-1 px-2 rounded-md"
+                              onClick={() => handleEditOptionModal(option?._id)}
+                            >
+                              <Pencil className="w-4 h-4" />
+                              Edit
+                            </div>
+                            <div
+                              className="flex items-center gap-2 cursor-pointer border border-b border-1 py-1 px-2 rounded-md"
+                              onClick={() => handleDeleteService(service?._id)}
+                            >
+                              <Trash2 className="w-4 h-4" /> Delete
+                            </div>
                           </div>
                         </td>
                       </tr>
@@ -363,6 +417,18 @@ export default function AddQuestionPage() {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         item={selectedItem}
+        refetch={singleServicewiseQuestionsRefetch}
+      />
+
+      <EditOptionDialog
+        open={editOptionModalOpen}
+        onOpenChange={setEditOptionModalOpen}
+        item={selectedItem}
+      />
+      <SelectOptionsModal
+        open={selectOptionsModalOpen}
+        onOpenChange={setSelectOptionsModalOpen}
+        option={selectedOption}
       />
     </>
   );
