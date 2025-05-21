@@ -26,8 +26,11 @@ import {
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import React, { useMemo, useState } from 'react';
+import CreateZipCodeModal from '../../_components/modal/CreateZipCodeModal';
 
 export default function Page() {
+  const [modalOpen, setModalOpen] = useState(false);
+
   const { data: countryList, refetch: refetchCountry } =
     useGetCountryListQuery();
   const { data: ZipCodeList } = useGetZipCodeListQuery();
@@ -53,7 +56,12 @@ export default function Page() {
   const [zipCodeDelete] = useDeleteZipCodeMutation();
 
   const handleDeleteZipCode = async (id) => {
-    console.log('id', id);
+    const confirmDelete = window.confirm(
+      'Are you sure you want to delete this zip code?'
+    );
+
+    if (!confirmDelete) return;
+
     try {
       const res = await zipCodeDelete(id).unwrap();
       if (res) {
@@ -64,6 +72,11 @@ export default function Page() {
       console.error(error);
       showErrorToast('Failed to delete Zip Code.');
     }
+  };
+
+  const handleModalSuccess = () => {
+    console.log('Refetch or update list');
+    // e.g. refetch zip codes
   };
 
   const columns = [
@@ -174,6 +187,12 @@ export default function Page() {
             </SelectContent>
           </Select>
         </div>
+        <Button onClick={() => setModalOpen(true)}>Add Zip Code</Button>
+        <CreateZipCodeModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          onSuccess={handleModalSuccess}
+        />
       </div>
       <DataTable
         data={filteredZipCodes}
