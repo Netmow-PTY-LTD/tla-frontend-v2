@@ -37,6 +37,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { showSuccessToast } from './toasts';
+import { useUpdateQuestionOrderMutation } from '@/store/features/admin/questionApiService';
 
 export function SimpleQuestionTable({ data, setData, columns, searchColumn }) {
   const [sorting, setSorting] = React.useState([]);
@@ -45,6 +47,7 @@ export function SimpleQuestionTable({ data, setData, columns, searchColumn }) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [draggedIndex, setDraggedIndex] = React.useState(null);
   const [visibleRows, setVisibleRows] = React.useState([]);
+  const [order, setOrder] = React.useState('');
 
   const table = useReactTable({
     data,
@@ -80,15 +83,37 @@ export function SimpleQuestionTable({ data, setData, columns, searchColumn }) {
     e.preventDefault(); // Required to allow dropping
   };
 
-  const handleDrop = (targetIndex) => {
+  //update question order
+
+  const [updateQuestionOrder] = useUpdateQuestionOrderMutation();
+
+  const handleDrop = async (targetIndex) => {
     if (draggedIndex === null || draggedIndex === targetIndex) return;
 
     const updatedRows = [...visibleRows];
     const [moved] = updatedRows.splice(draggedIndex, 1);
     updatedRows.splice(targetIndex, 0, moved);
 
+    // Assign new order based on current index
+    const orderArray = updatedRows.map((row, index) => ({
+      _id: row.id, // assuming each row has _id
+      order: index + 1, // you can start from 0 if needed
+    }));
+
+    // You can now use orderArray to update backend or internal state
+    console.log('New order:', orderArray);
     setVisibleRows(updatedRows); // Update visibleRows for visual movement
     setDraggedIndex(null);
+
+    // 🔥 Call the API
+    try {
+      const response = await updateQuestionOrder(orderArray).unwrap();
+      console.log('Order updated successfully:', response);
+      showSuccessToast(response?.message || 'Order updated successfully:');
+    } catch (error) {
+      console.error('Failed to update question order:', error);
+      // Optionally revert the state if the API fails
+    }
   };
 
   return (
