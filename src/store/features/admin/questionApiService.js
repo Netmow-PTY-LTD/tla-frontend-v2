@@ -39,6 +39,14 @@ const questionApiService = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['question'],
     }),
+     updateQuestionOrder: builder.mutation({
+      query: (body) => ({
+        url: `/question/order`,
+        method: 'PATCH',
+        body,
+      }),
+      invalidatesTags: ['question'],
+    }),
      addCountryWiseServiceQuestion: builder.mutation({
       query: (body) => ({
         url: '/country-wise-service/add',
@@ -64,5 +72,6 @@ export const {
   useEditQuestionMutation,
   useDeleteQuestionMutation,
   useAllCountryWiseServiceQuestionsQuery,
-  useGetServiceWiseQuestionsQuery
+  useLazyGetServiceWiseQuestionsQuery,
+  useUpdateQuestionOrderMutation
 } = questionApiService;

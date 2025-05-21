@@ -28,6 +28,8 @@ import {
   useAddQuestionMutation,
   useDeleteQuestionMutation,
   useGetServiceWiseQuestionsQuery,
+  useLazyGetServiceWiseQuestionsQuery,
+  useUpdateQuestionOrderMutation,
 } from '@/store/features/admin/questionApiService';
 import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
 import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
@@ -48,8 +50,7 @@ import { SimpleQuestionTable } from '@/components/common/SimpleQuestionTable';
 export default function AddQuestionPage() {
   //state variables
   const [selectedCountry, setSelectedCountry] = useState('');
-  const [countryId, setCountryId] = useState(null);
-  const [serviceId, setServiceId] = useState(null);
+  const [selectedService, setSelectedService] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [data, setData] = useState([]);
@@ -64,47 +65,16 @@ export default function AddQuestionPage() {
       skip: !selectedCountry, // Skip query if no country is selected
     });
 
-  //single service wise questions
-
-  const { data: singleServicewiseQuestions } = useGetServiceWiseQuestionsQuery(
-    serviceId && countryId ? { serviceId, countryId } : skipToken
-  );
-
-  useEffect(() => {
-    if (singleServicewiseQuestions) {
-      setData(singleServicewiseQuestions?.data);
-    }
-  }, [singleServicewiseQuestions]);
-
-  //console.log('singleServicewiseQuestions', singleServicewiseQuestions);
-
   //edit modal
 
   const handleModalOpen = (id) => {
     setDialogOpen(true);
 
-    const singleQuestion = singleServicewiseQuestions?.data?.find(
+    const singleQuestion = singleServicewiseQuestionsData?.data?.find(
       (item) => item?._id === id
     );
 
     setSelectedItem(singleQuestion);
-  };
-
-  //handling deleting specific servicewise question
-
-  const [deleteServiceQuestion] = useDeleteQuestionMutation();
-
-  const handleDeleteQuestion = async (id) => {
-    try {
-      const res = await deleteServiceQuestion(id).unwrap();
-      if (res) {
-        showSuccessToast(res?.message);
-        refetch();
-      }
-    } catch (error) {
-      console.error(error);
-      showErrorToast('Failed to delete country.');
-    }
   };
 
   //Table columns
@@ -128,6 +98,13 @@ export default function AddQuestionPage() {
       header: 'Question Type',
       cell: ({ row }) => (
         <div className="lowercase">{row.getValue('questionType')}</div>
+      ),
+    },
+    {
+      accessorKey: 'order',
+      header: 'Order',
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue('order')}</div>
       ),
     },
     {
@@ -208,15 +185,47 @@ export default function AddQuestionPage() {
     form.setValue('slug', slug);
   }, [name, form]);
 
-  //country wise service change handler
+  //country change handler
 
-  const handleCountryWiseServiceChange = (val) => {
-    console.log('value', val);
+  const handleCountryChange = (val) => {
     setSelectedCountry(val);
-    setData(null);
+    setSelectedService(''); // reset service
   };
 
-  const hasSelected = useRef(false);
+  //Countrywise service handler
+
+  const handleCountryWiseServiceChange = (val) => {
+    console.log('Service', val);
+    setSelectedService(val);
+  };
+
+  // console.log('selectedCountry', selectedCountry);
+
+  // console.log('selectedService', selectedService);
+
+  //single service wise questions
+
+  const [
+    singleServicewiseQuestions,
+    { data: singleServicewiseQuestionsData, isFetching: isQuestionsLoading },
+  ] = useLazyGetServiceWiseQuestionsQuery();
+
+  useEffect(() => {
+    if (selectedCountry && selectedService) {
+      singleServicewiseQuestions({
+        countryId: selectedCountry,
+        serviceId: selectedService,
+      });
+    }
+  }, [selectedCountry, selectedService]);
+
+  useEffect(() => {
+    if (singleServicewiseQuestionsData) {
+      setData(singleServicewiseQuestionsData?.data);
+    }
+  }, [singleServicewiseQuestions]);
+
+  console.log('data', data);
 
   //handling adding service wise question
   const [addQuestion, { isLoading }] = useAddQuestionMutation();
@@ -246,7 +255,7 @@ export default function AddQuestionPage() {
   return (
     <>
       <div className="flex flex-wrap">
-        <div className="w-1/2 pr-5">
+        <div className="w-1/3 pr-5">
           <Card>
             <CardHeader>
               <CardTitle>Add Question</CardTitle>
@@ -263,15 +272,7 @@ export default function AddQuestionPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Country</FormLabel>
-                        <Select
-                          onValueChange={(val) => {
-                            field.onChange(val); // updates form state
-                            handleCountryWiseServiceChange(val);
-                            setCountryId(val); // your custom logic
-                            setServiceId(null);
-                          }}
-                          defaultValue={field.value}
-                        >
+                        <Select onValueChange={handleCountryChange}>
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select a country" />
@@ -297,24 +298,10 @@ export default function AddQuestionPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Service</FormLabel>
-                        <Select
-                          onValueChange={(val) => {
-                            field.onChange(val); // updates form state
-                            setServiceId(val); // your custom logic
-                            setData(null);
-                            hasSelected.current = true;
-                          }}
-                          defaultValue={field.value}
-                        >
+                        <Select onValueChange={handleCountryWiseServiceChange}>
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue
-                                placeholder={
-                                  hasSelected.current
-                                    ? undefined
-                                    : 'Select a service'
-                                }
-                              />
+                              <SelectValue placeholder="Select a service" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -387,9 +374,9 @@ export default function AddQuestionPage() {
             </CardContent>
           </Card>
         </div>
-        <div className="w-1/2 pl-5">
+        <div className="w-2/3 pl-5">
           <SimpleQuestionTable
-            data={data || []}
+            data={singleServicewiseQuestionsData?.data || []}
             setData={setData}
             columns={columns}
             searchColumn="question"

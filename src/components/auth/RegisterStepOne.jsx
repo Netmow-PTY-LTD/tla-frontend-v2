@@ -61,7 +61,7 @@ export default function RegisterStepOne({
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullName: '',
+      fullName: fullName || '',
       service: '',
     },
   });
@@ -134,6 +134,7 @@ export default function RegisterStepOne({
                           className="tla-form-control"
                           value={selectedServiceNames}
                           readonly
+                          autoComplete="off"
                         />
                       </FormControl>
                       <FormMessage />

@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import { isValidPhoneNumber } from 'libphonenumber-js';
 
 export default function RegisterStepThree({
   handleBack,
@@ -27,15 +28,19 @@ export default function RegisterStepThree({
   setSoloPractitioner,
   companyTeam,
   setCompanyTeam,
-  ompanyName,
+  companyName,
   setCompanyName,
   companyWebsite,
   setCompanyWebsite,
   companySize,
   setCompanySize,
   handleFinalSubmit,
+  isLoading,
+  selectedCountryCode,
 }) {
   const [isCompany, setIsCompany] = useState(false);
+
+  console.log('selectedCountryCode', selectedCountryCode);
 
   const formSchema = z
     .object({
@@ -45,14 +50,16 @@ export default function RegisterStepThree({
       email: z.string().email({
         message: 'Please enter a valid email address.',
       }),
-      phone: z.string().min(10, {
-        message: 'Phone must be at least 10 digits.',
-      }),
+      phone: z
+        .string()
+        .nonempty({ message: 'Phone number is required' })
+        .refine((val) => isValidPhoneNumber(val, selectedCountryCode), {
+          message: `Invalid ${selectedCountryCode} phone number`,
+        }),
       soloPractitioner: z.boolean(),
       companyTeam: z.boolean(),
       company_name: z.string().optional(),
       company_website: z.string().optional(),
-      company_size: z.string().optional(),
     })
     .superRefine((data, ctx) => {
       if (data.companyTeam) {
@@ -69,14 +76,6 @@ export default function RegisterStepThree({
             code: z.ZodIssueCode.custom,
             path: ['company_website'],
             message: 'Company website is required',
-          });
-        }
-
-        if (!data.company_size || data.company_size.trim() === '') {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ['company_size'],
-            message: 'Company size is required',
           });
         }
 
@@ -105,7 +104,6 @@ export default function RegisterStepThree({
       companyTeam: false,
       company_name: '',
       company_website: '',
-      company_size: '',
     },
   });
 
@@ -205,9 +203,14 @@ export default function RegisterStepThree({
                               {...field}
                               className="tla-form-control"
                               onChange={(e) => {
-                                field.onChange(e); // Let react-hook-form track it
-                                setPhone(e.target.value); // Your custom logic
+                                const onlyNumbers = e.target.value.replace(
+                                  /[^0-9]/g,
+                                  ''
+                                ); // Remove non-numeric chars
+                                field.onChange(onlyNumbers); // Update react-hook-form
+                                setPhone(onlyNumbers); // Your custom logic (if needed)
                               }}
+                              value={field.value}
                             />
                           </FormControl>
                           <FormMessage />
@@ -357,11 +360,12 @@ export default function RegisterStepThree({
                     Back
                   </button>
                   <button
-                    type="button" // Use type="button" so it doesn't auto-submit form
+                    type="button"
                     className="btn-auth-register"
-                    onClick={form.handleSubmit(handleFinalSubmit)} // <-- call handleStep only if form valid
+                    onClick={form.handleSubmit(handleFinalSubmit)}
+                    disabled={isLoading} // <- disable when submitting
                   >
-                    Finish & See Leads
+                    {isLoading ? 'Submitting...' : 'Finish & See Leads'}
                   </button>
 
                   {/* <button type="submit" className="btn-auth-register">
