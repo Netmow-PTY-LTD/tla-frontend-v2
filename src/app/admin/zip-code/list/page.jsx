@@ -27,9 +27,12 @@ import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import React, { useMemo, useState } from 'react';
 import CreateZipCodeModal from '../../_components/modal/CreateZipCodeModal';
+import EditZipCodeModal from '../../_components/modal/EditZipCodeModal';
 
 export default function Page() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedZipId, setSelectedZipId] = useState(null);
 
   const { data: countryList, refetch: refetchCountry } =
     useGetCountryListQuery();
@@ -139,16 +142,15 @@ export default function Page() {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Link
-                  href={`/admin/zip-code/edit/${
-                    item?._id
-                  }?country=${encodeURIComponent(countryName)}`}
-                  className="flex gap-2 items-center"
-                >
-                  <Pencil className="w-4 h-4" />
-                  Edit
-                </Link>
+              <DropdownMenuItem
+                onClick={() => {
+                  setSelectedZipId(item?._id);
+                  setEditModalOpen(true);
+                }}
+                className="flex gap-2 cursor-pointer"
+              >
+                <Pencil className="w-4 h-4" />
+                Edit
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
@@ -191,6 +193,12 @@ export default function Page() {
         <CreateZipCodeModal
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
+          onSuccess={handleModalSuccess}
+        />
+        <EditZipCodeModal
+          open={editModalOpen}
+          onClose={() => setEditModalOpen(false)}
+          zipId={selectedZipId}
           onSuccess={handleModalSuccess}
         />
       </div>
