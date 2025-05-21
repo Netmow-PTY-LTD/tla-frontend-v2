@@ -5,7 +5,7 @@ const SettingsLayout = ({ children }) => {
   return (
     <div className=" border rounded-xl">
       <SettingsTabs />
-      <div className="p-4">{children}</div>
+      <div className="p-4 bg-white">{children}</div>
     </div>
   );
 };

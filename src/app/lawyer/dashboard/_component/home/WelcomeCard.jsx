@@ -1,5 +1,9 @@
 import React from 'react';
 
 export default function WelcomeCard() {
-  return <div>Welcome to your dashboard, user</div>;
+  return (
+    <div>
+      <h2>Welcome </h2>
+    </div>
+  );
 }

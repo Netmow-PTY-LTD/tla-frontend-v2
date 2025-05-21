@@ -15,16 +15,18 @@ export default function SellerDashboard() {
   console.log('currentUser', currentUser);
   console.log('token', token);
   return (
-    <>
-      <WelcomeCard />
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-        <ProfileCard />
+    <div>
+      {/* <WelcomeCard /> */}
+
+      <ProfileCard />
+      <GetStartedCard />
+      <div className="grid grid-cols-2 gap-5 mt-5">
         <LeadSettingsCard />
         <LeadsCountCard />
-        <GetStartedCard />
+
         <ResponsesCard />
         <HelpCard />
       </div>
-    </>
+    </div>
   );
 }
