@@ -23,7 +23,7 @@ import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { useAddOptionMutation } from '@/store/features/admin/optionApiService';
 import { slugify } from '@/helpers/generateSlug';
 
-export function AddOptionDialog({ open, onOpenChange, item, refetch }) {
+export function EditOptionDialog({ open, onOpenChange, item, refetch }) {
   const formSchema = z.object({
     name: z.string().min(2, {
       message: 'Name is required.',

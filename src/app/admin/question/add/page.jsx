@@ -28,7 +28,6 @@ import {
   useAddQuestionMutation,
   useDeleteQuestionMutation,
   useGetServiceWiseQuestionsQuery,
-  useLazyGetServiceWiseQuestionsQuery,
   useUpdateQuestionOrderMutation,
 } from '@/store/features/admin/questionApiService';
 import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
@@ -200,30 +199,38 @@ export default function AddQuestionPage() {
   };
 
   // console.log('selectedCountry', selectedCountry);
-
   // console.log('selectedService', selectedService);
 
   //single service wise questions
 
-  const [
-    singleServicewiseQuestions,
-    { data: singleServicewiseQuestionsData, isFetching: isQuestionsLoading },
-  ] = useLazyGetServiceWiseQuestionsQuery();
-
-  useEffect(() => {
-    if (selectedCountry && selectedService) {
-      singleServicewiseQuestions({
-        countryId: selectedCountry,
-        serviceId: selectedService,
-      });
+  const {
+    data: singleServicewiseQuestionsData,
+    isFetching: isQuestionsLoading,
+    refetch,
+  } = useGetServiceWiseQuestionsQuery(
+    {
+      countryId: selectedCountry,
+      serviceId: selectedService,
+    },
+    {
+      skip: !selectedCountry || !selectedService,
     }
-  }, [selectedCountry, selectedService]);
+  );
+
+  // useEffect(() => {
+  //   if (selectedCountry && selectedService) {
+  //     singleServicewiseQuestions({
+  //       countryId: selectedCountry,
+  //       serviceId: selectedService,
+  //     });
+  //   }
+  // }, [selectedCountry, selectedService]);
 
   useEffect(() => {
     if (singleServicewiseQuestionsData) {
       setData(singleServicewiseQuestionsData?.data);
     }
-  }, [singleServicewiseQuestions]);
+  }, [singleServicewiseQuestionsData]);
 
   console.log('data', data);
 
@@ -251,6 +258,24 @@ export default function AddQuestionPage() {
       );
     }
   }
+
+  const [deleteQuestion] = useDeleteQuestionMutation();
+
+  const handleDeleteQuestion = async (id) => {
+    try {
+      const res = await deleteQuestion(id).unwrap();
+      if (res) {
+        showSuccessToast(res?.message);
+      }
+    } catch (err) {
+      console.log('Error in deleting question', err);
+      showErrorToast(
+        err?.data?.errorSources?.[0]?.message ||
+          err?.data?.message ||
+          'Failed to delete question.'
+      );
+    }
+  };
 
   return (
     <>
