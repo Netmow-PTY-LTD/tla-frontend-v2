@@ -36,6 +36,26 @@ export const AdminSidebarItems = {
         },
       ],
     },
+    {
+      title: 'Zip Code',
+      url: '#',
+      icon: MapPinHouse,
+      isActive: true,
+      items: [
+        {
+          title: 'Add Zip Code',
+          url: '/admin/zip-code/add',
+          icon: Plus,
+          isActive: true,
+        },
+        {
+          title: 'List of Zip Code',
+          url: '/admin/zip-code/list',
+          icon: List,
+          isActive: true,
+        },
+      ],
+    },
 
     {
       title: 'Services',
