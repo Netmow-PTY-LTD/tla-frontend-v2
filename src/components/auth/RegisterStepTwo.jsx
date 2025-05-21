@@ -39,6 +39,8 @@ export default function RegisterStepTwo({
   setPracticeInternational,
   areaRange,
   setAreaRange,
+  setAreaZipValue,
+  areaZipValue,
 }) {
   const [query, setQuery] = useState('');
   const [selectedZip, setSelectedZip] = useState('');
@@ -80,10 +82,10 @@ export default function RegisterStepTwo({
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      practiceWithin: false,
-      practiceInternational: false,
-      AreaZipcode: '',
-      areaRange: '',
+      practiceWithin: practice || false,
+      practiceInternational: practiceInternational || false,
+      AreaZipcode: areaZipValue || '',
+      areaRange: practiceArea || '',
     },
   });
 
@@ -171,13 +173,9 @@ export default function RegisterStepTwo({
     ],
   };
 
-  console.log('areaZipList', areaZipList.data);
-
   const filteredZipcodes = areaZipList?.data?.filter((item) =>
     item.zip.toLowerCase().includes(query.toLowerCase())
   );
-
-  console.log('filteredZipcodes', filteredZipcodes);
 
   return (
     <>
@@ -230,68 +228,6 @@ export default function RegisterStepTwo({
                   )}
                 />
 
-                {/* <FormField
-                  control={form.control}
-                  name="AreaZipcode"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Area Zipcode</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="zipcode"
-                          {...field}
-                          className="tla-form-control"
-                          onChange={(e) => {
-                            field.onChange(e); // Let react-hook-form track it
-                            setAreaZipcode(e.target.value); // Your custom logic
-
-                            // If user fills AreaZipcode, force practiceWithin checkbox to true
-                            if (e.target.value.trim() !== '') {
-                              form.setValue('practiceWithin', true);
-                              setPractice(true);
-                            }
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
-                {/* <FormField
-                  control={form.control}
-                  name="AreaZipcode"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Area Zipcode</FormLabel>
-                      <FormControl>
-                        <Select
-                          onValueChange={(val) => {
-                            field.onChange(val); // Update form value
-                            setAreaZipcode(val); // Update local state if needed
-                            if (val.trim() !== '') {
-                              form.setValue('practiceWithin', true); // Auto-check
-                              setPractice(true);
-                            }
-                          }}
-                          value={field.value}
-                        >
-                          <SelectTrigger className="tla-form-control">
-                            <SelectValue placeholder="Select a Zipcode" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {areaZipList?.data?.map((item) => (
-                              <SelectItem key={item._id} value={item._id}>
-                                {item.zip}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
-
                 <FormField
                   control={form.control}
                   name="AreaZipcode"
@@ -299,13 +235,19 @@ export default function RegisterStepTwo({
                     <FormItem>
                       <FormLabel>Area Zipcode</FormLabel>
                       <Combobox
-                        value={field.value}
+                        value={field.value} // string zip code
                         onChange={(val) => {
-                          field.onChange(val);
-                          setAreaZipcode(val);
-                          if (val.trim() !== '') {
+                          field.onChange(val.zip); // pass string zip
+                          setAreaZipcode(val._id); // save id separately
+                          setAreaZipValue(val.zip); // save id separately
+                          if (val?.zip?.trim() !== '') {
                             form.setValue('practiceWithin', true);
                             setPractice(true);
+                          } else {
+                            form.setValue('practiceWithin', false);
+                            setPractice(false);
+                            setAreaZipcode(null);
+                            setAreaZipValue(null); // save id separately
                           }
                         }}
                       >
@@ -313,7 +255,7 @@ export default function RegisterStepTwo({
                           <Combobox.Input
                             className="tla-form-control w-full"
                             onChange={(event) => setQuery(event.target.value)}
-                            displayValue={(val) => val}
+                            displayValue={(val) => val || ''}
                             placeholder="Select a Zipcode"
                           />
                           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
@@ -325,7 +267,7 @@ export default function RegisterStepTwo({
                               {filteredZipcodes.map((item) => (
                                 <Combobox.Option
                                   key={item._id}
-                                  value={item.zip}
+                                  value={item} // full object for selection
                                   className={({ active }) =>
                                     cn(
                                       'cursor-pointer select-none relative py-2 pl-10 pr-4',

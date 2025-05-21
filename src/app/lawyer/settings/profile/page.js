@@ -19,7 +19,7 @@ export default function MyProfilePage() {
         <AccordionComponent content={<About />} title={'About'} />
         <AccordionComponent content={<Reviews />} title={'Reviews'} />
         <AccordionComponent content={<Services />} title={'Services'} />
-        <AccordionComponent content={<Media />} title={'Media'} />
+        <AccordionComponent content={<Media />} title={'Photos'} />
         <AccordionComponent
           content={<SocialMediaLinks />}
           title={'Social Media Links'}
