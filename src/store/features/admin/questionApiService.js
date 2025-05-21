@@ -39,7 +39,7 @@ const questionApiService = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['question'],
     }),
-     updateQuestionOrder: builder.mutation({
+    updateQuestionOrder: builder.mutation({
       query: (body) => ({
         url: `/question/order`,
         method: 'PATCH',
@@ -47,7 +47,7 @@ const questionApiService = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['question'],
     }),
-     addCountryWiseServiceQuestion: builder.mutation({
+    addCountryWiseServiceQuestion: builder.mutation({
       query: (body) => ({
         url: '/country-wise-service/add',
         method: 'POST',
@@ -56,9 +56,9 @@ const questionApiService = baseApi.injectEndpoints({
       invalidatesTags: ['question'],
     }),
     getServiceWiseQuestions: builder.query({
-      query: ({serviceId, countryId}) => ({
+      query: ({ serviceId, countryId }) => ({
         url: `/service-wise-questions?serviceId=${serviceId}&countryId=${countryId}`,
-        method: 'GET',      
+        method: 'GET',
       }),
       providesTags: ['question'],
     }),
@@ -72,6 +72,6 @@ export const {
   useEditQuestionMutation,
   useDeleteQuestionMutation,
   useAllCountryWiseServiceQuestionsQuery,
-  useLazyGetServiceWiseQuestionsQuery,
-  useUpdateQuestionOrderMutation
+  useGetServiceWiseQuestionsQuery,
+  useUpdateQuestionOrderMutation,
 } = questionApiService;

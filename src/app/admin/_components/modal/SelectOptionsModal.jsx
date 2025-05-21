@@ -13,23 +13,31 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
 import { useEffect } from 'react';
+import { useEditQuestionMutation } from '@/store/features/admin/questionApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
-import { useAddOptionMutation } from '@/store/features/admin/optionApiService';
-import { slugify } from '@/helpers/generateSlug';
 
-export function AddOptionDialog({ open, onOpenChange, item, refetch }) {
+export function SelectOptionsModal({ open, onOpenChange, item }) {
   const formSchema = z.object({
-    name: z.string().min(2, {
-      message: 'Name is required.',
+    question: z.string().min(2, {
+      message: 'Question is required.',
     }),
     slug: z.string().min(1, {
       message: 'Slug is required.',
+    }),
+    questionType: z.string().min(1, {
+      message: 'Question type is required.',
     }),
   });
 
@@ -37,39 +45,38 @@ export function AddOptionDialog({ open, onOpenChange, item, refetch }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
+      question: '',
       slug: '',
+      questionType: '',
     },
   });
 
-  const name = form.watch('name');
-
   useEffect(() => {
-    const generatedSlug = slugify(name || '');
-    form.setValue('slug', generatedSlug);
-  }, [name, form.setValue]);
+    if (item) {
+      form.reset({
+        question: item?.question || '',
+        slug: item?.slug || '',
+        questionType: item?.questionType,
+      });
+    }
+  }, [item, form]);
 
-  //add option api call
-  const [AddOption] = useAddOptionMutation();
+  const [updateQuestion] = useEditQuestionMutation();
 
   async function onSubmit(values) {
-    console.log('values', values);
-    const finalValues = {
-      countryId: item?.countryId?._id,
+    //console.log('values', values);
+    const updatedData = {
+      id: item?._id,
+      countyId: item?.countryId?._id,
       serviceId: item?.serviceId?._id,
-      questionId: item?._id,
       ...values,
     };
-
-    console.log('finalValues', finalValues);
+    console.log(updatedData);
     try {
-      const result = await AddOption(finalValues).unwrap();
+      const result = await updateQuestion(updatedData).unwrap();
       // Optionally reset form or show success toast
       if (result) {
         showSuccessToast(result?.message);
-        refetch();
-        form.reset();
-        onOpenChange(false);
       }
     } catch (error) {
       console.error('Error adding question:', error);
@@ -86,18 +93,18 @@ export function AddOptionDialog({ open, onOpenChange, item, refetch }) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px] md:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Add Option</DialogTitle>
+          <DialogTitle>Select Options</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             <FormField
               control={form.control}
-              name="name"
+              name="question"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Question</FormLabel>
                   <FormControl>
-                    <Input placeholder="Option" {...field} />
+                    <Input placeholder="Question" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -110,13 +117,37 @@ export function AddOptionDialog({ open, onOpenChange, item, refetch }) {
                 <FormItem>
                   <FormLabel>Slug</FormLabel>
                   <FormControl>
-                    <Input placeholder="Option Slug" {...field} />
+                    <Input placeholder="Question Slug" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit">Add</Button>
+            <FormField
+              control={form.control}
+              name="questionType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Question Type</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a question type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="radio">Radio</SelectItem>
+                      <SelectItem value="checkbox">Checkbox</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Update</Button>
           </form>
         </Form>
       </DialogContent>

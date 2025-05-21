@@ -10,27 +10,31 @@ import {
   SidebarRail,
 } from '@/components/ui/sidebar';
 import { LawyerSideNav } from '@/components/dashboard/lawyer/layout/SellerSideNav';
+import SidebarTop from './dashboard/_component/common/SidebarTop';
 
 export default async function SellerDashboardLayout({ children }) {
   return (
     <>
       <DashboardHeader />
-      <SidebarProvider>
-        <Sidebar collapsible="icon" className="w-64">
-          <SidebarHeader />
+      <SidebarProvider className="sidebar-main">
+        <Sidebar collapsible="icon" className="w-96">
+          <SidebarHeader>
+            <SidebarTop />
+          </SidebarHeader>
+
           <SidebarContent>
             <LawyerSideNav />
           </SidebarContent>
           <SidebarRail />
         </Sidebar>
         <div
-          className="w-full pb-10"
+          className="flex-1 pb-10 main-content"
           style={{
             minHeight: 'calc(100vh - 74px - 42px)',
           }}
         >
-          <div className="flex flex-col p-5 h-full">
-            <div className="flex-1 rounded-xl bg-white  p-4 ">{children}</div>
+          <div className="flex flex-col h-full">
+            <div className="flex-1 rounded-xl bg-white p-5">{children}</div>
             <DashboardFooter />
           </div>
         </div>
