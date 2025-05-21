@@ -1,7 +1,7 @@
 'use client';
 import TextInput from '@/components/form/TextInput';
 import { Form } from '@/components/ui/form';
-import { ShieldQuestion } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import React from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 
@@ -54,7 +54,7 @@ export default function CompanyLocation() {
                 className="flex items-center text-sm text-gray-700 space-x-2"
               >
                 <span>Don’t show this on my profile</span>
-                <ShieldQuestion className="w-4 h-4 text-gray-500" />
+                <AlertCircle className="w-4 h-4 text-gray-500" />
               </label>
             </div>
           </div>

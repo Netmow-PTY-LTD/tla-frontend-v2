@@ -36,4 +36,32 @@ const AccordionComponent = ({ title, content }) => {
   );
 };
 
+export const DynamicAccordion = ({ items }) => {
+  return (
+    <Accordion type="single" collapsible className="space-y-[10px] ">
+      {items.map(({ id, title, content }) => (
+        <AccordionItem
+          key={id}
+          value={id}
+          className="border-none bg-[#F3F3F3]  p-[10px] rounded-[5px]"
+        >
+          <AccordionTrigger className="h-[44px] px-2">
+            <div className="flex items-center gap-[16px]">
+              {' '}
+              {/* Horizontal gap */}
+              <CircularProgress progress={27} size={30} />
+              <span className="text-sm font-medium text-gray-700 leading-none">
+                {title}
+              </span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="px-2 py-5">{content}</div>
+          </AccordionContent>
+        </AccordionItem>
+      ))}
+    </Accordion>
+  );
+};
+
 export default AccordionComponent;

@@ -2,7 +2,8 @@
 
 import { Form } from '@/components/ui/form';
 import FileUploader from '@/components/UIComponents/fileUploader';
-import Image from 'next/image';
+import { CloudUpload } from 'lucide-react';
+
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -23,11 +24,12 @@ export default function VideoGallery() {
             onChange={(e) => console.log(e.target.files)}
             accept="image/*"
             multiple={false}
+            icon={<CloudUpload className="w-6 h-6 text-[#00C3C0] mb-2" />}
           />
         </div>
       </Form>
       <div>
-        <Image />
+        <div>{/* Image Gellary*/}</div>
       </div>
     </div>
   );
