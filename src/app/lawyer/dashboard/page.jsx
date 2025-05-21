@@ -5,9 +5,10 @@ import ProfileCard from './_component/home/ProfileCard';
 import LeadSettingsCard from './_component/home/LeadSettingsCard';
 import LeadsCountCard from './_component/home/LeadsCountCard';
 import GetStartedCard from './_component/home/GetStartedCard';
-import ResponsesCard from './_component/home/ResponsesCard';
-import HelpCard from './_component/home/HelpCard';
+
 import { useSelector } from 'react-redux';
+import ResponseCard from './_component/home/ResponseCard';
+import SendNewLeadsCard from './_component/home/SendNewLeadsCard';
 
 export default function SellerDashboard() {
   const currentUser = useSelector((state) => state.auth.user);
@@ -20,12 +21,12 @@ export default function SellerDashboard() {
 
       <ProfileCard />
       <GetStartedCard />
-      <div className="grid grid-cols-2 gap-5 mt-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5">
         <LeadSettingsCard />
         <LeadsCountCard />
 
-        <ResponsesCard />
-        <HelpCard />
+        <SendNewLeadsCard />
+        <ResponseCard />
       </div>
     </div>
   );
