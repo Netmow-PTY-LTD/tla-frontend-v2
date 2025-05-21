@@ -16,9 +16,9 @@ import z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  useGetSingleZipCodeQuery,
   useEditZipCodeMutation,
   useGetCountryListQuery,
+  useGetSingleZipCodeQuery,
 } from '@/store/features/public/publicApiService';
 import {
   Select,
@@ -65,10 +65,17 @@ export default function EditZipCodePage() {
 
   const onSubmit = async (values) => {
     try {
-      const res = await editZipCode({ id: zipId, ...values }).unwrap();
+      const payload = {
+        _id: zipId, // ✅ Include id in the body
+        zipcode: values.zipcode,
+        countryId: values.countryId,
+      };
+
+      const res = await editZipCode(payload).unwrap();
       showSuccessToast(res?.message || 'Zip Code updated successfully!');
+
       setTimeout(() => {
-        router.push('/admin/country/zipcodes');
+        router.push('/admin/zip-code/list');
       }, 1500);
     } catch (error) {
       const message = error?.data?.message || 'Failed to update Zip Code.';

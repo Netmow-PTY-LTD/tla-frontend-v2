@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-  useDeleteCountryMutation,
+  useDeleteZipCodeMutation,
   useGetCountryListQuery,
   useGetZipCodeListQuery,
 } from '@/store/features/public/publicApiService';
@@ -50,18 +50,19 @@ export default function Page() {
     return ZipCodeList.data;
   }, [ZipCodeList, selectedCountry]);
 
-  const [countryDelete] = useDeleteCountryMutation();
+  const [zipCodeDelete] = useDeleteZipCodeMutation();
 
-  const handleDeleteCountry = async (id) => {
+  const handleDeleteZipCode = async (id) => {
+    console.log('id', id);
     try {
-      const res = await countryDelete(id).unwrap();
+      const res = await zipCodeDelete(id).unwrap();
       if (res) {
         showSuccessToast(res?.message);
         refetchCountry();
       }
     } catch (error) {
       console.error(error);
-      showErrorToast('Failed to delete country.');
+      showErrorToast('Failed to delete Zip Code.');
     }
   };
 
@@ -140,7 +141,7 @@ export default function Page() {
               <DropdownMenuItem>
                 <div
                   className="flex gap-2 cursor-pointer"
-                  onClick={() => handleDeleteCountry(item?._id)}
+                  onClick={() => handleDeleteZipCode(item?._id)}
                 >
                   <Trash2 className="w-4 h-4" /> Delete
                 </div>

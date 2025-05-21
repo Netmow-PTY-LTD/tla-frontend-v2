@@ -54,18 +54,25 @@ const publicApiService = baseApi.injectEndpoints({
       }),
       providesTags: ['Country'],
     }),
-            singleZipCode: builder.query({
+       getSingleZipCode: builder.query({
       query: (id) => ({
         url: `/country/zipcode/${id}`,
         method: 'GET',
       }),
       providesTags: ['Country'],
     }),
-        ediZipCode: builder.mutation({
+        editZipCode: builder.mutation({
       query: (body) => ({
-        url: `/country/zipcode/edit/${body.id}`,
-        method: 'POST',
+        url: `/country/zipcode/edit/${body._id}`,
+        method: 'PATCH',
         body,
+      }),
+      invalidatesTags: ['Country'],
+    }),
+      deleteZipCode: builder.mutation({
+      query: (id) => ({
+        url: `/country/zipcode/delete/${id}`,
+        method: 'DELETE',
       }),
       invalidatesTags: ['Country'],
     }),
@@ -81,5 +88,6 @@ export const {
   useAddZipCodeMutation,
    useGetZipCodeListQuery,
    useGetSingleZipCodeQuery,
-   useEditZipCodeMutation
+   useEditZipCodeMutation,
+   useDeleteZipCodeMutation,
 } = publicApiService;
