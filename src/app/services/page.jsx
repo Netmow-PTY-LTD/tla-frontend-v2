@@ -3,13 +3,13 @@ import LawCard from '@/components/main/common/card/LawCard';
 import MainLayout from '@/components/main/common/layout';
 import SectionHeading from '@/components/main/home/SectionHeading';
 import WorkingSteps from '@/components/main/WorkingSteps';
-import { useGetAllServicesQuery } from '@/store/features/public/publicApiService';
+import { useAllServicesQuery } from '@/store/features/admin/servicesApiService';
 
 const ServicesPage = () => {
-  const { data: allServices } = useGetAllServicesQuery();
+  const { data: allServices } = useAllServicesQuery();
   return (
     <MainLayout>
-      <section className="bg-[url('/assets/img/services/service-bg.png')]  pt-12 mb-20 ">
+      <section className="bg-[url('/assets/img/services/service-bg.png')] pt-12 mb-20">
         <div className="container">
           <SectionHeading
             title="Find From Wide Range of Legal Services"
