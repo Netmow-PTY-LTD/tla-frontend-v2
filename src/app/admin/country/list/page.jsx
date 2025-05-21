@@ -31,6 +31,12 @@ export default function Page() {
   const [countryDelete] = useDeleteCountryMutation();
 
   const handleDeleteCountry = async (id) => {
+    const confirmDelete = window.confirm(
+      'Are you sure you want to delete this country?'
+    );
+
+    if (!confirmDelete) return;
+
     try {
       const res = await countryDelete(id).unwrap();
       if (res) {
@@ -42,6 +48,7 @@ export default function Page() {
       showErrorToast('Failed to delete country.');
     }
   };
+
   const columns = [
     {
       id: 'select',
@@ -142,7 +149,10 @@ export default function Page() {
       <EditCountryModal
         id={editId}
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          setOpen(false);
+          setEditId(null); // reset after close
+        }}
       />
 
       <DataTable
