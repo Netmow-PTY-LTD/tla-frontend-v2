@@ -157,51 +157,9 @@ export default function Register() {
       }
     } catch (error) {
       console.error('❌ API error:', error);
-      showErrorToast('Something went wrong. Please try again.');
+      showErrorToast(error.data.message);
     }
   };
-
-  // const handleFinalSubmit = async () => {
-  //   const formData = {
-  //     fullName,
-  //     selectedServiceIds,
-  //     practice,
-  //     areaZipcode,
-  //     practiceArea,
-  //     practiceInternational,
-  //     username,
-  //     email,
-  //     phone,
-  //     soloPractitioner,
-  //     companyTeam,
-  //     companyName,
-  //     companyWebsite,
-  //     companySize,
-  //     role: 'user',
-  //     regUserType: 'lawyer',
-  //     password: '123456',
-  //     profile: {
-  //       name: fullName,
-  //       activeProfile: 'basic',
-  //     },
-  //   };
-  //   try {
-  //     const result = await authRegister(formData).unwrap();
-
-  //     if (result?.success && result?.token) {
-  //       window.location.href = `/lawyer?token=${result.token}`;
-  //     } else {
-  //       const errorMessage =
-  //         result?.errorSources?.[0]?.message ||
-  //         result?.message ||
-  //         'Registration failed.';
-  //       showErrorToast(errorMessage);
-  //     }
-  //   } catch (error) {
-  //     console.error('API error:', error);
-  //     showErrorToast('Something went wrong. Please try again.');
-  //   }
-  // };
 
   return (
     <section
