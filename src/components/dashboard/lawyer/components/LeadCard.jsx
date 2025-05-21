@@ -60,7 +60,7 @@ const LeadCard = () => {
         </h1>
         <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
           <h1 className="font-medium mb-2">Position Overview</h1>
-          <p className="text-sm text-[#34495E] ">
+          <p className="text-[13px] text-[#34495E] ">
             If you're facing a divorce, it's crucial to seek professional legal
             advice. Our consultations cover everything from asset division to
             child custody arrangements, ensuring you understand your rights and

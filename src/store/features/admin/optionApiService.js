@@ -39,7 +39,7 @@ const optionApiService = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['option'],
     }),
-     getQuestionWiseOptions: builder.query({
+    getQuestionWiseOptions: builder.query({
       query: (questionId) => ({
         url: `/question-wise-options?questionId=${questionId}`,
         method: 'GET',
@@ -51,11 +51,9 @@ const optionApiService = baseApi.injectEndpoints({
 
 export const {
   useAddOptionMutation,
-  useGetAllQuestionsQuery,
-  useGetSingleQuestionQuery,
-  useEditQuestionMutation,
-  useDeleteQuestionMutation,
-  useAllCountryWiseServiceQuestionsQuery,
-  useGetServiceWiseQuestionsQuery,
-  useGetQuestionWiseOptionsQuery
+  useGetAllOptionsQuery,
+  useGetSingleOptionQuery,
+  useEditOptionMutation,
+  useDeleteOptionMutation,
+  useGetQuestionWiseOptionsQuery,
 } = optionApiService;

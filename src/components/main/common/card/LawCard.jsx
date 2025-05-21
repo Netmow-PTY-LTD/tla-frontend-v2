@@ -36,7 +36,7 @@ const LawCard = ({ service }) => {
             </p>
           </div>
           <h1 className="card-title font-medium sm:text-2xl text-[27px] mt-2 ">
-            {service?.serviceName}{' '}
+            {service?.name}{' '}
           </h1>
         </div>
       </div>
