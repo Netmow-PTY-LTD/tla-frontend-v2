@@ -19,9 +19,11 @@ import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import AddCountryModal from '../../_components/modal/AddCountryModal';
+import EditCountryModal from '../../_components/modal/EditCountryModal';
 
 export default function Page() {
   const [open, setOpen] = useState(false);
+  const [editId, setEditId] = useState(null);
 
   const { data: countryList, refetch } = useGetCountryListQuery();
   console.log('countryList', countryList);
@@ -96,13 +98,23 @@ export default function Page() {
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <Link
+                {/* <Link
                   href={`/admin/country/edit/${country?._id}`}
                   className="flex gap-2 items-center"
                 >
                   <Pencil className="w-4 h-4" />
                   Edit
-                </Link>
+                </Link> */}
+                <button
+                  onClick={() => {
+                    setEditId(country?._id);
+                    setOpen(true);
+                  }}
+                  className="flex gap-2"
+                >
+                  <Pencil className="w-4 h-4" />
+                  Edit
+                </button>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
@@ -127,6 +139,12 @@ export default function Page() {
         <Button onClick={() => setOpen(true)}>Add Country</Button>
       </div>
       <AddCountryModal open={open} onClose={() => setOpen(false)} />
+      <EditCountryModal
+        id={editId}
+        open={open}
+        onClose={() => setOpen(false)}
+      />
+
       <DataTable
         data={countryList?.data || []}
         columns={columns}
