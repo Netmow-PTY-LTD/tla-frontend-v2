@@ -3,6 +3,7 @@ import TextInput from '@/components/form/TextInput';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Form } from '@/components/ui/form';
 import FileUploader from '@/components/UIComponents/fileUploader';
+import { CloudUpload } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -27,6 +28,7 @@ export default function CompanyProfile() {
             onChange={(e) => console.log(e.target.files)}
             accept="image/*"
             multiple={false}
+            icon={<CloudUpload className="w-6 h-6 text-[#00C3C0] mb-2" />}
           />
         </div>
         <div className="mt-[30px]">
