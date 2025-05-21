@@ -19,9 +19,14 @@ import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import AddServiceModal from '../../_components/modal/AddServiceModal ';
+import EditServiceModal from '../../_components/modal/EditServiceModal';
 
 export default function ServicesList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [editId, setEditId] = useState(null);
+
+  console.log('editId', editId);
 
   const { data: serviceList, refetch } = useAllServicesQuery();
   const [deleteService] = useDeleteServiceMutation();
@@ -94,13 +99,23 @@ export default function ServicesList() {
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <Link
+                {/* <Link
                   href={`/admin/service/edit/${service?._id}`}
                   className="flex items-center gap-2"
                 >
                   <Pencil className="w-4 h-4" />
                   Edit
-                </Link>
+                </Link> */}
+                <button
+                  onClick={() => {
+                    setEditId(service?._id);
+                    setOpen(true);
+                  }}
+                  className="flex gap-2"
+                >
+                  <Pencil className="w-4 h-4" />
+                  Edit
+                </button>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
@@ -131,6 +146,14 @@ export default function ServicesList() {
       <AddServiceModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+      />
+      <EditServiceModal
+        id={editId}
+        open={open}
+        onClose={() => {
+          setOpen(false);
+          setEditId(null); // reset after close
+        }}
       />
     </div>
   );
