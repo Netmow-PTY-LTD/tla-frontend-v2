@@ -1,5 +1,7 @@
+'use client';
+
+import { Modal } from '@/components/UIComponents/Modal';
 import { Edit, FileIcon, Trash } from 'lucide-react';
-import React from 'react';
 
 export default function AccreditionsList() {
   return (
@@ -29,6 +31,10 @@ export default function AccreditionsList() {
           </button>
         </div>
       </div>
+
+      <Modal buttonName={' + Add Accredition'}>
+        <h2>Test modal</h2>
+      </Modal>
     </div>
   );
 }
