@@ -3,7 +3,6 @@
 import { Form } from '@/components/ui/form';
 import FileUploader from '@/components/UIComponents/fileUploader';
 import { CloudUpload } from 'lucide-react';
-import Image from 'next/image';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -29,9 +28,7 @@ export default function PhotoGallery() {
           />
         </div>
       </Form>
-      <div>
-        <Image />
-      </div>
+      <div>{/* Image Gellary*/}</div>
     </div>
   );
 }
