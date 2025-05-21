@@ -24,11 +24,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { useRouter } from 'next/navigation';
-import {
-  useAddQuestionMutation,
-  useDeleteQuestionMutation,
-  useGetServiceWiseQuestionsQuery,
-} from '@/store/features/admin/questionApiService';
 import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
 import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
 import { slugify } from '@/helpers/generateSlug';
@@ -49,14 +44,17 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 
+import { AddOptionDialog } from '../../_components/modal/AddOptionModal';
+import { useLazyGetServiceWiseQuestionsQuery } from '@/store/features/admin/questionApiService';
+import { useGetQuestionWiseOptionsQuery } from '@/store/features/admin/optiionApiService';
+
 export default function AddQuestionPage() {
   //state variables
   const [selectedCountry, setSelectedCountry] = useState('');
-  const [countryId, setCountryId] = useState(null);
-  const [serviceId, setServiceId] = useState(null);
+  const [selectedService, setSelectedService] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [data, setData] = useState([]);
+  const [selectedQuestionId, setSelectedQuestionId] = useState(null);
 
   const router = useRouter();
 
@@ -67,49 +65,6 @@ export default function AddQuestionPage() {
     useGetCountryWiseServicesQuery(selectedCountry, {
       skip: !selectedCountry, // Skip query if no country is selected
     });
-
-  //single service wise questions
-
-  const { data: singleServicewiseQuestions } = useGetServiceWiseQuestionsQuery(
-    serviceId && countryId ? { serviceId, countryId } : skipToken
-  );
-
-  useEffect(() => {
-    if (singleServicewiseQuestions) {
-      setData(singleServicewiseQuestions?.data);
-    }
-  }, [singleServicewiseQuestions]);
-
-  //console.log('singleServicewiseQuestions', singleServicewiseQuestions);
-
-  //edit modal
-
-  const handleModalOpen = (id) => {
-    setDialogOpen(true);
-
-    const singleQuestion = singleServicewiseQuestions?.data?.find(
-      (item) => item?._id === id
-    );
-
-    setSelectedItem(singleQuestion);
-  };
-
-  //handling deleting specific servicewise question
-
-  const [deleteServiceQuestion] = useDeleteQuestionMutation();
-
-  const handleDeleteQuestion = async (id) => {
-    try {
-      const res = await deleteServiceQuestion(id).unwrap();
-      if (res) {
-        showSuccessToast(res?.message);
-        refetch();
-      }
-    } catch (error) {
-      console.error(error);
-      showErrorToast('Failed to delete country.');
-    }
-  };
 
   //Table columns
   const columns = [
@@ -212,11 +167,48 @@ export default function AddQuestionPage() {
     form.setValue('slug', slug);
   }, [name, form]);
 
+  //country change handler
+  const handleCountryChange = (val) => {
+    console.log('value', val);
+    setSelectedCountry(val);
+  };
+
   //country wise service change handler
 
   const handleCountryWiseServiceChange = (val) => {
     console.log('value', val);
-    setSelectedCountry(val);
+    setSelectedService(val);
+  };
+
+  //   console.log('selected country', selectedCountry);
+  console.log('selected service', selectedService);
+
+  //single service wise questions
+
+  const [
+    singleServicewiseQuestions,
+    { data: singleServicewiseQuestionsData, isFetching: isQuestionsLoading },
+  ] = useLazyGetServiceWiseQuestionsQuery();
+
+  useEffect(() => {
+    if (selectedCountry && selectedService) {
+      singleServicewiseQuestions({
+        countryId: selectedCountry,
+        serviceId: selectedService,
+      });
+    }
+  }, [selectedCountry, selectedService]);
+
+  console.log('singleServicewiseQuestionsData', singleServicewiseQuestionsData);
+
+  //Add option modal handling
+
+  const handleModalOpen = (id) => {
+    setDialogOpen(true);
+    const singleQuestion = singleServicewiseQuestionsData?.data?.find(
+      (item) => item?._id === id
+    );
+    setSelectedItem(singleQuestion);
   };
 
   //handling adding service wise question
@@ -243,6 +235,16 @@ export default function AddQuestionPage() {
     // }
   }
 
+  //   console.log('countryId', countryId);
+  //   console.log('serviceId', serviceId);
+
+  //   const { data: questionWiseOptions, isLoading: isOptionsLoading } =
+  //     useGetQuestionWiseOptionsQuery(selectedQuestionId, {
+  //       skip: !selectedQuestionId,
+  //     });
+
+  //console.log('questionWiseOptions', questionWiseOptions?.data);
+
   return (
     <>
       <Card>
@@ -252,87 +254,116 @@ export default function AddQuestionPage() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-              <FormField
-                control={form.control}
-                name="countryId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Country</FormLabel>
-                    <Select
-                      onValueChange={(val) => {
-                        field.onChange(val); // updates form state
-                        handleCountryWiseServiceChange(val);
-                        setCountryId(val); // your custom logic
-                      }}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a country" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {countryList?.data?.map((country, i) => {
-                          return (
-                            <SelectItem key={i} value={country?._id}>
-                              {country?.name}
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="serviceId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Service</FormLabel>
-                    <Select
-                      onValueChange={(val) => {
-                        field.onChange(val); // updates form state
-                        setServiceId(val); // your custom logic
-                      }}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a service" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {countrywiseServices?.data?.map((service, i) => {
-                          return (
-                            <SelectItem key={i} value={service?._id}>
-                              {service?.name}
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit">Add</Button>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <FormField
+                  control={form.control}
+                  name="countryId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Country</FormLabel>
+                      <Select onValueChange={handleCountryChange}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a country" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {countryList?.data?.map((country, i) => {
+                            return (
+                              <SelectItem key={i} value={country?._id}>
+                                {country?.name}
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="serviceId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Service</FormLabel>
+                      <Select onValueChange={handleCountryWiseServiceChange}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a service" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {countrywiseServices?.data?.map((service, i) => {
+                            return (
+                              <SelectItem key={i} value={service?._id}>
+                                {service?.name}
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* <Button type="submit">Add</Button> */}
             </form>
           </Form>
         </CardContent>
       </Card>
 
-      <Accordion type="single" collapsible className="w-full">
-        {singleServicewiseQuestions?.data?.map((item, i) => (
-          <AccordionItem value="item-1" key={i}>
-            <AccordionTrigger>{item?.question}</AccordionTrigger>
-            <AccordionContent>
-              Yes. It adheres to the WAI-ARIA design pattern.
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
+      <div className="mt-10">
+        <Accordion type="single" collapsible className="w-full">
+          {singleServicewiseQuestionsData?.data?.map((item, i) => (
+            <AccordionItem value={item?._id} key={i}>
+              <AccordionTrigger>
+                {item?.question}
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleModalOpen(item?._id);
+                  }}
+                  className="p-2 bg-black text-white rounded-md cursor-pointer"
+                >
+                  Add Option
+                </div>
+              </AccordionTrigger>
+              <AccordionContent>
+                <table width={'100%'}>
+                  <thead>
+                    <tr>
+                      <th className="text-left">Option Name</th>
+                      <th className="text-left">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(item?.options ?? [])?.map((option, i) => (
+                      <tr key={i}>
+                        <td className="text-black font-medium">
+                          {option?.name}
+                        </td>
+                        <td>
+                          <div>
+                            <Button>Select Next Options</Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
+      <AddOptionDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        item={selectedItem}
+      />
     </>
   );
 }

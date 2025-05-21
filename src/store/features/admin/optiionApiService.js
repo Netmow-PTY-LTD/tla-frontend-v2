@@ -39,6 +39,13 @@ const optionApiService = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['option'],
     }),
+     getQuestionWiseOptions: builder.query({
+      query: (questionId) => ({
+        url: `/question-wise-options?questionId=${questionId}`,
+        method: 'GET',
+      }),
+      providesTags: ['option'],
+    }),
   }),
 });
 
@@ -49,5 +56,6 @@ export const {
   useEditQuestionMutation,
   useDeleteQuestionMutation,
   useAllCountryWiseServiceQuestionsQuery,
-  useGetServiceWiseQuestionsQuery
+  useGetServiceWiseQuestionsQuery,
+  useGetQuestionWiseOptionsQuery
 } = optionApiService;
