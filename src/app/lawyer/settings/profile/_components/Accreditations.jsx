@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import AddAccreditationsModal from './accreditations/AddAccreditationsModal';
 import AccreditationsList from './accreditations/AccreditationsList';
 import { CircleAlert } from 'lucide-react';
 import ToggleSwitch from '@/components/UIComponents/ToggleSwitch';
@@ -34,7 +33,6 @@ export default function Accreditations() {
         </div>
         <div className="flex flex-col gap-3">
           <AccreditationsList />
-          <AddAccreditationsModal />
         </div>
       </div>
       {/* Footer Buttons */}
