@@ -17,9 +17,12 @@ import {
 } from '@/store/features/admin/servicesApiService';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
+import AddServiceModal from '../../_components/modal/AddServiceModal ';
 
 export default function ServicesList() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const { data: serviceList, refetch } = useAllServicesQuery();
   const [deleteService] = useDeleteServiceMutation();
 
@@ -116,11 +119,18 @@ export default function ServicesList() {
   ];
   return (
     <div>
-      <h1>Services List</h1>
+      <div className="flex justify-between">
+        <h1>Services List</h1>
+        <Button onClick={() => setIsModalOpen(true)}>Add New Service</Button>
+      </div>
       <DataTable
         data={serviceList?.data || []}
         columns={columns}
         searchColumn={'name'}
+      />
+      <AddServiceModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
       />
     </div>
   );
