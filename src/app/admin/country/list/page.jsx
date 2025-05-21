@@ -17,9 +17,12 @@ import {
 } from '@/store/features/public/publicApiService';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
+import AddCountryModal from '../../_components/modal/AddCountryModal';
 
 export default function Page() {
+  const [open, setOpen] = useState(false);
+
   const { data: countryList, refetch } = useGetCountryListQuery();
   console.log('countryList', countryList);
 
@@ -119,7 +122,11 @@ export default function Page() {
 
   return (
     <div>
-      <h1>Country List Page</h1>
+      <div className="flex justify-between">
+        <h1>Country List Page</h1>
+        <Button onClick={() => setOpen(true)}>Add Country</Button>
+      </div>
+      <AddCountryModal open={open} onClose={() => setOpen(false)} />
       <DataTable
         data={countryList?.data || []}
         columns={columns}
