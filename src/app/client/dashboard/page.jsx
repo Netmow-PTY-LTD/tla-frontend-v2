@@ -1,4 +1,5 @@
 import React from 'react';
+import JobPostCard from '../_components/JobPostCard';
 
 export default function BuyerDashboard() {
   return (
@@ -25,6 +26,10 @@ export default function BuyerDashboard() {
           <button className="mt-10 sm:mt-12 lg:mt-[72px] rounded-[5px] bg-[#00c3c0] px-6 py-[10px] text-white">
             Place a new request
           </button>
+        </div>
+
+        <div>
+          <JobPostCard />
         </div>
       </div>
     </div>
