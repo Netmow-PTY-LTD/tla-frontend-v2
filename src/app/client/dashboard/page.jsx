@@ -44,7 +44,7 @@ export default function BuyerDashboard() {
     },
   ];
   return (
-    <div className="bg-white rounded-xl p-4">
+    <div className="bg-white rounded-xl p-4 border">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Your Request</h2>
         <button className="text-[#00C3C0] p-[10px] rounded-[5px] border border-[#00C3C0]">
