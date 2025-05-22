@@ -5,35 +5,50 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { DataTable } from '@/components/common/DataTable';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useEditOptionMutation } from '@/store/features/admin/optionApiService';
 
-export function SelectOptionsModal({ open, onOpenChange, item, optionId }) {
-  console.log('selected next question', item);
+export function SelectOptionsModal({
+  open,
+  onOpenChange,
+  item,
+  option,
+  refetch,
+  selectedOptions,
+  setSelectedOptions,
+}) {
+  console.log('selected options', option);
+  // const [selectedOptions, setSelectedOptions] = useState([]);
+  const [rowSelection, setRowSelection] = useState({});
+  const [updateOption] = useEditOptionMutation();
 
-  const [selectedOptions, setSelectedOptions] = React.useState([]);
-  const [checkedOptions, setCheckedOptions] = React.useState([]);
-
+  // Initialize selectedOptions and rowSelection when modal opens
   useEffect(() => {
-    if (selectedOptions?.length > 0) {
-      setCheckedOptions(selectedOptions);
-    } else {
-      setCheckedOptions(selectedOptions);
-    }
-  }, []);
+    if (!option?.selected_options || !item?.options) return;
 
-  const rowSelection = React.useMemo(() => {
-    const map = {};
-    selectedOptions.forEach((option) => {
-      map[option._id] = true;
+    // Get selected option IDs
+    const preselectedIds = new Set(option.selected_options.map((s) => s._id));
+
+    // Match full option objects from item.options
+    const preselectedOptions = item?.options?.filter((opt) =>
+      preselectedIds.has(opt._id)
+    );
+
+    setSelectedOptions(preselectedOptions);
+
+    // Build rowSelection object: { "optionId1": true, "optionId2": true }
+    const initialRowSelection = {};
+    preselectedOptions.forEach((opt) => {
+      initialRowSelection[opt._id] = true;
     });
-    return map;
-  }, [selectedOptions]);
 
-  const getColumns = (setSelectedOptions) => [
+    setRowSelection(initialRowSelection);
+  }, [option, item?.options, open]);
+
+  const columns = [
     {
       id: 'select',
       header: ({ table }) => (
@@ -48,29 +63,50 @@ export function SelectOptionsModal({ open, onOpenChange, item, optionId }) {
               .getRowModel()
               .rows.map((row) => row.original);
 
+            // Build new rowSelection map
+            const selectedMap = {};
+            selected.forEach((opt) => {
+              selectedMap[opt._id] = true;
+            });
+
+            setRowSelection(!!value ? selectedMap : {});
             setSelectedOptions(!!value ? selected : []);
           }}
           aria-label="Select all"
         />
       ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => {
-            row.toggleSelected(!!value);
-            const selectedRow = row.original;
+      cell: ({ row }) => {
+        const option = row.original;
+        const isChecked = selectedOptions.some((s) => s._id === option._id);
 
-            setSelectedOptions((prev) => {
-              if (!!value) {
-                return [...prev, selectedRow];
-              } else {
-                return prev.filter((s) => s._id !== selectedRow._id);
-              }
-            });
-          }}
-          aria-label="Select row"
-        />
-      ),
+        return (
+          <Checkbox
+            checked={isChecked}
+            onCheckedChange={(value) => {
+              setRowSelection((prev) => {
+                const updated = { ...prev };
+                if (value) {
+                  updated[option._id] = true;
+                } else {
+                  delete updated[option._id];
+                }
+                return updated;
+              });
+
+              setSelectedOptions((prev) => {
+                const exists = prev.find((s) => s._id === option._id);
+                if (value && !exists) {
+                  return [...prev, option];
+                } else if (!value && exists) {
+                  return prev.filter((s) => s._id !== option._id);
+                }
+                return prev;
+              });
+            }}
+            aria-label="Select row"
+          />
+        );
+      },
       enableSorting: false,
       enableHiding: false,
     },
@@ -83,27 +119,22 @@ export function SelectOptionsModal({ open, onOpenChange, item, optionId }) {
     },
   ];
 
-  const columns = getColumns(setSelectedOptions);
-
-  //handling data save
-
-  const [updateOption] = useEditOptionMutation();
-
   const handleSave = async () => {
-    if (!selectedOptions.length) return alert('Please select options');
-
+    if (!selectedOptions.length) return showErrorToast('Please select options');
     try {
       const response = await updateOption({
-        id: optionId,
+        id: option._id,
         selected_options: selectedOptions,
       }).unwrap();
+
       if (response) {
-        showSuccessToast(response?.message);
+        showSuccessToast(response?.message || 'Options updated');
+        refetch();
         onOpenChange(false);
       }
-      console.log('Submitted:', response);
     } catch (err) {
       console.error('Save failed:', err);
+      showErrorToast('Failed to save options');
     }
   };
 
@@ -118,14 +149,18 @@ export function SelectOptionsModal({ open, onOpenChange, item, optionId }) {
           columns={columns}
           searchColumn="name"
           rowSelection={rowSelection}
-          onRowSelectionChange={(updatedSelection) => {
-            const selectedRows = Object.keys(updatedSelection)
-              .map((id) => item.options.find((opt) => opt._id === id))
-              .filter(Boolean);
-
-            setSelectedOptions(selectedRows);
+          onRowSelectionChange={(updated) => {
+            const selectedIds = Object.keys(updated).filter(
+              (key) => updated[key]
+            );
+            const newSelectedOptions = item.options.filter((opt) =>
+              selectedIds.includes(opt._id)
+            );
+            setSelectedOptions(newSelectedOptions);
+            setRowSelection(updated);
           }}
         />
+
         <Button onClick={handleSave}>Save</Button>
       </DialogContent>
     </Dialog>
