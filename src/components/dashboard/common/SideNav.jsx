@@ -21,24 +21,34 @@ import { BuyerSidebarItems } from '@/app/client/_components/BuyerSidebarItems';
 import { AdminSidebarItems } from '@/app/admin/_components/AdminSidebarItems';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import { useSelector } from 'react-redux';
+import { usePathname } from 'next/navigation';
 
 export function SideNav() {
   const currentUser = useSelector(selectCurrentUser);
+  const pathname = usePathname();
+
+  const sidebarItems =
+    currentUser?.role === 'admin' ? AdminSidebarItems : BuyerSidebarItems;
+
   return (
-    <SidebarGroup>
-      {currentUser?.regUserType === 'client' && (
-        <SidebarGroupLabel>Main</SidebarGroupLabel>
+    <SidebarGroup className="nav-group">
+      {currentUser?.role === 'user' && (
+        <SidebarGroupLabel className="text-lg mb-2 text-black font-semibold">
+          Client Main Menu
+        </SidebarGroupLabel>
       )}
+
       <SidebarMenu>
-        {(currentUser?.role === 'admin'
-          ? AdminSidebarItems
-          : BuyerSidebarItems
-        )?.navMain?.map((item) =>
-          item?.items ? (
+        {sidebarItems?.navMain?.map((item) => {
+          const isParentActive = item.items?.some(
+            (sub) => pathname === sub.url
+          );
+
+          return item.items ? (
             <Collapsible
               key={item.title}
               asChild
-              defaultOpen={item.isActive}
+              defaultOpen={isParentActive}
               className="group/collapsible"
             >
               <SidebarMenuItem>
@@ -46,41 +56,53 @@ export function SideNav() {
                   <SidebarMenuButton tooltip={item.title}>
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
-
                     <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
+
                 <CollapsibleContent>
                   <SidebarMenuSub>
-                    {item.items?.map((subItem) => (
-                      <SidebarMenuSubItem key={subItem.title}>
-                        <SidebarMenuSubButton asChild>
-                          <div className="flex gap-2">
-                            {subItem.icon && <subItem.icon />}
-                            <Link href={subItem.url}>
+                    {item.items.map((subItem) => {
+                      const isSubActive = pathname === subItem.url;
+                      return (
+                        <SidebarMenuSubItem
+                          key={subItem.title}
+                          className={
+                            isSubActive ? 'bg-[#f3f3f3] font-medium' : ''
+                          }
+                        >
+                          <SidebarMenuSubButton asChild>
+                            <Link
+                              href={subItem.url}
+                              className="flex gap-2 w-full"
+                            >
+                              {subItem.icon && <subItem.icon />}
                               <span>{subItem.title}</span>
                             </Link>
-                          </div>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    ))}
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      );
+                    })}
                   </SidebarMenuSub>
                 </CollapsibleContent>
               </SidebarMenuItem>
             </Collapsible>
           ) : (
-            <SidebarMenuSubItem key={item.title}>
+            <SidebarMenuSubItem
+              key={item.title}
+              className={
+                pathname === item.url ? 'bg-[#f3f3f3] font-medium' : ''
+              }
+            >
               <SidebarMenuSubButton asChild>
-                <div className="flex gap-2">
+                <Link href={item.url} className="flex gap-2 w-full">
                   {item.icon && <item.icon />}
-                  <Link href={item.url}>
-                    <span>{item.title}</span>
-                  </Link>
-                </div>
+                  <span>{item.title}</span>
+                </Link>
               </SidebarMenuSubButton>
             </SidebarMenuSubItem>
-          )
-        )}
+          );
+        })}
       </SidebarMenu>
     </SidebarGroup>
   );

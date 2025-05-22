@@ -20,10 +20,20 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
 import { useEffect } from 'react';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
-import { useAddOptionMutation } from '@/store/features/admin/optionApiService';
+import {
+  useAddOptionMutation,
+  useEditOptionMutation,
+} from '@/store/features/admin/optionApiService';
 import { slugify } from '@/helpers/generateSlug';
 
-export function EditOptionDialog({ open, onOpenChange, item, refetch }) {
+export function EditOptionDialog({
+  open,
+  onOpenChange,
+  item,
+  question,
+  refetch,
+}) {
+  console.log('item name', item?.name);
   const formSchema = z.object({
     name: z.string().min(2, {
       message: 'Name is required.',
@@ -49,21 +59,32 @@ export function EditOptionDialog({ open, onOpenChange, item, refetch }) {
     form.setValue('slug', generatedSlug);
   }, [name, form.setValue]);
 
+  useEffect(() => {
+    if (item) {
+      form.reset({
+        name: item?.name || '',
+        slug: item?.slug || '',
+      });
+    }
+  }, [item, form]);
+
   //add option api call
-  const [AddOption] = useAddOptionMutation();
+  const [editOption] = useEditOptionMutation();
 
   async function onSubmit(values) {
     console.log('values', values);
-    const finalValues = {
-      countryId: item?.countryId?._id,
-      serviceId: item?.serviceId?._id,
-      questionId: item?._id,
+    const updatedValues = {
       ...values,
+      id: item?._id,
+      countryId: question?.countryId?._id,
+      serviceId: question?.serviceId?._id,
+      questionId: question?._id,
+      selected_options: [],
     };
 
-    console.log('finalValues', finalValues);
+    console.log('updatedValues', updatedValues);
     try {
-      const result = await AddOption(finalValues).unwrap();
+      const result = await editOption(updatedValues).unwrap();
       // Optionally reset form or show success toast
       if (result) {
         showSuccessToast(result?.message);
@@ -86,7 +107,7 @@ export function EditOptionDialog({ open, onOpenChange, item, refetch }) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px] md:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Add Option</DialogTitle>
+          <DialogTitle>Edit Option</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
@@ -116,7 +137,7 @@ export function EditOptionDialog({ open, onOpenChange, item, refetch }) {
                 </FormItem>
               )}
             />
-            <Button type="submit">Add</Button>
+            <Button type="submit">Update</Button>
           </form>
         </Form>
       </DialogContent>
