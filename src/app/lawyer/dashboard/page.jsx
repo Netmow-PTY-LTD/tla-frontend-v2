@@ -16,11 +16,18 @@ export default function SellerDashboard() {
   console.log('currentUser', currentUser);
   console.log('token', token);
   return (
-    <div>
+    <div className=" max-w-[1100px] mx-auto">
       {/* <WelcomeCard /> */}
 
       <ProfileCard />
-      <GetStartedCard />
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center justify-center z-0">
+          <div className="w-[200px] h-[200px] rounded-full bg-[#00C3C080] blur-[120px]"></div>
+        </div>
+        <div className="relative z-10">
+          <GetStartedCard />
+        </div>
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5">
         <LeadSettingsCard />
         <LeadsCountCard />

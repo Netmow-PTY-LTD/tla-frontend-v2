@@ -13,7 +13,7 @@ export default function Accreditations() {
   const onCancel = () => console.log('Cancel clicked');
 
   return (
-    <div className="max-w-[900px]">
+    <div className="max-w-[900px] mx-auto">
       <div>
         <div className="flex items-center justify-between gap-5">
           <div>
