@@ -11,27 +11,30 @@ import {
   SidebarProvider,
   SidebarRail,
 } from '@/components/ui/sidebar';
+import SidebarTop from '../lawyer/dashboard/_component/common/SidebarTop';
 
 export default function BuyerDashboardLayout({ children }) {
   return (
     <>
       <BuyerDashboardHeader />
-      <SidebarProvider>
-        <Sidebar collapsible="icon" className="w-64">
-          <SidebarHeader />
+      <SidebarProvider className="sidebar-main">
+        <Sidebar collapsible="icon" className="w-96">
+          <SidebarHeader>
+            <SidebarTop />
+          </SidebarHeader>
           <SidebarContent>
             <SideNav />
           </SidebarContent>
           <SidebarRail />
         </Sidebar>
         <div
-          className="w-full pb-10"
+          className="flex-1 pb-10 main-content"
           style={{
             minHeight: 'calc(100vh - 74px - 42px)',
           }}
         >
-          <div className="flex flex-col p-5 h-full">
-            <div className="flex-1 ">{children}</div>
+          <div className="flex flex-col h-full">
+            <div className="flex-1 py-5 px-4">{children}</div>
             <DashboardFooter />
           </div>
         </div>

@@ -26,7 +26,9 @@ export function LawyerSideNav() {
   return (
     <>
       <SidebarGroup className="nav-group">
-        <SidebarGroupLabel>Main</SidebarGroupLabel>
+        <SidebarGroupLabel className="text-lg mb-2 text-black">
+          Lawyer Main Menu
+        </SidebarGroupLabel>
         <SidebarMenu>
           {SellerSidebarItems?.navMain?.map((item) => {
             const isParentActive =
@@ -37,7 +39,7 @@ export function LawyerSideNav() {
               <Collapsible
                 key={item.title}
                 asChild
-                defaultOpen={isParentActive}
+                defaultOpen={false}
                 className="group/collapsible"
               >
                 <SidebarMenuItem

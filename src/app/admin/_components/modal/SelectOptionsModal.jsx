@@ -5,63 +5,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import z from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from '@/components/ui/input';
-import { useEffect } from 'react';
-import { useEditQuestionMutation } from '@/store/features/admin/questionApiService';
+import React, { useEffect } from 'react';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import { DataTable } from '@/components/common/DataTable';
+import { Checkbox } from '@/components/ui/checkbox';
+import { useEditOptionMutation } from '@/store/features/admin/optionApiService';
 
-export function SelectOptionsModal({ open, onOpenChange, item }) {
-  const formSchema = z.object({
-    question: z.string().min(2, {
-      message: 'Question is required.',
-    }),
-    slug: z.string().min(1, {
-      message: 'Slug is required.',
-    }),
-    questionType: z.string().min(1, {
-      message: 'Question type is required.',
-    }),
-  });
+export function SelectOptionsModal({ open, onOpenChange, item, optionId }) {
+  console.log('selected next question', item);
 
-  // 1. Define your form.
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      question: '',
-      slug: '',
-      questionType: '',
-    },
-  });
-
-  useEffect(() => {
-    if (item) {
-      form.reset({
-        question: item?.question || '',
-        slug: item?.slug || '',
-        questionType: item?.questionType,
-      });
-    }
-  }, [item, form]);
-
-  const [updateQuestion] = useEditQuestionMutation();
+  const [selectedOptions, setSelectedOptions] = React.useState([]);
 
   async function onSubmit(values) {
     //console.log('values', values);
@@ -89,67 +42,92 @@ export function SelectOptionsModal({ open, onOpenChange, item }) {
     }
   }
 
+  const getColumns = (setSelectedOptions) => [
+    {
+      id: 'select',
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && 'indeterminate')
+          }
+          onCheckedChange={(value) => {
+            table.toggleAllPageRowsSelected(!!value);
+            const selected = table
+              .getRowModel()
+              .rows.map((row) => row.original);
+
+            setSelectedOptions(!!value ? selected : []);
+          }}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => {
+            row.toggleSelected(!!value);
+            const selectedRow = row.original;
+
+            setSelectedOptions((prev) => {
+              if (!!value) {
+                return [...prev, selectedRow];
+              } else {
+                return prev.filter((s) => s._id !== selectedRow._id);
+              }
+            });
+          }}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: 'name',
+      header: 'Option Name',
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue('name')}</div>
+      ),
+    },
+  ];
+
+  const columns = getColumns(setSelectedOptions);
+
+  //handling data save
+
+  const [updateOption] = useEditOptionMutation();
+
+  const handleSave = async () => {
+    if (!selectedOptions.length) return alert('Please select options');
+
+    try {
+      const response = await updateOption({
+        id: optionId,
+        selected_options: selectedOptions,
+      }).unwrap();
+      if (response) {
+        showSuccessToast(response?.message);
+        onOpenChange(false);
+      }
+      console.log('Submitted:', response);
+    } catch (err) {
+      console.error('Save failed:', err);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px] md:max-w-[600px]">
-        <DialogHeader>
+        <DialogHeader className="flex justify-between">
           <DialogTitle>Select Options</DialogTitle>
         </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-            <FormField
-              control={form.control}
-              name="question"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Question</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Question" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="slug"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Slug</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Question Slug" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="questionType"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Question Type</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a question type" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="radio">Radio</SelectItem>
-                      <SelectItem value="checkbox">Checkbox</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit">Update</Button>
-          </form>
-        </Form>
+        <DataTable
+          data={item?.options ?? []}
+          columns={columns}
+          searchColumn="name"
+        />
+        <Button onClick={handleSave}>Save</Button>
       </DialogContent>
     </Dialog>
   );

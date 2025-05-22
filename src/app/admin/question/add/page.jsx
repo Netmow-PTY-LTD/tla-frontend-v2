@@ -187,6 +187,7 @@ export default function AddQuestionPage() {
   //country change handler
 
   const handleCountryChange = (val) => {
+    console.log('value', val);
     setSelectedCountry(val);
     setSelectedService(''); // reset service
   };
@@ -251,11 +252,7 @@ export default function AddQuestionPage() {
     } catch (error) {
       console.error('Error adding question:', error);
       // Optionally show error toast
-      showErrorToast(
-        error?.data?.errorSources?.[0]?.message ||
-          error?.data?.message ||
-          'Failed to add question.'
-      );
+      showErrorToast(error?.data?.message || 'Failed to add question.');
     }
   }
 
@@ -269,11 +266,7 @@ export default function AddQuestionPage() {
       }
     } catch (err) {
       console.log('Error in deleting question', err);
-      showErrorToast(
-        err?.data?.errorSources?.[0]?.message ||
-          err?.data?.message ||
-          'Failed to delete question.'
-      );
+      showErrorToast(err?.data?.message || 'Failed to delete question.');
     }
   };
 
@@ -297,7 +290,12 @@ export default function AddQuestionPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Country</FormLabel>
-                        <Select onValueChange={handleCountryChange}>
+                        <Select
+                          onValueChange={(val) => {
+                            field.onChange(val);
+                            handleCountryChange(val);
+                          }}
+                        >
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select a country" />
@@ -323,7 +321,12 @@ export default function AddQuestionPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Service</FormLabel>
-                        <Select onValueChange={handleCountryWiseServiceChange}>
+                        <Select
+                          onValueChange={(val) => {
+                            field.onChange(val);
+                            handleCountryWiseServiceChange(val);
+                          }}
+                        >
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select a service" />

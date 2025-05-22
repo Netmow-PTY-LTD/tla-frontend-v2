@@ -45,15 +45,12 @@ import {
 } from '@/components/ui/accordion';
 
 import { AddOptionDialog } from '../../_components/modal/AddOptionModal';
-import {
-  useGetServiceWiseQuestionsQuery,
-  useLazyGetServiceWiseQuestionsQuery,
-} from '@/store/features/admin/questionApiService';
-import { useGetQuestionWiseOptionsQuery } from '@/store/features/admin/optionApiService';
+import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/questionApiService';
 import { SelectOptionsModal } from '../../_components/modal/SelectOptionsModal';
 import { EditOptionDialog } from '../../_components/modal/EditOptionModal';
+import { useDeleteOptionMutation } from '@/store/features/admin/optionApiService';
 
-export default function AddQuestionPage() {
+export default function AddOptionPage() {
   //state variables
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedService, setSelectedService] = useState('');
@@ -62,6 +59,9 @@ export default function AddQuestionPage() {
   const [selectOptionsModalOpen, setSelectOptionsModalOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [editOptionModalOpen, setEditOptionModalOpen] = useState(false);
+  const [question, setQuestion] = useState(null);
+  const [selectedQuestion, setSelectedQuestion] = useState(null);
+  const [optionId, setOptionId] = useState('');
 
   const router = useRouter();
 
@@ -259,14 +259,51 @@ export default function AddQuestionPage() {
   //console.log('questionWiseOptions', questionWiseOptions?.data);
 
   //handle SelectOptionsModal
-  const handleSelectOptionsModal = (id) => {
-    setSelectOptionsModalOpen(true);
+  const handleSelectOptionsModal = (optionId, currentOrder) => {
+    setOptionId(optionId);
+    const allQuestions = singleServicewiseQuestionsData?.data || [];
+    const nextQuestion = allQuestions.find((q) => q.order === currentOrder + 1);
+    if (nextQuestion) {
+      setSelectedQuestion(nextQuestion); // ⬅️ set next question, not current
+      setSelectOptionsModalOpen(true);
+    } else {
+      showErrorToast('No next question found.');
+    }
   };
 
   //handle SelectOptionsModal
-  const handleEditOptionModal = (id) => {
-    setSelectedOption(id);
-    setSelectOptionsModalOpen(true);
+  const handleEditOptionModal = (questionId, OptionId) => {
+    // console.log('questionId', questionId);
+    // console.log('questionId', OptionId);
+    const singleQuestion = singleServicewiseQuestionsData?.data?.find(
+      (item) => item?._id === questionId
+    );
+
+    setQuestion(singleQuestion);
+
+    const singleOption = singleQuestion?.options?.find(
+      (option) => option?._id === OptionId
+    );
+    setSelectedOption(singleOption);
+    setEditOptionModalOpen(true);
+  };
+
+  //handling delete option
+
+  const [deleteOption] = useDeleteOptionMutation();
+
+  const handleDeleteOption = async (id) => {
+    //console.log('option id', id);
+    try {
+      const res = await deleteOption(id).unwrap();
+      if (res) {
+        showSuccessToast(res?.message);
+        await singleServicewiseQuestionsRefetch();
+      }
+    } catch (err) {
+      console.log('Error in deleting option', err);
+      showErrorToast(err?.data?.message || 'Failed to delete option.');
+    }
   };
 
   return (
@@ -383,7 +420,10 @@ export default function AddQuestionPage() {
                                 variant="outline"
                                 size="sm"
                                 onClick={() =>
-                                  handleSelectOptionsModal(option?._id)
+                                  handleSelectOptionsModal(
+                                    option?._id,
+                                    item?.order
+                                  )
                                 }
                               >
                                 Select Next Options
@@ -391,14 +431,16 @@ export default function AddQuestionPage() {
                             )}
                             <div
                               className="flex items-center gap-2 cursor-pointer border border-b border-1 py-1 px-2 rounded-md"
-                              onClick={() => handleEditOptionModal(option?._id)}
+                              onClick={() =>
+                                handleEditOptionModal(item?._id, option?._id)
+                              }
                             >
                               <Pencil className="w-4 h-4" />
                               Edit
                             </div>
                             <div
                               className="flex items-center gap-2 cursor-pointer border border-b border-1 py-1 px-2 rounded-md"
-                              onClick={() => handleDeleteService(service?._id)}
+                              onClick={() => handleDeleteOption(option?._id)}
                             >
                               <Trash2 className="w-4 h-4" /> Delete
                             </div>
@@ -423,12 +465,15 @@ export default function AddQuestionPage() {
       <EditOptionDialog
         open={editOptionModalOpen}
         onOpenChange={setEditOptionModalOpen}
-        item={selectedItem}
+        item={selectedOption}
+        question={question}
+        refetch={singleServicewiseQuestionsRefetch}
       />
       <SelectOptionsModal
         open={selectOptionsModalOpen}
         onOpenChange={setSelectOptionsModalOpen}
-        option={selectedOption}
+        item={selectedQuestion}
+        optionId={optionId}
       />
     </>
   );

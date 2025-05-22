@@ -64,6 +64,15 @@ export default function ProfileDropDown({ data }) {
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
+              <Link href="/lawyer/dashboard/my-stats">My Profile</Link>
+              <DropdownMenuShortcut>
+                <Settings />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem>
               <Link href="/lawyer/settings">Settings</Link>
               <DropdownMenuShortcut>
                 <Settings />

@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -40,6 +40,8 @@ const formSchema = z.object({
 });
 
 export default function EditZipCodeModal({ open, onClose, zipId }) {
+  const [isLocalLoading, setIsLocalLoading] = useState(true);
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -48,18 +50,33 @@ export default function EditZipCodeModal({ open, onClose, zipId }) {
     },
   });
 
-  const { data: singleZipCode, isSuccess } = useGetSingleZipCodeQuery(zipId, {
+  const {
+    data: singleZipCode,
+    isSuccess,
+    refetch,
+  } = useGetSingleZipCodeQuery(zipId, {
     skip: !zipId,
   });
-  const { data: countryList } = useGetCountryListQuery();
-  const [editZipCode] = useEditZipCodeMutation();
 
+  const { data: countryList } = useGetCountryListQuery();
+  const [editZipCode, { isLoading }] = useEditZipCodeMutation();
+
+  // Trigger loader on open
+  useEffect(() => {
+    if (open && zipId) {
+      setIsLocalLoading(true);
+      refetch();
+    }
+  }, [open, zipId, refetch]);
+
+  // Populate form when data is loaded
   useEffect(() => {
     if (isSuccess && singleZipCode?.data) {
       form.reset({
         zipcode: singleZipCode.data.zipcode,
         countryId: singleZipCode.data.countryId,
       });
+      setIsLocalLoading(false);
     }
   }, [isSuccess, singleZipCode, form]);
 
@@ -85,51 +102,61 @@ export default function EditZipCodeModal({ open, onClose, zipId }) {
         <DialogHeader>
           <DialogTitle>Edit Zip Code</DialogTitle>
         </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-            <FormField
-              control={form.control}
-              name="zipcode"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Zip Code</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter Zip Code" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="countryId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Country</FormLabel>
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Country" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {countryList?.data?.map((country) => (
-                        <SelectItem key={country._id} value={country._id}>
-                          {country.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <DialogFooter>
-              <Button variant="outline" type="button" onClick={onClose}>
-                Cancel
-              </Button>
-              <Button type="submit">Update</Button>
-            </DialogFooter>
-          </form>
-        </Form>
+
+        {isLocalLoading ? (
+          <div className="flex justify-center items-center py-10">
+            <p>Loading zip code details...</p>
+            {/* You can replace this with a spinner */}
+          </div>
+        ) : (
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+              <FormField
+                control={form.control}
+                name="zipcode"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Zip Code</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter Zip Code" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="countryId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Country</FormLabel>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Country" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {countryList?.data?.map((country) => (
+                          <SelectItem key={country._id} value={country._id}>
+                            {country.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <DialogFooter>
+                <Button variant="outline" type="button" onClick={onClose}>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading ? 'Updating...' : 'Update'}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        )}
       </DialogContent>
     </Dialog>
   );
