@@ -103,7 +103,8 @@
   border-radius: 5px;
 }
 
-.nav-group ul li a {
+.nav-group ul li a,
+.nav-group ul li button{
   color: var(--brand-surface-1-text-on-light, #0B1C2D);
   text-align: justify;
   font-size: 16px;

@@ -72,6 +72,24 @@ export default function AdminProfileDropDown({ data }) {
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
+              <Link href="/lawyer/dashboard">Switch to Lawyer</Link>
+              <DropdownMenuShortcut>
+                <Settings />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem>
+              <Link href="/client/dashboard">Switch to Client</Link>
+              <DropdownMenuShortcut>
+                <Settings />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem>
               <Link href="/admin/account-settings">Settings</Link>
               <DropdownMenuShortcut>
                 <Settings />
