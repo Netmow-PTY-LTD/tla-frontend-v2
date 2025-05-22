@@ -19,7 +19,7 @@ const SettingsLayout = ({ children }) => {
     },
     {
       label: 'Lead Settings',
-      href: '/lawyer/settings/lead-settings/my-services',
+      href: '/lawyer/settings/lead-settings',
       icon: <BarChart3Icon className="w-4 h-4" />,
     },
     {
