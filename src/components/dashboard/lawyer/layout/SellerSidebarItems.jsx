@@ -25,7 +25,7 @@ export const SellerSidebarItems = {
     },
     {
       title: 'My Responses',
-      url: '/lawyer/dashboard/myresponses',
+      url: '/lawyer/dashboard/my-responses',
       icon: MessagesSquare,
       isActive: true,
     },
