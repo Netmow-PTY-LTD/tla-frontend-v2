@@ -22,6 +22,7 @@ import AddCountryModal from '../../_components/modal/AddCountryModal';
 import EditCountryModal from '../../_components/modal/EditCountryModal';
 
 export default function Page() {
+  const [addOpen, setAddOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState(null);
 
@@ -50,28 +51,28 @@ export default function Page() {
   };
 
   const columns = [
-    {
-      id: 'select',
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && 'indeterminate')
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
+    // {
+    //   id: 'select',
+    //   header: ({ table }) => (
+    //     <Checkbox
+    //       checked={
+    //         table.getIsAllPageRowsSelected() ||
+    //         (table.getIsSomePageRowsSelected() && 'indeterminate')
+    //       }
+    //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+    //       aria-label="Select all"
+    //     />
+    //   ),
+    //   cell: ({ row }) => (
+    //     <Checkbox
+    //       checked={row.getIsSelected()}
+    //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+    //       aria-label="Select row"
+    //     />
+    //   ),
+    //   enableSorting: false,
+    //   enableHiding: false,
+    // },
     {
       accessorKey: 'name',
       header: 'Name',
@@ -143,9 +144,9 @@ export default function Page() {
     <div>
       <div className="flex justify-between">
         <h1>Country List Page</h1>
-        <Button onClick={() => setOpen(true)}>Add Country</Button>
+        <Button onClick={() => setAddOpen(true)}>Add Country</Button>
       </div>
-      <AddCountryModal open={open} onClose={() => setOpen(false)} />
+      <AddCountryModal open={addOpen} onClose={() => setAddOpen(false)} />
       <EditCountryModal
         id={editId}
         open={open}
