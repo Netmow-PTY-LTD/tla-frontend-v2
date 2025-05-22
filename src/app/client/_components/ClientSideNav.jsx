@@ -17,20 +17,20 @@ import {
 } from '@/components/ui/sidebar';
 
 import Link from 'next/link';
-import { AdminSidebarItems } from '@/app/admin/_components/AdminSidebarItems';
+import { BuyerSidebarItems } from '@/app/client/_components/BuyerSidebarItems';
 import { usePathname } from 'next/navigation';
 
-export function SideNav() {
+export function ClientSideNav() {
   const pathname = usePathname();
 
   return (
     <SidebarGroup className="nav-group">
       <SidebarGroupLabel className="text-lg mb-2 text-black font-semibold">
-        Admin Main Menu
+        Client Main Menu
       </SidebarGroupLabel>
 
       <SidebarMenu>
-        {AdminSidebarItems?.navMain?.map((item) => {
+        {BuyerSidebarItems?.navMain?.map((item) => {
           const isParentActive = item.items?.some(
             (sub) => pathname === sub.url
           );

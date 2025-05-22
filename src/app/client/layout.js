@@ -12,6 +12,7 @@ import {
   SidebarRail,
 } from '@/components/ui/sidebar';
 import SidebarTop from '../lawyer/dashboard/_component/common/SidebarTop';
+import { ClientSideNav } from './_components/ClientSideNav';
 
 export default function BuyerDashboardLayout({ children }) {
   return (
@@ -23,7 +24,7 @@ export default function BuyerDashboardLayout({ children }) {
             <SidebarTop />
           </SidebarHeader>
           <SidebarContent>
-            <SideNav />
+            <ClientSideNav />
           </SidebarContent>
           <SidebarRail />
         </Sidebar>
