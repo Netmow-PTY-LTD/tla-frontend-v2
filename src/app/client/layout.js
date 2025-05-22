@@ -35,7 +35,7 @@ export default function BuyerDashboardLayout({ children }) {
           }}
         >
           <div className="flex flex-col h-full">
-            <div className="flex-1 py-5 px-4">{children}</div>
+            <div className="flex-1 py-5 px-4 bg-[#F3F3F3]">{children}</div>
             <DashboardFooter />
           </div>
         </div>
