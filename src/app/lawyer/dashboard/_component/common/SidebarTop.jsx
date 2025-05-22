@@ -1,4 +1,4 @@
-'use client'; // if you're using Next.js App Router
+'use client';
 
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import Link from 'next/link';
@@ -7,38 +7,50 @@ import { useSelector } from 'react-redux';
 
 export default function SidebarTop() {
   const [greeting, setGreeting] = useState('');
-  const [formattedDate, setFormattedDate] = useState('');
+  const [dateTime, setDateTime] = useState('');
 
   const userInfo = useSelector(selectCurrentUser);
 
   useEffect(() => {
-    const now = new Date();
-    const hour = now.getHours();
+    const updateDateTime = () => {
+      const now = new Date();
+      const hour = now.getHours();
+      const minute = now.getMinutes();
 
-    // Set greeting based on hour
-    if (hour < 12) {
-      setGreeting('Good Morning');
-    } else if (hour < 17) {
-      setGreeting('Good Afternoon');
-    } else {
-      setGreeting('Good Evening');
-    }
+      // Greeting logic
+      if (hour < 12) {
+        setGreeting('Good Morning');
+      } else if (hour === 12 && minute < 60) {
+        setGreeting('Good Noon');
+      } else if (hour < 17) {
+        setGreeting('Good Afternoon');
+      } else {
+        setGreeting('Good Evening');
+      }
 
-    // Format the date
-    const dateStr = now
-      .toLocaleString('en-GB', {
+      // Format date and time
+      const formatted = now.toLocaleString('en-GB', {
         weekday: 'long',
         day: '2-digit',
         month: 'short',
+        year: 'numeric',
         hour: 'numeric',
         minute: '2-digit',
+        second: '2-digit',
         hour12: true,
-      })
-      .replace(',', '')
-      .replace(' at', '')
-      .toLowerCase();
+      });
 
-    setFormattedDate(dateStr);
+      // Make only AM/PM uppercase
+      const formattedWithUppercaseMeridiem = formatted.replace(
+        /\b(am|pm)\b/i,
+        (match) => match.toUpperCase()
+      );
+      setDateTime(formattedWithUppercaseMeridiem.replace(',', ''));
+    };
+
+    updateDateTime(); // initial
+    const interval = setInterval(updateDateTime, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -46,7 +58,7 @@ export default function SidebarTop() {
       className="sidebar-top"
       style={{ backgroundImage: `url(/assets/img/bg-shape.png)` }}
     >
-      <span className="capitalize">{formattedDate}</span>
+      <span className="capitalize">{dateTime}</span>
       <h2>
         {greeting}, {userInfo?.username}! <br />
         Welcome To TLA Dashboard
