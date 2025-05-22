@@ -4,7 +4,7 @@ import Image from 'next/image';
 import TagButton from './TagButton';
 import { BadgeCheck, CircleAlert, Zap } from 'lucide-react';
 
-const LeadCard = () => {
+const LeadCard = ({ onViewDetails }) => {
   return (
     <Card className="w-full max-w-xl mx-auto">
       {/* Header Section */}
@@ -72,7 +72,10 @@ const LeadCard = () => {
 
       {/* Footer Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">
-        <button className="px-5 py-2 w-full sm:w-auto rounded-lg font-medium bg-[#EDF0F4] text-[#0B1C2D]">
+        <button
+          className="px-5 py-2 w-full sm:w-auto rounded-lg font-medium bg-[#EDF0F4] text-[#0B1C2D]"
+          onClick={onViewDetails}
+        >
           View Job Details
         </button>
         <p className="text-[#34495E] flex items-center gap-2">
