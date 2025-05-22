@@ -13,6 +13,7 @@ import { useGetCountryListQuery } from '@/store/features/public/publicApiService
 import {
   useAddCountryWiseServiceMutation,
   useAllServicesQuery,
+  useEditCountryWiseServiceMutation,
   useGetAllCountryWiseServicesQuery,
   useGetCountryWiseServicesQuery,
 } from '@/store/features/admin/servicesApiService';
