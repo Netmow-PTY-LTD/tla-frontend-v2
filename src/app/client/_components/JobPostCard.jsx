@@ -6,10 +6,10 @@ const statusStyles = {
 
 export default function JobPostCard({ title, date, status, message }) {
   return (
-    <div className="relative rounded-lg bg-gradient-to-br from-white to-cyan-50 shadow p-6 w-full max-w-md">
+    <div className="relative rounded-lg bg-gradient-to-bl from-white to-cyan-50 shadow p-[13px] w-full ">
       {/* Status Badge */}
       <div
-        className={`absolute top-2 left-2 px-3 py-1 text-white text-sm font-semibold rounded ${statusStyles[status]?.bg}`}
+        className={`absolute top-0 left-0  px-[10px] py-[5px] rounded-tl-[10px] rounded-br-[10px] text-white text-sm font-semibold  ${statusStyles[status]?.bg}`}
       >
         {statusStyles[status]?.text}
       </div>
@@ -34,8 +34,8 @@ export default function JobPostCard({ title, date, status, message }) {
       </p>
 
       {/* Button */}
-      <div className="mt-6 flex justify-center">
-        <button className="bg-[#00c3c0] text-white px-4 py-2 rounded hover:bg-[#00b0ad] transition">
+      <div className="mt-6 flex justify-end">
+        <button className="bg-[#00C3C0] text-white p-[10px] rounded hover:bg-[#00b0ad] transition">
           View Post
         </button>
       </div>
