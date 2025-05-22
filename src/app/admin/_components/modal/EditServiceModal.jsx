@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   useEditServiceMutation,
   useSingleServiceQuery,
@@ -25,6 +25,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { showSuccessToast, showErrorToast } from '@/components/common/toasts';
 
 export default function EditServiceModal({ id, open, onClose }) {
+  const [isLocalLoading, setIsLocalLoading] = useState(true);
+
   const formSchema = z.object({
     name: z.string().min(2, {
       message: 'Service name must be at least 2 characters.',
@@ -42,9 +44,20 @@ export default function EditServiceModal({ id, open, onClose }) {
     },
   });
 
-  const { data: singleService, isSuccess } = useSingleServiceQuery(id, {
+  const {
+    data: singleService,
+    isSuccess,
+    refetch,
+  } = useSingleServiceQuery(id, {
     skip: !id,
   });
+
+  useEffect(() => {
+    if (open && id) {
+      setIsLocalLoading(true);
+      refetch(); // Always fetch fresh data
+    }
+  }, [open, id, refetch]);
 
   useEffect(() => {
     if (isSuccess && singleService?.data) {
@@ -52,6 +65,7 @@ export default function EditServiceModal({ id, open, onClose }) {
         name: singleService.data.name || '',
         slug: singleService.data.slug || '',
       });
+      setIsLocalLoading(false);
     }
   }, [isSuccess, singleService, form]);
 
@@ -79,56 +93,63 @@ export default function EditServiceModal({ id, open, onClose }) {
           <DialogTitle>Edit Service</DialogTitle>
         </DialogHeader>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Service Name"
-                      {...field}
-                      onChange={(e) => {
-                        const nameValue = e.target.value;
-                        const slugValue = nameValue
-                          .toLowerCase()
-                          .replace(/[^\w\s-]/g, '') // Remove special characters
-                          .replace(/\s+/g, '-') // Replace spaces with dashes
-                          .replace(/--+/g, '-'); // Replace multiple dashes with single dash
+        {isLocalLoading ? (
+          <div className="flex justify-center items-center py-10">
+            <p>Loading service details...</p>
+            {/* Replace with a <Loader /> if you have a spinner */}
+          </div>
+        ) : (
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Service Name"
+                        {...field}
+                        onChange={(e) => {
+                          const nameValue = e.target.value;
+                          const slugValue = nameValue
+                            .toLowerCase()
+                            .replace(/[^\w\s-]/g, '')
+                            .replace(/\s+/g, '-')
+                            .replace(/--+/g, '-');
 
-                        field.onChange(nameValue); // Update name
-                        form.setValue('slug', slugValue); // Auto-generate slug
-                      }}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="slug"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Slug</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Slug" {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <div className="flex justify-end gap-2">
-              <Button type="button" variant="outline" onClick={onClose}>
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? 'Saving...' : 'Save'}
-              </Button>
-            </div>
-          </form>
-        </Form>
+                          field.onChange(nameValue);
+                          form.setValue('slug', slugValue);
+                        }}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="slug"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Slug</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Slug" {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-end gap-2">
+                <Button type="button" variant="outline" onClick={onClose}>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading ? 'Saving...' : 'Save'}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        )}
       </DialogContent>
     </Dialog>
   );
