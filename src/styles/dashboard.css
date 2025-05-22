@@ -112,6 +112,6 @@
 
 @media(max-width:1366px){
   .sidebar-main{
-  --sidebar-width: 16rem !important;
+  --sidebar-width: 24rem !important;
 }
 }

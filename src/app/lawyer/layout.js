@@ -17,7 +17,7 @@ export default async function SellerDashboardLayout({ children }) {
     <>
       <DashboardHeader />
       <SidebarProvider className="sidebar-main min-h-screen overflow-hidden">
-        <Sidebar collapsible="icon" className="w-64">
+        <Sidebar collapsible="icon" className="w-64 lg:w-96">
           <SidebarHeader>
             <SidebarTop />
           </SidebarHeader>
