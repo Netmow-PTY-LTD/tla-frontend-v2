@@ -7,7 +7,7 @@ export default function SettingsTabs({ tabs = [] }) {
   const pathname = usePathname();
 
   return (
-    <div className="overflow-x-auto scrollbar-hide bg-white">
+    <div className="overflow-x-auto scrollbar-hide bg-white rounded">
       <div className="flex gap-4  p-4 rounded-md w-max min-w-full">
         {tabs?.map((tab, index) => {
           const isActive = pathname.startsWith(tab.href);

@@ -1,9 +1,10 @@
 import React from 'react';
+import EmailNotifications from '../../_components/EmailNotification';
 
 const page = () => {
   return (
-    <div>
-      <h2>This is client notification settings </h2>
+    <div className="mb-4">
+      <EmailNotifications />
     </div>
   );
 };

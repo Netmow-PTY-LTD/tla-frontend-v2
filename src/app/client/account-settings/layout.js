@@ -18,9 +18,9 @@ const SettingsLayout = ({ children }) => {
   ];
 
   return (
-    <div className="bg-white p-4 border rounded-xl">
+    <div className="bg-white border rounded-xl">
       <SettingsTabs tabs={tabs} />
-      <div>{children}</div>
+      <div className="px-4 ">{children}</div>
     </div>
   );
 };

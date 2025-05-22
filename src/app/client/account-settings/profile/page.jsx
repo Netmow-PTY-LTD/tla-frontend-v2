@@ -7,7 +7,7 @@ import React from 'react';
 
 const page = () => {
   return (
-    <div>
+    <div className="max-w-[900px] mb-4">
       <div className="bg-[#F5F5F5] p-6 rounded-lg shadow-sm  mx-auto">
         <h2 className="text-lg font-semibold mb-1 flex items-center gap-2">
           <BookOpenText className="text-[#00C3C0] w-6 h-6" />{' '}
