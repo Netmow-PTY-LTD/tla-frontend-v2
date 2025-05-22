@@ -17,66 +17,84 @@ export const AdminSidebarItems = {
       isActive: true,
     },
     {
-      title: 'Country',
-      url: '#',
+      title: 'Countries',
+      url: '/admin/country/list',
       icon: MapPinHouse,
       isActive: true,
-      items: [
-        // {
-        //   title: 'Add Country',
-        //   url: '/admin/country/add',
-        //   icon: Plus,
-        //   isActive: true,
-        // },
-        {
-          title: 'List of Countries',
-          url: '/admin/country/list',
-          icon: List,
-          isActive: true,
-        },
-      ],
     },
     {
-      title: 'Zip Code',
-      url: '#',
+      title: 'Zip Codes',
+      url: '/admin/zip-code/list',
       icon: MapPinHouse,
       isActive: true,
-      items: [
-        // {
-        //   title: 'Add Zip Code',
-        //   url: '/admin/zip-code/add',
-        //   icon: Plus,
-        //   isActive: true,
-        // },
-        {
-          title: 'List of Zip Code',
-          url: '/admin/zip-code/list',
-          icon: List,
-          isActive: true,
-        },
-      ],
     },
-
     {
       title: 'Services',
-      url: '#',
+      url: '/admin/service/list',
       icon: SquareTerminal,
       isActive: true,
-      items: [
-        // {
-        //   title: 'Add Service',
-        //   url: '/admin/service/add',
-        //   icon: Plus,
-        //   isActive: true,
-        // },
-        {
-          title: 'List of Service',
-          url: '/admin/service/list',
-          icon: List,
-          isActive: true,
-        },
-      ],
     },
+    // {
+    //   title: 'Country',
+    //   url: '/admin/country/list',
+    //   icon: MapPinHouse,
+    //   isActive: true,
+    //   items: [
+    //     // {
+    //     //   title: 'Add Country',
+    //     //   url: '/admin/country/add',
+    //     //   icon: Plus,
+    //     //   isActive: true,
+    //     // },
+    //     // {
+    //     //   title: 'List of Countries',
+    //     //   url: '/admin/country/list',
+    //     //   icon: List,
+    //     //   isActive: true,
+    //     // },
+    //   ],
+    // },
+    // {
+    //   title: 'Zip Code',
+    //   url: '#',
+    //   icon: MapPinHouse,
+    //   isActive: true,
+    //   items: [
+    //     // {
+    //     //   title: 'Add Zip Code',
+    //     //   url: '/admin/zip-code/add',
+    //     //   icon: Plus,
+    //     //   isActive: true,
+    //     // },
+    //     {
+    //       title: 'List of Zip Code',
+    //       url: '/admin/zip-code/list',
+    //       icon: List,
+    //       isActive: true,
+    //     },
+    //   ],
+    // },
+
+    // {
+    //   title: 'Services',
+    //   url: '#',
+    //   icon: SquareTerminal,
+    //   isActive: true,
+    //   items: [
+    //     // {
+    //     //   title: 'Add Service',
+    //     //   url: '/admin/service/add',
+    //     //   icon: Plus,
+    //     //   isActive: true,
+    //     // },
+    //     {
+    //       title: 'List of Service',
+    //       url: '/admin/service/list',
+    //       icon: List,
+    //       isActive: true,
+    //     },
+    //   ],
+    // },
     {
       title: 'Country Wise Services',
       url: '/admin/country-wise-service/list',
@@ -84,30 +102,16 @@ export const AdminSidebarItems = {
       isActive: true,
     },
     {
-      title: 'Questions',
+      title: 'Service Wise Questions',
       url: '/admin/question/add',
       icon: SquareTerminal,
       isActive: true,
     },
     {
-      title: 'Options',
-      url: '#',
+      title: 'Question Wise Options',
+      url: '/admin/option/add',
       icon: SquareTerminal,
       isActive: true,
-      items: [
-        {
-          title: 'Add Option',
-          url: '/admin/option/add',
-          icon: Plus,
-          isActive: true,
-        },
-        {
-          title: 'List of Options',
-          url: '/admin/option/list',
-          icon: List,
-          isActive: true,
-        },
-      ],
     },
     {
       title: 'Subscriptions',
