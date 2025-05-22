@@ -17,12 +17,12 @@ export const BuyerSidebarItems = {
       isActive: true,
     },
 
-    {
-      title: 'My Requests',
-      url: '/client/dashboard/my-requests',
-      icon: LayoutDashboard,
-      isActive: true,
-    },
+    // {
+    //   title: 'My Requests',
+    //   url: '/client/dashboard/my-requests',
+    //   icon: LayoutDashboard,
+    //   isActive: true,
+    // },
     {
       title: 'Account Settings',
       url: '/client/account-settings',

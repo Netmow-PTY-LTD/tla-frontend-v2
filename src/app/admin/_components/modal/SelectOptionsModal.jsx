@@ -15,32 +15,23 @@ export function SelectOptionsModal({ open, onOpenChange, item, optionId }) {
   console.log('selected next question', item);
 
   const [selectedOptions, setSelectedOptions] = React.useState([]);
+  const [checkedOptions, setCheckedOptions] = React.useState([]);
 
-  async function onSubmit(values) {
-    //console.log('values', values);
-    const updatedData = {
-      id: item?._id,
-      countyId: item?.countryId?._id,
-      serviceId: item?.serviceId?._id,
-      ...values,
-    };
-    console.log(updatedData);
-    try {
-      const result = await updateQuestion(updatedData).unwrap();
-      // Optionally reset form or show success toast
-      if (result) {
-        showSuccessToast(result?.message);
-      }
-    } catch (error) {
-      console.error('Error adding question:', error);
-      // Optionally show error toast
-      showErrorToast(
-        error?.data?.errorSources?.[0]?.message ||
-          error?.data?.message ||
-          'Failed to add question.'
-      );
+  useEffect(() => {
+    if (selectedOptions?.length > 0) {
+      setCheckedOptions(selectedOptions);
+    } else {
+      setCheckedOptions(selectedOptions);
     }
-  }
+  }, []);
+
+  const rowSelection = React.useMemo(() => {
+    const map = {};
+    selectedOptions.forEach((option) => {
+      map[option._id] = true;
+    });
+    return map;
+  }, [selectedOptions]);
 
   const getColumns = (setSelectedOptions) => [
     {
@@ -126,6 +117,14 @@ export function SelectOptionsModal({ open, onOpenChange, item, optionId }) {
           data={item?.options ?? []}
           columns={columns}
           searchColumn="name"
+          rowSelection={rowSelection}
+          onRowSelectionChange={(updatedSelection) => {
+            const selectedRows = Object.keys(updatedSelection)
+              .map((id) => item.options.find((opt) => opt._id === id))
+              .filter(Boolean);
+
+            setSelectedOptions(selectedRows);
+          }}
         />
         <Button onClick={handleSave}>Save</Button>
       </DialogContent>

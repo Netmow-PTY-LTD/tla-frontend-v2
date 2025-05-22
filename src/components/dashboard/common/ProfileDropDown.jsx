@@ -15,13 +15,17 @@ import Cookies from 'js-cookie';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { userDummyImage } from '@/data/data';
-import { logOut } from '@/store/features/auth/authSlice';
-import { useDispatch } from 'react-redux';
+import { logOut, selectCurrentUser } from '@/store/features/auth/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { useAuthLogOutMutation } from '@/store/features/auth/authApiService';
 import { useRouter } from 'next/navigation';
 
 export default function ProfileDropDown({ data }) {
   const dispatch = useDispatch();
+
+  const currentUser = useSelector(selectCurrentUser);
+
+  console.log('currentUser', currentUser);
 
   const router = useRouter();
 
@@ -62,6 +66,19 @@ export default function ProfileDropDown({ data }) {
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
+
+          {currentUser?.role === 'admin' &&
+            currentUser?.regUserType === 'admin' && (
+              <>
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <Link href={`/admin`}>Switch to Admin</Link>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+              </>
+            )}
+
           <DropdownMenuGroup>
             <DropdownMenuItem>
               <Link href="/lawyer/dashboard/my-stats">My Profile</Link>
