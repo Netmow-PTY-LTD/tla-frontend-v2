@@ -169,7 +169,7 @@ export default function RegisterStepOne({
               </FormItem>
 
               {/* Grid view for Popular Services */}
-              <div
+              {/* <div
                 className={`popular-services mb-8 ${
                   hasServiceError ? 'border border-red-500 p-4 rounded-md' : ''
                 }`}
@@ -177,6 +177,37 @@ export default function RegisterStepOne({
                 <h4>Popular Law Services</h4>
                 <div className="flex flex-wrap gap-2 mt-4">
                   {countrywiseServices?.data?.map((service) => (
+                    <div key={service._id} className="w-full sm:w-1/2 md:w-1/4">
+                      <button
+                        type="button"
+                        onClick={() => handleSelectService(service._id)}
+                        className={`service-box flex gap-2 items-center w-full ${
+                          selectedServiceIds.includes(service._id)
+                            ? 'selected'
+                            : ''
+                        }`}
+                      >
+                        <Image
+                          src={service.image || '/assets/img/no-image.jpg'}
+                          width={50}
+                          height={50}
+                          className="object-cover rounded-md"
+                          alt={service.name}
+                        />
+                        <h5 className="service-title">{service.name}</h5>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div> */}
+              <div
+                className={`popular-services mb-8 ${
+                  hasServiceError ? 'border border-red-500 p-4 rounded-md' : ''
+                }`}
+              >
+                <h4>Popular Law Services</h4>
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {countrywiseServices?.data?.slice(0, 9).map((service) => (
                     <div key={service._id} className="w-full sm:w-1/2 md:w-1/4">
                       <button
                         type="button"
