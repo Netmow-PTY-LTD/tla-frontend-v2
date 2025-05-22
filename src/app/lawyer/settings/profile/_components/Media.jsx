@@ -7,7 +7,7 @@ export default function Photos() {
   const onSave = () => console.log('Save clicked');
   const onCancel = () => console.log('Cancel clicked');
   return (
-    <div className="max-w-[900px]">
+    <div className="max-w-[900px] mx-auto">
       <div className="flex flex-col gap-3">
         <PhotoGallery />
         <VideoGallery />
