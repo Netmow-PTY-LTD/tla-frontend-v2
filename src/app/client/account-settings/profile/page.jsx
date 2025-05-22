@@ -4,6 +4,7 @@ import { Label } from '@/components/ui/label';
 import { BookOpenText, Camera, CloudUpload, UserRound } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
+import ChangePassword from '../../_components/ChangePassword';
 
 const page = () => {
   return (
@@ -82,12 +83,8 @@ const page = () => {
                 placeholder="**********"
                 className="bg-white text-black placeholder:text-gray-400"
               />
-              <Link
-                href="#"
-                className="text-xs text-[#00C3C0] mt-5 lg:mt-1 block"
-              >
-                Change password
-              </Link>
+
+              <ChangePassword />
             </div>
           </div>
         </div>
