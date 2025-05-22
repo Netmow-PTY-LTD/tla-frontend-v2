@@ -88,7 +88,21 @@ export default function EditServiceModal({ id, open, onClose }) {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Service Name" {...field} />
+                    <Input
+                      placeholder="Service Name"
+                      {...field}
+                      onChange={(e) => {
+                        const nameValue = e.target.value;
+                        const slugValue = nameValue
+                          .toLowerCase()
+                          .replace(/[^\w\s-]/g, '') // Remove special characters
+                          .replace(/\s+/g, '-') // Replace spaces with dashes
+                          .replace(/--+/g, '-'); // Replace multiple dashes with single dash
+
+                        field.onChange(nameValue); // Update name
+                        form.setValue('slug', slugValue); // Auto-generate slug
+                      }}
+                    />
                   </FormControl>
                 </FormItem>
               )}
