@@ -1,6 +1,7 @@
 import React from 'react';
 import JobPostCard from '../_components/JobPostCard';
 import JobRequest from '../_components/JobRequest';
+import { CircleX, SlidersHorizontal } from 'lucide-react';
 
 export default function BuyerDashboard() {
   const posts = [
@@ -52,7 +53,17 @@ export default function BuyerDashboard() {
       <div className="mt-5 ">
         <JobRequest />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+        <div className="flex justify-between items-center my-5">
+          <button className="text-[#00C3C0] font-medium flex items-center gap-2">
+            <SlidersHorizontal className="w-5 h-5" /> <span>Filter</span>
+          </button>
+
+          <button className="bg-green-700 p-[10px]  flex items-center gap-2 text-white rounded-lg">
+            <CircleX className="w-4 h-4" /> <span>Approve</span>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-4">
           {posts?.map((post, index) => (
             <JobPostCard key={index} {...post} />
           ))}
