@@ -22,12 +22,12 @@ export const AdminSidebarItems = {
       icon: MapPinHouse,
       isActive: true,
       items: [
-        {
-          title: 'Add Country',
-          url: '/admin/country/add',
-          icon: Plus,
-          isActive: true,
-        },
+        // {
+        //   title: 'Add Country',
+        //   url: '/admin/country/add',
+        //   icon: Plus,
+        //   isActive: true,
+        // },
         {
           title: 'List of Countries',
           url: '/admin/country/list',
@@ -42,12 +42,12 @@ export const AdminSidebarItems = {
       icon: MapPinHouse,
       isActive: true,
       items: [
-        {
-          title: 'Add Zip Code',
-          url: '/admin/zip-code/add',
-          icon: Plus,
-          isActive: true,
-        },
+        // {
+        //   title: 'Add Zip Code',
+        //   url: '/admin/zip-code/add',
+        //   icon: Plus,
+        //   isActive: true,
+        // },
         {
           title: 'List of Zip Code',
           url: '/admin/zip-code/list',
@@ -63,12 +63,12 @@ export const AdminSidebarItems = {
       icon: SquareTerminal,
       isActive: true,
       items: [
-        {
-          title: 'Add Service',
-          url: '/admin/service/add',
-          icon: Plus,
-          isActive: true,
-        },
+        // {
+        //   title: 'Add Service',
+        //   url: '/admin/service/add',
+        //   icon: Plus,
+        //   isActive: true,
+        // },
         {
           title: 'List of Service',
           url: '/admin/service/list',
