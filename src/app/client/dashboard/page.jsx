@@ -2,6 +2,7 @@ import React from 'react';
 import JobPostCard from '../_components/JobPostCard';
 import JobRequest from '../_components/JobRequest';
 import { CircleX, SlidersHorizontal } from 'lucide-react';
+import { FilterDropdown } from '../_components/FilterDropDwon';
 
 export default function BuyerDashboard() {
   const posts = [
@@ -54,10 +55,7 @@ export default function BuyerDashboard() {
         <JobRequest />
 
         <div className="flex justify-between items-center my-5">
-          <button className="text-[#00C3C0] font-medium flex items-center gap-2">
-            <SlidersHorizontal className="w-5 h-5" /> <span>Filter</span>
-          </button>
-
+          <FilterDropdown />
           <button className="bg-green-700 p-[10px]  flex items-center gap-2 text-white rounded-lg">
             <CircleX className="w-4 h-4" /> <span>Approve</span>
           </button>
