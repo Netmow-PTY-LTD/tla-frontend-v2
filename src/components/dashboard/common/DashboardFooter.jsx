@@ -14,9 +14,9 @@ export default function DashboardFooter() {
       ? '/client/dashboard'
       : '/admin';
   return (
-    <footer className="db-footer">
+    <footer className="db-footer bg-[#F3F3F3]">
       <div className="container">
-        <p>
+        <p className="font-semibold">
           Copyright &copy; {new Date().getFullYear()} |{' '}
           <Link href={homeUrl}>The LawAppOnline</Link>.
         </p>

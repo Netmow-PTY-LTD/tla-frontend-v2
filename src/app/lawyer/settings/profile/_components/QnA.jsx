@@ -16,7 +16,7 @@ export default function QuestionsAndAnswers() {
   const onSave = () => console.log('Save clicked');
   const onCancel = () => console.log('Cancel clicked');
   return (
-    <div className="max-w-[900px]">
+    <div className="max-w-[900px] mx-auto">
       <Form {...form}>
         {/* Links Section */}
         <div>

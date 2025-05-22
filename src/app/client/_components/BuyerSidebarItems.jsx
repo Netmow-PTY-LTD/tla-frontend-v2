@@ -25,7 +25,7 @@ export const BuyerSidebarItems = {
     // },
     {
       title: 'Account Settings',
-      url: '/client/account-settings',
+      url: '/client/account-settings/profile',
       icon: Settings,
       isActive: true,
     },
