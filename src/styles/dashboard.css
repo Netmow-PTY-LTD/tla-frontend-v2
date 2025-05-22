@@ -50,6 +50,7 @@
   --sidebar-width: 24rem !important;
 }
 
+
 .bg-sidebar {
   background-color: #fff;
 }
@@ -107,4 +108,10 @@
   font-weight: 500;
   line-height: 24px;
   padding: 20px 10px !important;
+}
+
+@media(max-width:1366px){
+  .sidebar-main{
+  --sidebar-width: 16rem !important;
+}
 }
