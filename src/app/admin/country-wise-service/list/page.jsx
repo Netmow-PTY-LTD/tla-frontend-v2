@@ -13,6 +13,7 @@ import { useGetCountryListQuery } from '@/store/features/public/publicApiService
 import {
   useAddCountryWiseServiceMutation,
   useAllServicesQuery,
+  useEditCountryWiseServiceMutation,
   useGetAllCountryWiseServicesQuery,
   useGetCountryWiseServicesQuery,
 } from '@/store/features/admin/servicesApiService';
@@ -35,8 +36,8 @@ export default function Page() {
     });
 
   //Api call for countrywise services
-  const [addCountrywiseServices, { isLoading }] =
-    useAddCountryWiseServiceMutation();
+  const [editCountrywiseServices, { isLoading }] =
+    useEditCountryWiseServiceMutation();
 
   const columns = [
     {
@@ -125,7 +126,7 @@ export default function Page() {
     }
 
     try {
-      await addCountrywiseServices({
+      await editCountrywiseServices({
         countryId: selectedCountry,
         serviceIds: selectedServiceIds,
       }).unwrap();
