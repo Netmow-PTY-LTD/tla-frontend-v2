@@ -38,12 +38,8 @@
 
 .db-footer {
   padding: 10px 20px;
-  background-color: #fff;
-  border-top: 1px solid #f5f5f5;
   text-align: center;
-  position: fixed;
-  bottom: 0;
-  width: calc(100% - 24rem);
+  width: 100%;
 }
 
 .db-footer p {

@@ -27,7 +27,7 @@ export default function AdminDashboardLayout({ children }) {
           <SidebarRail />
         </Sidebar>
         <div
-          className="flex-1 pb-10 main-content"
+          className="flex-1 main-content"
           style={{
             minHeight: 'calc(100vh - 74px - 42px)',
           }}
