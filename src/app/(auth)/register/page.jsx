@@ -35,7 +35,7 @@ export default function Register() {
   const [hasServiceError, setHasServiceError] = useState(false);
   const [areaZipValue, setAreaZipValue] = useState(false);
   const [selectedCountryCode, SetSelectedCountryCode] = useState('AU');
-  const selectedCountry = '6825904407058a57bd0fe192';
+  const selectedCountry = '682c4cc84c93ea5164dde92d';
   const dispatch = useDispatch();
   const router = useRouter();
 

@@ -56,6 +56,14 @@ const servicesApiService = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['service'],
     }),
+         editCountryWiseService: builder.mutation({
+      query: (body) => ({
+        url: `/country-wise-map/edit/${body.countryId}`,
+        method: 'PATCH',
+        body,
+      }),
+      invalidatesTags: ['service'],
+    }),
      getAllCountryWiseServices: builder.query({
       query: () => ({
         url: '/country-wise-map/list',
@@ -80,6 +88,7 @@ export const {
   useEditServiceMutation,
   useDeleteServiceMutation,
   useAddCountryWiseServiceMutation,
+  useEditCountryWiseServiceMutation,
   useGetAllCountryWiseServicesQuery,
   useGetCountryWiseServicesQuery,
 } = servicesApiService;

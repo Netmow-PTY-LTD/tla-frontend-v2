@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -24,16 +24,19 @@ import {
   useEditCountryMutation,
   useGetSingleCountryQuery,
 } from '@/store/features/public/publicApiService';
+import { Loader2 } from 'lucide-react'; // Spinner icon
+
+const formSchema = z.object({
+  name: z.string().min(2, {
+    message: 'Country name must be at least 2 characters.',
+  }),
+  slug: z.string().min(2).max(3, {
+    message: 'Country code must be 2 to 3 characters.',
+  }),
+});
 
 export default function EditCountryModal({ id, open, onClose }) {
-  const formSchema = z.object({
-    name: z.string().min(2, {
-      message: 'Country name must be at least 2 characters.',
-    }),
-    slug: z.string().min(2).max(3, {
-      message: 'Country code must be 2 to 3 characters.',
-    }),
-  });
+  const [localLoading, setLocalLoading] = useState(true);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -45,11 +48,20 @@ export default function EditCountryModal({ id, open, onClose }) {
 
   const {
     data: singleCountry,
-    isLoading,
     isSuccess,
-  } = useGetSingleCountryQuery(id, { skip: !id || !open });
+    refetch,
+  } = useGetSingleCountryQuery(id, {
+    skip: !id || !open,
+  });
 
   const [editCountry, { isLoading: isSubmitting }] = useEditCountryMutation();
+
+  useEffect(() => {
+    if (open && id) {
+      setLocalLoading(true);
+      refetch();
+    }
+  }, [open, id, refetch]);
 
   useEffect(() => {
     if (isSuccess && singleCountry) {
@@ -57,6 +69,7 @@ export default function EditCountryModal({ id, open, onClose }) {
         name: singleCountry?.data?.name || '',
         slug: singleCountry?.data?.slug || '',
       });
+      setLocalLoading(false);
     }
   }, [isSuccess, singleCountry, form]);
 
@@ -73,7 +86,7 @@ export default function EditCountryModal({ id, open, onClose }) {
     try {
       const res = await editCountry({ id, ...formattedValues }).unwrap();
       showSuccessToast(res?.message || 'Country updated successfully!');
-      onClose(); // Close modal after success
+      onClose();
     } catch (error) {
       const backendMessage =
         error?.data?.err?.errorSources?.[0]?.message ||
@@ -90,39 +103,49 @@ export default function EditCountryModal({ id, open, onClose }) {
         <DialogHeader>
           <DialogTitle>Edit Country</DialogTitle>
         </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Country Name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="slug"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Code</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Country Code" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Updating...' : 'Update'}
-            </Button>
-          </form>
-        </Form>
+
+        {localLoading ? (
+          <div className="flex flex-col items-center justify-center py-16">
+            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            <p className="mt-4 text-sm text-muted-foreground">
+              Loading country details...
+            </p>
+          </div>
+        ) : (
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Country Name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="slug"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Code</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Country Code" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Updating...' : 'Update'}
+              </Button>
+            </form>
+          </Form>
+        )}
       </DialogContent>
     </Dialog>
   );
