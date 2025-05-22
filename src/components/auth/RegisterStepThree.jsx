@@ -353,24 +353,22 @@ export default function RegisterStepThree({
 
                 <div className="flex flex-wrap justify-end gap-3 mt-10">
                   <button
-                    type="submit"
+                    type="button"
                     className="btn-outline"
                     onClick={handleBack}
+                    disabled={isLoading}
                   >
-                    Back
+                    {isLoading ? 'Submitting...' : 'Backs'}
                   </button>
+
                   <button
                     type="button"
                     className="btn-auth-register"
                     onClick={form.handleSubmit(handleFinalSubmit)}
-                    disabled={isLoading} // <- disable when submitting
+                    disabled={isLoading}
                   >
                     {isLoading ? 'Submitting...' : 'Finish & See Leads'}
                   </button>
-
-                  {/* <button type="submit" className="btn-auth-register">
-                    Finish & See Leads
-                  </button> */}
                 </div>
               </form>
             </Form>
