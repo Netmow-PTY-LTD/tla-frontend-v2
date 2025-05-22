@@ -13,7 +13,6 @@ import { useGetCountryListQuery } from '@/store/features/public/publicApiService
 import {
   useAddCountryWiseServiceMutation,
   useAllServicesQuery,
-  useGetAllCountryWiseServicesQuery,
   useGetCountryWiseServicesQuery,
 } from '@/store/features/admin/servicesApiService';
 import { Checkbox } from '@/components/ui/checkbox';
