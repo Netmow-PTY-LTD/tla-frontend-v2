@@ -6,7 +6,7 @@ const statusStyles = {
 
 export default function JobPostCard({ title, date, status, message }) {
   return (
-    <div className="relative rounded-lg bg-gradient-to-bl from-white to-cyan-50 shadow p-[13px] w-full ">
+    <div className="relative rounded-lg bg-gradient-to-bl from-white to-cyan-100 shadow p-[13px] w-full ">
       {/* Status Badge */}
       <div
         className={`absolute top-0 left-0  px-[10px] py-[5px] rounded-tl-[10px] rounded-br-[10px] text-white text-sm font-semibold  ${statusStyles[status]?.bg}`}

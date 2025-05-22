@@ -34,7 +34,7 @@ export default async function SellerDashboardLayout({ children }) {
           }}
         >
           <div className="flex flex-col h-full">
-            <div className="flex-1  bg-[#F3F3F3] p-5">{children}</div>
+            <div className="flex-1  bg-[#F3F3F3] p-5 w-full">{children}</div>
             <DashboardFooter />
           </div>
         </div>

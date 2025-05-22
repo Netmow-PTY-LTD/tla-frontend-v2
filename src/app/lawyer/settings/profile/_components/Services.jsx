@@ -14,7 +14,7 @@ export default function Services() {
   const onCancel = () => setOpen(!open);
   const form = useForm();
   return (
-    <div className="max-w-[900px]">
+    <div className="max-w-[900px] mx-auto">
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-black font-semibold">Services</h2>
