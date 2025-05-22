@@ -16,12 +16,16 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { userDummyImage } from '@/data/data';
 import { useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useAuthLogOutMutation } from '@/store/features/auth/authApiService';
-import { logOut } from '@/store/features/auth/authSlice';
+import { logOut, selectCurrentUser } from '@/store/features/auth/authSlice';
 
 export default function BuyerProfileDropDown({ data }) {
   const dispatch = useDispatch();
+
+  const currentUser = useSelector(selectCurrentUser);
+
+  console.log('currentUser', currentUser);
 
   const router = useRouter();
   /**
@@ -61,9 +65,20 @@ export default function BuyerProfileDropDown({ data }) {
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
+          {currentUser?.role === 'admin' &&
+            currentUser?.regUserType === 'admin' && (
+              <>
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <Link href={`/admin`}>Switch to Admin</Link>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+              </>
+            )}
           <DropdownMenuGroup>
             <DropdownMenuItem>
-              <Link href="/client/account-settings">Settings</Link>
+              <Link href="/client/account-settings">Account Settings</Link>
               <DropdownMenuShortcut>
                 <Settings />
               </DropdownMenuShortcut>
