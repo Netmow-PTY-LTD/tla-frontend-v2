@@ -67,7 +67,6 @@ export default function AddOptionPage() {
   const [question, setQuestion] = useState(null);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [option, setOption] = useState('');
-  const [selectedOptions, setSelectedOptions] = useState([]);
 
   const router = useRouter();
 
@@ -486,8 +485,6 @@ export default function AddOptionPage() {
         item={selectedQuestion}
         option={option}
         refetch={singleServicewiseQuestionsRefetch}
-        selectedOptions={selectedOptions}
-        setSelectedOptions={setSelectedOptions}
       />
     </>
   );

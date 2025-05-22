@@ -10,15 +10,14 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 
-export function AdminCollapsible({ item, option }) {
-  console.log('selected option', item);
+export function AdminCollapsible({ item }) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
     <Collapsible
       open={isOpen}
       onOpenChange={setIsOpen}
-      className="w-[350px] space-y-2"
+      className="w-[350px] space-y-2 py-2"
     >
       <div className="flex items-center justify-between space-x-4 px-4">
         <h4 className="text-sm font-semibold">
@@ -34,7 +33,10 @@ export function AdminCollapsible({ item, option }) {
       <CollapsibleContent className="space-y-2">
         {item?.length > 0 &&
           item?.map((option, i) => (
-            <div className="rounded-md border px-4 py-2 font-mono text-sm shadow-sm">
+            <div
+              className="rounded-md border px-4 py-2 font-mono text-sm shadow-sm"
+              key={i}
+            >
               {option?.name}
             </div>
           ))}
