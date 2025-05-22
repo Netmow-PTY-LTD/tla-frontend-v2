@@ -7,6 +7,7 @@ import {
   MessageCircleIcon,
   SettingsIcon,
   CreditCardIcon,
+  Bell,
 } from 'lucide-react';
 import SettingsTabs from '@/components/dashboard/Settings/SettingTab';
 const SettingsLayout = ({ children }) => {
@@ -18,7 +19,7 @@ const SettingsLayout = ({ children }) => {
     },
     {
       label: 'Lead Settings',
-      href: '/lawyer/settings/lead-settings/my-services',
+      href: '/lawyer/settings/lead-settings',
       icon: <BarChart3Icon className="w-4 h-4" />,
     },
     {
@@ -42,6 +43,11 @@ const SettingsLayout = ({ children }) => {
       label: 'Credits & Payments',
       href: '/lawyer/settings/billing/my-credits',
       icon: <CreditCardIcon className="w-4 h-4" />,
+    },
+    {
+      label: 'Notification',
+      href: '/lawyer/settings/notifications',
+      icon: <Bell className="w-4 h-4" />,
     },
   ];
 
