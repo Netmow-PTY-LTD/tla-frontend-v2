@@ -114,7 +114,9 @@ export default function SidebarTop() {
           </svg>
           <span>You have 3 jobs</span>
         </div>
-        <Link href={'/client/dashboard'}>Create Request</Link>
+        <Link href={`/client/dashboard?trigger=new-request`}>
+          Create Request
+        </Link>
       </div>
     </div>
   );

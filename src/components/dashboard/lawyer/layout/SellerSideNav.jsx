@@ -27,7 +27,7 @@ export function LawyerSideNav() {
     <>
       <SidebarGroup className="nav-group">
         <SidebarGroupLabel className="text-lg mb-2 text-black">
-          Lawyer Main Menu
+          Lawyer Menu
         </SidebarGroupLabel>
         <SidebarMenu>
           {SellerSidebarItems?.navMain?.map((item) => {

@@ -27,7 +27,6 @@ import { useRouter } from 'next/navigation';
 import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
 import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
 import { slugify } from '@/helpers/generateSlug';
-import { skipToken } from '@reduxjs/toolkit/query';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,7 +35,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { MoreHorizontal, Pencil, Trash2, ChevronsUpDown } from 'lucide-react';
 import {
   Accordion,
   AccordionContent,
@@ -49,6 +48,12 @@ import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/question
 import { SelectOptionsModal } from '../../_components/modal/SelectOptionsModal';
 import { EditOptionDialog } from '../../_components/modal/EditOptionModal';
 import { useDeleteOptionMutation } from '@/store/features/admin/optionApiService';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
+import { AdminCollapsible } from '../../_components/AdminCollapsible';
 
 export default function AddOptionPage() {
   //state variables
@@ -61,7 +66,8 @@ export default function AddOptionPage() {
   const [editOptionModalOpen, setEditOptionModalOpen] = useState(false);
   const [question, setQuestion] = useState(null);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
-  const [optionId, setOptionId] = useState('');
+  const [option, setOption] = useState('');
+  const [selectedOptions, setSelectedOptions] = useState([]);
 
   const router = useRouter();
 
@@ -259,8 +265,8 @@ export default function AddOptionPage() {
   //console.log('questionWiseOptions', questionWiseOptions?.data);
 
   //handle SelectOptionsModal
-  const handleSelectOptionsModal = (optionId, currentOrder) => {
-    setOptionId(optionId);
+  const handleSelectOptionsModal = (option, currentOrder) => {
+    setOption(option);
     const allQuestions = singleServicewiseQuestionsData?.data || [];
     const nextQuestion = allQuestions.find((q) => q.order === currentOrder + 1);
     if (nextQuestion) {
@@ -387,7 +393,7 @@ export default function AddOptionPage() {
                     e.stopPropagation();
                     handleModalOpen(item?._id);
                   }}
-                  className="p-2 bg-black text-white rounded-md cursor-pointer"
+                  className="p-2 bg-black text-white rounded-md cursor-pointer ml-auto mr-4"
                 >
                   Add Option
                 </div>
@@ -401,6 +407,9 @@ export default function AddOptionPage() {
                       </th>
                       <th className="px-4 py-2 text-left font-medium text-muted-foreground">
                         Actions
+                      </th>
+                      <th className="px-4 py-2 text-left font-medium text-muted-foreground">
+                        Selected Options
                       </th>
                     </tr>
                   </thead>
@@ -420,10 +429,7 @@ export default function AddOptionPage() {
                                 variant="outline"
                                 size="sm"
                                 onClick={() =>
-                                  handleSelectOptionsModal(
-                                    option?._id,
-                                    item?.order
-                                  )
+                                  handleSelectOptionsModal(option, item?.order)
                                 }
                               >
                                 Select Next Options
@@ -445,6 +451,11 @@ export default function AddOptionPage() {
                               <Trash2 className="w-4 h-4" /> Delete
                             </div>
                           </div>
+                        </td>
+                        <td>
+                          <AdminCollapsible
+                            item={option?.selected_options ?? []}
+                          />
                         </td>
                       </tr>
                     ))}
@@ -473,7 +484,10 @@ export default function AddOptionPage() {
         open={selectOptionsModalOpen}
         onOpenChange={setSelectOptionsModalOpen}
         item={selectedQuestion}
-        optionId={optionId}
+        option={option}
+        refetch={singleServicewiseQuestionsRefetch}
+        selectedOptions={selectedOptions}
+        setSelectedOptions={setSelectedOptions}
       />
     </>
   );

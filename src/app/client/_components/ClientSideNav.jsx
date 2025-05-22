@@ -26,7 +26,7 @@ export function ClientSideNav() {
   return (
     <SidebarGroup className="nav-group">
       <SidebarGroupLabel className="text-lg mb-2 text-black font-semibold">
-        Client Main Menu
+        Client Menu
       </SidebarGroupLabel>
 
       <SidebarMenu>
