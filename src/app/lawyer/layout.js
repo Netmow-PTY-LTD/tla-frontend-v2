@@ -33,7 +33,7 @@ export default async function SellerDashboardLayout({ children }) {
           //   minHeight: 'calc(100vh - 74px - 42px)',
           // }}
         >
-          <div className="flex flex-col h-[calc(100vh-70px)]">
+          <div className="flex flex-col h-full">
             <div className="flex-1  bg-[#F3F3F3] p-5 w-full">{children}</div>
             <DashboardFooter />
           </div>
