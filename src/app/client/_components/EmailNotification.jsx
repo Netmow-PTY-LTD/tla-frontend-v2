@@ -5,7 +5,7 @@ import { Switch } from '@/components/ui/switch';
 
 const EmailNotifications = () => {
   return (
-    <div className="bg-gray-50 p-6 rounded-lg">
+    <div className="bg-[#F3F3F3] p-6 rounded-lg">
       <div className="flex items-center gap-3 mb-3">
         <div className=" p-2 rounded-lg">
           <Bell className="h-5 w-5 text-blue-500" />
