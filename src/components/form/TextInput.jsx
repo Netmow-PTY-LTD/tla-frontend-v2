@@ -42,7 +42,7 @@ export default function TextInput({
                 placeholder={placeholder}
                 value={field.value || ''}
                 onChange={handleChange}
-                className="tla-form-control"
+                className="bg-white text-black placeholder:text-gray-400 h-11"
               />
             </FormControl>
             <FormMessage />
