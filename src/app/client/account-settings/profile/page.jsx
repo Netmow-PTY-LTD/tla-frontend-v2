@@ -52,7 +52,7 @@ const page = () => {
               </Label>
               <Input
                 id="name"
-                placeholder="Md Forhad Sarkar"
+                placeholder="Enter Your Name"
                 className="bg-white text-black placeholder:text-gray-400"
               />
             </div>
@@ -74,7 +74,7 @@ const page = () => {
               </Label>
               <Input
                 id="email"
-                placeholder="forhad.netmow@gmail.com"
+                placeholder="Enter Your Email"
                 className="bg-white text-black placeholder:text-gray-400"
               />
             </div>
