@@ -29,10 +29,64 @@ const ServicesList = () => {
             collapsible
             className="border-t border-gray-200"
           >
-            <ServiceCard title="Contracts Lawyer" />
-            <ServiceCard title="Lawyers, Solicitors & Notary Publics" />
-            <ServiceCard title="Legal Document Preparation" />
-            <ServiceCard title="Estate Lawyer" />
+            <ServiceCard
+              id="contracts-lawyer"
+              title="Contracts Lawyer"
+              description="Our contract lawyers specialize in ensuring every clause protects your interests—be it employment, leases, or vendor agreements."
+              subtitle="Helping clients draft and review legal agreements efficiently."
+              question="What best describes your contract needs?"
+              options={['Employment', 'Lease', 'Sales', 'Partnership']}
+              defaultSelectedOptions={[
+                'Employment',
+                'Lease',
+                'Sales',
+                'Partnership',
+              ]}
+            />
+            <ServiceCard
+              id="notary-public"
+              title="Lawyers, Solicitors & Notary Publics"
+              subtitle="Supporting customers with legal certifications and advice."
+              description="Certified professionals for notarization, legal consulting, and public documentation—available across multiple locations."
+              question="What service are you looking for?"
+              options={[
+                'Document notarization',
+                'Legal advice',
+                'Representation',
+              ]}
+              defaultSelectedOptions={[
+                'Document notarization',
+                'Legal advice',
+                'Representation',
+              ]}
+            />
+            <ServiceCard
+              id="biz-consultants"
+              title="Business Consultants"
+              subtitle="Get guidance tailored to your business scale."
+              description="From startups to enterprises, our consultants offer data-driven solutions and proven business strategies to help you grow."
+              question="Which type of business are you running?"
+              options={['Startup', 'SME', 'Enterprise', 'Freelance']}
+              defaultSelectedOptions={[
+                'Startup',
+                'SME',
+                'Enterprise',
+                'Freelance',
+              ]}
+            />
+            <ServiceCard
+              id="estate-lawyer"
+              title="Estate Lawyer"
+              subtitle="Assisting with wills, trusts, and estate planning."
+              description="Our estate planning experts simplify the legalities around wills, trusts, and asset transfers to secure your family's future."
+              question="What estate services do you need?"
+              options={['Will drafting', 'Trust setup', 'Inheritance guidance']}
+              defaultSelectedOptions={[
+                'Will drafting',
+                'Trust setup',
+                'Inheritance guidance',
+              ]}
+            />
           </Accordion>
         </section>
 
