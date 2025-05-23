@@ -14,7 +14,7 @@ import Image from 'next/image';
 
 export default function LeadDetailsPage({ onBack }) {
   return (
-    <div className="mb-10 overflow-y-auto h-[calc(100vh-74px-42px)]">
+    <div className="">
       <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
         <div className="flex items-center justify-between">
           <button className="flex py-2 items-center gap-2" onClick={onBack}>
