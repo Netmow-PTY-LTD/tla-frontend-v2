@@ -17,11 +17,8 @@ export function SelectOptionsModal({
   item,
   option,
   refetch,
-  selectedOptions,
-  setSelectedOptions,
 }) {
-  console.log('selected options', option);
-  // const [selectedOptions, setSelectedOptions] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState([]);
   const [rowSelection, setRowSelection] = useState({});
   const [updateOption] = useEditOptionMutation();
 

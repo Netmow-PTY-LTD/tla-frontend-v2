@@ -16,8 +16,8 @@ export default async function SellerDashboardLayout({ children }) {
   return (
     <>
       <DashboardHeader />
-      <SidebarProvider className="sidebar-main">
-        <Sidebar collapsible="icon" className="w-96">
+      <SidebarProvider className="sidebar-main min-h-screen overflow-hidden">
+        <Sidebar collapsible="icon" className="w-64 lg:w-96">
           <SidebarHeader>
             <SidebarTop />
           </SidebarHeader>
@@ -29,9 +29,9 @@ export default async function SellerDashboardLayout({ children }) {
         </Sidebar>
         <div
           className="flex-1 main-content"
-          style={{
-            minHeight: 'calc(100vh - 74px - 42px)',
-          }}
+          // style={{
+          //   minHeight: 'calc(100vh - 74px - 42px)',
+          // }}
         >
           <div className="flex flex-col h-[calc(100vh-70px)]">
             <div className="flex-1  bg-[#F3F3F3] p-5 w-full">{children}</div>

@@ -25,8 +25,6 @@ export default function ProfileDropDown({ data }) {
 
   const currentUser = useSelector(selectCurrentUser);
 
-  console.log('currentUser', currentUser);
-
   const router = useRouter();
 
   /**
