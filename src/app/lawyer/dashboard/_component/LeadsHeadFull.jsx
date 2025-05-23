@@ -13,11 +13,9 @@ import {
 export default function LeadsHead({ isExpanded }) {
   return (
     <section className={`${isExpanded ? 'pr-4' : 'px-4'}`}>
-      <div className="flex items-center gap-2">
-        <h2 className="font-bold text-[16px] text-[#0B1C2D] text-left">
-          112 Matching Leads
-        </h2>
-      </div>
+      <h2 className="font-bold text-[25px] text-[#0B1C2D] text-left">
+        112 Matching Leads
+      </h2>
 
       <div className="flex flex-wrap lg:justify-between items-center my-3 gap-4">
         <div className="flex flex-wrap items-center gap-2 text-[#34495E]">

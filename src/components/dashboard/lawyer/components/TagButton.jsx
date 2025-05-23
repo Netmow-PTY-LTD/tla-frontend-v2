@@ -15,7 +15,7 @@ const TagButton = ({
     <button
       className={clsx(
         !className &&
-          'text-sm px-3 py-1 rounded-[29px] flex items-center gap-2 transition-all duration-200 active:scale-95',
+          'text-[10px] px-3 py-1.5 rounded-[29px] flex items-center gap-2 transition-all duration-200 active:scale-95',
         className
       )}
       style={{ backgroundColor: bgColor }}
