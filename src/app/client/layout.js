@@ -34,7 +34,7 @@ export default function BuyerDashboardLayout({ children }) {
             minHeight: 'calc(100vh - 74px - 42px)',
           }}
         >
-          <div className="flex flex-col h-screen">
+          <div className="flex flex-col h-[calc(100vh-70px)] ">
             <div className="flex-1 p-4 bg-[#F3F3F3]">{children}</div>
             <DashboardFooter />
           </div>
