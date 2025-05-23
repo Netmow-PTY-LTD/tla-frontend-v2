@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import '@/styles/dashboard.css';
 import DashboardHeader from '@/components/dashboard/common/DashboardHeader';
@@ -11,13 +13,16 @@ import {
 } from '@/components/ui/sidebar';
 import { LawyerSideNav } from '@/components/dashboard/lawyer/layout/SellerSideNav';
 import SidebarTop from './dashboard/_component/common/SidebarTop';
+import { useRouter } from 'next/navigation';
+import ScrollToTopOnRouteChange from './dashboard/_component/ScrollToTop';
 
-export default async function SellerDashboardLayout({ children }) {
+export default function SellerDashboardLayout({ children }) {
   return (
     <>
+      <ScrollToTopOnRouteChange />
       <DashboardHeader />
       <SidebarProvider className="sidebar-main min-h-screen overflow-hidden">
-        <Sidebar collapsible="icon" className="w-64 lg:w-96">
+        <Sidebar collapsible="icon" className="sidebar-width-control">
           <SidebarHeader>
             <SidebarTop />
           </SidebarHeader>
