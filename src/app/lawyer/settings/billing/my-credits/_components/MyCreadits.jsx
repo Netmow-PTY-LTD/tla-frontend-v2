@@ -1,9 +1,10 @@
 import React from 'react';
+import CreditsPurchase from './UI/CreditPurchse';
 
 const MyCredits = () => {
   return (
     <div>
-      <h2>My Credits</h2>
+      <CreditsPurchase />
     </div>
   );
 };
