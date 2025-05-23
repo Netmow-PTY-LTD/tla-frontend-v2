@@ -4,7 +4,7 @@ import Image from 'next/image';
 import TagButton from './TagButton';
 import { BadgeCheck, CircleAlert, Zap } from 'lucide-react';
 
-const LeadCard = ({ onViewDetails, user }) => {
+const ResponseCard = ({ onViewDetails, user }) => {
   return (
     <Card className="w-full max-w-xl mx-auto">
       {/* Header Section */}
@@ -86,4 +86,4 @@ const LeadCard = ({ onViewDetails, user }) => {
   );
 };
 
-export default LeadCard;
+export default ResponseCard;
