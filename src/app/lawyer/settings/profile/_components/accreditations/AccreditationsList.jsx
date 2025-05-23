@@ -15,7 +15,7 @@ export default function AccreditionsList() {
   const form = useForm();
   return (
     <div className="mt-5">
-      <div className="bg-[#f3f3f3] border  rounded-sm shadow p-4 w-full  flex items-center justify-between">
+      <div className="bg-white border  rounded-sm shadow p-4 w-full  flex items-center justify-between">
         <div className="flex items-center gap-2 ">
           <h1 className=" font-semibold">Title</h1>
           <span>
@@ -50,7 +50,7 @@ export default function AccreditionsList() {
       >
         <Form {...form}>
           {/* Facebook Field */}
-          <div className="space-y-5">
+          <div className="space-y-5 ">
             <div>
               <TextInput
                 control={form.control}

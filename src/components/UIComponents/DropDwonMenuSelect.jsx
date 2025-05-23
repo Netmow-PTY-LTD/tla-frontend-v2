@@ -27,13 +27,13 @@ export default function DropdownMenuSelect({
 
   return (
     <DropdownMenu>
-      <div className="flex flex-col space-y-1">
-        <label className="text-black  font-semibold">{triggerLabel}</label>
-        <DropdownMenuTrigger asChild>
+      <div className="flex flex-col">
+        <label className="  font-semibold">{triggerLabel}</label>
+        <DropdownMenuTrigger asChild className="h-10 mt-2">
           <Button variant="outline">{selected || triggerLabel}</Button>
         </DropdownMenuTrigger>
       </div>
-      <DropdownMenuContent className="w-56 mt-1">
+      <DropdownMenuContent className="w-56 ">
         {dropdownLabel && (
           <>
             <DropdownMenuLabel>{dropdownLabel}</DropdownMenuLabel>
