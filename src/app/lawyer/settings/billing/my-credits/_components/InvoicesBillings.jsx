@@ -1,9 +1,10 @@
 import React from 'react';
+import InvoicingForm from './UI/InvoicingForm';
 
 const InvoicesBillings = () => {
   return (
-    <div>
-      <h2>Invoices And billing</h2>
+    <div className="w-full">
+      <InvoicingForm />
     </div>
   );
 };
