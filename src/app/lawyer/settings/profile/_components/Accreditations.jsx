@@ -4,6 +4,7 @@ import React from 'react';
 import AccreditationsList from './accreditations/AccreditationsList';
 import { CircleAlert } from 'lucide-react';
 import ToggleSwitch from '@/components/UIComponents/ToggleSwitch';
+import AddAccreditaionsModal from './accreditations/AddAccreditaionsModal';
 
 export default function Accreditations() {
   const handleToggle = (checked) => {
@@ -33,6 +34,7 @@ export default function Accreditations() {
         </div>
         <div className="flex flex-col gap-3">
           <AccreditationsList />
+          <AddAccreditaionsModal />
         </div>
       </div>
       {/* Footer Buttons */}
