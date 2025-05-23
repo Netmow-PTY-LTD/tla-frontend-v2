@@ -5,12 +5,10 @@ import LeadsRight from '../_component/LeadsRight';
 import { usePathname } from 'next/navigation';
 import LeadsHead from '../_component/LeadsHead';
 import data from '@/data/user';
-import MyResponseDetails from './_components/MyResponseDetails';
-import ResponseHead from './_components/ResponseHead';
 
 const MyResponsePage = () => {
-  const [showResponseDetails, setShowResponseDetails] = useState(true);
-  const [selectedResponse, setSelectedResponse] = useState(null);
+  const [showLeadDetails, setShowLeadDetails] = useState(true);
+  const [selectedLead, setSelectedLead] = useState(null);
 
   const pathname = usePathname();
 
@@ -32,7 +30,7 @@ const MyResponsePage = () => {
 
   useEffect(() => {
     if (data && data.length > 0) {
-      setSelectedResponse(data[0]); // Set first lead
+      setSelectedLead(data[0]); // Set first lead
     }
   }, [data]);
 
@@ -40,12 +38,12 @@ const MyResponsePage = () => {
     <div className="continer">
       <div className="lead-board-wrap">
         <div className="lead-board-container">
-          {showResponseDetails && selectedResponse && (
+          {showLeadDetails && selectedLead && (
             <div className="left-column-7">
               <div className="column-wrap-left">
-                <MyResponseDetails
-                  response={selectedResponse}
-                  onBack={() => setShowResponseDetails(false)}
+                <LeadDetailsPage
+                  lead={selectedLead}
+                  onBack={() => setShowLeadDetails(false)}
                 />
               </div>
             </div>
@@ -53,19 +51,19 @@ const MyResponsePage = () => {
 
           <div
             className={`${
-              showResponseDetails ? 'right-column-5 ' : 'right-column-full'
+              showLeadDetails ? 'right-column-5 ' : 'right-column-full'
             }`}
           >
             <div className="column-wrap-right">
               <div className="leads-top-row">
-                <ResponseHead isExpanded={!showResponseDetails} />
+                <LeadsHead isExpanded={!showLeadDetails} />
               </div>
               <div className="leads-bottom-row">
                 <LeadsRight
-                  isExpanded={!showResponseDetails}
-                  onViewDetails={(response) => {
-                    setSelectedResponse(response);
-                    setShowResponseDetails(true);
+                  isExpanded={!showLeadDetails}
+                  onViewDetails={(lead) => {
+                    setSelectedLead(lead);
+                    setShowLeadDetails(true);
                   }}
                   data={data}
                 />
