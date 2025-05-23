@@ -10,12 +10,12 @@ const LeadBoardPage = () => {
 
   const pathname = usePathname();
 
-  console.log('pathname', pathname);
-
   useEffect(() => {
     const cleanPathname = pathname?.trim().replace(/\/+$/, '');
 
     if (cleanPathname === '/lawyer/dashboard/leads-board') {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+
       document.body.style.setProperty('overflow', 'hidden', 'important');
     } else {
       document.body.style.overflow = '';
@@ -28,39 +28,8 @@ const LeadBoardPage = () => {
 
   return (
     <div className="continer">
-      {/* <div className="flex flex-wrap">
-        {showLeadDetails && (
-          <div className="w-full md:w-1/2 lg:w-2/3">
-            <LeadDetailsPage onBack={() => setShowLeadDetails(false)} />
-          </div>
-        )}
-        <div
-          className={showLeadDetails ? 'w-full md:w-1/2 lg:w-1/3' : 'w-full'}
-        >
-          <LeadsRight
-            isExpanded={!showLeadDetails}
-            onViewDetails={() => setShowLeadDetails(true)}
-          />
-        </div>
-      </div> */}
-      <div className="lead-bord-wrap">
+      <div className="lead-board-wrap">
         <div className="lead-board-container">
-          {/* <div className="flex flex-wrap">
-            <div className="w-full md:w-1/2 lg:w-2/3">
-              <LeadDetailsPage onBack={() => setShowLeadDetails(false)} />
-            </div>
-            <div
-              className={
-                showLeadDetails ? 'w-full md:w-1/2 lg:w-1/3' : 'w-full'
-              }
-            >
-              <LeadsRight
-                isExpanded={!showLeadDetails}
-                onViewDetails={() => setShowLeadDetails(true)}
-              />
-            </div>
-          </div>{' '} */}
-
           {showLeadDetails && (
             <div className="left-column-7">
               <div className="column-wrap-left">
@@ -76,7 +45,7 @@ const LeadBoardPage = () => {
           >
             <div className="column-wrap-right">
               <div className="leads-top-row">
-                <LeadsHead />
+                <LeadsHead isExpanded={!showLeadDetails} />
               </div>
               <div className="leads-bottom-row">
                 <LeadsRight
