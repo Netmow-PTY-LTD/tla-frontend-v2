@@ -32,7 +32,7 @@ export default function Review() {
                   placeholder="Separate email address using commas"
                 />
               </div>
-              <button className="w-1/4 h-12 text-sm text-white rounded-md bg-[#12C7C4CC]">
+              <button className="w-1/4 h-11 text-sm text-white rounded-md bg-[#12C7C4CC]">
                 Invite
               </button>
             </div>
@@ -48,7 +48,7 @@ export default function Review() {
                   placeholder="https://www.bark.com/en/au/company/inleadsit/4XjReb/?show_reviews=true"
                 />
               </div>
-              <button className="w-1/4 h-12 text-sm text-white rounded-md bg-[#12C7C4CC]">
+              <button className="w-1/4 h-11 text-sm text-white rounded-md bg-[#12C7C4CC]">
                 Copy link
               </button>
             </div>
@@ -65,7 +65,7 @@ export default function Review() {
                     placeholder="e.g. https://www.facebook.com/en/..."
                   />
                 </div>
-                <button className="w-1/4 h-12 text-sm text-white rounded-md bg-[#12C7C4CC]">
+                <button className="w-1/4 h-11 text-sm text-white rounded-md bg-[#12C7C4CC]">
                   Import Reviews
                 </button>
               </div>
