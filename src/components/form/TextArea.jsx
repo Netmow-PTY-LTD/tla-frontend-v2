@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/form';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function TextArea({
   label,
@@ -34,10 +34,11 @@ export default function TextArea({
               <FormLabel>{label}</FormLabel>
               <FormControl>
                 <Textarea
+                  rows={6}
                   placeholder={placeholder}
                   {...field}
-                  className="tla-form-textarea"
-                  value={value || ""}
+                  className="bg-white text-black placeholder:text-gray-400"
+                  value={value || ''}
                   onChange={handleChange}
                 />
               </FormControl>
