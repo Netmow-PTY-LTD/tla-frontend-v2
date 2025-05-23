@@ -13,8 +13,8 @@ import SendNewLeadsCard from './_component/home/SendNewLeadsCard';
 export default function SellerDashboard() {
   const currentUser = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
-  console.log('currentUser', currentUser);
-  console.log('token', token);
+  // console.log('currentUser', currentUser);
+  // console.log('token', token);
   return (
     <div className=" max-w-[1100px] mx-auto">
       {/* <WelcomeCard /> */}

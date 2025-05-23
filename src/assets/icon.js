@@ -1,8 +1,8 @@
 const PencilIcon = ({
   width = 24,
   height = 24,
-  color = "currentColor",
-  className = "",
+  color = 'currentColor',
+  className = '',
 }) => {
   return (
     <svg
@@ -23,3 +23,49 @@ const PencilIcon = ({
 };
 
 export default PencilIcon;
+
+export const BrandIcon = (props) => (
+  <svg
+    width={17}
+    height={17}
+    viewBox="0 0 17 17"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <circle cx={8.72461} cy={8.5} r={8.17188} fill="#D9D9D9" />
+    <path
+      d="M13.7369 3.39307H3.71289V5.20878H13.7369V3.39307Z"
+      fill="url(#paint0_linear_582_2102)"
+    />
+    <path
+      d="M12.7402 7.5288H4.71094V5.80859H8.30654L12.7402 6.84955V7.5288Z"
+      fill="#0B1C2D"
+    />
+    <path
+      d="M7.24372 8.12842H5.77539V13.6066H7.24372V8.12842Z"
+      fill="#00C3C0"
+    />
+    <path
+      d="M9.45661 13.6066H7.98828V8.12842L9.45661 8.56414V13.6066Z"
+      fill="#00C3C0"
+    />
+    <path
+      d="M11.6746 13.6053H10.2051V8.76221L11.6746 9.14779V13.6053Z"
+      fill="#00C3C0"
+    />
+    <defs>
+      <linearGradient
+        id="paint0_linear_582_2102"
+        x1={13.7369}
+        y1={4.30092}
+        x2={3.71289}
+        y2={4.30092}
+        gradientUnits="userSpaceOnUse"
+      >
+        <stop stopColor="#FF8602" />
+        <stop offset={1} stopColor="#01C3C0" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
