@@ -8,8 +8,8 @@ const LeadsRight = ({ isExpanded, onViewDetails }) => {
       {/* lead card section */}
       <section
         className={`grid ${
-          isExpanded ? 'grid-cols-3' : 'grid-cols-1'
-        } gap-4 p-4`}
+          isExpanded ? 'grid-cols-3 py-4 pr-4' : 'grid-cols-1 p-4'
+        } gap-4`}
       >
         {[1, 2, 3, 4, 5, 6].map((i) => (
           <LeadCard key={i} onViewDetails={onViewDetails} />
