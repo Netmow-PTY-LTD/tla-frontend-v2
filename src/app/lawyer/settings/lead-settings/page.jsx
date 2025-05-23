@@ -12,9 +12,11 @@ const LeadSettingsPage = () => {
   //   },
   // ];
   return (
-    <div>
+    <div className="w-full">
+      <div className="max-w-[900px] mx-auto">
+        <ServicesList />
+      </div>
       {/* <DynamicAccordion items={accordionItems} /> */}
-      <ServicesList />
     </div>
   );
 };

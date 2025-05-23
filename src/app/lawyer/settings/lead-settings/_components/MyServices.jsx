@@ -7,7 +7,7 @@ import LocationItem from './my-services/LoactionItem';
 
 const ServicesList = () => {
   return (
-    <div className=" mx-auto">
+    <div className=" max-[900px] mx-auto">
       <div className="space-y-6">
         {/* Services Section */}
         <section className="p-6">
