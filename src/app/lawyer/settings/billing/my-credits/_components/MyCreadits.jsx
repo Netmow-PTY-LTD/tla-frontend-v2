@@ -3,7 +3,7 @@ import CreditsPurchase from './UI/CreditPurchse';
 
 const MyCredits = () => {
   return (
-    <div>
+    <div className="w-full ">
       <CreditsPurchase />
     </div>
   );
