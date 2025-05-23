@@ -9,8 +9,9 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
+import StatusButton from '@/components/dashboard/lawyer/components/StatusButton';
 
-export default function LeadsHead({ isExpanded }) {
+export default function ResponseHead({ isExpanded }) {
   return (
     <section className={`${isExpanded ? 'pr-4' : 'px-4'}`}>
       <div className="flex justify-between items-center gap-4">
@@ -20,19 +21,17 @@ export default function LeadsHead({ isExpanded }) {
               isExpanded ? 'text-[25px]' : 'text-[16px]'
             } text-[#0B1C2D] text-left`}
           >
-            112 Matching Leads
+            My Responses
           </h2>
-          <div className="flex items-center gap-2">
-            <Files className="w-4 h-4" />
-            <span className={`${isExpanded ? 'text-[16px]' : 'text-[11px]'}`}>
-              4 Services
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <MapPin className="w-4 h-4" />
-            <span className={`${isExpanded ? 'text-[16px]' : 'text-[11px]'}`}>
-              4 Locations
-            </span>
+          <div className="flex items-center gap-2 mt-2 ">
+            <div className="flex item-center">
+              <span className={`w-3 h-3 rounded-full bg-[#FF8602] mr-2`}></span>
+              <span>3 Pending</span>
+            </div>
+            <div className="flex item-center">
+              <span className={`w-3 h-3 rounded-full bg-[#00C3C0] mr-2`}></span>
+              <span>5 Hired</span>
+            </div>
           </div>
         </div>
         <Link
@@ -53,7 +52,7 @@ export default function LeadsHead({ isExpanded }) {
           >
             <Database className="w-4 h-4" />
             <span>
-              {isExpanded ? 'Showing all 112 leads' : '96 of 112 leads'}{' '}
+              {isExpanded ? 'Showing all 112 responses' : '96 of 112 responses'}{' '}
             </span>
           </Link>
           <span className="hidden lg:inline text-[#919FAC]">|</span>
