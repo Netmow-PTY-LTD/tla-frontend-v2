@@ -15,87 +15,67 @@ import {
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { isValidPhoneNumber } from 'libphonenumber-js';
+import { prevStep } from '@/store/features/auth/lawyerRegistrationSlice';
 
-export default function RegisterStepThreeTest({
-  handleBack,
-  username,
-  setUsername,
-  email,
-  setEmail,
-  phone,
-  setPhone,
-  soloPractitioner,
-  setSoloPractitioner,
-  companyTeam,
-  setCompanyTeam,
-  companyName,
-  setCompanyName,
-  companyWebsite,
-  setCompanyWebsite,
-  companySize,
-  setCompanySize,
-  handleFinalSubmit,
-  isLoading,
-  selectedCountryCode,
-}) {
+export default function RegisterStepThreeTest({}) {
   const [isCompany, setIsCompany] = useState(false);
 
   console.log('selectedCountryCode', selectedCountryCode);
 
-  const formSchema = z
-    .object({
-      username: z.string().min(2, {
-        message: 'Name is required and must be at least 2 characters.',
-      }),
-      email: z.string().email({
-        message: 'Please enter a valid email address.',
-      }),
-      // phone: z
-      //   .string()
-      //   .nonempty({ message: 'Phone number is required' })
-      //   .refine((val) => isValidPhoneNumber(val, selectedCountryCode), {
-      //     message: `Invalid ${selectedCountryCode} phone number`,
-      //   }),
-      soloPractitioner: z.boolean(),
-      companyTeam: z.boolean(),
-      company_name: z.string().optional(),
-      company_website: z.string().optional(),
-    })
-    .superRefine((data, ctx) => {
-      if (data.companyTeam) {
-        if (!data.company_name || data.company_name.trim() === '') {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ['company_name'],
-            message: 'Company name is required',
-          });
-        }
+  // const formSchema = z
+  //   .object({
+  //     username: z.string().min(2, {
+  //       message: 'Name is required and must be at least 2 characters.',
+  //     }),
+  //     email: z.string().email({
+  //       message: 'Please enter a valid email address.',
+  //     }),
+  //     // phone: z
+  //     //   .string()
+  //     //   .nonempty({ message: 'Phone number is required' })
+  //     //   .refine((val) => isValidPhoneNumber(val, selectedCountryCode), {
+  //     //     message: `Invalid ${selectedCountryCode} phone number`,
+  //     //   }),
+  //     soloPractitioner: z.boolean(),
+  //     companyTeam: z.boolean(),
+  //     company_name: z.string().optional(),
+  //     company_website: z.string().optional(),
+  //   })
+  //   .superRefine((data, ctx) => {
+  //     if (data.companyTeam) {
+  //       if (!data.company_name || data.company_name.trim() === '') {
+  //         ctx.addIssue({
+  //           code: z.ZodIssueCode.custom,
+  //           path: ['company_name'],
+  //           message: 'Company name is required',
+  //         });
+  //       }
 
-        if (!data.company_website || data.company_website.trim() === '') {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ['company_website'],
-            message: 'Company website is required',
-          });
-        }
+  //       if (!data.company_website || data.company_website.trim() === '') {
+  //         ctx.addIssue({
+  //           code: z.ZodIssueCode.custom,
+  //           path: ['company_website'],
+  //           message: 'Company website is required',
+  //         });
+  //       }
 
-        if (data.company_website) {
-          try {
-            new URL(data.company_website);
-          } catch {
-            ctx.addIssue({
-              path: ['company_website'],
-              code: z.ZodIssueCode.custom,
-              message:
-                'Invalid website URL - please use full URL including https://',
-            });
-          }
-        }
-      }
-    });
+  //       if (data.company_website) {
+  //         try {
+  //           new URL(data.company_website);
+  //         } catch {
+  //           ctx.addIssue({
+  //             path: ['company_website'],
+  //             code: z.ZodIssueCode.custom,
+  //             message:
+  //               'Invalid website URL - please use full URL including https://',
+  //           });
+  //         }
+  //       }
+  //     }
+  //   });
 
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    // resolver: zodResolver(formSchema),
     defaultValues: {
       username: '',
       email: '',
@@ -355,7 +335,7 @@ export default function RegisterStepThreeTest({
                   <button
                     type="button"
                     className="btn-outline"
-                    onClick={handleBack}
+                    onClick={dispatch(prevStep())}
                     disabled={isLoading}
                   >
                     {isLoading ? 'Submitting...' : 'Backs'}

@@ -158,27 +158,11 @@ export default function RegisterTest() {
         <div className="tla-auth-wrapper">
           <div className="tla-auth-box">
             {step === 1 && <RegisterStepOneTest />}
-            {step === 2 && (
-              <RegisterStepTwoTest
-                // handleStep={handleStep}
-                // handleStep={handleStep}
-                // handleBack={handleBack}
-                practice={practice}
-                setPractice={setPractice}
-                practiceArea={practiceArea}
-                setPracticeArea={setPracticeArea}
-                areaZipcode={areaZipcode}
-                setAreaZipcode={setAreaZipcode}
-                practiceInternational={practiceInternational}
-                setPracticeInternational={setPracticeInternational}
-                areaZipValue={areaZipValue}
-                setAreaZipValue={setAreaZipValue}
-              />
-            )}
+            {step === 2 && <RegisterStepTwoTest />}
 
             {step === 3 && (
               <RegisterStepThreeTest
-                handleBack={handleBack}
+                // handleBack={handleBack}
                 username={username}
                 setUsername={setUsername}
                 email={email}
