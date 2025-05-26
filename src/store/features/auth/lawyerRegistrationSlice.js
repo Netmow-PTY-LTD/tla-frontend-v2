@@ -26,7 +26,7 @@ const initialState = {
     userProfile: '', // string (ObjectId)
     services: [], // string[] (ObjectId[])
     country: '', // string (ObjectId)
-    zipCodes: [], // string[] (ObjectId[])
+    zipCode: '', // string (ObjectId[])
     rangeInKm: '', // string (ObjectId)
     practiceWithin: false,
     practiceInternationally: false,
@@ -90,5 +90,7 @@ export const {
   resetRegistration,
   addOrRemoveServiceId,
   setSelectedServiceIds,
+  addOrRemoveZipCode,
+  setSelectedZipCodes, // ✅ newly added action
 } = registrationSlice.actions;
 export default registrationSlice.reducer;

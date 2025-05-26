@@ -7,7 +7,7 @@ import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesA
 import { toast } from 'sonner';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { useAuthRegisterMutation } from '@/store/features/auth/authApiService';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { verifyToken } from '@/utils/verifyToken';
 import { setUser } from '@/store/features/auth/authSlice';
 import { useRouter } from 'next/navigation';
@@ -16,7 +16,8 @@ import RegisterStepTwoTest from '@/components/auth/RegisterStepTwoTest';
 import RegisterStepThreeTest from '@/components/auth/RegisterStepThreeTest';
 
 export default function RegisterTest() {
-  const [step, setStep] = useState(1);
+  // const [step, setStep] = useState(1);
+  const step = useSelector((state) => state.lawyerRegistration.step);
   const [fullName, setFullName] = useState(null);
   const [selectedService, setSelectedService] = useState([]);
   const [selectedServiceId, setSelectedServiceId] = useState('');
@@ -47,23 +48,25 @@ export default function RegisterTest() {
       skip: !selectedCountry, // Skip query if no country is selected
     });
 
-  const handleStep = () => {
-    if (step === 1) {
-      if (selectedServiceIds.length <= 0) {
-        setHasServiceError(true); // add error
-        return;
-      }
+  console.log(step);
 
-      setHasServiceError(false); // clear error
-      setStep(step + 1);
-    } else if (step === 2) {
-      setStep(step + 1);
-    }
-  };
+  // const handleStep = () => {
+  //   if (step === 1) {
+  //     if (selectedServiceIds.length <= 0) {
+  //       setHasServiceError(true); // add error
+  //       return;
+  //     }
 
-  const handleBack = () => {
-    if (step > 1) setStep(step - 1);
-  };
+  //     setHasServiceError(false); // clear error
+  //     setStep(step + 1);
+  //   } else if (step === 2) {
+  //     setStep(step + 1);
+  //   }
+  // };
+
+  // const handleBack = () => {
+  //   if (step > 1) setStep(step - 1);
+  // };
 
   const [authRegister, { isLoading }] = useAuthRegisterMutation();
 
@@ -154,32 +157,12 @@ export default function RegisterTest() {
       <div className="container">
         <div className="tla-auth-wrapper">
           <div className="tla-auth-box">
-            {step === 1 && (
-              <RegisterStepOneTest
-                step={step}
-                setStep={setStep}
-                handleStep={handleStep}
-                fullName={fullName}
-                setFullName={setFullName}
-                selectedService={selectedService}
-                setSelectedService={setSelectedService}
-                selectedServiceId={selectedServiceId}
-                setSelectedServiceId={setSelectedServiceId}
-                selectedServiceIds={selectedServiceIds}
-                setSelectedServiceIds={setSelectedServiceIds}
-                countrywiseServices={countrywiseServices}
-                selectedServiceNames={selectedServiceNames}
-                setSelectedServiceNames={setSelectedServiceNames}
-                hasServiceError={hasServiceError}
-                setHasServiceError={setHasServiceError}
-                areaRange={areaRange}
-                setAreaRange={setAreaRange}
-              />
-            )}
+            {step === 1 && <RegisterStepOneTest />}
             {step === 2 && (
               <RegisterStepTwoTest
-                handleStep={handleStep}
-                handleBack={handleBack}
+                // handleStep={handleStep}
+                // handleStep={handleStep}
+                // handleBack={handleBack}
                 practice={practice}
                 setPractice={setPractice}
                 practiceArea={practiceArea}
