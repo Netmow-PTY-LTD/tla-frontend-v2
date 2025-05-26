@@ -16,8 +16,7 @@ import RegisterStepTwoTest from '@/components/auth/RegisterStepTwoTest';
 import RegisterStepThreeTest from '@/components/auth/RegisterStepThreeTest';
 
 export default function RegisterTest() {
-  // const [step, setStep] = useState(1);
-
+  const step = useSelector((state) => state.lawyerRegistration.step);
   const selectedCountry = '682ecd01e6b730f229c8d3d3';
   const dispatch = useDispatch();
   const router = useRouter();
@@ -26,8 +25,6 @@ export default function RegisterTest() {
     useGetCountryWiseServicesQuery(selectedCountry, {
       skip: !selectedCountry, // Skip query if no country is selected
     });
-
-  console.log(step);
 
   // const handleStep = () => {
   //   if (step === 1) {
