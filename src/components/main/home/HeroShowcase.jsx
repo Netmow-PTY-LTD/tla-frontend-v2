@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from 'next/image';
 
 export default function HeroShowcase() {
   return (
@@ -7,7 +7,7 @@ export default function HeroShowcase() {
         <div className="w-full md:w-2/12 relative mt-20">
           <div className="w-full mb-8">
             <Image
-              src={"/assets/img/showcase-1.png"}
+              src={'/assets/img/showcase-1.png'}
               width={275}
               height={310}
               className="w-full showcase-img"
@@ -16,7 +16,7 @@ export default function HeroShowcase() {
           </div>
           <div className="w-full">
             <Image
-              src={"/assets/img/showcase-2.png"}
+              src={'/assets/img/showcase-2.png'}
               width={275}
               height={310}
               className="w-full showcase-img"
@@ -25,19 +25,19 @@ export default function HeroShowcase() {
           </div>
           <div className="showcase-gradient-overlay left-0"></div>
         </div>
-        <div className="w-full md:w-8/12 md:px-5 my-8 md:my-0 md:">
+        <div className="w-full md:w-8/12 md:px-5 my-8 md:my-0 rounded-lg">
           <Image
-            src={"/assets/img/showcase-main.png"}
+            src={'/assets/img/showcase-main.png'}
             width={1190}
             height={576}
-            className="rounded-lg showcase-main"
+            className="showcase-main rounded-lg"
             alt="Showcase"
           />
         </div>
         <div className="w-full md:w-2/12 relative mt-20">
           <div className="w-full mb-8">
             <Image
-              src={"/assets/img/showcase-3.png"}
+              src={'/assets/img/showcase-3.png'}
               width={275}
               height={310}
               className="w-full showcase-img"
@@ -46,7 +46,7 @@ export default function HeroShowcase() {
           </div>
           <div className="w-full">
             <Image
-              src={"/assets/img/showcase-4.png"}
+              src={'/assets/img/showcase-4.png'}
               width={275}
               height={310}
               className="w-full showcase-img"

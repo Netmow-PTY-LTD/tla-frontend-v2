@@ -10,7 +10,7 @@ export default function HeroHome() {
       className="hero-home"
       style={{ backgroundImage: `url('/assets/img/hero_bg.png')` }}
     >
-      <div className="container">
+      <div className="container-lg">
         <div className="hero-content">
           <h3>Get a quote for legal services.</h3>
           <h1>
