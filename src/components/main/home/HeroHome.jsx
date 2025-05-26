@@ -17,22 +17,22 @@ export default function HeroHome() {
             Need legal help? <br /> Find a lawyer . On your terms.
           </h1>
           <form className="w-full">
-            <div className="hero-search-area flex gap-2 items-center w-full">
-              <div className="tla-form-group w-5/12">
+            <div className="hero-search-area flex flex-wrap md:flex-nowrap gap-2 items-center w-full">
+              <div className="tla-form-group w-full lg:w-5/12">
                 <input
                   type="text"
                   className="tla-form-control"
                   placeholder="What area of law are you interested in?"
                 />
               </div>
-              <div className="tla-form-group w-5/12">
+              <div className="tla-form-group w-full md:w-5/12">
                 <input
                   type="text"
                   className="tla-form-control"
                   placeholder="Your location"
                 />
               </div>
-              <div className="tla-btn-wrapper w-1/3">
+              <div className="tla-btn-wrapper w-full md:w-2/3 lg:w-1/3">
                 <button type="submit" className="tla-btn-search">
                   <span>Get Started</span>
                   <svg
