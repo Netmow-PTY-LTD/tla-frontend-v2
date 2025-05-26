@@ -20,6 +20,8 @@ import {
   updateNestedField,
   prevStep,
 } from '@/store/features/auth/lawyerRegistrationSlice';
+import { useAuthRegisterMutation } from '@/store/features/auth/authApiService';
+import { useRouter } from 'next/navigation';
 
 export default function RegisterStepThreeTest() {
   const dispatch = useDispatch();
@@ -30,7 +32,6 @@ export default function RegisterStepThreeTest() {
 
   const [localCompanySize, setLocalCompanySize] = useState(companySize || '');
   const [isCompany, setIsCompany] = useState(companyTeam || false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm({
     defaultValues: {
@@ -45,11 +46,6 @@ export default function RegisterStepThreeTest() {
     },
   });
 
-  const onSubmit = (data) => {
-    console.log('Submit:', data);
-    // handleFinalSubmit(data); // TODO: connect with backend or next step
-  };
-
   useEffect(() => {
     // Sync redux data to local form
     form.reset({
@@ -63,6 +59,37 @@ export default function RegisterStepThreeTest() {
       company_size: companySize,
     });
   }, [username, email, phone, companyTeam, companyName, website, companySize]);
+
+  const router = useRouter();
+  const registrationState = useSelector((state) => state.lawyerRegistration);
+  const [authRegister, { isLoading }] = useAuthRegisterMutation();
+
+  const handleSubmit = async () => {
+    try {
+      const result = await authRegister(registrationState).unwrap();
+      console.log('✅ Registration result:', result);
+
+      if (result?.success && result?.token) {
+        showSuccessToast(result?.message || 'Registration successful');
+        const token = result.token;
+        const userPayload = verifyToken(token);
+
+        if (userPayload) {
+          dispatch(setUser({ user: result?.data, token }));
+
+          const userType = result?.data?.regUserType;
+          if (userType === 'lawyer') router.push('/lawyer/dashboard');
+          else if (userType === 'client') router.push('/client/dashboard');
+          else router.push('/');
+        }
+      } else {
+        showErrorToast(result?.message || 'Something went wrong');
+      }
+    } catch (error) {
+      console.error('❌ Registration API Error:', error);
+      showErrorToast(error?.data?.message || 'Server error');
+    }
+  };
 
   return (
     <div className="flex flex-wrap lg:flex-nowrap items-center">
@@ -83,7 +110,10 @@ export default function RegisterStepThreeTest() {
           </p>
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className="space-y-4"
+            >
               {/* Username */}
               <FormField
                 control={form.control}

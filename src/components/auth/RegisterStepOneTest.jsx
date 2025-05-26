@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import {
   Form,
@@ -42,6 +42,18 @@ export default function RegisterStepOneTest() {
   const { data: countryWiseServices } = useGetCountryWiseServicesQuery(
     selectedCountry || '682ecd01e6b730f229c8d3d3'
   );
+
+  useEffect(() => {
+    if (selectedCountry) {
+      dispatch(
+        updateNestedField({
+          section: 'lawyerServiceMap',
+          field: 'country',
+          value: '682ecd01e6b730f229c8d3d3',
+        })
+      );
+    }
+  }, [selectedCountry, dispatch]);
 
   const form = useForm({
     defaultValues: {
