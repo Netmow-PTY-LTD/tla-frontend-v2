@@ -1,8 +1,8 @@
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
-import HeroShowcase from "./HeroShowcase";
-import { data } from "@/data/data";
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
+import HeroShowcase from './HeroShowcase';
+import { data } from '@/data/data';
 
 export default function HeroHome() {
   return (
@@ -10,11 +10,11 @@ export default function HeroHome() {
       className="hero-home"
       style={{ backgroundImage: `url('/assets/img/hero_bg.png')` }}
     >
-      <div className="container-lg">
+      <div className="container">
         <div className="hero-content">
-          <h3>Find the lawyer & clients in one platform.</h3>
+          <h3>Get a quote for legal services.</h3>
           <h1>
-            Need legal help? <br /> Find a lawyer On your terms
+            Need legal help? <br /> Find a lawyer . On your terms.
           </h1>
           <form className="w-full">
             <div className="hero-search-area flex gap-2 items-center w-full">
@@ -22,7 +22,7 @@ export default function HeroHome() {
                 <input
                   type="text"
                   className="tla-form-control"
-                  placeholder="What type of lawyer are you looking for?"
+                  placeholder="What area of law are you interested in?"
                 />
               </div>
               <div className="tla-form-group w-5/12">
@@ -32,9 +32,9 @@ export default function HeroHome() {
                   placeholder="Your location"
                 />
               </div>
-              <div className="tla-btn-wrapper w-1/6">
+              <div className="tla-btn-wrapper w-1/3">
                 <button type="submit" className="tla-btn-search">
-                  <span>Search</span>
+                  <span>Get Started</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
