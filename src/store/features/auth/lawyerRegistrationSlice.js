@@ -14,20 +14,24 @@ const initialState = {
     country: '',
   },
   //  company profile data
-  companyTeam: false,
-  companyName: '',
-  phone: '',
-  website: '',
-  companySize: '',
+  companyInfo: {
+    companyTeam: false,
+    companyName: '',
+    phone: '',
+    website: '',
+    companySize: '',
+  },
   // lawyer service map
-  userProfile: '', // string (ObjectId)
-  services: [], // string[] (ObjectId[])
-  country: '', // string (ObjectId)
-  zipCodes: [], // string[] (ObjectId[])
-  rangeInKm: '', // string (ObjectId)
-  practiceWithin: false,
-  practiceInternationally: false,
-  isSoloPractitioner: false,
+  lawyerServiceMap: {
+    userProfile: '', // string (ObjectId)
+    services: [], // string[] (ObjectId[])
+    country: '', // string (ObjectId)
+    zipCodes: [], // string[] (ObjectId[])
+    rangeInKm: '', // string (ObjectId)
+    practiceWithin: false,
+    practiceInternationally: false,
+    isSoloPractitioner: false,
+  },
 };
 
 export const registrationSlice = createSlice({
@@ -37,16 +41,54 @@ export const registrationSlice = createSlice({
     updateField: (state, action) => {
       state[action.payload.field] = action.payload.value;
     },
+    // Nested update: profile or lawyerServiceMap
+    updateNestedField: (state, action) => {
+      const { section, field, value } = action.payload;
+      if (state[section]) {
+        state[section][field] = value;
+      }
+    },
+
+    // Bulk update (useful for prefilling forms)
+    bulkUpdate: (state, action) => {
+      return { ...state, ...action.payload };
+    },
+
+    // Step navigation
     nextStep: (state) => {
       state.step += 1;
     },
     prevStep: (state) => {
-      state.step -= 1;
+      if (state.step > 1) state.step -= 1;
     },
+
+    // Reset everything
     resetRegistration: () => initialState,
+
+    //  add new logic
+    addOrRemoveServiceId: (state, action) => {
+      const id = action.payload;
+      const index = state.lawyerServiceMap.services.indexOf(id);
+      if (index > -1) {
+        state.lawyerServiceMap.services.splice(index, 1);
+      } else {
+        state.lawyerServiceMap.services.push(id);
+      }
+    },
+    setSelectedServiceIds: (state, action) => {
+      state.lawyerServiceMap.services = action.payload;
+    },
   },
 });
 
-export const { updateField, nextStep, prevStep, resetRegistration } =
-  registrationSlice.actions;
+export const {
+  updateField,
+  updateNestedField,
+  bulkUpdate,
+  nextStep,
+  prevStep,
+  resetRegistration,
+  addOrRemoveServiceId,
+  setSelectedServiceIds,
+} = registrationSlice.actions;
 export default registrationSlice.reducer;

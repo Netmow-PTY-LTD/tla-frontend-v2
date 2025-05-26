@@ -11,11 +11,8 @@ import { useDispatch } from 'react-redux';
 import { verifyToken } from '@/utils/verifyToken';
 import { setUser } from '@/store/features/auth/authSlice';
 import { useRouter } from 'next/navigation';
-import RegisterStepOneTest from '@/components/auth/RegisterStepOneTest';
-import RegisterStepTwoTest from '@/components/auth/RegisterStepTwoTest';
-import RegisterStepThreeTest from '@/components/auth/RegisterStepThreeTest';
 
-export default function RegisterTest() {
+export default function Register() {
   const [step, setStep] = useState(1);
   const [fullName, setFullName] = useState(null);
   const [selectedService, setSelectedService] = useState([]);
@@ -41,6 +38,24 @@ export default function RegisterTest() {
   const selectedCountry = '682ecd01e6b730f229c8d3d3';
   const dispatch = useDispatch();
   const router = useRouter();
+
+  console.log('fullName', fullName);
+  console.log('selectedService', selectedService);
+  console.log('selectedServiceId', selectedServiceId);
+  console.log('practice', practice);
+  console.log('practiceArea', practiceArea);
+  console.log('areaZipcode', areaZipcode);
+  console.log('practiceInternational', practiceInternational);
+  console.log('username', username);
+  console.log('email', email);
+  console.log('phone', phone);
+  console.log('soloPractitioner', soloPractitioner);
+  console.log('companyTeam', companyTeam);
+  console.log('companyName', companyName);
+  console.log('companyWebsite', companyWebsite);
+  console.log('companySize', companySize);
+  console.log('setSelectedServiceIds', selectedServiceIds);
+  console.log('selectedServiceNames', selectedServiceNames);
 
   const { data: countrywiseServices, isFetching } =
     useGetCountryWiseServicesQuery(selectedCountry, {
@@ -155,7 +170,7 @@ export default function RegisterTest() {
         <div className="tla-auth-wrapper">
           <div className="tla-auth-box">
             {step === 1 && (
-              <RegisterStepOneTest
+              <RegisterStepOne
                 step={step}
                 setStep={setStep}
                 handleStep={handleStep}
@@ -177,7 +192,7 @@ export default function RegisterTest() {
               />
             )}
             {step === 2 && (
-              <RegisterStepTwoTest
+              <RegisterStepTwo
                 handleStep={handleStep}
                 handleBack={handleBack}
                 practice={practice}
@@ -194,7 +209,7 @@ export default function RegisterTest() {
             )}
 
             {step === 3 && (
-              <RegisterStepThreeTest
+              <RegisterStepThree
                 handleBack={handleBack}
                 username={username}
                 setUsername={setUsername}
