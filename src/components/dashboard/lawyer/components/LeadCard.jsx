@@ -6,7 +6,7 @@ import { BadgeCheck, CircleAlert, Zap } from 'lucide-react';
 
 const LeadCard = ({ onViewDetails, user }) => {
   return (
-    <Card className="w-full max-w-xl mx-auto">
+    <Card className="w-full max-w-full mx-auto">
       {/* Header Section */}
       <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 p-3">
         <figure className="w-10 h-10 rounded-full overflow-hidden">
@@ -54,12 +54,12 @@ const LeadCard = ({ onViewDetails, user }) => {
 
       {/* Job Description */}
       <div className="p-3">
-        <h3 className="font-medium text-[13px] mb-1">
+        <h3 className="font-medium text-[14px] mb-1">
           Looking for a divorce law consultation
         </h3>
         <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
-          <h4 className="text-[12px] font-medium mb-2">Position Overview</h4>
-          <p className="text-[10px] text-[#34495E] ">
+          <h4 className="text-[14px] font-medium mb-2">Position Overview</h4>
+          <p className="text-[12px] text-[#34495E] ">
             {`If you're facing a divorce, it's crucial to seek professional legal
             advice. Our consultations cover everything from asset division to
             child custody arrangements, ensuring you understand your rights and

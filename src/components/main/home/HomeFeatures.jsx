@@ -4,7 +4,7 @@ import Link from 'next/link';
 const HomeFeatures = () => {
   return (
     <section className="home-features">
-      <div className="container-lg">
+      <div className="container">
         <div className="home-features-grid">
           <div className="container">
             <div className="flex flex-wrap">

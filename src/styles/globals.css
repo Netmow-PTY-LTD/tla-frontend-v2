@@ -27,7 +27,7 @@ input:focus {
 }
 
 .container {
-  max-width: 1600px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 0 20px;
 }
@@ -442,7 +442,7 @@ input:focus {
 .hero-content h1 {
   color: var(--color-text);
   text-align: center;
-  font-size: clamp(36px, 3.5vw, 66px);
+  font-size: clamp(32px, 3.5vw, 60px);
   font-style: normal;
   font-weight: 700;
   line-height: 110%; /* 72.6px */

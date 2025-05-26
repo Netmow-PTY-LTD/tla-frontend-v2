@@ -1,16 +1,32 @@
-import React from "react";
-import styles from "./Header.module.css";
-import Link from "next/link";
-import Image from "next/image";
+'use client';
+import React from 'react';
+import styles from './Header.module.css';
+import Link from 'next/link';
+import Image from 'next/image';
+import { selectCurrentUser } from '@/store/features/auth/authSlice';
+import { useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
 
 export default function Header() {
+  const currentUser = useSelector(selectCurrentUser);
+
+  const token = Cookies.get('token');
+
+  const dashboardPaths = {
+    admin: '/admin',
+    lawyer: '/lawyer/dashboard',
+    client: '/client/dashboard',
+  };
+
+  const dashboardUrl = dashboardPaths[currentUser?.regUserType] || '';
+
   return (
     <header className={styles.main_header}>
-      <div className="container-lg">
+      <div className="container">
         <div className="flex items-center justify-between">
           <Link href="/">
             <Image
-              src={"/assets/img/logo.png"}
+              src={'/assets/img/logo.png'}
               alt="TLA Logo"
               width={150}
               height={40}
@@ -83,14 +99,20 @@ export default function Header() {
               </li>
             </ul>
           </nav>
-          <div className="flex items-center gap-4">
-            <Link href="/login" className={styles.nav_link}>
-              <span>Log In</span>
+          {token && currentUser ? (
+            <Link href={dashboardUrl} className={styles.btn_register}>
+              <span>Dashboard</span>
             </Link>
-            <Link href="/register" className={styles.btn_register}>
-              <span>Register With TLA</span>
-            </Link>
-          </div>
+          ) : (
+            <div className="flex items-center gap-4">
+              <Link href="/login" className={styles.nav_link}>
+                <span>Log In</span>
+              </Link>
+              <Link href="/register" className={styles.btn_register}>
+                <span>Register With TLA</span>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </header>
