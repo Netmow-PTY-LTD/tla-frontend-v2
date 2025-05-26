@@ -15,7 +15,6 @@ export default function Home() {
       <HomeFeatures />
       <HomeTestimonials />
       <HomeCTA />
-      <NewsletterSignup />
     </MainLayout>
   );
 }
