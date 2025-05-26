@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { ChevronDown, LogOut, Settings } from 'lucide-react';
+import { ChevronDown, LogOut, SendToBack, Settings } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -60,7 +60,15 @@ export default function ProfileDropDown({ data }) {
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
-              <Link href={`/client/dashboard`}>Switch to Client</Link>
+              <Link
+                href={`/client/dashboard`}
+                className="w-full flex items-center justify-between gap-2 cursor-pointer px-2 py-1.5"
+              >
+                <span>Switch to Client</span>
+                <DropdownMenuShortcut>
+                  <SendToBack />
+                </DropdownMenuShortcut>
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
@@ -70,7 +78,15 @@ export default function ProfileDropDown({ data }) {
               <>
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
-                    <Link href={`/admin`}>Switch to Admin</Link>
+                    <Link
+                      href={`/admin`}
+                      className="w-full flex items-center justify-between gap-2 cursor-pointer px-2 py-1.5"
+                    >
+                      <span>Switch to Admin</span>
+                      <DropdownMenuShortcut>
+                        <SendToBack />
+                      </DropdownMenuShortcut>
+                    </Link>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
@@ -79,26 +95,36 @@ export default function ProfileDropDown({ data }) {
 
           <DropdownMenuGroup>
             <DropdownMenuItem>
-              <Link href="/lawyer/dashboard/my-stats">My Profile</Link>
-              <DropdownMenuShortcut>
-                <Settings />
-              </DropdownMenuShortcut>
+              <Link
+                href="/lawyer/dashboard/my-stats"
+                className="w-full flex items-center justify-between gap-2 cursor-pointer px-2 py-1.5"
+              >
+                <span>My Profile</span>
+                <DropdownMenuShortcut>
+                  <Settings />
+                </DropdownMenuShortcut>
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
-              <Link href="/lawyer/settings">Settings</Link>
-              <DropdownMenuShortcut>
-                <Settings />
-              </DropdownMenuShortcut>
+              <Link
+                href="/lawyer/settings/profile"
+                className="w-full flex items-center justify-between gap-2 cursor-pointer px-2 py-1.5"
+              >
+                <span>Settings</span>
+                <DropdownMenuShortcut>
+                  <Settings />
+                </DropdownMenuShortcut>
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
 
           <DropdownMenuItem>
             <div
-              className="flex items-center justify-between w-full"
+              className="flex items-center justify-between w-full cursor-pointer px-2 py-1.5"
               onClick={handleLogout}
             >
               <span>Log out</span>
