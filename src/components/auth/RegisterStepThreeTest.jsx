@@ -16,75 +16,14 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { isValidPhoneNumber } from 'libphonenumber-js';
 import { prevStep } from '@/store/features/auth/lawyerRegistrationSlice';
+import { useDispatch } from 'react-redux';
 
 export default function RegisterStepThreeTest({}) {
   const [isCompany, setIsCompany] = useState(false);
-
-  console.log('selectedCountryCode', selectedCountryCode);
-
-  // const formSchema = z
-  //   .object({
-  //     username: z.string().min(2, {
-  //       message: 'Name is required and must be at least 2 characters.',
-  //     }),
-  //     email: z.string().email({
-  //       message: 'Please enter a valid email address.',
-  //     }),
-  //     // phone: z
-  //     //   .string()
-  //     //   .nonempty({ message: 'Phone number is required' })
-  //     //   .refine((val) => isValidPhoneNumber(val, selectedCountryCode), {
-  //     //     message: `Invalid ${selectedCountryCode} phone number`,
-  //     //   }),
-  //     soloPractitioner: z.boolean(),
-  //     companyTeam: z.boolean(),
-  //     company_name: z.string().optional(),
-  //     company_website: z.string().optional(),
-  //   })
-  //   .superRefine((data, ctx) => {
-  //     if (data.companyTeam) {
-  //       if (!data.company_name || data.company_name.trim() === '') {
-  //         ctx.addIssue({
-  //           code: z.ZodIssueCode.custom,
-  //           path: ['company_name'],
-  //           message: 'Company name is required',
-  //         });
-  //       }
-
-  //       if (!data.company_website || data.company_website.trim() === '') {
-  //         ctx.addIssue({
-  //           code: z.ZodIssueCode.custom,
-  //           path: ['company_website'],
-  //           message: 'Company website is required',
-  //         });
-  //       }
-
-  //       if (data.company_website) {
-  //         try {
-  //           new URL(data.company_website);
-  //         } catch {
-  //           ctx.addIssue({
-  //             path: ['company_website'],
-  //             code: z.ZodIssueCode.custom,
-  //             message:
-  //               'Invalid website URL - please use full URL including https://',
-  //           });
-  //         }
-  //       }
-  //     }
-  //   });
+  const dispatch = useDispatch();
 
   const form = useForm({
-    // resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: '',
-      email: '',
-      phone: '',
-      soloPractitioner: false,
-      companyTeam: false,
-      company_name: '',
-      company_website: '',
-    },
+    defaultValues: {},
   });
 
   const onSubmit = (data) => {
@@ -127,18 +66,12 @@ export default function RegisterStepThreeTest({}) {
                           {...field}
                           className="tla-form-control"
                           onChange={(e) => {
-                            // Get raw input value
-                            let val = e.target.value;
-
-                            // Convert to unique username format:
-                            val = val
-                              .trim() // remove leading/trailing spaces
-                              .toLowerCase() // lowercase
-                              .replace(/\s+/g, '_') // replace spaces with underscores
-                              .replace(/[^a-z0-9_]/g, ''); // remove special chars except underscore and alphanumeric
-
-                            field.onChange(val); // update react-hook-form value
-                            setUsername(val); // your custom state update
+                            dispatch(
+                              updateField({
+                                field: 'username',
+                                value: e.target.value,
+                              })
+                            );
                           }}
                         />
                       </FormControl>
@@ -160,8 +93,12 @@ export default function RegisterStepThreeTest({}) {
                               {...field}
                               className="tla-form-control"
                               onChange={(e) => {
-                                field.onChange(e); // Let react-hook-form track it
-                                setEmail(e.target.value); // Your custom logic
+                                dispatch(
+                                  updateField({
+                                    field: 'email',
+                                    value: e.target.value,
+                                  })
+                                );
                               }}
                             />
                           </FormControl>
@@ -183,12 +120,13 @@ export default function RegisterStepThreeTest({}) {
                               {...field}
                               className="tla-form-control"
                               onChange={(e) => {
-                                const onlyNumbers = e.target.value.replace(
-                                  /[^0-9]/g,
-                                  ''
-                                ); // Remove non-numeric chars
-                                field.onChange(onlyNumbers); // Update react-hook-form
-                                setPhone(onlyNumbers); // Your custom logic (if needed)
+                                dispatch(
+                                  updateField({
+                                    section: 'companyInfo',
+                                    field: 'phone',
+                                    value: e.target.value,
+                                  })
+                                );
                               }}
                               value={field.value}
                             />
@@ -210,7 +148,13 @@ export default function RegisterStepThreeTest({}) {
                           checked={field.value} // control from react-hook-form
                           onCheckedChange={(checked) => {
                             field.onChange(checked); // update form state
-                            setSoloPractitioner(checked); // update your custom state
+                            dispatch(
+                              updateField({
+                                section: 'companyInfo',
+                                field: 'soloPractitioner',
+                                value: e.target.value,
+                              })
+                            );
                           }}
                         />
                       </FormControl>

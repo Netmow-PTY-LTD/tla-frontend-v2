@@ -17,28 +17,7 @@ import RegisterStepThreeTest from '@/components/auth/RegisterStepThreeTest';
 
 export default function RegisterTest() {
   // const [step, setStep] = useState(1);
-  const step = useSelector((state) => state.lawyerRegistration.step);
-  const [fullName, setFullName] = useState(null);
-  const [selectedService, setSelectedService] = useState([]);
-  const [selectedServiceId, setSelectedServiceId] = useState('');
-  const [practice, setPractice] = useState('');
-  const [practiceArea, setPracticeArea] = useState('');
-  const [areaZipcode, setAreaZipcode] = useState('');
-  const [areaRange, setAreaRange] = useState('');
-  const [practiceInternational, setPracticeInternational] = useState('');
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [soloPractitioner, setSoloPractitioner] = useState('');
-  const [companyTeam, setCompanyTeam] = useState('');
-  const [companyName, setCompanyName] = useState('');
-  const [companyWebsite, setCompanyWebsite] = useState('');
-  const [companySize, setCompanySize] = useState('2-10');
-  const [selectedServiceIds, setSelectedServiceIds] = useState([]);
-  const [selectedServiceNames, setSelectedServiceNames] = useState([]);
-  const [hasServiceError, setHasServiceError] = useState(false);
-  const [areaZipValue, setAreaZipValue] = useState(false);
-  const [selectedCountryCode, SetSelectedCountryCode] = useState('AU');
+
   const selectedCountry = '682ecd01e6b730f229c8d3d3';
   const dispatch = useDispatch();
   const router = useRouter();
@@ -159,31 +138,7 @@ export default function RegisterTest() {
           <div className="tla-auth-box">
             {step === 1 && <RegisterStepOneTest />}
             {step === 2 && <RegisterStepTwoTest />}
-
-            {step === 3 && (
-              <RegisterStepThreeTest
-                // handleBack={handleBack}
-                username={username}
-                setUsername={setUsername}
-                email={email}
-                setEmail={setEmail}
-                phone={phone}
-                setPhone={setPhone}
-                soloPractitioner={soloPractitioner}
-                setSoloPractitioner={setSoloPractitioner}
-                companyTeam={companyTeam}
-                setCompanyTeam={setCompanyTeam}
-                companyName={companyName}
-                setCompanyName={setCompanyName}
-                companyWebsite={companyWebsite}
-                setCompanyWebsite={setCompanyWebsite}
-                companySize={companySize}
-                setCompanySize={setCompanySize}
-                handleFinalSubmit={handleFinalSubmit}
-                isLoading={isLoading}
-                selectedCountryCode={selectedCountryCode}
-              />
-            )}
+            {step === 3 && <RegisterStepThreeTest />}
           </div>
         </div>
       </div>
