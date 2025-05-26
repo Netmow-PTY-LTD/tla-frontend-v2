@@ -109,56 +109,56 @@ export default function Register() {
 
     console.log('🔄 Submitting registration form:', formData);
 
-    try {
-      const result = await authRegister(formData).unwrap();
-      console.log('✅ Registration result:', result);
+    // try {
+    //   const result = await authRegister(formData).unwrap();
+    //   console.log('✅ Registration result:', result);
 
-      if (result?.success && result?.token) {
-        showSuccessToast(result?.message || 'Registration successful');
+    //   if (result?.success && result?.token) {
+    //     showSuccessToast(result?.message || 'Registration successful');
 
-        const token = result.token;
-        const userPayload = verifyToken(token);
-        console.log('🔐 Decoded user from token:', userPayload);
+    //     const token = result.token;
+    //     const userPayload = verifyToken(token);
+    //     console.log('🔐 Decoded user from token:', userPayload);
 
-        if (userPayload) {
-          const dispatchUser = dispatch(
-            setUser({
-              user: result?.data,
-              token: result?.token,
-            })
-          );
+    //     if (userPayload) {
+    //       const dispatchUser = dispatch(
+    //         setUser({
+    //           user: result?.data,
+    //           token: result?.token,
+    //         })
+    //       );
 
-          console.log('📦 Dispatched user to store:', dispatchUser);
+    //       console.log('📦 Dispatched user to store:', dispatchUser);
 
-          if (dispatchUser?.payload?.token) {
-            const userType = result?.data?.regUserType;
-            console.log('🚦 Redirecting user based on type:', userType);
+    //       if (dispatchUser?.payload?.token) {
+    //         const userType = result?.data?.regUserType;
+    //         console.log('🚦 Redirecting user based on type:', userType);
 
-            if (userType === 'lawyer') {
-              router.push(`/lawyer/dashboard`);
-            } else if (userType === 'client') {
-              router.push(`/client/dashboard`);
-            } else if (userType === 'admin') {
-              router.push(`/admin`);
-            }
-          } else {
-            console.warn('⚠️ Token not found in dispatch payload');
-          }
-        } else {
-          console.warn('⚠️ Token could not be verified');
-        }
-      } else {
-        const errorMessage =
-          result?.errorSources?.[0]?.message ||
-          result?.message ||
-          'Registration failed.';
-        console.error('❌ Registration failed:', errorMessage);
-        showErrorToast(errorMessage);
-      }
-    } catch (error) {
-      console.error('❌ API error:', error);
-      showErrorToast(error.data.message);
-    }
+    //         if (userType === 'lawyer') {
+    //           router.push(`/lawyer/dashboard`);
+    //         } else if (userType === 'client') {
+    //           router.push(`/client/dashboard`);
+    //         } else if (userType === 'admin') {
+    //           router.push(`/admin`);
+    //         }
+    //       } else {
+    //         console.warn('⚠️ Token not found in dispatch payload');
+    //       }
+    //     } else {
+    //       console.warn('⚠️ Token could not be verified');
+    //     }
+    //   } else {
+    //     const errorMessage =
+    //       result?.errorSources?.[0]?.message ||
+    //       result?.message ||
+    //       'Registration failed.';
+    //     console.error('❌ Registration failed:', errorMessage);
+    //     showErrorToast(errorMessage);
+    //   }
+    // } catch (error) {
+    //   console.error('❌ API error:', error);
+    //   showErrorToast(error.data.message);
+    // }
   };
 
   return (

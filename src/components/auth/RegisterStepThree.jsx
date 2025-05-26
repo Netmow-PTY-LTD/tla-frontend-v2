@@ -50,12 +50,12 @@ export default function RegisterStepThree({
       email: z.string().email({
         message: 'Please enter a valid email address.',
       }),
-      phone: z
-        .string()
-        .nonempty({ message: 'Phone number is required' })
-        .refine((val) => isValidPhoneNumber(val, selectedCountryCode), {
-          message: `Invalid ${selectedCountryCode} phone number`,
-        }),
+      // phone: z
+      //   .string()
+      //   .nonempty({ message: 'Phone number is required' })
+      //   .refine((val) => isValidPhoneNumber(val, selectedCountryCode), {
+      //     message: `Invalid ${selectedCountryCode} phone number`,
+      //   }),
       soloPractitioner: z.boolean(),
       companyTeam: z.boolean(),
       company_name: z.string().optional(),
