@@ -1,4 +1,4 @@
-import { Inter } from 'next/font/google';
+import { Inter, Poppins } from 'next/font/google';
 import '../styles/globals.css';
 import ReduxProvider from '@/store/Provider';
 import { Toaster } from '@/components/ui/sonner';
@@ -6,6 +6,12 @@ import { Toaster } from '@/components/ui/sonner';
 const inter = Inter({
   variable: '--font-inter',
   subsets: ['latin'],
+});
+
+const poppins = Poppins({
+  variable: '--font-poppins',
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
 });
 
 export const metadata = {
@@ -17,7 +23,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} antialiased`}>
+      <body className={`${poppins.variable} antialiased`}>
         <ReduxProvider>
           {children}
           <Toaster />
