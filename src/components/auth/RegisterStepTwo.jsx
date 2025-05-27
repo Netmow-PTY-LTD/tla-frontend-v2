@@ -51,7 +51,7 @@ export default function RegisterStepTwo() {
     lawyerServiceMap;
 
   const { data: zipcodeData } = useGetZipCodeListQuery();
-  console.log('zipCode', zipCode);
+
   const { data: rangeData } = useGetRangeListQuery({
     zipcodeId: zipCode || '',
   });
@@ -68,7 +68,6 @@ export default function RegisterStepTwo() {
   });
 
   const onSubmit = (data) => {
-    console.log(data);
     dispatch(
       updateNestedField({
         section: 'lawyerServiceMap',
@@ -104,7 +103,6 @@ export default function RegisterStepTwo() {
     item?.zipcode?.toLowerCase().includes(query.toLowerCase())
   );
 
-  console.log('zipCode', zipCode);
   return (
     <div className="flex flex-wrap lg:flex-nowrap">
       <div className="hidden lg:block lg:max-w-[602]">

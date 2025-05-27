@@ -68,7 +68,6 @@ export default function RegisterStepThree() {
   const handleSubmit = async () => {
     try {
       const result = await authRegister(registrationState).unwrap();
-      console.log('✅ Registration result:', result);
 
       if (result?.success && result?.token) {
         showSuccessToast(result?.message || 'Registration successful');
@@ -84,9 +83,15 @@ export default function RegisterStepThree() {
           else router.push('/');
         }
       } else {
-        showErrorToast(result?.message || 'Something went wrong');
+        const errorMessage =
+          result?.errorSources?.[0]?.message ||
+          result?.message ||
+          'Registration failed.';
+        console.log('Registration error:', result);
+        showErrorToast(errorMessage || 'Something went wrong');
       }
     } catch (error) {
+      console.log('Registration error:', error);
       console.error('❌ Registration API Error:', error);
       showErrorToast(error?.data?.message || 'Server error');
     }
