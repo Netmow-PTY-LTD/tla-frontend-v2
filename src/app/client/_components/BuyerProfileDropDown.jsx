@@ -51,12 +51,17 @@ export default function BuyerProfileDropDown({ data }) {
               <AvatarFallback>USER</AvatarFallback>
             </Avatar>
             <span className="ml-2 font-medium">
-              {data?.username || 'User Name'}
+              {data?.username || 'username'}
             </span>
             <ChevronDown className="ml-auto" />
           </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56">
+        <DropdownMenuContent
+          className="w-56 z-[999]"
+          portalled={'false'}
+          sideOffset={8}
+          align="start"
+        >
           <DropdownMenuLabel>User Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>

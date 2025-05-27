@@ -17,7 +17,7 @@ export default function AdminDashboardLayout({ children }) {
     <>
       <AdminDashboardHeader />
       <SidebarProvider className="sidebar-main">
-        <Sidebar collapsible="icon" className="w-96">
+        <Sidebar collapsible="icon" className="sidebar-width-control">
           <SidebarHeader>
             <SidebarTop />
           </SidebarHeader>
@@ -27,7 +27,7 @@ export default function AdminDashboardLayout({ children }) {
           <SidebarRail />
         </Sidebar>
         <div
-          className="flex-1 main-content"
+          className="flex-1 dashboard-content"
           style={{
             minHeight: 'calc(100vh - 74px - 42px)',
           }}

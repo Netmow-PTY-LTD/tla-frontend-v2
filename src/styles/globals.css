@@ -38,6 +38,24 @@ input:focus {
   padding: 0 20px;
 }
 
+.section {
+  padding: 80px 0;
+}
+
+.no-bottom-padding {
+  padding-bottom: 0 !important;
+}
+
+@media (max-width: 1024px) {
+  .section {
+    padding: 50px 0;
+  }
+}
+
+.border-white-300 {
+  border-color: rgba(255, 255, 255, 0.31);
+}
+
 /* Reuseable Grid */
 
 .grid-row {
@@ -55,7 +73,6 @@ input:focus {
 .grid-col-12 {
   grid-template-columns: 1fr;
 }
-
 
 /* Utility */
 
@@ -186,20 +203,37 @@ input:focus {
   border: 1px solid #dce2ea;
   opacity: 0.93;
   background-color: #fff;
-  box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.06);
+  /* box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.06); */
   width: 100%;
   height: 100%;
+}
+
+.tla-auth-image {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   padding: 20px;
+  height: 538px;
+  border-radius: 0 14px 14px 0;
 }
 
 .tla-auth-image img {
   border-radius: 20px;
 }
 
-.tla-auth-form-login {
-  max-width: 544px;
-  width: 100%;
-  margin: 0 auto;
+.tla-auth-login-text {
+  font-size: 10px;
+  font-weight: 400;
+  text-align: center;
+  color: #fff;
+  max-width: 305px;
+  margin-top: 58px;
 }
 
 .tla-auth-form-register {
@@ -208,7 +242,7 @@ input:focus {
 
 .tla-auth-form h2 {
   color: var(--color-black);
-  font-size: clamp(20px, 1.5vw, 28px);
+  font-size: clamp(18px, 1.5vw, 24px);
   font-weight: 700;
   line-height: 110%;
   letter-spacing: -0.5px;
@@ -216,7 +250,7 @@ input:focus {
 
 .tla-auth-form p {
   color: var(--color-text);
-  font-size: clamp(12px, 0.8vw, 16px);
+  font-size: clamp(10px, 0.8vw, 12px);
   font-weight: 400;
   line-height: 18px;
 }
@@ -224,7 +258,7 @@ input:focus {
 .tla-auth-form h3 {
   color: var(--color-black);
   text-align: center;
-  font-size: clamp(16px, 1vw, 24px);
+  font-size: clamp(15px, 1vw, 20px);
   font-weight: 600;
   line-height: 110%;
   letter-spacing: -0.5px;
@@ -265,13 +299,13 @@ input:focus {
 .btn-auth-login {
   /* width: 100%; */
   display: flex;
-  padding: 20px 40px;
+  padding: 14px 40px;
   justify-content: center;
   align-items: center;
   gap: 10px;
   border-radius: 8px;
   background-color: var(--primary-color);
-  color: var(--color-black);
+  color: var(--color-white);
   font-size: clamp(13px, 0.8vw, 16px);
   font-weight: 600;
   line-height: 12px;
@@ -288,6 +322,8 @@ input:focus {
 
 .tla-auth-footer a {
   text-decoration: underline;
+  color: var(--primary-color);
+  font-weight: 500;
 }
 
 .btn-auth-register {
@@ -407,7 +443,7 @@ input:focus {
 /* HeroHome */
 
 .hero-home {
-  padding: 50px 0;
+  /* padding: 50px 0; */
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
@@ -500,24 +536,24 @@ input:focus {
  Home About
  ====================================*/
 
-.home-about-preview{
+/* .home-about-preview{
   padding: 50px 0;
-}
+} */
 
 /*===================================
  Home Services
  ====================================*/
 
-.home-services {
+/* .home-services {
   padding: 50px 0;
-}
+} */
 
 /*===============================
 Home Features
 =================================*/
-.home-features {
+/* .home-features {
   padding: 50px 0 0;
-}
+} */
 .home-features-grid {
   padding: 80px;
   border-radius: 80px 80px 0px 0px;
@@ -608,9 +644,9 @@ Home Testimonials
       Home CTA
 ==============================*/
 
-.home-cta {
+/* .home-cta {
   padding: 50px 0;
-}
+} */
 
 .home-cta-content {
   border-radius: 26px;
@@ -711,9 +747,9 @@ Home Testimonials
       About Page
 ======================*/
 
-.about-section {
+/* .about-section {
   padding: 50px 0;
-}
+} */
 
 .about-showcase {
   padding: 50px 0 100px;
@@ -910,23 +946,19 @@ Home Testimonials
       Footer
 ======================*/
 
-.newsletter-signup{
-  padding: 50px 0;
-}
-
 .newsletter-signup p:after {
-    content: "";
-    position: absolute;
-    bottom: 18px;
-    right: 44px;
-    background-color: #fff;
-    max-width: 161px;
-    width: 100%;
-    height: 1px;
+  content: '';
+  position: absolute;
+  bottom: 18px;
+  right: 44px;
+  background-color: #fff;
+  max-width: 161px;
+  width: 100%;
+  height: 1px;
 }
 
-@media(max-width: 991px){
-  .newsletter-signup p:after{
+@media (max-width: 991px) {
+  .newsletter-signup p:after {
     display: none;
   }
 }
@@ -1017,13 +1049,13 @@ Home Testimonials
 }
 
 .footer-contact .icon {
-    width: 40px;
-    height: 40px;
-    background: var(--primary-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  background: var(--primary-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
 }
 
 .footer-bottom {

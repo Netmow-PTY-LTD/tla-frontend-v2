@@ -75,7 +75,7 @@ const LoginForm = () => {
 
   return (
     <>
-      <div className="tla-auth-form tla-auth-form-login">
+      <div className="tla-auth-form tla-auth-form-login relative">
         <h2 className="tla-auth-title mb-2 text-center">
           Explore the opportunities
         </h2>
@@ -111,7 +111,7 @@ const LoginForm = () => {
               style={{ cursor: 'pointer' }}
               disabled={loading || isLoading}
             >
-              {loading || isLoading ? <LoaderSpinner /> : <span>Submit</span>}
+              {loading || isLoading ? <LoaderSpinner /> : <span>Log In</span>}
             </button>
           </form>
         </Form>

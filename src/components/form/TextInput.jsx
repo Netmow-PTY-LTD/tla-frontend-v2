@@ -42,7 +42,7 @@ export default function TextInput({
                 placeholder={placeholder}
                 value={field.value || ''}
                 onChange={handleChange}
-                className="bg-white text-black placeholder:text-gray-400 h-11"
+                className="bg-[#f2f2f2] text-black placeholder:text-[#a6a8ab] h-[44px]"
               />
             </FormControl>
             <FormMessage />

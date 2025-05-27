@@ -20,7 +20,7 @@
   position: sticky;
   top: 0;
   left: 0;
-  z-index: 9;
+  z-index: 999;
 }
 
 .sidebar {
@@ -65,10 +65,9 @@
 }
 
 .sidebar-top{
-  height: 190px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
   padding: 20px;
   border-radius: 8px;
   /* background: lightgray 400.285px 233.221px / -128.734% -145.496% no-repeat, #0B1C2D; */
@@ -97,10 +96,10 @@
   color: var(--brand-brand-primary-action, #00C3C0);
   font-size: 20px;
   font-weight: 700;
-  line-height: 28px; /* 140% */
+  line-height: 30px; /* 140% */
 
   @media(max-width: 1366px){
-    font-size: 16px;
+    font-size: 14px;
   }
 }
 
