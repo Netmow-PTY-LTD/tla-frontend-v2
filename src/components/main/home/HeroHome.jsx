@@ -14,7 +14,9 @@ export default function HeroHome() {
         <div className="hero-content">
           <h3>Get a quote for legal services.</h3>
           <h1>
-            Need legal help? <br /> Find a lawyer . On your terms.
+            Need legal help? <br /> Find a{' '}
+            <span className="text-[var(--primary-color)]">lawyer</span> . On
+            your terms.
           </h1>
           <form className="w-full">
             <div className="hero-search-area flex flex-wrap md:flex-nowrap gap-2 items-center w-full">
