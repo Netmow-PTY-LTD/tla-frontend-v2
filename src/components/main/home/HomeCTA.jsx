@@ -1,5 +1,5 @@
-import Link from "next/link";
-import React from "react";
+import Link from 'next/link';
+import React from 'react';
 export default function HomeCTA() {
   return (
     <>
@@ -17,7 +17,7 @@ export default function HomeCTA() {
                     case, compare bids, and choose the right lawyer—all in one
                     place.
                   </div>
-                  <div className="home-cta-button flex gap-2">
+                  <div className="home-cta-button flex flex-wrap gap-2">
                     <Link href="/register" className="btn-brand">
                       Join as Client
                     </Link>

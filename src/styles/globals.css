@@ -56,6 +56,7 @@ input:focus {
   grid-template-columns: 1fr;
 }
 
+
 /* Utility */
 
 .section-heading {
@@ -406,7 +407,7 @@ input:focus {
 /* HeroHome */
 
 .hero-home {
-  padding: 70px 0 0;
+  padding: 50px 0;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
@@ -442,7 +443,7 @@ input:focus {
 .hero-content h1 {
   color: var(--color-text);
   text-align: center;
-  font-size: clamp(32px, 3.5vw, 60px);
+  font-size: clamp(32px, 3.5vw, 55px);
   font-style: normal;
   font-weight: 700;
   line-height: 110%; /* 72.6px */
@@ -452,7 +453,7 @@ input:focus {
 .tla-btn-search {
   border-radius: 8px;
   background: var(--primary-color);
-  color: var(--color-black);
+  color: var(--color-white);
   display: flex;
   padding: 8px 20px;
   width: 100%;
@@ -496,17 +497,27 @@ input:focus {
 }
 
 /*===================================
+ Home About
+ ====================================*/
+
+.home-about-preview{
+  padding: 50px 0;
+}
+
+/*===================================
  Home Services
  ====================================*/
 
 .home-services {
-  padding: 0 0 70px;
+  padding: 50px 0;
 }
 
 /*===============================
 Home Features
 =================================*/
-
+.home-features {
+  padding: 50px 0 0;
+}
 .home-features-grid {
   padding: 80px;
   border-radius: 80px 80px 0px 0px;
@@ -598,7 +609,7 @@ Home Testimonials
 ==============================*/
 
 .home-cta {
-  padding: 100px 0;
+  padding: 50px 0;
 }
 
 .home-cta-content {
@@ -701,7 +712,7 @@ Home Testimonials
 ======================*/
 
 .about-section {
-  padding: 100px 0;
+  padding: 50px 0;
 }
 
 .about-showcase {
@@ -722,9 +733,9 @@ Home Testimonials
 }
 
 @media (max-width: 1024px) {
-  .about-section {
+  /* .about-section {
     padding: 50px 0;
-  }
+  } */
   .about-showcase {
     padding: 30px 0;
   }
@@ -898,6 +909,10 @@ Home Testimonials
 /* ===================
       Footer
 ======================*/
+
+.newsletter-signup{
+  padding: 50px 0;
+}
 
 .newsletter-signup p:after {
     content: "";

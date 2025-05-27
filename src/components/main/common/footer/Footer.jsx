@@ -13,7 +13,7 @@ export default function Footer() {
     <>
       <NewsletterSignup />
       <footer
-        className="main-footer pt-10"
+        className="main-footer"
         style={{ backgroundImage: `url('/assets/img/footer_bg.png')` }}
       >
         <div className="footer-top">
@@ -54,8 +54,8 @@ export default function Footer() {
                     </Link>
                   </div>
                 </div>
-                <div className="flex flex-wrap justify-between gap-10">
-                  <div className="footer-widget w">
+                <div className="flex flex-wrap justify-between gap-[30px] md:gap-10">
+                  <div className="footer-widget w-[calc(50%-15px)] md:w-auto">
                     <h3>Navigate</h3>
                     <ul>
                       <li>
@@ -72,7 +72,7 @@ export default function Footer() {
                       </li>
                     </ul>
                   </div>
-                  <div className="footer-widget">
+                  <div className="footer-widget w-[calc(50%-15px)] md:w-auto">
                     <h3>For Clients</h3>
                     <ul>
                       <li>
@@ -86,7 +86,7 @@ export default function Footer() {
                       </li>
                     </ul>
                   </div>
-                  <div className="footer-widget">
+                  <div className="footer-widget w-[calc(50%-15px)] md:w-auto">
                     <h3>For Lawyers</h3>
                     <ul>
                       <li>
@@ -100,7 +100,7 @@ export default function Footer() {
                       </li>
                     </ul>
                   </div>
-                  <div className="footer-widget">
+                  <div className="footer-widget w-[calc(50%-15px)] md:w-auto">
                     <h3>Other Pages</h3>
                     <ul>
                       <li>

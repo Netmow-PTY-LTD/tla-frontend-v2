@@ -4,7 +4,7 @@ import React from 'react';
 
 export default function HomeAboutPreview() {
   return (
-    <section className="pt-10 pb-40">
+    <section className="home-about-preview">
       <div className="container">
         <div className="flex flex-wrap">
           <div className="w-full lg:w-1/2 lg:pr-10">
