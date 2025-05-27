@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import authSlice from './features/auth/authSlice';
+import lawyerRegistrationReducer from './features/auth/lawyerRegistrationSlice';
 import { baseApi } from './baseApi/baseApi';
 
 import {
@@ -26,6 +27,7 @@ export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
     auth: persistedAuthReducer,
+    lawyerRegistration: lawyerRegistrationReducer,
   },
 
   middleware: (getDefaultMiddleware) =>
