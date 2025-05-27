@@ -49,7 +49,7 @@ export default function HomeServices() {
   ];
 
   return (
-    <section className="home-services">
+    <section className="home-services section">
       <div className="container-lg">
         <SectionHeading
           title={sectionHeading.title}

@@ -7,7 +7,7 @@ import { data } from '@/data/data';
 export default function HeroHome() {
   return (
     <section
-      className="hero-home"
+      className="hero-home section"
       style={{ backgroundImage: `url('/assets/img/hero_bg.png')` }}
     >
       <div className="container-lg">
@@ -46,7 +46,7 @@ export default function HeroHome() {
                   >
                     <path
                       d="M10.8048 11.1297L14.6509 14.9642M12.4339 7.20484C12.4339 10.2658 9.95247 12.7473 6.8915 12.7473C3.83049 12.7473 1.34906 10.2658 1.34906 7.20484C1.34906 4.14383 3.83049 1.6624 6.8915 1.6624C9.95247 1.6624 12.4339 4.14383 12.4339 7.20484Z"
-                      stroke="#0B1C2D"
+                      stroke="#Fff"
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -60,7 +60,7 @@ export default function HeroHome() {
             {data.map((item) => (
               <Link
                 href="#"
-                className="flex flex-col items-center gap-3 text-center"
+                className="flex flex-col items-center gap-[10px] text-center w-[calc(50%-10px)] sm:w-auto"
                 key={item.id}
               >
                 <Image

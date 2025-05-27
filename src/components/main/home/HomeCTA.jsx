@@ -3,7 +3,7 @@ import React from 'react';
 export default function HomeCTA() {
   return (
     <>
-      <section className="home-cta">
+      <section className="home-cta section">
         <div className="container">
           <div className="home-cta-content">
             <div className="flex flex-wrap">

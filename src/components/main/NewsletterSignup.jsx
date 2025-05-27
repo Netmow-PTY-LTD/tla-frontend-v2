@@ -3,7 +3,7 @@ import { Input } from '../ui/input';
 
 export default function NewsletterSignup() {
   return (
-    <section className="newsletter-signup">
+    <section className="newsletter-signup section">
       <div className="container">
         <div className="bg-[var(--secondary-color)] flex flex-col justify-center items-center py-[30px] md:py-[50px] rounded-[20px] gap-10 px-5">
           <div className="max-w-[828px] flex flex-wrap sm:flex-nowrap items-center gap-6">
@@ -36,20 +36,23 @@ export default function NewsletterSignup() {
               Get your desired lawyer or client within a reasonable costing.{' '}
             </p>
           </div>
-          <form action="">
-            <div className="w-full lg:max-w-[437px] flex flex-wrap lg:flex-nowrap items-center gap-4">
-              <input
-                placeholder="Enter email"
-                className="border-1 border-b border-[#fff] focus-within:0 rounded-0 bg-transparent h-[44px] text-white placeholder:text-white w-full md:w-[calc(100%-105px)]"
-              />
-              <button
-                type="submit"
-                className="bg-[var(--primary-color)] text-[14px] text-[#fff] font-semibold py-2 px-3 rounded-[8px] h-[44px] uppercase"
-              >
-                Subscribe
-              </button>
-            </div>
-          </form>
+          <div className="w-full lg:max-w-[437px] ">
+            <form action="">
+              <div className="flex flex-wrap lg:flex-nowrap items-center gap-4">
+                <input
+                  placeholder="Enter email"
+                  className="border-1 border-b border-white-300 focus-within:0 rounded-0 bg-transparent h-[44px] text-white placeholder:text-white w-full md:w-[calc(100%-105px)]"
+                  required
+                />
+                <button
+                  type="submit"
+                  className="bg-[var(--primary-color)] text-[14px] text-[#fff] font-semibold py-2 px-5 rounded-[8px] h-[44px] uppercase"
+                >
+                  Subscribe
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </section>

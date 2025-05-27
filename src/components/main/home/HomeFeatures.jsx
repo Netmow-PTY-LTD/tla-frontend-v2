@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 const HomeFeatures = () => {
   return (
-    <section className="home-features">
+    <section className="home-features section no-bottom-padding">
       <div className="container">
         <div className="home-features-grid">
           <div className="container">

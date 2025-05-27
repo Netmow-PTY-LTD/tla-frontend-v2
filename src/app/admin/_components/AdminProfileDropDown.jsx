@@ -67,7 +67,12 @@ export default function AdminProfileDropDown({ data }) {
             <ChevronDown className="ml-auto" />
           </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56">
+        <DropdownMenuContent
+          className="w-56 z-[999]"
+          portalled={'false'}
+          sideOffset={8}
+          align="start"
+        >
           <DropdownMenuLabel>User Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
