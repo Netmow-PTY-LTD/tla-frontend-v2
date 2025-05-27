@@ -22,6 +22,8 @@ import {
 } from '@/store/features/auth/lawyerRegistrationSlice';
 import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
 import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { lawyerRegistrationStepOneFormValidation } from '@/schema/auth/lawyerRegistration.schema';
 
 export default function RegisterStepOne() {
   const dispatch = useDispatch();
@@ -71,6 +73,7 @@ export default function RegisterStepOne() {
   }, [selectedCountry, dispatch, defaultCountry?._id]);
 
   const form = useForm({
+    resolver: zodResolver(lawyerRegistrationStepOneFormValidation),
     defaultValues: {
       name: defaultName || '',
     },
