@@ -39,7 +39,7 @@ const publicApiService = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Country'],
     }),
-    // Zip code related
+    // ----------- Zip code related ----------
     addZipCode: builder.mutation({
       query: (body) => ({
         url: '/country/zipcode/add',
@@ -77,6 +77,44 @@ const publicApiService = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Country'],
     }),
+    //  ------------------ range related ------------------
+    addRange: builder.mutation({
+      query: (body) => ({
+        url: '/country/zipcode/range/add',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['range'],
+    }),
+    getRangeList: builder.query({
+      query: () => ({
+        url: `/country/zipcode/range/list`,
+        method: 'GET',
+      }),
+      providesTags: ['range'],
+    }),
+    getSingleRange: builder.query({
+      query: (id) => ({
+        url: `/country/zipcode/range/${id}`,
+        method: 'GET',
+      }),
+      providesTags: ['range'],
+    }),
+    editRange: builder.mutation({
+      query: (body) => ({
+        url: `/country/zipcode/range/edit/${body._id}`,
+        method: 'PATCH',
+        body,
+      }),
+      invalidatesTags: ['range'],
+    }),
+    deleteRange: builder.mutation({
+      query: (id) => ({
+        url: `/country/zipcode/range/delete/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['range'],
+    }),
   }),
 });
 
@@ -91,4 +129,9 @@ export const {
   useGetSingleZipCodeQuery,
   useEditZipCodeMutation,
   useDeleteZipCodeMutation,
+  useAddRangeMutation,
+  useGetSingleRangeQuery,
+  useGetRangeListQuery,
+  useEditRangeMutation,
+  useDeleteRangeMutation,
 } = publicApiService;
