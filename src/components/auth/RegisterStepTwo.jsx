@@ -38,6 +38,9 @@ import {
   nextStep,
   prevStep,
 } from '@/store/features/auth/lawyerRegistrationSlice';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { lawyerRegistrationStepTwoFormValidation } from '@/schema/auth/lawyerRegistration.schema';
 
 export default function RegisterStepTwo() {
   const dispatch = useDispatch();
@@ -56,9 +59,48 @@ export default function RegisterStepTwo() {
     zipcodeId: zipCode || '',
   });
 
-  const ranges = rangeData?.data || [];
+  // const ranges = rangeData?.data || [];
+  const ranges = [
+    {
+      label: '1 miles',
+      value: 1,
+    },
+    {
+      label: '2 miles',
+      value: 2,
+    },
+    {
+      label: '10 miles',
+      value: 10,
+    },
+    {
+      label: '20 miles',
+      value: 20,
+    },
+    {
+      label: '50 miles',
+      value: 50,
+    },
+    {
+      label: '75 miles',
+      value: 75,
+    },
+    {
+      label: '100 miles',
+      value: 100,
+    },
+    {
+      label: '125 miles',
+      value: 125,
+    },
+    {
+      label: '150 miles',
+      value: 150,
+    },
+  ];
 
   const form = useForm({
+    resolver: zodResolver(lawyerRegistrationStepTwoFormValidation),
     defaultValues: {
       practiceWithin: practiceWithin || false,
       practiceInternational: practiceInternationally || false,
@@ -219,7 +261,7 @@ export default function RegisterStepTwo() {
                 )}
               />
 
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="rangeInKm"
                 render={({ field }) => (
@@ -260,6 +302,58 @@ export default function RegisterStepTwo() {
                             {item.value} {item.unit}
                           </SelectItem>
                         ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              /> */}
+
+              <FormField
+                control={form.control}
+                name="rangeInKm"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Range of Area</FormLabel>
+                    <Select
+                      disabled={!zipCode} // disable if no zipcode selected
+                      onValueChange={(val) => {
+                        const parsedValue = Number(val); // convert from string to number
+                        field.onChange(parsedValue); // update form
+                        dispatch(
+                          updateNestedField({
+                            section: 'lawyerServiceMap',
+                            field: 'rangeInKm',
+                            value: parsedValue, // store number in Redux
+                          })
+                        );
+                      }}
+                      value={String(field.value)} // must be string for Select
+                    >
+                      <FormControl className="tla-form-control">
+                        <SelectTrigger>
+                          <SelectValue
+                            placeholder="Select range of area"
+                            renderValue={(selectedValue) => {
+                              const selectedItem = ranges?.find(
+                                (item) => String(item.value) === selectedValue
+                              );
+                              return selectedItem?.label || '';
+                            }}
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {ranges?.map((item) => {
+                          return (
+                            <SelectItem
+                              key={item.value}
+                              value={String(item.value)}
+                            >
+                              {item.label}
+                            </SelectItem>
+                          );
+                        })}
                       </SelectContent>
                     </Select>
                     <FormMessage />
