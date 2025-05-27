@@ -114,34 +114,6 @@ export default function RegisterStepThreeTest() {
               onSubmit={form.handleSubmit(handleSubmit)}
               className="space-y-4"
             >
-              {/* Username */}
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Username*</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="John Doe"
-                        {...field}
-                        className="tla-form-control"
-                        onChange={(e) => {
-                          field.onChange(e);
-                          dispatch(
-                            updateField({
-                              field: 'username',
-                              value: e.target.value,
-                            })
-                          );
-                        }}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
               {/* Email & Phone */}
               <div className="flex flex-wrap">
                 <div className="w-full md:w-1/2 md:pr-1">
@@ -190,6 +162,66 @@ export default function RegisterStepThreeTest() {
                                 updateNestedField({
                                   section: 'companyInfo',
                                   field: 'phone',
+                                  value: e.target.value,
+                                })
+                              );
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-wrap">
+                <div className="w-full md:w-1/2 md:pr-1">
+                  {/* Username */}
+                  <FormField
+                    control={form.control}
+                    name="username"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Username*</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="John Doe"
+                            {...field}
+                            className="tla-form-control"
+                            onChange={(e) => {
+                              field.onChange(e);
+                              dispatch(
+                                updateField({
+                                  field: 'username',
+                                  value: e.target.value,
+                                })
+                              );
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="w-full md:w-1/2 md:pl-1">
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Password*</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter your password"
+                            {...field}
+                            className="tla-form-control"
+                            onChange={(e) => {
+                              field.onChange(e);
+                              dispatch(
+                                updateField({
+                                  field: 'password',
                                   value: e.target.value,
                                 })
                               );
