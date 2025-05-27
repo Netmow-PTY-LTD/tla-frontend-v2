@@ -3,9 +3,9 @@ import { Input } from '../ui/input';
 
 export default function NewsletterSignup() {
   return (
-    <section className="py-20">
+    <section className="newsletter-signup">
       <div className="container">
-        <div className="newsletter-signup bg-[var(--secondary-color)] flex flex-col justify-center items-center py-[50px] rounded-[20px] gap-10 p-5">
+        <div className="bg-[var(--secondary-color)] flex flex-col justify-center items-center py-[30px] md:py-[50px] rounded-[20px] gap-10 px-5">
           <div className="max-w-[828px] flex flex-wrap sm:flex-nowrap items-center gap-6">
             <svg
               width="40"
@@ -37,14 +37,14 @@ export default function NewsletterSignup() {
             </p>
           </div>
           <form action="">
-            <div className="max-w-[437px] w-full flex flex-wrap lg:flex-nowrap items-center gap-4">
+            <div className="w-full lg:max-w-[437px] flex flex-wrap lg:flex-nowrap items-center gap-4">
               <input
                 placeholder="Enter email"
                 className="border-1 border-b border-[#fff] focus-within:0 rounded-0 bg-transparent h-[44px] text-white placeholder:text-white w-full md:w-[calc(100%-105px)]"
               />
               <button
                 type="submit"
-                className="bg-[var(--primary-color)] text-[#000] font-semibold py-2 px-3 rounded-[8px] h-[44px]"
+                className="bg-[var(--primary-color)] text-[14px] text-[#fff] font-semibold py-2 px-3 rounded-[8px] h-[44px] uppercase"
               >
                 Subscribe
               </button>
