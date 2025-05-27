@@ -21,6 +21,7 @@ import {
   updateNestedField,
 } from '@/store/features/auth/lawyerRegistrationSlice';
 import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
+import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
 
 export default function RegisterStepOneTest() {
   const dispatch = useDispatch();
@@ -38,22 +39,36 @@ export default function RegisterStepOneTest() {
 
   const [inputValue, setInputValue] = useState('');
   const [hasServiceError, setHasServiceError] = useState(false);
-
+  const { data: countryList } = useGetCountryListQuery();
+  const defaultCountry = countryList?.data?.find(
+    (country) => country.slug === 'au'
+  );
+  // Default to Australia (AU) if available
   const { data: countryWiseServices } = useGetCountryWiseServicesQuery(
-    selectedCountry || '682ecd01e6b730f229c8d3d3'
+    defaultCountry?._id,
+    {
+      skip: !defaultCountry?._id, // Skip
+    }
   );
 
   useEffect(() => {
-    if (selectedCountry) {
+    if (!selectedCountry) {
       dispatch(
         updateNestedField({
           section: 'lawyerServiceMap',
           field: 'country',
-          value: '682ecd01e6b730f229c8d3d3',
+          value: defaultCountry?._id || selectedCountry,
+        })
+      );
+      dispatch(
+        updateNestedField({
+          section: 'profile',
+          field: 'country',
+          value: defaultCountry?._id || selectedCountry,
         })
       );
     }
-  }, [selectedCountry, dispatch]);
+  }, [selectedCountry, dispatch, defaultCountry?._id]);
 
   const form = useForm({
     defaultValues: {
