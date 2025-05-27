@@ -233,8 +233,17 @@ export default function RegisterStepTwoTest() {
                   <FormItem>
                     <FormLabel>Range of Area</FormLabel>
                     <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      onValueChange={(val) => {
+                        field.onChange(val);
+                        dispatch(
+                          updateNestedField({
+                            section: 'lawyerServiceMap',
+                            field: 'rangeInKm',
+                            value: val,
+                          })
+                        );
+                      }}
+                      defaultValue={String(field.value)}
                     >
                       <FormControl className="tla-form-control">
                         <SelectTrigger>
@@ -242,9 +251,9 @@ export default function RegisterStepTwoTest() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {ranges?.map((miles) => (
-                          <SelectItem key={miles} value={miles.toString()}>
-                            {miles} miles
+                        {ranges?.map((item) => (
+                          <SelectItem key={item._id} value={String(item.value)}>
+                            {item.value} {item.unit}
                           </SelectItem>
                         ))}
                       </SelectContent>
