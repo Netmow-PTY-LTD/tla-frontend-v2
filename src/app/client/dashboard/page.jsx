@@ -56,7 +56,7 @@ export default function BuyerDashboard() {
 
         <div className="flex justify-between items-center my-5">
           <FilterDropdown />
-          <button className="bg-green-700 p-[10px]  flex items-center gap-2 text-white rounded-lg">
+          <button className="bg-green-700 p-[10px] flex items-center gap-2 text-white rounded-lg">
             <CircleX className="w-4 h-4" /> <span>Approve</span>
           </button>
         </div>
