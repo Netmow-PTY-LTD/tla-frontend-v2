@@ -22,6 +22,7 @@ import {
 } from '@/store/features/auth/lawyerRegistrationSlice';
 import { useAuthRegisterMutation } from '@/store/features/auth/authApiService';
 import { useRouter } from 'next/navigation';
+import { showErrorToast, showSuccessToast } from '../common/toasts';
 
 export default function RegisterStepThreeTest() {
   const dispatch = useDispatch();

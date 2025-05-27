@@ -226,7 +226,7 @@ export default function RegisterStepTwoTest() {
                 )}
               />
 
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="rangeInKm"
                 render={({ field }) => (
@@ -253,6 +253,52 @@ export default function RegisterStepTwoTest() {
                       <SelectContent>
                         {ranges?.map((item) => (
                           <SelectItem key={item._id} value={String(item.value)}>
+                            {item.value} {item.unit}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              /> */}
+              <FormField
+                control={form.control}
+                name="rangeInKm"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Range of Area</FormLabel>
+                    <Select
+                      onValueChange={(val) => {
+                        field.onChange(val); // update form
+                        dispatch(
+                          updateNestedField({
+                            section: 'lawyerServiceMap',
+                            field: 'rangeInKm',
+                            value: val, // store _id in Redux
+                          })
+                        );
+                      }}
+                      value={field.value} // current selected _id
+                    >
+                      <FormControl className="tla-form-control">
+                        <SelectTrigger>
+                          <SelectValue
+                            placeholder="Select range of area"
+                            renderValue={(selectedId) => {
+                              const selectedItem = ranges?.find(
+                                (item) => item._id === selectedId
+                              );
+                              return selectedItem
+                                ? `${selectedItem.value} ${selectedItem.unit}`
+                                : '';
+                            }}
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {ranges?.map((item) => (
+                          <SelectItem key={item._id} value={item._id}>
                             {item.value} {item.unit}
                           </SelectItem>
                         ))}
