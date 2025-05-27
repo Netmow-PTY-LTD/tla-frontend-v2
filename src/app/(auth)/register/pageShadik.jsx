@@ -1,8 +1,8 @@
 'use client';
 import React, { useState } from 'react';
-import RegisterStepOne from '@/components/auth/RegisterStepOne';
-import RegisterStepTwo from '@/components/auth/RegisterStepTwo';
-import RegisterStepThree from '@/components/auth/RegisterStepThree';
+import RegisterStepOne from '@/components/auth/RegisterStepOneShadik';
+import RegisterStepTwo from '@/components/auth/RegisterStepTwoShadik';
+import RegisterStepThree from '@/components/auth/RegisterStepThreeShadik';
 import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
 import { toast } from 'sonner';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
@@ -12,7 +12,7 @@ import { verifyToken } from '@/utils/verifyToken';
 import { setUser } from '@/store/features/auth/authSlice';
 import { useRouter } from 'next/navigation';
 
-export default function Register() {
+export default function RegisterShadik() {
   const [step, setStep] = useState(1);
   const [fullName, setFullName] = useState(null);
   const [selectedService, setSelectedService] = useState([]);

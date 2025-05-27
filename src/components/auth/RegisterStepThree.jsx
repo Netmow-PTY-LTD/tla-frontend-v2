@@ -1,380 +1,440 @@
-import React, { useState } from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import {
   Form,
-  FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
+  FormControl,
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import { isValidPhoneNumber } from 'libphonenumber-js';
+import { useDispatch, useSelector } from 'react-redux';
 
-export default function RegisterStepThree({
-  handleBack,
-  username,
-  setUsername,
-  email,
-  setEmail,
-  phone,
-  setPhone,
-  soloPractitioner,
-  setSoloPractitioner,
-  companyTeam,
-  setCompanyTeam,
-  companyName,
-  setCompanyName,
-  companyWebsite,
-  setCompanyWebsite,
-  companySize,
-  setCompanySize,
-  handleFinalSubmit,
-  isLoading,
-  selectedCountryCode,
-}) {
-  const [isCompany, setIsCompany] = useState(false);
+import {
+  updateField,
+  updateNestedField,
+  prevStep,
+} from '@/store/features/auth/lawyerRegistrationSlice';
+import { useAuthRegisterMutation } from '@/store/features/auth/authApiService';
+import { useRouter } from 'next/navigation';
+import { showErrorToast, showSuccessToast } from '../common/toasts';
 
-  console.log('selectedCountryCode', selectedCountryCode);
+export default function RegisterStepThree() {
+  const dispatch = useDispatch();
+  const registration = useSelector((state) => state.lawyerRegistration);
+  const { username, email } = registration;
+  const { phone, companyTeam, companyName, website, companySize } =
+    registration.companyInfo;
 
-  const formSchema = z
-    .object({
-      username: z.string().min(2, {
-        message: 'Name is required and must be at least 2 characters.',
-      }),
-      email: z.string().email({
-        message: 'Please enter a valid email address.',
-      }),
-      // phone: z
-      //   .string()
-      //   .nonempty({ message: 'Phone number is required' })
-      //   .refine((val) => isValidPhoneNumber(val, selectedCountryCode), {
-      //     message: `Invalid ${selectedCountryCode} phone number`,
-      //   }),
-      soloPractitioner: z.boolean(),
-      companyTeam: z.boolean(),
-      company_name: z.string().optional(),
-      company_website: z.string().optional(),
-    })
-    .superRefine((data, ctx) => {
-      if (data.companyTeam) {
-        if (!data.company_name || data.company_name.trim() === '') {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ['company_name'],
-            message: 'Company name is required',
-          });
-        }
-
-        if (!data.company_website || data.company_website.trim() === '') {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ['company_website'],
-            message: 'Company website is required',
-          });
-        }
-
-        if (data.company_website) {
-          try {
-            new URL(data.company_website);
-          } catch {
-            ctx.addIssue({
-              path: ['company_website'],
-              code: z.ZodIssueCode.custom,
-              message:
-                'Invalid website URL - please use full URL including https://',
-            });
-          }
-        }
-      }
-    });
+  const [localCompanySize, setLocalCompanySize] = useState(companySize || '');
+  const [isCompany, setIsCompany] = useState(companyTeam || false);
 
   const form = useForm({
-    resolver: zodResolver(formSchema),
     defaultValues: {
-      username: '',
-      email: '',
-      phone: '',
-      soloPractitioner: false,
-      companyTeam: false,
-      company_name: '',
-      company_website: '',
+      username,
+      email,
+      phone,
+      soloPractitioner: registration.lawyerServiceMap.isSoloPractitioner,
+      companyTeam,
+      company_name: companyName,
+      company_website: website,
+      company_size: companySize,
     },
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  useEffect(() => {
+    // Sync redux data to local form
+    form.reset({
+      username,
+      email,
+      phone,
+      soloPractitioner: registration.lawyerServiceMap.isSoloPractitioner,
+      companyTeam,
+      company_name: companyName,
+      company_website: website,
+      company_size: companySize,
+    });
+  }, [username, email, phone, companyTeam, companyName, website, companySize]);
+
+  const router = useRouter();
+  const registrationState = useSelector((state) => state.lawyerRegistration);
+  const [authRegister, { isLoading }] = useAuthRegisterMutation();
+
+  const handleSubmit = async () => {
+    try {
+      const result = await authRegister(registrationState).unwrap();
+      console.log('✅ Registration result:', result);
+
+      if (result?.success && result?.token) {
+        showSuccessToast(result?.message || 'Registration successful');
+        const token = result.token;
+        const userPayload = verifyToken(token);
+
+        if (userPayload) {
+          dispatch(setUser({ user: result?.data, token }));
+
+          const userType = result?.data?.regUserType;
+          if (userType === 'lawyer') router.push('/lawyer/dashboard');
+          else if (userType === 'client') router.push('/client/dashboard');
+          else router.push('/');
+        }
+      } else {
+        showErrorToast(result?.message || 'Something went wrong');
+      }
+    } catch (error) {
+      console.error('❌ Registration API Error:', error);
+      showErrorToast(error?.data?.message || 'Server error');
+    }
   };
 
   return (
-    <>
-      <div className="flex flex-wrap lg:flex-nowrap items-center">
-        <div className="hidden lg:block lg:max-w-[602]">
-          <div className="tla-auth-image">
-            <Image
-              src="/assets/img/auth-step3.png"
-              width={602}
-              height={751}
-              alt="Auth Image"
-            />
-          </div>
-        </div>
-        <div className="w-full lg:w-7/12">
-          <div className="tla-auth-form tla-auth-form-register">
-            <h2 className="tla-auth-title mb-2">Some details about you</h2>
-            <p className="tla-auth-subtitle mb-5">
-              You’re just a few steps away from viewing our Family Law leads{' '}
-            </p>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-4"
-              >
-                <FormField
-                  control={form.control}
-                  name="username"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Username*</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="John Doe"
-                          {...field}
-                          className="tla-form-control"
-                          onChange={(e) => {
-                            // Get raw input value
-                            let val = e.target.value;
+    <div className="flex flex-wrap lg:flex-nowrap items-center">
+      <div className="hidden lg:block lg:max-w-[602px]">
+        <Image
+          src="/assets/img/auth-step3.png"
+          width={602}
+          height={751}
+          alt="Auth Image"
+        />
+      </div>
 
-                            // Convert to unique username format:
-                            val = val
-                              .trim() // remove leading/trailing spaces
-                              .toLowerCase() // lowercase
-                              .replace(/\s+/g, '_') // replace spaces with underscores
-                              .replace(/[^a-z0-9_]/g, ''); // remove special chars except underscore and alphanumeric
+      <div className="w-full lg:w-7/12">
+        <div className="tla-auth-form tla-auth-form-register">
+          <h2 className="tla-auth-title mb-2">Some details about you</h2>
+          <p className="tla-auth-subtitle mb-5">
+            You’re just a few steps away from viewing our Family Law leads
+          </p>
 
-                            field.onChange(val); // update react-hook-form value
-                            setUsername(val); // your custom state update
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="flex flex-wrap">
-                  <div className="w-full md:w-1/2 md:pr-1">
-                    <FormField
-                      control={form.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Email*</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="johndoe@gmail.com"
-                              {...field}
-                              className="tla-form-control"
-                              onChange={(e) => {
-                                field.onChange(e); // Let react-hook-form track it
-                                setEmail(e.target.value); // Your custom logic
-                              }}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  <div className="w-full md:w-1/2 md:pl-1">
-                    <FormField
-                      control={form.control}
-                      name="phone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Phone*</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="phone number"
-                              {...field}
-                              className="tla-form-control"
-                              onChange={(e) => {
-                                const onlyNumbers = e.target.value.replace(
-                                  /[^0-9]/g,
-                                  ''
-                                ); // Remove non-numeric chars
-                                field.onChange(onlyNumbers); // Update react-hook-form
-                                setPhone(onlyNumbers); // Your custom logic (if needed)
-                              }}
-                              value={field.value}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
-                <FormField
-                  control={form.control}
-                  name="soloPractitioner"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Checkbox
-                          {...field}
-                          checked={field.value} // control from react-hook-form
-                          onCheckedChange={(checked) => {
-                            field.onChange(checked); // update form state
-                            setSoloPractitioner(checked); // update your custom state
-                          }}
-                        />
-                      </FormControl>
-                      <FormLabel className="ml-2 font-bold">
-                        I will work as solo practitioner
-                      </FormLabel>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="companyTeam"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Checkbox
-                          {...field}
-                          checked={field.value}
-                          onCheckedChange={(checked) => {
-                            field.onChange(checked);
-                            setCompanyTeam(checked);
-                            setIsCompany(checked);
-
-                            if (!checked) {
-                              // Clear company-related values when unchecked
-                              setCompanyName('');
-                              setCompanyWebsite('');
-                              setCompanySize('2-10');
-                              form.setValue('company_name', '');
-                              form.setValue('company_website', '');
-                              form.setValue('company_size', '');
-                            }
-                          }}
-                        />
-                      </FormControl>
-                      <FormLabel className="ml-2 font-bold">
-                        I work with a company/team
-                      </FormLabel>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {isCompany && (
-                  <>
-                    <div className="flex flex-wrap">
-                      <div className="w-full md:w-1/2 md:pr-1">
-                        <FormField
-                          control={form.control}
-                          name="company_name"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Company Name*</FormLabel>
-                              <FormControl>
-                                <Input
-                                  placeholder="Company"
-                                  {...field}
-                                  className="tla-form-control"
-                                  onChange={(e) => {
-                                    field.onChange(e); // Let react-hook-form track it
-                                    setCompanyName(e.target.value); // Your custom logic
-                                  }}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      <div className="w-full md:w-1/2 md:pl-1">
-                        <FormField
-                          control={form.control}
-                          name="company_website"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Company Website*</FormLabel>
-                              <FormControl>
-                                <Input
-                                  placeholder="https://"
-                                  {...field}
-                                  className="tla-form-control"
-                                  onChange={(e) => {
-                                    field.onChange(e); // Let react-hook-form track it
-                                    setCompanyWebsite(e.target.value); // Your custom logic
-                                  }}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                    </div>
-                    <div className="company-size">
-                      <label>Company Size, Team Members</label>
-                      <div className="flex flex-wrap gap-2">
-                        {['2-10', '11-50', '51-100', '100+'].map((size) => (
-                          <button
-                            type="button"
-                            key={size}
-                            onClick={() => {
-                              setCompanySize(size); // your local state
-                              form.setValue('company_size', size); // sync with react-hook-form
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className="space-y-4"
+            >
+              {/* Email & Phone */}
+              <div className="flex flex-wrap">
+                <div className="w-full md:w-1/2 md:pr-1">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email*</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="johndoe@gmail.com"
+                            {...field}
+                            className="tla-form-control"
+                            onChange={(e) => {
+                              field.onChange(e);
+                              dispatch(
+                                updateField({
+                                  field: 'email',
+                                  value: e.target.value,
+                                })
+                              );
                             }}
-                            className={`${
-                              companySize === size ? 'selected' : ''
-                            }`}
-                          >
-                            {size}
-                          </button>
-                        ))}
-                        <input
-                          type="hidden"
-                          {...form.register('company_size')}
-                        />
-                      </div>
-                    </div>
-                  </>
-                )}
-
-                <div className="flex flex-wrap justify-end gap-3 mt-10">
-                  <button
-                    type="button"
-                    className="btn-outline"
-                    onClick={handleBack}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? 'Submitting...' : 'Backs'}
-                  </button>
-
-                  <button
-                    type="button"
-                    className="btn-auth-register"
-                    onClick={form.handleSubmit(handleFinalSubmit)}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? 'Submitting...' : 'Finish & See Leads'}
-                  </button>
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
-              </form>
-            </Form>
-          </div>
+                <div className="w-full md:w-1/2 md:pl-1">
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Phone*</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Phone number"
+                            {...field}
+                            className="tla-form-control"
+                            onChange={(e) => {
+                              field.onChange(e);
+                              dispatch(
+                                updateNestedField({
+                                  section: 'companyInfo',
+                                  field: 'phone',
+                                  value: e.target.value,
+                                })
+                              );
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-wrap">
+                <div className="w-full md:w-1/2 md:pr-1">
+                  {/* Username */}
+                  <FormField
+                    control={form.control}
+                    name="username"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Username*</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="John Doe"
+                            {...field}
+                            className="tla-form-control"
+                            onChange={(e) => {
+                              field.onChange(e);
+                              dispatch(
+                                updateField({
+                                  field: 'username',
+                                  value: e.target.value,
+                                })
+                              );
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="w-full md:w-1/2 md:pl-1">
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Password*</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter your password"
+                            {...field}
+                            className="tla-form-control"
+                            onChange={(e) => {
+                              field.onChange(e);
+                              dispatch(
+                                updateField({
+                                  field: 'password',
+                                  value: e.target.value,
+                                })
+                              );
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              {/* Solo Practitioner */}
+              <FormField
+                control={form.control}
+                name="soloPractitioner"
+                render={({ field }) => (
+                  <FormItem className="flex items-center">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={(checked) => {
+                          field.onChange(checked);
+                          dispatch(
+                            updateNestedField({
+                              section: 'lawyerServiceMap',
+                              field: 'isSoloPractitioner',
+                              value: checked,
+                            })
+                          );
+                        }}
+                      />
+                    </FormControl>
+                    <FormLabel className="ml-2 font-bold">
+                      I will work as solo practitioner
+                    </FormLabel>
+                  </FormItem>
+                )}
+              />
+
+              {/* Company/Team Checkbox */}
+              <FormField
+                control={form.control}
+                name="companyTeam"
+                render={({ field }) => (
+                  <FormItem className="flex items-center">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={(checked) => {
+                          field.onChange(checked);
+                          setIsCompany(checked);
+                          dispatch(
+                            updateNestedField({
+                              section: 'companyInfo',
+                              field: 'companyTeam',
+                              value: checked,
+                            })
+                          );
+
+                          if (!checked) {
+                            dispatch(
+                              updateNestedField({
+                                section: 'companyInfo',
+                                field: 'companyName',
+                                value: '',
+                              })
+                            );
+                            dispatch(
+                              updateNestedField({
+                                section: 'companyInfo',
+                                field: 'website',
+                                value: '',
+                              })
+                            );
+                            dispatch(
+                              updateNestedField({
+                                section: 'companyInfo',
+                                field: 'companySize',
+                                value: '',
+                              })
+                            );
+                          }
+                        }}
+                      />
+                    </FormControl>
+                    <FormLabel className="ml-2 font-bold">
+                      I work with a company/team
+                    </FormLabel>
+                  </FormItem>
+                )}
+              />
+
+              {/* Company Info Section */}
+              {isCompany && (
+                <>
+                  <div className="flex flex-wrap">
+                    <div className="w-full md:w-1/2 md:pr-1">
+                      <FormField
+                        control={form.control}
+                        name="company_name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Company Name*</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Company"
+                                {...field}
+                                className="tla-form-control"
+                                onChange={(e) => {
+                                  field.onChange(e);
+                                  dispatch(
+                                    updateNestedField({
+                                      section: 'companyInfo',
+                                      field: 'companyName',
+                                      value: e.target.value,
+                                    })
+                                  );
+                                }}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="w-full md:w-1/2 md:pl-1">
+                      <FormField
+                        control={form.control}
+                        name="company_website"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Company Website*</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="https://"
+                                {...field}
+                                className="tla-form-control"
+                                onChange={(e) => {
+                                  field.onChange(e);
+                                  dispatch(
+                                    updateNestedField({
+                                      section: 'companyInfo',
+                                      field: 'website',
+                                      value: e.target.value,
+                                    })
+                                  );
+                                }}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Company Size Buttons */}
+                  <div className="company-size">
+                    <label className="block mb-2">
+                      Company Size, Team Members
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {['2-10', '11-50', '51-100', '100+'].map((size) => (
+                        <button
+                          type="button"
+                          key={size}
+                          onClick={() => {
+                            setLocalCompanySize(size);
+                            dispatch(
+                              updateNestedField({
+                                section: 'companyInfo',
+                                field: 'companySize',
+                                value: size,
+                              })
+                            );
+                          }}
+                          className={`tla-company-size-btn ${
+                            localCompanySize === size ? 'selected' : ''
+                          }`}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* Navigation Buttons */}
+              <div className="flex justify-end gap-3 mt-10">
+                <button
+                  type="button"
+                  className="btn-outline"
+                  onClick={() => dispatch(prevStep())}
+                  disabled={isLoading}
+                >
+                  Back
+                </button>
+                <button
+                  type="submit"
+                  className="btn-auth-register"
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Submitting...' : 'Finish & See Leads'}
+                </button>
+              </div>
+            </form>
+          </Form>
         </div>
       </div>
-    </>
+    </div>
   );
 }
