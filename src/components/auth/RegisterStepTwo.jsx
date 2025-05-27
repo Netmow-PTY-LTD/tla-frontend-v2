@@ -38,6 +38,9 @@ import {
   nextStep,
   prevStep,
 } from '@/store/features/auth/lawyerRegistrationSlice';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { lawyerRegistrationStepTwoFormValidation } from '@/schema/auth/lawyerRegistration.schema';
 
 export default function RegisterStepTwo() {
   const dispatch = useDispatch();
@@ -59,44 +62,45 @@ export default function RegisterStepTwo() {
   // const ranges = rangeData?.data || [];
   const ranges = [
     {
-      label: '3 miles',
-      value: 3,
+      label: '1 miles',
+      value: 1,
     },
     {
-      label: '6 miles',
-      value: 6,
+      label: '2 miles',
+      value: 2,
     },
     {
-      label: '9 miles',
-      value: 9,
+      label: '10 miles',
+      value: 10,
     },
     {
-      label: '12 miles',
-      value: 12,
+      label: '20 miles',
+      value: 20,
     },
     {
-      label: '16 miles',
-      value: 16,
+      label: '50 miles',
+      value: 50,
     },
     {
-      label: '19 miles',
-      value: 19,
+      label: '75 miles',
+      value: 75,
     },
     {
-      label: '31 miles',
-      value: 31,
+      label: '100 miles',
+      value: 100,
     },
     {
-      label: '47 miles',
-      value: 47,
+      label: '125 miles',
+      value: 125,
     },
     {
-      label: '62 miles',
-      value: 62,
+      label: '150 miles',
+      value: 150,
     },
   ];
 
   const form = useForm({
+    resolver: zodResolver(lawyerRegistrationStepTwoFormValidation),
     defaultValues: {
       practiceWithin: practiceWithin || false,
       practiceInternational: practiceInternationally || false,
@@ -341,7 +345,6 @@ export default function RegisterStepTwo() {
                       </FormControl>
                       <SelectContent>
                         {ranges?.map((item) => {
-                          console.log('Rendering SelectItem:', item); // Debug log
                           return (
                             <SelectItem
                               key={item.value}

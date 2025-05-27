@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
@@ -14,7 +13,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useDispatch, useSelector } from 'react-redux';
-
 import {
   updateField,
   updateNestedField,
@@ -25,6 +23,8 @@ import { useRouter } from 'next/navigation';
 import { showErrorToast, showSuccessToast } from '../common/toasts';
 import { verifyToken } from '@/utils/verifyToken';
 import { setUser } from '@/store/features/auth/authSlice';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { lawyerRegistrationStepThreeFormValidation } from '@/schema/auth/lawyerRegistration.schema';
 
 export default function RegisterStepThree() {
   const dispatch = useDispatch();
@@ -37,6 +37,7 @@ export default function RegisterStepThree() {
   const [isCompany, setIsCompany] = useState(companyTeam || false);
 
   const form = useForm({
+    resolver: zodResolver(lawyerRegistrationStepThreeFormValidation),
     defaultValues: {
       username,
       email,
