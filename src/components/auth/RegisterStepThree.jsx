@@ -23,6 +23,8 @@ import {
 import { useAuthRegisterMutation } from '@/store/features/auth/authApiService';
 import { useRouter } from 'next/navigation';
 import { showErrorToast, showSuccessToast } from '../common/toasts';
+import { verifyToken } from '@/utils/verifyToken';
+import { setUser } from '@/store/features/auth/authSlice';
 
 export default function RegisterStepThree() {
   const dispatch = useDispatch();
