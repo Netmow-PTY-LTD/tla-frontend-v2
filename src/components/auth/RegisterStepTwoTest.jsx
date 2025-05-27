@@ -29,7 +29,10 @@ import {
 import { Check, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { useGetZipCodeListQuery } from '@/store/features/public/publicApiService';
+import {
+  useGetRangeListQuery,
+  useGetZipCodeListQuery,
+} from '@/store/features/public/publicApiService';
 import {
   updateNestedField,
   nextStep,
@@ -40,6 +43,8 @@ export default function RegisterStepTwoTest() {
   const dispatch = useDispatch();
   const [query, setQuery] = useState('');
 
+  console.log('query', query);
+
   const lawyerServiceMap = useSelector(
     (state) => state.lawyerRegistration.lawyerServiceMap
   );
@@ -48,13 +53,22 @@ export default function RegisterStepTwoTest() {
     lawyerServiceMap;
 
   const { data: zipcodeData } = useGetZipCodeListQuery();
+  console.log('zipCode', zipCode);
+  const { data: rangeData } = useGetRangeListQuery({
+    zipcodeId: zipCode || '',
+  });
+
+  console.log('zipcodeData', zipcodeData);
+
+  console.log('rangeData', rangeData);
+  const ranges = rangeData?.data || [20, 30, 50, 70, 100, 120, 150];
 
   const form = useForm({
     defaultValues: {
       practiceWithin: practiceWithin || false,
       practiceInternational: practiceInternationally || false,
       AreaZipcode: zipCode || '',
-      areaRange: rangeInKm || '',
+      rangeInKm: rangeInKm || '',
     },
   });
 
@@ -85,7 +99,7 @@ export default function RegisterStepTwoTest() {
       updateNestedField({
         section: 'lawyerServiceMap',
         field: 'rangeInKm',
-        value: data.areaRange,
+        value: data.rangeInKm,
       })
     );
     dispatch(nextStep());
@@ -95,6 +109,7 @@ export default function RegisterStepTwoTest() {
     item?.zipcode?.toLowerCase().includes(query.toLowerCase())
   );
 
+  console.log('zipCode', zipCode);
   return (
     <div className="flex flex-wrap lg:flex-nowrap">
       <div className="hidden lg:block lg:max-w-[602]">
@@ -142,12 +157,27 @@ export default function RegisterStepTwoTest() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Area Zipcode</FormLabel>
-                    <Combobox value={field.value} onChange={field.onChange}>
+                    <Combobox
+                      value={field.value}
+                      onChange={(val) => {
+                        field.onChange(val);
+                        dispatch(
+                          updateNestedField({
+                            section: 'lawyerServiceMap',
+                            field: 'zipCode',
+                            value: val,
+                          })
+                        );
+                      }}
+                    >
                       <div className="relative">
                         <ComboboxInput
                           className="tla-form-control w-full"
                           onChange={(event) => setQuery(event.target.value)}
-                          displayValue={(val) => val || ''}
+                          displayValue={(val) =>
+                            zipcodeData?.data?.find((z) => z._id === val)
+                              ?.zipcode || ''
+                          }
                           placeholder="Select a Zipcode"
                         />
                         <ComboboxButton className="absolute inset-y-0 right-0 flex items-center pr-2">
@@ -158,7 +188,7 @@ export default function RegisterStepTwoTest() {
                             {filteredZipcodes.map((item) => (
                               <ComboboxOption
                                 key={item._id}
-                                value={item.zipcode}
+                                value={item._id}
                                 className={({ active }) =>
                                   cn(
                                     'cursor-pointer select-none relative py-2 pl-10 pr-4',
@@ -198,7 +228,7 @@ export default function RegisterStepTwoTest() {
 
               <FormField
                 control={form.control}
-                name="areaRange"
+                name="rangeInKm"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Range of Area</FormLabel>
@@ -212,7 +242,7 @@ export default function RegisterStepTwoTest() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {[20, 30, 50, 70, 100, 120, 150].map((miles) => (
+                        {ranges?.map((miles) => (
                           <SelectItem key={miles} value={miles.toString()}>
                             {miles} miles
                           </SelectItem>

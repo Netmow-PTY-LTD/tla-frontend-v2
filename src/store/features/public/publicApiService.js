@@ -87,9 +87,10 @@ const publicApiService = baseApi.injectEndpoints({
       invalidatesTags: ['range'],
     }),
     getRangeList: builder.query({
-      query: () => ({
+      query: ({ zipcodeId }) => ({
         url: `/country/zipcode/range/list`,
         method: 'GET',
+        params: zipcodeId ? { zipcodeId } : {},
       }),
       providesTags: ['range'],
     }),
