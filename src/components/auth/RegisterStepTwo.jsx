@@ -56,7 +56,45 @@ export default function RegisterStepTwo() {
     zipcodeId: zipCode || '',
   });
 
-  const ranges = rangeData?.data || [];
+  // const ranges = rangeData?.data || [];
+  const ranges = [
+    {
+      label: '3 miles',
+      value: 3,
+    },
+    {
+      label: '6 miles',
+      value: 6,
+    },
+    {
+      label: '9 miles',
+      value: 9,
+    },
+    {
+      label: '12 miles',
+      value: 12,
+    },
+    {
+      label: '16 miles',
+      value: 16,
+    },
+    {
+      label: '19 miles',
+      value: 19,
+    },
+    {
+      label: '31 miles',
+      value: 31,
+    },
+    {
+      label: '47 miles',
+      value: 47,
+    },
+    {
+      label: '62 miles',
+      value: 62,
+    },
+  ];
 
   const form = useForm({
     defaultValues: {
@@ -219,7 +257,7 @@ export default function RegisterStepTwo() {
                 )}
               />
 
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="rangeInKm"
                 render={({ field }) => (
@@ -260,6 +298,59 @@ export default function RegisterStepTwo() {
                             {item.value} {item.unit}
                           </SelectItem>
                         ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              /> */}
+
+              <FormField
+                control={form.control}
+                name="rangeInKm"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Range of Area</FormLabel>
+                    <Select
+                      disabled={!zipCode} // disable if no zipcode selected
+                      onValueChange={(val) => {
+                        const parsedValue = Number(val); // convert from string to number
+                        field.onChange(parsedValue); // update form
+                        dispatch(
+                          updateNestedField({
+                            section: 'lawyerServiceMap',
+                            field: 'rangeInKm',
+                            value: parsedValue, // store number in Redux
+                          })
+                        );
+                      }}
+                      value={String(field.value)} // must be string for Select
+                    >
+                      <FormControl className="tla-form-control">
+                        <SelectTrigger>
+                          <SelectValue
+                            placeholder="Select range of area"
+                            renderValue={(selectedValue) => {
+                              const selectedItem = ranges?.find(
+                                (item) => String(item.value) === selectedValue
+                              );
+                              return selectedItem?.label || '';
+                            }}
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {ranges?.map((item) => {
+                          console.log('Rendering SelectItem:', item); // Debug log
+                          return (
+                            <SelectItem
+                              key={item.value}
+                              value={String(item.value)}
+                            >
+                              {item.label}
+                            </SelectItem>
+                          );
+                        })}
                       </SelectContent>
                     </Select>
                     <FormMessage />
