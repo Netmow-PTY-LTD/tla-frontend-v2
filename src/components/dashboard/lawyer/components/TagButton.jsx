@@ -10,12 +10,19 @@ const TagButton = ({
   onClick,
   onChange,
   className,
+  fontSize,
+  textColor,
+  rounded,
 }) => {
   return (
     <button
       className={clsx(
         !className &&
-          'text-[10px] px-3 py-1.5 rounded-[29px] flex items-center gap-2 transition-all duration-200 active:scale-95',
+          `${fontSize ? fontSize : 'text-[12px]'} ${
+            textColor ? textColor : 'text-[black]'
+          } px-3 py-1.5 ${
+            rounded ? rounded : 'rounded-[30px]'
+          } flex items-center gap-2 transition-all duration-200 active:scale-95`,
         className
       )}
       style={{ backgroundColor: bgColor }}

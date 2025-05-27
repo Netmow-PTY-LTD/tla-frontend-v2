@@ -9,10 +9,12 @@ const statusColors = {
   default: 'bg-gray-400',
 };
 
-const StatusButton = ({ status = 'pending', onClick }) => {
+const StatusButton = ({ status = 'pending', onClick, fontSize }) => {
   return (
     <button
-      className="flex items-center text-lg font-medium px-4 py-3 rounded-lg hover:bg-white hover:text-black "
+      className={`flex items-center ${
+        fontSize ? fontSize : 'text-[18px]'
+      } font-medium px-4 py-1.5 rounded-lg hover:bg-white hover:text-black `}
       onClick={onClick}
     >
       <span

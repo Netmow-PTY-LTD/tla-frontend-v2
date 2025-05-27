@@ -1,8 +1,8 @@
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
-import HeroShowcase from "./HeroShowcase";
-import { data } from "@/data/data";
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
+import HeroShowcase from './HeroShowcase';
+import { data } from '@/data/data';
 
 export default function HeroHome() {
   return (
@@ -12,29 +12,29 @@ export default function HeroHome() {
     >
       <div className="container-lg">
         <div className="hero-content">
-          <h3>Find the lawyer & clients in one platform.</h3>
+          <h3>Get a quote for legal services.</h3>
           <h1>
-            Need legal help? <br /> Find a lawyer On your terms
+            Need legal help? <br /> Find a lawyer . On your terms.
           </h1>
           <form className="w-full">
-            <div className="hero-search-area flex gap-2 items-center w-full">
-              <div className="tla-form-group w-5/12">
+            <div className="hero-search-area flex flex-wrap md:flex-nowrap gap-2 items-center w-full">
+              <div className="tla-form-group w-full lg:w-5/12">
                 <input
                   type="text"
                   className="tla-form-control"
-                  placeholder="What type of lawyer are you looking for?"
+                  placeholder="What area of law are you interested in?"
                 />
               </div>
-              <div className="tla-form-group w-5/12">
+              <div className="tla-form-group w-full md:w-5/12">
                 <input
                   type="text"
                   className="tla-form-control"
                   placeholder="Your location"
                 />
               </div>
-              <div className="tla-btn-wrapper w-1/6">
+              <div className="tla-btn-wrapper w-full md:w-2/3 lg:w-1/3">
                 <button type="submit" className="tla-btn-search">
-                  <span>Search</span>
+                  <span>Get Started</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"

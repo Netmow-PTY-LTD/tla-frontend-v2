@@ -13,7 +13,7 @@ import {
 import Image from 'next/image';
 import { useEffect } from 'react';
 
-export default function LeadDetailsPage({ onBack, lead }) {
+export default function MyResponseDetails({ onBack, response }) {
   useEffect(() => {
     // Scroll to top of the window when this component mounts
     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -24,7 +24,7 @@ export default function LeadDetailsPage({ onBack, lead }) {
         <div className="flex items-center justify-between">
           <button className="flex py-2 items-center gap-2" onClick={onBack}>
             {' '}
-            <MoveLeft /> <span>Back to leads</span>
+            <MoveLeft /> <span>Back to Responses</span>
           </button>
         </div>
         <div className="mt-3 max-w-4xl">
@@ -40,9 +40,11 @@ export default function LeadDetailsPage({ onBack, lead }) {
               />
             </figure>
             <div>
-              <h2 className="font-medium text-xl sm:text-base">{lead.name}</h2>
+              <h2 className="font-medium text-xl sm:text-base">
+                {response.name}
+              </h2>
               <p className="text-xs sm:text-sm text-gray-500 mt-2">
-                {lead.address}
+                {response.address}
               </p>
             </div>
           </div>

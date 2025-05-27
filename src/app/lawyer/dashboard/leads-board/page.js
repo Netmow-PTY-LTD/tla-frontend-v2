@@ -4,9 +4,11 @@ import LeadDetailsPage from '../_component/LeadsLeft';
 import LeadsRight from '../_component/LeadsRight';
 import { usePathname } from 'next/navigation';
 import LeadsHead from '../_component/LeadsHead';
+import data from '@/data/user';
 
 const LeadBoardPage = () => {
   const [showLeadDetails, setShowLeadDetails] = useState(true);
+  const [selectedLead, setSelectedLead] = useState(null);
 
   const pathname = usePathname();
 
@@ -26,14 +28,23 @@ const LeadBoardPage = () => {
     };
   }, [pathname]);
 
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setSelectedLead(data[0]); // Set first lead
+    }
+  }, [data]);
+
   return (
     <div className="continer">
       <div className="lead-board-wrap">
         <div className="lead-board-container">
-          {showLeadDetails && (
+          {showLeadDetails && selectedLead && (
             <div className="left-column-7">
               <div className="column-wrap-left">
-                <LeadDetailsPage onBack={() => setShowLeadDetails(false)} />
+                <LeadDetailsPage
+                  lead={selectedLead}
+                  onBack={() => setShowLeadDetails(false)}
+                />
               </div>
             </div>
           )}
@@ -50,7 +61,11 @@ const LeadBoardPage = () => {
               <div className="leads-bottom-row">
                 <LeadsRight
                   isExpanded={!showLeadDetails}
-                  onViewDetails={() => setShowLeadDetails(true)}
+                  onViewDetails={(lead) => {
+                    setSelectedLead(lead);
+                    setShowLeadDetails(true);
+                  }}
+                  data={data}
                 />
               </div>
             </div>

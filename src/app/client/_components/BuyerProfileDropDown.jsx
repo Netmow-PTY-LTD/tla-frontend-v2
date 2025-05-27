@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { ChevronDown, LogOut, Settings } from 'lucide-react';
+import { ChevronDown, LogOut, SendToBack, Settings } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,7 +25,7 @@ export default function BuyerProfileDropDown({ data }) {
 
   const currentUser = useSelector(selectCurrentUser);
 
-  console.log('currentUser', currentUser);
+  //console.log('currentUser', currentUser);
 
   const router = useRouter();
   /**
@@ -61,7 +61,15 @@ export default function BuyerProfileDropDown({ data }) {
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
-              <Link href={`/lawyer/dashboard`}>Switch to Lawyer</Link>
+              <Link
+                href={`/lawyer/dashboard`}
+                className="w-full flex items-center justify-between gap-2 cursor-pointer px-2 py-1.5"
+              >
+                <span>Switch to Lawyer</span>
+                <DropdownMenuShortcut>
+                  <SendToBack />
+                </DropdownMenuShortcut>
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
@@ -70,7 +78,15 @@ export default function BuyerProfileDropDown({ data }) {
               <>
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
-                    <Link href={`/admin`}>Switch to Admin</Link>
+                    <Link
+                      href={`/admin`}
+                      className="w-full flex items-center justify-between gap-2 cursor-pointer px-2 py-1.5"
+                    >
+                      <span>Switch to Admin</span>
+                      <DropdownMenuShortcut>
+                        <SendToBack />
+                      </DropdownMenuShortcut>
+                    </Link>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
@@ -78,17 +94,22 @@ export default function BuyerProfileDropDown({ data }) {
             )}
           <DropdownMenuGroup>
             <DropdownMenuItem>
-              <Link href="/client/account-settings">Account Settings</Link>
-              <DropdownMenuShortcut>
-                <Settings />
-              </DropdownMenuShortcut>
+              <Link
+                href="/client/account-settings/profile"
+                className="w-full flex items-center justify-between gap-2 cursor-pointer px-2 py-1.5"
+              >
+                <span> Account Settings</span>
+                <DropdownMenuShortcut>
+                  <Settings />
+                </DropdownMenuShortcut>
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
 
           <DropdownMenuItem>
             <div
-              className="flex items-center justify-between w-full"
+              className="flex items-center justify-between w-full cursor-pointer px-2 py-1.5"
               onClick={handleLogout}
             >
               <span>Log out</span>
