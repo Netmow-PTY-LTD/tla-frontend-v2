@@ -2,6 +2,7 @@
 import { LoaderSpinner } from '@/components/common/LoaderSpinner';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import TextInput from '@/components/form/TextInput';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Form } from '@/components/ui/form';
 import { loginValidationSchema } from '@/schema/auth/authValidation.schema';
 import { useAuthLoginMutation } from '@/store/features/auth/authApiService';
@@ -9,14 +10,17 @@ import { setUser } from '@/store/features/auth/authSlice';
 import { verifyToken } from '@/utils/verifyToken';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Cookies from 'js-cookie';
+import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState();
+  const [rememberMe, setRememberMe] = useState(false);
   const [authLogin, { isLoading }] = useAuthLoginMutation();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -53,6 +57,15 @@ const LoginForm = () => {
             })
           );
 
+          // ✅ Save to localStorage if rememberMe is checked
+          if (rememberMe) {
+            localStorage.setItem('rememberMe', 'true');
+            localStorage.setItem('userEmail', data.email);
+          } else {
+            localStorage.removeItem('rememberMe');
+            localStorage.removeItem('userEmail');
+          }
+
           //console.log('dispatchUser', dispatchUser);
           if (dispatchUser?.payload?.token) {
             if (res?.data?.regUserType === 'lawyer') {
@@ -73,10 +86,20 @@ const LoginForm = () => {
     }
   };
 
+  useEffect(() => {
+    const remembered = localStorage.getItem('rememberMe') === 'true';
+    const email = localStorage.getItem('userEmail');
+
+    if (remembered && email) {
+      form.setValue('email', email);
+      setRememberMe(true);
+    }
+  }, []);
+
   return (
     <>
       <div className="tla-auth-form tla-auth-form-login relative">
-        <h3 className="tla-auth-title mb-2 text-center">
+        <h3 className="tla-auth-title mb-4 text-center">
           Explore the opportunities
         </h3>
         <p className="tla-auth-subtitle text-center">
@@ -87,7 +110,7 @@ const LoginForm = () => {
 
         {/* Form Wrapper */}
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             <TextInput
               label="Email"
               type="email"
@@ -96,14 +119,46 @@ const LoginForm = () => {
               placeholder="John@example.com"
               onChange={handleChange}
             />
-            <TextInput
-              label="Password"
-              type="password"
-              control={form.control}
-              name="password"
-              placeholder="********"
-              onChange={handleChange}
-            />
+
+            <div className="relative">
+              <TextInput
+                label="Password"
+                type={showPassword ? 'text' : 'password'}
+                control={form.control}
+                name="password"
+                placeholder="********"
+                onChange={handleChange}
+              />
+              {showPassword ? (
+                <EyeOff
+                  className="absolute right-[12px] top-[43px] text-[var(--color-text)] cursor-pointer"
+                  onClick={() => setShowPassword(false)}
+                />
+              ) : (
+                <Eye
+                  className="absolute right-[12px] top-[43px] text-[var(--color-text)] cursor-pointer"
+                  onClick={() => setShowPassword(true)}
+                />
+              )}
+            </div>
+
+            <div className="flex flex-wrap justify-between">
+              <label
+                htmlFor="remember"
+                className="flex gap-2 items-center cursor-pointer"
+              >
+                <Checkbox
+                  id="remember"
+                  checked={rememberMe}
+                  onCheckedChange={(checked) => setRememberMe(!!checked)}
+                />
+                Remember Me
+              </label>
+
+              <Link href="/forget-password" className="text-[#00C3C0]">
+                Forgot Password?
+              </Link>
+            </div>
 
             <button
               type="submit"

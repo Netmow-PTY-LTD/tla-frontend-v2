@@ -60,8 +60,11 @@ export default function SidebarTop() {
     >
       <span className="capitalize">{dateTime}</span>
       <h2>
-        {greeting}, {userInfo?.username}! <br />
-        Welcome To TLA Dashboard
+        <b>
+          {greeting}, {userInfo?.username}!{' '}
+        </b>
+        <br />
+        <b>Welcome To TLA Dashboard</b>
       </h2>
       <div className="flex justify-between items-center mt-5">
         <div className="icon flex items-center gap-2">
