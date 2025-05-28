@@ -1,22 +1,22 @@
-"use client";
-import MainLayout from "@/components/main/common/layout";
-import Link from "next/link";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Form } from "@/components/ui/form";
-import TextInput from "@/components/form/TextInput";
-import TextArea from "@/components/form/TextArea";
+'use client';
+import MainLayout from '@/components/main/common/layout';
+import Link from 'next/link';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { Form } from '@/components/ui/form';
+import TextInput from '@/components/form/TextInput';
+import TextArea from '@/components/form/TextArea';
 
 const formSchema = z.object({
   name: z.string().min(2, {
-    message: "Name is required and must be at least 2 characters.",
+    message: 'Name is required and must be at least 2 characters.',
   }),
   email: z.string().email({
-    message: "Please enter a valid email address.",
+    message: 'Please enter a valid email address.',
   }),
   message: z.string().min(10, {
-    message: "Message must be at least 10 characters long.",
+    message: 'Message must be at least 10 characters long.',
   }),
 });
 
@@ -24,10 +24,10 @@ export default function ContactPage() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      phone: "",
-      email: "",
-      message: "",
+      name: '',
+      phone: '',
+      email: '',
+      message: '',
     },
   });
 
@@ -44,7 +44,7 @@ export default function ContactPage() {
 
   return (
     <MainLayout>
-      <section className="contact-section">
+      <section className="contact-section section">
         <div className="contact-top">
           <div className="container">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -61,7 +61,7 @@ export default function ContactPage() {
                   </div>
                 </div>
                 <Form {...form}>
-                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-7">
+                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     <TextInput
                       label="Name"
                       name="name"
@@ -101,7 +101,7 @@ export default function ContactPage() {
           </div>
         </div>
         <div className="contact-bottom">
-          <section className="home-cta">
+          <section className="home-cta section">
             <div className="container">
               <div className="home-cta-content">
                 <div className="flex flex-wrap">

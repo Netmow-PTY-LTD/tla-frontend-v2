@@ -82,7 +82,9 @@ export default function LeadSettingsPage() {
               <ToggleButton className="ml-3" size="sm" />
             </div>
           </div>
-          <button className="btn-brand mt-12">Save Changes</button>
+          <button className="btn-default btn-primary mt-12">
+            Save Changes
+          </button>
         </div>
       </div>
     </div>

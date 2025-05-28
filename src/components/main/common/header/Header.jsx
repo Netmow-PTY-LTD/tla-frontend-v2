@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './Header.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -8,7 +8,22 @@ import { useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 
 export default function Header() {
+  const [isHeaderFixed, setIsHeaderFixed] = useState();
   const currentUser = useSelector(selectCurrentUser);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const handleScroll = () => {
+        setIsHeaderFixed(window.scrollY > 50);
+      };
+
+      window.addEventListener('scroll', handleScroll);
+
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, []);
 
   const token = Cookies.get('token');
 
@@ -21,7 +36,9 @@ export default function Header() {
   const dashboardUrl = dashboardPaths[currentUser?.regUserType] || '';
 
   return (
-    <header className={styles.main_header}>
+    <header
+      className={`${styles.main_header} ${isHeaderFixed ? styles.sticky : ''}`}
+    >
       <div className="container">
         <div className="flex items-center justify-between">
           <Link href="/">

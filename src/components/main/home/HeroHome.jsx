@@ -70,7 +70,7 @@ export default function HeroHome() {
                   className="object-cover"
                   alt={item.title}
                 />
-                <h5>{item.title}</h5>
+                <h6>{item.title}</h6>
               </Link>
             ))}
           </div>
