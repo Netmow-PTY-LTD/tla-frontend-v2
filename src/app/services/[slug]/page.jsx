@@ -75,10 +75,13 @@ const SingleServiceDetailsPage = async ({ params }) => {
                     </ul>
                   </div>
                   <div className="home-cta-button flex gap-2">
-                    <Link href="/register" className="btn-brand">
+                    <Link href="/register" className="btn-default btn-primary">
                       Join as Client
                     </Link>
-                    <Link href="/register" className="btn-outline">
+                    <Link
+                      href="/register"
+                      className="btn-default btn-outline-black"
+                    >
                       Join as Lawyer
                     </Link>
                   </div>

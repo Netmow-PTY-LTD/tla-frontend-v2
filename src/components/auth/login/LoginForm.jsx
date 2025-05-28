@@ -76,14 +76,14 @@ const LoginForm = () => {
   return (
     <>
       <div className="tla-auth-form tla-auth-form-login relative">
-        <h2 className="tla-auth-title mb-2 text-center">
+        <h3 className="tla-auth-title mb-2 text-center">
           Explore the opportunities
-        </h2>
+        </h3>
         <p className="tla-auth-subtitle text-center">
           1000’s of local and remote clients & lawyers are already waiting for
           your services
         </p>
-        <h3 className="my-6 text-center">Login</h3>
+        <h4 className="my-6 text-center">Login</h4>
 
         {/* Form Wrapper */}
         <Form {...form}>

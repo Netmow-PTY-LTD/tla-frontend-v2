@@ -1,7 +1,7 @@
-import Image from "next/image";
-import SectionHeading from "./home/SectionHeading";
-import Link from "next/link";
-import { workingSteps } from "@/data/data";
+import Image from 'next/image';
+import SectionHeading from './home/SectionHeading';
+import Link from 'next/link';
+import { workingSteps } from '@/data/data';
 
 export default function WorkingSteps() {
   return (
@@ -29,10 +29,10 @@ export default function WorkingSteps() {
           </div>
         </div>
         <div className="flex flex-wrap justify-center gap-4">
-          <Link href="/register" className="btn-brand">
+          <Link href="/register" className="btn-default btn-primary">
             Join as Lawyer - find client
           </Link>
-          <Link href="/register" className="btn-outline">
+          <Link href="/register" className="btn-default btn-outline-black">
             Join as Client - post cases
           </Link>
         </div>

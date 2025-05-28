@@ -384,7 +384,7 @@ export default function RegisterStepTwo() {
               <div className="flex justify-between mt-8">
                 <button
                   type="button"
-                  className="tla-btn tla-btn-outline"
+                  className="tla-btn tla-btn-default btn-outline-black"
                   onClick={() => dispatch(prevStep())}
                 >
                   Back

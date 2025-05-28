@@ -1,28 +1,28 @@
-import Faq from "@/components/main/about/Faq";
-import CallToAction from "@/components/main/CallToAction";
-import MainLayout from "@/components/main/common/layout";
-import SectionHeading from "@/components/main/home/SectionHeading";
-import WorkingSteps from "@/components/main/WorkingSteps";
-import Image from "next/image";
-import Link from "next/link";
+import Faq from '@/components/main/about/Faq';
+import CallToAction from '@/components/main/CallToAction';
+import MainLayout from '@/components/main/common/layout';
+import SectionHeading from '@/components/main/home/SectionHeading';
+import WorkingSteps from '@/components/main/WorkingSteps';
+import Image from 'next/image';
+import Link from 'next/link';
 
 const AboutPage = () => {
   const sectionHeading = {
-    subtitle: "Who We Are?",
-    title: "The Law App – Transforming Legal Connections",
+    subtitle: 'Who We Are?',
+    title: 'The Law App – Transforming Legal Connections',
     paragraph:
-      "The Law App is a cutting-edge legal services marketplace designed to help clients and lawyers connect effortlessly. We provide a smart, user-friendly platform where clients can post their legal needs and receive competitive offers from qualified lawyers.",
+      'The Law App is a cutting-edge legal services marketplace designed to help clients and lawyers connect effortlessly. We provide a smart, user-friendly platform where clients can post their legal needs and receive competitive offers from qualified lawyers.',
   };
   return (
     <MainLayout>
-      <section className="about-section">
+      <section className="about-section section">
         <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
             <div className="feature-heading lg:pr-20">
               <h3>About TLA</h3>
               <h2>The Law App – Transforming Legal Connections</h2>
               <div className="feature-heading-text mb-3">
-                <b>Making Legal Services Simple, Accessible & Efficient</b>{" "}
+                <b>Making Legal Services Simple, Accessible & Efficient</b>{' '}
                 <br /> <br />
                 we believe that finding the right legal help should be easy,
                 transparent, and stress-free. Whether you're a client seeking
@@ -33,7 +33,7 @@ const AboutPage = () => {
                 professionals in just a few clicks, ensuring quality legal
                 assistance without the usual complexity.
               </div>
-              <Link href="/register" className="btn-brand">
+              <Link href="/register" className="btn-default btn-primary">
                 Start TLA - Register Now
               </Link>
             </div>
@@ -48,7 +48,7 @@ const AboutPage = () => {
           </div>
         </div>
       </section>
-      <section className="about-showcase">
+      <section className="about-showcase section">
         <div className="container">
           <SectionHeading
             title={sectionHeading.title}
@@ -57,7 +57,7 @@ const AboutPage = () => {
           />
           <div className="w-full mt-5 lg:mt-10">
             <Image
-              src={"/assets/img/showcase-main.png"}
+              src={'/assets/img/showcase-main.png'}
               width={1190}
               height={576}
               className="showcase-main w-full"
@@ -66,7 +66,7 @@ const AboutPage = () => {
           </div>
         </div>
       </section>
-      <section className="about-features">
+      <section className="about-features section">
         <div className="container">
           <SectionHeading
             title="Why Choose The Law App?"
@@ -97,7 +97,7 @@ const AboutPage = () => {
                 Connect with experienced and verified legal professionals.
               </div>
               <Image
-                src={"/assets/img/feature-1.png"}
+                src={'/assets/img/feature-1.png'}
                 width={234}
                 height={234}
                 alt="Feature 1"
@@ -127,7 +127,7 @@ const AboutPage = () => {
                 Connect with experienced and verified legal professionals.
               </div>
               <Image
-                src={"/assets/img/feature-1.png"}
+                src={'/assets/img/feature-1.png'}
                 width={234}
                 height={234}
                 alt="Feature 1"
@@ -158,7 +158,7 @@ const AboutPage = () => {
                 Connect with experienced and verified legal professionals.
               </div>
               <Image
-                src={"/assets/img/feature-1.png"}
+                src={'/assets/img/feature-1.png'}
                 width={234}
                 height={234}
                 alt="Feature 1"
@@ -188,7 +188,7 @@ const AboutPage = () => {
                 Connect with experienced and verified legal professionals.
               </div>
               <Image
-                src={"/assets/img/feature-1.png"}
+                src={'/assets/img/feature-1.png'}
                 width={234}
                 height={234}
                 alt="Feature 1"
@@ -196,10 +196,10 @@ const AboutPage = () => {
             </div>
           </div>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/register" className="btn-brand">
+            <Link href="/register" className="btn-default btn-primary">
               Join as Lawyer - find client
             </Link>
-            <Link href="/register" className="btn-outline">
+            <Link href="/register" className="btn-default btn-outline-black">
               Join as Client - post cases
             </Link>
           </div>
@@ -207,7 +207,7 @@ const AboutPage = () => {
       </section>
       <WorkingSteps />
       <Faq />
-      <section className="home-cta">
+      <section className="home-cta section">
         <div className="container">
           <div className="home-cta-content">
             <div className="flex flex-wrap">
@@ -227,10 +227,13 @@ const AboutPage = () => {
                     </ul>
                   </div>
                   <div className="home-cta-button flex gap-2">
-                    <Link href="/register" className="btn-brand">
+                    <Link href="/register" className="btn-default btn-primary">
                       Join as Client
                     </Link>
-                    <Link href="/register" className="btn-outline">
+                    <Link
+                      href="/register"
+                      className="btn-default btn-outline-black"
+                    >
                       Join as Lawyer
                     </Link>
                   </div>

@@ -397,7 +397,7 @@ export default function RegisterStepTwoShadik({
                   <div className="flex gap-3">
                     <button
                       type="submit"
-                      className="btn-outline"
+                      className="btn-default btn-outline-black"
                       onClick={handleBack}
                     >
                       Back
