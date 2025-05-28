@@ -9,6 +9,10 @@
   --color-black: #0b1c2d;
   --color-text: #34495e;
   --color-white: #ffffff;
+
+  --body-text: 
+  --subtitle:
+  --primary-
 }
 
 body {
@@ -95,7 +99,6 @@ input:focus {
   gap: 10px;
   color: var(--color-black);
   text-align: center;
-  font-size: clamp(13px, 0.9vw, 16px);
   font-weight: 500;
   line-height: 27px;
 }
@@ -103,7 +106,6 @@ input:focus {
 .section-heading h2 {
   color: var(--color-black);
   text-align: center;
-  font-size: clamp(24px, 1.5vw, 36px);
   font-weight: 700;
   line-height: 130%;
   letter-spacing: -0.5px;
@@ -112,7 +114,6 @@ input:focus {
 .section-heading p {
   color: #34495e;
   text-align: center;
-  font-size: clamp(13px, 0.9vw, 16px);
   font-weight: 400;
   line-height: 170%;
 }
@@ -126,7 +127,6 @@ input:focus {
   border-radius: 8px;
   background: var(--primary-color);
   color: var(--color-black);
-  font-size: clamp(13px, 0.9vw, 13px);
   font-weight: 700;
   line-height: 12px; /* 75% */
 }
@@ -140,7 +140,6 @@ input:focus {
   align-items: center;
   gap: 10px;
   color: var(--color-white);
-  font-size: clamp(13px, 0.8vw, 16px);
   font-weight: 600;
   line-height: 12px;
 }
@@ -155,7 +154,6 @@ input:focus {
   height: 52px;
   padding: 0 16px;
   color: var(--color-black);
-  font-size: 16px;
   font-weight: 500;
   line-height: 27px;
 }
@@ -173,7 +171,6 @@ input:focus {
   height: 141px;
   padding: 10px 16px 0;
   color: var(--color-black);
-  font-size: 16px;
   font-weight: 500;
   line-height: 27px;
   resize: vertical;
@@ -191,7 +188,7 @@ input:focus {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  min-height: calc(100vh - 65px);
+  min-height: calc(100vh - 65px - 64px);
 }
 
 .tla-auth-wrapper {
@@ -228,7 +225,6 @@ input:focus {
 }
 
 .tla-auth-login-text {
-  font-size: 10px;
   font-weight: 400;
   text-align: center;
   color: #fff;
@@ -242,7 +238,6 @@ input:focus {
 
 .tla-auth-form h2 {
   color: var(--color-black);
-  font-size: clamp(18px, 1.5vw, 24px);
   font-weight: 700;
   line-height: 110%;
   letter-spacing: -0.5px;
@@ -250,7 +245,6 @@ input:focus {
 
 .tla-auth-form p {
   color: var(--color-text);
-  font-size: clamp(10px, 0.8vw, 12px);
   font-weight: 400;
   line-height: 18px;
 }
@@ -258,7 +252,6 @@ input:focus {
 .tla-auth-form h3 {
   color: var(--color-black);
   text-align: center;
-  font-size: clamp(15px, 1vw, 20px);
   font-weight: 600;
   line-height: 110%;
   letter-spacing: -0.5px;
@@ -266,7 +259,6 @@ input:focus {
 
 .tla-form-label {
   color: var(--color-black);
-  font-size: clamp(14px, 0.8vw, 18px);
   font-style: normal;
   font-weight: 500;
   line-height: 27px; /* 150% */
@@ -274,14 +266,12 @@ input:focus {
 
 .popular-services h4 {
   color: var(--color-black);
-  font-size: clamp(14px, 0.8vw, 18px);
   font-weight: 500;
   line-height: 27px;
 }
 
 .popular-services h5 {
   color: var(--color-text);
-  font-size: clamp(13px, 0.8vw, 16px);
   font-weight: 400;
   line-height: 18px;
 }
@@ -306,7 +296,6 @@ input:focus {
   border-radius: 8px;
   background-color: var(--primary-color);
   color: var(--color-white);
-  font-size: clamp(13px, 0.8vw, 16px);
   font-weight: 600;
   line-height: 12px;
   cursor: pointer;
@@ -314,7 +303,6 @@ input:focus {
 
 .tla-auth-footer {
   color: var(--color-text);
-  font-size: clamp(12px, 0.8vw, 16px);
   font-weight: 400;
   line-height: 20px;
   margin-top: 50px;
@@ -336,7 +324,6 @@ input:focus {
   align-items: center;
   gap: 10px;
   color: var(--color-black);
-  font-size: clamp(13px, 0.8vw, 16px);
   font-weight: 600;
   line-height: 12px;
   cursor: pointer;
@@ -351,21 +338,18 @@ input:focus {
   align-items: center;
   gap: 10px;
   color: var(--color-black);
-  font-size: clamp(13px, 0.8vw, 16px);
   font-weight: 600;
   line-height: 12px;
 }
 
 .info-text {
   color: var(--color-black);
-  font-size: clamp(13px, 0.8vw, 16px);
   font-weight: 400;
   line-height: 27px;
 }
 
 .company-size label {
   color: var(--color-black);
-  font-size: clamp(13px, 0.8vw, 16px);
   font-weight: 500;
   line-height: 27px;
   margin-bottom: 10px;
@@ -379,7 +363,6 @@ input:focus {
   gap: 10px;
   color: var(--color-black);
   text-align: center;
-  font-size: clamp(13px, 0.8vw, 16px);
   font-weight: 500;
   line-height: 27px;
   border: 1px solid var(--color-black);
@@ -419,7 +402,6 @@ input:focus {
   color: var(--color-black);
   text-align: center;
   font-family: Inter;
-  font-size: 16px;
   font-style: normal;
   font-weight: 500;
   line-height: 21px;
@@ -435,7 +417,6 @@ input:focus {
   align-items: center;
   color: #fff;
   text-align: center;
-  font-size: 16px;
   font-weight: 600;
   line-height: 12px;
 }
@@ -460,7 +441,6 @@ input:focus {
   color: var(--brand-surface-1-text-on-light, #0b1c2d);
   text-align: center;
   font-family: Inter;
-  font-size: clamp(13px, 0.9vw, 16px);
   font-style: normal;
   font-weight: 500;
   line-height: 27px; /* 168.75% */
@@ -479,7 +459,6 @@ input:focus {
 .hero-content h1 {
   color: var(--color-text);
   text-align: center;
-  font-size: clamp(32px, 3.5vw, 55px);
   font-style: normal;
   font-weight: 700;
   line-height: 110%; /* 72.6px */
@@ -497,7 +476,6 @@ input:focus {
   justify-content: center;
   align-items: center;
   gap: 6px;
-  font-size: 16px;
   font-weight: 700;
   line-height: 27px;
 }
@@ -505,7 +483,6 @@ input:focus {
 .suggestion-area h5 {
   color: #34495e;
   text-align: center;
-  font-size: 15px;
   font-weight: 400;
   line-height: 27px;
 }
@@ -578,14 +555,12 @@ Home Features
   gap: 10px;
   color: var(--color-black);
   text-align: center;
-  font-size: clamp(13px, 0.9vw, 13px);
   font-weight: 500;
   line-height: 27px;
 }
 
 .feature-heading h2 {
   color: #34495e;
-  font-size: clamp(24px, 2vw, 28px);
   font-weight: 700;
   line-height: 130%;
   letter-spacing: -0.5px;
@@ -593,7 +568,6 @@ Home Features
 
 .feature-heading .feature-heading-text {
   color: #34495e;
-  font-size: clamp(12px, 0.9vw, 13px);
   font-weight: 400;
   line-height: 170%;
 }
@@ -664,7 +638,6 @@ Home Testimonials
 
 .home-cta-text h2 {
   color: var(--color-text);
-  font-size: clamp(24px, 2vw, 36px);
   font-weight: 700;
   line-height: 130%;
   letter-spacing: -0.5px;
@@ -672,7 +645,6 @@ Home Testimonials
 
 .home-cta-text .cta-text {
   color: var(--color-text);
-  font-size: clamp(12px, 0.9vw, 16px);
   font-weight: 400;
   line-height: 170%;
 }
@@ -806,7 +778,6 @@ Home Testimonials
 
 .tla-faq-accordion-header h2 {
   color: #212121;
-  font-size: clamp(14px, 0.9vw, 22px);
   font-weight: 600;
   line-height: 1.2;
 }
@@ -883,14 +854,12 @@ Home Testimonials
 .working-step-content h3 {
   color: #0b1c2d;
   text-align: justify;
-  font-size: clam(14px, 0.9vw, 20px);
   font-weight: 600;
   line-height: 24px;
 }
 .working-steps-paragraph {
   color: #34495e;
   font-family: Inter;
-  font-size: clamp(12px, 0.9vw, 16px);
   font-weight: 400;
   line-height: 170%;
 }
@@ -917,7 +886,6 @@ Home Testimonials
 
 .contact-form-heading h2 {
   color: var(--color-black);
-  font-size: clamp(18px, 1.5vw, 28px);
   font-weight: 700;
   line-height: 110%;
   letter-spacing: -0.5px;
@@ -926,7 +894,6 @@ Home Testimonials
 
 .contact-text {
   color: var(--color-text);
-  font-size: clamp(13px, 0.9vw, 16px);
   font-weight: 400;
   line-height: 24px;
 }
@@ -982,7 +949,6 @@ Home Testimonials
 
 .footer-top p {
   color: var(--color-black);
-  font-size: 14px;
   font-weight: 500;
   line-height: 24px; /* 114.286% */
 }
@@ -1014,7 +980,6 @@ Home Testimonials
 
 .footer-text {
   color: var(--Brand-Secondary-Text, #34495e);
-  font-size: 14px;
   font-weight: 400;
   line-height: 170%;
 }
@@ -1026,8 +991,6 @@ Home Testimonials
 .footer-widget h3,
 .footer-contact h3 {
   color: var(--brand-surface-1-text-on-light, #0b1c2d);
-  font-family: Inter;
-  font-size: 16px;
   font-style: normal;
   font-weight: 600;
   line-height: 12px;
@@ -1042,7 +1005,6 @@ Home Testimonials
 .footer-widget ul li a,
 .footer-contact ul li a {
   color: var(--Brand-Secondary-Text, #34495e);
-  font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: 170%; /* 27.2px */
@@ -1065,7 +1027,6 @@ Home Testimonials
 
 .footer-copyright p {
   color: var(--Brand-Secondary-Text, #34495e);
-  font-size: 16px;
   font-weight: 400;
   line-height: 170%;
 }
