@@ -9,8 +9,10 @@ export default function HomeAboutPreview() {
         <div className="flex flex-wrap">
           <div className="w-full lg:w-1/2 lg:pr-10">
             <div className="feature-heading">
-              <h3>Looking for legal help from a lawyer?</h3>
-              <h2>Legal Help Made Simple with TLA</h2>
+              <h3 className="section-subtitle">
+                Looking for legal help from a lawyer?
+              </h3>
+              <h2 className="section-title">Legal Help Made Simple with TLA</h2>
               <div className="feature-heading-text">
                 Finding or offering legal services is fast and hassle-free on
                 The Law App. Just three easy steps:
@@ -31,7 +33,7 @@ export default function HomeAboutPreview() {
                   </li>
                 </ul>
               </div>
-              <Link href="/register" className="btn-brand">
+              <Link href="/register" className="btn-default btn-primary">
                 Join as Lawyer - Post your job
               </Link>
             </div>

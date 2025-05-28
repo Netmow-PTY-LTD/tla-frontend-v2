@@ -61,7 +61,7 @@ const Chat = () => {
           placeholder="Type message..."
           name="message"
         />
-        <button className="btn-brand">
+        <button className="btn-default btn-primary">
           {' '}
           <span>Send </span> <SendHorizontal />
         </button>

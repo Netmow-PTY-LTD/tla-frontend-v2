@@ -425,7 +425,7 @@ export default function RegisterStepThree() {
               <div className="flex justify-end gap-3 mt-10">
                 <button
                   type="button"
-                  className="btn-outline"
+                  className="btn-default btn-outline-black"
                   onClick={() => dispatch(prevStep())}
                   disabled={isLoading}
                 >

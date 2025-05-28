@@ -71,12 +71,14 @@ export default function HomeServices() {
                 className="object-cover rounded-lg w-full"
                 alt={item.title}
               />
-              <h5>{item.title}</h5>
+              <h5 className="text-[var(--color-text)] text-[16px]">
+                {item.title}
+              </h5>
             </Link>
           ))}
         </div>
         <div className="flex justify-center gap-5 mt-10">
-          <Link href="/services" className="btn-brand">
+          <Link href="/services" className="btn-default btn-primary">
             Get Started - Explore All Services
           </Link>
         </div>

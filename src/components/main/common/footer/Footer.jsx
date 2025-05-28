@@ -56,7 +56,7 @@ export default function Footer() {
                 </div>
                 <div className="flex flex-wrap justify-between gap-[30px] md:gap-10">
                   <div className="footer-widget w-[calc(50%-15px)] md:w-auto">
-                    <h3>Navigate</h3>
+                    <h5>Navigate</h5>
                     <ul>
                       <li>
                         <Link href="/about">About Us</Link>
@@ -73,7 +73,7 @@ export default function Footer() {
                     </ul>
                   </div>
                   <div className="footer-widget w-[calc(50%-15px)] md:w-auto">
-                    <h3>For Clients</h3>
+                    <h5>For Clients</h5>
                     <ul>
                       <li>
                         <Link href="/about">Find Lawyers</Link>
@@ -87,7 +87,7 @@ export default function Footer() {
                     </ul>
                   </div>
                   <div className="footer-widget w-[calc(50%-15px)] md:w-auto">
-                    <h3>For Lawyers</h3>
+                    <h5>For Lawyers</h5>
                     <ul>
                       <li>
                         <Link href="/about">Find Clients</Link>
@@ -101,7 +101,7 @@ export default function Footer() {
                     </ul>
                   </div>
                   <div className="footer-widget w-[calc(50%-15px)] md:w-auto">
-                    <h3>Other Pages</h3>
+                    <h5>Other Pages</h5>
                     <ul>
                       <li>
                         <Link href="/faq">FAQs</Link>

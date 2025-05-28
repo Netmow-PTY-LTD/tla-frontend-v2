@@ -26,7 +26,9 @@ const LeadSettings = () => {
       </div>
 
       <div className="flex flex-col sm:flex-row justify-between items-center m-3">
-        <button className="btn-brand mb-2 sm:mb-0">Upgrade plan</button>
+        <button className="btn-default btn-primary mb-2 sm:mb-0">
+          Upgrade plan
+        </button>
         <p className="text-sm">
           Visit{' '}
           <span>

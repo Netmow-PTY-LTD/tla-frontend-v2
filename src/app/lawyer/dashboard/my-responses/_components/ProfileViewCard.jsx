@@ -44,9 +44,9 @@ const ProfileViewCard = ({ id }) => {
           </p>
         </div>
         <div className="flex items-center gap-2  ">
-          <button className="btn-brand">Call Client</button>
-          <button className="btn-brand"> Send WhatsApp</button>
-          <button className="btn-brand"> Send Email</button>
+          <button className="btn-default btn-primary">Call Client</button>
+          <button className="btn-default btn-primary"> Send WhatsApp</button>
+          <button className="btn-default btn-primary"> Send Email</button>
         </div>
         <div className="mt-5">
           <h1 className="font-medium mb-1">Matched criteria</h1>

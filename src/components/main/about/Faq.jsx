@@ -1,7 +1,7 @@
-"use client";
-import { useState } from "react";
-import SectionHeading from "../home/SectionHeading";
-import { faqData } from "@/data/data";
+'use client';
+import { useState } from 'react';
+import SectionHeading from '../home/SectionHeading';
+import { faqData } from '@/data/data';
 
 export default function Faq() {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -15,7 +15,7 @@ export default function Faq() {
   };
 
   return (
-    <section className="tla-faq">
+    <section className="tla-faq section">
       <div className="container">
         <SectionHeading
           title="Frequently Asked Questions"
@@ -29,15 +29,15 @@ export default function Faq() {
                   className="tla-faq-accordion-header"
                   onClick={() => toggleAccordion(index)}
                 >
-                  <h2>
+                  <h5>
                     <span>{index + 1}.</span> {faq?.question}
-                  </h2>
+                  </h5>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
                     height="24"
                     viewBox="0 0 24 24"
-                    className={`${index === activeIndex ? "rotate" : ""}`}
+                    className={`${index === activeIndex ? 'rotate' : ''}`}
                   >
                     <path
                       fill="#575757"
@@ -47,7 +47,7 @@ export default function Faq() {
                 </div>
                 <div
                   className={`tla-faq-accordion-body ${
-                    index === activeIndex ? "active" : ""
+                    index === activeIndex ? 'active' : ''
                   }`}
                 >
                   {faq?.answer}

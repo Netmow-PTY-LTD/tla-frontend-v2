@@ -354,7 +354,7 @@ export default function RegisterStepThreeShadik({
                 <div className="flex flex-wrap justify-end gap-3 mt-10">
                   <button
                     type="button"
-                    className="btn-outline"
+                    className="btn-default btn-outline-black"
                     onClick={handleBack}
                     disabled={isLoading}
                   >

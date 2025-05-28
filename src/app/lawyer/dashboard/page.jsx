@@ -1,6 +1,5 @@
 'use client';
 import React from 'react';
-import WelcomeCard from './_component/home/WelcomeCard';
 import ProfileCard from './_component/home/ProfileCard';
 import LeadSettingsCard from './_component/home/LeadSettingsCard';
 import LeadsCountCard from './_component/home/LeadsCountCard';
