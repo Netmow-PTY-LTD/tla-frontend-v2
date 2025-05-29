@@ -10,7 +10,7 @@ export default function Register() {
 
   return (
     <section
-      className="tla-auth-section"
+      className="tla-auth-section flex items-center"
       style={{ backgroundImage: `url('/assets/img/hero_bg.png')` }}
     >
       <div className="container">
