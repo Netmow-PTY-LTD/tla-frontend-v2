@@ -1,6 +1,8 @@
 'use client';
 
 import React from 'react';
+import { useFormContext } from 'react-hook-form';
+import clsx from 'clsx'; // for conditional class merging
 import {
   FormControl,
   FormField,
@@ -11,41 +13,47 @@ import {
 import { Input } from '@/components/ui/input';
 
 export default function TextInput({
-  label,
   name,
-  value,
-  onChange,
-  type,
-  placeholder,
-  control,
+  label,
+  placeholder = '',
+  type = 'text',
+  disabled = false,
+  inputClassName = '',
+  itemClassName = '',
+  labelClassName = '',
   ...props
 }) {
+  const { control } = useFormContext();
+
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => {
-        const handleChange = (e) => {
-          field.onChange(e);
-          if (onChange) {
-            onChange(e);
-          }
-        };
+        const { ref, value, onChange, onBlur, name, ...restField } = field;
 
         return (
-          <FormItem>
-            <FormLabel>{label}</FormLabel>
+          <FormItem className={itemClassName}>
+            {label && <FormLabel className={labelClassName}>{label}</FormLabel>}
             <FormControl>
               <Input
-                {...field}
-                type={type || 'text'}
+                {...restField}
+                name={name}
+                ref={ref}
+                type={type}
                 placeholder={placeholder}
-                value={field.value || ''}
-                onChange={handleChange}
-                className="bg-[#f2f2f2] text-black placeholder:text-[#a6a8ab] h-[44px]"
+                disabled={disabled}
+                onChange={onChange}
+                onBlur={onBlur}
+                value={value ?? ''}
+                className={clsx(
+                  'bg-white border-[#DCE2EA] text-black placeholder:text-[#a6a8ab] h-[44px]',
+                  inputClassName
+                )}
+                {...props}
               />
             </FormControl>
-            <FormMessage className="text-red-500" />
+            <FormMessage />
           </FormItem>
         );
       }}
