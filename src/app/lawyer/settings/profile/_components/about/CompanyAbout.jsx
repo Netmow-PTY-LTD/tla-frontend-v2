@@ -1,5 +1,6 @@
 'use client';
 
+import TextareaInput from '@/components/form/TextArea';
 import TextArea from '@/components/form/TextArea';
 import TextInput from '@/components/form/TextInput';
 import { Form } from '@/components/ui/form';
@@ -55,8 +56,9 @@ export default function CompanyAbout() {
             name="yer"
             placeholder="Number of years"
           />
-          <TextArea
-            control={form.control}
+          <TextareaInput
+            // control={form.control}
+
             label="Describe your company "
             name="description"
             placeholder="What sets you apart from businesses?"
