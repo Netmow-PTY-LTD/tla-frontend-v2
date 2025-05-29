@@ -1,6 +1,7 @@
 'use client';
 
-import TextArea from '@/components/form/TextArea';
+import TextareaInput from '@/components/form/TextArea';
+
 import { Form } from '@/components/ui/form';
 import ToggleSwitch from '@/components/UIComponents/ToggleSwitch';
 import { CircleAlert } from 'lucide-react';
@@ -37,7 +38,7 @@ export default function QuestionsAndAnswers() {
 
           <div className="space-y-5 mt-5">
             <div>
-              <TextArea
+              <TextareaInput
                 control={form.control}
                 label="What do you love most about your job ?"
                 name="item"
@@ -45,7 +46,7 @@ export default function QuestionsAndAnswers() {
               <p className="mt-2">Minimum 50 Character</p>
             </div>
             <div>
-              <TextArea
+              <TextareaInput
                 control={form.control}
                 label="What inspired you to start your own business ?"
                 name="item"
@@ -53,7 +54,7 @@ export default function QuestionsAndAnswers() {
               <p className="mt-2">Minimum 50 Character</p>
             </div>
             <div>
-              <TextArea
+              <TextareaInput
                 control={form.control}
                 label="Why should our clients choose you ?"
                 name="item"
@@ -61,7 +62,7 @@ export default function QuestionsAndAnswers() {
               <p className="mt-2">Minimum 50 Character</p>
             </div>
             <div>
-              <TextArea
+              <TextareaInput
                 control={form.control}
                 label="Can you provide your services online or remotely ?"
                 name="item"

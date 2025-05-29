@@ -1,12 +1,11 @@
 'use client';
 import MainLayout from '@/components/main/common/layout';
 import Link from 'next/link';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Form } from '@/components/ui/form';
+
 import TextInput from '@/components/form/TextInput';
-import TextArea from '@/components/form/TextArea';
+import TextareaInput from '@/components/form/TextArea';
+import FormWrapper from '@/components/form/FromWrapper';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -21,24 +20,14 @@ const formSchema = z.object({
 });
 
 export default function ContactPage() {
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: '',
-      phone: '',
-      email: '',
-      message: '',
-    },
-  });
-
-  const { control, handleSubmit, setValue } = form;
-
-  const handleChange = (e) => {
-    // Example of custom logic
-    console.log(`Input changed for ${e.target.name}: ${e.target.value}`);
+  const defaultValues = {
+    name: 'rabby',
+    phone: '05445454',
+    email: 'rabby@gmail.com',
+    message: 'this is a test message',
   };
 
-  const onSubmit = (data) => {
+  const handleSubmit = (data) => {
     console.log(data);
   };
 
@@ -60,42 +49,38 @@ export default function ContactPage() {
                     practice, we’re here to support you every step of the way.
                   </div>
                 </div>
-                <Form {...form}>
-                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <FormWrapper
+                  onSubmit={handleSubmit}
+                  // defaultValues={defaultValues}
+                  schema={formSchema}
+                >
+                  <div className="space-y-4">
                     <TextInput
                       label="Name"
                       name="name"
-                      control={control}
                       placeholder="Enter your name"
-                      onChange={handleChange}
                     />
                     <TextInput
                       label="Email"
                       name="email"
-                      control={control}
                       placeholder="Enter your email address"
-                      onChange={handleChange}
                     />
                     <TextInput
                       label="Phone(Optional)"
                       name="phone"
-                      control={control}
                       placeholder="Enter your phone number"
-                      onChange={handleChange}
                     />
-                    <TextArea
+                    <TextareaInput
                       label="Message"
                       name="message"
-                      control={control}
                       placeholder="Type your message here..."
-                      onChange={handleChange}
                     />
 
                     <button type="submit" className="btn-auth-register">
                       Send Message
                     </button>
-                  </form>
-                </Form>
+                  </div>
+                </FormWrapper>
               </div>
             </div>
           </div>

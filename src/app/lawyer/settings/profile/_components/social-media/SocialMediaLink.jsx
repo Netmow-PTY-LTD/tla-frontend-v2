@@ -1,6 +1,6 @@
 'use client';
 
-import TextArea from '@/components/form/TextArea';
+import TextareaInput from '@/components/form/TextArea';
 import TextInput from '@/components/form/TextInput';
 import { Form } from '@/components/ui/form';
 import ToggleSwitch from '@/components/UIComponents/ToggleSwitch';
@@ -75,8 +75,7 @@ export default function SocialMediaLink() {
           </div>
 
           <div className="mt-5">
-            <TextArea
-              control={form.control}
+            <TextareaInput
               label="Describe your company"
               name="link"
               placeholder="Enter one link per line"
