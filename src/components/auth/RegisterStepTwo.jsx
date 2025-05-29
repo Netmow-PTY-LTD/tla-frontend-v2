@@ -215,7 +215,7 @@ export default function RegisterStepTwo() {
                           }
                           placeholder="Select a Zipcode"
                         />
-                        <ComboboxButton className="absolute inset-y-0 right-0 flex items-center pr-2">
+                        <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
                           <ChevronDown className="h-4 w-4 text-gray-500" />
                         </ComboboxButton>
                         {filteredZipcodes?.length > 0 && (
