@@ -1,6 +1,7 @@
 'use client';
 import { LoaderSpinner } from '@/components/common/LoaderSpinner';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import FormWrapper from '@/components/form/FromWrapper';
 import TextInput from '@/components/form/TextInput';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Form } from '@/components/ui/form';
@@ -32,10 +33,6 @@ const LoginForm = () => {
       password: '',
     },
   });
-
-  const handleChange = (e) => {
-    console.log(`Input changed for ${e.target.name}: ${e.target.value}`);
-  };
 
   const onSubmit = async (data) => {
     try {
@@ -109,25 +106,21 @@ const LoginForm = () => {
         <h4 className="my-6 text-center">Login</h4>
 
         {/* Form Wrapper */}
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        <FormWrapper onSubmit={onSubmit}>
+          <div className="space-y-5">
             <TextInput
               label="Email"
               type="email"
-              control={form.control}
               name="email"
               placeholder="John@example.com"
-              onChange={handleChange}
             />
 
             <div className="relative">
               <TextInput
                 label="Password"
                 type={showPassword ? 'text' : 'password'}
-                control={form.control}
                 name="password"
                 placeholder="********"
-                onChange={handleChange}
               />
               {showPassword ? (
                 <EyeOff
@@ -168,8 +161,8 @@ const LoginForm = () => {
             >
               {loading || isLoading ? <LoaderSpinner /> : <span>Log In</span>}
             </button>
-          </form>
-        </Form>
+          </div>
+        </FormWrapper>
 
         {/* Footer with Register Link */}
         <div className="tla-auth-footer text-center">
