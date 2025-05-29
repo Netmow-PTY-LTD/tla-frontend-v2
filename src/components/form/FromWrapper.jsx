@@ -1,8 +1,8 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 
 export default function FormWrapper({
   schema,
@@ -10,14 +10,21 @@ export default function FormWrapper({
   onSubmit,
   children,
 }) {
-  const form = useForm({
-    resolver: zodResolver(schema),
-    defaultValues,
-  });
+  const formConfig = {};
+
+  if (!!defaultValues) {
+    formConfig['defaultValues'] = defaultValues;
+  }
+
+  if (schema) {
+    formConfig['resolver'] = zodResolver(schema);
+  }
+
+  const methods = useForm(formConfig);
 
   return (
-    <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
         {children}
       </form>
     </FormProvider>

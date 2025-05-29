@@ -78,6 +78,7 @@ export default function TextInput({
   inputClassName = '',
   itemClassName = '',
   labelClassName = '',
+  ...props
 }) {
   const { control } = useFormContext();
 
@@ -85,24 +86,34 @@ export default function TextInput({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
-        <FormItem className={itemClassName}>
-          {label && <FormLabel className={labelClassName}>{label}</FormLabel>}
-          <FormControl>
-            <Input
-              {...field}
-              type={type}
-              placeholder={placeholder}
-              disabled={disabled}
-              className={clsx(
-                'bg-white border-[#DCE2EA] text-black placeholder:text-[#a6a8ab] h-[44px]',
-                inputClassName
-              )}
-            />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
+      render={({ field }) => {
+        const { ref, value, onChange, onBlur, name, ...restField } = field;
+
+        return (
+          <FormItem className={itemClassName}>
+            {label && <FormLabel className={labelClassName}>{label}</FormLabel>}
+            <FormControl>
+              <Input
+                {...restField}
+                name={name}
+                ref={ref}
+                type={type}
+                placeholder={placeholder}
+                disabled={disabled}
+                onChange={onChange}
+                onBlur={onBlur}
+                value={value ?? ''}
+                className={clsx(
+                  'bg-white border-[#DCE2EA] text-black placeholder:text-[#a6a8ab] h-[44px]',
+                  inputClassName
+                )}
+                {...props}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        );
+      }}
     />
   );
 }
