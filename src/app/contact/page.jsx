@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Form } from '@/components/ui/form';
 import TextInput from '@/components/form/TextInput';
-import TextArea from '@/components/form/TextArea';
+import TextareaInput from '@/components/form/TextArea';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -83,12 +83,10 @@ export default function ContactPage() {
                       placeholder="Enter your phone number"
                       onChange={handleChange}
                     />
-                    <TextArea
+                    <TextareaInput
                       label="Message"
                       name="message"
-                      control={control}
                       placeholder="Type your message here..."
-                      onChange={handleChange}
                     />
 
                     <button type="submit" className="btn-auth-register">
