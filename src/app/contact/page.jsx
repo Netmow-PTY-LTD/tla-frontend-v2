@@ -25,7 +25,6 @@ export default function ContactPage() {
     phone: '05445454',
     email: 'rabby@gmail.com',
     message: 'this is a test message',
-    country: 'bd',
   };
 
   const handleSubmit = (data) => {
