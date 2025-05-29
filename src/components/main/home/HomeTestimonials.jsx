@@ -1,5 +1,5 @@
-import Image from "next/image";
-import Link from "next/link";
+import Image from 'next/image';
+import Link from 'next/link';
 
 export default function HomeTestimonials() {
   return (
@@ -12,8 +12,10 @@ export default function HomeTestimonials() {
           <div className="flex flex-wrap">
             <div className="w-full lg:w-4/12">
               <div className="feature-heading">
-                <h3>Our Testimonials</h3>
-                <h2>People Say About TLA – Real Stories, Real Impact</h2>
+                <h3 className="section-subtitle">Our Testimonials</h3>
+                <h2 className="section-title">
+                  People Say About TLA – Real Stories, Real Impact
+                </h2>
                 <div className="feature-heading-text">
                   The Law App is changing the way people find legal help and how
                   lawyers grow their practice. Whether you’re a client in need
@@ -23,10 +25,13 @@ export default function HomeTestimonials() {
                   <b>Ready to Experience the Difference?</b>
                 </div>
                 <div className="flex flex-wrap gap-2 mt-8">
-                  <Link href="/register" className="btn-brand">
+                  <Link href="/register" className="btn-default btn-primary">
                     Post your first job
                   </Link>
-                  <Link href="/register" className="btn-outline-alt">
+                  <Link
+                    href="/register"
+                    className="btn-default btn-outline-black"
+                  >
                     Join as Lawyer
                   </Link>
                 </div>

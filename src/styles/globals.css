@@ -4,15 +4,63 @@
 
 :root {
   --font-poppins: 'Poppins', sans-serif;
-  --primary-color: #00c3c0;
-  --secondary-color: #ff8602;
+  --primary-color: #ff8602;
+  --secondary-color: #34495e;
   --color-black: #0b1c2d;
   --color-text: #34495e;
   --color-white: #ffffff;
+
+  --body-text: clamp(0.8rem, 0.9vw, 1rem);
+  --subtitle: clamp(0.75rem, 0.9vw, 0.875rem);
+  --title: clamp(1.5rem, 2vw, 2.25rem);
+  --hero-title: clamp(2.2rem, 3vw, 3.5rem);
 }
 
 body {
   font-family: var(--font-poppins), sans-serif;
+  font-size: var(--body-text);
+}
+
+h1 {
+  font-size: 2.75rem; /* 44px */
+  line-height: 3rem;
+}
+
+h2 {
+  font-size: 2rem; /* 32px */
+  line-height: 2.25rem; /* 36px */
+}
+
+h3 {
+  font-size: 1.75rem; /* 28px */
+  line-height: 2rem; /* 32px */
+}
+
+h4 {
+  font-size: 1.5rem; /* 24px */
+  line-height: 1.75rem; /* 28px */
+}
+
+h5 {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.375rem; /* 22px */
+}
+
+h6 {
+  font-size: 0.875rem; /* 32px */
+  line-height: 1.375rem; /* 36px */
+}
+
+.section-title {
+  font-size: var(--title);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.section-subtitle {
+  font-size: var(--subtitle);
+  font-weight: 400;
+  line-height: 1.5;
 }
 
 /* Reset CSS */
@@ -27,15 +75,33 @@ input:focus {
 }
 
 .container {
-  max-width: 1280px;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+.container-lg {
+  max-width: 112.5rem;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-.container-lg {
-  max-width: 1800px;
-  margin: 0 auto;
-  padding: 0 20px;
+.section {
+  padding: 80px 0;
+}
+
+.no-bottom-padding {
+  padding-bottom: 0 !important;
+}
+
+@media (max-width: 1024px) {
+  .section {
+    padding: 50px 0;
+  }
+}
+
+.border-white-300 {
+  border-color: rgba(255, 255, 255, 0.31);
 }
 
 /* Reuseable Grid */
@@ -56,7 +122,6 @@ input:focus {
   grid-template-columns: 1fr;
 }
 
-
 /* Utility */
 
 .section-heading {
@@ -76,9 +141,9 @@ input:focus {
   justify-content: center;
   align-items: center;
   gap: 10px;
-  color: var(--color-black);
+  color: var(--color-white);
   text-align: center;
-  font-size: clamp(13px, 0.9vw, 16px);
+  font-size: var(--subtitle);
   font-weight: 500;
   line-height: 27px;
 }
@@ -86,46 +151,77 @@ input:focus {
 .section-heading h2 {
   color: var(--color-black);
   text-align: center;
-  font-size: clamp(24px, 1.5vw, 36px);
+  font-size: var(--title);
   font-weight: 700;
-  line-height: 130%;
+  line-height: 1.25;
   letter-spacing: -0.5px;
 }
 
 .section-heading p {
-  color: #34495e;
+  color: var(--color-text);
   text-align: center;
-  font-size: clamp(13px, 0.9vw, 16px);
   font-weight: 400;
   line-height: 170%;
 }
 
-.btn-brand {
-  display: flex;
-  padding: 20px 30px;
+.btn-default {
+  display: inline-flex;
+  padding: 15px 30px;
   justify-content: center;
   align-items: center;
   gap: 10px;
   border-radius: 8px;
-  background: var(--primary-color);
-  color: var(--color-black);
-  font-size: clamp(13px, 0.9vw, 13px);
+  color: var(--color-white);
   font-weight: 700;
-  line-height: 12px; /* 75% */
+  line-height: 1;
+  transition: all 0.3s ease;
 }
 
-.btn-outline-alt {
-  border-radius: 8px;
-  border: 1px solid var(--color-white);
-  display: flex;
-  padding: 15px 20px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
+.btn-primary {
+  background-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+  background-color: var(--secondary-color);
   color: var(--color-white);
-  font-size: clamp(13px, 0.8vw, 16px);
-  font-weight: 600;
-  line-height: 12px;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color);
+}
+
+.btn-secondary:hover {
+  background-color: var(--primary-color);
+  color: var(--color-white);
+  transition: all 0.3s ease;
+}
+
+.btn-outline-primary {
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+}
+
+.btn-outline-secondary {
+  border: 1px solid var(--secondary-color);
+  color: var(--secondary-color);
+}
+
+.btn-outline-white {
+  border: 1px solid var(--color-white);
+  color: var(--color-white);
+}
+
+.btn-outline-black {
+  border: 1px solid var(--color-black);
+  color: var(--color-black);
+}
+
+.btn-outline-black:hover {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
 }
 
 /* Reusable Form */
@@ -138,7 +234,6 @@ input:focus {
   height: 52px;
   padding: 0 16px;
   color: var(--color-black);
-  font-size: 16px;
   font-weight: 500;
   line-height: 27px;
 }
@@ -156,7 +251,6 @@ input:focus {
   height: 141px;
   padding: 10px 16px 0;
   color: var(--color-black);
-  font-size: 16px;
   font-weight: 500;
   line-height: 27px;
   resize: vertical;
@@ -174,7 +268,7 @@ input:focus {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  min-height: calc(100vh - 65px);
+  min-height: calc(100vh - 65px - 64px);
 }
 
 .tla-auth-wrapper {
@@ -186,29 +280,44 @@ input:focus {
   border: 1px solid #dce2ea;
   opacity: 0.93;
   background-color: #fff;
-  box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.06);
+  /* box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.06); */
+  /* width: 100%; */
+  height: 100%;
+}
+
+.tla-auth-image {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   padding: 20px;
+  height: 538px;
+  border-radius: 0 14px 14px 0;
 }
 
 .tla-auth-image img {
   border-radius: 20px;
 }
 
-.tla-auth-form-login {
-  max-width: 544px;
-  width: 100%;
-  margin: 0 auto;
+.tla-auth-login-text {
+  font-weight: 400;
+  text-align: center;
+  color: #fff;
+  max-width: 305px;
+  margin-top: 58px;
 }
 
 .tla-auth-form-register {
   padding: 30px 0 30px 50px;
 }
 
-.tla-auth-form h2 {
+.tla-auth-form h3 {
   color: var(--color-black);
-  font-size: clamp(20px, 1.5vw, 28px);
   font-weight: 700;
   line-height: 110%;
   letter-spacing: -0.5px;
@@ -216,15 +325,13 @@ input:focus {
 
 .tla-auth-form p {
   color: var(--color-text);
-  font-size: clamp(12px, 0.8vw, 16px);
   font-weight: 400;
   line-height: 18px;
 }
 
-.tla-auth-form h3 {
+.tla-auth-form h4 {
   color: var(--color-black);
   text-align: center;
-  font-size: clamp(16px, 1vw, 24px);
   font-weight: 600;
   line-height: 110%;
   letter-spacing: -0.5px;
@@ -232,7 +339,6 @@ input:focus {
 
 .tla-form-label {
   color: var(--color-black);
-  font-size: clamp(14px, 0.8vw, 18px);
   font-style: normal;
   font-weight: 500;
   line-height: 27px; /* 150% */
@@ -240,14 +346,12 @@ input:focus {
 
 .popular-services h4 {
   color: var(--color-black);
-  font-size: clamp(14px, 0.8vw, 18px);
   font-weight: 500;
   line-height: 27px;
 }
 
 .popular-services h5 {
   color: var(--color-text);
-  font-size: clamp(13px, 0.8vw, 16px);
   font-weight: 400;
   line-height: 18px;
 }
@@ -265,14 +369,13 @@ input:focus {
 .btn-auth-login {
   /* width: 100%; */
   display: flex;
-  padding: 20px 40px;
+  padding: 14px 40px;
   justify-content: center;
   align-items: center;
   gap: 10px;
   border-radius: 8px;
-  background-color: var(--primary-color);
-  color: var(--color-black);
-  font-size: clamp(13px, 0.8vw, 16px);
+  background-color: var(--secondary-color);
+  color: var(--color-white);
   font-weight: 600;
   line-height: 12px;
   cursor: pointer;
@@ -280,7 +383,6 @@ input:focus {
 
 .tla-auth-footer {
   color: var(--color-text);
-  font-size: clamp(12px, 0.8vw, 16px);
   font-weight: 400;
   line-height: 20px;
   margin-top: 50px;
@@ -288,6 +390,8 @@ input:focus {
 
 .tla-auth-footer a {
   text-decoration: underline;
+  color: var(--primary-color);
+  font-weight: 500;
 }
 
 .btn-auth-register {
@@ -300,36 +404,19 @@ input:focus {
   align-items: center;
   gap: 10px;
   color: var(--color-black);
-  font-size: clamp(13px, 0.8vw, 16px);
   font-weight: 600;
   line-height: 12px;
   cursor: pointer;
 }
 
-.btn-outline {
-  border-radius: 8px;
-  border: 1px solid var(--color-black);
-  display: flex;
-  padding: 15px 20px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  color: var(--color-black);
-  font-size: clamp(13px, 0.8vw, 16px);
-  font-weight: 600;
-  line-height: 12px;
-}
-
 .info-text {
   color: var(--color-black);
-  font-size: clamp(13px, 0.8vw, 16px);
   font-weight: 400;
   line-height: 27px;
 }
 
 .company-size label {
   color: var(--color-black);
-  font-size: clamp(13px, 0.8vw, 16px);
   font-weight: 500;
   line-height: 27px;
   margin-bottom: 10px;
@@ -343,7 +430,6 @@ input:focus {
   gap: 10px;
   color: var(--color-black);
   text-align: center;
-  font-size: clamp(13px, 0.8vw, 16px);
   font-weight: 500;
   line-height: 27px;
   border: 1px solid var(--color-black);
@@ -383,14 +469,13 @@ input:focus {
   color: var(--color-black);
   text-align: center;
   font-family: Inter;
-  font-size: 16px;
   font-style: normal;
   font-weight: 500;
   line-height: 21px;
 }
 
 .btn_register {
-  background-color: var(--color-black);
+  background-color: var(--secondary-color);
   padding: 16px 20px;
   border: none;
   border-radius: 5px;
@@ -399,7 +484,6 @@ input:focus {
   align-items: center;
   color: #fff;
   text-align: center;
-  font-size: 16px;
   font-weight: 600;
   line-height: 12px;
 }
@@ -407,7 +491,7 @@ input:focus {
 /* HeroHome */
 
 .hero-home {
-  padding: 50px 0;
+  /* padding: 50px 0; */
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
@@ -421,10 +505,9 @@ input:focus {
   justify-content: center;
   align-items: center;
   gap: 10px;
-  color: var(--brand-surface-1-text-on-light, #0b1c2d);
+  color: var(--color-white);
   text-align: center;
-  font-family: Inter;
-  font-size: clamp(13px, 0.9vw, 16px);
+  font-size: var(--subtitle);
   font-style: normal;
   font-weight: 500;
   line-height: 27px; /* 168.75% */
@@ -443,7 +526,7 @@ input:focus {
 .hero-content h1 {
   color: var(--color-text);
   text-align: center;
-  font-size: clamp(32px, 3.5vw, 55px);
+  font-size: var(--hero-title);
   font-style: normal;
   font-weight: 700;
   line-height: 110%; /* 72.6px */
@@ -461,17 +544,14 @@ input:focus {
   justify-content: center;
   align-items: center;
   gap: 6px;
-  font-size: 16px;
   font-weight: 700;
   line-height: 27px;
 }
 
-.suggestion-area h5 {
-  color: #34495e;
+.suggestion-area h6 {
+  color: var(--color-text);
   text-align: center;
-  font-size: 15px;
   font-weight: 400;
-  line-height: 27px;
 }
 
 /* Hero Showcase */
@@ -500,24 +580,24 @@ input:focus {
  Home About
  ====================================*/
 
-.home-about-preview{
+/* .home-about-preview{
   padding: 50px 0;
-}
+} */
 
 /*===================================
  Home Services
  ====================================*/
 
-.home-services {
+/* .home-services {
   padding: 50px 0;
-}
+} */
 
 /*===============================
 Home Features
 =================================*/
-.home-features {
+/* .home-features {
   padding: 50px 0 0;
-}
+} */
 .home-features-grid {
   padding: 80px;
   border-radius: 80px 80px 0px 0px;
@@ -540,24 +620,17 @@ Home Features
   justify-content: center;
   align-items: center;
   gap: 10px;
-  color: var(--color-black);
+  color: var(--color-white);
   text-align: center;
-  font-size: clamp(13px, 0.9vw, 13px);
-  font-weight: 500;
-  line-height: 27px;
 }
 
 .feature-heading h2 {
-  color: #34495e;
-  font-size: clamp(24px, 2vw, 28px);
-  font-weight: 700;
-  line-height: 130%;
+  color: var(--color-black);
   letter-spacing: -0.5px;
 }
 
 .feature-heading .feature-heading-text {
   color: #34495e;
-  font-size: clamp(12px, 0.9vw, 13px);
   font-weight: 400;
   line-height: 170%;
 }
@@ -608,9 +681,9 @@ Home Testimonials
       Home CTA
 ==============================*/
 
-.home-cta {
+/* .home-cta {
   padding: 50px 0;
-}
+} */
 
 .home-cta-content {
   border-radius: 26px;
@@ -627,16 +700,12 @@ Home Testimonials
 }
 
 .home-cta-text h2 {
-  color: var(--color-text);
-  font-size: clamp(24px, 2vw, 36px);
-  font-weight: 700;
-  line-height: 130%;
+  color: var(--color-black);
   letter-spacing: -0.5px;
 }
 
 .home-cta-text .cta-text {
   color: var(--color-text);
-  font-size: clamp(12px, 0.9vw, 16px);
   font-weight: 400;
   line-height: 170%;
 }
@@ -671,6 +740,8 @@ Home Testimonials
   bottom: 0;
   right: 0;
   border-radius: 24px 0 24px 0;
+  max-width: 29.625rem;
+  width: 100%;
 }
 
 .home-cta-images .cta-img-1 {
@@ -678,6 +749,8 @@ Home Testimonials
   bottom: 0;
   right: 420px;
   z-index: 9;
+  max-width: 20.5rem;
+  width: 100%;
 }
 
 @media (max-width: 1400px) {
@@ -711,17 +784,10 @@ Home Testimonials
       About Page
 ======================*/
 
-.about-section {
+/* .about-section {
   padding: 50px 0;
-}
+} */
 
-.about-showcase {
-  padding: 50px 0 100px;
-}
-
-.about-features {
-  padding: 50px 0 100px;
-}
 .feature-item {
   border-radius: 16px;
   border: 1px solid #dce2ea;
@@ -742,10 +808,6 @@ Home Testimonials
 }
 
 /* Faq section */
-
-.tla-faq {
-  padding: 50px 0 100px;
-}
 
 .tla-faq-accordion {
   max-width: 1004px;
@@ -768,11 +830,9 @@ Home Testimonials
   cursor: pointer;
 }
 
-.tla-faq-accordion-header h2 {
-  color: #212121;
-  font-size: clamp(14px, 0.9vw, 22px);
-  font-weight: 600;
-  line-height: 1.2;
+.tla-faq-accordion-header h5 {
+  color: var(--color-black);
+  font-weight: 500;
 }
 
 .tla-faq-accordion-body {
@@ -847,14 +907,12 @@ Home Testimonials
 .working-step-content h3 {
   color: #0b1c2d;
   text-align: justify;
-  font-size: clam(14px, 0.9vw, 20px);
   font-weight: 600;
   line-height: 24px;
 }
 .working-steps-paragraph {
   color: #34495e;
   font-family: Inter;
-  font-size: clamp(12px, 0.9vw, 16px);
   font-weight: 400;
   line-height: 170%;
 }
@@ -870,10 +928,6 @@ Home Testimonials
       Contact Page
 ======================*/
 
-.contact-section {
-  padding: 60px 0 100px;
-}
-
 .contact-image img {
   width: 100%;
   border-radius: 12px;
@@ -881,7 +935,7 @@ Home Testimonials
 
 .contact-form-heading h2 {
   color: var(--color-black);
-  font-size: clamp(18px, 1.5vw, 28px);
+  font-size: var(--title);
   font-weight: 700;
   line-height: 110%;
   letter-spacing: -0.5px;
@@ -890,13 +944,12 @@ Home Testimonials
 
 .contact-text {
   color: var(--color-text);
-  font-size: clamp(13px, 0.9vw, 16px);
   font-weight: 400;
   line-height: 24px;
 }
 
 .contact-form-heading {
-  margin-bottom: 28px;
+  margin-bottom: 15px;
 }
 
 .contact-info .address,
@@ -910,23 +963,19 @@ Home Testimonials
       Footer
 ======================*/
 
-.newsletter-signup{
-  padding: 50px 0;
-}
-
 .newsletter-signup p:after {
-    content: "";
-    position: absolute;
-    bottom: 18px;
-    right: 44px;
-    background-color: #fff;
-    max-width: 161px;
-    width: 100%;
-    height: 1px;
+  content: '';
+  position: absolute;
+  bottom: 18px;
+  right: 44px;
+  background-color: #fff;
+  max-width: 161px;
+  width: 100%;
+  height: 1px;
 }
 
-@media(max-width: 991px){
-  .newsletter-signup p:after{
+@media (max-width: 991px) {
+  .newsletter-signup p:after {
     display: none;
   }
 }
@@ -950,7 +999,6 @@ Home Testimonials
 
 .footer-top p {
   color: var(--color-black);
-  font-size: 14px;
   font-weight: 500;
   line-height: 24px; /* 114.286% */
 }
@@ -982,7 +1030,6 @@ Home Testimonials
 
 .footer-text {
   color: var(--Brand-Secondary-Text, #34495e);
-  font-size: 14px;
   font-weight: 400;
   line-height: 170%;
 }
@@ -991,11 +1038,9 @@ Home Testimonials
   width: calc(20% - 10px);
 } */
 
-.footer-widget h3,
-.footer-contact h3 {
-  color: var(--brand-surface-1-text-on-light, #0b1c2d);
-  font-family: Inter;
-  font-size: 16px;
+.footer-widget h5,
+.footer-contact h5 {
+  color: var(--color-black);
   font-style: normal;
   font-weight: 600;
   line-height: 12px;
@@ -1010,20 +1055,19 @@ Home Testimonials
 .footer-widget ul li a,
 .footer-contact ul li a {
   color: var(--Brand-Secondary-Text, #34495e);
-  font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: 170%; /* 27.2px */
 }
 
 .footer-contact .icon {
-    width: 40px;
-    height: 40px;
-    background: var(--primary-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  background: var(--secondary-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
 }
 
 .footer-bottom {
@@ -1033,7 +1077,6 @@ Home Testimonials
 
 .footer-copyright p {
   color: var(--Brand-Secondary-Text, #34495e);
-  font-size: 16px;
   font-weight: 400;
   line-height: 170%;
 }
