@@ -45,7 +45,7 @@ export default function TextInput({
                 className="bg-[#f2f2f2] text-black placeholder:text-[#a6a8ab] h-[44px]"
               />
             </FormControl>
-            <FormMessage className="text-red" />
+            <FormMessage className="text-red-500" />
           </FormItem>
         );
       }}
