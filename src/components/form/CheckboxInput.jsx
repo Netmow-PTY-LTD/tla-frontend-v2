@@ -10,15 +10,12 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 
-export default function TextareaInput({
+export default function CheckboxInput({
   name,
   label,
-  rows = 4,
-  placeholder = '',
   disabled = false,
-  textareaClassName = '',
   itemClassName = '',
   labelClassName = '',
 }) {
@@ -29,20 +26,21 @@ export default function TextareaInput({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={itemClassName}>
-          {label && <FormLabel className={labelClassName}>{label}</FormLabel>}
+        <FormItem
+          className={clsx('flex items-center gap-2 space-y-0', itemClassName)}
+        >
           <FormControl>
-            <Textarea
-              {...field}
-              rows={rows}
-              placeholder={placeholder}
+            <Checkbox
+              checked={field.value ?? ''}
+              onCheckedChange={field.onChange}
               disabled={disabled}
-              className={clsx(
-                'bg-white border-[#DCE2EA] text-black placeholder:text-[#a6a8ab] w-full ',
-                textareaClassName
-              )}
             />
           </FormControl>
+          {label && (
+            <FormLabel className={clsx('font-normal', labelClassName)}>
+              {label}
+            </FormLabel>
+          )}
           <FormMessage />
         </FormItem>
       )}

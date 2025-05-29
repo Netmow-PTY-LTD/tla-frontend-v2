@@ -1,6 +1,6 @@
 'use client';
 
-import TextArea from '@/components/form/TextArea';
+import TextareaInput from '@/components/form/TextArea';
 import TextInput from '@/components/form/TextInput';
 import { Form } from '@/components/ui/form';
 import DropdownMenuSelect from '@/components/UIComponents/DropDwonMenuSelect';
@@ -55,8 +55,7 @@ export default function CompanyAbout() {
             name="yer"
             placeholder="Number of years"
           />
-          <TextArea
-            control={form.control}
+          <TextareaInput
             label="Describe your company "
             name="description"
             placeholder="What sets you apart from businesses?"
