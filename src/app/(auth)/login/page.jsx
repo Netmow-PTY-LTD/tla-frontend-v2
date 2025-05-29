@@ -6,7 +6,7 @@ export default function Login() {
   return (
     <section
       className="tla-auth-section flex justify-center items-center"
-      style={{ backgroundImage: `url('/assets/img/hero_bg.png')` }}
+      style={{ backgroundImage: `url('/assets/img/auth-bg.png')` }}
     >
       <div className="tla-auth-box max-w-[900px] w-full mx-auto">
         <div className="flex flex-wrap w-full">

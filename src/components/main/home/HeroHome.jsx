@@ -8,9 +8,9 @@ export default function HeroHome() {
   return (
     <section
       className="hero-home section"
-      style={{ backgroundImage: `url('/assets/img/hero_bg.png')` }}
+      style={{ backgroundImage: `url('/assets/img/auth-bg.png')` }}
     >
-      <div className="container-lg">
+      <div className="container">
         <div className="hero-content">
           <h3>Get a quote for legal services.</h3>
           <h1>

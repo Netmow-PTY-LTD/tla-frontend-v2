@@ -11,10 +11,11 @@
   --color-white: #ffffff;
   --color-special: #00c3c0;
 
-  --body-text: clamp(0.8rem, 0.9vw, 1rem);
-  --subtitle: clamp(0.75rem, 0.9vw, 0.875rem);
-  --title: clamp(1.5rem, 2vw, 2.25rem);
-  --hero-title: clamp(2.2rem, 3vw, 3.5rem);
+  /* --body-text: clamp(0.8rem, 0.9vw, 1rem); */
+  --subtitle: 0.875rem;
+  --title: 2.25rem;
+  /* --hero-title: clamp(2.2rem, 3vw, 3.5rem); */
+  --hero-title: 3.5rem;
 }
 
 body {
@@ -79,6 +80,24 @@ input:focus {
   max-width: 80rem;
   margin: 0 auto;
   padding: 0 1.25rem;
+}
+
+@media (min-width: 1921px) {
+  .container {
+    max-width: 112.5rem;
+  }
+}
+
+@media (max-width: 1920px) {
+  .container {
+    max-width: 100rem;
+  }
+}
+
+@media (max-width: 1440px) {
+  .container {
+    max-width: 80rem;
+  }
 }
 
 .container-lg {
@@ -273,11 +292,11 @@ input:focus {
 }
 
 .tla-auth-wrapper {
-  padding: 30px 0 50px;
+  padding: 30px 0 20px;
 }
 
 .tla-auth-box {
-  border-radius: 40px;
+  border-radius: 1.25rem;
   border: 1px solid #dce2ea;
   opacity: 0.93;
   background-color: #fff;

@@ -123,7 +123,7 @@ export default function RegisterStepOne() {
 
   return (
     <div className="flex flex-wrap lg:flex-nowrap">
-      <div className="w-full lg:max-w-[780px]">
+      <div className="w-full lg:max-w-[48.75rem]">
         <div className="tla-auth-form tla-auth-form-register relative z-1">
           <div className="absolute inset-0 flex items-center justify-center z-[-1]">
             <div className="w-[215px] h-[215px] rounded-full bg-[#00C3C080] blur-[100px]"></div>
@@ -136,7 +136,7 @@ export default function RegisterStepOne() {
             services
           </p>
 
-          <h5 className="text-[var(--color-black)] text-[20px] font-semibold mb-5">
+          <h5 className="text-[var(--color-black)] text-[24px] uppercase text-center font-semibold mb-5">
             Register
           </h5>
 
@@ -332,11 +332,11 @@ export default function RegisterStepOne() {
           </div>
         </div>
       </div>
-      <div className="hidden lg:block lg:max-w-[500px] overflow-hidden">
+      <div className="hidden lg:block lg:max-w-[31.25rem] overflow-hidden">
         <Image
           src="/assets/img/reg-bg.png"
           width={500}
-          height={751}
+          height={300}
           alt="Auth"
           className="h-full object-cover rounded-tl-0 rounded-tr-[1.25rem] rounded-br-[1.125rem] rounded-bl-0"
         />
