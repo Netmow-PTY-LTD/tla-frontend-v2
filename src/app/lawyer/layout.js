@@ -22,7 +22,10 @@ export default function SellerDashboardLayout({ children }) {
       <ScrollToTopOnRouteChange />
       <DashboardHeader />
       <SidebarProvider className="sidebar-main min-h-screen overflow-hidden">
-        <Sidebar collapsible="icon" className="sidebar-width-control">
+        <Sidebar
+          collapsible="icon"
+          className="sidebar-width-control sidebar-y-64"
+        >
           <SidebarHeader>
             <SidebarTop />
           </SidebarHeader>
