@@ -25,16 +25,22 @@ export default function AuthHeader() {
           </div>
           <div className="flex items-center gap-4">
             {pathname === '/register' && (
-              <Link href="/login" className="nav-link">
+              <Link
+                href="/login"
+                className="btn-auth-login bg-[var(--primary-color)]"
+              >
                 <span>Log In</span>
               </Link>
             )}
-            <Link
-              href="/register"
-              className="btn_register bg-[var(--primary-color)]"
-            >
-              <span>Register With TLA</span>
-            </Link>
+
+            {pathname === '/login' && (
+              <Link
+                href="/register"
+                className="btn_register bg-[var(--primary-color)]"
+              >
+                <span>Register With TLA</span>
+              </Link>
+            )}
           </div>
         </div>
       </div>

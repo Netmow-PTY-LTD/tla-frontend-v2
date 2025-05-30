@@ -155,7 +155,7 @@ const LoginForm = () => {
 
             <button
               type="submit"
-              className="btn-auth-login w-full"
+              className="btn-auth-login bg-[var(--secondary-color)] w-full"
               style={{ cursor: 'pointer' }}
               disabled={loading || isLoading}
             >
