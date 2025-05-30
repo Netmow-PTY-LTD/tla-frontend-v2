@@ -1,4 +1,5 @@
 'use client';
+import CheckboxInput from '@/components/form/CheckboxInput';
 import TextInput from '@/components/form/TextInput';
 
 import { AlertCircle } from 'lucide-react';
@@ -38,19 +39,13 @@ export default function CompanyLocation() {
             />
             {/* Checkbox with label */}
             <div className="flex items-center justify-start space-x-3 pt-4">
-              <input
-                type="checkbox"
-                name="isProfileShow"
-                id="isProfileShow"
-                className="mt-1 h-4 w-4 text-[#00C3C0]  border-gray-300 rounded focus:ring-[#00C3C0]"
+              <CheckboxInput
+                label={"Don't show this on my profile"}
+                name="hideFromProfile"
+                id="hideFromProfile"
+                className="mt-1 h-4 w-4 text-[#00C3C0] border-gray-300 rounded focus:ring-[#00C3C0]"
               />
-              <label
-                htmlFor="isProfileShow"
-                className="flex items-center text-sm text-gray-700 space-x-2"
-              >
-                <span>Don’t show this on my profile</span>
-                <AlertCircle className="w-4 h-4 text-gray-500" />
-              </label>
+              <AlertCircle className="w-4 h-4 text-gray-500 cursor-pointer" />
             </div>
           </div>
 

@@ -8,7 +8,6 @@ import CompanyLocation from './about/CompanyLocation';
 import CompanyAbout from './about/CompanyAbout';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import FormWrapper from '@/components/form/FromWrapper';
-import { useFormContext } from 'react-hook-form';
 import AboutFormActions from './about/AboutFormAction';
 
 export default function About() {
@@ -25,6 +24,7 @@ export default function About() {
   const profile = userInfo?.data?.profile;
   if (isLoading) return <div className="text-gray-500">Loading...</div>;
 
+  console.log('🔍 User profile data:', profile);
   if (isError) {
     return (
       <div className="text-red-500">
@@ -39,6 +39,31 @@ export default function About() {
     );
   }
 
+  const defaultValues = {
+    companyName: profile?.companyProfile?.companyName ?? '',
+    name: profile?.name ?? '',
+    contactEmail: profile?.companyProfile?.contactEmail ?? '',
+    phoneNumber: profile?.companyProfile?.phoneNumber ?? '',
+    website: profile?.companyProfile?.website ?? '',
+    companyLocation: profile?.companyProfile?.companyLocation ?? '',
+    companySize: profile?.companyProfile?.companySize ?? '',
+    description: profile?.companyProfile?.description ?? '',
+    yearsInBusiness: profile?.companyProfile?.yearsInBusiness ?? '',
+  };
+
+  // const defaultValues = {
+  //   companyName: 'Acme Legal Solutions',
+  //   name: 'John Doe',
+  //   contactEmail: 'john.doe@acmelegalsolutions.com',
+  //   phoneNumber: '+1 (415) 555-0123',
+  //   website: 'https://www.acmelegalsolutions.com',
+  //   companyLocation: '123 Market Street, San Francisco, CA 94105, USA',
+  //   companySize: '11_50_employees',
+  //   description:
+  //     'Acme Legal Solutions is a boutique law firm specializing in corporate, commercial, and intellectual property law. We provide strategic legal counsel to startups and established enterprises.',
+  //   yearsInBusiness: '7',
+  // };
+
   const onSubmit = (data) => {
     console.log('✅ Submitted form:', data);
     // e.g., dispatch(updateUserProfile(data))
@@ -46,7 +71,7 @@ export default function About() {
 
   return (
     <div className="max-w-[900px] mx-auto">
-      <FormWrapper onSubmit={onSubmit}>
+      <FormWrapper onSubmit={onSubmit} defaultValues={defaultValues}>
         <div className="flex items-center gap-20  mb-5 ">
           <CompanyProfile />
           <PersonalProfile />
