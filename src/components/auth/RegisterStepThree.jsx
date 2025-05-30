@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import {
   Form,
   FormField,
@@ -25,11 +25,12 @@ import { verifyToken } from '@/utils/verifyToken';
 import { setUser } from '@/store/features/auth/authSlice';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { lawyerRegistrationStepThreeFormValidation } from '@/schema/auth/lawyerRegistration.schema';
+import Link from 'next/link';
 
 export default function RegisterStepThree() {
   const dispatch = useDispatch();
   const registration = useSelector((state) => state.lawyerRegistration);
-  const { username, email } = registration;
+  const { username, email, password } = registration;
   const { phone, companyTeam, companyName, website, companySize } =
     registration.companyInfo;
 
@@ -47,6 +48,7 @@ export default function RegisterStepThree() {
       company_name: companyName,
       company_website: website,
       company_size: companySize,
+      password,
     },
   });
 
@@ -56,19 +58,29 @@ export default function RegisterStepThree() {
       username,
       email,
       phone,
+      password,
       soloPractitioner: registration.lawyerServiceMap.isSoloPractitioner,
       companyTeam,
       company_name: companyName,
       company_website: website,
       company_size: companySize,
     });
-  }, [username, email, phone, companyTeam, companyName, website, companySize]);
+  }, [
+    username,
+    email,
+    phone,
+    password,
+    companyTeam,
+    companyName,
+    website,
+    companySize,
+  ]);
 
   const router = useRouter();
   const registrationState = useSelector((state) => state.lawyerRegistration);
   const [authRegister, { isLoading }] = useAuthRegisterMutation();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (data) => {
     try {
       const result = await authRegister(registrationState).unwrap();
 
@@ -101,27 +113,23 @@ export default function RegisterStepThree() {
   };
 
   return (
-    <div className="flex flex-wrap lg:flex-nowrap items-center">
-      <div className="hidden lg:block lg:max-w-[602px]">
-        <Image
-          src="/assets/img/auth-step3.png"
-          width={602}
-          height={751}
-          alt="Auth Image"
-        />
-      </div>
-
-      <div className="w-full lg:w-7/12">
-        <div className="tla-auth-form tla-auth-form-register">
-          <h2 className="tla-auth-title mb-2">Some details about you</h2>
-          <p className="tla-auth-subtitle mb-5">
+    <div className="flex flex-wrap lg:flex-nowrap">
+      <div className="w-full lg:max-w-[48.75rem]">
+        <div className="tla-auth-form tla-auth-form-register relative">
+          <div className="absolute inset-0 flex items-center justify-center z-[-1]">
+            <div className="w-[215px] h-[215px] rounded-full bg-[#00C3C080] blur-[100px]"></div>
+          </div>
+          <h3 className="tla-auth-title mb-2 text-center">
+            Some details about you
+          </h3>
+          <p className="tla-auth-subtitle mb-5 text-center">
             You’re just a few steps away from viewing our Family Law leads
           </p>
 
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(handleSubmit)}
-              className="space-y-4"
+              className="space-y-6"
             >
               {/* Email & Phone */}
               <div className="flex flex-wrap">
@@ -249,7 +257,7 @@ export default function RegisterStepThree() {
                 control={form.control}
                 name="soloPractitioner"
                 render={({ field }) => (
-                  <FormItem className="flex items-center">
+                  <FormItem className="flex items-center cursor-pointer">
                     <FormControl>
                       <Checkbox
                         checked={field.value}
@@ -265,7 +273,10 @@ export default function RegisterStepThree() {
                         }}
                       />
                     </FormControl>
-                    <FormLabel className="ml-2 font-bold">
+                    <FormLabel
+                      className="ml-2 font-bold mt-0 cursor-pointer"
+                      style={{ marginTop: '0 !important' }}
+                    >
                       I will work as solo practitioner
                     </FormLabel>
                   </FormItem>
@@ -318,7 +329,7 @@ export default function RegisterStepThree() {
                         }}
                       />
                     </FormControl>
-                    <FormLabel className="ml-2 font-bold">
+                    <FormLabel className="ml-2 font-bold cursor-pointer">
                       I work with a company/team
                     </FormLabel>
                   </FormItem>
@@ -422,7 +433,7 @@ export default function RegisterStepThree() {
               )}
 
               {/* Navigation Buttons */}
-              <div className="flex justify-end gap-3 mt-10">
+              <div className="flex justify-between gap-3 mt-10">
                 <button
                   type="button"
                   className="btn-default btn-outline-black"
@@ -433,15 +444,30 @@ export default function RegisterStepThree() {
                 </button>
                 <button
                   type="submit"
-                  className="btn-auth-register"
-                  disabled={isLoading}
+                  className="btn-default bg-[var(--color-special)]"
+                  // disabled={isLoading}
                 >
                   {isLoading ? 'Submitting...' : 'Finish & See Leads'}
                 </button>
               </div>
             </form>
           </Form>
+          <div className="tla-auth-footer text-center">
+            <span>Already have an account? </span>
+            <Link href="/login">
+              <b>Log In</b>
+            </Link>
+          </div>
         </div>
+      </div>
+      <div className="hidden lg:block lg:max-w-[31.25rem]">
+        <Image
+          src="/assets/img/reg-bg.png"
+          width={602}
+          height={751}
+          className='h-full object-cover rounded-tl-0 rounded-tr-[1.25rem] rounded-br-[1.125rem] rounded-bl-0"'
+          alt="Auth Image"
+        />
       </div>
     </div>
   );

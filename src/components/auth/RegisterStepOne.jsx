@@ -225,7 +225,7 @@ export default function RegisterStepOne() {
                 </div>
               </div>
 
-              {selectedServices?.length > 0 && (
+              {/* {selectedServices?.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {selectedServices.map((service) => (
                     <div
@@ -266,7 +266,7 @@ export default function RegisterStepOne() {
                     </div>
                   ))}
                 </div>
-              )}
+              )} */}
 
               <div
                 className={`popular-services mb-8 ${
@@ -336,7 +336,7 @@ export default function RegisterStepOne() {
         <Image
           src="/assets/img/reg-bg.png"
           width={500}
-          height={300}
+          height={627}
           alt="Auth"
           className="h-full object-cover rounded-tl-0 rounded-tr-[1.25rem] rounded-br-[1.125rem] rounded-bl-0"
         />
