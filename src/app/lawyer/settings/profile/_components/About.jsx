@@ -24,7 +24,6 @@ export default function About() {
   const profile = userInfo?.data?.profile;
   if (isLoading) return <div className="text-gray-500">Loading...</div>;
 
-  console.log('🔍 User profile data:', profile);
   if (isError) {
     return (
       <div className="text-red-500">
@@ -63,8 +62,47 @@ export default function About() {
   };
 
   const onSubmit = (data) => {
-    console.log('✅ Submitted form:', data);
-    // e.g., dispatch(updateUserProfile(data))
+    const formData = new FormData();
+    const { name, companyLogo, userProfileLogo, ...rest } = data;
+    const companyProfile = {
+      companyName: rest.companyName,
+      contactEmail: rest.contactEmail,
+      phoneNumber: rest.phoneNumber,
+      website: rest.website,
+      companySize: rest.companySize,
+      description: rest.description,
+      yearsInBusiness: rest.yearsInBusiness,
+      location: {
+        address: rest.location.address,
+        hideFromProfile: rest.location.hideFromProfile,
+        locationReason: rest.location.locationReason,
+        coordinates: {
+          lat: rest.location.coordinates.lat,
+          lng: rest.location.coordinates.lng,
+        },
+      },
+    };
+
+    const payload = {
+      userProfile: {
+        name,
+      },
+      companyProfile,
+    };
+
+    // Append serialized JSON data
+    formData.append('data', JSON.stringify(payload));
+
+    // Conditionally append files
+    if (companyLogo instanceof File) {
+      formData.append('companyLogo', companyLogo);
+    }
+
+    if (userProfileLogo instanceof File) {
+      formData.append('userProfileLogo', userProfileLogo);
+    }
+
+    console.log(JSON.parse(formData.get('data')));
   };
 
   return (
