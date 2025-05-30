@@ -2,6 +2,7 @@
 
 import TextInput from '@/components/form/TextInput';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import AvatarUploader from '@/components/UIComponents/AvaterUploader';
 import FileUploader from '@/components/UIComponents/fileUploader';
 import { CloudUpload } from 'lucide-react';
 import React from 'react';
@@ -16,7 +17,7 @@ export default function CompanyProfile() {
       </p>
 
       <div>
-        <div className="flex items-center gap-3 mt-11">
+        {/* <div className="flex items-center gap-3 mt-11">
           <Avatar className="h-[90px] w-[90px]">
             <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>CN</AvatarFallback>
@@ -28,7 +29,8 @@ export default function CompanyProfile() {
             multiple={false}
             icon={<CloudUpload className="w-6 h-6 text-[#00C3C0] mb-2" />}
           />
-        </div>
+        </div> */}
+        <AvatarUploader name="companyLogo" label="Upload Logo" />
         <div className="mt-[30px]">
           <TextInput
             name={'companyName'}
