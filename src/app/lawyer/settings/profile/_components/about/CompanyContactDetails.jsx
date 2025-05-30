@@ -1,13 +1,10 @@
 'use client';
 
 import TextInput from '@/components/form/TextInput';
-import { Form } from '@/components/ui/form';
 import Link from 'next/link';
 import React from 'react';
-import { useForm } from 'react-hook-form';
 
 export default function CompanyContactDetails() {
-  const form = useForm();
   return (
     <div className="py-9">
       <h2 className="text-black font-semibold">Company contact details</h2>
@@ -23,28 +20,25 @@ export default function CompanyContactDetails() {
         .
       </p>
 
-      <Form {...form}>
+      <div>
         <div className="grid grid-cols-2 gap-x-20 gap-y-7">
           <TextInput
-            control={form.control}
             label="Company Email Address"
-            name="companyEmail"
+            name="contactEmail"
             placeholder="netmow@gmail.com"
           />
           <TextInput
-            control={form.control}
             label="Company Phone Number"
-            name="companyPhone"
+            name="phoneNumber"
             placeholder="+8801XXXXXXX"
           />
           <TextInput
-            control={form.control}
             label="Website"
-            name="website-link"
+            name="website"
             placeholder="Company Website"
           />
         </div>
-      </Form>
+      </div>
     </div>
   );
 }

@@ -1,58 +1,52 @@
 'use client';
-
+import SelectInput from '@/components/form/SelectInput';
 import TextareaInput from '@/components/form/TextArea';
 import TextInput from '@/components/form/TextInput';
-import { Form } from '@/components/ui/form';
-import DropdownMenuSelect from '@/components/UIComponents/DropDwonMenuSelect';
+
 import React from 'react';
-import { useForm } from 'react-hook-form';
 
 export default function CompanyAbout() {
-  const form = useForm();
   const options = [
     {
-      label: 'Self-employed / Sole Trader',
+      label: 'Self-employed / sole trader',
       value: 'self_employed',
     },
     {
-      label: '2–10 Employees',
+      label: '2–10 employees',
       value: '2_10_employees',
     },
     {
-      label: '11–50 Employees',
+      label: '11–50 employees',
       value: '11_50_employees',
     },
     {
-      label: '51–200 Employees',
+      label: '51–200 employees',
       value: '51_200_employees',
     },
     {
-      label: 'Over 200 Employees',
+      label: 'Over 200 employees',
       value: 'over_200_employees',
     },
   ];
-  const handleSelect = (value) => {
-    console.log('Selected:', value);
-  };
+
   return (
     <div className="py-9">
       <h2 className="text-black font-semibold">About the company</h2>
       <p className="mt-[10px] mb-7">Introduce the company to your customers.</p>
 
-      <Form {...form}>
+      <div>
         <div className="grid grid-cols-2 gap-x-20 gap-y-7">
-          <DropdownMenuSelect
-            triggerLabel="Company Size"
-            dropdownLabel="Choose Company Size"
+          <SelectInput
+            label={'Choose Company Size'}
+            name={'companySize'}
             options={options}
-            onSelect={handleSelect}
+            placeholder="Select company size"
             defaultValue="Self-employed / Sole Trader"
           />
 
           <TextInput
-            control={form.control}
             label="Years in business"
-            name="yer"
+            name="yearsInBusiness"
             placeholder="Number of years"
           />
           <TextareaInput
@@ -61,7 +55,7 @@ export default function CompanyAbout() {
             placeholder="What sets you apart from businesses?"
           />
         </div>
-      </Form>
+      </div>
     </div>
   );
 }

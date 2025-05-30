@@ -1,14 +1,12 @@
 'use client';
 import TextInput from '@/components/form/TextInput';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Form } from '@/components/ui/form';
+import AvatarUploader from '@/components/UIComponents/AvaterUploader';
 import FileUploader from '@/components/UIComponents/fileUploader';
 import { Camera, CloudUpload } from 'lucide-react';
 import React from 'react';
-import { useForm } from 'react-hook-form';
 
 export default function PersonalProfile() {
-  const form = useForm();
   return (
     <div>
       <h2 className="16px text-black font-semibold">
@@ -19,19 +17,9 @@ export default function PersonalProfile() {
         photo will appear alongside your messages with customers.
       </p>
 
-      <Form {...form}>
+      <div>
         <div className="flex items-center gap-3 mt-11">
-          <Avatar className="h-[90px] w-[90px]">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <FileUploader
-            label="Upload Photo"
-            onChange={(e) => console.log(e.target.files)}
-            accept="image/*"
-            multiple={false}
-            icon={<CloudUpload className="w-6 h-6 text-[#00C3C0] mb-2" />}
-          />
+          <AvatarUploader name="userProfileLogo" label="Upload Photo" />
           <div>
             <label
               htmlFor="open-camera"
@@ -46,13 +34,12 @@ export default function PersonalProfile() {
         </div>
         <div className="mt-[30px]">
           <TextInput
-            control={form.control}
             name={'name'}
             label={'Name'}
             placeholder={'Enter Your  Name'}
           />
         </div>
-      </Form>
+      </div>
     </div>
   );
 }
