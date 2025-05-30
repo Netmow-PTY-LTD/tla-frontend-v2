@@ -45,28 +45,20 @@ export default function About() {
     contactEmail: profile?.companyProfile?.contactEmail ?? '',
     phoneNumber: profile?.companyProfile?.phoneNumber ?? '',
     website: profile?.companyProfile?.website ?? '',
-    companyLocation: profile?.companyProfile?.companyLocation ?? '',
     companySize: profile?.companyProfile?.companySize ?? '',
     description: profile?.companyProfile?.description ?? '',
     yearsInBusiness: profile?.companyProfile?.yearsInBusiness ?? '',
-    companyLocation: profile?.companyProfile?.location?.address || '',
-    hideFromProfile:
-      profile?.companyProfile?.location?.hideFromProfile || false,
+    location: {
+      address: profile?.companyProfile?.location?.address ?? '',
+      hideFromProfile:
+        profile?.companyProfile?.location?.hideFromProfile ?? false,
+      locationReason: profile?.companyProfile?.location?.locationReason ?? '',
+      coordinates: {
+        lat: profile?.companyProfile?.location?.coordinates?.lat ?? null,
+        lng: profile?.companyProfile?.location?.coordinates?.lng ?? null,
+      },
+    },
   };
-
-  console.log('company size', profile?.companyProfile?.companySize ?? '');
-  // const defaultValues = {
-  //   companyName: 'Acme Legal Solutions',
-  //   name: 'John Doe',
-  //   contactEmail: 'john.doe@acmelegalsolutions.com',
-  //   phoneNumber: '+1 (415) 555-0123',
-  //   website: 'https://www.acmelegalsolutions.com',
-  //   companyLocation: '123 Market Street, San Francisco, CA 94105, USA',
-  //   companySize: '11_50_employees',
-  //   description:
-  //     'Acme Legal Solutions is a boutique law firm specializing in corporate, commercial, and intellectual property law. We provide strategic legal counsel to startups and established enterprises.',
-  //   yearsInBusiness: '7',
-  // };
 
   const onSubmit = (data) => {
     console.log('✅ Submitted form:', data);
