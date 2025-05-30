@@ -12,6 +12,9 @@ export default function CompanyLocation() {
 
   const address = watch('location.address');
   const hideFromProfile = watch('location.hideFromProfile');
+  const coordinates = watch('location.coordinates');
+
+  console.log('cordinates', coordinates);
 
   const mapQuery = address?.trim() ? encodeURIComponent(address) : 'Australia';
 
@@ -31,7 +34,8 @@ export default function CompanyLocation() {
 
         if (data.status === 'OK') {
           const coords = data.results[0].geometry.location;
-          setValue('location.coordinates', coords); // ✅ sets location.coordinates.lat & lng
+          setValue('location.coordinates.lat', coords.lat);
+          setValue('location.coordinates.lng', coords.lng);
         }
       } catch (err) {
         console.error('Failed to fetch coordinates', err);
