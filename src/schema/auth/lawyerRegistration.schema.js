@@ -23,8 +23,8 @@ export const lawyerRegistrationStepOneFormValidation = z.object({
     .max(50, 'Name must be less than 50 characters'),
 });
 
-const bdPhoneRegex = /^(?:\+88|88)?01[3-9]\d{8}$/; // Bangladesh
-const auPhoneRegex = /^(?:\+61|61|0)[2-478]\d{8}$/; // Australia
+const bdPhoneRegex = /^(?:\+88|88)?01[3-9]\d{8}$/;
+const auPhoneRegex = /^(?:\+?61|0)[2-478]\d{8}$/;
 
 export const lawyerRegistrationStepThreeFormValidation = z
   .object({
@@ -41,7 +41,7 @@ export const lawyerRegistrationStepThreeFormValidation = z
     soloPractitioner: z.boolean(),
     companyTeam: z.boolean(),
     company_name: z.string().optional(),
-    company_website: z.string().url('Invalid URL').optional(),
+    company_website: z.string().optional(),
     company_size: z.string().optional(),
   })
   .superRefine((data, ctx) => {
@@ -60,6 +60,16 @@ export const lawyerRegistrationStepThreeFormValidation = z
           code: z.ZodIssueCode.custom,
           message: 'Company website is required',
         });
+      } else {
+        // ✅ Validate the URL format
+        const urlPattern = /^https?:\/\/[^\s$.?#].[^\s]*$/;
+        if (!urlPattern.test(data.company_website)) {
+          ctx.addIssue({
+            path: ['company_website'],
+            code: z.ZodIssueCode.custom,
+            message: 'Company website must be a valid URL',
+          });
+        }
       }
 
       if (!data.company_size || data.company_size.trim() === '') {

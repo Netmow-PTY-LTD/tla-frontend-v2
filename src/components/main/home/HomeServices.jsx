@@ -50,7 +50,7 @@ export default function HomeServices() {
 
   return (
     <section className="home-services section">
-      <div className="container-lg">
+      <div className="container">
         <SectionHeading
           title={sectionHeading.title}
           subtitle={sectionHeading.subtitle}
