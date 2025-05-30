@@ -99,11 +99,11 @@ export default function Header() {
                   <span>Services</span>
                 </Link>
               </li>
-              {/* <li>
+              <li>
                 <Link href="/pricing" className={styles.nav_link}>
                   <span>Pricing</span>
                 </Link>
-              </li> */}
+              </li>
               <li>
                 <Link href="/about" className={styles.nav_link}>
                   <span>About Us</span>

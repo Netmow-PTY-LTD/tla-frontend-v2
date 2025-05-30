@@ -21,7 +21,12 @@ const PricingPage = () => {
               </Link>
             </div>
             <div className="w-full md:max-w-[356px]">
-              <Image src="/assets/img/circle.png" width={356} height={353} />
+              <Image
+                src="/assets/img/circle.png"
+                width={356}
+                height={353}
+                alt="banner shape"
+              />
             </div>
           </div>
         </div>
