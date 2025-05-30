@@ -48,6 +48,8 @@ export default function About() {
     companySize: profile?.companyProfile?.companySize ?? '',
     description: profile?.companyProfile?.description ?? '',
     yearsInBusiness: profile?.companyProfile?.yearsInBusiness ?? '',
+    companyLogo: profile?.companyProfile?.logoUrl ?? '', // URL string
+    userProfileLogo: profile?.profilePicture ?? '', // URL string
     location: {
       address: profile?.companyProfile?.location?.address ?? '',
       hideFromProfile:

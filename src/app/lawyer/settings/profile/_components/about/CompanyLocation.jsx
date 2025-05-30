@@ -14,8 +14,6 @@ export default function CompanyLocation() {
   const hideFromProfile = watch('location.hideFromProfile');
   const coordinates = watch('location.coordinates');
 
-  console.log('cordinates', coordinates);
-
   const mapQuery = address?.trim() ? encodeURIComponent(address) : 'Australia';
 
   const mapSrc = `https://www.google.com/maps?q=${mapQuery}&output=embed`;

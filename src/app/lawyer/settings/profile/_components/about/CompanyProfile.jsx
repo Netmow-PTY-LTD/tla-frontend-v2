@@ -17,20 +17,10 @@ export default function CompanyProfile() {
       </p>
 
       <div>
-        {/* <div className="flex items-center gap-3 mt-11">
-          <Avatar className="h-[90px] w-[90px]">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <FileUploader
-            label="Upload Photo"
-            onChange={(e) => console.log(e.target.files)}
-            accept="image/*"
-            multiple={false}
-            icon={<CloudUpload className="w-6 h-6 text-[#00C3C0] mb-2" />}
-          />
-        </div> */}
-        <AvatarUploader name="companyLogo" label="Upload Logo" />
+        <div className="mt-11">
+          <AvatarUploader name="companyLogo" label="Upload Logo" />
+        </div>
+
         <div className="mt-[30px]">
           <TextInput
             name={'companyName'}
