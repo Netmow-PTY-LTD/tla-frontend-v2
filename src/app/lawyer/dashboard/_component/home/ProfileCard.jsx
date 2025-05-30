@@ -2,7 +2,7 @@ import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 export default function ProfileCard() {
   return (
-    <div className="flex items-center justify-between p-4 bg-white  rounded-[10px] ">
+    <div className="flex items-center justify-between p-4 bg-white rounded-[10px] relative z-[9]">
       {/* Left section: Avatar and text */}
       <div className="flex items-center gap-4">
         <Avatar className="h-[80px] w-[80px]">

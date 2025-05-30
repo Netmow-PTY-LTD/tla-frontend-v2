@@ -19,8 +19,10 @@ const AboutPage = () => {
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
             <div className="feature-heading lg:pr-20">
-              <h3>About TLA</h3>
-              <h2>The Law App – Transforming Legal Connections</h2>
+              <h3 className="section-subtitle">About TLA</h3>
+              <h2 className="section-title">
+                The Law App – Transforming Legal Connections
+              </h2>
               <div className="feature-heading-text mb-3">
                 <b>Making Legal Services Simple, Accessible & Efficient</b>{' '}
                 <br /> <br />

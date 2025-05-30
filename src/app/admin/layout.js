@@ -17,7 +17,10 @@ export default function AdminDashboardLayout({ children }) {
     <>
       <AdminDashboardHeader />
       <SidebarProvider className="sidebar-main">
-        <Sidebar collapsible="icon" className="sidebar-width-control">
+        <Sidebar
+          collapsible="icon"
+          className="sidebar-width-control sidebar-y-64"
+        >
           <SidebarHeader>
             <SidebarTop />
           </SidebarHeader>
