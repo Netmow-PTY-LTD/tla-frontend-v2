@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function AuthFooter() {
   return (
-    <footer className="auth-footer py-5">
+    <footer className="auth-footer py-3">
       <div className="container">
         <div className="copyright-text text-center">
           <p>
