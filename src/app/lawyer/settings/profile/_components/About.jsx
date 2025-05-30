@@ -12,6 +12,7 @@ import {
 } from '@/store/features/auth/authApiService';
 import FormWrapper from '@/components/form/FromWrapper';
 import AboutFormActions from './about/AboutFormAction';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
 export default function About() {
   const {
@@ -108,17 +109,14 @@ export default function About() {
       }
 
       console.log(JSON.parse(formData.get('data')));
-      const res = await updateUserData(formData)
-        .unwrap()
-        .then(() => {
-          console.log('Profile updated successfully');
-        })
-        .catch((error) => {
-          console.error('Failed to update profile:', error);
-        });
-
+      const res = await updateUserData(formData).unwrap();
+      if (res?.success === true) {
+        showSuccessToast(res?.message || ' update successful');
+      }
       console.log('Update response:', res);
     } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
       console.error('Error submitting form:', error);
     }
   };
