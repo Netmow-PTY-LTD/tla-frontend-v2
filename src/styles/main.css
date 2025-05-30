@@ -941,6 +941,37 @@ Home Testimonials
   margin-bottom: 10px;
 }
 
+.pricing-banner-content h1 {
+  position: relative;
+  font-weight: 700;
+}
+
+.pricing-banner-content h1:before {
+  content: '';
+  position: absolute;
+  top: 30px;
+  right: -18px;
+  width: 11px;
+  height: 5px;
+  background-color: var(--color-white);
+  border-radius: 10px;
+}
+
+.pricing-banner-content h1:after {
+  content: '';
+  position: absolute;
+  top: 30px;
+  right: -70px;
+  width: 45px;
+  height: 5px;
+  background-color: var(--primary-color);
+  border-radius: 10px;
+}
+
+.pricing-banner-content img {
+  border-radius: 0 30px 30px 0;
+}
+
 /* ===================
       Footer
 ======================*/
