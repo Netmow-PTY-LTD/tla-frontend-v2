@@ -49,8 +49,12 @@ export default function About() {
     companySize: profile?.companyProfile?.companySize ?? '',
     description: profile?.companyProfile?.description ?? '',
     yearsInBusiness: profile?.companyProfile?.yearsInBusiness ?? '',
+    companyLocation: profile?.companyProfile?.location?.address || '',
+    hideFromProfile:
+      profile?.companyProfile?.location?.hideFromProfile || false,
   };
 
+  console.log('company size', profile?.companyProfile?.companySize ?? '');
   // const defaultValues = {
   //   companyName: 'Acme Legal Solutions',
   //   name: 'John Doe',

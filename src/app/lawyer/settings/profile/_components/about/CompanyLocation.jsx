@@ -1,26 +1,60 @@
 'use client';
-import CheckboxInput from '@/components/form/CheckboxInput';
-import TextInput from '@/components/form/TextInput';
 
+import CheckboxInput from '@/components/form/CheckboxInput';
+import SelectInput from '@/components/form/SelectInput';
+import TextInput from '@/components/form/TextInput';
 import { AlertCircle } from 'lucide-react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 export default function CompanyLocation() {
-  const { watch } = useFormContext();
+  const { watch, setValue } = useFormContext();
 
-  const companyLocation = watch('companyLocation');
-  const mapQuery = companyLocation?.trim()
-    ? encodeURIComponent(companyLocation)
-    : 'Australia';
+  const address = watch('location.address');
+  const hideFromProfile = watch('location.hideFromProfile');
 
-  // const mapSrc = `https://www.google.com/maps/embed/v1/place?key=YOUR_GOOGLE_MAPS_API_KEY&q=${mapQuery}`;
+  const mapQuery = address?.trim() ? encodeURIComponent(address) : 'Australia';
 
-  const mapSrc = mapQuery
-    ? `https://www.google.com/maps?q=${encodeURIComponent(
-        mapQuery
-      )}&output=embed`
-    : 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14136.511046512486!2d153.017!3d-27.4698!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6b915a0ed9f2aa2d%3A0x402a35af3decb90!2sBrisbane%20QLD%2C%20Australia!5e0!3m2!1sen!2sau!4v1716190380000!5m2!1sen!2sau';
+  const mapSrc = `https://www.google.com/maps?q=${mapQuery}&output=embed`;
+
+  useEffect(() => {
+    const fetchCoordinates = async () => {
+      if (!address) return;
+
+      try {
+        const res = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+            address
+          )}&key=YOUR_GOOGLE_MAPS_API_KEY` // Replace with your actual API key
+        );
+        const data = await res.json();
+
+        if (data.status === 'OK') {
+          const coords = data.results[0].geometry.location;
+          setValue('location.coordinates', coords); // ✅ sets location.coordinates.lat & lng
+        }
+      } catch (err) {
+        console.error('Failed to fetch coordinates', err);
+      }
+    };
+
+    fetchCoordinates();
+  }, [address, setValue]);
+
+  const options = [
+    {
+      label: 'No Location',
+      value: 'no_location',
+    },
+    {
+      label: 'Online only',
+      value: 'online_only',
+    },
+    {
+      label: 'Multiple Location',
+      value: 'multiple_location',
+    },
+  ];
 
   return (
     <div className="py-9">
@@ -29,37 +63,44 @@ export default function CompanyLocation() {
         Use a specific address to help customers searching for a local business.
       </p>
 
-      <div>
-        <div className="flex  justify-between gap-20">
-          <div className="w-full">
-            <TextInput
-              label="What's the business location?"
-              name="companyLocation"
-              placeholder="Enter the company address"
-            />
-            {/* Checkbox with label */}
-            <div className="flex items-center justify-start space-x-3 pt-4">
-              <CheckboxInput
-                label={"Don't show this on my profile"}
-                name="hideFromProfile"
-                id="hideFromProfile"
-                className="mt-1 h-4 w-4 text-[#00C3C0] border-gray-300 rounded focus:ring-[#00C3C0]"
-              />
-              <AlertCircle className="w-4 h-4 text-gray-500 cursor-pointer" />
-            </div>
-          </div>
+      <div className="flex justify-between gap-20">
+        <div className="w-full">
+          <TextInput
+            label="What's the business location?"
+            name="location.address"
+            placeholder="Enter the company address"
+          />
 
-          <div className="aspect-video w-full max-w-3xl border rounded-xl overflow-hidden">
-            <iframe
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              loading="lazy"
-              allowFullScreen
-              referrerPolicy="no-referrer-when-downgrade"
-              src={mapSrc}
+          <div className="flex items-center justify-start space-x-3 pt-4">
+            <CheckboxInput
+              label={"Don't show this on my profile"}
+              name="location.hideFromProfile"
+              id="hideFromProfile"
+              className="mt-1 h-4 w-4 text-[#00C3C0] border-gray-300 rounded focus:ring-[#00C3C0]"
+            />
+            <AlertCircle className="w-4 h-4 text-gray-500 cursor-pointer" />
+          </div>
+          <div className="border-t border-white my-10" />
+          <div>
+            <SelectInput
+              label={"Can't give us a particular location?"}
+              name={'location.locationReason'}
+              options={options}
+              placeholder="Select a reason"
             />
           </div>
+        </div>
+
+        <div className="aspect-video w-full max-w-3xl border rounded-xl overflow-hidden">
+          <iframe
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            loading="lazy"
+            allowFullScreen
+            referrerPolicy="no-referrer-when-downgrade"
+            src={mapSrc}
+          />
         </div>
       </div>
     </div>
