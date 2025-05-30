@@ -1,14 +1,12 @@
 'use client';
+
 import TextInput from '@/components/form/TextInput';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Form } from '@/components/ui/form';
 import FileUploader from '@/components/UIComponents/fileUploader';
 import { CloudUpload } from 'lucide-react';
 import React from 'react';
-import { useForm } from 'react-hook-form';
 
 export default function CompanyProfile() {
-  const form = useForm();
   return (
     <div>
       <h2 className="16px text-black font-semibold">Company name & logo</h2>
@@ -17,7 +15,7 @@ export default function CompanyProfile() {
         professional. As a sole-trader, you can just enter your name.
       </p>
 
-      <Form {...form}>
+      <div>
         <div className="flex items-center gap-3 mt-11">
           <Avatar className="h-[90px] w-[90px]">
             <AvatarImage src="https://github.com/shadcn.png" />
@@ -33,13 +31,12 @@ export default function CompanyProfile() {
         </div>
         <div className="mt-[30px]">
           <TextInput
-            control={form.control}
-            name={'name'}
-            label={'Name'}
+            name={'companyName'}
+            label={'Company Name'}
             placeholder={'Enter Your Company Name'}
           />
         </div>
-      </Form>
+      </div>
     </div>
   );
 }

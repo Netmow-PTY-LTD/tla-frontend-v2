@@ -1,18 +1,14 @@
 'use client';
 import TextInput from '@/components/form/TextInput';
-import { Form } from '@/components/ui/form';
+
 import { AlertCircle } from 'lucide-react';
 import React from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 export default function CompanyLocation() {
-  const form = useForm();
+  const { watch } = useFormContext();
 
-  const companyLocation = useWatch({
-    control: form.control,
-    name: 'companyLocation',
-  });
-
+  const companyLocation = watch('companyLocation');
   const mapQuery = companyLocation?.trim()
     ? encodeURIComponent(companyLocation)
     : 'Australia';
@@ -32,11 +28,10 @@ export default function CompanyLocation() {
         Use a specific address to help customers searching for a local business.
       </p>
 
-      <Form {...form}>
+      <div>
         <div className="flex  justify-between gap-20">
           <div className="w-full">
             <TextInput
-              control={form.control}
               label="What's the business location?"
               name="companyLocation"
               placeholder="Enter the company address"
@@ -71,7 +66,7 @@ export default function CompanyLocation() {
             />
           </div>
         </div>
-      </Form>
+      </div>
     </div>
   );
 }
