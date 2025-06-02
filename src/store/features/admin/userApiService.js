@@ -15,13 +15,13 @@ const userApiService = baseApi.injectEndpoints({
       }),
     }),
 
-editProfile: builder.mutation({
-  query: (formData) => ({
-    url: `/user/edit/${formData.get('userId')}`,
-    method: 'PATCH',
-    body,
-  }),
-}),
+    editProfile: builder.mutation({
+      query: (formData) => ({
+        url: `/user/edit/${formData.get('userId')}`,
+        method: 'PATCH',
+        body,
+      }),
+    }),
 
     deleteUser: builder.mutation({
       query: (body) => ({
