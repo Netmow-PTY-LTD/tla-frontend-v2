@@ -13,6 +13,7 @@ import {
 import FormWrapper from '@/components/form/FromWrapper';
 import AboutFormActions from './about/AboutFormAction';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import { lawyerSettingAboutSchema } from '@/schema/dashboard/lawyerSettings';
 
 export default function About() {
   const {
@@ -60,8 +61,8 @@ export default function About() {
         profile?.companyProfile?.location?.hideFromProfile ?? false,
       locationReason: profile?.companyProfile?.location?.locationReason ?? '',
       coordinates: {
-        lat: profile?.companyProfile?.location?.coordinates?.lat ?? null,
-        lng: profile?.companyProfile?.location?.coordinates?.lng ?? null,
+        lat: profile?.companyProfile?.location?.coordinates?.lat ?? 0,
+        lng: profile?.companyProfile?.location?.coordinates?.lng ?? 0,
       },
     },
   };
@@ -83,8 +84,8 @@ export default function About() {
           hideFromProfile: rest.location.hideFromProfile,
           locationReason: rest.location.locationReason,
           coordinates: {
-            lat: rest.location.coordinates.lat,
-            lng: rest.location.coordinates.lng,
+            lat: rest.location?.coordinates?.lat,
+            lng: rest.location?.coordinates?.lng,
           },
         },
       };
@@ -123,7 +124,11 @@ export default function About() {
 
   return (
     <div className="max-w-[900px] mx-auto">
-      <FormWrapper onSubmit={onSubmit} defaultValues={defaultValues}>
+      <FormWrapper
+        onSubmit={onSubmit}
+        defaultValues={defaultValues}
+        schema={lawyerSettingAboutSchema}
+      >
         <div className="flex items-center gap-20  mb-5 ">
           <CompanyProfile />
           <PersonalProfile />
@@ -136,7 +141,7 @@ export default function About() {
         <CompanyAbout />
         <div className="border-t border-white" />
         {/* Footer Buttons */}
-        <AboutFormActions />
+        <AboutFormActions initialValues={defaultValues} />
       </FormWrapper>
     </div>
   );

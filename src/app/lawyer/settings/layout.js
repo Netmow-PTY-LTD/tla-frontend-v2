@@ -22,23 +22,23 @@ const SettingsLayout = ({ children }) => {
       href: '/lawyer/settings/lead-settings',
       icon: <BarChart3Icon className="w-4 h-4" />,
     },
-    {
-      label: 'Enquiries',
-      href: '/lawyer/settings/enquiries/enquiries-settings',
-      icon: <UsersIcon className="w-4 h-4" />,
-      badge: 'BETA',
-    },
-    {
-      label: 'Communication',
-      href: '/lawyer/settings/communication/one-click-response',
-      icon: <MessageCircleIcon className="w-4 h-4" />,
-    },
+    // {
+    //   label: 'Enquiries',
+    //   href: '/lawyer/settings/enquiries/enquiries-settings',
+    //   icon: <UsersIcon className="w-4 h-4" />,
+    //   badge: 'BETA',
+    // },
+    // {
+    //   label: 'Communication',
+    //   href: '/lawyer/settings/communication/one-click-response',
+    //   icon: <MessageCircleIcon className="w-4 h-4" />,
+    // },
 
-    {
-      label: 'Integration',
-      href: '/lawyer/settings/integrations/hubspot',
-      icon: <SettingsIcon className="w-4 h-4" />,
-    },
+    // {
+    //   label: 'Integration',
+    //   href: '/lawyer/settings/integrations/hubspot',
+    //   icon: <SettingsIcon className="w-4 h-4" />,
+    // },
     {
       label: 'Credits & Payments',
       href: '/lawyer/settings/billing/my-credits',
