@@ -1,8 +1,8 @@
 'use client';
 
 import TextInput from '@/components/form/TextInput';
-
 import { Modal } from '@/components/UIComponents/Modal';
+import { getEmbedUrl } from '@/utils/embedVideoLink';
 import { CloudUpload } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -13,55 +13,36 @@ export default function VideoGallery() {
   const [open, setOpen] = useState(false);
   const [embedUrl, setEmbedUrl] = useState('');
 
-  // Extract YouTube Video ID
-  const extractYouTubeId = (url) => {
-    if (!url) return null;
-    const regExp =
-      /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/;
-    const match = url.match(regExp);
-    return match?.[1] ?? null;
-  };
-  // Manually register the videos field
   useEffect(() => {
     register('video');
 
     const defaultVideo = getValues('video'); // ✅ fetch default value from form
-    const videoId = extractYouTubeId(defaultVideo);
-    if (videoId) {
-      setEmbedUrl(`https://www.youtube.com/embed/${videoId}`);
+    const embed = getEmbedUrl(defaultVideo); // ✅ works for all platforms
+    if (embed) {
+      setEmbedUrl(embed);
     }
   }, [getValues, register]);
 
   const onSave = async () => {
     const isValid = await trigger('video');
-
     if (!isValid) return;
 
     const videoLink = watch('video');
+    const embed = getEmbedUrl(videoLink);
 
-    if (!videoLink || typeof videoLink !== 'string') {
-      console.warn('⚠️ Video link is empty or invalid');
-      setEmbedUrl('');
+    if (embed) {
+      setEmbedUrl(embed);
       setOpen(false);
-      return;
-    }
-
-    const videoId = extractYouTubeId(videoLink);
-
-    if (videoId) {
-      setEmbedUrl(`https://www.youtube.com/embed/${videoId}`);
     } else {
+      console.warn('Invalid or unsupported video URL');
       setEmbedUrl('');
-      console.warn('⚠️ Invalid YouTube URL format');
     }
-
-    setOpen(false);
   };
-
   const onCancel = () => {
     resetField('video');
     setOpen(false);
   };
+
   return (
     <div>
       <h2 className="16px text-black font-semibold">Videos</h2>
@@ -79,9 +60,8 @@ export default function VideoGallery() {
           <CloudUpload className="w-6 h-6 text-[#00C3C0] mb-2" />
         </label>
 
-        <Modal open={open} onOpenChange={setOpen} title={'Add YouTube link'}>
+        <Modal open={open} onOpenChange={setOpen} title={'Add Video Link Here'}>
           <TextInput
-            label={'YouTube Link'}
             name="video"
             placeholder="https://www.youtube.com/watch?v=example"
             className="w-full"

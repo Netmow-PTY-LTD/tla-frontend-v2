@@ -51,14 +51,38 @@ export const lawyerSettingAboutSchema = z.object({
   }),
 });
 
-const youtubeUrlRegex =
-  /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[\w\-]{11}(\S+)?$/;
+const videoUrlRegex = new RegExp(
+  [
+    // YouTube (watch, short, embed, youtu.be)
+    '(https?:\\/\\/)?(www\\.)?(youtube\\.com\\/watch\\?v=|youtube\\.com\\/shorts\\/|youtube\\.com\\/embed\\/|youtu\\.be\\/)[\\w-]{11}',
+    // Vimeo
+    '(https?:\\/\\/)?(www\\.)?vimeo\\.com\\/\\d+',
+    // Dailymotion
+    '(https?:\\/\\/)?(www\\.)?dailymotion\\.com\\/video\\/\\w+',
+    // Facebook (watch, video, story.php, video.php)
+    '(https?:\\/\\/)?(www\\.)?facebook\\.com\\/(watch\\/\\?v=\\d+|story\\.php\\?story_fbid=\\d+|video\\.php\\?v=\\d+|.+\\/videos\\/\\d+)',
+    // TikTok
+    '(https?:\\/\\/)?(www\\.)?tiktok\\.com\\/@[\\w.-]+\\/video\\/\\d+',
+    // Instagram (Reels/TV)
+    '(https?:\\/\\/)?(www\\.)?instagram\\.com\\/(reel|tv)\\/[^/]+',
+    // Twitch
+    '(https?:\\/\\/)?(www\\.)?twitch\\.tv\\/videos\\/\\d+',
+    // Loom
+    '(https?:\\/\\/)?(www\\.)?loom\\.com\\/share\\/[^/]+',
+    // Wistia
+    '(https?:\\/\\/)?(fast\\.)?wistia\\.(com|net)\\/medias\\/[^/]+',
+  ].join('|'),
+  'i'
+);
 
 export const lawyerSettingsMediaFormSchema = z.object({
   video: z
     .string()
     .trim()
-    .regex(youtubeUrlRegex, 'Must be a valid YouTube video URL')
-    .or(z.literal('')),
+    .regex(videoUrlRegex, {
+      message: 'Please enter a valid video URL (YouTube, Vimeo, etc.)',
+    })
+    .or(z.literal(''))
+    .optional(),
   photo: z.any(),
 });
