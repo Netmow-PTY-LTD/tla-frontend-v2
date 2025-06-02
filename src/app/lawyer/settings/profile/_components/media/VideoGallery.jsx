@@ -8,7 +8,8 @@ import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 export default function VideoGallery() {
-  const { resetField, register, watch, getValues } = useFormContext();
+  const { resetField, register, watch, getValues, trigger, getFieldState } =
+    useFormContext();
   const [open, setOpen] = useState(false);
   const [embedUrl, setEmbedUrl] = useState('');
 
@@ -31,7 +32,11 @@ export default function VideoGallery() {
     }
   }, [getValues, register]);
 
-  const onSave = () => {
+  const onSave = async () => {
+    const isValid = await trigger('video');
+
+    if (!isValid) return;
+
     const videoLink = watch('video');
 
     if (!videoLink || typeof videoLink !== 'string') {

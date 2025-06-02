@@ -9,6 +9,7 @@ import {
   useUpdateUserDataMutation,
 } from '@/store/features/auth/authApiService';
 import MediaFormAction from './media/MediaFormAction';
+import { lawyerSettingsMediaFormSchema } from '@/schema/dashboard/lawyerSettings';
 
 export default function Photos() {
   const {
@@ -78,7 +79,11 @@ export default function Photos() {
 
   return (
     <div className="max-w-[900px] mx-auto">
-      <FormWrapper onSubmit={handlePhotoUpload} defaultValues={defaultValues}>
+      <FormWrapper
+        onSubmit={handlePhotoUpload}
+        defaultValues={defaultValues}
+        schema={lawyerSettingsMediaFormSchema}
+      >
         <div className="flex flex-col gap-3">
           <PhotoGallery />
           <VideoGallery />

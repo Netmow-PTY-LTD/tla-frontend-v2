@@ -50,3 +50,15 @@ export const lawyerSettingAboutSchema = z.object({
     //   .optional(),
   }),
 });
+
+const youtubeUrlRegex =
+  /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[\w\-]{11}(\S+)?$/;
+
+export const lawyerSettingsMediaFormSchema = z.object({
+  video: z
+    .string()
+    .trim()
+    .regex(youtubeUrlRegex, 'Must be a valid YouTube video URL')
+    .or(z.literal('')),
+  photo: z.any(),
+});
