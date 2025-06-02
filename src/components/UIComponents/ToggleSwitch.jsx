@@ -13,6 +13,7 @@ export default function ToggleSwitch({ enabled = false, onToggle }) {
 
   return (
     <button
+      type="button"
       onClick={handleToggle}
       className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors duration-300 ${
         isOn ? 'bg-[#00C3C0]' : 'bg-gray-300'
