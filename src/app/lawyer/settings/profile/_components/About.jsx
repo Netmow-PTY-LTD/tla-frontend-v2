@@ -13,6 +13,7 @@ import {
 import FormWrapper from '@/components/form/FromWrapper';
 import AboutFormActions from './about/AboutFormAction';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import { lawyerSettingAboutSchema } from '@/schema/dashboard/lawyerSettings';
 
 export default function About() {
   const {
@@ -123,7 +124,11 @@ export default function About() {
 
   return (
     <div className="max-w-[900px] mx-auto">
-      <FormWrapper onSubmit={onSubmit} defaultValues={defaultValues}>
+      <FormWrapper
+        onSubmit={onSubmit}
+        defaultValues={defaultValues}
+        // schema={lawyerSettingAboutSchema}
+      >
         <div className="flex items-center gap-20  mb-5 ">
           <CompanyProfile />
           <PersonalProfile />
