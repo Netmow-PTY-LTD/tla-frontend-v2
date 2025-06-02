@@ -8,21 +8,54 @@ import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 export default function VideoGallery() {
-  const { setValue, resetField, register, watch } = useFormContext();
+  const { resetField, register, watch, getValues } = useFormContext();
   const [open, setOpen] = useState(false);
+  const [embedUrl, setEmbedUrl] = useState('');
+
+  console.log('get values', getValues('video'));
+  // Extract YouTube Video ID
+  const extractYouTubeId = (url) => {
+    if (!url) return null;
+    const regExp =
+      /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/;
+    const match = url.match(regExp);
+    return match?.[1] ?? null;
+  };
   // Manually register the videos field
   useEffect(() => {
-    register('videos');
-  }, [register]);
+    register('video');
+
+    const defaultVideo = getValues('video'); // ✅ fetch default value from form
+    const videoId = extractYouTubeId(defaultVideo);
+    if (videoId) {
+      setEmbedUrl(`https://www.youtube.com/embed/${videoId}`);
+    }
+  }, [getValues, register]);
 
   const onSave = () => {
-    const videoLink = watch('videos');
-    console.log('🎥 YouTube Link:', videoLink);
+    const videoLink = watch('video');
+
+    if (!videoLink || typeof videoLink !== 'string') {
+      console.warn('⚠️ Video link is empty or invalid');
+      setEmbedUrl('');
+      setOpen(false);
+      return;
+    }
+
+    const videoId = extractYouTubeId(videoLink);
+
+    if (videoId) {
+      setEmbedUrl(`https://www.youtube.com/embed/${videoId}`);
+    } else {
+      setEmbedUrl('');
+      console.warn('⚠️ Invalid YouTube URL format');
+    }
+
     setOpen(false);
   };
 
   const onCancel = () => {
-    resetField('videos');
+    resetField('video');
     setOpen(false);
   };
   return (
@@ -45,7 +78,7 @@ export default function VideoGallery() {
         <Modal open={open} onOpenChange={setOpen} title={'Add YouTube link'}>
           <TextInput
             label={'YouTube Link'}
-            name="videos"
+            name="video"
             placeholder="https://www.youtube.com/watch?v=example"
             className="w-full"
           />
@@ -65,7 +98,19 @@ export default function VideoGallery() {
             </button>
           </div>
         </Modal>
-        {/* show embaded video under this  */}
+        {/* Embedded video preview */}
+        {embedUrl && (
+          <div className="mt-6 w-full aspect-video rounded-xl overflow-hidden shadow-lg">
+            <iframe
+              width="100%"
+              height="100%"
+              src={embedUrl}
+              title="Embedded YouTube Video"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        )}
       </div>
     </div>
   );

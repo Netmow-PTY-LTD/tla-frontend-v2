@@ -14,7 +14,7 @@ export default function PhotoGallery() {
       </p>
 
       <div className="mt-11">
-        <AvatarUploader name="photos" label="Upload Photos" />
+        <AvatarUploader name="photo" label="Upload Photos" />
       </div>
     </div>
   );
