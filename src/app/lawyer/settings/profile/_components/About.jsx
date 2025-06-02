@@ -141,7 +141,7 @@ export default function About() {
         <CompanyAbout />
         <div className="border-t border-white" />
         {/* Footer Buttons */}
-        <AboutFormActions />
+        <AboutFormActions initialValues={defaultValues} />
       </FormWrapper>
     </div>
   );
