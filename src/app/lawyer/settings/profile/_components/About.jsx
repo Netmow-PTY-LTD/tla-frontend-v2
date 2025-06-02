@@ -61,8 +61,8 @@ export default function About() {
         profile?.companyProfile?.location?.hideFromProfile ?? false,
       locationReason: profile?.companyProfile?.location?.locationReason ?? '',
       coordinates: {
-        lat: profile?.companyProfile?.location?.coordinates?.lat ?? null,
-        lng: profile?.companyProfile?.location?.coordinates?.lng ?? null,
+        lat: profile?.companyProfile?.location?.coordinates?.lat ?? 0,
+        lng: profile?.companyProfile?.location?.coordinates?.lng ?? 0,
       },
     },
   };
@@ -84,8 +84,8 @@ export default function About() {
           hideFromProfile: rest.location.hideFromProfile,
           locationReason: rest.location.locationReason,
           coordinates: {
-            lat: rest.location.coordinates.lat,
-            lng: rest.location.coordinates.lng,
+            lat: rest.location?.coordinates?.lat,
+            lng: rest.location?.coordinates?.lng,
           },
         },
       };
@@ -127,7 +127,7 @@ export default function About() {
       <FormWrapper
         onSubmit={onSubmit}
         defaultValues={defaultValues}
-        // schema={lawyerSettingAboutSchema}
+        schema={lawyerSettingAboutSchema}
       >
         <div className="flex items-center gap-20  mb-5 ">
           <CompanyProfile />

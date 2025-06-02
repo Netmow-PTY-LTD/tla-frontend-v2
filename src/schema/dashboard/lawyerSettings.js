@@ -42,11 +42,11 @@ export const lawyerSettingAboutSchema = z.object({
     address: z.string(),
     hideFromProfile: z.boolean(),
     locationReason: z.string().optional(),
-    coordinates: z
-      .object({
-        lat: z.number({ invalid_type_error: 'Latitude must be a number' }),
-        lng: z.number({ invalid_type_error: 'Longitude must be a number' }),
-      })
-      .optional(),
+    // coordinates: z
+    //   .object({
+    //     lat: z.number({ invalid_type_error: 'Latitude must be a number' }),
+    //     lng: z.number({ invalid_type_error: 'Longitude must be a number' }),
+    //   })
+    //   .optional(),
   }),
 });
