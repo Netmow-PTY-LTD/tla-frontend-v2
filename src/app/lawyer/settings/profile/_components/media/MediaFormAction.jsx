@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-export default function AboutFormActions({ initialValues }) {
+export default function MediaFormAction({ initialValues }) {
   const { reset, control } = useFormContext();
 
   const watched = useWatch({ control });

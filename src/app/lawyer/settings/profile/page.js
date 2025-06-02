@@ -14,7 +14,7 @@ import { DynamicAccordion } from '@/components/UIComponents/AcordionComponent';
 export default function MyProfilePage() {
   const accordionItems = [
     { id: 'about', title: 'About', content: <About /> },
-    { id: 'reviews', title: 'Reviews', content: <Reviews /> },
+    // { id: 'reviews', title: 'Reviews', content: <Reviews /> },
     { id: 'services', title: 'Services', content: <Services /> },
     { id: 'media', title: 'Photos', content: <Media /> },
     {
