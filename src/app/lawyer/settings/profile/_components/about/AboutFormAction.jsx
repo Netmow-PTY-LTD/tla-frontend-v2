@@ -2,11 +2,11 @@
 
 import { useFormContext } from 'react-hook-form';
 
-export default function AboutFormActions({ originalValues }) {
+export default function AboutFormActions() {
   const { reset } = useFormContext();
 
   const onCancel = () => {
-    reset(originalValues);
+    reset();
     console.log('🔄 Form reset to initial values');
   };
 
