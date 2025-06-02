@@ -12,7 +12,6 @@ export default function VideoGallery() {
   const [open, setOpen] = useState(false);
   const [embedUrl, setEmbedUrl] = useState('');
 
-  console.log('get values', getValues('video'));
   // Extract YouTube Video ID
   const extractYouTubeId = (url) => {
     if (!url) return null;

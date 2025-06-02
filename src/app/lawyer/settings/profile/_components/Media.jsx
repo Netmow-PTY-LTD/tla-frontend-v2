@@ -8,6 +8,7 @@ import {
   useAuthUserInfoQuery,
   useUpdateUserDataMutation,
 } from '@/store/features/auth/authApiService';
+import MediaFormAction from './media/MediaFormAction';
 
 export default function Photos() {
   const {
@@ -20,7 +21,6 @@ export default function Photos() {
     refetchOnMountOrArgChange: true, // keep data fresh
   });
   const [updatePhotosData] = useUpdateUserDataMutation();
-  const onCancel = () => console.log('Cancel clicked');
 
   const profile = userInfo?.data?.profile;
   if (isLoading) return <div className="text-gray-500">Loading...</div>;
@@ -84,20 +84,7 @@ export default function Photos() {
           <VideoGallery />
         </div>
         {/* Footer Buttons */}
-        <div className="flex justify-between items-center pt-4 ">
-          <button
-            onClick={onCancel}
-            className="text-sm text-gray-600 hover:text-gray-800"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="bg-[#12C7C4] text-white px-4 py-2 text-sm rounded-md hover:bg-[#10b0ae]"
-          >
-            Save
-          </button>
-        </div>
+        <MediaFormAction initialValues={defaultValues} />
       </FormWrapper>
     </div>
   );
