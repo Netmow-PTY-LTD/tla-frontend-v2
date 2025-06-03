@@ -7,14 +7,21 @@ import { Modal } from '@/components/UIComponents/Modal';
 import FormWrapper from '@/components/form/FromWrapper';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
-const ServiceAddModal = ({ profile, updateUserData, refetch }) => {
+const EditServiceModal = ({
+  profile,
+  updateUserData,
+  refetch,
+  selectedService,
+  open,
+  onClose,
+}) => {
   console.log('profile', profile);
-  const [open, setOpen] = useState(false);
-  const onCancel = () => setOpen(!open);
+
+  const onCancel = () => onClose(); // correctly close modal
 
   const defaultValues = {
-    title: profile?.customService?.title ?? '',
-    description: profile?.customService?.description ?? '',
+    title: selectedService?.title ?? '',
+    description: selectedService?.description ?? '',
   };
 
   const handleSubmit = async (values) => {
@@ -23,6 +30,7 @@ const ServiceAddModal = ({ profile, updateUserData, refetch }) => {
 
     const payload = {
       serviceInfo: {
+        _id: selectedService?._id,
         title,
         description,
       },
@@ -51,10 +59,9 @@ const ServiceAddModal = ({ profile, updateUserData, refetch }) => {
   return (
     <div>
       <Modal
-        buttonName="+ Add Service"
         description="Describe what you can offer to customers"
-        title="Adding service"
-        onOpenChange={setOpen}
+        title="Update service"
+        onOpenChange={onClose}
         open={open}
       >
         <FormWrapper onSubmit={handleSubmit} defaultValues={defaultValues}>
@@ -69,13 +76,14 @@ const ServiceAddModal = ({ profile, updateUserData, refetch }) => {
           {/* Footer Buttons */}
           <div className="flex justify-between items-center pt-4 ">
             <button
+              type="button"
               onClick={onCancel}
               className="text-sm text-gray-600 hover:text-gray-800"
             >
               Cancel
             </button>
             <button className="bg-[#12C7C4] text-white px-4 py-2 text-sm rounded-md hover:bg-[#10b0ae]">
-              Save
+              Update
             </button>
           </div>
         </FormWrapper>
@@ -84,4 +92,4 @@ const ServiceAddModal = ({ profile, updateUserData, refetch }) => {
   );
 };
 
-export default ServiceAddModal;
+export default EditServiceModal;
