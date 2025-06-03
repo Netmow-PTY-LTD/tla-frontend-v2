@@ -38,7 +38,7 @@ const authApi = baseApi.injectEndpoints({
         method: 'PATCH',
         body: data,
       }),
-      providesTags: ['userInfo'],
+      invalidatesTags: ['userInfo'],
     }),
   }),
 });

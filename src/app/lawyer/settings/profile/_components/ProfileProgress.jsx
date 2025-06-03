@@ -24,7 +24,7 @@ export default function ProfileProgress() {
       <p className="text-sm text-gray-700">
         Make the best first impression with a great profile — this is what
         customers will look at first when choosing which professional to hire.{' '}
-        <Link href="/lawyer/settings/profile/my-profile">
+        <Link href="/lawyer/dashboard/my-stats">
           <span className="text-cyan-600 font-semibold hover:underline">
             View profile
           </span>

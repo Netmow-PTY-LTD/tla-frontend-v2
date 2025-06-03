@@ -5,7 +5,166 @@ import { Accordion } from '@/components/ui/accordion';
 import ServiceCard from './my-services/ServiceCard';
 import LocationItem from './my-services/LoactionItem';
 
+import AddLeadServiceModal from './my-services/AddLeadServiceModal';
+import { useGetLeadServiceListQuery } from '@/store/features/leadService/leadServiceApiService';
+import { Skeleton } from '@/components/ui/skeleton';
+import { AlertCircle } from 'lucide-react';
+
 const ServicesList = () => {
+  const {
+    data: leadServicesData,
+    isLoading,
+    isError,
+    error,
+  } = useGetLeadServiceListQuery();
+  const leadServices = leadServicesData?.data || [];
+
+  // const leadServices = [
+  //   {
+  //     _id: '665aabcde1234567890abc01',
+  //     userProfileId: '665aa0000b1234567890abcd1',
+  //     serviceName: 'Family Lawyer',
+  //     serviceId: {
+  //       _id: '665aa0000c1234567890abcd2',
+  //       name: 'Family Lawyer',
+  //       slug: 'family-lawyer',
+  //       questions: [
+  //         {
+  //           _id: '665aa1111d1234567890abcd3',
+  //           question: 'What do you need help with?',
+  //           slug: 'what-do-you-need-help-with',
+  //           questionType: 'checkbox',
+  //           order: 1,
+  //           options: [
+  //             {
+  //               _id: '665aa1111d1234567890abcd4',
+  //               name: 'Divorce',
+  //               slug: 'divorce',
+  //             },
+  //             {
+  //               _id: '665aa1111d1234567890abcd5',
+  //               name: 'Child custody',
+  //               slug: 'child-custody',
+  //             },
+  //             {
+  //               _id: '665aa1111d1234567890abcd6',
+  //               name: 'Adoption',
+  //               slug: 'adoption',
+  //             },
+  //           ],
+  //         },
+  //       ],
+  //       defaultSelectedOptions: [
+  //         '665aa1111d1234567890abcd4',
+  //         '665aa1111d1234567890abcd5',
+  //       ],
+  //     },
+  //     locations: ['Chicago', 'Houston'],
+  //     onlineEnabled: true,
+  //   },
+  //   {
+  //     _id: '665aabcde1234567890abc02',
+  //     userProfileId: '665aa0000b1234567890abcd2',
+  //     serviceName: 'Familydgd Lawyer',
+  //     serviceId: {
+  //       _id: '665aa0000c1234567890abcd3',
+  //       name: 'Business Lawyer',
+  //       slug: 'business-lawyer',
+  //       questions: [
+  //         {
+  //           _id: '665aa1111d1234567890abcd7',
+  //           question: 'What type of business help do you need?',
+  //           slug: 'business-help-type',
+  //           questionType: 'checkbox',
+  //           order: 1,
+  //           options: [
+  //             {
+  //               _id: '665aa1111d1234567890abcd8',
+  //               name: 'Contracts',
+  //               slug: 'contracts',
+  //             },
+  //             {
+  //               _id: '665aa1111d1234567890abcd9',
+  //               name: 'LLC Formation',
+  //               slug: 'llc-formation',
+  //             },
+  //             {
+  //               _id: '665aa1111d1234567890abcda',
+  //               name: 'Trademark',
+  //               slug: 'trademark',
+  //             },
+  //           ],
+  //         },
+  //         {
+  //           _id: '665aa1111d1234567890abce9',
+  //           question: 'What type of business help do you need?',
+  //           slug: 'business-help-type',
+  //           questionType: 'checkbox',
+  //           order: 1,
+  //           options: [
+  //             {
+  //               _id: '665aa1111d1234567892abcd8',
+  //               name: 'Contracts',
+  //               slug: 'contracts',
+  //             },
+  //             {
+  //               _id: '665aa1111d1234567390abcd9',
+  //               name: 'LLC Formation',
+  //               slug: 'llc-formation',
+  //             },
+  //             {
+  //               _id: '665aa1111d1234563890abcda',
+  //               name: 'Trademark',
+  //               slug: 'trademark',
+  //             },
+  //           ],
+  //         },
+  //       ],
+  //       defaultSelectedOptions: ['665aa1111d1234567890abcd8'],
+  //     },
+  //     locations: ['San Francisco', 'Seattle'],
+  //     onlineEnabled: false,
+  //   },
+  //   {
+  //     _id: '665aabcde1234567890abc03',
+  //     userProfileId: '665aa0000b1234567890abcd3',
+  //     serviceName: 'Family dffdLawyer',
+  //     serviceId: {
+  //       _id: '665aa0000c1234567890abcd4',
+  //       name: 'Criminal Defense Lawyer',
+  //       slug: 'criminal-defense-lawyer',
+  //       questions: [
+  //         {
+  //           _id: '665aa1111d1234567890abcdb',
+  //           question: 'What kind of case are you facing?',
+  //           slug: 'case-type',
+  //           questionType: 'checkbox',
+  //           order: 1,
+  //           options: [
+  //             { _id: '665aa1111d1234567890abcdc', name: 'DUI', slug: 'dui' },
+  //             {
+  //               _id: '665aa1111d1234567890abcdd',
+  //               name: 'Theft',
+  //               slug: 'theft',
+  //             },
+  //             {
+  //               _id: '665aa1111d1234567890abcde',
+  //               name: 'Assault',
+  //               slug: 'assault',
+  //             },
+  //           ],
+  //         },
+  //       ],
+  //       defaultSelectedOptions: [
+  //         '665aa1111d1234567890abcdd',
+  //         '665aa1111d1234567890abcde',
+  //       ],
+  //     },
+  //     locations: ['Miami', 'Atlanta'],
+  //     onlineEnabled: true,
+  //   },
+  // ];
+
   return (
     <div className=" mx-auto">
       <div className="space-y-6">
@@ -15,9 +174,8 @@ const ServicesList = () => {
             <h2 className="text-xl font-semibold text-gray-800">
               Your Services
             </h2>
-            <Button className="bg-teal-500 hover:bg-teal-600">
-              + Add a service
-            </Button>
+
+            <AddLeadServiceModal />
           </div>
           <p className="text-gray-500 mb-6">
             Tell us what services you provide so we can send you the most
@@ -25,68 +183,40 @@ const ServicesList = () => {
           </p>
 
           <Accordion
-            type="single"
+            type="multiple"
             collapsible
             className="border-t border-gray-200"
           >
-            <ServiceCard
-              id="contracts-lawyer"
-              title="Contracts Lawyer"
-              description="Our contract lawyers specialize in ensuring every clause protects your interests—be it employment, leases, or vendor agreements."
-              subtitle="Helping clients draft and review legal agreements efficiently."
-              question="What best describes your contract needs?"
-              options={['Employment', 'Lease', 'Sales', 'Partnership']}
-              defaultSelectedOptions={[
-                'Employment',
-                'Lease',
-                'Sales',
-                'Partnership',
-              ]}
-            />
-            <ServiceCard
-              id="notary-public"
-              title="Lawyers, Solicitors & Notary Publics"
-              subtitle="Supporting customers with legal certifications and advice."
-              description="Certified professionals for notarization, legal consulting, and public documentation—available across multiple locations."
-              question="What service are you looking for?"
-              options={[
-                'Document notarization',
-                'Legal advice',
-                'Representation',
-              ]}
-              defaultSelectedOptions={[
-                'Document notarization',
-                'Legal advice',
-                'Representation',
-              ]}
-            />
-            <ServiceCard
-              id="biz-consultants"
-              title="Business Consultants"
-              subtitle="Get guidance tailored to your business scale."
-              description="From startups to enterprises, our consultants offer data-driven solutions and proven business strategies to help you grow."
-              question="Which type of business are you running?"
-              options={['Startup', 'SME', 'Enterprise', 'Freelance']}
-              defaultSelectedOptions={[
-                'Startup',
-                'SME',
-                'Enterprise',
-                'Freelance',
-              ]}
-            />
-            <ServiceCard
-              id="estate-lawyer"
-              title="Estate Lawyer"
-              subtitle="Assisting with wills, trusts, and estate planning."
-              description="Our estate planning experts simplify the legalities around wills, trusts, and asset transfers to secure your family's future."
-              question="What estate services do you need?"
-              options={['Will drafting', 'Trust setup', 'Inheritance guidance']}
-              defaultSelectedOptions={[
-                'Will drafting',
-                'Trust setup',
-                'Inheritance guidance',
-              ]}
-            />
+            {isLoading ? (
+              <div className="space-y-4">
+                {[...Array(3)].map((_, i) => (
+                  <Skeleton key={i} className="h-20 w-full rounded-lg" />
+                ))}
+              </div>
+            ) : isError ? (
+              <div className="flex items-center space-x-2 text-red-500 p-4 border border-red-300 rounded-md bg-red-50">
+                <AlertCircle className="w-5 h-5" />
+                <span>
+                  {error?.data?.message || 'Failed to load services.'}
+                </span>
+              </div>
+            ) : leadServices.length > 0 ? (
+              leadServices.map((service) => (
+                <ServiceCard
+                  key={service._id}
+                  id={service._id}
+                  title={service.serviceName}
+                  service={service?.serviceId}
+                />
+              ))
+            ) : (
+              <div className="text-center p-4">
+                <h2 className="text-lg font-semibold">No services available</h2>
+                <p className="text-sm text-muted-foreground">
+                  Click above to add your first service.
+                </p>
+              </div>
+            )}
           </Accordion>
         </section>
 
