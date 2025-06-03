@@ -182,11 +182,7 @@ const ServicesList = () => {
             relevant leads
           </p>
 
-          <Accordion
-            type="multiple"
-            collapsible
-            className="border-t border-gray-200"
-          >
+          <Accordion type="multiple" collapsible>
             {isLoading ? (
               <div className="space-y-4">
                 {[...Array(3)].map((_, i) => (
@@ -201,14 +197,16 @@ const ServicesList = () => {
                 </span>
               </div>
             ) : leadServices.length > 0 ? (
-              leadServices.map((service) => (
-                <ServiceCard
-                  key={service._id}
-                  id={service._id}
-                  title={service.serviceName}
-                  service={service?.serviceId}
-                />
-              ))
+              <div className="w-full">
+                {leadServices.map((service) => (
+                  <ServiceCard
+                    key={service._id}
+                    id={service._id}
+                    title={service.serviceName}
+                    service={service?.serviceId}
+                  />
+                ))}
+              </div>
             ) : (
               <div className="text-center p-4">
                 <h2 className="text-lg font-semibold">No services available</h2>
@@ -221,7 +219,7 @@ const ServicesList = () => {
         </section>
 
         {/* Locations Section */}
-        <section className="p-6 border-t border-gray-200">
+        <section className="p-6 ">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold text-gray-800">
               Your Locations
@@ -241,7 +239,7 @@ const ServicesList = () => {
         </section>
 
         {/* Remote Services Section */}
-        <section className="p-6 border-t  border-gray-200">
+        <section className="p-6">
           <h2 className="text-xl font-semibold text-gray-800 mb-2">
             Your Locations
           </h2>
