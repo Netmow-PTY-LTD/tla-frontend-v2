@@ -15,7 +15,7 @@ const leadServiceApiService = baseApi.injectEndpoints({
         url: `lead-service/list`,
         method: 'GET',
       }),
-      invalidatesTags: ['leadService'],
+      providesTags: ['leadService'],
     }),
 
     deleteLeadService: builder.mutation({

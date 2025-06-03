@@ -1,46 +1,69 @@
 'use client';
 
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Modal } from '@/components/UIComponents/Modal';
+import { useAllServicesQuery } from '@/store/features/admin/servicesApiService';
+import { useAddLeadServiceMutation } from '@/store/features/leadService/leadServiceApiService';
 import { X } from 'lucide-react';
 
 import React, { useState } from 'react';
-
-const suggestions = [
-  'Man & Van Services',
-  'Property Extensions',
-  'Porch Installation',
-  'Couriers',
-  'House Clearance',
-  'Limousine Hire',
-  'Garage Conversions',
-  'Parcel Delivery',
-  'Airport Transfers',
-  'Kitchen Refurbishment',
-];
 
 const AddLeadServiceModal = () => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [selectedServices, setSelectedServices] = useState([]);
+  const [locations, setLocations] = useState(['']);
+  const [onlineEnabled, setOnlineEnabled] = useState(false);
+  const [addLedService] = useAddLeadServiceMutation();
+  const { data } = useAllServicesQuery();
+  const suggestions = data?.data || [];
 
   const addService = (service) => {
-    if (!selectedServices.includes(service)) {
+    if (!selectedServices.find((s) => s._id === service._id)) {
       setSelectedServices((prev) => [...prev, service]);
       setInputValue('');
     }
   };
 
-  const removeService = (service) => {
-    setSelectedServices((prev) => prev.filter((s) => s !== service));
+  const removeService = (serviceId) => {
+    setSelectedServices((prev) => prev.filter((s) => s._id !== serviceId));
   };
 
-  const filteredSuggestions = suggestions?.filter(
+  const handleAddServices = async () => {
+    try {
+      const payload = {
+        serviceIds: selectedServices.map((s) => s._id),
+        locations,
+        onlineEnabled,
+      };
+
+      const response = await addLedService(payload).unwrap();
+      console.log('Service added:', response);
+
+      if (response.success) {
+        showSuccessToast(response.message || 'Services added successfully');
+        // Additional actions if needed
+      }
+
+      // Reset
+      setSelectedServices([]);
+      setLocations([]);
+      setOnlineEnabled(false);
+      setOpen(false);
+    } catch (error) {
+      console.error('Failed to add services:', error);
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+    }
+  };
+
+  const filteredSuggestions = suggestions.filter(
     (s) =>
-      s.toLowerCase().includes(inputValue.toLowerCase()) &&
-      !selectedServices.includes(s)
+      s.name.toLowerCase().includes(inputValue.toLowerCase()) &&
+      !selectedServices.some((selected) => selected._id === s._id)
   );
 
   return (
@@ -65,11 +88,11 @@ const AddLeadServiceModal = () => {
             <div className="absolute z-10 mt-1 w-full bg-white border rounded shadow">
               {filteredSuggestions.map((service) => (
                 <div
-                  key={service}
-                  className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                  key={service._id}
                   onClick={() => addService(service)}
+                  className="cursor-pointer hover:bg-gray-100 p-2"
                 >
-                  {service}
+                  {service.name}
                 </div>
               ))}
             </div>
@@ -77,27 +100,20 @@ const AddLeadServiceModal = () => {
         </div>
 
         {/* Selected Services */}
-        {selectedServices.length > 0 && (
-          <div>
-            <p className="text-sm font-medium mt-4 mb-2">
-              New services you're adding
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {selectedServices.map((service) => (
-                <Badge
-                  key={service}
-                  className="bg-black text-white px-2 py-1 flex items-center"
-                >
-                  {service}
-                  <X
-                    className="ml-2 h-3 w-3 cursor-pointer"
-                    onClick={() => removeService(service)}
-                  />
-                </Badge>
-              ))}
-            </div>
-          </div>
-        )}
+        <div className="flex flex-wrap gap-2 mt-4">
+          {selectedServices.map((service) => (
+            <Badge
+              key={service._id}
+              className="bg-black text-white px-2 py-1 flex items-center"
+            >
+              {service.name}
+              <X
+                className="ml-2 h-3 w-3 cursor-pointer"
+                onClick={() => removeService(service._id)}
+              />
+            </Badge>
+          ))}
+        </div>
 
         {/* Suggestions */}
         <div>
@@ -105,12 +121,12 @@ const AddLeadServiceModal = () => {
           <div className="flex flex-wrap gap-2">
             {suggestions.map((service) => (
               <Button
-                key={service}
+                key={service._id}
                 variant="outline"
                 size="sm"
                 onClick={() => addService(service)}
               >
-                + {service}
+                + {service.name}
               </Button>
             ))}
           </div>
@@ -121,7 +137,10 @@ const AddLeadServiceModal = () => {
           <Button variant="ghost" onClick={() => setOpen(false)}>
             Cancel
           </Button>
-          <Button className="bg-teal-500 hover:bg-teal-600">
+          <Button
+            onClick={handleAddServices}
+            className="bg-teal-500 hover:bg-teal-600"
+          >
             Add Services
           </Button>
         </div>
