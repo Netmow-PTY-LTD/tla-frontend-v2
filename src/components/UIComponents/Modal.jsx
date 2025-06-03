@@ -9,28 +9,27 @@ import {
 } from '@/components/ui/dialog';
 
 export function Modal({
-  buttonName = '',
+  buttonName,
   title = 'modal title',
   description,
   children,
   open,
   onOpenChange,
+  width,
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
-        {buttonName && (
-          <DialogTrigger asChild>
-            <Button
-              variant="outline"
-              className="bg-[#12C7C4CC] px-4 py-3 text-sm rounded-lg text-white mt-5"
-            >
-              {buttonName}
-            </Button>
-          </DialogTrigger>
-        )}
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      {buttonName && (
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            className="bg-[#12C7C4CC] px-4 py-3 text-sm rounded-lg text-white mt-5"
+          >
+            {buttonName}
+          </Button>
+        </DialogTrigger>
+      )}
+      <DialogContent className={width}>
         <DialogHeader>
           <DialogTitle>{title} </DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}

@@ -1,4 +1,7 @@
+import { useFormContext } from 'react-hook-form';
+
 export default function FileUploader({
+  name,
   label = 'Upload File',
   onChange,
   accept = '*',
@@ -6,20 +9,21 @@ export default function FileUploader({
   width = 'max-w-sm',
   icon,
 }) {
+  const { register } = useFormContext();
   return (
-    <div className={`${width} `}>
+    <div className={`${width}`}>
       <label
-        htmlFor="file-upload"
+        htmlFor={name}
         className={`flex flex-col items-center justify-center w-full  px-5 py-4 border border-dashed border-gray-300 rounded-2xl cursor-pointer text-center hover:bg-gray-50 transition`}
       >
         {icon}
         <input
-          id="file-upload"
+          id={name}
           type="file"
           className="hidden"
-          onChange={onChange}
           accept={accept}
           multiple={multiple}
+          {...register(name, { onChange })}
         />
       </label>
       <p className="text-gray-700 font-medium text-center mt-2">{label}</p>
