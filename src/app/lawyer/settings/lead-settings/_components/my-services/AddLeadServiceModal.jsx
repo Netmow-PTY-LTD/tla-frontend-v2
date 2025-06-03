@@ -55,7 +55,7 @@ const AddLeadServiceModal = () => {
       setOpen(false);
     } catch (error) {
       console.error('Failed to add services:', error);
-      const errorMessage = error?.data?.message || 'An error occurred';
+      const errorMessage = error?.data?.err?.message || 'An error occurred';
       showErrorToast(errorMessage);
     }
   };
