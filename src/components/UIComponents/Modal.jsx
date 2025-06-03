@@ -23,14 +23,14 @@ export function Modal({
           <DialogTrigger asChild>
             <Button
               variant="outline"
-              className="bg-[#12C7C4CC] px-4 py-3 text-sm rounded-lg text-white mt-5"
+              className="bg-[#12C7C4CC] hover:bg-teal-300 px-4 py-3 text-sm rounded-lg text-white mt-5 "
             >
               {buttonName}
             </Button>
           </DialogTrigger>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="w-full">
         <DialogHeader>
           <DialogTitle>{title} </DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}

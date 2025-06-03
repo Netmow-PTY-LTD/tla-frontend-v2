@@ -5,6 +5,8 @@ import { Accordion } from '@/components/ui/accordion';
 import ServiceCard from './my-services/ServiceCard';
 import LocationItem from './my-services/LoactionItem';
 
+import AddLeadServiceModal from './my-services/AddLeadServiceModal';
+
 const ServicesList = () => {
   const serviceList = [
     {
@@ -67,9 +69,10 @@ const ServicesList = () => {
             <h2 className="text-xl font-semibold text-gray-800">
               Your Services
             </h2>
-            <Button className="bg-teal-500 hover:bg-teal-600">
+            {/* <Button className="bg-teal-500 hover:bg-teal-600">
               + Add a service
-            </Button>
+            </Button> */}
+            <AddLeadServiceModal />
           </div>
           <p className="text-gray-500 mb-6">
             Tell us what services you provide so we can send you the most
