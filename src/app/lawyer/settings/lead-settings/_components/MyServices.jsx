@@ -12,8 +12,7 @@ const ServicesList = () => {
     {
       id: 'contracts-lawyer',
       title: 'Contracts Lawyer',
-      subtitle:
-        'Helping clients draft and review legal agreements efficiently.',
+
       description:
         'Our contract lawyers specialize in ensuring every clause protects your interests—be it employment, leases, or vendor agreements.',
       question: 'What best describes your contract needs?',
@@ -23,7 +22,7 @@ const ServicesList = () => {
     {
       id: 'notary-public',
       title: 'Lawyers, Solicitors & Notary Publics',
-      subtitle: 'Supporting customers with legal certifications and advice.',
+
       description:
         'Certified professionals for notarization, legal consulting, and public documentation—available across multiple locations.',
       question: 'What service are you looking for?',
@@ -37,7 +36,7 @@ const ServicesList = () => {
     {
       id: 'biz-consultants',
       title: 'Business Consultants',
-      subtitle: 'Get guidance tailored to your business scale.',
+
       description:
         'From startups to enterprises, our consultants offer data-driven solutions and proven business strategies to help you grow.',
       question: 'Which type of business are you running?',
@@ -47,7 +46,6 @@ const ServicesList = () => {
     {
       id: 'estate-lawyer',
       title: 'Estate Lawyer',
-      subtitle: 'Assisting with wills, trusts, and estate planning.',
       description:
         "Our estate planning experts simplify the legalities around wills, trusts, and asset transfers to secure your family's future.",
       question: 'What estate services do you need?',
@@ -69,9 +67,6 @@ const ServicesList = () => {
             <h2 className="text-xl font-semibold text-gray-800">
               Your Services
             </h2>
-            {/* <Button className="bg-teal-500 hover:bg-teal-600">
-              + Add a service
-            </Button> */}
             <AddLeadServiceModal />
           </div>
           <p className="text-gray-500 mb-6">
@@ -90,7 +85,6 @@ const ServicesList = () => {
                   key={service.id}
                   id={service.id}
                   title={service.title}
-                  subtitle={service.subtitle}
                   description={service.description}
                   question={service.question}
                   options={service.options}

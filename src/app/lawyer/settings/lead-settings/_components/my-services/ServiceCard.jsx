@@ -13,7 +13,6 @@ import { useState } from 'react';
 const ServiceCard = ({
   id = 'default-id',
   title,
-  subtitle,
   description = 'All leads · 1 location',
   question = 'Which of these best describes you?',
   options = [],
@@ -34,8 +33,12 @@ const ServiceCard = ({
       <AccordionTrigger className="py-4 px-4 hover:no-underline">
         <div className="flex flex-col items-start text-left">
           <h3 className="text-base font-medium text-gray-800">{title}</h3>
-          {subtitle && <p className="text-sm text-gray-500">{subtitle}</p>}
           <p className="text-sm text-gray-500 mt-1">{description}</p>
+          <div className="text-sm text-gray-500 mt-2">
+            <span className="font-medium">All leads </span>
+            <span className=" mx-2 w-2 h-2 rounded-full bg-slate-500 inline-block"></span>
+            <span className="font-medium"> 1 location </span>
+          </div>
         </div>
       </AccordionTrigger>
       <AccordionContent className="px-4 pb-4">
