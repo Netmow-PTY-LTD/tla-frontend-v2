@@ -8,56 +8,152 @@ import LocationItem from './my-services/LoactionItem';
 import AddLeadServiceModal from './my-services/AddLeadServiceModal';
 
 const ServicesList = () => {
-  const serviceList = [
+  const leadServices = [
     {
-      id: 'contracts-lawyer',
-      title: 'Contracts Lawyer',
-
-      description:
-        'Our contract lawyers specialize in ensuring every clause protects your interests—be it employment, leases, or vendor agreements.',
-      question: 'What best describes your contract needs?',
-      options: ['Employment', 'Lease', 'Sales', 'Partnership'],
-      defaultSelectedOptions: ['Employment', 'Lease', 'Sales', 'Partnership'],
+      _id: '665aabcde1234567890abc01',
+      userProfileId: '665aa0000b1234567890abcd1',
+      serviceName: 'Family Lawyer',
+      serviceId: {
+        _id: '665aa0000c1234567890abcd2',
+        name: 'Family Lawyer',
+        slug: 'family-lawyer',
+        questions: [
+          {
+            _id: '665aa1111d1234567890abcd3',
+            question: 'What do you need help with?',
+            slug: 'what-do-you-need-help-with',
+            questionType: 'checkbox',
+            order: 1,
+            options: [
+              {
+                _id: '665aa1111d1234567890abcd4',
+                name: 'Divorce',
+                slug: 'divorce',
+              },
+              {
+                _id: '665aa1111d1234567890abcd5',
+                name: 'Child custody',
+                slug: 'child-custody',
+              },
+              {
+                _id: '665aa1111d1234567890abcd6',
+                name: 'Adoption',
+                slug: 'adoption',
+              },
+            ],
+          },
+        ],
+        defaultSelectedOptions: [
+          '665aa1111d1234567890abcd4',
+          '665aa1111d1234567890abcd5',
+        ],
+      },
+      locations: ['Chicago', 'Houston'],
+      onlineEnabled: true,
     },
     {
-      id: 'notary-public',
-      title: 'Lawyers, Solicitors & Notary Publics',
-
-      description:
-        'Certified professionals for notarization, legal consulting, and public documentation—available across multiple locations.',
-      question: 'What service are you looking for?',
-      options: ['Document notarization', 'Legal advice', 'Representation'],
-      defaultSelectedOptions: [
-        'Document notarization',
-        'Legal advice',
-        'Representation',
-      ],
+      _id: '665aabcde1234567890abc02',
+      userProfileId: '665aa0000b1234567890abcd2',
+      serviceName: 'Familydgd Lawyer',
+      serviceId: {
+        _id: '665aa0000c1234567890abcd3',
+        name: 'Business Lawyer',
+        slug: 'business-lawyer',
+        questions: [
+          {
+            _id: '665aa1111d1234567890abcd7',
+            question: 'What type of business help do you need?',
+            slug: 'business-help-type',
+            questionType: 'checkbox',
+            order: 1,
+            options: [
+              {
+                _id: '665aa1111d1234567890abcd8',
+                name: 'Contracts',
+                slug: 'contracts',
+              },
+              {
+                _id: '665aa1111d1234567890abcd9',
+                name: 'LLC Formation',
+                slug: 'llc-formation',
+              },
+              {
+                _id: '665aa1111d1234567890abcda',
+                name: 'Trademark',
+                slug: 'trademark',
+              },
+            ],
+          },
+          {
+            _id: '665aa1111d1234567890abce9',
+            question: 'What type of business help do you need?',
+            slug: 'business-help-type',
+            questionType: 'checkbox',
+            order: 1,
+            options: [
+              {
+                _id: '665aa1111d1234567892abcd8',
+                name: 'Contracts',
+                slug: 'contracts',
+              },
+              {
+                _id: '665aa1111d1234567390abcd9',
+                name: 'LLC Formation',
+                slug: 'llc-formation',
+              },
+              {
+                _id: '665aa1111d1234563890abcda',
+                name: 'Trademark',
+                slug: 'trademark',
+              },
+            ],
+          },
+        ],
+        defaultSelectedOptions: ['665aa1111d1234567890abcd8'],
+      },
+      locations: ['San Francisco', 'Seattle'],
+      onlineEnabled: false,
     },
     {
-      id: 'biz-consultants',
-      title: 'Business Consultants',
-
-      description:
-        'From startups to enterprises, our consultants offer data-driven solutions and proven business strategies to help you grow.',
-      question: 'Which type of business are you running?',
-      options: ['Startup', 'SME', 'Enterprise', 'Freelance'],
-      defaultSelectedOptions: ['Startup', 'SME', 'Enterprise', 'Freelance'],
-    },
-    {
-      id: 'estate-lawyer',
-      title: 'Estate Lawyer',
-      description:
-        "Our estate planning experts simplify the legalities around wills, trusts, and asset transfers to secure your family's future.",
-      question: 'What estate services do you need?',
-      options: ['Will drafting', 'Trust setup', 'Inheritance guidance'],
-      defaultSelectedOptions: [
-        'Will drafting',
-        'Trust setup',
-        'Inheritance guidance',
-      ],
+      _id: '665aabcde1234567890abc03',
+      userProfileId: '665aa0000b1234567890abcd3',
+      serviceName: 'Family dffdLawyer',
+      serviceId: {
+        _id: '665aa0000c1234567890abcd4',
+        name: 'Criminal Defense Lawyer',
+        slug: 'criminal-defense-lawyer',
+        questions: [
+          {
+            _id: '665aa1111d1234567890abcdb',
+            question: 'What kind of case are you facing?',
+            slug: 'case-type',
+            questionType: 'checkbox',
+            order: 1,
+            options: [
+              { _id: '665aa1111d1234567890abcdc', name: 'DUI', slug: 'dui' },
+              {
+                _id: '665aa1111d1234567890abcdd',
+                name: 'Theft',
+                slug: 'theft',
+              },
+              {
+                _id: '665aa1111d1234567890abcde',
+                name: 'Assault',
+                slug: 'assault',
+              },
+            ],
+          },
+        ],
+        defaultSelectedOptions: [
+          '665aa1111d1234567890abcdd',
+          '665aa1111d1234567890abcde',
+        ],
+      },
+      locations: ['Miami', 'Atlanta'],
+      onlineEnabled: true,
     },
   ];
-  // const serviceList = [];
+
   return (
     <div className=" mx-auto">
       <div className="space-y-6">
@@ -67,6 +163,9 @@ const ServicesList = () => {
             <h2 className="text-xl font-semibold text-gray-800">
               Your Services
             </h2>
+            {/* <Button className="bg-teal-500 hover:bg-teal-600">
+              + Add a service
+            </Button> */}
             <AddLeadServiceModal />
           </div>
           <p className="text-gray-500 mb-6">
@@ -75,20 +174,16 @@ const ServicesList = () => {
           </p>
 
           <Accordion
-            type="single"
+            type="multiple"
             collapsible
             className="border-t border-gray-200"
           >
-            {serviceList.length > 0 ? (
-              serviceList.map((service) => (
+            {leadServices.length > 0 ? (
+              leadServices.map((service) => (
                 <ServiceCard
-                  key={service.id}
-                  id={service.id}
-                  title={service.title}
-                  description={service.description}
-                  question={service.question}
-                  options={service.options}
-                  defaultSelectedOptions={service.defaultSelectedOptions}
+                  id={service._id}
+                  title={service.serviceName}
+                  service={service?.serviceId}
                 />
               ))
             ) : (

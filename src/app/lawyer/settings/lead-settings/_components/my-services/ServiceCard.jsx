@@ -12,28 +12,31 @@ import { useState } from 'react';
 
 const ServiceCard = ({
   id = 'default-id',
-  title,
-  description = 'All leads · 1 location',
-  question = 'Which of these best describes you?',
-  options = [],
-  defaultSelectedOptions = [],
+  title = 'Default Service Title',
+  service,
 }) => {
+  const questions = service?.questions || [];
+  const defaultSelectedOptions = service?.defaultSelectedOptions || [];
+
   const [selectedOptions, setSelectedOptions] = useState(
     defaultSelectedOptions
   );
 
-  const handleOptionChange = (option, checked) => {
+  const handleOptionChange = (optionId, checked) => {
     setSelectedOptions((prev) =>
-      checked ? [...prev, option] : prev.filter((opt) => opt !== option)
+      checked ? [...prev, optionId] : prev.filter((opt) => opt !== optionId)
     );
   };
 
   return (
-    <AccordionItem value={title} className="border-b bg-white border-gray-200">
+    <AccordionItem
+      value={`service-${id}`}
+      className="border-b bg-white border-gray-200"
+    >
       <AccordionTrigger className="py-4 px-4 hover:no-underline">
         <div className="flex flex-col items-start text-left">
           <h3 className="text-base font-medium text-gray-800">{title}</h3>
-          <p className="text-sm text-gray-500 mt-1">{description}</p>
+
           <div className="text-sm text-gray-500 mt-2">
             <span className="font-medium">All leads </span>
             <span className=" mx-2 w-2 h-2 rounded-full bg-slate-500 inline-block"></span>
@@ -43,35 +46,44 @@ const ServiceCard = ({
       </AccordionTrigger>
       <AccordionContent className="px-4 pb-4">
         <div className="space-y-4">
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value={`${id}-question`} className="border-none">
-              <AccordionTrigger className="py-4 px-0">
-                <h4 className="text-base font-semibold text-gray-900">
-                  {question}
-                </h4>
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-4 py-2">
-                  {options.map((option) => (
-                    <div key={option} className="flex items-center space-x-3">
-                      <Checkbox
-                        id={`${id}-${option}`}
-                        checked={selectedOptions.includes(option)}
-                        onCheckedChange={(checked) =>
-                          handleOptionChange(option, checked)
-                        }
-                      />
-                      <Label
-                        htmlFor={`${id}-${option}`}
-                        className="text-sm font-medium text-gray-700 cursor-pointer"
+          <Accordion type="multiple" collapsible className="w-full">
+            {questions.map((q) => (
+              <AccordionItem
+                key={q._id}
+                value={`${id}-question-${q._id}`}
+                className="border-none"
+              >
+                <AccordionTrigger className="py-4 px-0">
+                  <h4 className="text-base font-semibold text-gray-900">
+                    {q.question}
+                  </h4>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-4 py-2">
+                    {q.options.map((option) => (
+                      <div
+                        key={option._id}
+                        className="flex items-center space-x-3"
                       >
-                        {option}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
+                        <Checkbox
+                          id={`${id}-${option._id}`}
+                          checked={selectedOptions.includes(option._id)}
+                          onCheckedChange={(checked) =>
+                            handleOptionChange(option._id, checked)
+                          }
+                        />
+                        <Label
+                          htmlFor={`${id}-${option._id}`}
+                          className="text-sm font-medium text-gray-700 cursor-pointer"
+                        >
+                          {option.name}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
           </Accordion>
         </div>
       </AccordionContent>
