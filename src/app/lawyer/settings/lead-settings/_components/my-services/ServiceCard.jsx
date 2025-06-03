@@ -57,7 +57,6 @@ const ServiceCard = ({
                         onCheckedChange={(checked) =>
                           handleOptionChange(option, checked)
                         }
-                        className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
                       />
                       <Label
                         htmlFor={`${id}-${option}`}

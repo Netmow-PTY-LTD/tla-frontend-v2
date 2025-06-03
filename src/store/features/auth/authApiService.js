@@ -34,7 +34,7 @@ const authApi = baseApi.injectEndpoints({
     }),
     updateUserData: builder.mutation({
       query: (data) => ({
-        url: '/user/edit',
+        url: '/user/update',
         method: 'PATCH',
         body: data,
       }),
