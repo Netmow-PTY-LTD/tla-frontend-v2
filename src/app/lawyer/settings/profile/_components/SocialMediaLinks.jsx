@@ -8,6 +8,7 @@ import {
   useUpdateUserDataMutation,
 } from '@/store/features/auth/authApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import { z } from 'zod';
 
 export default function SocialMediaLinks() {
   const {
@@ -25,12 +26,16 @@ export default function SocialMediaLinks() {
   const [updateUserData] = useUpdateUserDataMutation();
   const profile = userInfo?.data?.profile;
 
-  console.log('socialMedia', profile?.socialMedia?.facebook);
-
   const onCancel = () => {
     console.log('Cancel clicked');
     //reset(originalValues);
   };
+
+  const socialMediaSchema = z.object({
+    facebook: z.string().url('Invalid Facebook URL').optional(),
+    twitter: z.string().url('Invalid Twitter URL').optional(),
+    website: z.string().url('Invalid URL').optional().or(z.literal('')), // Allow empty string as valid input
+  });
 
   const defaultValues = {
     facebook: profile?.socialMedia?.facebook ?? '',
@@ -74,7 +79,11 @@ export default function SocialMediaLinks() {
 
   return (
     <div className="max-w-[900px] mx-auto">
-      <FormWrapper onSubmit={handleSubmit} defaultValues={defaultValues}>
+      <FormWrapper
+        onSubmit={handleSubmit}
+        defaultValues={defaultValues}
+        schema={socialMediaSchema}
+      >
         <div className="flex flex-col gap-3">
           <SocialMediaLink profile={profile} />
           {/* <ExternalLinks /> */}

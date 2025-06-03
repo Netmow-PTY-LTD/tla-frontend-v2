@@ -2,33 +2,11 @@
 
 import TextareaInput from '@/components/form/TextArea';
 import TextInput from '@/components/form/TextInput';
-import ToggleSwitch from '@/components/UIComponents/ToggleSwitch';
 import { CircleAlert } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 export default function SocialMediaLink({ profile }) {
-  //console.log('profile', profile);
-  const [hiddenFields, setHiddenFields] = useState({
-    facebook: false,
-    twitter: false,
-    website: false,
-  });
-
-  const toggleField = (field) => (checked) => {
-    setHiddenFields((prev) => ({ ...prev, [field]: checked }));
-  };
-
-  const OptionalToggle = ({ field }) => (
-    <div className="flex items-center gap-2 max-w-sm p-2 rounded-md text-gray-700 text-sm">
-      <CircleAlert className="w-4 h-4" />
-      <span>Optional</span>
-      <ToggleSwitch
-        enabled={hiddenFields[field]}
-        onToggle={toggleField(field)}
-      />
-    </div>
-  );
   const { reset } = useFormContext();
 
   useEffect(() => {
@@ -57,10 +35,12 @@ export default function SocialMediaLink({ profile }) {
             label="Facebook"
             name="facebook"
             placeholder="https://facebook.com/"
-            inputClassName={hiddenFields.facebook ? 'hidden' : ''}
           />
         </div>
-        <OptionalToggle field="facebook" />
+        <div className="flex items-center gap-2 max-w-sm p-2 rounded-md text-gray-700 text-sm">
+          <CircleAlert className="w-4 h-4" />
+          <span>Optional</span>
+        </div>
       </div>
 
       {/* Twitter Field */}
@@ -70,10 +50,12 @@ export default function SocialMediaLink({ profile }) {
             label="Twitter"
             name="twitter"
             placeholder="https://twitter.com"
-            inputClassName={hiddenFields.twitter ? 'hidden' : ''}
           />
         </div>
-        <OptionalToggle field="twitter" />
+        <div className="flex items-center gap-2 max-w-sm p-2 rounded-md text-gray-700 text-sm">
+          <CircleAlert className="w-4 h-4" />
+          <span>Optional</span>
+        </div>
       </div>
 
       {/* Website Links Section */}
@@ -86,7 +68,10 @@ export default function SocialMediaLink({ profile }) {
               other content that will help promote your business.
             </p>
           </div>
-          <OptionalToggle field="website" />
+          <div className="flex items-center gap-2 max-w-sm p-2 rounded-md text-gray-700 text-sm">
+            <CircleAlert className="w-4 h-4" />
+            <span>Optional</span>
+          </div>
         </div>
 
         <div className="mt-5">
@@ -94,7 +79,6 @@ export default function SocialMediaLink({ profile }) {
             label="Describe your company"
             name="website"
             placeholder="Enter one link per line"
-            textareaClassName={hiddenFields.website ? 'hidden' : ''}
           />
         </div>
       </div>

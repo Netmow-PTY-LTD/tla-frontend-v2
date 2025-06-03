@@ -21,7 +21,7 @@ export default function Login() {
           <div
             className="hidden md:block w-full md:w-1/2"
             style={{
-              backgroundImage: `url('/assets/img/law.jpg')`,
+              backgroundImage: `url('/assets/img/law-webp.webp')`,
               backgroundRepeat: 'no-repeat',
               backgroundSize: 'cover',
               backgroundPosition: 'center center',

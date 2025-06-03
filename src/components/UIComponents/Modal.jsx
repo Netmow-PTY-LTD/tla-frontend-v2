@@ -9,12 +9,13 @@ import {
 } from '@/components/ui/dialog';
 
 export function Modal({
-  buttonName = '',
+  buttonName,
   title = 'modal title',
   description,
   children,
   open,
   onOpenChange,
+  width,
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

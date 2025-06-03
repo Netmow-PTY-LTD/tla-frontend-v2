@@ -2,14 +2,36 @@
 
 import ServicesList from './services/ServicesList';
 import ServiceAddModal from './services/ServiceAddModal';
+import {
+  useAuthUserInfoQuery,
+  useUpdateUserDataMutation,
+} from '@/store/features/auth/authApiService';
+import { useState } from 'react';
+import EditServiceModal from './services/EditServiceModal';
 
 export default function Services() {
-  const onSave = () => console.log('Save clicked');
-  const onCancel = () => console.log('Save clicked');
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
+  const {
+    data: userInfo,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useAuthUserInfoQuery(undefined, {
+    refetchOnMountOrArgChange: true, // keep data fresh
+  });
 
+  const handleEditClick = (service) => {
+    setSelectedService(service);
+    setIsEditModalOpen(true);
+  };
+
+  const [updateUserData] = useUpdateUserDataMutation();
+  const profile = userInfo?.data?.profile;
   return (
     <div className="max-w-[900px] mx-auto">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center gap-5">
         <div>
           <h2 className="text-black font-semibold">Services</h2>
 
@@ -18,27 +40,21 @@ export default function Services() {
             confidence they’re looking for when making a hiring decision.
           </p>
         </div>
-
         {/*  Services modal */}
-        <ServiceAddModal />
+        <ServiceAddModal
+          profile={profile}
+          updateUserData={updateUserData}
+          refetch={refetch}
+        />
       </div>
-      <ServicesList />
-
-      {/* Footer Buttons */}
-      <div className="flex justify-between items-center pt-4 ">
-        <button
-          onClick={onCancel}
-          className="text-sm text-gray-600 hover:text-gray-800"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={onSave}
-          className="bg-[#12C7C4] text-white px-4 py-2 text-sm rounded-md hover:bg-[#10b0ae]"
-        >
-          Save
-        </button>
-      </div>
+      <ServicesList profile={profile} handleEditClick={handleEditClick} />
+      <EditServiceModal
+        open={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        selectedService={selectedService}
+        updateUserData={updateUserData}
+        refetch={refetch}
+      />
     </div>
   );
 }
