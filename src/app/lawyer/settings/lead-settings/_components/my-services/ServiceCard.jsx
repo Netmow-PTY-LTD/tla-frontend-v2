@@ -12,7 +12,7 @@ import { useState } from 'react';
 import LeadServiceAction from './LeadServiceAction';
 
 const ServiceCard = ({
-  id = 'default-id',
+  leadServiceId,
   title = 'Default Service Title',
   service,
 }) => {
@@ -31,7 +31,7 @@ const ServiceCard = ({
 
   return (
     <AccordionItem
-      value={`service-${id}`}
+      value={`service-${leadServiceId}`}
       className="border-b bg-white border-gray-200   "
     >
       <AccordionTrigger className="py-4 px-4 hover:no-underline">
@@ -55,7 +55,7 @@ const ServiceCard = ({
             {questions.map((q, index) => (
               <AccordionItem
                 key={q._id}
-                value={`${id}-question-${q._id}`}
+                value={`question-${q._id}`}
                 className="border-none"
               >
                 <AccordionTrigger className="py-4 px-0">
@@ -74,14 +74,14 @@ const ServiceCard = ({
                         className="flex items-center space-x-3"
                       >
                         <Checkbox
-                          id={`${id}-${option._id}`}
+                          id={`${option._id}`}
                           checked={selectedOptions.includes(option._id)}
                           onCheckedChange={(checked) =>
                             handleOptionChange(option._id, checked)
                           }
                         />
                         <Label
-                          htmlFor={`${id}-${option._id}`}
+                          htmlFor={`${option._id}`}
                           className="text-sm font-medium text-gray-700 cursor-pointer"
                         >
                           {option.name}
@@ -94,7 +94,7 @@ const ServiceCard = ({
             ))}
           </Accordion>
           <div className="border-t border-gray-200 ">
-            <LeadServiceAction />
+            <LeadServiceAction leadServiceId={leadServiceId} />
           </div>
         </div>
       </AccordionContent>

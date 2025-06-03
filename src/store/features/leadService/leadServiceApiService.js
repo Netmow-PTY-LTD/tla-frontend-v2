@@ -19,8 +19,8 @@ const leadServiceApiService = baseApi.injectEndpoints({
     }),
 
     deleteLeadService: builder.mutation({
-      query: (id) => ({
-        url: `/lead-service/${id}`,
+      query: (leadServiceId) => ({
+        url: `/lead-service/delete/${leadServiceId}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['leadService'],

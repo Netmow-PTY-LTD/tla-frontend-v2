@@ -201,7 +201,7 @@ const ServicesList = () => {
                 {leadServices.map((service) => (
                   <ServiceCard
                     key={service._id}
-                    id={service._id}
+                    leadServiceId={service._id}
                     title={service.serviceName}
                     service={service?.serviceId}
                   />

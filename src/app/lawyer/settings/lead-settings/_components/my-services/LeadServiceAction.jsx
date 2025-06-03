@@ -1,10 +1,13 @@
 'use client';
 
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { Checkbox } from '@/components/ui/checkbox';
+import { useDeleteLeadServiceMutation } from '@/store/features/leadService/leadServiceApiService';
 import React, { useState } from 'react';
 
-const LeadServiceAction = () => {
-  const [locations, setLocations] = useState(['New York', 'Los Angeles']);
+const LeadServiceAction = ({ leadServiceId }) => {
+  const [deleteService] = useDeleteLeadServiceMutation();
+  const [locations, setLocations] = useState(['NationWide', 'within 50 miles']);
   const [selectedLocations, setSelectedLocations] = useState(locations);
 
   const handleAddLocation = () => {
@@ -27,13 +30,28 @@ const LeadServiceAction = () => {
     console.log('Selected locations:', selectedLocations);
     // Save to backend or state
   };
-  const handleDeleteService = () => {
+  const handleDeleteService = async () => {
     const confirmDelete = window.confirm(
       'Are you sure you want to remove this service?'
     );
-    if (confirmDelete) {
-      console.log('Service removed');
-      // Implement service removal logic here
+
+    if (!confirmDelete) return;
+
+    try {
+      const response = await deleteService(leadServiceId).unwrap();
+
+      if (response.success) {
+        console.log('Service removed:', response);
+        showSuccessToast(response?.message || 'Service removed successfully');
+        // Optionally: refresh data or update local state here
+      } else {
+        showErrorToast('Failed to remove service');
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+      const errorMessage =
+        error?.data?.message || 'An error occurred while removing the service';
+      showErrorToast(errorMessage);
     }
   };
 
