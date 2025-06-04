@@ -8,15 +8,12 @@ import FormWrapper from '@/components/form/FromWrapper';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
 const EditServiceModal = ({
-  profile,
   updateUserData,
   refetch,
   selectedService,
   open,
   onClose,
 }) => {
-  console.log('profile', profile);
-
   const onCancel = () => onClose(); // correctly close modal
 
   const defaultValues = {
@@ -25,7 +22,6 @@ const EditServiceModal = ({
   };
 
   const handleSubmit = async (values) => {
-    console.log('Form values:', values);
     const { title, description } = values;
 
     const payload = {
@@ -36,12 +32,8 @@ const EditServiceModal = ({
       },
     };
 
-    console.log('payload', payload);
-
     const formData = new FormData();
     formData.append('data', JSON.stringify(payload));
-
-    console.log('data', JSON.parse(formData?.get('data')));
 
     try {
       const res = await updateUserData(formData).unwrap();
@@ -56,6 +48,7 @@ const EditServiceModal = ({
       console.error('Error submitting form:', error);
     }
   };
+
   return (
     <div>
       <Modal
