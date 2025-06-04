@@ -10,23 +10,78 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { useState } from 'react';
 import LeadServiceAction from './LeadServiceAction';
+import { useLeadServiceSelectedOptionsUpdateMutation } from '@/store/features/leadService/leadServiceApiService';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
 const ServiceCard = ({
   leadServiceId,
   title = 'Default Service Title',
   service,
 }) => {
-  const questions = service?.questions || [];
-  const defaultSelectedOptions = service?.defaultSelectedOptions || [];
+  const [selectedOptionsUpdate] = useLeadServiceSelectedOptionsUpdateMutation();
 
-  const [selectedOptions, setSelectedOptions] = useState(
-    defaultSelectedOptions
-  );
+  const questions = service || [];
 
-  const handleOptionChange = (optionId, checked) => {
-    setSelectedOptions((prev) =>
-      checked ? [...prev, optionId] : prev.filter((opt) => opt !== optionId)
+  // Initialize selected options grouped by questionId
+  const initializeSelected = () => {
+    const initial = {};
+    questions.forEach((q) => {
+      initial[q._id] = q.selectedOptionIds || [];
+    });
+    return initial;
+  };
+
+  // Detect if selectedOptions have changed from the initial
+
+  const [selectedOptions, setSelectedOptions] = useState(initializeSelected());
+
+  const initialSelectedOptions = initializeSelected();
+
+  // Detect if selectedOptions have changed from the initial
+  const isDirty =
+    JSON.stringify(selectedOptions) !== JSON.stringify(initialSelectedOptions);
+
+  const handleOptionChange = (questionId, optionId, checked) => {
+    setSelectedOptions((prev) => {
+      const prevOptions = prev[questionId] || [];
+      return {
+        ...prev,
+        [questionId]: checked
+          ? [...new Set([...prevOptions, optionId])]
+          : prevOptions.filter((id) => id !== optionId),
+      };
+    });
+  };
+
+  const handleSubmit = async () => {
+    const answers = Object.entries(selectedOptions).map(
+      ([questionId, selectedOptionIds]) => ({
+        questionId,
+        selectedOptionIds,
+      })
     );
+
+    const payload = { answers };
+
+    try {
+      const response = await selectedOptionsUpdate({
+        leadServiceId,
+        answers: payload,
+      }).unwrap();
+
+      if (response.success) {
+        showSuccessToast(
+          response?.message || 'selected option update successfully'
+        );
+      } else {
+        showErrorToast('Failed to selected option');
+      }
+    } catch (error) {
+      console.error('Update failed:', error);
+      const errorMessage =
+        error?.data?.message || 'An error occurred while selected option';
+      showErrorToast(errorMessage);
+    }
   };
 
   return (
@@ -75,9 +130,12 @@ const ServiceCard = ({
                       >
                         <Checkbox
                           id={`${option._id}`}
-                          checked={selectedOptions.includes(option._id)}
+                          checked={
+                            selectedOptions[q._id]?.includes(option._id) ||
+                            false
+                          }
                           onCheckedChange={(checked) =>
-                            handleOptionChange(option._id, checked)
+                            handleOptionChange(q._id, option._id, checked)
                           }
                         />
                         <Label
@@ -94,7 +152,11 @@ const ServiceCard = ({
             ))}
           </Accordion>
           <div className="max-w-[85%] mx-auto">
-            <LeadServiceAction leadServiceId={leadServiceId} />
+            <LeadServiceAction
+              leadServiceId={leadServiceId}
+              onSubmit={handleSubmit}
+              isDirty={isDirty}
+            />
           </div>
         </div>
       </AccordionContent>
