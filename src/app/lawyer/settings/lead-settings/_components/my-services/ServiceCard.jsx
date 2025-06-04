@@ -93,7 +93,7 @@ const ServiceCard = ({
               </AccordionItem>
             ))}
           </Accordion>
-          <div className="border-t border-gray-200 ">
+          <div className="max-w-[85%] mx-auto">
             <LeadServiceAction leadServiceId={leadServiceId} />
           </div>
         </div>
