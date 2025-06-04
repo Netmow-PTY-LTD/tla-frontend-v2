@@ -4,7 +4,7 @@ import { Switch } from '@/components/ui/switch';
 
 const BrowserNotification = () => {
   return (
-    <div>
+    <div className="max-w-[900px] mx-auto p-6 bg-gray-50 rounded-lg shadow-sm">
       <div className="flex items-center gap-3 mb-3">
         <div>
           <h2 className="font-semibold text-lg">Browser Notification</h2>

@@ -18,7 +18,6 @@ const ServiceAddModal = ({ profile, updateUserData, refetch }) => {
   };
 
   const handleSubmit = async (values) => {
-    console.log('Form values:', values);
     const { title, description } = values;
 
     const payload = {
@@ -28,12 +27,8 @@ const ServiceAddModal = ({ profile, updateUserData, refetch }) => {
       },
     };
 
-    console.log('payload', payload);
-
     const formData = new FormData();
     formData.append('data', JSON.stringify(payload));
-
-    console.log('data', JSON.parse(formData?.get('data')));
 
     try {
       const res = await updateUserData(formData).unwrap();
