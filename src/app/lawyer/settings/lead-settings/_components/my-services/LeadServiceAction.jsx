@@ -28,7 +28,6 @@ const LeadServiceAction = ({ leadServiceId, onSubmit, isDirty }) => {
   };
 
   const handleSaveLocations = () => {
-    console.log('Selected locations:', selectedLocations);
     // Save to backend or state
   };
   const handleDeleteService = async () => {
@@ -42,9 +41,7 @@ const LeadServiceAction = ({ leadServiceId, onSubmit, isDirty }) => {
       const response = await deleteService(leadServiceId).unwrap();
 
       if (response.success) {
-        console.log('Service removed:', response);
         showSuccessToast(response?.message || 'Service removed successfully');
-        // Optionally: refresh data or update local state here
       } else {
         showErrorToast('Failed to remove service');
       }

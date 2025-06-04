@@ -67,12 +67,12 @@ const ServiceCard = ({
       const response = await selectedOptionsUpdate({
         leadServiceId,
         answers: payload,
-      });
+      }).unwrap();
+
       if (response.success) {
         showSuccessToast(
           response?.message || 'selected option update successfully'
         );
-        // Optionally: refresh data or update local state here
       } else {
         showErrorToast('Failed to selected option');
       }
