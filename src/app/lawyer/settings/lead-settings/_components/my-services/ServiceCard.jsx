@@ -16,8 +16,10 @@ const ServiceCard = ({
   title = 'Default Service Title',
   service,
 }) => {
-  const questions = service?.questions || [];
-  const defaultSelectedOptions = service?.defaultSelectedOptions || [];
+  const questions = service || [];
+  const defaultSelectedOptions = service
+    ?.map((s) => s.selectedOptionIds || [])
+    .flat();
 
   const [selectedOptions, setSelectedOptions] = useState(
     defaultSelectedOptions

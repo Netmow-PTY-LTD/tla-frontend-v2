@@ -203,7 +203,7 @@ const ServicesList = () => {
                     key={service._id}
                     leadServiceId={service._id}
                     title={service.serviceName}
-                    service={service?.serviceId}
+                    service={service?.questions}
                   />
                 ))}
               </div>
