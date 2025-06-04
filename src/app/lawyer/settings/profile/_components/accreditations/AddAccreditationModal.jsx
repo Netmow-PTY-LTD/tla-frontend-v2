@@ -6,7 +6,7 @@ import { CloudUpload, Edit, FileIcon, Trash } from 'lucide-react';
 import FormWrapper from '@/components/form/FromWrapper';
 import { z } from 'zod';
 
-const AddAccreditaionsModal = ({ defaultValues, handleSubmit }) => {
+const AddAccreditationModal = ({ defaultValues, handleSubmit }) => {
   const [open, setOpen] = useState(false);
   const onCancel = () => setOpen(!open);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -121,4 +121,4 @@ const AddAccreditaionsModal = ({ defaultValues, handleSubmit }) => {
   );
 };
 
-export default AddAccreditaionsModal;
+export default AddAccreditationModal;
