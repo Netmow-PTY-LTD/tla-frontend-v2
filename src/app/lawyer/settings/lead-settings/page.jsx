@@ -9,6 +9,7 @@ const LeadSettingsPage = () => {
       <div className="max-w-[900px] mx-auto">
         <ServicesList />
       </div>
+      {/* <DynamicAccordion items={accordionItems} /> */}
     </div>
   );
 };
