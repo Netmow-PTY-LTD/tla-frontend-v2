@@ -3,6 +3,7 @@
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useDeleteLeadServiceMutation } from '@/store/features/leadService/leadServiceApiService';
+import { Trash } from 'lucide-react';
 import React, { useState } from 'react';
 
 const LeadServiceAction = ({ leadServiceId }) => {
@@ -56,7 +57,7 @@ const LeadServiceAction = ({ leadServiceId }) => {
   };
 
   return (
-    <div className=" p-4 mt-6">
+    <div className="mt-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">Your Location</h2>
         <button
@@ -72,7 +73,7 @@ const LeadServiceAction = ({ leadServiceId }) => {
           locations.map((location, index) => (
             <label
               key={index}
-              className="flex items-center justify-between px-4 py-2  rounded-md  hover:bg-gray-50"
+              className="flex items-center justify-between px-8 py-2  rounded-md  hover:bg-gray-50"
             >
               <div className="flex items-center gap-3">
                 <Checkbox
@@ -93,10 +94,12 @@ const LeadServiceAction = ({ leadServiceId }) => {
 
       <div className="flex justify-between items-center mt-6">
         <button
-          className="btn-primary text-red-600 font-medium"
-          onClick={() => handleDeleteService()} // implement this to remove the service
+          type="button"
+          onClick={handleDeleteService}
+          className="flex items-center text-red-600 hover:text-red-700 font-medium transition-colors"
         >
-          Remove this Service
+          <Trash className="w-5 h-5 mr-2" />
+          <span>Remove this Service</span>
         </button>
         <button
           className="bg-[#12C7C4CC] hover:bg-teal-300 px-4 py-3 text-sm rounded-lg text-white mt-5 "
