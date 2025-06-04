@@ -32,8 +32,9 @@ export function LawyerSideNav() {
         <SidebarMenu>
           {SellerSidebarItems?.navMain?.map((item) => {
             const isParentActive =
-              item.items?.some((sub) => pathname === sub.url) ||
-              pathname === item.url;
+              pathname.startsWith(item.url || '') ||
+              (item.items?.length &&
+                item.items.some((sub) => pathname.startsWith(sub.url || '')));
 
             return item.items ? (
               <Collapsible

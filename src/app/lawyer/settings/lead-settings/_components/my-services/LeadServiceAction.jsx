@@ -6,7 +6,7 @@ import { useDeleteLeadServiceMutation } from '@/store/features/leadService/leadS
 import { Trash } from 'lucide-react';
 import React, { useState } from 'react';
 
-const LeadServiceAction = ({ leadServiceId }) => {
+const LeadServiceAction = ({ leadServiceId, onSubmit, isDirty }) => {
   const [deleteService] = useDeleteLeadServiceMutation();
   const [locations, setLocations] = useState(['NationWide', 'within 50 miles']);
   const [selectedLocations, setSelectedLocations] = useState(locations);
@@ -28,7 +28,6 @@ const LeadServiceAction = ({ leadServiceId }) => {
   };
 
   const handleSaveLocations = () => {
-    console.log('Selected locations:', selectedLocations);
     // Save to backend or state
   };
   const handleDeleteService = async () => {
@@ -42,9 +41,7 @@ const LeadServiceAction = ({ leadServiceId }) => {
       const response = await deleteService(leadServiceId).unwrap();
 
       if (response.success) {
-        console.log('Service removed:', response);
         showSuccessToast(response?.message || 'Service removed successfully');
-        // Optionally: refresh data or update local state here
       } else {
         showErrorToast('Failed to remove service');
       }
@@ -102,8 +99,15 @@ const LeadServiceAction = ({ leadServiceId }) => {
           <span>Remove this Service</span>
         </button>
         <button
-          className="bg-[#12C7C4CC] hover:bg-teal-300 px-4 py-3 text-sm rounded-lg text-white mt-5 "
-          onClick={handleSaveLocations}
+          disabled={!isDirty}
+          className={`px-4 py-3 text-sm rounded-lg text-white mt-5
+            ${
+              isDirty
+                ? 'bg-[#12C7C4CC] hover:bg-teal-300'
+                : 'bg-gray-300 cursor-not-allowed'
+            }
+          `}
+          onClick={onSubmit}
         >
           Save
         </button>
