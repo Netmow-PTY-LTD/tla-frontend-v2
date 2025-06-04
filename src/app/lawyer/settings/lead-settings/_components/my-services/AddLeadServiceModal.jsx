@@ -75,6 +75,7 @@ const AddLeadServiceModal = () => {
         description="Type the name of your service to start searching our thousands of available services."
         buttonName="+ Add a service"
         className="w-full " // ensure modal is full width (adjust max-width as needed)
+        width="max-w-[600px]"
       >
         {/* Search Input */}
         <div className="relative">

@@ -15,7 +15,7 @@ export function Modal({
   children,
   open,
   onOpenChange,
-  width,
+  width = 'max-w-[500px]',
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -31,7 +31,7 @@ export function Modal({
           </DialogTrigger>
         )}
       </DialogTrigger>
-      <DialogContent className="w-full">
+      <DialogContent className={`${width}`}>
         <DialogHeader>
           <DialogTitle>{title} </DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}

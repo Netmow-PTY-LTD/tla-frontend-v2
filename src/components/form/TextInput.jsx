@@ -34,11 +34,16 @@ export default function TextInput({
 
         return (
           <FormItem className={itemClassName}>
-            {label && <FormLabel className={labelClassName}>{label}</FormLabel>}
+            {label && (
+              <FormLabel className={labelClassName} htmlFor={name}>
+                {label}
+              </FormLabel>
+            )}
             <FormControl>
               <Input
                 {...restField}
                 name={name}
+                id={name}
                 ref={ref}
                 type={type}
                 placeholder={placeholder}
