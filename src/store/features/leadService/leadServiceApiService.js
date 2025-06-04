@@ -12,7 +12,7 @@ const leadServiceApiService = baseApi.injectEndpoints({
     }),
     getLeadServiceList: builder.query({
       query: () => ({
-        url: `lead-service/list`,
+        url: `/lead-service/list`,
         method: 'GET',
       }),
       providesTags: ['leadService'],
