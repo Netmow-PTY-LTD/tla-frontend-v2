@@ -20,13 +20,97 @@ const PricingPage = () => {
                 Join as a Lawyer
               </Link>
             </div>
-            <div className="w-full md:max-w-[356px]">
+            <div className="w-full md:max-w-[356px] hidden md:block">
               <Image
                 src="/assets/img/circle.png"
                 width={356}
                 height={353}
                 alt="banner shape"
               />
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="section">
+        <div className="container">
+          <div className="flex flex-wrap items-center">
+            <div className="w-full md:w-7/12">
+              <div className="image-container">
+                <Image
+                  src="/assets/img/visacard.png"
+                  width={750}
+                  height={375}
+                  alt="Visa Card"
+                  className="w-full"
+                />
+              </div>
+            </div>
+            <div className="w-full md:w-5/12 mt-10 md:mt-0">
+              <h2 className="section-title">
+                Get Started with Simple <br /> Credits{' '}
+                <span className="line-sm mr-1" /> <span className="line-lg" />
+              </h2>
+              <div className="text-[var(--color-black)] mt-4">
+                Buy a credit pack and use your credits to reach out to the
+                customers you want—<b>no commissions, no hidden fees,</b> just
+                straightforward connections.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="section">
+        <div className="container">
+          <div className="flex flex-wrap items-center">
+            <div className="w-full md:w-7/12">
+              <h2 className="section-title flex item-center">
+                You're in control
+                <span className="line-sm mr-1 ml-5" />{' '}
+                <span className="line-lg" />
+              </h2>
+              <div className="text-[var(--color-black)] mt-4">
+                Decide which leads to pursue with clear, upfront pricing — so
+                you always know what you're spending.
+              </div>
+            </div>
+            <div className="w-full md:w-5/12 mt-10 md:mt-0">
+              <div className="image-container">
+                <Image
+                  src="/assets/img/pricing-leads.png"
+                  width={750}
+                  height={375}
+                  alt="Visa Card"
+                  className="w-full"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="section">
+        <div className="container">
+          <div className="max-w-[1025px] mx-auto flex flex-wrap items-center">
+            <div className="w-full md:w-5/12">
+              <div className="image-container">
+                <Image
+                  src="/assets/img/pricing-medal.png"
+                  width={265}
+                  height={295}
+                  alt="Medal"
+                  className=""
+                />
+              </div>
+            </div>
+            <div className="w-full md:w-7/12 mt-10 md:mt-0">
+              <h2 className="section-title">
+                New business guaranteed <br />
+                <span className="line-sm mr-1" /> <span className="line-lg" />
+              </h2>
+              <div className="text-[var(--color-black)] mt-4">
+                We're confident you'll land new customers with your first credit
+                pack — and if you don't, we'll give all your credits back. No
+                hassle, no questions asked.
+              </div>
             </div>
           </div>
         </div>

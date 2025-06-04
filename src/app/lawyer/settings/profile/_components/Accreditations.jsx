@@ -3,14 +3,13 @@
 import React, { useState } from 'react';
 import AccreditationsList from './accreditations/AccreditationsList';
 import { CircleAlert } from 'lucide-react';
-import ToggleSwitch from '@/components/UIComponents/ToggleSwitch';
-import AddAccreditaionsModal from './accreditations/AddAccreditaionsModal';
 import {
   useAuthUserInfoQuery,
   useUpdateUserDataMutation,
 } from '@/store/features/auth/authApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import EditAccreditationFormModal from './accreditations/EditAccreditationFormModal';
+import AddAccreditationModal from './accreditations/AddAccreditationModal';
 
 export default function Accreditations() {
   const [isHidden, setIsHidden] = useState(false); // ← local state
@@ -160,7 +159,7 @@ export default function Accreditations() {
               profile={profile}
               handleEditClick={handleEditClick}
             />
-            <AddAccreditaionsModal
+            <AddAccreditationModal
               defaultValues={defaultValues}
               handleSubmit={handleSubmit}
             />
