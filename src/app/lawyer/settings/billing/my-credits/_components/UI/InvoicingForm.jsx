@@ -1,14 +1,60 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { InfoIcon } from 'lucide-react';
+import FormWrapper from '@/components/form/FromWrapper';
+import TextInput from '@/components/form/TextInput';
+import CheckboxInput from '@/components/form/CheckboxInput';
+import {
+  useGetBillingsDetailsQuery,
+  useUpdateBillingDetailsMutation,
+} from '@/store/features/credit_and_payment/creditAndPaymentApiService';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
 const InvoicingForm = () => {
-  const [isVatRegistered, setIsVatRegistered] = useState(false);
-  const onSave = () => console.log('Save clicked');
-  const onCancel = () => console.log('Cancel clicked');
+  const { data: invoiceBillingData, refetch: refetchBillingDetails } =
+    useGetBillingsDetailsQuery();
+
+  console.log('invoiceBillingData', invoiceBillingData);
+
+  const defaultValues = {
+    contactName: invoiceBillingData?.billingAddress?.contactName || '',
+    addressLine1: invoiceBillingData?.billingAddress?.addressLine1 || '',
+    addressLine2: invoiceBillingData?.billingAddress?.addressLine2 || '',
+    city: invoiceBillingData?.billingAddress?.city || '',
+    postcode: invoiceBillingData?.billingAddress?.postcode || '',
+    phoneNumber: invoiceBillingData?.billingAddress?.phoneNumber || '',
+    isVatRegistered:
+      invoiceBillingData?.billingAddress?.isVatRegistered || false,
+    vatNumber: invoiceBillingData?.billingAddress?.vatNumber || '',
+  };
+
+  useEffect(() => {
+    if (defaultValues) {
+      methods.reset(defaultValues);
+    }
+  }, [defaultValues, methods]);
+
+  const [updateBillingDetails] = useUpdateBillingDetailsMutation();
+
+  const handleSubmit = async (data) => {
+    try {
+      const res = await updateBillingDetails(data).unwrap();
+      if (res?.success === true) {
+        showSuccessToast(
+          res?.message || 'Email notifications updated successfully'
+        );
+        refetchBillingDetails();
+      }
+      console.log('Update response:', res);
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+      console.error('Error in saving notifications update:', error);
+    }
+  };
 
   return (
     <div className="max-w-[900px] mx-auto p-6">
@@ -31,99 +77,97 @@ const InvoicingForm = () => {
         </div>
       </div>
 
-      <div className="space-y-6">
-        <div>
-          <h3 className="text-base font-semibold text-gray-900 mb-2">
-            Billing Address
-          </h3>
-          <p className="text-sm text-gray-500 mb-4">
-            Your business address for billing & invoicing
-          </p>
-        </div>
+      <FormWrapper onSubmit={handleSubmit} defaultValues={defaultValues}>
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-base font-semibold text-gray-900 mb-2">
+              Billing Address
+            </h3>
+            <p className="text-sm text-gray-500 mb-4">
+              Your business address for billing & invoicing
+            </p>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="contact-name">Contact name</Label>
-            <Input
-              id="contact-name"
-              placeholder="Name"
-              className="bg-white h-10"
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <TextInput
+                label="Contact name"
+                name="contactName"
+                placeholder="Name"
+                className="bg-white h-10"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <TextInput
+                label="Phone number"
+                name="phoneNumber"
+                type="tel"
+                placeholder="Phone Number"
+                className="bg-white h-10"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <TextInput
+                label={'Address line 1'}
+                name="addressLine1"
+                placeholder="Address Line 1"
+                className="bg-white h-10"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <TextInput
+                label={'Address line 2'}
+                name="addressLine2"
+                placeholder="Address line 2"
+                className="bg-white h-10"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <TextInput
+                label="City"
+                name="city"
+                placeholder="City"
+                className="bg-white h-10"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <TextInput
+                label="Post code"
+                name="postcode"
+                placeholder="Post code"
+                className="bg-white h-10"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-2 mt-4">
+            <CheckboxInput name="isVatRegistered" label="I am VAT registered" />
+            {/* <Checkbox
+              id="vat"
+              checked={isVatRegistered}
+              onCheckedChange={(checked) => setIsVatRegistered(!!checked)}
             />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="phone-number">Phone number</Label>
-            <Input
-              id="phone-number"
-              placeholder="Number"
-              className="bg-white h-10"
-              type="tel"
-            />
+            <Label htmlFor="vat" className="text-sm font-normal cursor-pointer">
+              I am VAT registered
+            </Label> */}
           </div>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="address-line-1">Address line 1</Label>
-            <Input
-              id="address-line-1"
-              placeholder="Address 1"
-              className="bg-white h-10"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="address-line-2">Address line 2</Label>
-            <Input
-              id="address-line-2"
-              placeholder="Address 2"
-              className="bg-white h-10"
-            />
-          </div>
+        {/* Footer Buttons */}
+        <div className="flex justify-between items-center pt-4 ">
+          <button className="bg-[#12C7C4] text-white px-4 py-2 text-sm rounded-md hover:bg-[#10b0ae]">
+            Save
+          </button>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="city">City</Label>
-            <Input id="city" placeholder="City" className="bg-white h-10" />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="post-code">Post code</Label>
-            <Input
-              id="post-code"
-              placeholder="Post code"
-              className="bg-white h-10"
-            />
-          </div>
-        </div>
-
-        <div className="flex items-center space-x-2 mt-4">
-          <Checkbox
-            id="vat"
-            checked={isVatRegistered}
-            onCheckedChange={(checked) => setIsVatRegistered(!!checked)}
-          />
-          <Label htmlFor="vat" className="text-sm font-normal cursor-pointer">
-            I am VAT registered
-          </Label>
-        </div>
-      </div>
-      {/* Footer Buttons */}
-      <div className="flex justify-between items-center pt-4 ">
-        <button
-          onClick={onCancel}
-          className="text-sm text-gray-600 hover:text-gray-800"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={onSave}
-          className="bg-[#12C7C4] text-white px-4 py-2 text-sm rounded-md hover:bg-[#10b0ae]"
-        >
-          Save
-        </button>
-      </div>
+      </FormWrapper>
     </div>
   );
 };

@@ -66,6 +66,8 @@ export const baseApi = createApi({
     'option',
     'range',
     'leadService',
+    'notification',
+    'credit-payment',
   ],
   endpoints: () => ({}),
 });
