@@ -13,22 +13,54 @@ const LeadServiceAction = ({
   serviceLocations,
 }) => {
   const [deleteService] = useDeleteLeadServiceMutation();
+  // const [locations, setLocations] = useState(['Nationwide']);
   const [locations, setLocations] = useState(serviceLocations);
-  const [selectedLocations, setSelectedLocations] = useState(locations);
+  // const [selectedLocations, setSelectedLocations] = useState(locations);
+  const [selectedLocationIds, setSelectedLocationIds] = useState(
+    serviceLocations.map((loc) => loc._id)
+  );
 
-  const handleAddLocation = () => {
-    const newLocation = prompt('Enter new location');
-    if (newLocation && !locations?.includes(newLocation)) {
-      setLocations((prev) => [...prev, newLocation]);
-      setSelectedLocations((prev) => [...prev, newLocation]);
-    }
-  };
+  console.log('location ==>', selectedLocationIds);
 
-  const handleToggleLocation = (location) => {
-    setSelectedLocations((prev) =>
-      prev.includes(location)
-        ? prev.filter((loc) => loc !== location)
-        : [...prev, location]
+  // const handleAddLocation = () => {
+  //   const newLocation = prompt('Enter new location');
+  //   if (newLocation && !locations?.includes(newLocation)) {
+  //     setLocations((prev) => [...prev, newLocation]);
+  //     setSelectedLocations((prev) => [...prev, newLocation]);
+  //   }
+  // };
+
+  //  i will work able next time ==>
+  // const handleAddLocation = () => {
+  //   const newLocationName = prompt('Enter new location');
+  //   if (!newLocationName) return;
+
+  //   const newId = crypto.randomUUID(); // Generate a temp ID
+  //   const newLocation = {
+  //     _id: newId,
+  //     areaName: newLocationName,
+  //     locationType: 'custom',
+  //     locationGroupId: null,
+  //   };
+
+  //   setLocations((prev) => [...prev, newLocation]);
+  //   setSelectedLocationIds((prev) => [...prev, newId]);
+  // };
+
+  // const handleToggleLocation = (location) => {
+  //   console.log('location =>', location);
+  //   setSelectedLocations((prev) =>
+  //     prev.includes(location)
+  //       ? prev.filter((loc) => loc !== location)
+  //       : [...prev, location]
+  //   );
+  // };
+
+  const handleToggleLocation = (locationId) => {
+    setSelectedLocationIds((prev) =>
+      prev.includes(locationId)
+        ? prev.filter((id) => id !== locationId)
+        : [...prev, locationId]
     );
   };
 
@@ -69,21 +101,30 @@ const LeadServiceAction = ({
 
       <div className="space-y-2">
         {locations.length > 0 ? (
-          locations.map((location, index) => (
-            <label
-              key={index}
-              className="flex items-center justify-between px-8 py-2  rounded-md  hover:bg-gray-50"
-            >
-              <div className="flex items-center gap-3">
-                <Checkbox
-                  checked={selectedLocations.includes(location)}
-                  onCheckedChange={() => handleToggleLocation(location)}
-                  id={`location-${index}`}
-                />
-                <span className="text-sm text-gray-800">{location}</span>
-              </div>
-            </label>
-          ))
+          locations?.map((location, index) => {
+            return (
+              <label
+                key={location._id}
+                className="flex items-center justify-between px-8 py-2  rounded-md  hover:bg-gray-50"
+              >
+                <div className="flex items-center gap-3">
+                  {/* <Checkbox
+                    checked={selectedLocations?.includes(location)}
+                    onCheckedChange={() => handleToggleLocation(location)}
+                    id={`location-${index}`}
+                  /> */}
+                  <Checkbox
+                    checked={selectedLocationIds.includes(location._id)}
+                    onCheckedChange={() => handleToggleLocation(location._id)}
+                    id={`location-${index}`}
+                  />
+                  <span className="text-sm text-gray-800">
+                    {location?.areaName}
+                  </span>
+                </div>
+              </label>
+            );
+          })
         ) : (
           <p className="text-sm text-gray-500 italic">
             No locations added yet.

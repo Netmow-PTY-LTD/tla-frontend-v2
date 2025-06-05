@@ -18,6 +18,8 @@ const ServicesList = () => {
   } = useGetLeadServiceListQuery();
   const leadServices = leadServicesData?.data || [];
 
+  console.log('service data ==>', leadServices);
+
   return (
     <div className=" max-[900px] mx-auto">
       <div className="space-y-6">
