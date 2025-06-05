@@ -35,7 +35,7 @@ const ServicesList = () => {
             relevant leads
           </p>
 
-          <Accordion type="multiple" collapsible>
+          <Accordion type="multiple" collapsible="true">
             {isLoading ? (
               <div className="space-y-4">
                 {[...Array(3)].map((_, i) => (

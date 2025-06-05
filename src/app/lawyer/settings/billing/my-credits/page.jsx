@@ -1,5 +1,5 @@
 import { DynamicAccordion } from '@/components/UIComponents/AcordionComponent';
-import MyCredits from './_components/MyCreadits';
+import MyCredits from './_components/MyCredits';
 import InvoicesBillings from './_components/InvoicesBillings';
 import MyPayments from './_components/MyPayments';
 
