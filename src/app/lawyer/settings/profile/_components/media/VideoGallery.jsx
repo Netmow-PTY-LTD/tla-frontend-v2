@@ -45,7 +45,7 @@ export default function VideoGallery() {
 
   return (
     <div>
-      <h2 className="16px text-black font-semibold">Videos</h2>
+      <h3 className="16px text-black font-semibold heading-lg">Videos</h3>
       <p className="text-[#8E8E8E] mt-[10px]">
         Add YouTube videos to showcase your work and expertise – videos of
         previous events for example.

@@ -14,9 +14,9 @@ export default function GetStartedCard() {
         {/* Content */}
         <div className="p-4 space-y-2">
           <h4 className="text-black font-medium text-sm">Get Started</h4>
-          <h1 className="text-[#00C3C0] font-semibold text-lg">
+          <h2 className="text-[#00C3C0] font-semibold text-lg heading">
             Starter Pack Offer
-          </h1>
+          </h2>
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
             <p className="text-sm text-gray-700 leading-snug">

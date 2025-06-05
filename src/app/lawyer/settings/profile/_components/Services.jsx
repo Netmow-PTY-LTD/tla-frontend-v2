@@ -33,7 +33,7 @@ export default function Services() {
     <div className="max-w-[900px] mx-auto">
       <div className="flex justify-between items-center gap-5">
         <div>
-          <h2 className="text-black font-semibold">Services</h2>
+          <h3 className="text-black font-semibold heading-lg">Services</h3>
 
           <p className="mt-[10px]">
             Include all services you offer in some detail to give customers the

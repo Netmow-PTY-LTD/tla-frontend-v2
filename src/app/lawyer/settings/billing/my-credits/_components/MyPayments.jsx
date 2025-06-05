@@ -7,7 +7,9 @@ const MyPayments = () => {
   return (
     <div className="max-w-[900px] mx-auto">
       <div className="mb-6 ">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">My Saved Card</h2>
+        <h3 className="heading-lg font-bold text-gray-900 mb-4">
+          My Saved Card
+        </h3>
         <div className="text-gray-600 bg-gray-50 rounded-lg shadow-sm p-5">
           We don't have any payment information for you yet.
           <br />

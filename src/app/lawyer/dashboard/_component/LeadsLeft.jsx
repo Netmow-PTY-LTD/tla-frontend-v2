@@ -11,9 +11,26 @@ import {
   Zap,
 } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function LeadDetailsPage({ onBack, lead }) {
+  const fullText = `If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options. Let us help you navigate this challenging time with expert guidance. If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options. Let us help you navigate this challenging time with expert guidance.`;
+
+  const getTruncatedText = (text, maxLength) => {
+    if (!text || typeof text !== 'string') return '';
+    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+  };
+
+  const [isExpanded, setIsExpanded] = useState(false);
+  const toggleReadMore = () => setIsExpanded(!isExpanded);
+  const maxLength = 300;
+
+  const shouldTruncate = fullText.length > maxLength;
+  const displayText =
+    isExpanded || !shouldTruncate
+      ? fullText
+      : getTruncatedText(fullText, maxLength);
+
   useEffect(() => {
     // Scroll to top of the window when this component mounts
     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -28,7 +45,7 @@ export default function LeadDetailsPage({ onBack, lead }) {
           </button>
         </div>
         <div className="mt-3 max-w-4xl">
-          <div className="flex flex-col  items-start gap-4 ">
+          <div className="flex flex-col items-start gap-4 ">
             <figure className="w-20 h-20 rounded-full overflow-hidden">
               <Image
                 src="/assets/img/auth-step1.png"
@@ -40,32 +57,30 @@ export default function LeadDetailsPage({ onBack, lead }) {
               />
             </figure>
             <div>
-              <h2 className="font-medium text-xl sm:text-base">{lead.name}</h2>
-              <p className="text-xs sm:text-sm text-gray-500 mt-2">
-                {lead.address}
-              </p>
+              <h2 className="font-medium heading-lg">{lead.name}</h2>
+              <p className="text-gray-500 mt-2">{lead.address}</p>
             </div>
           </div>
           <hr className="border-[#F3F3F3] my-5  " />
           <div className="mb-4">
-            <p className=" flex items-center gap-2">
+            <div className="flex items-center gap-2 admin-text font-medium">
               <PhoneOutgoing /> <span>Phone: (480) *******</span>{' '}
-            </p>
-            <p className=" flex items-center gap-2 mt-2">
+            </div>
+            <div className=" flex items-center gap-2 mt-2 admin-text font-medium">
               <AtSign /> <span>Email: t*******@e********.com</span>{' '}
-            </p>
+            </div>
           </div>
-          <div className="flex flex-col sm:flex-row   items-center  gap-3 sm:gap-0 ">
-            <button className="px-5 py-2 w-full sm:w-auto rounded-lg font-medium bg-[#EDF0F4] hover:bg-[#00C3C0] text-[#0B1C2D]">
-              View Job Details
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <button className="btn-default bg-[#00C3C0]">
+              Contact {lead.name}
             </button>
-            <p className="text-[#34495E] ml-2 flex items-center gap-2">
+            <div className="text-[#34495E] ml-2 flex items-center gap-2">
               <span>49 Credits required</span>
               <CircleAlert />
-            </p>
+            </div>
           </div>
           <div className="mt-5">
-            <h1 className="font-medium mb-1">Matched criteria</h1>
+            <h4 className="font-medium mb-1 heading-base">Matched criteria</h4>
             <div className="flex flex-wrap gap-2">
               <TagButton
                 text="Urgent"
@@ -80,32 +95,36 @@ export default function LeadDetailsPage({ onBack, lead }) {
               <TagButton text="Criminal Law" bgColor="#A600161A" />
             </div>
           </div>
+          <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
           <div className="mt-5">
-            <h1 className="font-medium mb-1">
+            <h4 className="font-medium mb-1 heading-base">
               Looking for a divorce law consultation
-            </h1>
+            </h4>
             <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
-              <h1 className="font-medium mb-2">Position Overview</h1>
-              <p className="text-sm text-[#34495E] ">
-                {`If you're facing a divorce, it's crucial to seek professional
-                legal advice. Our consultations cover everything from asset
-                division to child custody arrangements, ensuring you understand
-                your rights and options. Let us help you navigate this
-                challenging time with expert guidance.`}
-              </p>
+              <h5 className="font-medium mb-2 heading-base">
+                Position Overview
+              </h5>
+              <div className="admin-text text-[#34495E] ">
+                {displayText}
+                {shouldTruncate && (
+                  <button
+                    onClick={toggleReadMore}
+                    className="text-[var(--color-black)] font-semibold hover:underline focus:outline-none ml-2"
+                  >
+                    {isExpanded ? 'Read less' : 'Read more'}
+                  </button>
+                )}
+              </div>
             </div>
           </div>
           <div className="mt-5">
-            <h1 className="font-medium mb-1">
-              Looking for a divorce law consultation
-            </h1>
             <div className=" my-3 ">
-              <h1 className="font-medium my-2">File Attached</h1>
+              <h4 className="font-medium my-2 heading-md">File Attached</h4>
               <div className="flex items-center justify-between  p-3 rounded-lg bg-[#F8F9FA]">
-                <h2 className="flex items-center gap-2">
+                <div className="flex items-center gap-2">
                   <FileText />
                   <span>Cases brief.pdf</span>{' '}
-                </h2>
+                </div>
 
                 <button className="px-5 py-2 w-full sm:w-auto flex gap-2 items-center justify-center rounded-lg font-medium bg-[#EDF0F4] hover:bg-[#00C3C0] text-[#0B1C2D] transition-all duration-200 ease-in-out">
                   <ArrowDownToLine />
@@ -114,28 +133,30 @@ export default function LeadDetailsPage({ onBack, lead }) {
               </div>
             </div>
           </div>
-          <hr className="border-[#F3F3F3] " />
-          <div className="mt-5 space-y-3 mb-5">
-            <h1 className="font-medium text-xl">
+          <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
+          <div className="mt-5 space-y-3">
+            <h4 className="font-medium heading-md mb-5">
               Answered some of selected questions
-            </h1>
-            <div>
-              <p className="text-[#34495E]">
-                What kind of Law service you need?
-              </p>
-              <h1 className="font-medium text-black"> Family Law</h1>
-            </div>
-            <div>
-              <p className="text-[#34495E]">
-                What kind of Law service you need?
-              </p>
-              <h1 className="font-medium text-black"> Family Law</h1>
-            </div>
-            <div>
-              <p className="text-[#34495E]">
-                What kind of Law service you need?
-              </p>
-              <h1 className="font-medium text-black"> Family Law</h1>
+            </h4>
+            <div className="flex flex-col gap-5">
+              <div>
+                <p className="text-[#34495E]">
+                  What kind of Law service you need?
+                </p>
+                <div className="font-medium text-black"> Family Law</div>
+              </div>
+              <div>
+                <p className="text-[#34495E]">
+                  What kind of Law service you need?
+                </p>
+                <div className="font-medium text-black"> Family Law</div>
+              </div>
+              <div>
+                <p className="text-[#34495E]">
+                  What kind of Law service you need?
+                </p>
+                <div className="font-medium text-black"> Family Law</div>
+              </div>
             </div>
           </div>
         </div>
