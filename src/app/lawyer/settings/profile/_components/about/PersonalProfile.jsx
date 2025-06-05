@@ -9,13 +9,13 @@ import React from 'react';
 export default function PersonalProfile() {
   return (
     <div>
-      <h2 className="16px text-black font-semibold">
+      <h3 className="16px text-black font-semibold heading-lg">
         Name and profile picture
-      </h2>
-      <p className="text-[#8E8E8E] mt-[10px]">
+      </h3>
+      <div className="text-[#8E8E8E] mt-[10px]">
         This is the person who will be communicating with customers on Bark. The
         photo will appear alongside your messages with customers.
-      </p>
+      </div>
 
       <div>
         <div className="flex items-center gap-3 mt-11">

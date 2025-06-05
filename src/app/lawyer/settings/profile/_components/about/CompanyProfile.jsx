@@ -1,20 +1,19 @@
 'use client';
 
 import TextInput from '@/components/form/TextInput';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import AvatarUploader from '@/components/UIComponents/AvaterUploader';
-import FileUploader from '@/components/UIComponents/fileUploader';
-import { CloudUpload } from 'lucide-react';
 import React from 'react';
 
 export default function CompanyProfile() {
   return (
     <div>
-      <h2 className="16px text-black font-semibold">Company name & logo</h2>
-      <p className="text-[#8E8E8E] mt-[10px]">
+      <h3 className="text-black font-semibold heading-lg">
+        Company name & logo
+      </h3>
+      <div className="text-[#8E8E8E] mt-[10px]">
         This is the first thing customers will see when searching for a
         professional. As a sole-trader, you can just enter your name.
-      </p>
+      </div>
 
       <div>
         <div className="mt-11">

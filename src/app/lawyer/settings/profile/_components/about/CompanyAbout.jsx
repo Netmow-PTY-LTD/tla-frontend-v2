@@ -31,7 +31,7 @@ export default function CompanyAbout() {
 
   return (
     <div className="py-9">
-      <h2 className="text-black font-semibold">About the company</h2>
+      <h3 className="text-black font-semibold heading-lg">About the company</h3>
       <p className="mt-[10px] mb-7">Introduce the company to your customers.</p>
 
       <div>
