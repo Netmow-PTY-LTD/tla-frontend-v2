@@ -8,15 +8,12 @@ import { Modal } from '@/components/UIComponents/Modal';
 import { useAllServicesQuery } from '@/store/features/admin/servicesApiService';
 import { useAddLeadServiceMutation } from '@/store/features/leadService/leadServiceApiService';
 import { X } from 'lucide-react';
-
 import React, { useState } from 'react';
 
 const AddLeadServiceModal = () => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [selectedServices, setSelectedServices] = useState([]);
-  const [locations, setLocations] = useState(['']);
-  const [onlineEnabled, setOnlineEnabled] = useState(false);
   const [addLedService] = useAddLeadServiceMutation();
   const { data } = useAllServicesQuery();
   const suggestions = data?.data || [];
@@ -36,8 +33,6 @@ const AddLeadServiceModal = () => {
     try {
       const payload = {
         serviceIds: selectedServices.map((s) => s._id),
-        locations,
-        onlineEnabled,
       };
 
       const response = await addLedService(payload).unwrap();
@@ -50,8 +45,6 @@ const AddLeadServiceModal = () => {
 
       // Reset
       setSelectedServices([]);
-      setLocations([]);
-      setOnlineEnabled(false);
       setOpen(false);
     } catch (error) {
       console.error('Failed to add services:', error);

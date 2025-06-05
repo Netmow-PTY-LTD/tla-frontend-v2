@@ -6,14 +6,19 @@ import { useDeleteLeadServiceMutation } from '@/store/features/leadService/leadS
 import { Trash } from 'lucide-react';
 import React, { useState } from 'react';
 
-const LeadServiceAction = ({ leadServiceId, onSubmit, isDirty }) => {
+const LeadServiceAction = ({
+  leadServiceId,
+  onSubmit,
+  isDirty,
+  serviceLocations,
+}) => {
   const [deleteService] = useDeleteLeadServiceMutation();
-  const [locations, setLocations] = useState(['NationWide', 'within 50 miles']);
+  const [locations, setLocations] = useState(serviceLocations);
   const [selectedLocations, setSelectedLocations] = useState(locations);
 
   const handleAddLocation = () => {
     const newLocation = prompt('Enter new location');
-    if (newLocation && !locations.includes(newLocation)) {
+    if (newLocation && !locations?.includes(newLocation)) {
       setLocations((prev) => [...prev, newLocation]);
       setSelectedLocations((prev) => [...prev, newLocation]);
     }
@@ -27,9 +32,6 @@ const LeadServiceAction = ({ leadServiceId, onSubmit, isDirty }) => {
     );
   };
 
-  const handleSaveLocations = () => {
-    // Save to backend or state
-  };
   const handleDeleteService = async () => {
     const confirmDelete = window.confirm(
       'Are you sure you want to remove this service?'

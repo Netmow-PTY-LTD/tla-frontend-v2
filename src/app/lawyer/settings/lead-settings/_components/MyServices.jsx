@@ -57,6 +57,7 @@ const ServicesList = () => {
                     leadServiceId={service._id}
                     title={service.serviceName}
                     service={service?.questions}
+                    serviceLocations={service?.locations}
                   />
                 ))}
               </div>

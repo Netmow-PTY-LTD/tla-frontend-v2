@@ -17,6 +17,7 @@ const ServiceCard = ({
   leadServiceId,
   title = 'Default Service Title',
   service,
+  serviceLocations,
 }) => {
   const [selectedOptionsUpdate] = useLeadServiceSelectedOptionsUpdateMutation();
 
@@ -156,6 +157,7 @@ const ServiceCard = ({
               leadServiceId={leadServiceId}
               onSubmit={handleSubmit}
               isDirty={isDirty}
+              serviceLocations={serviceLocations}
             />
           </div>
         </div>
