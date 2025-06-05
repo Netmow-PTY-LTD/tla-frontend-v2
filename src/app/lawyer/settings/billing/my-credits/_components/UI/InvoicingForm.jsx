@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -17,25 +17,27 @@ const InvoicingForm = () => {
   const { data: invoiceBillingData, refetch: refetchBillingDetails } =
     useGetBillingsDetailsQuery();
 
-  console.log('invoiceBillingData', invoiceBillingData);
+  console.log(
+    'contactName',
+    invoiceBillingData?.data?.billingAddress?.contactName
+  );
 
-  const defaultValues = {
-    contactName: invoiceBillingData?.billingAddress?.contactName || '',
-    addressLine1: invoiceBillingData?.billingAddress?.addressLine1 || '',
-    addressLine2: invoiceBillingData?.billingAddress?.addressLine2 || '',
-    city: invoiceBillingData?.billingAddress?.city || '',
-    postcode: invoiceBillingData?.billingAddress?.postcode || '',
-    phoneNumber: invoiceBillingData?.billingAddress?.phoneNumber || '',
-    isVatRegistered:
-      invoiceBillingData?.billingAddress?.isVatRegistered || false,
-    vatNumber: invoiceBillingData?.billingAddress?.vatNumber || '',
-  };
-
-  useEffect(() => {
-    if (defaultValues) {
-      methods.reset(defaultValues);
-    }
-  }, [defaultValues, methods]);
+  const defaultValues = useMemo(
+    () => ({
+      contactName: invoiceBillingData?.data?.billingAddress?.contactName ?? '',
+      addressLine1:
+        invoiceBillingData?.data?.billingAddress?.addressLine1 ?? '',
+      addressLine2:
+        invoiceBillingData?.data?.billingAddress?.addressLine2 ?? '',
+      city: invoiceBillingData?.data?.billingAddress?.city ?? '',
+      postcode: invoiceBillingData?.data?.billingAddress?.postcode ?? '',
+      phoneNumber: invoiceBillingData?.data?.billingAddress?.phoneNumber ?? '',
+      isVatRegistered:
+        invoiceBillingData?.data?.billingAddress?.isVatRegistered ?? false,
+      vatNumber: invoiceBillingData?.data?.billingAddress?.vatNumber ?? '',
+    }),
+    [invoiceBillingData]
+  );
 
   const [updateBillingDetails] = useUpdateBillingDetailsMutation();
 
@@ -44,7 +46,7 @@ const InvoicingForm = () => {
       const res = await updateBillingDetails(data).unwrap();
       if (res?.success === true) {
         showSuccessToast(
-          res?.message || 'Email notifications updated successfully'
+          res?.message || 'Billing details updated successfully'
         );
         refetchBillingDetails();
       }
@@ -52,9 +54,13 @@ const InvoicingForm = () => {
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);
-      console.error('Error in saving notifications update:', error);
+      console.error('Error in saving billing details updates:', error);
     }
   };
+
+  const formKey = useMemo(() => {
+    return JSON.stringify(invoiceBillingData?.data?.billingAddress ?? {});
+  }, [invoiceBillingData]);
 
   return (
     <div className="max-w-[900px] mx-auto p-6">
@@ -77,7 +83,11 @@ const InvoicingForm = () => {
         </div>
       </div>
 
-      <FormWrapper onSubmit={handleSubmit} defaultValues={defaultValues}>
+      <FormWrapper
+        onSubmit={handleSubmit}
+        defaultValues={defaultValues}
+        key={formKey}
+      >
         <div className="space-y-6">
           <div>
             <h3 className="text-base font-semibold text-gray-900 mb-2">
