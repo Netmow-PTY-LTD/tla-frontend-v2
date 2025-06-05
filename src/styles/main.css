@@ -136,67 +136,6 @@ input:focus {
   font-weight: 400;
   line-height: 170%;
 }
-
-.btn-default {
-  display: inline-flex;
-  padding: 15px 30px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  border-radius: 8px;
-  color: var(--color-white);
-  font-weight: 700;
-  line-height: 1;
-  transition: all 0.3s ease;
-}
-
-.btn-primary {
-  background-color: var(--primary-color);
-}
-
-.btn-primary:hover {
-  background-color: var(--secondary-color);
-  color: var(--color-white);
-  transition: all 0.3s ease;
-}
-
-.btn-secondary {
-  background-color: var(--secondary-color);
-}
-
-.btn-secondary:hover {
-  background-color: var(--primary-color);
-  color: var(--color-white);
-  transition: all 0.3s ease;
-}
-
-.btn-outline-primary {
-  border: 1px solid var(--primary-color);
-  color: var(--primary-color);
-}
-
-.btn-outline-secondary {
-  border: 1px solid var(--secondary-color);
-  color: var(--secondary-color);
-}
-
-.btn-outline-white {
-  border: 1px solid var(--color-white);
-  color: var(--color-white);
-}
-
-.btn-outline-black {
-  border: 1px solid var(--color-black);
-  color: var(--color-black);
-}
-
-.btn-outline-black:hover {
-  background-color: var(--color-black);
-  color: var(--color-white);
-  border: 1px solid transparent;
-  transition: all 0.3s ease;
-}
-
 /* Reusable Form */
 
 .tla-form-control {

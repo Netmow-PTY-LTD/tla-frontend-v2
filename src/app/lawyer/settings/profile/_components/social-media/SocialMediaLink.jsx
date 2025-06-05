@@ -21,7 +21,7 @@ export default function SocialMediaLink({ profile }) {
 
   return (
     <div>
-      <h2 className="16px text-black font-semibold">Social media</h2>
+      <h3 className="16px text-black font-semibold heading-lg">Social media</h3>
       <p className="text-[#8E8E8E] mt-[10px]">
         Add your company social media accounts to lend credibility to your
         business - it is often something customers will look for to validate

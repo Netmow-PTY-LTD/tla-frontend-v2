@@ -22,7 +22,7 @@ const ServiceCard = ({ service, handleEditClick }) => {
   return (
     <div className="bg-white rounded-lg shadow-sm p-5 border border-gray-200 hover:shadow-lg transition-all">
       <div className="flex items-start justify-between mb-3">
-        <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
+        <h2 className="heading-base font-semibold text-gray-800">{title}</h2>
         <div className="flex gap-2">
           <button
             className="text-blue-500 hover:text-blue-700"

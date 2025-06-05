@@ -4,12 +4,12 @@ import Image from 'next/image';
 import TagButton from './TagButton';
 import { BadgeCheck, CircleAlert, Zap } from 'lucide-react';
 
-const LeadCard = ({ onViewDetails, user }) => {
+const LeadCard = ({ onViewDetails, user, isExpanded }) => {
   return (
     <Card className="w-full max-w-full mx-auto">
       {/* Header Section */}
-      <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 p-3">
-        <figure className="w-10 h-10 rounded-full overflow-hidden">
+      <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 p-3">
+        <figure className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
           <Image
             src="/assets/img/auth-step1.png"
             alt="John Doe"
@@ -22,8 +22,20 @@ const LeadCard = ({ onViewDetails, user }) => {
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
           <div>
-            <h2 className="font-medium text-[13px]">{user.name}</h2>
-            <p className="text-[10px] text-gray-500">{user.address}</p>
+            <div
+              className={`font-medium mb-1 ${
+                isExpanded ? 'heading-md' : 'text-[13px]'
+              }`}
+            >
+              {user.name}
+            </div>
+            <div
+              className={`${
+                isExpanded ? 'text-[13px]' : 'text-[10px]'
+              } text-gray-500`}
+            >
+              {user.address}
+            </div>
           </div>
           <p className="font-medium text-[10px] text-gray-600 sm:ml-4 mt-2 sm:mt-0">
             Just now
@@ -34,8 +46,14 @@ const LeadCard = ({ onViewDetails, user }) => {
       <hr className="border-[#F3F3F3] border" />
 
       {/* Matched Criteria */}
-      <div className="p-3">
-        <h1 className="font-medium text-[13px] mb-1">Matched criteria</h1>
+      <div className="px-3 pt-3 pb-2">
+        <h4
+          className={`font-medium mb-2 ${
+            isExpanded ? 'heading-md' : 'text-[13px]'
+          }`}
+        >
+          Matched criteria
+        </h4>
         <div className="flex flex-wrap gap-2">
           <TagButton
             text="Urgent"
@@ -54,12 +72,26 @@ const LeadCard = ({ onViewDetails, user }) => {
 
       {/* Job Description */}
       <div className="p-3">
-        <h3 className="font-medium text-[14px] mb-1">
+        <h3
+          className={`font-medium mb-2 ${
+            isExpanded ? 'heading-md' : 'text-[13px]'
+          }`}
+        >
           Looking for a divorce law consultation
         </h3>
         <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
-          <h4 className="text-[14px] font-medium mb-2">Position Overview</h4>
-          <p className="text-[12px] text-[#34495E] ">
+          <h4
+            className={`font-medium mb-2 ${
+              isExpanded ? 'heading-base' : 'text-[14px]'
+            }`}
+          >
+            Position Overview
+          </h4>
+          <p
+            className={`text-[#34495E] ${
+              isExpanded ? 'text-[13px]' : 'text-[12px]'
+            }`}
+          >
             {`If you're facing a divorce, it's crucial to seek professional legal
             advice. Our consultations cover everything from asset division to
             child custody arrangements, ensuring you understand your rights and
@@ -72,12 +104,18 @@ const LeadCard = ({ onViewDetails, user }) => {
       {/* Footer Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">
         <button
-          className="px-5 py-2 w-full sm:w-auto rounded-lg text-[12px] font-medium bg-[#EDF0F4] text-[#0B1C2D]"
+          className={`px-5 py-3 w-full sm:w-auto rounded-lg ${
+            isExpanded ? 'heading-base' : 'text-[12px] '
+          } font-medium bg-[var(--color-special)] text-[#0B1C2D]`}
           onClick={() => onViewDetails(user)}
         >
           View Job Details
         </button>
-        <p className="text-[#34495E] text-[11px] flex items-center gap-2">
+        <p
+          className={`text-[#34495E] ${
+            isExpanded ? 'heading-base' : 'text-[12px]'
+          } flex items-center gap-2`}
+        >
           <span>49 Credits required</span>
           <CircleAlert className="w-4 h-4" />
         </p>

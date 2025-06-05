@@ -78,8 +78,8 @@ const EmailNotification = () => {
     <div className="max-w-[900px] mx-auto p-6 bg-gray-50 rounded-lg shadow-sm">
       <div className="flex items-center gap-3 mb-3">
         <div>
-          <h2 className="font-semibold text-lg">Email notifications</h2>
-          <p className="text-gray-500 text-sm">
+          <h3 className="font-semibold heading-lg">Email notifications</h3>
+          <p className="text-gray-500 text-sm mt-2">
             Control what you'd like us to email you about. Not getting our
             e-mails? 
             <span className="text-[#00C3C0]">Click Here</span>

@@ -88,7 +88,7 @@ export default function QuestionsAndAnswers() {
         <div>
           <div className="flex items-center justify-between gap-5">
             <div>
-              <h2 className="text-base font-semibold text-black">Links</h2>
+              <h3 className="heading-lg font-semibold text-black">Links</h3>
               <p className="text-sm text-[#8E8E8E] mt-2">
                 Answer common questions to remove customer, reservations and
                 doubt, bring them closer to making them hiring decision.

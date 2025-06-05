@@ -14,41 +14,45 @@ export default function LeadsHead({ isExpanded }) {
   return (
     <section className={`${isExpanded ? 'pr-4' : 'px-4'}`}>
       <div className="flex justify-between items-center gap-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <h2
             className={`font-bold ${
-              isExpanded ? 'text-[25px]' : 'text-[16px]'
+              isExpanded ? 'heading' : 'heading-base'
             } text-[#0B1C2D] text-left`}
           >
             112 Matching Leads
           </h2>
           <div className="flex items-center gap-2">
             <Files className="w-4 h-4" />
-            <span className={`${isExpanded ? 'text-[16px]' : 'text-[11px]'}`}>
+            <span className={`${isExpanded ? 'admin-text' : 'text-[11px]'}`}>
               4 Services
             </span>
           </div>
           <div className="flex items-center gap-2">
             <MapPin className="w-4 h-4" />
-            <span className={`${isExpanded ? 'text-[16px]' : 'text-[11px]'}`}>
+            <span className={`${isExpanded ? 'admin-text' : 'text-[11px]'}`}>
               4 Locations
             </span>
           </div>
         </div>
         <Link
           href={'/lawyer/settings/profile'}
-          className={`${isExpanded ? 'text-[16px]' : 'text-[12px]'}`}
+          className={`${isExpanded ? 'admin-text' : 'text-[12px]'}`}
         >
           Edit
         </Link>
       </div>
 
       <div className="flex flex-wrap lg:justify-between items-center my-3 gap-2">
-        <div className="flex flex-wrap items-center gap-2 text-[#34495E]">
+        <div
+          className={`flex flex-wrap items-center gap-2 text-[#34495E] ${
+            isExpanded ? 'w-[calc(100%-100px)]' : ''
+          }`}
+        >
           <Link
             href="#"
             className={`flex items-center gap-2 ${
-              isExpanded ? 'text-[16px]' : 'text-[12px]'
+              isExpanded ? 'admin-text' : 'text-[12px]'
             }`}
           >
             <Database className="w-4 h-4" />
@@ -56,8 +60,12 @@ export default function LeadsHead({ isExpanded }) {
               {isExpanded ? 'Showing all 112 leads' : '96 of 112 leads'}{' '}
             </span>
           </Link>
-          <span className="hidden lg:inline text-[#919FAC]">|</span>
-          <div className="lg:flex items-center gap-2">
+          {/* <span className="hidden lg:inline text-[#919FAC]">|</span> */}
+          <div
+            className={`lg:flex items-center gap-2 ${
+              isExpanded ? 'ml-auto' : ''
+            }`}
+          >
             {!isExpanded && (
               <div className="text-[#C72C41] text-[11px] flex items-center gap-2">
                 <span>Clear</span>
@@ -128,7 +136,7 @@ export default function LeadsHead({ isExpanded }) {
         </Sheet>
       </div>
 
-      <hr className="border border-[#F3F3F3]" />
+      <hr className=" bg-[#F3F3F3] h-1 w-full" />
     </section>
   );
 }
