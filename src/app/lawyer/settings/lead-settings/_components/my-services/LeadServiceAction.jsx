@@ -59,12 +59,12 @@ const LeadServiceAction = ({
     <div className="mt-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">Your Location</h2>
-        <button
+        {/* <button
           className="text-sm text-blue-600 hover:underline"
           onClick={handleAddLocation} // implement this to show a prompt/modal/input
         >
           + Add Location
-        </button>
+        </button> */}
       </div>
 
       <div className="space-y-2">
