@@ -17,10 +17,10 @@ const LeadServiceAction = ({
   const [locations, setLocations] = useState(serviceLocations);
   // const [selectedLocations, setSelectedLocations] = useState(locations);
   const [selectedLocationIds, setSelectedLocationIds] = useState(
-    serviceLocations.map((loc) => loc._id)
+    serviceLocations?.map((loc) => loc._id)
   );
 
-  console.log('location ==>', selectedLocationIds);
+  console.log('serviceLocations', serviceLocations);
 
   // const handleAddLocation = () => {
   //   const newLocation = prompt('Enter new location');
@@ -87,6 +87,15 @@ const LeadServiceAction = ({
     }
   };
 
+  const formatLocationType = (str) => {
+    if (!str) return '';
+    return str
+      .replace(/[_-]/g, ' ') // Replace underscores and hyphens with space
+      .split(' ') // Split into words
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+      .join(''); // Join without space for PascalCase
+  };
+
   return (
     <div className="mt-6">
       <div className="flex items-center justify-between mb-4">
@@ -100,7 +109,7 @@ const LeadServiceAction = ({
       </div>
 
       <div className="space-y-2">
-        {locations.length > 0 ? (
+        {locations?.length > 0 ? (
           locations?.map((location, index) => {
             return (
               <label
@@ -119,7 +128,7 @@ const LeadServiceAction = ({
                     id={`location-${index}`}
                   />
                   <span className="text-sm text-gray-800">
-                    {location?.areaName}
+                    {formatLocationType(location?.locationType)}
                   </span>
                 </div>
               </label>
