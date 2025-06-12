@@ -54,7 +54,8 @@ const ServiceCard = ({
     });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (data) => {
+    console.log('data ==>', data);
     const answers = Object.entries(selectedOptions).map(
       ([questionId, selectedOptionIds]) => ({
         questionId,
