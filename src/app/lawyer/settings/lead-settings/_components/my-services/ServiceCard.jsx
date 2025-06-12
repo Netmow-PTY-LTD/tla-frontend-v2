@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/accordion';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import LeadServiceAction from './LeadServiceAction';
 import { useLeadServiceSelectedOptionsUpdateMutation } from '@/store/features/leadService/leadServiceApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
@@ -21,6 +21,21 @@ const ServiceCard = ({
 }) => {
   const [selectedOptionsUpdate] = useLeadServiceSelectedOptionsUpdateMutation();
 
+  // console.log('serviceLocations', serviceLocations);
+  // const [selectedLocationIds, setSelectedLocationIds] = useState(
+  //   serviceLocations?.map((loc) => loc._id)
+  // );
+
+  // const [selectedLocationIds, setSelectedLocationIds] = useState(() =>
+  //   serviceLocations
+  //     .filter((loc) => loc.SelectedLocationId === loc.SelectedLocationId)
+  //     .map((loc) => loc._id)
+  // );
+  /* 
+
+initial state data for question wise options 
+
+*/
   const questions = service || [];
 
   // Initialize selected options grouped by questionId
@@ -37,10 +52,43 @@ const ServiceCard = ({
   const [selectedOptions, setSelectedOptions] = useState(initializeSelected());
 
   const initialSelectedOptions = initializeSelected();
+  /* 
+initial locations data 
+
+
+*/
 
   // Detect if selectedOptions have changed from the initial
   const isDirty =
     JSON.stringify(selectedOptions) !== JSON.stringify(initialSelectedOptions);
+
+  // // Detect if locations have changed
+
+  const initialLocationIds = () => {
+    return serviceLocations;
+  };
+
+  const [selectedLocationIds, setSelectedLocationIds] =
+    useState(serviceLocations);
+
+  console.log('selectedLocationIds', selectedLocationIds);
+  console.log('initialLocationIds', initialLocationIds());
+
+  const deepEqual = (a, b) => {
+    if (a === b) return true;
+    if (a.length !== b.length) return false;
+
+    return a.every((objA, i) => {
+      const objB = b[i];
+      return (
+        objA._id === objB._id &&
+        objA.locationType === objB.locationType &&
+        JSON.stringify(objA.serviceIds) === JSON.stringify(objB.serviceIds)
+      );
+    });
+  };
+
+  const isDirtyLocation = !deepEqual(selectedLocationIds, initialLocationIds());
 
   const handleOptionChange = (questionId, optionId, checked) => {
     setSelectedOptions((prev) => {
@@ -62,7 +110,10 @@ const ServiceCard = ({
       })
     );
 
-    const payload = { answers };
+    const payload = {
+      answers,
+      selectedLocationIds: selectedLocationIds,
+    };
 
     try {
       const response = await selectedOptionsUpdate({
@@ -158,6 +209,9 @@ const ServiceCard = ({
               onSubmit={handleSubmit}
               isDirty={isDirty}
               serviceLocations={serviceLocations}
+              selectedLocationIds={selectedLocationIds}
+              setSelectedLocationIds={setSelectedLocationIds}
+              isDirtyLocation={isDirtyLocation}
             />
           </div>
         </div>

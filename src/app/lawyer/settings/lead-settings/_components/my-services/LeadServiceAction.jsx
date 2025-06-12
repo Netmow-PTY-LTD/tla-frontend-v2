@@ -11,16 +11,19 @@ const LeadServiceAction = ({
   onSubmit,
   isDirty,
   serviceLocations,
+  selectedLocationIds,
+  setSelectedLocationIds,
+  isDirtyLocation,
 }) => {
+  console.log('is Dirty Location ==>', isDirtyLocation);
+  // console.log('isDirty ==>', isDirty);
   const [deleteService] = useDeleteLeadServiceMutation();
   // const [locations, setLocations] = useState(['Nationwide']);
-  const [locations, setLocations] = useState(serviceLocations);
-  // const [selectedLocations, setSelectedLocations] = useState(locations);
-  const [selectedLocationIds, setSelectedLocationIds] = useState(
-    serviceLocations?.map((loc) => loc._id)
-  );
+  // const [locations, setLocations] = useState(serviceLocations);
 
-  console.log('serviceLocations', serviceLocations);
+  // const [selectedLocationIds, setSelectedLocationIds] = useState(
+  //   serviceLocations?.map((loc) => loc._id)
+  // );
 
   // const handleAddLocation = () => {
   //   const newLocation = prompt('Enter new location');
@@ -56,12 +59,24 @@ const LeadServiceAction = ({
   //   );
   // };
 
+  // one solution -1
   const handleToggleLocation = (locationId) => {
-    setSelectedLocationIds((prev) =>
-      prev.includes(locationId)
-        ? prev.filter((id) => id !== locationId)
-        : [...prev, locationId]
-    );
+    setSelectedLocationIds((prev) => {
+      return prev.map((location) => {
+        if (location._id !== locationId) return location;
+
+        const alreadyChecked = location.serviceIds?.includes(leadServiceId);
+
+        const updatedServiceIds = alreadyChecked
+          ? location?.serviceIds.filter((id) => id !== leadServiceId)
+          : [...location.serviceIds, leadServiceId];
+
+        return {
+          ...location,
+          serviceIds: updatedServiceIds,
+        };
+      });
+    });
   };
 
   const handleDeleteService = async () => {
@@ -109,21 +124,22 @@ const LeadServiceAction = ({
       </div>
 
       <div className="space-y-2">
-        {locations?.length > 0 ? (
-          locations?.map((location, index) => {
+        {selectedLocationIds?.length > 0 ? (
+          selectedLocationIds?.map((location, index) => {
+            // console.log('selected service id ==>', leadServiceId);
+            // console.log('current location ==>' + index + '=', location);
+
+            const isChecked = location.serviceIds?.includes(leadServiceId);
+            // console.log('is check', isChecked);
+
             return (
               <label
                 key={location._id}
                 className="flex items-center justify-between px-8 py-2  rounded-md  hover:bg-gray-50"
               >
                 <div className="flex items-center gap-3">
-                  {/* <Checkbox
-                    checked={selectedLocations?.includes(location)}
-                    onCheckedChange={() => handleToggleLocation(location)}
-                    id={`location-${index}`}
-                  /> */}
                   <Checkbox
-                    checked={selectedLocationIds.includes(location._id)}
+                    checked={isChecked}
                     onCheckedChange={() => handleToggleLocation(location._id)}
                     id={`location-${index}`}
                   />
@@ -151,10 +167,12 @@ const LeadServiceAction = ({
           <span>Remove this Service</span>
         </button>
         <button
-          disabled={!isDirty}
+          disabled={!isDirty && !isDirtyLocation}
           className={`px-4 py-3 text-sm rounded-lg text-white mt-5
             ${
               isDirty
+                ? 'bg-[#12C7C4CC] hover:bg-teal-300'
+                : isDirtyLocation
                 ? 'bg-[#12C7C4CC] hover:bg-teal-300'
                 : 'bg-gray-300 cursor-not-allowed'
             }
