@@ -11,21 +11,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
   useDeleteRangeMutation,
-  useDeleteZipCodeMutation,
   useGetCountryListQuery,
   useGetRangeListQuery,
-  useGetZipCodeListQuery,
 } from '@/store/features/public/publicApiService';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import CreateRangeModal from '../_components/CreateRangeModal';
 import EditRangeModal from '../_components/EditRangeModal';
 
@@ -37,14 +28,6 @@ export default function Page() {
   const { data: countryList, refetch: refetchCountry } =
     useGetCountryListQuery();
 
-  console.log('countryList', countryList);
-
-  const [selectedCountry, setSelectedCountry] = useState(null);
-
-  const handleCountryWiseServiceChange = (val) => {
-    setSelectedCountry(val);
-  };
-
   const {
     data: allRanges,
     refetch: refetchRange,
@@ -54,12 +37,9 @@ export default function Page() {
     refetchOnMountOrArgChange: true,
   });
 
-  console.log('allRanges', allRanges);
-
   const [deleteRange] = useDeleteRangeMutation();
 
   const handleDeleteRange = async (id) => {
-    console.log('range id', id);
     const confirmDelete = window.confirm(
       'Are you sure you want to delete this range?'
     );
@@ -133,10 +113,6 @@ export default function Page() {
       enableHiding: false,
       cell: ({ row }) => {
         const item = row.original;
-        const countryName =
-          countryList?.data?.find((c) => c._id === item.countryId)?.name ||
-          'N/A';
-
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

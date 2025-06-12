@@ -17,32 +17,31 @@ import FormWrapper from '@/components/form/FromWrapper';
 import TextInput from '@/components/form/TextInput';
 import z from 'zod';
 
-export default function CreateRangeModal({ isOpen, onClose, onSuccess }) {
+export default function CreateRangeModal({ isOpen, onClose }) {
   const defaultValues = {
     name: '',
     value: null,
-    unit: '',
   };
 
   const formSchema = z.object({
     name: z.string().min(1, {
       message: 'Range name must be at least 1 character.',
     }),
-    value: z.string().min(1, {
-      message: 'Value must be a positive number and at least 1 character.',
-    }),
+    value: z.preprocess(
+      (val) => Number(val),
+      z.number().min(1, {
+        message: 'Value must be a positive number.',
+      })
+    ),
   });
 
   const [addRange, { isLoading }] = useAddRangeMutation();
-  const { data: countryList } = useGetCountryListQuery();
 
   async function onSubmit(values) {
     const payload = {
       name: values.name,
-      value: parseInt(values.value),
+      value: Number(values.value),
     };
-
-    console.log('payload', payload);
 
     try {
       const result = await addRange(payload).unwrap();
@@ -70,7 +69,7 @@ export default function CreateRangeModal({ isOpen, onClose, onSuccess }) {
           <TextInput name="name" label="Range" placeholder="range name" />
           <TextInput
             name="value"
-            type="number"
+            type="text"
             label="Value"
             placeholder="range value"
           />

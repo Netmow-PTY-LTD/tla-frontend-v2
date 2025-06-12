@@ -38,22 +38,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  MoreHorizontal,
-  Pencil,
-  Trash2,
-  ChevronsUpDown,
-  CloudUpload,
-} from 'lucide-react';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
-
+import { MoreHorizontal, Pencil, Trash2, CloudUpload } from 'lucide-react';
 import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/questionApiService';
-import { useDeleteOptionMutation } from '@/store/features/admin/optionApiService';
 import FormWrapper from '@/components/form/FromWrapper';
 import TextInput from '@/components/form/TextInput';
 import FileUploader from '@/components/UIComponents/fileUploader';
@@ -62,14 +48,6 @@ export default function ManageServices() {
   //state variables
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedService, setSelectedService] = useState('');
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [selectOptionsModalOpen, setSelectOptionsModalOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [editOptionModalOpen, setEditOptionModalOpen] = useState(false);
-  const [question, setQuestion] = useState(null);
-  const [selectedQuestion, setSelectedQuestion] = useState(null);
-  const [option, setOption] = useState('');
   const [thumbPreviewUrl, setThumbPreviewUrl] = useState(null);
   const [thumbImageFile, setThumbImageFile] = useState(null);
   const [bannerImageFile, setBannerImageFile] = useState(null);
