@@ -32,13 +32,9 @@ const ServiceCard = ({
     return initial;
   };
 
-  // Detect if selectedOptions have changed from the initial
-
   const [selectedOptions, setSelectedOptions] = useState(initializeSelected());
-
   const initialSelectedOptions = initializeSelected();
 
-  // Detect if selectedOptions have changed from the initial
   const isDirty =
     JSON.stringify(selectedOptions) !== JSON.stringify(initialSelectedOptions);
 
@@ -55,7 +51,6 @@ const ServiceCard = ({
   };
 
   const handleSubmit = async (data) => {
-    console.log('data ==>', data);
     const answers = Object.entries(selectedOptions).map(
       ([questionId, selectedOptionIds]) => ({
         questionId,
@@ -64,9 +59,7 @@ const ServiceCard = ({
     );
 
     const selectedLocationIds = data?.map((item) => item.SelectedLocationId);
-    console.log('selectedLocationIds', selectedLocationIds);
-
-    const payload = { answers, selectedLocationIds: selectedLocationIds };
+    const payload = { answers, selectedLocationIds };
 
     try {
       const response = await selectedOptionsUpdate({
@@ -82,7 +75,6 @@ const ServiceCard = ({
         showErrorToast('Failed to selected option');
       }
     } catch (error) {
-      console.error('Update failed:', error);
       const errorMessage =
         error?.data?.message || 'An error occurred while selected option';
       showErrorToast(errorMessage);
@@ -92,19 +84,19 @@ const ServiceCard = ({
   return (
     <AccordionItem
       value={`service-${leadServiceId}`}
-      className="border-b bg-white border-gray-200   "
+      className="border-b bg-white border-gray-200"
     >
       <AccordionTrigger className="py-4 px-4 hover:no-underline">
         <div className="flex flex-col items-start text-left">
           <h3 className="text-base font-medium text-gray-800">{title}</h3>
-
           <div className="text-sm text-gray-500 mt-2">
-            <span className="font-medium">All leads </span>
-            <span className=" mx-2 w-2 h-2 rounded-full bg-slate-500 inline-block"></span>
-            <span className="font-medium"> 1 location </span>
+            <span className="font-medium">All leads</span>
+            <span className="mx-2 w-2 h-2 rounded-full bg-slate-500 inline-block"></span>
+            <span className="font-medium">1 location</span>
           </div>
         </div>
       </AccordionTrigger>
+
       <AccordionContent className="px-4 pb-4 w-full">
         <div className="space-y-4">
           <Accordion
@@ -156,6 +148,7 @@ const ServiceCard = ({
               </AccordionItem>
             ))}
           </Accordion>
+
           <div className="max-w-[85%] mx-auto">
             <LeadServiceAction
               leadServiceId={leadServiceId}
