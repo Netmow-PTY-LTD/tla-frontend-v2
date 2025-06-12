@@ -9,7 +9,6 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import z from 'zod';
-import { useForm } from 'react-hook-form';
 import {
   useEditRangeMutation,
   useGetSingleRangeQuery,
@@ -82,8 +81,6 @@ export default function EditRangeModal({ open, onClose, rangeId }) {
       showErrorToast(message);
     }
   };
-
-  console.log('isLocalLoading', isLocalLoading);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
