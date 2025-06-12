@@ -196,7 +196,6 @@ const LeadServiceAction = ({
     }))
   );
 
-  console.log();
   const handleToggleLocation = (locationId) => {
     setLocations((prev) =>
       prev.map((loc) => {

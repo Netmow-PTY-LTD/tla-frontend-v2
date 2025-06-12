@@ -63,7 +63,10 @@ const ServiceCard = ({
       })
     );
 
-    const payload = { answers };
+    const selectedLocationIds = data?.map((item) => item.SelectedLocationId);
+    console.log('selectedLocationIds', selectedLocationIds);
+
+    const payload = { answers, selectedLocationIds: selectedLocationIds };
 
     try {
       const response = await selectedOptionsUpdate({
