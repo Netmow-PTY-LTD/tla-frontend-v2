@@ -87,7 +87,7 @@ const ServiceCard = ({
 
     const payload = {
       answers,
-      selectedLocationIds: serviceLocations?.map((loc) => ({
+      selectedLocationData: serviceLocations?.map((loc) => ({
         locationsId:loc._id,
         serviceIds:loc.serviceIds
       })),
