@@ -8,93 +8,82 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
 import z from 'zod';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  useEditZipCodeMutation,
-  useGetCountryListQuery,
-  useGetSingleZipCodeQuery,
+  useEditRangeMutation,
+  useGetSingleRangeQuery,
 } from '@/store/features/public/publicApiService';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import FormWrapper from '@/components/form/FromWrapper';
+import TextInput from '@/components/form/TextInput';
 
-const formSchema = z.object({
-  zipcode: z.string().min(4, { message: 'Zip Code must be at least 4 digits' }),
-  countryId: z.string().min(1, { message: 'Country is required' }),
-});
-
-export default function EditRangeModal({ open, onClose, zipId }) {
+export default function EditRangeModal({ open, onClose, rangeId }) {
   const [isLocalLoading, setIsLocalLoading] = useState(true);
 
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      zipcode: '',
-      countryId: '',
-    },
+  const [defaultValues, setDefaultValues] = useState({
+    name: '',
+    value: 0,
+  });
+
+  const formSchema = z.object({
+    name: z.string().min(1, {
+      message: 'Range name must be at least 1 character.',
+    }),
+    value: z.number().min(1, {
+      message: 'Value must be a positive number and at least 1 character.',
+    }),
   });
 
   const {
-    data: singleZipCode,
+    data: singleRange,
     isSuccess,
+    isLoading,
     refetch,
-  } = useGetSingleZipCodeQuery(zipId, {
-    skip: !zipId,
+  } = useGetSingleRangeQuery(rangeId, {
+    skip: !rangeId,
   });
-
-  const { data: countryList } = useGetCountryListQuery();
-  const [editZipCode, { isLoading }] = useEditZipCodeMutation();
 
   // Trigger loader on open
   useEffect(() => {
-    if (open && zipId) {
+    if (open && rangeId) {
       setIsLocalLoading(true);
       refetch();
     }
-  }, [open, zipId, refetch]);
+  }, [open, rangeId, refetch]);
 
-  // Populate form when data is loaded
   useEffect(() => {
-    if (isSuccess && singleZipCode?.data) {
-      form.reset({
-        zipcode: singleZipCode.data.zipcode,
-        countryId: singleZipCode.data.countryId,
+    if (isSuccess && singleRange?.data) {
+      setDefaultValues({
+        name: singleRange?.data?.name ?? '',
+        value: singleRange?.data?.value ?? '',
       });
       setIsLocalLoading(false);
     }
-  }, [isSuccess, singleZipCode, form]);
+  }, [isSuccess, singleRange]);
 
+  const [editRange] = useEditRangeMutation();
   const onSubmit = async (values) => {
+    const payload = {
+      _id: rangeId,
+      name: values.name,
+      value: Number(values.value),
+    };
+
     try {
-      const payload = {
-        _id: zipId,
-        zipcode: values.zipcode,
-        countryId: values.countryId,
-      };
-      const res = await editZipCode(payload).unwrap();
-      showSuccessToast(res?.message || 'Range updated successfully!');
-      onClose(); // Close modal after update
+      const res = await editRange(payload).unwrap();
+      if (res) {
+        showSuccessToast(res?.message || 'Range updated successfully!');
+        onClose(); // Close modal after update
+        refetch();
+      }
     } catch (error) {
       const message = error?.data?.message || 'Failed to update range.';
       showErrorToast(message);
     }
   };
+
+  console.log('isLocalLoading', isLocalLoading);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -103,59 +92,26 @@ export default function EditRangeModal({ open, onClose, zipId }) {
           <DialogTitle>Edit Range</DialogTitle>
         </DialogHeader>
 
-        {isLocalLoading ? (
+        {isLoading ? (
           <div className="flex justify-center items-center py-10">
-            <p>Loading zip code details...</p>
+            <p>Loading range details...</p>
             {/* You can replace this with a spinner */}
           </div>
         ) : (
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-              <FormField
-                control={form.control}
-                name="zipcode"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Zip Code</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter Zip Code" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="countryId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Country</FormLabel>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Country" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {countryList?.data?.map((country) => (
-                          <SelectItem key={country._id} value={country._id}>
-                            {country.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <DialogFooter>
-                <Button variant="outline" type="button" onClick={onClose}>
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={isLoading}>
-                  {isLoading ? 'Updating...' : 'Update'}
-                </Button>
-              </DialogFooter>
-            </form>
-          </Form>
+          <FormWrapper
+            onSubmit={onSubmit}
+            defaultValues={defaultValues}
+            schema={formSchema}
+          >
+            <TextInput name="name" label="Range" placeholder="range name" />
+            <TextInput
+              name="value"
+              type="number"
+              label="Value"
+              placeholder="range value"
+            />
+            <Button type="submit">Update</Button>
+          </FormWrapper>
         )}
       </DialogContent>
     </Dialog>

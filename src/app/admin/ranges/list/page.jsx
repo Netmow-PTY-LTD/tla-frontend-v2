@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
+  useDeleteRangeMutation,
   useDeleteZipCodeMutation,
   useGetCountryListQuery,
   useGetRangeListQuery,
@@ -31,7 +32,7 @@ import EditRangeModal from '../_components/EditRangeModal';
 export default function Page() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [selectedZipId, setSelectedZipId] = useState(null);
+  const [selectedRange, setSelectedRange] = useState(null);
 
   const { data: countryList, refetch: refetchCountry } =
     useGetCountryListQuery();
@@ -44,40 +45,36 @@ export default function Page() {
     setSelectedCountry(val);
   };
 
-  // const filteredZipCodes = useMemo(() => {
-  //   if (!ZipCodeList?.data) return [];
-
-  //   if (selectedCountry) {
-  //     return ZipCodeList.data.filter(
-  //       (zip) => zip.countryId === selectedCountry
-  //     );
-  //   }
-
-  //   return ZipCodeList.data;
-  // }, [ZipCodeList, selectedCountry]);
-
-  const { data: allRanges } = useGetRangeListQuery();
+  const {
+    data: allRanges,
+    refetch: refetchRange,
+    isFetching,
+    isLoading,
+  } = useGetRangeListQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
 
   console.log('allRanges', allRanges);
 
-  const [zipCodeDelete] = useDeleteZipCodeMutation();
+  const [deleteRange] = useDeleteRangeMutation();
 
-  const handleDeleteZipCode = async (id) => {
+  const handleDeleteRange = async (id) => {
+    console.log('range id', id);
     const confirmDelete = window.confirm(
-      'Are you sure you want to delete this zip code?'
+      'Are you sure you want to delete this range?'
     );
 
     if (!confirmDelete) return;
 
     try {
-      const res = await zipCodeDelete(id).unwrap();
+      const res = await deleteRange(id).unwrap();
       if (res) {
         showSuccessToast(res?.message);
-        refetchCountry();
+        refetchRange();
       }
     } catch (error) {
       console.error(error);
-      showErrorToast('Failed to delete Zip Code.');
+      showErrorToast('Failed to delete range.');
     }
   };
 
@@ -109,17 +106,17 @@ export default function Page() {
     //   enableSorting: false,
     //   enableHiding: false,
     // },
-    {
-      id: 'countryName',
-      header: 'Country Name',
-      cell: ({ row }) => {
-        const item = row.original;
-        const countryName =
-          countryList?.data?.find((c) => c._id === item.countryId)?.name ||
-          'N/A';
-        return <div>{countryName}</div>;
-      },
-    },
+    // {
+    //   id: 'countryName',
+    //   header: 'Country Name',
+    //   cell: ({ row }) => {
+    //     const item = row.original;
+    //     const countryName =
+    //       countryList?.data?.find((c) => c._id === item.countryId)?.name ||
+    //       'N/A';
+    //     return <div>{countryName}</div>;
+    //   },
+    // },
     {
       accessorKey: 'name',
       header: 'Range',
@@ -153,7 +150,7 @@ export default function Page() {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => {
-                  setSelectedZipId(item?._id);
+                  setSelectedRange(item?._id);
                   setEditModalOpen(true);
                 }}
                 className="flex gap-2 cursor-pointer"
@@ -165,7 +162,7 @@ export default function Page() {
               <DropdownMenuItem>
                 <div
                   className="flex gap-2 cursor-pointer"
-                  onClick={() => handleDeleteZipCode(item?._id)}
+                  onClick={() => handleDeleteRange(item?._id)}
                 >
                   <Trash2 className="w-4 h-4" /> Delete
                 </div>
@@ -180,8 +177,8 @@ export default function Page() {
   return (
     <div>
       <h1 className="font-bold text-lg mb-4">Ranges List</h1>
-      <div className="flex justify-between mb-4">
-        <div className="w-[300px]">
+      <div className="flex justify-end mb-4">
+        {/* <div className="w-[300px]">
           <Select
             value={selectedCountry || ''}
             onValueChange={handleCountryWiseServiceChange}
@@ -197,7 +194,7 @@ export default function Page() {
               ))}
             </SelectContent>
           </Select>
-        </div>
+        </div> */}
         <Button onClick={() => setModalOpen(true)}>Add Range</Button>
         <CreateRangeModal
           isOpen={modalOpen}
@@ -207,11 +204,15 @@ export default function Page() {
         <EditRangeModal
           open={editModalOpen}
           onClose={() => setEditModalOpen(false)}
-          zipId={selectedZipId}
+          rangeId={selectedRange}
           onSuccess={handleModalSuccess}
         />
       </div>
-      <DataTable data={allRanges?.data} columns={columns} searchColumn="name" />
+      <DataTable
+        data={allRanges?.data || []}
+        columns={columns}
+        searchColumn="name"
+      />
     </div>
   );
 }
