@@ -117,7 +117,7 @@ const LeadServiceAction = ({
         </button>
 
         <button
-          disabled={!isDirty || !isLocationDirty}
+          disabled={!isDirty && !isLocationDirty}
           className={`px-4 py-3 text-sm rounded-lg text-white mt-5
             ${
               isDirty
