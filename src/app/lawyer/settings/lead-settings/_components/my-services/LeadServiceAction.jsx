@@ -202,7 +202,7 @@ import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useDeleteLeadServiceMutation } from '@/store/features/leadService/leadServiceApiService';
 import { Trash } from 'lucide-react';
-import React from 'react';
+import React, { useRef, useState } from 'react';
 
 const LeadServiceAction = ({
   leadServiceId,
@@ -212,10 +212,32 @@ const LeadServiceAction = ({
   setServiceLocations = () => {},
 }) => {
   const [deleteService] = useDeleteLeadServiceMutation();
+  const [isLocationDirty, setIsLocationDirty] = useState(false); // ✅ NEW
+ // Store original serviceLocations for comparison
+  const originalLocationsRef = useRef(JSON.stringify(serviceLocations));
+
+  // const handleToggleLocation = (locationId) => {
+  //   setServiceLocations((prev) =>
+  //     prev.map((location) => {
+  //       if (location._id !== locationId) return location;
+
+  //       const alreadyChecked = location.serviceIds?.includes(leadServiceId);
+
+  //       const updatedServiceIds = alreadyChecked
+  //         ? location.serviceIds.filter((id) => id !== leadServiceId)
+  //         : [...location.serviceIds, leadServiceId];
+
+  //       return {
+  //         ...location,
+  //         serviceIds: updatedServiceIds,
+  //       };
+  //     })
+  //   );
+  // };
 
   const handleToggleLocation = (locationId) => {
-    setServiceLocations((prev) =>
-      prev.map((location) => {
+    setServiceLocations((prev) => {
+      const updated = prev.map((location) => {
         if (location._id !== locationId) return location;
 
         const alreadyChecked = location.serviceIds?.includes(leadServiceId);
@@ -228,8 +250,14 @@ const LeadServiceAction = ({
           ...location,
           serviceIds: updatedServiceIds,
         };
-      })
-    );
+      });
+
+      // ✅ Compare new vs original to set isLocationDirty
+      const isChanged = JSON.stringify(updated) !== originalLocationsRef.current;
+      setIsLocationDirty(isChanged);
+
+      return updated;
+    });
   };
 
   const handleDeleteService = async () => {
@@ -252,6 +280,14 @@ const LeadServiceAction = ({
       showErrorToast(errorMessage);
     }
   };
+
+  const handleSave = () => {
+    onSubmit();
+    // ✅ Reset dirty state after saving
+    originalLocationsRef.current = JSON.stringify(serviceLocations);
+    setIsLocationDirty(false);
+  };
+
 
   const formatLocationType = (str) => {
     if (!str) return '';
@@ -318,13 +354,13 @@ const LeadServiceAction = ({
         </button>
 
         <button
-          disabled={!isDirty}
+          disabled={!isDirty &&!isLocationDirty}
           className={`px-4 py-3 text-sm rounded-lg text-white mt-5 ${
             isDirty
-              ? 'bg-[#12C7C4CC] hover:bg-teal-300'
+              ? 'bg-[#12C7C4CC] hover:bg-teal-300':isLocationDirty?'bg-[#12C7C4CC] hover:bg-teal-300'
               : 'bg-gray-300 cursor-not-allowed'
           }`}
-          onClick={onSubmit}
+          onClick={handleSave}
         >
           Save
         </button>
