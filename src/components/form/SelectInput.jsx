@@ -44,7 +44,9 @@ export default function SelectInput({
                 onValueChange={field.onChange}
                 value={field.value ?? ''}
               >
-                <SelectTrigger className={clsx('bg-white', triggerClassName)}>
+                <SelectTrigger
+                  className={clsx('bg-white h-[44px]', triggerClassName)}
+                >
                   <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
                 <SelectContent>
