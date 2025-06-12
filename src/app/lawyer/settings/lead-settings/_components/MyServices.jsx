@@ -19,7 +19,8 @@ const ServicesList = () => {
   const leadServices = leadServicesData?.data.service || [];
   const locations = leadServicesData?.data.locations || [];
 
-  console.log('service data ==>', leadServices);
+  // console.log('service data ==>', leadServices);
+  // console.log('locations ==>', locations);
 
   return (
     <div className=" max-[900px] mx-auto">
@@ -60,7 +61,7 @@ const ServicesList = () => {
                     leadServiceId={service?.service?._id}
                     title={service?.service?.name}
                     questions={service?.questions}
-                    serviceLocations={locations}
+                    // serviceLocations={locations}
                   />
                 ))}
               </div>
