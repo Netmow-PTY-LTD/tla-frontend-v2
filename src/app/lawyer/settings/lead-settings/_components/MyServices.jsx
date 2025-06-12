@@ -55,11 +55,11 @@ const ServicesList = () => {
               <div className="w-full">
                 {leadServices.map((service) => (
                   <ServiceCard
-                    key={service._id}
-                    leadServiceId={service._id}
-                    title={service.serviceName}
-                    service={service?.questions}
-                    serviceLocations={service?.locations}
+                    key={service?.service?._id}
+                    leadServiceId={service?.service?._id}
+                    title={service?.service?.name}
+                    questions={service?.questions}
+                    serviceLocations={[]}
                   />
                 ))}
               </div>

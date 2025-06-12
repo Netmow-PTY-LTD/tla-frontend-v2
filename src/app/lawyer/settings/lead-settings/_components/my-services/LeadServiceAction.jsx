@@ -10,12 +10,11 @@ const LeadServiceAction = ({
   leadServiceId,
   onSubmit,
   isDirty,
-  serviceLocations,
-  selectedLocationIds,
-  setSelectedLocationIds,
-  isDirtyLocation,
+  serviceLocations = [],
+  selectedLocationIds = [],
+  setSelectedLocationIds = [],
+  // isDirtyLocation,
 }) => {
-  console.log('is Dirty Location ==>', isDirtyLocation);
   // console.log('isDirty ==>', isDirty);
   const [deleteService] = useDeleteLeadServiceMutation();
   // const [locations, setLocations] = useState(['Nationwide']);
@@ -167,12 +166,20 @@ const LeadServiceAction = ({
           <span>Remove this Service</span>
         </button>
         <button
-          disabled={!isDirty && !isDirtyLocation}
+          // disabled={!isDirty && !isDirtyLocation}
+          disabled={!isDirty}
+          // className={`px-4 py-3 text-sm rounded-lg text-white mt-5
+          //   ${
+          //     isDirty
+          //       ? 'bg-[#12C7C4CC] hover:bg-teal-300'
+          //       : isDirtyLocation
+          //       ? 'bg-[#12C7C4CC] hover:bg-teal-300'
+          //       : 'bg-gray-300 cursor-not-allowed'
+          //   }
+          // `}
           className={`px-4 py-3 text-sm rounded-lg text-white mt-5
             ${
               isDirty
-                ? 'bg-[#12C7C4CC] hover:bg-teal-300'
-                : isDirtyLocation
                 ? 'bg-[#12C7C4CC] hover:bg-teal-300'
                 : 'bg-gray-300 cursor-not-allowed'
             }
