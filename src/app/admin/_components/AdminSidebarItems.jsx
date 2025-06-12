@@ -17,6 +17,12 @@ export const AdminSidebarItems = {
       isActive: true,
     },
     {
+      title: 'Settings',
+      url: '/admin/settings',
+      icon: Settings,
+      isActive: true,
+    },
+    {
       title: 'Countries',
       url: '/admin/country/list',
       icon: MapPinHouse,
@@ -25,6 +31,12 @@ export const AdminSidebarItems = {
     {
       title: 'Zip Codes',
       url: '/admin/zip-code/list',
+      icon: MapPinHouse,
+      isActive: true,
+    },
+    {
+      title: 'Ranges',
+      url: '/admin/ranges/list',
       icon: MapPinHouse,
       isActive: true,
     },
@@ -102,11 +114,18 @@ export const AdminSidebarItems = {
       isActive: true,
     },
     {
+      title: 'Manage Services',
+      url: '/admin/manage-services',
+      icon: SquareTerminal,
+      isActive: true,
+    },
+    {
       title: 'Service Wise Questions',
       url: '/admin/question/add',
       icon: SquareTerminal,
       isActive: true,
     },
+
     {
       title: 'Question Wise Options',
       url: '/admin/option/add',
@@ -167,12 +186,6 @@ export const AdminSidebarItems = {
           isActive: true,
         },
       ],
-    },
-    {
-      title: 'Account Settings',
-      url: '/admin/account-settings',
-      icon: Settings,
-      isActive: true,
     },
   ],
 };

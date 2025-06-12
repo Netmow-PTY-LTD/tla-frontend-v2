@@ -17,11 +17,6 @@ const InvoicingForm = () => {
   const { data: invoiceBillingData, refetch: refetchBillingDetails } =
     useGetBillingsDetailsQuery();
 
-  console.log(
-    'contactName',
-    invoiceBillingData?.data?.billingAddress?.contactName
-  );
-
   const defaultValues = useMemo(
     () => ({
       contactName: invoiceBillingData?.data?.billingAddress?.contactName ?? '',
