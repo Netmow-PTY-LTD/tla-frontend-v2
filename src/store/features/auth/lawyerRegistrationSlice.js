@@ -12,12 +12,12 @@ const initialState = {
     name: '',
     activeProfile: 'basic',
     country: '',
+    phone: '',
   },
   //  company profile data
   companyInfo: {
     companyTeam: false,
     companyName: '',
-    phone: '',
     website: '',
     companySize: '',
   },

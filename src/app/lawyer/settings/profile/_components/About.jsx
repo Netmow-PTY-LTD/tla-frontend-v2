@@ -14,6 +14,8 @@ import FormWrapper from '@/components/form/FromWrapper';
 import AboutFormActions from './about/AboutFormAction';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { lawyerSettingAboutSchema } from '@/schema/dashboard/lawyerSettings';
+import TextInput from '@/components/form/TextInput';
+import TextareaInput from '@/components/form/TextArea';
 
 export default function About() {
   const {
@@ -47,6 +49,9 @@ export default function About() {
   const defaultValues = {
     companyName: profile?.companyProfile?.companyName ?? '',
     name: profile?.name ?? '',
+    address: profile?.address ?? '',
+    phone: profile?.phone ?? '',
+    bio: profile?.bio ?? '',
     contactEmail: profile?.companyProfile?.contactEmail ?? '',
     phoneNumber: profile?.companyProfile?.phoneNumber ?? '',
     website: profile?.companyProfile?.website ?? '',
@@ -70,7 +75,15 @@ export default function About() {
   const onSubmit = async (data) => {
     try {
       const formData = new FormData();
-      const { name, companyLogo, userProfileLogo, ...rest } = data;
+      const {
+        name,
+        address,
+        phone,
+        bio,
+        companyLogo,
+        userProfileLogo,
+        ...rest
+      } = data;
       const companyInfo = {
         companyName: rest.companyName,
         contactEmail: rest.contactEmail,
@@ -93,6 +106,9 @@ export default function About() {
       const payload = {
         userProfile: {
           name,
+          address,
+          phone,
+          bio,
         },
         companyInfo,
       };
@@ -132,6 +148,35 @@ export default function About() {
         <div className="flex items-center gap-20  mb-5 ">
           <CompanyProfile />
           <PersonalProfile />
+        </div>
+        <div className="border-t border-white" />
+        {/* Personal Contact Info */}
+        <div className="py-9">
+          <h3 className="text-black font-semibold heading-lg">
+            About Your Profile
+          </h3>
+          <p className="mt-[10px] mb-7">
+            This information will be visible to customers on Bark. Use it to
+            showcase your experience and build trust. You can update your
+            private contact details in your account settings.
+          </p>
+          <div className="grid grid-cols-2 gap-x-20 gap-y-7 mb-7">
+            <TextInput
+              label="Phone Number"
+              name="phone"
+              placeholder="+8801XXXXXXX"
+            />
+            <TextInput
+              label="Address"
+              name="address"
+              placeholder="Enter your personal address"
+            />
+          </div>
+          <TextareaInput
+            label="About You"
+            name="bio"
+            placeholder="Tell us about your experience, what makes you stand out, or how you help your clients."
+          />
         </div>
         <div className="border-t border-white" />
         <CompanyContactDetails />

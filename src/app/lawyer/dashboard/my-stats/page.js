@@ -1,8 +1,11 @@
+'use client';
 import LeadSettingNotificationCard from '@/components/dashboard/lawyer/components/LeadSettingNotificationCard';
 import LeadSettings from '@/components/dashboard/lawyer/components/LeadSettings';
 import MessageCard from '@/components/dashboard/lawyer/components/MessageCard';
 import StatusCard from '@/components/dashboard/lawyer/components/StatusCard';
 import ProfileCard from '@/components/dashboard/lawyer/module/MyStats/ProfileCard';
+import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import { useGetLeadServiceListQuery } from '@/store/features/leadService/leadServiceApiService';
 
 import React from 'react';
 
@@ -45,6 +48,25 @@ const MyStatsPage = () => {
     },
   ];
 
+  const {
+    data: userInfo,
+    isLoading: isLoadingUserInfo,
+    isError: isErrorUserInfo,
+    error: errorUserInfo,
+  } = useAuthUserInfoQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  const {
+    data: leadServicesData,
+    isLoading: isLoadingLeadServices,
+    isError: isErrorLeadServices,
+    error: errorLeadServices,
+  } = useGetLeadServiceListQuery();
+
+  const profileData = userInfo?.data ?? {};
+  const locations = leadServicesData?.data?.locations ?? [];
+
   return (
     <div className="lg:m-5">
       <h1 className="font-bold text-2xl border-b-2 text-[#0B1C2D] ">
@@ -54,7 +76,13 @@ const MyStatsPage = () => {
       <div className="mt-5 grid grid-cols-1  md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-5 mb-10">
         {/* Left Section - Profile */}
         <div className="h-full ">
-          <ProfileCard className="h-full" />
+          <ProfileCard
+            profile={profileData}
+            isLoading={isLoadingUserInfo}
+            isError={isErrorUserInfo}
+            error={errorUserInfo}
+            className="h-full"
+          />
         </div>
 
         {/* Middle Section - Status + Lead Settings */}
