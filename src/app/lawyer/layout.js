@@ -29,7 +29,6 @@ export default function SellerDashboardLayout({ children }) {
           <SidebarHeader>
             <SidebarTop />
           </SidebarHeader>
-
           <SidebarContent>
             <LawyerSideNav />
           </SidebarContent>

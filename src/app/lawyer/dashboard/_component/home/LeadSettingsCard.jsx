@@ -1,9 +1,13 @@
-import MapMarker from '@/components/icon/MapMarker';
 import MapMarkerAlt from '@/components/icon/MapMarkerAlt';
-import { MapPin } from 'lucide-react';
 import React from 'react';
+import ShowServiceList from './ShowServiceList';
 
-export default function LeadSettingsCard() {
+export default function LeadSettingsCard({
+  services,
+  isLoading,
+  isError,
+  error,
+}) {
   return (
     <div className="bg-white p-4 rounded-[10px] w-full">
       {/* Title */}
@@ -25,18 +29,12 @@ export default function LeadSettingsCard() {
 
       {/* Services Tags */}
       <div className="btn-group flex flex-wrap gap-3 mt-[15px]">
-        <button className="font-medium text-[12px] text-[#444444] rounded-[5px] border border-[#444444] px-[12px] py-[6px]">
-          Contracts Lawyer
-        </button>
-        <button className="font-medium text-[12px] text-[#444444] rounded-[5px] border border-[#444444] px-[12px] py-[6px]">
-          Estate Lawyer
-        </button>
-        <button className="font-medium text-[12px] text-[#444444] rounded-[5px] border border-[#444444] px-[12px] py-[6px]">
-          Immigration Lawyers
-        </button>
-        <button className="font-medium text-[12px] text-[#444444] rounded-[5px] border border-[#444444] px-[12px] py-[6px]">
-          +3
-        </button>
+        <ShowServiceList
+          services={services}
+          isLoading={isLoading}
+          error={error}
+          isError={isError}
+        />
       </div>
 
       {/* Divider */}
