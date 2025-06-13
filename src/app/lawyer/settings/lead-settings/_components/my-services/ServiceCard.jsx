@@ -34,8 +34,6 @@ const ServiceCard = ({
 
   const [serviceLocations, setServiceLocations] = useState([]);
 
-  console.log('serviceLocations', serviceLocations);
-
   useEffect(() => {
     setServiceLocations(locations);
   }, [locations]);
@@ -194,7 +192,18 @@ const ServiceCard = ({
                               htmlFor={optionId}
                               className="text-sm font-medium text-gray-700 cursor-pointer"
                             >
-                              {optionName}
+                              {optionName === 'Others' ? (
+                                <input
+                                  type="text"
+                                  id={`other-input-${optionId}`}
+                                  name="idExtraData"
+                                  defaultValue={optionObj?.idExtraData}
+                                  placeholder="Enter other option"
+                                  className="mt-1  rounded-md border  shadow-sm p-2  sm:text-sm"
+                                />
+                              ) : (
+                                optionName
+                              )}
                             </Label>
                           </div>
                         );

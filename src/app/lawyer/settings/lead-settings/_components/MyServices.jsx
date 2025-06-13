@@ -91,8 +91,33 @@ const ServicesList = () => {
           </p>
 
           <div className="space-y-1">
-            <LocationItem distance={150} location="Alberton" />
-            <LocationItem distance={30} location="Logan City" />
+            {isLoading ? (
+              <div className="space-y-4">
+                {[...Array(3)].map((_, i) => (
+                  <Skeleton key={i} className="h-20 w-full rounded-lg" />
+                ))}
+              </div>
+            ) : isError ? (
+              <div className="flex items-center space-x-2 text-red-500 p-4 border border-red-300 rounded-md bg-red-50">
+                <AlertCircle className="w-5 h-5" />
+                <span>
+                  {error?.data?.message || 'Failed to load locations.'}
+                </span>
+              </div>
+            ) : locations?.length > 0 ? (
+              <div className="space-y-1">
+                {locations.map((loc) => (
+                  <LocationItem key={loc._id} location={loc} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center p-4">
+                <h2 className="text-lg font-semibold">No locations selected</h2>
+                <p className="text-sm text-muted-foreground">
+                  Select a location to get started.
+                </p>
+              </div>
+            )}
           </div>
         </section>
 
