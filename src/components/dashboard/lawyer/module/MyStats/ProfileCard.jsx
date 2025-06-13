@@ -6,6 +6,7 @@ import Link from 'next/link';
 import React from 'react';
 
 const ProfileCard = ({ profile, isLoading, isError, error }) => {
+  console.log('profile', profile);
   return (
     // figma base
     <Card>
@@ -46,9 +47,9 @@ const ProfileCard = ({ profile, isLoading, isError, error }) => {
         </h1>
 
         <div className="space-y-4 text-[#34495E] ">
-          <p> Phone: (480) 123456789 Verified</p>
+          <p> Phone: {profile?.profile?.phone} (Verified)</p>
           <p> Email: {profile?.email}</p>
-          <p> Address: Cedar Boulevard, Lakeside, Florida 32123</p>
+          <p> Address: {profile?.profile?.address} </p>
         </div>
         <hr className="tet-[#F3F3F3] border" />
       </div>

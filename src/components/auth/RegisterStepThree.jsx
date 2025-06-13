@@ -30,8 +30,8 @@ import Link from 'next/link';
 export default function RegisterStepThree() {
   const dispatch = useDispatch();
   const registration = useSelector((state) => state.lawyerRegistration);
-  const { username, email, password } = registration;
-  const { phone, companyTeam, companyName, website, companySize } =
+  const { username, email, password, profile } = registration;
+  const { companyTeam, companyName, website, companySize } =
     registration.companyInfo;
 
   const [localCompanySize, setLocalCompanySize] = useState(companySize || '');
@@ -42,7 +42,7 @@ export default function RegisterStepThree() {
     defaultValues: {
       username,
       email,
-      phone,
+      phone: profile?.phone,
       soloPractitioner: registration.lawyerServiceMap.isSoloPractitioner,
       companyTeam,
       company_name: companyName,
@@ -57,7 +57,7 @@ export default function RegisterStepThree() {
     form.reset({
       username,
       email,
-      phone,
+      phone: profile?.phone,
       password,
       soloPractitioner: registration.lawyerServiceMap.isSoloPractitioner,
       companyTeam,
@@ -68,7 +68,7 @@ export default function RegisterStepThree() {
   }, [
     username,
     email,
-    phone,
+    profile?.phone,
     password,
     companyTeam,
     companyName,
@@ -177,7 +177,7 @@ export default function RegisterStepThree() {
                               field.onChange(e);
                               dispatch(
                                 updateNestedField({
-                                  section: 'companyInfo',
+                                  section: 'profile',
                                   field: 'phone',
                                   value: e.target.value,
                                 })
