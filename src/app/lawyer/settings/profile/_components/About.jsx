@@ -49,6 +49,9 @@ export default function About() {
   const defaultValues = {
     companyName: profile?.companyProfile?.companyName ?? '',
     name: profile?.name ?? '',
+    address: profile?.address ?? '',
+    phone: profile?.phone ?? '',
+    bio: profile?.bio ?? '',
     contactEmail: profile?.companyProfile?.contactEmail ?? '',
     phoneNumber: profile?.companyProfile?.phoneNumber ?? '',
     website: profile?.companyProfile?.website ?? '',
@@ -72,7 +75,15 @@ export default function About() {
   const onSubmit = async (data) => {
     try {
       const formData = new FormData();
-      const { name, companyLogo, userProfileLogo, ...rest } = data;
+      const {
+        name,
+        address,
+        phone,
+        bio,
+        companyLogo,
+        userProfileLogo,
+        ...rest
+      } = data;
       const companyInfo = {
         companyName: rest.companyName,
         contactEmail: rest.contactEmail,
@@ -95,6 +106,9 @@ export default function About() {
       const payload = {
         userProfile: {
           name,
+          address,
+          phone,
+          bio,
         },
         companyInfo,
       };
@@ -139,11 +153,12 @@ export default function About() {
         {/* Personal Contact Info */}
         <div className="py-9">
           <h3 className="text-black font-semibold heading-lg">
-            About Profiles
+            About Your Profile
           </h3>
           <p className="mt-[10px] mb-7">
-            This information will be seen by customers on Bark. Change the
-            details Bark uses to contact you privately in  .
+            This information will be visible to customers on Bark. Use it to
+            showcase your experience and build trust. You can update your
+            private contact details in your account settings.
           </p>
           <div className="grid grid-cols-2 gap-x-20 gap-y-7 mb-7">
             <TextInput
@@ -154,13 +169,13 @@ export default function About() {
             <TextInput
               label="Address"
               name="address"
-              placeholder="Enter Your Personal Address"
+              placeholder="Enter your personal address"
             />
           </div>
           <TextareaInput
             label="About You"
             name="bio"
-            placeholder="Write about you?"
+            placeholder="Tell us about your experience, what makes you stand out, or how you help your clients."
           />
         </div>
         <div className="border-t border-white" />

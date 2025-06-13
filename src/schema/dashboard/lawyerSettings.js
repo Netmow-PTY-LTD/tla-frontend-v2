@@ -5,6 +5,9 @@ const auPhoneRegex = /^(?:\+?61|0)[2-478]\d{8}$/;
 
 export const lawyerSettingAboutSchema = z.object({
   name: z.string({ invalid_type_error: 'Name must be a string' }),
+  phone: z.string({ invalid_type_error: 'phone must be a string' }),
+  bio: z.string({ invalid_type_error: 'Bio must be a string' }),
+  address: z.string({ invalid_type_error: 'Address must be a string' }),
   companyLogo: z.any().optional(),
   userProfileLogo: z.any().optional(),
   companyName: z.string(),
