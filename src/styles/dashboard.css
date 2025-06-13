@@ -1,3 +1,46 @@
+:root {
+  --admin-heading: 1.5rem;
+  --admin-heading-lg: 1.25rem;
+  --admin-heading-md: 1.125rem;
+  --admin-heading-base: 1rem;
+  --admin-text: 1rem;
+  --admin-label: 1rem;
+  --admin-input-text: 1rem;
+  --admin-notice: 0.75rem;
+}
+
+.heading {
+  font-size: var(--admin-heading);
+  font-weight: 600;
+  line-height: 1.5rem;
+}
+
+.heading-lg {
+  font-size: var(--admin-heading-lg);
+  font-weight: 600;
+  line-height: 1.25rem;
+}
+
+.heading-md {
+  font-size: var(--admin-heading-md);
+  font-weight: 500;
+  line-height: 1.25rem;
+}
+
+.heading-base {
+  font-size: var(--admin-heading-base);
+}
+
+.label-text {
+  font-size: var(--admin-label);
+  font-weight: 500;
+  line-height: 1.125rem;
+}
+
+.admin-text {
+  font-size: var(--admin-text);
+}
+
 .sidebar-y-64 {
   top: 64px;
   bottom: 64px;

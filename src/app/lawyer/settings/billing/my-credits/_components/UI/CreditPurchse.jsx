@@ -12,7 +12,7 @@ const CreditsPurchase = () => {
   return (
     <div className="max-w-[900px] mx-auto">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">My credits</h2>
+        <h2 className="heading-lg font-bold text-gray-900 mb-2">My credits</h2>
         <p className="text-gray-600 mb-2">
           Credits are used to contact customers on LawApp. A small fee, paid in
           credits, is charged for each customer you contact. Learn more about

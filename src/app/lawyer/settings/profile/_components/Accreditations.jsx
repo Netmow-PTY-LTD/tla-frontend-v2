@@ -139,9 +139,9 @@ export default function Accreditations() {
       <div>
         <div className="flex items-center justify-between gap-5">
           <div>
-            <h2 className="text-base font-semibold text-black">
+            <h3 className="heading-lg font-semibold text-black">
               Accreditations
-            </h2>
+            </h3>
             <p className="text-sm text-[#8E8E8E] mt-2">
               Increase your chances of getting hired and boost customer
               confidence by adding your accreditations.

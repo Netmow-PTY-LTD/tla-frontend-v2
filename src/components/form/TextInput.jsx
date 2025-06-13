@@ -35,7 +35,10 @@ export default function TextInput({
         return (
           <FormItem className={itemClassName}>
             {label && (
-              <FormLabel className={labelClassName} htmlFor={name}>
+              <FormLabel
+                className={`${labelClassName} label-text`}
+                htmlFor={name}
+              >
                 {label}
               </FormLabel>
             )}

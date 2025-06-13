@@ -17,11 +17,6 @@ const InvoicingForm = () => {
   const { data: invoiceBillingData, refetch: refetchBillingDetails } =
     useGetBillingsDetailsQuery();
 
-  console.log(
-    'contactName',
-    invoiceBillingData?.data?.billingAddress?.contactName
-  );
-
   const defaultValues = useMemo(
     () => ({
       contactName: invoiceBillingData?.data?.billingAddress?.contactName ?? '',
@@ -65,7 +60,7 @@ const InvoicingForm = () => {
   return (
     <div className="max-w-[900px] mx-auto p-6">
       <div className="mb-8">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">
+        <h2 className="heading-lg font-bold text-gray-900 mb-4">
           Invoices and billing details
         </h2>
 
@@ -90,7 +85,7 @@ const InvoicingForm = () => {
       >
         <div className="space-y-6">
           <div>
-            <h3 className="text-base font-semibold text-gray-900 mb-2">
+            <h3 className="heading-md font-semibold text-gray-900 mb-2">
               Billing Address
             </h3>
             <p className="text-sm text-gray-500 mb-4">
