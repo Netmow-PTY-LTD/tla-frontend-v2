@@ -27,7 +27,6 @@ const leadServiceApiService = baseApi.injectEndpoints({
     }),
     leadServiceSelectedOptionsUpdate: builder.mutation({
       query: ({ leadServiceId, answers }) => {
-        console.log({ leadServiceId, answers });
         return {
           url: `/lead-service/${leadServiceId}/options`,
           method: 'PATCH',
@@ -37,12 +36,11 @@ const leadServiceApiService = baseApi.injectEndpoints({
       invalidatesTags: ['leadService'],
     }),
     leadServiceLocationUpdate: builder.mutation({
-      query: ({ leadServiceId, locations }) => {
-        console.log({ leadServiceId, answers });
+      query: (body) => {
         return {
-          url: `/lead-service/${leadServiceId}/locations`,
+          url: `/lead-service/locations`,
           method: 'PATCH',
-          body: locations,
+          body: body,
         };
       },
       invalidatesTags: ['leadService'],
