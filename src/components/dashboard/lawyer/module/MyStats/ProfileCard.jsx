@@ -26,15 +26,23 @@ const ProfileCard = ({ profile, isLoading, isError, error }) => {
         </figure>
         <h1 className="font-medium text-xl flex items-center">
           {profile?.profile?.name}{' '}
-          <button aria-label="Edit Name" className="ml-3 rounded ">
+          <Link
+            href={'/lawyer/settings/profile'}
+            aria-label="Edit Name"
+            className="ml-3 rounded "
+          >
             <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
-          </button>
+          </Link>
         </h1>
         <h1 className="font-medium  flex items-center">
           Personal Details{' '}
-          <button aria-label="Edit Name" className="ml-3 rounded ">
+          <Link
+            href={'/lawyer/settings/profile'}
+            aria-label="Edit Name"
+            className="ml-3 rounded "
+          >
             <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
-          </button>
+          </Link>
         </h1>
 
         <div className="space-y-4 text-[#34495E] ">
@@ -48,9 +56,13 @@ const ProfileCard = ({ profile, isLoading, isError, error }) => {
         <div className="mb-4">
           <h1 className="font-medium  flex items-center">
             About Description{' '}
-            <button aria-label="Edit Name" className="ml-3 rounded ">
+            <Link
+              href={'/lawyer/settings/profile'}
+              aria-label="Edit Name"
+              className="ml-3 rounded "
+            >
               <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
-            </button>
+            </Link>
           </h1>
           <div className="p-3 bg-[#F3F3F3] mt-5 rounded-lg ">
             <p>
@@ -64,9 +76,13 @@ const ProfileCard = ({ profile, isLoading, isError, error }) => {
         <div className="space-y-4 my-5">
           <h1 className="font-medium  flex items-center">
             Professional Details{' '}
-            <button aria-label="Edit Name" className="ml-3 rounded ">
+            <Link
+              href={'/lawyer/settings/profile'}
+              aria-label="Edit Name"
+              className="ml-3 rounded "
+            >
               <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
-            </button>
+            </Link>
           </h1>
           <p>Company Name: {profile?.profile?.companyProfile?.companyName}</p>
           <p>
