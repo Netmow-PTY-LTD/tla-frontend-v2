@@ -9,21 +9,29 @@ import { useSelector } from 'react-redux';
 import ResponseCard from './_component/home/ResponseCard';
 import SendNewLeadsCard from './_component/home/SendNewLeadsCard';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import { useGetLeadServiceListQuery } from '@/store/features/leadService/leadServiceApiService';
 
 export default function SellerDashboard() {
   const currentUser = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
   const {
     data: userInfo,
-    isLoading,
-    isError,
-    error,
-    refetch,
+    isLoading: isLoadingUserInfo,
+    isError: isErrorUserInfo,
+    error: errorUserInfo,
   } = useAuthUserInfoQuery(undefined, {
-    refetchOnMountOrArgChange: true, // keep data fresh
+    refetchOnMountOrArgChange: true,
   });
 
-  const profileData = userInfo?.data?.profile || {};
+  const {
+    data: leadServicesData,
+    isLoading: isLoadingLeadServices,
+    isError: isErrorLeadServices,
+    error: errorLeadServices,
+  } = useGetLeadServiceListQuery();
+
+  const profileData = userInfo?.data?.profile ?? {};
+  const locations = leadServicesData?.data?.locations ?? [];
 
   return (
     <div className=" max-w-[1100px] mx-auto">
@@ -40,10 +48,11 @@ export default function SellerDashboard() {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5 relative z-[1]">
         <LeadSettingsCard
-          services={profileData.serviceIds}
-          isLoading={isLoading}
-          isError={isError}
-          error={error}
+          services={profileData.serviceIds || []}
+          isLoading={isLoadingUserInfo || isLoadingLeadServices}
+          isError={isErrorUserInfo || isErrorLeadServices}
+          error={errorUserInfo || errorLeadServices}
+          locations={locations}
         />
         <LeadsCountCard />
 

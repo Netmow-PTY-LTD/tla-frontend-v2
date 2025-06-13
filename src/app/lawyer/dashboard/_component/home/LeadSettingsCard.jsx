@@ -7,6 +7,7 @@ export default function LeadSettingsCard({
   isLoading,
   isError,
   error,
+  locations,
 }) {
   return (
     <div className="bg-white p-4 rounded-[10px] w-full">
@@ -49,10 +50,37 @@ export default function LeadSettingsCard({
               You're receiving customers within
             </p>
             {/* Location Display */}
-            <div className="flex items-center gap-2 mt-[15px] mb-3">
-              <MapMarkerAlt className="text-black" />
-              <span className="text-black text-sm">4207</span>
-            </div>
+
+            {isLoading ? (
+              <div className="mt-4 space-y-2">
+                {[...Array(2)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="w-[120px] h-[20px] bg-gray-200 animate-pulse rounded"
+                  />
+                ))}
+              </div>
+            ) : isError ? (
+              <p className="text-red-500 text-sm mt-4">
+                {error?.data?.message || 'Failed to load locations'}
+              </p>
+            ) : locations?.length === 0 ? (
+              <p className="text-gray-500 text-sm mt-4">No locations found</p>
+            ) : (
+              <div className="mt-[15px] space-y-3">
+                {locations.map((item, index) => (
+                  <div
+                    key={item._id || index}
+                    className="flex items-center gap-2"
+                  >
+                    <MapMarkerAlt className="text-black w-4 h-4" />
+                    <span className="text-black text-sm">
+                      {item?.locationGroupId?.zipcode}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           <button className="text-[#8E8E8E] text-[14px]">Edit</button>
         </div>
