@@ -30,8 +30,8 @@ import Link from 'next/link';
 export default function RegisterStepThree() {
   const dispatch = useDispatch();
   const registration = useSelector((state) => state.lawyerRegistration);
-  const { username, email, password } = registration;
-  const { phone, companyTeam, companyName, website, companySize } =
+  const { username, email, password, profile } = registration;
+  const { companyTeam, companyName, website, companySize } =
     registration.companyInfo;
 
   const [localCompanySize, setLocalCompanySize] = useState(companySize || '');
@@ -42,7 +42,7 @@ export default function RegisterStepThree() {
     defaultValues: {
       username,
       email,
-      phone,
+      phone: profile?.phone,
       soloPractitioner: registration.lawyerServiceMap.isSoloPractitioner,
       companyTeam,
       company_name: companyName,
@@ -57,7 +57,7 @@ export default function RegisterStepThree() {
     form.reset({
       username,
       email,
-      phone,
+      phone: profile?.phone,
       password,
       soloPractitioner: registration.lawyerServiceMap.isSoloPractitioner,
       companyTeam,
@@ -68,7 +68,7 @@ export default function RegisterStepThree() {
   }, [
     username,
     email,
-    phone,
+    profile?.phone,
     password,
     companyTeam,
     companyName,
@@ -177,7 +177,7 @@ export default function RegisterStepThree() {
                               field.onChange(e);
                               dispatch(
                                 updateNestedField({
-                                  section: 'companyInfo',
+                                  section: 'profile',
                                   field: 'phone',
                                   value: e.target.value,
                                 })
@@ -406,25 +406,30 @@ export default function RegisterStepThree() {
                       Company Size, Team Members
                     </label>
                     <div className="flex flex-wrap gap-2">
-                      {['2-10', '11-50', '51-100', '100+'].map((size) => (
+                      {[
+                        { label: '2-10', value: '2_10_employees' },
+                        { label: '11-50', value: '11_50_employees' },
+                        { label: '51-100', value: '51_100_employees' },
+                        { label: '100+', value: 'over_100_employees' },
+                      ]?.map(({ label, value }) => (
                         <button
                           type="button"
-                          key={size}
+                          key={value}
                           onClick={() => {
-                            setLocalCompanySize(size);
+                            setLocalCompanySize(value);
                             dispatch(
                               updateNestedField({
                                 section: 'companyInfo',
                                 field: 'companySize',
-                                value: size,
+                                value: value,
                               })
                             );
                           }}
                           className={`tla-company-size-btn ${
-                            localCompanySize === size ? 'selected' : ''
+                            localCompanySize === value ? 'selected' : ''
                           }`}
                         >
-                          {size}
+                          {label}
                         </button>
                       ))}
                     </div>
