@@ -1,9 +1,11 @@
 'use client';
 
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { DeleteConfirmation } from '@/components/UIComponents/DeleteConfirm';
 import { useDeleteLeadServiceMutation } from '@/store/features/leadService/leadServiceApiService';
-import { Trash } from 'lucide-react';
+import { Trash, Trash2 } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 
 const LeadServiceAction = ({
@@ -13,6 +15,7 @@ const LeadServiceAction = ({
   serviceLocations = [],
   setServiceLocations = () => {},
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [deleteService] = useDeleteLeadServiceMutation();
   const [isLocationDirty, setIsLocationDirty] = useState(false); // ✅ NEW
   // Store original serviceLocations for comparison
@@ -53,11 +56,6 @@ const LeadServiceAction = ({
   };
 
   const handleDeleteService = async () => {
-    const confirmDelete = window.confirm(
-      'Are you sure you want to remove this service?'
-    );
-    if (!confirmDelete) return;
-
     try {
       const response = await deleteService(leadServiceId).unwrap();
       if (response.success) {
@@ -70,6 +68,8 @@ const LeadServiceAction = ({
       const errorMessage =
         error?.data?.message || 'An error occurred while removing the service';
       showErrorToast(errorMessage);
+    } finally {
+      setIsOpen(false); // Close the modal after operation
     }
   };
 
@@ -133,14 +133,21 @@ const LeadServiceAction = ({
       </div>
 
       <div className="flex justify-between items-center mt-6">
-        <button
-          type="button"
-          onClick={handleDeleteService}
-          className="flex items-center text-red-600 hover:text-red-700 font-medium transition-colors"
-        >
-          <Trash className="w-5 h-5 mr-2" />
-          <span>Remove this Service</span>
-        </button>
+        <DeleteConfirmation
+          onConfirm={handleDeleteService}
+          open={isOpen}
+          onOpenChange={setIsOpen}
+          description="You want to delete your lead service?"
+          trigger={
+            <button
+              type="button"
+              className="flex items-center text-red-600 hover:text-red-700 font-medium transition-colors"
+            >
+              <Trash className="w-5 h-5 mr-2" />
+              <span>Remove this Service</span>
+            </button>
+          }
+        />
 
         <button
           disabled={!isDirty && !isLocationDirty}
