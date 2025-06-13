@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import {
@@ -11,7 +9,10 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { useEffect, useState } from 'react';
-import { useGetLeadServiceListQuery, useLeadServiceSelectedOptionsUpdateMutation } from '@/store/features/leadService/leadServiceApiService';
+import {
+  useGetLeadServiceListQuery,
+  useLeadServiceSelectedOptionsUpdateMutation,
+} from '@/store/features/leadService/leadServiceApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import LeadServiceAction from './LeadServiceAction';
 
@@ -21,24 +22,22 @@ const ServiceCard = ({
   questions = [],
   // serviceLocationsdata = [],
 }) => {
-    const {
-      data: leadServicesData,
-      isLoading,
-      isError,
-      error,
-    } = useGetLeadServiceListQuery();
-  
-    const locations = leadServicesData?.data.locations || [];
+  const {
+    data: leadServicesData,
+    isLoading,
+    isError,
+    error,
+  } = useGetLeadServiceListQuery();
+
+  const locations = leadServicesData?.data.locations || [];
   const [selectedOptionsUpdate] = useLeadServiceSelectedOptionsUpdateMutation();
 
- 
   const [serviceLocations, setServiceLocations] = useState([]);
 
-  console.log('serviceLocations',serviceLocations)
+  console.log('serviceLocations', serviceLocations);
 
   useEffect(() => {
-      setServiceLocations(locations);
-    
+    setServiceLocations(locations);
   }, [locations]);
 
   const initializeSelected = () => {
@@ -60,7 +59,6 @@ const ServiceCard = ({
   const [selectedOptions, setSelectedOptions] = useState(
     initialSelectedOptions
   );
-
 
   const isDirty =
     JSON.stringify(selectedOptions) !== JSON.stringify(initialSelectedOptions);
@@ -88,12 +86,11 @@ const ServiceCard = ({
     const payload = {
       answers,
       selectedLocationData: serviceLocations?.map((loc) => ({
-        locationsId:loc._id,
-        serviceIds:loc.serviceIds
+        locationsId: loc._id,
+        serviceIds: loc.serviceIds,
       })),
     };
 
-  
     try {
       const response = await selectedOptionsUpdate({
         leadServiceId,
