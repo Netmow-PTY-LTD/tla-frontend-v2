@@ -119,7 +119,7 @@ const LeadServiceAction = ({
                     id={`location-${index}`}
                   />
                   <span className="text-sm text-gray-800">
-                    {formatLocationType(location?.locationType)}
+                    {location?.locationGroupId?.zipcode}
                   </span>
                 </div>
               </label>
