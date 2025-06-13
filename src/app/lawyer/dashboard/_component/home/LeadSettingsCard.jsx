@@ -1,6 +1,7 @@
 import MapMarkerAlt from '@/components/icon/MapMarkerAlt';
 import React from 'react';
 import ShowServiceList from './ShowServiceList';
+import Link from 'next/link';
 
 export default function LeadSettingsCard({
   services,
@@ -25,7 +26,12 @@ export default function LeadSettingsCard({
             You'll receive leads in these categories
           </p>
         </div>
-        <button className="text-[#8E8E8E] text-[14px]">Edit</button>
+        <Link
+          href={'/lawyer/settings/lead-settings'}
+          className="text-[#8E8E8E] text-[14px] hover:underline"
+        >
+          Edit
+        </Link>
       </div>
 
       {/* Services Tags */}
@@ -82,7 +88,12 @@ export default function LeadSettingsCard({
               </div>
             )}
           </div>
-          <button className="text-[#8E8E8E] text-[14px]">Edit</button>
+          <Link
+            href={'/lawyer/settings/lead-settings'}
+            className="text-[#8E8E8E] text-[14px] hover:underline"
+          >
+            Edit
+          </Link>
         </div>
       </div>
     </div>
