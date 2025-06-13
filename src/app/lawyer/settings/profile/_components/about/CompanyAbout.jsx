@@ -35,7 +35,7 @@ export default function CompanyAbout() {
       <p className="mt-[10px] mb-7">Introduce the company to your customers.</p>
 
       <div>
-        <div className="grid grid-cols-2 gap-x-20 gap-y-7">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-20 gap-y-7">
           <SelectInput
             label={'Choose Company Size'}
             name={'companySize'}
