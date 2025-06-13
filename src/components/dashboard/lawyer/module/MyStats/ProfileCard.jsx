@@ -6,7 +6,7 @@ import Link from 'next/link';
 import React from 'react';
 
 const ProfileCard = ({ profile, isLoading, isError, error }) => {
-  console.log('profile', profile);
+  // console.log('profile', profile);
   return (
     // figma base
     <Card>

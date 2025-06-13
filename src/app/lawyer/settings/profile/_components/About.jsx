@@ -14,6 +14,8 @@ import FormWrapper from '@/components/form/FromWrapper';
 import AboutFormActions from './about/AboutFormAction';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { lawyerSettingAboutSchema } from '@/schema/dashboard/lawyerSettings';
+import TextInput from '@/components/form/TextInput';
+import TextareaInput from '@/components/form/TextArea';
 
 export default function About() {
   const {
@@ -132,6 +134,34 @@ export default function About() {
         <div className="flex items-center gap-20  mb-5 ">
           <CompanyProfile />
           <PersonalProfile />
+        </div>
+        <div className="border-t border-white" />
+        {/* Personal Contact Info */}
+        <div className="py-9">
+          <h3 className="text-black font-semibold heading-lg">
+            About Profiles
+          </h3>
+          <p className="mt-[10px] mb-7">
+            This information will be seen by customers on Bark. Change the
+            details Bark uses to contact you privately in  .
+          </p>
+          <div className="grid grid-cols-2 gap-x-20 gap-y-7 mb-7">
+            <TextInput
+              label="Phone Number"
+              name="phone"
+              placeholder="+8801XXXXXXX"
+            />
+            <TextInput
+              label="Address"
+              name="address"
+              placeholder="Enter Your Personal Address"
+            />
+          </div>
+          <TextareaInput
+            label="About You"
+            name="bio"
+            placeholder="Write about you?"
+          />
         </div>
         <div className="border-t border-white" />
         <CompanyContactDetails />
