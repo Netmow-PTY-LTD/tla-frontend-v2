@@ -129,7 +129,7 @@ export default function About() {
         defaultValues={defaultValues}
         schema={lawyerSettingAboutSchema}
       >
-        <div className="flex items-center gap-20  mb-5 ">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 mb-5">
           <CompanyProfile />
           <PersonalProfile />
         </div>

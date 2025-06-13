@@ -65,7 +65,7 @@ export default function CompanyLocation() {
         Use a specific address to help customers searching for a local business.
       </p>
 
-      <div className="flex justify-between gap-20">
+      <div className="flex flex-wrap lg:flex-nowrap justify-between gap-20">
         <div className="w-full">
           <TextInput
             label="What's the business location?"
