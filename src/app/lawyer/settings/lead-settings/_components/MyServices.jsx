@@ -16,7 +16,11 @@ const ServicesList = () => {
     isError,
     error,
   } = useGetLeadServiceListQuery();
-  const leadServices = leadServicesData?.data || [];
+  const leadServices = leadServicesData?.data.service || [];
+  const locations = leadServicesData?.data.locations || [];
+
+  // console.log('service data ==>', leadServices);
+  // console.log('locations ==>', locations);
 
   return (
     <div className=" max-[900px] mx-auto">
@@ -51,12 +55,13 @@ const ServicesList = () => {
               </div>
             ) : leadServices.length > 0 ? (
               <div className="w-full">
-                {leadServices.map((service) => (
+                {leadServices?.map((service) => (
                   <ServiceCard
-                    key={service._id}
-                    leadServiceId={service._id}
-                    title={service.serviceName}
-                    service={service?.questions}
+                    key={service?.service?._id}
+                    leadServiceId={service?.service?._id}
+                    title={service?.service?.name}
+                    questions={service?.questions}
+                    // serviceLocations={locations}
                   />
                 ))}
               </div>

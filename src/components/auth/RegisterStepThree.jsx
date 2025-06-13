@@ -406,25 +406,30 @@ export default function RegisterStepThree() {
                       Company Size, Team Members
                     </label>
                     <div className="flex flex-wrap gap-2">
-                      {['2-10', '11-50', '51-100', '100+'].map((size) => (
+                      {[
+                        { label: '2-10', value: '2_10_employees' },
+                        { label: '11-50', value: '11_50_employees' },
+                        { label: '51-100', value: '51_100_employees' },
+                        { label: '100+', value: 'over_100_employees' },
+                      ]?.map(({ label, value }) => (
                         <button
                           type="button"
-                          key={size}
+                          key={value}
                           onClick={() => {
-                            setLocalCompanySize(size);
+                            setLocalCompanySize(value);
                             dispatch(
                               updateNestedField({
                                 section: 'companyInfo',
                                 field: 'companySize',
-                                value: size,
+                                value: value,
                               })
                             );
                           }}
                           className={`tla-company-size-btn ${
-                            localCompanySize === size ? 'selected' : ''
+                            localCompanySize === value ? 'selected' : ''
                           }`}
                         >
-                          {size}
+                          {label}
                         </button>
                       ))}
                     </div>
