@@ -79,15 +79,6 @@ const LeadServiceAction = ({
     setIsLocationDirty(false);
   };
 
-  const formatLocationType = (str) => {
-    if (!str) return '';
-    return str
-      .replace(/[_-]/g, ' ')
-      .split(' ')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join('');
-  };
-
   return (
     <div className="mt-6">
       <div className="flex items-center justify-between mb-4">
@@ -103,7 +94,7 @@ const LeadServiceAction = ({
 
       <div className="space-y-2">
         {serviceLocations?.length > 0 ? (
-          serviceLocations.map((location, index) => {
+          serviceLocations?.map((location, index) => {
             const isChecked = location.serviceIds?.includes(leadServiceId);
 
             return (
