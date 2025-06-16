@@ -38,6 +38,7 @@ const ServiceCard = ({
     setServiceLocations(locations);
   }, [locations]);
 
+  console.log('serviceLocations', serviceLocations);
   useEffect(() => {
     if (!questions || questions.length === 0) return;
 
@@ -152,8 +153,18 @@ const ServiceCard = ({
             <span className="font-medium">All leads</span>
             <span className="mx-2 w-2 h-2 rounded-full bg-slate-500 inline-block"></span>
             <span className="font-medium">
-              {serviceLocations?.length || 0} location
-              {serviceLocations?.length > 1 ? 's' : ''}
+              {(() => {
+                const checkedLocationCount = serviceLocations?.filter((loc) =>
+                  loc?.serviceIds?.includes(leadServiceId)
+                )?.length;
+
+                return (
+                  <span className="font-medium">
+                    {checkedLocationCount} location
+                    {checkedLocationCount !== 1 ? 's' : ''}
+                  </span>
+                );
+              })()}
             </span>
           </div>
         </div>

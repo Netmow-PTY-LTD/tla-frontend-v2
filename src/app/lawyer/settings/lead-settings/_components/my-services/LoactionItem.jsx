@@ -11,7 +11,11 @@ const LocationItem = ({ location }) => {
           <div className="flex gap-2 mt-1">
             <button className="text-teal-500 text-sm">View on map</button>
             <span className="text-gray-400">·</span>
-            <button className="text-teal-500 text-sm">Remove</button>
+            {location?.locationGroupId?.zipcode !== 'Nationwide' ? (
+              <button className="text-teal-500 text-sm">Remove</button>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       </div>
