@@ -31,29 +31,46 @@ const ServiceCard = ({
 
   const locations = leadServicesData?.data.locations || [];
   const [selectedOptionsUpdate] = useLeadServiceSelectedOptionsUpdateMutation();
-
   const [serviceLocations, setServiceLocations] = useState([]);
+  const [otherInputs, setOtherInputs] = useState({});
 
   useEffect(() => {
     setServiceLocations(locations);
   }, [locations]);
 
-  const initializeSelected = () => {
-    const initial = {};
-    questions.forEach((q) => {
-      const questionId = q?.question?._id;
-      if (questionId) {
-        const selectedOptionIds = q.options
-          .filter((opt) => opt.isSelected)
-          .map((opt) => opt.option._id);
-        initial[questionId] = selectedOptionIds;
-      }
-    });
-    return initial;
-  };
+  useEffect(() => {
+    if (!questions || questions.length === 0) return;
 
-  // ✅ Only run once on mount
-  const [initialSelectedOptions] = useState(initializeSelected);
+    const initializeSelected = () => {
+      const initial = {};
+      const prefillOthers = {};
+
+      questions.forEach((q) => {
+        const questionId = q?.question?._id;
+        if (questionId) {
+          const selectedOptionIds = q.options
+            .filter((opt) => opt.isSelected)
+            .map((opt) => {
+              const oId = opt.option?._id;
+              if (opt.option?.name === 'Other' && opt?.idExtraData) {
+                prefillOthers[`${questionId}_${oId}`] = opt.idExtraData;
+              }
+              return oId;
+            });
+
+          initial[questionId] = selectedOptionIds;
+        }
+      });
+
+      setOtherInputs(prefillOthers);
+      setSelectedOptions(initial);
+      setInitialSelectedOptions(initial);
+    };
+
+    initializeSelected();
+  }, [questions]);
+
+  const [initialSelectedOptions, setInitialSelectedOptions] = useState({});
   const [selectedOptions, setSelectedOptions] = useState(
     initialSelectedOptions
   );
@@ -81,12 +98,24 @@ const ServiceCard = ({
       })
     );
 
+    const selectedOptionExtraData = Object.entries(otherInputs).map(
+      ([key, idExtraData]) => {
+        const [questionId, optionId] = key.split('_');
+        return {
+          questionId,
+          optionId,
+          idExtraData,
+        };
+      }
+    );
+
     const payload = {
       answers,
       selectedLocationData: serviceLocations?.map((loc) => ({
         locationsId: loc._id,
         serviceIds: loc.serviceIds,
       })),
+      selectedOptionExtraData,
     };
 
     try {
@@ -192,12 +221,22 @@ const ServiceCard = ({
                               htmlFor={optionId}
                               className="text-sm font-medium text-gray-700 cursor-pointer"
                             >
-                              {optionName === 'Others' ? (
+                              {optionName === 'Other' ? (
                                 <input
                                   type="text"
                                   id={`other-input-${optionId}`}
                                   name="idExtraData"
-                                  defaultValue={optionObj?.idExtraData}
+                                  onChange={(e) =>
+                                    setOtherInputs((prev) => ({
+                                      ...prev,
+                                      [`${questionId}_${optionId}`]:
+                                        e.target.value,
+                                    }))
+                                  }
+                                  value={
+                                    otherInputs[`${questionId}_${optionId}`] ||
+                                    ''
+                                  }
                                   placeholder="Enter other option"
                                   className="mt-1  rounded-md border  shadow-sm p-2  sm:text-sm"
                                 />
