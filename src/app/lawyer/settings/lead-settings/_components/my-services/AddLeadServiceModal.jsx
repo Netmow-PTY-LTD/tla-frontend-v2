@@ -36,7 +36,6 @@ const AddLeadServiceModal = () => {
       };
 
       const response = await addLedService(payload).unwrap();
-      console.log('Service added:', response);
 
       if (response.success) {
         showSuccessToast(response.message || 'Services added successfully');
