@@ -23,7 +23,7 @@ export default function CompanyContactDetails() {
       </p>
 
       <div>
-        <div className="grid grid-cols-2 gap-x-20 gap-y-7">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-20 gap-y-7">
           <TextInput
             label="Company Email Address"
             name="contactEmail"
