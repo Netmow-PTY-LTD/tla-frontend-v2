@@ -19,9 +19,6 @@ const ServicesList = () => {
   const leadServices = leadServicesData?.data.service || [];
   const locations = leadServicesData?.data.locations || [];
 
-  // console.log('service data ==>', leadServices);
-  // console.log('locations ==>', locations);
-
   return (
     <div className=" max-[900px] mx-auto">
       <div className="space-y-6">
@@ -39,7 +36,7 @@ const ServicesList = () => {
             relevant leads
           </p>
 
-          <Accordion type="multiple" collapsible="true">
+          <Accordion type="single" collapsible="true">
             {isLoading ? (
               <div className="space-y-4">
                 {[...Array(3)].map((_, i) => (

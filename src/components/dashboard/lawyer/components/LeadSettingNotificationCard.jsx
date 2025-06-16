@@ -2,9 +2,16 @@ import PencilIcon from '@/assets/icon';
 import { Card } from '@/components/ui/card';
 import { MapPin } from 'lucide-react';
 import React from 'react';
-import TagButton from './TagButton';
 
-const LeadSettingNotificationCard = () => {
+import ShowLeadsList from './showLeadsList';
+
+const LeadSettingNotificationCard = ({
+  services,
+  isLoading,
+  isError,
+  error,
+  locations,
+}) => {
   return (
     <Card>
       <div className="m-3 flex justify-between items-center flex-wrap">
@@ -27,9 +34,15 @@ const LeadSettingNotificationCard = () => {
         </p>
 
         <div className="inline-flex gap-2">
-          <TagButton text="Child Custody Law" bgColor="#FF86021A" />
+          {/* <TagButton text="Child Custody Law" bgColor="#FF86021A" />
           <TagButton text="Separation Law" bgColor="#004DA61A" />
-          <TagButton text="Criminal Law" bgColor="#A600161A" />
+          <TagButton text="Criminal Law" bgColor="#A600161A" /> */}
+          <ShowLeadsList
+            services={services}
+            isLoading={isLoading}
+            error={error}
+            isError={isError}
+          />
         </div>
       </div>
       <hr className="border-[#F3F3F3] border" />
@@ -44,15 +57,43 @@ const LeadSettingNotificationCard = () => {
         <p className="my-2 text-sm sm:text-base">
           You're receiving customers within
         </p>
-        <div className="space-y-2">
-          <p className="text-[#0B1C2D] bg-[#F3F3F3] rounded-lg p-4 flex items-center">
-            <span className="mr-1">
-              <MapPin />
-            </span>{' '}
-            Cedar Boulevard, Lakeside, Florida 32123
+
+        {isLoading ? (
+          <div className="mt-4 space-y-2">
+            {[...Array(2)].map((_, i) => (
+              <div
+                key={i}
+                className="w-[120px] h-[20px] bg-gray-200 animate-pulse rounded"
+              />
+            ))}
+          </div>
+        ) : isError ? (
+          <p className="text-red-500 text-sm mt-4">
+            {error?.data?.message || 'Failed to load locations'}
           </p>
-          <p className="text-[#0B1C2D] bg-[#F3F3F3] rounded-lg p-4">30 miles</p>
-        </div>
+        ) : !locations || locations.length === 0 ? (
+          <p className="text-gray-500 text-sm mt-4">No locations found</p>
+        ) : (
+          <div className="mt-[15px] space-y-3">
+            {locations.map((item, index) => {
+              const zip = item?.locationGroupId?.zipcode;
+              const key = item?._id || `${zip}-${index}`;
+              if (!zip) return null; // Skip if zipcode is missing
+
+              return (
+                <p
+                  key={key}
+                  className="text-[#0B1C2D] bg-[#F3F3F3] rounded-lg p-4 flex items-center"
+                >
+                  <span className="mr-2">
+                    <MapPin />
+                  </span>
+                  <span>{zip}</span>
+                </p>
+              );
+            })}
+          </div>
+        )}
       </div>
       <hr className="border-[#F3F3F3] border" />
 

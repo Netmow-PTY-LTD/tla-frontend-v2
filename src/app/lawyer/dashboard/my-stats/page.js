@@ -66,6 +66,7 @@ const MyStatsPage = () => {
 
   const profileData = userInfo?.data ?? {};
   const locations = leadServicesData?.data?.locations ?? [];
+  console.log('check profile data ==>', profileData);
 
   return (
     <div className="lg:m-5">
@@ -101,7 +102,14 @@ const MyStatsPage = () => {
               className="flex-1 h-full"
             />
           </div>
-          <LeadSettingNotificationCard className="h-full" />
+          <LeadSettingNotificationCard
+            services={profileData?.profile?.serviceIds || []}
+            isLoading={isLoadingUserInfo || isLoadingLeadServices}
+            isError={isErrorUserInfo || isErrorLeadServices}
+            error={errorUserInfo || errorLeadServices}
+            locations={locations}
+            className="h-full"
+          />
         </div>
 
         {/* Right Section - Messages + Lead Settings */}
