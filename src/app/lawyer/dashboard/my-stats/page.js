@@ -66,6 +66,7 @@ const MyStatsPage = () => {
 
   const profileData = userInfo?.data ?? {};
   const locations = leadServicesData?.data?.locations ?? [];
+  console.log('check profile data ==>', profileData);
 
   return (
     <div className="lg:m-5">
@@ -102,7 +103,7 @@ const MyStatsPage = () => {
             />
           </div>
           <LeadSettingNotificationCard
-            services={profileData.serviceIds || []}
+            services={profileData?.profile?.serviceIds || []}
             isLoading={isLoadingUserInfo || isLoadingLeadServices}
             isError={isErrorUserInfo || isErrorLeadServices}
             error={errorUserInfo || errorLeadServices}

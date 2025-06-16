@@ -2,8 +2,8 @@ import PencilIcon from '@/assets/icon';
 import { Card } from '@/components/ui/card';
 import { MapPin } from 'lucide-react';
 import React from 'react';
-import TagButton from './TagButton';
-import MapMarkerAlt from '@/components/icon/MapMarkerAlt';
+
+import ShowLeadsList from './showLeadsList';
 
 const LeadSettingNotificationCard = ({
   services,
@@ -34,9 +34,15 @@ const LeadSettingNotificationCard = ({
         </p>
 
         <div className="inline-flex gap-2">
-          <TagButton text="Child Custody Law" bgColor="#FF86021A" />
+          {/* <TagButton text="Child Custody Law" bgColor="#FF86021A" />
           <TagButton text="Separation Law" bgColor="#004DA61A" />
-          <TagButton text="Criminal Law" bgColor="#A600161A" />
+          <TagButton text="Criminal Law" bgColor="#A600161A" /> */}
+          <ShowLeadsList
+            services={services}
+            isLoading={isLoading}
+            error={error}
+            isError={isError}
+          />
         </div>
       </div>
       <hr className="border-[#F3F3F3] border" />
