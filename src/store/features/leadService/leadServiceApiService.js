@@ -4,7 +4,7 @@ const leadServiceApiService = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     addLeadService: builder.mutation({
       query: (body) => ({
-        url: '/lead-service/add',
+        url: '/settings/lead-service/add',
         method: 'POST',
         body,
       }),
@@ -12,7 +12,7 @@ const leadServiceApiService = baseApi.injectEndpoints({
     }),
     getLeadServiceList: builder.query({
       query: () => ({
-        url: `/lead-service/list`,
+        url: `/settings/lead-service/list`,
         method: 'GET',
       }),
       providesTags: ['leadService'],
@@ -20,7 +20,7 @@ const leadServiceApiService = baseApi.injectEndpoints({
 
     deleteLeadService: builder.mutation({
       query: (leadServiceId) => ({
-        url: `/lead-service/delete/${leadServiceId}`,
+        url: `/settings/lead-service/delete/${leadServiceId}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['leadService'],
@@ -28,7 +28,7 @@ const leadServiceApiService = baseApi.injectEndpoints({
     leadServiceSelectedOptionsUpdate: builder.mutation({
       query: ({ leadServiceId, answers }) => {
         return {
-          url: `/lead-service/${leadServiceId}/options`,
+          url: `/settings/lead-service/${leadServiceId}/options`,
           method: 'PATCH',
           body: answers,
         };
@@ -38,7 +38,7 @@ const leadServiceApiService = baseApi.injectEndpoints({
     leadServiceLocationUpdate: builder.mutation({
       query: (body) => {
         return {
-          url: `/lead-service/locations`,
+          url: `/settings/lead-service/locations`,
           method: 'PATCH',
           body: body,
         };
