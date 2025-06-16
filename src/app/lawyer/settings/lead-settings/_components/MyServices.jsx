@@ -19,9 +19,6 @@ const ServicesList = () => {
   const leadServices = leadServicesData?.data.service || [];
   const locations = leadServicesData?.data.locations || [];
 
-  // console.log('service data ==>', leadServices);
-  // console.log('locations ==>', locations);
-
   return (
     <div className=" max-[900px] mx-auto">
       <div className="space-y-6">

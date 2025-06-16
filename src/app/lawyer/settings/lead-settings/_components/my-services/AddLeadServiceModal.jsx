@@ -7,14 +7,14 @@ import { Input } from '@/components/ui/input';
 import { Modal } from '@/components/UIComponents/Modal';
 import { useAllServicesQuery } from '@/store/features/admin/servicesApiService';
 import { useAddLeadServiceMutation } from '@/store/features/leadService/leadServiceApiService';
-import { X } from 'lucide-react';
+import { Loader, X } from 'lucide-react';
 import React, { useState } from 'react';
 
 const AddLeadServiceModal = () => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [selectedServices, setSelectedServices] = useState([]);
-  const [addLedService] = useAddLeadServiceMutation();
+  const [addLedService, { isLoading, isSuccess }] = useAddLeadServiceMutation();
   const { data } = useAllServicesQuery();
   const suggestions = data?.data || [];
 
@@ -40,6 +40,9 @@ const AddLeadServiceModal = () => {
 
       if (response.success) {
         showSuccessToast(response.message || 'Services added successfully');
+
+        setSelectedServices([]);
+        setOpen(false);
         // Additional actions if needed
       }
 
@@ -132,10 +135,18 @@ const AddLeadServiceModal = () => {
             Cancel
           </Button>
           <Button
+            disabled={isLoading}
             onClick={handleAddServices}
             className="bg-teal-500 hover:bg-teal-600"
           >
-            Add Services
+            {isLoading ? (
+              <span className="flex items-center justify-center gap-2">
+                <Loader className="w-4 h-4 animate-spin" />
+                Saving...
+              </span>
+            ) : (
+              'Add Services'
+            )}
           </Button>
         </div>
       </Modal>
