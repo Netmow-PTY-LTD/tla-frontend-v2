@@ -79,7 +79,7 @@ const ServicesList = () => {
             <h2 className="text-xl font-semibold text-gray-800">
               Your Locations
             </h2>
-            <Button className="bg-teal-500 hover:bg-teal-600">
+            <Button className="bg-[#12C7C4CC] hover:bg-teal-300 px-4 py-3 text-sm rounded-lg text-white mt-5">
               + Add a location
             </Button>
           </div>
@@ -134,7 +134,7 @@ const ServicesList = () => {
           </div>
 
           <div className="mt-8 flex justify-center">
-            <Button className="bg-teal-500 hover:bg-teal-600 px-8">
+            <Button className="bg-[#12C7C4CC] hover:bg-teal-300  py-3 text-sm rounded-lg text-white mt-5 px-4">
               View Leads
             </Button>
           </div>
