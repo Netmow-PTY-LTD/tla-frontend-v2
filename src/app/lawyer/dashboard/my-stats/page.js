@@ -101,7 +101,14 @@ const MyStatsPage = () => {
               className="flex-1 h-full"
             />
           </div>
-          <LeadSettingNotificationCard className="h-full" />
+          <LeadSettingNotificationCard
+            services={profileData.serviceIds || []}
+            isLoading={isLoadingUserInfo || isLoadingLeadServices}
+            isError={isErrorUserInfo || isErrorLeadServices}
+            error={errorUserInfo || errorLeadServices}
+            locations={locations}
+            className="h-full"
+          />
         </div>
 
         {/* Right Section - Messages + Lead Settings */}
