@@ -38,31 +38,39 @@ const ServiceCard = ({
     setServiceLocations(locations);
   }, [locations]);
 
-  const initializeSelected = () => {
-    const initial = {};
-    const prefillOthers = {}; // ✅ missing in your code
+  useEffect(() => {
+    if (!questions || questions.length === 0) return;
 
-    questions.forEach((q) => {
-      const questionId = q?.question?._id;
-      if (questionId) {
-        const selectedOptionIds = q.options
-          .filter((opt) => opt.isSelected) // .map((opt) => opt.option._id);
-          .map((opt) => {
-            const oId = opt.option?._id;
-            if (opt.option?.name === 'Other' && opt?.idExtraData) {
-              prefillOthers[`${questionId}_${oId}`] = opt.idExtraData;
-            }
-            return oId;
-          });
-        initial[questionId] = selectedOptionIds;
-      }
-    });
-    setOtherInputs(prefillOthers); // ✅ also missing in your code
-    return initial;
-  };
+    const initializeSelected = () => {
+      const initial = {};
+      const prefillOthers = {};
 
-  // ✅ Only run once on mount
-  const [initialSelectedOptions] = useState(initializeSelected);
+      questions.forEach((q) => {
+        const questionId = q?.question?._id;
+        if (questionId) {
+          const selectedOptionIds = q.options
+            .filter((opt) => opt.isSelected)
+            .map((opt) => {
+              const oId = opt.option?._id;
+              if (opt.option?.name === 'Other' && opt?.idExtraData) {
+                prefillOthers[`${questionId}_${oId}`] = opt.idExtraData;
+              }
+              return oId;
+            });
+
+          initial[questionId] = selectedOptionIds;
+        }
+      });
+
+      setOtherInputs(prefillOthers);
+      setSelectedOptions(initial);
+      setInitialSelectedOptions(initial);
+    };
+
+    initializeSelected();
+  }, [questions]);
+
+  const [initialSelectedOptions, setInitialSelectedOptions] = useState({});
   const [selectedOptions, setSelectedOptions] = useState(
     initialSelectedOptions
   );
@@ -110,7 +118,6 @@ const ServiceCard = ({
       selectedOptionExtraData,
     };
 
-    console.log('others field value ==>', payload);
     try {
       const response = await selectedOptionsUpdate({
         leadServiceId,
