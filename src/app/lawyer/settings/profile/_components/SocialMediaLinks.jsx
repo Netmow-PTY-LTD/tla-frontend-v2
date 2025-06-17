@@ -9,6 +9,7 @@ import {
 } from '@/store/features/auth/authApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { z } from 'zod';
+import { Loader } from 'lucide-react';
 
 export default function SocialMediaLinks() {
   const {
@@ -24,6 +25,16 @@ export default function SocialMediaLinks() {
   //const onSave = () => console.log('Save clicked');
 
   const [updateUserData] = useUpdateUserDataMutation();
+
+  if (isLoading)
+    return (
+      <div>
+        <span className="flex items-center justify-center gap-2">
+          <Loader className="w-4 h-4 animate-spin" />
+          loading...
+        </span>
+      </div>
+    );
   const profile = userInfo?.data?.profile;
 
   const onCancel = () => {

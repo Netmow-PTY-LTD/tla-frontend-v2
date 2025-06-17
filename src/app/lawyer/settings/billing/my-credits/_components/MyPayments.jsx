@@ -1,9 +1,27 @@
 'use client';
 import React, { useState } from 'react';
-import AddAccreditationModal from './modal/AddCardDetailsModal';
+
+import AddCardModal from '../../_components/AddCardModal';
+import { useAddPaymentMethodMutation } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
 const MyPayments = () => {
   const [open, setOpen] = useState(false);
+  const [addPaymentMethod] = useAddPaymentMethodMutation();
+
+  const handleCardAdded = async (paymentMethodId) => {
+    const result = await addPaymentMethod({ paymentMethodId }).unwrap();
+    if (result.success) {
+      showSuccessToast(result?.message);
+    } else {
+      showErrorToast(result?.message);
+    }
+    try {
+    } catch {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+    }
+  };
   return (
     <div className="max-w-[900px] mx-auto">
       <div className="mb-6 ">
@@ -21,7 +39,12 @@ const MyPayments = () => {
           </span>
           .
         </div>
-        <AddAccreditationModal open={open} setOpen={setOpen} />
+
+        <AddCardModal
+          open={open}
+          setOpen={setOpen}
+          onCardAdded={handleCardAdded}
+        />
       </div>
     </div>
   );

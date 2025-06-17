@@ -8,6 +8,7 @@ import {
 } from '@/store/features/auth/authApiService';
 import { useState } from 'react';
 import EditServiceModal from './services/EditServiceModal';
+import { Loader } from 'lucide-react';
 
 export default function Services() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -21,13 +22,23 @@ export default function Services() {
   } = useAuthUserInfoQuery(undefined, {
     refetchOnMountOrArgChange: true, // keep data fresh
   });
+  const [updateUserData] = useUpdateUserDataMutation();
+
+  if (isLoading)
+    return (
+      <div>
+        <span className="flex items-center justify-center gap-2">
+          <Loader className="w-4 h-4 animate-spin" />
+          loading...
+        </span>
+      </div>
+    );
 
   const handleEditClick = (service) => {
     setSelectedService(service);
     setIsEditModalOpen(true);
   };
 
-  const [updateUserData] = useUpdateUserDataMutation();
   const profile = userInfo?.data?.profile;
   return (
     <div className="max-w-[900px] mx-auto">
