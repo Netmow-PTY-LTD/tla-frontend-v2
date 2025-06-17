@@ -27,6 +27,13 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['credit-payment'],
     }),
+    getPaymentMethod: builder.query({
+      query: () => ({
+        url: '/settings/credit-payment/payment-method',
+        method: 'GET',
+      }),
+      invalidatesTags: ['credit-payment'],
+    }),
     getBillingsDetails: builder.query({
       query: () => ({
         url: `/settings/credit-payment/billing`,
@@ -42,4 +49,5 @@ export const {
   useGetBillingsDetailsQuery,
   useAddPaymentMethodMutation,
   useSetupPaymentIntentMutation,
+  useGetPaymentMethodQuery,
 } = creditAndPaymentApiService;

@@ -44,7 +44,6 @@ const MyPayments = () => {
           open={open}
           setOpen={setOpen}
           onCardAdded={handleCardAdded}
-          email="test@gmail.com"
         />
       </div>
     </div>
