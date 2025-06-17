@@ -3,11 +3,13 @@
 import React from 'react';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { Modal } from '@/components/UIComponents/Modal'; // Assuming same Modal component used
+import { useSetupPaymentIntentMutation } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
+import { showErrorToast } from '@/components/common/toasts';
 
 const AddCardModal = ({ open, setOpen, onCardAdded }) => {
   const stripe = useStripe();
   const elements = useElements();
-
+  const [paymentIntentSetup] = useSetupPaymentIntentMutation();
   const handleClose = () => setOpen(false);
 
   const handleAddCard = async () => {
@@ -16,26 +18,20 @@ const AddCardModal = ({ open, setOpen, onCardAdded }) => {
     const cardElement = elements.getElement(CardElement);
     if (!cardElement) return;
 
-    // You should create a SetupIntent on your backend and pass its client_secret here
-    // For demo, I assume you have it as a prop or fetch it before this call
-    // Replace with your actual client secret from backend
+    const paymentIntent = await paymentIntentSetup().unwrap();
+    const { clientSecret, customerId } = paymentIntent?.data;
 
-    const STRIPE_SECRET_KEY = 'dhdhdshsdh';
-    const { setupIntent, error } = await stripe.confirmCardSetup(
-      STRIPE_SECRET_KEY,
-      {
-        payment_method: {
-          card: cardElement,
-        },
-      }
-    );
+    const { setupIntent, error } = await stripe.confirmCardSetup(clientSecret, {
+      payment_method: {
+        card: cardElement,
+      },
+    });
 
     if (error) {
       console.error(error.message);
-      alert(error.message);
+      showErrorToast(error.message);
       return;
     }
-
     // Pass the payment method id up to parent or save to backend here
     onCardAdded && onCardAdded(setupIntent.payment_method);
 

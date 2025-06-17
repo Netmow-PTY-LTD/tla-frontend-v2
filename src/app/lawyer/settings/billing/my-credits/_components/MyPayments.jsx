@@ -1,14 +1,26 @@
 'use client';
 import React, { useState } from 'react';
-import AddAccreditationModal from './modal/AddCardDetailsModal';
+
 import AddCardModal from '../../_components/AddCardModal';
+import { useAddPaymentMethodMutation } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
 const MyPayments = () => {
   const [open, setOpen] = useState(false);
+  const [addPaymentMethod] = useAddPaymentMethodMutation();
 
-  const handleCardAdded = (paymentMethodId) => {
+  const handleCardAdded = async (paymentMethodId) => {
     console.log('New card paymentMethodId:', paymentMethodId);
-    // Call backend API to save payment method id here
+    const result = await addPaymentMethod({ paymentMethodId }).unwrap();
+    console.log('restlt ==>', result);
+    if (result.success) {
+      showSuccessToast(result?.message || ' update successful');
+    }
+    try {
+    } catch {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+    }
   };
   return (
     <div className="max-w-[900px] mx-auto">
@@ -27,12 +39,12 @@ const MyPayments = () => {
           </span>
           .
         </div>
-        {/* <AddAccreditationModal open={open} setOpen={setOpen} /> */}
 
         <AddCardModal
           open={open}
           setOpen={setOpen}
           onCardAdded={handleCardAdded}
+          email="test@gmail.com"
         />
       </div>
     </div>

@@ -10,6 +10,23 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['credit-payment'],
     }),
+    setupPaymentIntent: builder.mutation({
+      query: (data) => {
+        return {
+          url: '/settings/credit-payment/setup-intent',
+          method: 'POST',
+          // body: data,
+        };
+      },
+    }),
+    addPaymentMethod: builder.mutation({
+      query: (body) => ({
+        url: '/settings/credit-payment/payment-method',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['credit-payment'],
+    }),
     getBillingsDetails: builder.query({
       query: () => ({
         url: `/settings/credit-payment/billing`,
@@ -20,5 +37,9 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
   }),
 });
 
-export const { useUpdateBillingDetailsMutation, useGetBillingsDetailsQuery } =
-  creditAndPaymentApiService;
+export const {
+  useUpdateBillingDetailsMutation,
+  useGetBillingsDetailsQuery,
+  useAddPaymentMethodMutation,
+  useSetupPaymentIntentMutation,
+} = creditAndPaymentApiService;
