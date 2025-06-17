@@ -10,11 +10,11 @@ const MyPayments = () => {
   const [addPaymentMethod] = useAddPaymentMethodMutation();
 
   const handleCardAdded = async (paymentMethodId) => {
-    console.log('New card paymentMethodId:', paymentMethodId);
     const result = await addPaymentMethod({ paymentMethodId }).unwrap();
-    console.log('restlt ==>', result);
     if (result.success) {
-      showSuccessToast(result?.message || ' update successful');
+      showSuccessToast(result?.message);
+    } else {
+      showErrorToast(result?.message);
     }
     try {
     } catch {
