@@ -139,6 +139,8 @@ export default function HeroHome() {
           singleServicewiseQuestionsData?.data ?? []
         }
         isLoading={isQuestionsLoading}
+        countryId={defaultCountry?._id}
+        serviceId={selectedService?._id}
       />
     </section>
   );
