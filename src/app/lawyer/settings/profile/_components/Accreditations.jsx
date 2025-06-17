@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import AccreditationsList from './accreditations/AccreditationsList';
-import { CircleAlert } from 'lucide-react';
+import { CircleAlert, Loader } from 'lucide-react';
 import {
   useAuthUserInfoQuery,
   useUpdateUserDataMutation,
@@ -36,13 +36,20 @@ export default function Accreditations() {
   } = useAuthUserInfoQuery(undefined, {
     refetchOnMountOrArgChange: true, // keep data fresh
   });
+  const [updateUserData] = useUpdateUserDataMutation();
+  if (isLoading)
+    return (
+      <div>
+        <span className="flex items-center justify-center gap-2">
+          <Loader className="w-4 h-4 animate-spin" />
+          loading...
+        </span>
+      </div>
+    );
 
   //const onSave = () => console.log('Save clicked');
 
-  const [updateUserData] = useUpdateUserDataMutation();
   const profile = userInfo?.data?.profile;
-
-  console.log('profile', profile);
 
   const defaultValues = {
     institution: profile?.accreditation?.institution,
