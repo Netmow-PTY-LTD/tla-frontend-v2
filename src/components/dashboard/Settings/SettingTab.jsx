@@ -17,7 +17,7 @@ export default function SettingsTabs({ tabs = [] }) {
               <Link
                 key={`${tab.href}-${index}`}
                 href={tab.href}
-                className={`flex-shrink-0 flex items-center gap-2 w-40 px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors
+                className={`flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors
               ${
                 isActive
                   ? 'bg-[#00C3C0] text-white'

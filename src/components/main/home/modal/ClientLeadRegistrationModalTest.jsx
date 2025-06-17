@@ -1,4 +1,4 @@
-import React, { useState, useEffect, use, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button'; // adjust if your button import path differs
 import { Modal } from '@/components/UIComponents/Modal';
 import { useGetZipCodeListQuery } from '@/store/features/public/publicApiService';
@@ -16,113 +16,68 @@ export default function ClientLeadRegistrationModal({
   open,
   onClose,
   selectedServiceWiseQuestions,
-  countryId,
-  serviceId,
   isLoading,
 }) {
   const [step, setStep] = useState(0);
-
-  //initial data
-  const [initialData, setInitialData] = useState([]);
-
-  //full cloned question with is_checked and isExtraData
-  const [fullClonedQuestions, setFullClonedQuestions] = useState([]);
-
-  //cloned questions with 0 index
-  const [partialClonedQuestions, setPartialClonedQuestions] = useState([]);
-
-  //data to show
-  const [viewData, setViewData] = useState([]);
-
-  //selected options
-  const [checkedOptions, setCheckedOptions] = useState([]);
-
-  //selected options
-  const [selectedOptions, setSelectedOptions] = useState([]);
-
-  const [clickButtonType, setClickButtonType] = useState('Next');
-
+  const [answers, setAnswers] = useState([]);
+  const [dynamicQuestions, setDynamicQuestions] = useState([]);
   const [additionalDetails, setAdditionalDetails] = useState('');
   const [zipCode, setZipCode] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [checkedOptions, setCheckedOptions] = useState([]);
+  const [clonedQuestions, setClonedQuestions] = useState([]);
 
-  // console.log(
-  //   'selectedServiceWiseQuestions',
-  //   selectedServiceWiseQuestions?.length
-  // );
-
-  //setting initial data
+  const totalSteps = selectedServiceWiseQuestions?.length + 4 || 0;
+  const currentQuestion = dynamicQuestions?.[step];
 
   useEffect(() => {
-    setInitialData(selectedServiceWiseQuestions);
-  }, [selectedServiceWiseQuestions]);
+    if (selectedServiceWiseQuestions?.length > 0) {
+      const cloned = selectedServiceWiseQuestions.map((q, index) => ({
+        ...q,
+        options:
+          index === 0
+            ? q.options.map((opt) => ({
+                ...opt,
+                is_checked: false,
+                idExtraData: '',
+              }))
+            : [],
+      }));
 
-  useEffect(() => {
-    if (clickButtonType === 'Next') {
-      setSelectedOptions([]);
-      setCheckedOptions([]);
+      setClonedQuestions(cloned);
     }
-  }, [step]);
-
-  //console.log('initialData', initialData);
-
-  const totalQuestions = selectedServiceWiseQuestions?.length;
-
-  const totalFormsSteps = 3;
-
-  const totalSteps = totalQuestions + totalFormsSteps;
-
-  //cloning full with is_checked and isExtraData. This data is needed when previous step is clicked
-  useEffect(() => {
-    if (!selectedServiceWiseQuestions?.length) return;
-
-    const cloned = selectedServiceWiseQuestions.map((q) => ({
-      ...q,
-      options: q.options.map((opt) => ({
-        ...opt,
-        is_checked: false,
-        idExtraData: '',
-      })),
-    }));
-
-    setFullClonedQuestions(cloned);
   }, [selectedServiceWiseQuestions]);
 
-  //partial cloning
+  console.log('clonedQuestions', clonedQuestions);
 
   useEffect(() => {
-    if (!fullClonedQuestions.length) return;
+    if (open) {
+      setStep(0);
+      setAnswers([]);
+      setDynamicQuestions([...selectedServiceWiseQuestions]); // Clone initially
+    }
+  }, [open, selectedServiceWiseQuestions]);
 
-    const cloned = fullClonedQuestions.map(({ options, ...rest }) => ({
-      ...rest,
-      options: [], // You can remove this line if you don't want `options` at all
-    }));
-
-    setPartialClonedQuestions(cloned);
-  }, [fullClonedQuestions]);
-
-  //console.log('partialClonedQuestions', partialClonedQuestions);
+  console.log('selectedServiceWiseQuestions', selectedServiceWiseQuestions);
 
   const options = selectedServiceWiseQuestions?.[step]?.options || [];
 
   const handleOptionChange = (optionId, checked) => {
-    // Compute the new checkedOptions immediately
-    const newCheckedOptions = checked
-      ? [...checkedOptions, optionId]
-      : checkedOptions.filter((id) => id !== optionId);
+    // console.log('optionId', optionId);
+    // console.log('checked', checked);
 
-    setCheckedOptions(newCheckedOptions);
-
-    // Find selected options metadata (if needed for something else)
     const findSelectedOptions = options?.find((item) => item?._id === optionId);
 
+    //console.log('findSelectedOpitons', findSelectedOptions?.selected_options);
+
     if (checked) {
-      setSelectedOptions((prev) => {
+      setCheckedOptions((prev) => {
         const newOptions = findSelectedOptions?.selected_options || [];
 
-        // Merge and filter out duplicates by _id
+        // Merge and filter out duplicates by _id (or any unique key)
         const combined = [...prev, ...newOptions];
+
         const unique = Array.from(
           new Map(combined.map((item) => [item._id, item])).values()
         );
@@ -130,111 +85,109 @@ export default function ClientLeadRegistrationModal({
         return unique;
       });
     }
+
+    // const prevSelected = answers[step]?.selectedOptions || [];
+    // let updatedSelected;
+
+    // if (currentQuestion.questionType === 'checkbox') {
+    //   updatedSelected = checked
+    //     ? [...prevSelected, optionId]
+    //     : prevSelected.filter((id) => id !== optionId);
+    // } else {
+    //   updatedSelected = [optionId]; // single select
+    // }
+
+    // const newAnswers = [...answers];
+    // newAnswers[step] = {
+    //   questionId: currentQuestion._id,
+    //   question: currentQuestion.question,
+    //   selectedOptions: updatedSelected,
+    // };
+    // setAnswers(newAnswers);
   };
 
-  // console.log('selectedOptions', selectedOptions);
-  // console.log('checkedOptions', checkedOptions);
-
-  useEffect(() => {
-    if (step === 0) {
-      partialClonedQuestions[step] = fullClonedQuestions?.[step];
-      // setViewData(fullClonedQuestions?.[step]);
-    } else {
-      if (clickButtonType === 'Next') {
-        partialClonedQuestions[step] = {
-          ...partialClonedQuestions[step],
-          options: selectedOptions,
-        };
-      }
-      // setViewData(partialClonedQuestions?.[step]);
-    }
-
-    setViewData(partialClonedQuestions?.[step]);
-  }, [step, partialClonedQuestions]);
-
-  console.log('partialClonedQuestions', partialClonedQuestions);
-
-  const [questionsPayload, setQuestionsPayload] = useState([]);
-
-  let formsPayload = {};
-
-  const handleNext = () => {
-    if (step < totalSteps) {
-      setStep((prev) => prev + 1);
-      setClickButtonType('Next');
-    } else if (step === totalSteps) {
-      formsPayload = {
-        additionalDetails,
-        zipCode,
-        email,
-        phone,
-      };
-    }
-
-    if (step < totalQuestions) {
-      setQuestionsPayload((prev) => {
-        const filtered = prev.filter((item) => item.step !== step);
-
-        const questionId = selectedServiceWiseQuestions?.[step]?._id;
-        const question = selectedServiceWiseQuestions?.[step]?.question;
-
-        return [
-          ...filtered,
-          {
-            step,
-            questionId,
-            question,
-            checkedOptions,
-          },
-        ];
-      });
-    }
-
-    const payload = {
-      countryId,
-      serviceId,
-      questions: questionsPayload,
-      formdata: formsPayload,
-    };
-
-    console.log('payload', payload);
-  };
-
-  useEffect(() => {
-    console.log('Updated questionsPayload:', questionsPayload);
-  }, [questionsPayload]);
-
-  console.log('viewdata', viewData);
-
-  const handleBack = () => {
-    setStep((prev) => Math.max(prev - 1, 0));
-    setClickButtonType('Prev');
-  };
+  console.log('checkedOptions', checkedOptions);
 
   const isNextDisabled = (() => {
+    const questionSteps = selectedServiceWiseQuestions.length;
+
     // Step: Questions (required) — check checkedOptions length instead of answers
-    if (step < totalQuestions) {
+    if (step < questionSteps) {
       return checkedOptions.length === 0;
     }
 
-    //Step: Additional Details (optional)
-    if (step === totalQuestions) {
+    // Step: Additional Details (optional)
+    if (step === questionSteps) {
       return false;
     }
 
     // Step: ZIP Code (required)
-    if (step === totalQuestions + 1) {
+    if (step === questionSteps + 1) {
       return !zipCode.trim();
     }
 
     // Step: Email (required and validated)
-    if (step === totalQuestions + 2) {
+    if (step === questionSteps + 2) {
       return !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
     // Step: Phone (optional)
     return false;
   })();
+
+  // const handleNext = () => {
+  //   const selectedOptionIds = answers[step]?.selectedOptions || [];
+
+  //   const selectedOptionObjects =
+  //     currentQuestion?.options?.filter((opt) =>
+  //       selectedOptionIds.includes(opt._id)
+  //     ) || [];
+
+  //   // Deduplicate selected_options
+  //   const mergedSelectedOptions = [];
+  //   const seen = new Set();
+
+  //   selectedOptionObjects.forEach((opt) => {
+  //     (opt.selected_options || []).forEach((selOpt) => {
+  //       if (!seen.has(selOpt._id)) {
+  //         seen.add(selOpt._id);
+  //         mergedSelectedOptions.push(selOpt);
+  //       }
+  //     });
+  //   });
+
+  //   console.log('mergedSelectedOptions', mergedSelectedOptions);
+
+  //   const newQuestions = [...dynamicQuestions];
+  //   const nextIndex = step + 1;
+
+  //   if (nextIndex < totalSteps) {
+  //     newQuestions[nextIndex] = {
+  //       ...newQuestions[nextIndex],
+  //       options: mergedSelectedOptions,
+  //     };
+  //     setDynamicQuestions(newQuestions);
+  //   }
+
+  //   setStep((prev) => Math.min(prev + 1, totalSteps - 1));
+  // };
+
+  const handleNext = () => {
+    const nextIndex = step + 1;
+
+    if (nextIndex < totalSteps) {
+      const newQuestions = [...dynamicQuestions];
+
+      newQuestions[nextIndex] = {
+        ...newQuestions[nextIndex],
+        options: checkedOptions,
+      };
+
+      setDynamicQuestions(newQuestions);
+    }
+
+    setStep((prev) => Math.min(prev + 1, totalSteps - 1));
+  };
 
   const { data: allZipCodes, isLoading: isZipCodeLoading } =
     useGetZipCodeListQuery();
@@ -245,52 +198,52 @@ export default function ClientLeadRegistrationModal({
     item?.zipcode?.toLowerCase().includes(zipCode.toLowerCase())
   );
 
-  console.log('selectedServiceWiseQuestions', selectedServiceWiseQuestions);
-
   return (
     <Modal open={open} onOpenChange={onClose} title="" width="max-w-[570px]">
       {isLoading ? (
-        <div className="text-center">Loading...</div>
-      ) : step < totalQuestions ? (
-        viewData?.question ? (
+        <div>Loading...</div>
+      ) : step < selectedServiceWiseQuestions.length ? (
+        // ✅ Service-related Questions step
+        clonedQuestions && (
           <div className="space-y-4 mt-4">
             <h4 className="text-[24px] font-semibold text-center mb-8">
-              {viewData.question}
+              {clonedQuestions?.question}
             </h4>
             <div className="border border-1 flex flex-col gap-2 rounded-lg">
-              {viewData.options?.map((option, index) => {
-                const isLast = index === viewData.options.length - 1;
+              {clonedQuestions?.options?.map((option, index) => {
+                const isChecked =
+                  checkedOptions?.selected_options?.includes(option?._id) ||
+                  false;
+                const isLast = index === clonedQuestions?.options?.length - 1;
 
                 return (
                   <label
-                    key={option._id || index}
+                    key={option?._id}
                     className={`flex gap-3 items-center px-4 py-3 ${
                       !isLast ? 'border-b' : ''
                     }`}
                   >
                     <input
                       type={
-                        viewData.questionType === 'checkbox'
+                        currentQuestion.questionType === 'checkbox'
                           ? 'checkbox'
                           : 'radio'
                       }
-                      name={`question-${viewData._id}`}
+                      name={`question-${currentQuestion._id}`}
+                      checked={isChecked}
                       onChange={(e) =>
                         handleOptionChange(option._id, e.target.checked)
                       }
                     />
-                    {option?.name}
+                    {option.name}
                   </label>
                 );
               })}
             </div>
           </div>
-        ) : (
-          <div className="text-center text-gray-500 mt-4">
-            No question found
-          </div>
         )
-      ) : step === totalQuestions ? (
+      ) : step === selectedServiceWiseQuestions.length ? (
+        // ✅ Additional Details step
         <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
             Want to share anything more?
@@ -307,7 +260,8 @@ export default function ClientLeadRegistrationModal({
             />
           </label>
         </div>
-      ) : step === totalQuestions + 1 ? (
+      ) : step === selectedServiceWiseQuestions.length + 1 ? (
+        // ✅ ZIP Code step
         <div className="space-y-4">
           <h4 className="text-[24px] font-semibold text-center">
             Where do you need the service?
@@ -365,28 +319,27 @@ export default function ClientLeadRegistrationModal({
             </div>
           </Combobox>
         </div>
-      ) : step === totalQuestions + 2 ? (
-        <div className="text-center text-gray-500 mt-4">
-          {' '}
-          <div className="space-y-6">
-            <h4 className="text-[24px] font-semibold text-center">
-              What email address would you like quotes sent to?
-            </h4>
-            <label className="flex flex-col gap-2">
-              <span className="text-sm font-medium">
-                Enter Your Valid Email Address
-              </span>
-              <input
-                type="email"
-                className="border rounded px-3 py-2"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="e.g., example@email.com"
-              />
-            </label>
-          </div>
+      ) : step === selectedServiceWiseQuestions.length + 2 ? (
+        // ✅ Email step
+        <div className="space-y-6">
+          <h4 className="text-[24px] font-semibold text-center">
+            What email address would you like quotes sent to?
+          </h4>
+          <label className="flex flex-col gap-2">
+            <span className="text-sm font-medium">
+              Enter Your Valid Email Address
+            </span>
+            <input
+              type="email"
+              className="border rounded px-3 py-2"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="e.g., example@email.com"
+            />
+          </label>
         </div>
-      ) : step === totalSteps ? (
+      ) : step === selectedServiceWiseQuestions.length + 3 ? (
+        // ✅ Phone step
         <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
             What phone number can we reach you on?
@@ -407,26 +360,20 @@ export default function ClientLeadRegistrationModal({
       ) : null}
 
       {!isLoading && (
-        <div
-          className={`flex ${
-            step === 0 ? 'justify-end' : 'justify-between'
-          } mt-8`}
-        >
-          {step !== 0 && (
-            <Button
-              variant="outline"
-              onClick={handleBack}
-              disabled={step === 0}
-            >
-              Back
-            </Button>
-          )}
+        <div className="flex justify-between mt-8">
+          <Button
+            variant="outline"
+            onClick={() => setStep((prev) => Math.max(prev - 1, 0))}
+            disabled={step === 0}
+          >
+            Back
+          </Button>
 
           <Button
             onClick={handleNext}
-            disabled={step === totalSteps ? false : isNextDisabled}
+            disabled={step === totalSteps - 1 ? false : isNextDisabled}
           >
-            {step === totalSteps ? 'Finish' : 'Next'}
+            {step === totalSteps - 1 ? 'Submit' : 'Next'}
           </Button>
         </div>
       )}
