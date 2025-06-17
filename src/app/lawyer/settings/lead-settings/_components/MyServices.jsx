@@ -19,9 +19,6 @@ const ServicesList = () => {
   const leadServices = leadServicesData?.data.service || [];
   const locations = leadServicesData?.data.locations || [];
 
-  // console.log('service data ==>', leadServices);
-  // console.log('locations ==>', locations);
-
   return (
     <div className=" max-[900px] mx-auto">
       <div className="space-y-6">
@@ -39,7 +36,7 @@ const ServicesList = () => {
             relevant leads
           </p>
 
-          <Accordion type="multiple" collapsible="true">
+          <Accordion type="single" collapsible="true">
             {isLoading ? (
               <div className="space-y-4">
                 {[...Array(3)].map((_, i) => (
@@ -82,7 +79,7 @@ const ServicesList = () => {
             <h2 className="text-xl font-semibold text-gray-800">
               Your Locations
             </h2>
-            <Button className="bg-teal-500 hover:bg-teal-600">
+            <Button className="bg-[#12C7C4CC] hover:bg-teal-300 px-4 py-3 text-sm rounded-lg text-white mt-5">
               + Add a location
             </Button>
           </div>
@@ -137,7 +134,7 @@ const ServicesList = () => {
           </div>
 
           <div className="mt-8 flex justify-center">
-            <Button className="bg-teal-500 hover:bg-teal-600 px-8">
+            <Button className="bg-[#12C7C4CC] hover:bg-teal-300  py-3 text-sm rounded-lg text-white mt-5 px-4">
               View Leads
             </Button>
           </div>
