@@ -1,9 +1,15 @@
 'use client';
 import React, { useState } from 'react';
 import AddAccreditationModal from './modal/AddCardDetailsModal';
+import AddCardModal from '../../_components/AddCardModal';
 
 const MyPayments = () => {
   const [open, setOpen] = useState(false);
+
+  const handleCardAdded = (paymentMethodId) => {
+    console.log('New card paymentMethodId:', paymentMethodId);
+    // Call backend API to save payment method id here
+  };
   return (
     <div className="max-w-[900px] mx-auto">
       <div className="mb-6 ">
@@ -21,7 +27,13 @@ const MyPayments = () => {
           </span>
           .
         </div>
-        <AddAccreditationModal open={open} setOpen={setOpen} />
+        {/* <AddAccreditationModal open={open} setOpen={setOpen} /> */}
+
+        <AddCardModal
+          open={open}
+          setOpen={setOpen}
+          onCardAdded={handleCardAdded}
+        />
       </div>
     </div>
   );
