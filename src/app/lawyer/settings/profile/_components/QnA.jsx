@@ -8,12 +8,10 @@ import {
   useUpdateUserDataMutation,
 } from '@/store/features/auth/authApiService';
 
-import { CircleAlert } from 'lucide-react';
+import { CircleAlert, Loader } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 export default function QuestionsAndAnswers() {
-  const onCancel = () => console.log('Cancel clicked');
-
   const {
     data: userInfo,
     isLoading,
@@ -25,9 +23,6 @@ export default function QuestionsAndAnswers() {
   });
 
   const [updateUserData] = useUpdateUserDataMutation();
-  const profile = userInfo?.data?.profile;
-
-  //console.log('profile', profile);
 
   const [defaultValues, setDefaultValues] = useState({
     profileQA: [
@@ -40,6 +35,8 @@ export default function QuestionsAndAnswers() {
       },
     ],
   });
+
+  const profile = userInfo?.data?.profile;
 
   useEffect(() => {
     if (profile?.profileQA) {
@@ -54,6 +51,19 @@ export default function QuestionsAndAnswers() {
     }
   }, [profile]);
 
+  if (isLoading)
+    return (
+      <div>
+        <span className="flex items-center justify-center gap-2">
+          <Loader className="w-4 h-4 animate-spin" />
+          loading...
+        </span>
+      </div>
+    );
+
+  //console.log('profile', profile);
+
+  const onCancel = () => console.log('Cancel clicked');
   const handleSubmit = async (values) => {
     const payload = {
       profileQA: values.profileQA.map((item, index) => ({
