@@ -47,12 +47,12 @@ export default function HeroHome() {
     }
   );
 
-  console.log('selectedService', selectedService);
+  // console.log('selectedService', selectedService);
 
-  console.log(
-    'singleServicewiseQuestionsData',
-    singleServicewiseQuestionsData?.data
-  );
+  // console.log(
+  //   'singleServicewiseQuestionsData',
+  //   singleServicewiseQuestionsData?.data
+  // );
 
   return (
     <section

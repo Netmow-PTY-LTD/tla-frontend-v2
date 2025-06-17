@@ -29,9 +29,12 @@ export default function EditRangeModal({ open, onClose, rangeId }) {
     name: z.string().min(1, {
       message: 'Range name must be at least 1 character.',
     }),
-    value: z.number().min(1, {
-      message: 'Value must be a positive number and at least 1 character.',
-    }),
+    value: z.preprocess(
+      (val) => Number(val),
+      z.number().min(1, {
+        message: 'Value must be a positive number.',
+      })
+    ),
   });
 
   const {
