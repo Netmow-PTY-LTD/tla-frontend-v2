@@ -10,6 +10,7 @@ import {
 } from '@/store/features/auth/authApiService';
 import MediaFormAction from './media/MediaFormAction';
 import { lawyerSettingsMediaFormSchema } from '@/schema/dashboard/lawyerSettings';
+import { Loader } from 'lucide-react';
 
 export default function Photos() {
   const {
@@ -24,7 +25,15 @@ export default function Photos() {
   const [updatePhotosData] = useUpdateUserDataMutation();
 
   const profile = userInfo?.data?.profile;
-  if (isLoading) return <div className="text-gray-500">Loading...</div>;
+  if (isLoading)
+    return (
+      <div>
+        <span className="flex items-center justify-center gap-2">
+          <Loader className="w-4 h-4 animate-spin" />
+          loading...
+        </span>
+      </div>
+    );
 
   if (isError) {
     return (

@@ -16,6 +16,7 @@ import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { lawyerSettingAboutSchema } from '@/schema/dashboard/lawyerSettings';
 import TextInput from '@/components/form/TextInput';
 import TextareaInput from '@/components/form/TextArea';
+import { Loader } from 'lucide-react';
 
 export default function About() {
   const {
@@ -30,7 +31,15 @@ export default function About() {
 
   const [updateUserData] = useUpdateUserDataMutation();
   const profile = userInfo?.data?.profile;
-  if (isLoading) return <div className="text-gray-500">Loading...</div>;
+  if (isLoading)
+    return (
+      <div>
+        <span className="flex items-center justify-center gap-2">
+          <Loader className="w-4 h-4 animate-spin" />
+          loading...
+        </span>
+      </div>
+    );
 
   if (isError) {
     return (
