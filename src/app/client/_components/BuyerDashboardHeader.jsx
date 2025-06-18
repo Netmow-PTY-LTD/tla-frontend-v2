@@ -20,7 +20,7 @@ export default function BuyerDashboardHeader() {
           />
         </Link>
       </div>
-      <BuyerProfileDropDown data={userInfo?.data} />
+      <BuyerProfileDropDown data={userInfo?.data ?? []} />
     </header>
   );
 }

@@ -30,7 +30,7 @@ import Link from 'next/link';
 export default function RegisterStepThree() {
   const dispatch = useDispatch();
   const registration = useSelector((state) => state.lawyerRegistration);
-  const { username, email, password, profile } = registration;
+  const { email, password, profile } = registration;
   const { companyTeam, companyName, website, companySize } =
     registration.companyInfo;
 
@@ -40,7 +40,6 @@ export default function RegisterStepThree() {
   const form = useForm({
     resolver: zodResolver(lawyerRegistrationStepThreeFormValidation),
     defaultValues: {
-      username,
       email,
       phone: profile?.phone,
       soloPractitioner: registration.lawyerServiceMap.isSoloPractitioner,
@@ -55,7 +54,6 @@ export default function RegisterStepThree() {
   useEffect(() => {
     // Sync redux data to local form
     form.reset({
-      username,
       email,
       phone: profile?.phone,
       password,
@@ -66,7 +64,6 @@ export default function RegisterStepThree() {
       company_size: companySize,
     });
   }, [
-    username,
     email,
     profile?.phone,
     password,
@@ -164,6 +161,37 @@ export default function RegisterStepThree() {
                 <div className="w-full md:w-1/2 md:pl-1">
                   <FormField
                     control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Password*</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter your password"
+                            {...field}
+                            className="tla-form-control"
+                            onChange={(e) => {
+                              field.onChange(e);
+                              dispatch(
+                                updateField({
+                                  field: 'password',
+                                  value: e.target.value,
+                                })
+                              );
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-wrap">
+                <div className="w-full">
+                  <FormField
+                    control={form.control}
                     name="phone"
                     render={({ field }) => (
                       <FormItem>
@@ -179,66 +207,6 @@ export default function RegisterStepThree() {
                                 updateNestedField({
                                   section: 'profile',
                                   field: 'phone',
-                                  value: e.target.value,
-                                })
-                              );
-                            }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-wrap">
-                <div className="w-full md:w-1/2 md:pr-1">
-                  {/* Username */}
-                  <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Username*</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="John Doe"
-                            {...field}
-                            className="tla-form-control"
-                            onChange={(e) => {
-                              field.onChange(e);
-                              dispatch(
-                                updateField({
-                                  field: 'username',
-                                  value: e.target.value,
-                                })
-                              );
-                            }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="w-full md:w-1/2 md:pl-1">
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Password*</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter your password"
-                            {...field}
-                            className="tla-form-control"
-                            onChange={(e) => {
-                              field.onChange(e);
-                              dispatch(
-                                updateField({
-                                  field: 'password',
                                   value: e.target.value,
                                 })
                               );

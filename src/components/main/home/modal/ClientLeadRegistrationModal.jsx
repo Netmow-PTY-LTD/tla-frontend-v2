@@ -11,6 +11,9 @@ import {
 } from '@headlessui/react';
 import { Check, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuthClientRegisterMutation } from '@/store/features/auth/authApiService';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import { useRouter } from 'next/navigation';
 
 export default function ClientLeadRegistrationModal({
   open,
@@ -54,6 +57,8 @@ export default function ClientLeadRegistrationModal({
   //   'selectedServiceWiseQuestions',
   //   selectedServiceWiseQuestions?.length
   // );
+
+  const router = useRouter();
 
   //setting initial data
 
@@ -214,9 +219,11 @@ export default function ClientLeadRegistrationModal({
 
   const [questionsPayload, setQuestionsPayload] = useState([]);
 
+  const [clientRegister] = useAuthClientRegisterMutation();
+
   let formsPayload = {};
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step < totalSteps) {
       setStep((prev) => prev + 1);
       setClickButtonType('Next');
@@ -255,10 +262,29 @@ export default function ClientLeadRegistrationModal({
       countryId,
       serviceId,
       questions: questionsPayload,
-      formdata: formsPayload,
+      leadDetails: formsPayload,
     };
 
     console.log('payload', payload);
+
+    if (step === totalSteps) {
+      try {
+        const res = await clientRegister(payload).unwrap();
+        if (res?.success === true) {
+          showSuccessToast(res?.message || 'Lead registered successfully');
+          onClose();
+          setTimeout(() => {
+            router.push('/client/dashboard');
+          }, 2000);
+          setQuestionsPayload([]);
+          formsPayload = {};
+        }
+        console.log('Register response:', res);
+      } catch (err) {
+        console.log('Register error:', err);
+        showErrorToast(err?.data?.message || 'Failed to register lead.');
+      }
+    }
   };
 
   const handleBack = () => {

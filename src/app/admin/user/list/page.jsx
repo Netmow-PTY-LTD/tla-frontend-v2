@@ -40,7 +40,7 @@ const columns = [
     enableHiding: false,
   },
   {
-    accessorKey: 'profile.name',
+    accessorKey: 'profile?.name',
     header: 'Name',
     cell: ({ row }) => {
       const profile = row.original.profile;
