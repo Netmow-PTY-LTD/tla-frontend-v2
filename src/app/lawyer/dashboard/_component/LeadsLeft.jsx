@@ -48,8 +48,11 @@ export default function LeadDetailsPage({ onBack, lead }) {
           <div className="flex flex-col items-start gap-4 ">
             <figure className="w-20 h-20 rounded-full overflow-hidden">
               <Image
-                src="/assets/img/auth-step1.png"
-                alt="John Doe"
+                src={`${
+                  lead?.userProfileId?.profilePicture ??
+                  '/assets/img/auth-step1.png'
+                }`}
+                alt={lead?.userProfileId?.name ?? 'John Doe'}
                 width={80}
                 height={80}
                 priority
@@ -57,22 +60,38 @@ export default function LeadDetailsPage({ onBack, lead }) {
               />
             </figure>
             <div>
-              <h2 className="font-medium heading-lg">{lead.name}</h2>
-              <p className="text-gray-500 mt-2">{lead.address}</p>
+              <h2 className="font-medium heading-lg">
+                {lead?.userProfileId?.name ?? ''}
+              </h2>
+              <p className="text-gray-500 mt-2">
+                {lead?.userProfileId?.address ?? ''}
+              </p>
             </div>
           </div>
           <hr className="border-[#F3F3F3] my-5  " />
           <div className="mb-4">
             <div className="flex items-center gap-2 admin-text font-medium">
-              <PhoneOutgoing /> <span>Phone: (480) *******</span>{' '}
+              <PhoneOutgoing className="w-4 h-4" />{' '}
+              <span>
+                Phone:{' '}
+                {(() => {
+                  const phone = lead?.userProfileId?.phone;
+                  return phone
+                    ? `${phone.slice(0, 3)}${'*'.repeat(
+                        Math.max(0, phone.length - 3)
+                      )}`
+                    : '480*******';
+                })()}
+              </span>{' '}
             </div>
             <div className=" flex items-center gap-2 mt-2 admin-text font-medium">
-              <AtSign /> <span>Email: t*******@e********.com</span>{' '}
+              <AtSign className="w-4 h-4" />{' '}
+              <span>Email: t*******@e********.com</span>{' '}
             </div>
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <button className="btn-default bg-[#00C3C0]">
-              Contact {lead.name}
+              Contact {lead?.userProfileId?.name ?? ''}
             </button>
             <div className="text-[#34495E] ml-2 flex items-center gap-2">
               <span>49 Credits required</span>

@@ -1,15 +1,14 @@
 'use client';
 
-import { selectCurrentUser } from '@/store/features/auth/authSlice';
+import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 
 export default function SidebarTop() {
   const [greeting, setGreeting] = useState('');
   const [dateTime, setDateTime] = useState('');
 
-  const userInfo = useSelector(selectCurrentUser);
+  const { data: userInfo } = useAuthUserInfoQuery();
 
   useEffect(() => {
     const updateDateTime = () => {
@@ -61,7 +60,7 @@ export default function SidebarTop() {
       <span className="capitalize">{dateTime}</span>
       <h2>
         <b>
-          {greeting}, {userInfo?.username}!{' '}
+          {greeting}, {userInfo?.data?.profile?.name ?? 'Lawyer'}!{' '}
         </b>
         <br />
         <b>Welcome To TLA Dashboard</b>

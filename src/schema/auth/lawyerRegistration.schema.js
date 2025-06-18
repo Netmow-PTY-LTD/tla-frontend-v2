@@ -28,7 +28,6 @@ const auPhoneRegex = /^(?:\+?61|0)[2-478]\d{8}$/;
 
 export const lawyerRegistrationStepThreeFormValidation = z
   .object({
-    username: z.string().min(1, 'Username is required'),
     email: z.string().email('Invalid email address'),
     phone: z
       .string()
