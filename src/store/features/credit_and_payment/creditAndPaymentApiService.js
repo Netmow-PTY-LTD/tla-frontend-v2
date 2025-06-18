@@ -25,14 +25,14 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['credit-payment'],
+      invalidatesTags: ['payment-method'],
     }),
     getPaymentMethod: builder.query({
       query: () => ({
         url: '/settings/credit-payment/payment-method',
         method: 'GET',
       }),
-      invalidatesTags: ['credit-payment'],
+      providesTags: ['payment-method'],
     }),
     getBillingsDetails: builder.query({
       query: () => ({

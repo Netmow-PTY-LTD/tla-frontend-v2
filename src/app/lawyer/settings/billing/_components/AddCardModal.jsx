@@ -50,7 +50,7 @@ const AddCardModal = ({ open, setOpen, onCardAdded }) => {
           <CardElement />
         </div>
 
-        <div className="flex justify-end space-x-3 pt-4">
+        <div className="flex justify-between space-x-3 pt-4">
           <button
             onClick={handleClose}
             className="text-sm text-gray-600 hover:text-gray-800"
