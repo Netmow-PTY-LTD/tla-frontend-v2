@@ -37,6 +37,8 @@ export default function ClientLeadRegistrationModal({
   //selected options
   const [checkedOptions, setCheckedOptions] = useState([]);
 
+  const [checkedOptionsDetails, setCheckedOptionsDetails] = useState([]);
+
   //selected options
   const [selectedOptions, setSelectedOptions] = useState([]);
 
@@ -44,6 +46,7 @@ export default function ClientLeadRegistrationModal({
 
   const [additionalDetails, setAdditionalDetails] = useState('');
   const [zipCode, setZipCode] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
 
@@ -62,6 +65,7 @@ export default function ClientLeadRegistrationModal({
     if (clickButtonType === 'Next') {
       setSelectedOptions([]);
       setCheckedOptions([]);
+      setCheckedOptionsDetails([]);
     }
   }, [step]);
 
@@ -69,7 +73,7 @@ export default function ClientLeadRegistrationModal({
 
   const totalQuestions = selectedServiceWiseQuestions?.length;
 
-  const totalFormsSteps = 3;
+  const totalFormsSteps = 4;
 
   const totalSteps = totalQuestions + totalFormsSteps;
 
@@ -107,12 +111,68 @@ export default function ClientLeadRegistrationModal({
   const options = selectedServiceWiseQuestions?.[step]?.options || [];
 
   const handleOptionChange = (optionId, checked) => {
-    // Compute the new checkedOptions immediately
+    // find optionid from fullcloned
+
+    // const foundOption = fullClonedQuestions
+    //   ?.flatMap((question) => question.options || [])
+    //   .find((option) => option?._id === optionId);
+
+    // console.log('foundOption', foundOption);
+
+    // const newCheckedOptions = checked
+    //   ? [...checkedOptions, optionId]
+    //   : checkedOptions.filter((id) => id !== optionId);
+
+    // setCheckedOptions(newCheckedOptions);
+
+    // const tempOption = {};
+
+    // if (foundOption?.name === 'Other') {
+    //   tempOption.id = optionId;
+    //   tempOption.is_checked = true;
+    //   tempOption.idExtraData = document.getElementById(
+    //     `${optionId}-other`
+    //   )?.value;
+    // } else {
+    //   tempOption.id = optionId;
+    //   tempOption.is_checked = true;
+    //   tempOption.idExtraData = '';
+    // }
+
+    // console.log('tempOption', tempOption);
+
+    // setCheckedOptionsDetails([...checkedOptionsDetails, tempOption]);
+
+    // console.log('checkedOptionsDetails', checkedOptionsDetails);
+
+    const foundOption = fullClonedQuestions
+      ?.flatMap((question) => question.options || [])
+      .find((option) => option?._id === optionId);
+
     const newCheckedOptions = checked
       ? [...checkedOptions, optionId]
       : checkedOptions.filter((id) => id !== optionId);
 
     setCheckedOptions(newCheckedOptions);
+
+    const tempOption = {
+      id: optionId,
+      name: foundOption?.name,
+      is_checked: checked,
+      idExtraData:
+        foundOption?.name === 'Other'
+          ? document.getElementById(`${optionId}-other`)?.value ?? ''
+          : '',
+    };
+
+    setCheckedOptionsDetails((prev) => {
+      if (checked) {
+        const filtered = prev.filter((item) => item.id !== optionId);
+        return [...filtered, tempOption];
+      } else {
+        return prev.filter((item) => item.id !== optionId);
+      }
+    });
 
     // Find selected options metadata (if needed for something else)
     const findSelectedOptions = options?.find((item) => item?._id === optionId);
@@ -152,8 +212,6 @@ export default function ClientLeadRegistrationModal({
     setViewData(partialClonedQuestions?.[step]);
   }, [step, partialClonedQuestions]);
 
-  console.log('partialClonedQuestions', partialClonedQuestions);
-
   const [questionsPayload, setQuestionsPayload] = useState([]);
 
   let formsPayload = {};
@@ -166,6 +224,7 @@ export default function ClientLeadRegistrationModal({
       formsPayload = {
         additionalDetails,
         zipCode,
+        name,
         email,
         phone,
       };
@@ -177,6 +236,7 @@ export default function ClientLeadRegistrationModal({
 
         const questionId = selectedServiceWiseQuestions?.[step]?._id;
         const question = selectedServiceWiseQuestions?.[step]?.question;
+        const order = selectedServiceWiseQuestions?.[step]?.order;
 
         return [
           ...filtered,
@@ -184,7 +244,8 @@ export default function ClientLeadRegistrationModal({
             step,
             questionId,
             question,
-            checkedOptions,
+            order,
+            checkedOptionsDetails,
           },
         ];
       });
@@ -199,12 +260,6 @@ export default function ClientLeadRegistrationModal({
 
     console.log('payload', payload);
   };
-
-  useEffect(() => {
-    console.log('Updated questionsPayload:', questionsPayload);
-  }, [questionsPayload]);
-
-  console.log('viewdata', viewData);
 
   const handleBack = () => {
     setStep((prev) => Math.max(prev - 1, 0));
@@ -227,8 +282,12 @@ export default function ClientLeadRegistrationModal({
       return !zipCode.trim();
     }
 
-    // Step: Email (required and validated)
     if (step === totalQuestions + 2) {
+      return !name.trim();
+    }
+
+    // Step: Email (required and validated)
+    if (step === totalQuestions + 3) {
       return !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
@@ -239,13 +298,9 @@ export default function ClientLeadRegistrationModal({
   const { data: allZipCodes, isLoading: isZipCodeLoading } =
     useGetZipCodeListQuery();
 
-  // console.log('allZipCodes', allZipCodes?.data);
-
   const filteredZipCodes = allZipCodes?.data?.filter((item) =>
     item?.zipcode?.toLowerCase().includes(zipCode.toLowerCase())
   );
-
-  console.log('selectedServiceWiseQuestions', selectedServiceWiseQuestions);
 
   return (
     <Modal open={open} onOpenChange={onClose} title="" width="max-w-[570px]">
@@ -260,26 +315,44 @@ export default function ClientLeadRegistrationModal({
             <div className="border border-1 flex flex-col gap-2 rounded-lg">
               {viewData.options?.map((option, index) => {
                 const isLast = index === viewData.options.length - 1;
+                const isOther = option?.name?.toLowerCase() === 'other';
 
                 return (
                   <label
                     key={option._id || index}
-                    className={`flex gap-3 items-center px-4 py-3 ${
+                    className={`flex gap-3 px-4 py-3 ${
                       !isLast ? 'border-b' : ''
                     }`}
                   >
-                    <input
-                      type={
-                        viewData.questionType === 'checkbox'
-                          ? 'checkbox'
-                          : 'radio'
-                      }
-                      name={`question-${viewData._id}`}
-                      onChange={(e) =>
-                        handleOptionChange(option._id, e.target.checked)
-                      }
-                    />
-                    {option?.name}
+                    <span className="flex items-center gap-3">
+                      <input
+                        type={
+                          viewData.questionType === 'checkbox'
+                            ? 'checkbox'
+                            : 'radio'
+                        }
+                        name={`question-${viewData._id}`}
+                        onChange={(e) =>
+                          handleOptionChange(option._id, e.target.checked)
+                        }
+                      />
+
+                      {/* Render name only if not 'Other' */}
+                      {option?.name !== 'Other' && <span>{option?.name}</span>}
+                    </span>
+
+                    {/* Render input only if option is 'Other' */}
+                    {isOther && (
+                      <input
+                        type="text"
+                        id={`${option._id}-other`}
+                        placeholder="Other"
+                        className="border rounded px-2 py-1 w-full"
+                        // onChange={(e) =>
+                        //   handleOptionChange(option._id, e.target.value)
+                        // }
+                      />
+                    )}
                   </label>
                 );
               })}
@@ -366,25 +439,38 @@ export default function ClientLeadRegistrationModal({
           </Combobox>
         </div>
       ) : step === totalQuestions + 2 ? (
-        <div className="text-center text-gray-500 mt-4">
-          {' '}
-          <div className="space-y-6">
-            <h4 className="text-[24px] font-semibold text-center">
-              What email address would you like quotes sent to?
-            </h4>
-            <label className="flex flex-col gap-2">
-              <span className="text-sm font-medium">
-                Enter Your Valid Email Address
-              </span>
-              <input
-                type="email"
-                className="border rounded px-3 py-2"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="e.g., example@email.com"
-              />
-            </label>
-          </div>
+        <div className="space-y-6">
+          <h4 className="text-[24px] font-semibold text-center">
+            Write a few words about yourself?
+          </h4>
+          <label className="flex flex-col gap-2">
+            <span className="text-sm font-medium">Enter Your Name</span>
+            <input
+              type="text"
+              className="border rounded px-3 py-2"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g., example@email.com"
+            />
+          </label>
+        </div>
+      ) : step === totalQuestions + 3 ? (
+        <div className="space-y-6">
+          <h4 className="text-[24px] font-semibold text-center">
+            What email address would you like quotes sent to?
+          </h4>
+          <label className="flex flex-col gap-2">
+            <span className="text-sm font-medium">
+              Enter Your Valid Email Address
+            </span>
+            <input
+              type="email"
+              className="border rounded px-3 py-2"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="e.g., example@email.com"
+            />
+          </label>
         </div>
       ) : step === totalSteps ? (
         <div className="space-y-6">
