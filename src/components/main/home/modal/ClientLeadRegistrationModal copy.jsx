@@ -37,8 +37,6 @@ export default function ClientLeadRegistrationModal({
   //selected options
   const [checkedOptions, setCheckedOptions] = useState([]);
 
-  const [checkedOptionsDetails, setCheckedOptionsDetails] = useState([]);
-
   //selected options
   const [selectedOptions, setSelectedOptions] = useState([]);
 
@@ -65,7 +63,6 @@ export default function ClientLeadRegistrationModal({
     if (clickButtonType === 'Next') {
       setSelectedOptions([]);
       setCheckedOptions([]);
-      setCheckedOptionsDetails([]);
     }
   }, [step]);
 
@@ -111,68 +108,12 @@ export default function ClientLeadRegistrationModal({
   const options = selectedServiceWiseQuestions?.[step]?.options || [];
 
   const handleOptionChange = (optionId, checked) => {
-    // find optionid from fullcloned
-
-    // const foundOption = fullClonedQuestions
-    //   ?.flatMap((question) => question.options || [])
-    //   .find((option) => option?._id === optionId);
-
-    // console.log('foundOption', foundOption);
-
-    // const newCheckedOptions = checked
-    //   ? [...checkedOptions, optionId]
-    //   : checkedOptions.filter((id) => id !== optionId);
-
-    // setCheckedOptions(newCheckedOptions);
-
-    // const tempOption = {};
-
-    // if (foundOption?.name === 'Other') {
-    //   tempOption.id = optionId;
-    //   tempOption.is_checked = true;
-    //   tempOption.idExtraData = document.getElementById(
-    //     `${optionId}-other`
-    //   )?.value;
-    // } else {
-    //   tempOption.id = optionId;
-    //   tempOption.is_checked = true;
-    //   tempOption.idExtraData = '';
-    // }
-
-    // console.log('tempOption', tempOption);
-
-    // setCheckedOptionsDetails([...checkedOptionsDetails, tempOption]);
-
-    // console.log('checkedOptionsDetails', checkedOptionsDetails);
-
-    const foundOption = fullClonedQuestions
-      ?.flatMap((question) => question.options || [])
-      .find((option) => option?._id === optionId);
-
+    // Compute the new checkedOptions immediately
     const newCheckedOptions = checked
       ? [...checkedOptions, optionId]
       : checkedOptions.filter((id) => id !== optionId);
 
     setCheckedOptions(newCheckedOptions);
-
-    const tempOption = {
-      id: optionId,
-      name: foundOption?.name,
-      is_checked: checked,
-      idExtraData:
-        foundOption?.name === 'Other'
-          ? document.getElementById(`${optionId}-other`)?.value ?? ''
-          : '',
-    };
-
-    setCheckedOptionsDetails((prev) => {
-      if (checked) {
-        const filtered = prev.filter((item) => item.id !== optionId);
-        return [...filtered, tempOption];
-      } else {
-        return prev.filter((item) => item.id !== optionId);
-      }
-    });
 
     // Find selected options metadata (if needed for something else)
     const findSelectedOptions = options?.find((item) => item?._id === optionId);
@@ -245,7 +186,7 @@ export default function ClientLeadRegistrationModal({
             questionId,
             question,
             order,
-            checkedOptionsDetails,
+            checkedOptions,
           },
         ];
       });
@@ -282,12 +223,8 @@ export default function ClientLeadRegistrationModal({
       return !zipCode.trim();
     }
 
-    if (step === totalQuestions + 2) {
-      return !name.trim();
-    }
-
     // Step: Email (required and validated)
-    if (step === totalQuestions + 3) {
+    if (step === totalQuestions + 2) {
       return !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
@@ -315,44 +252,26 @@ export default function ClientLeadRegistrationModal({
             <div className="border border-1 flex flex-col gap-2 rounded-lg">
               {viewData.options?.map((option, index) => {
                 const isLast = index === viewData.options.length - 1;
-                const isOther = option?.name?.toLowerCase() === 'other';
 
                 return (
                   <label
                     key={option._id || index}
-                    className={`flex gap-3 px-4 py-3 ${
+                    className={`flex gap-3 items-center px-4 py-3 ${
                       !isLast ? 'border-b' : ''
                     }`}
                   >
-                    <span className="flex items-center gap-3">
-                      <input
-                        type={
-                          viewData.questionType === 'checkbox'
-                            ? 'checkbox'
-                            : 'radio'
-                        }
-                        name={`question-${viewData._id}`}
-                        onChange={(e) =>
-                          handleOptionChange(option._id, e.target.checked)
-                        }
-                      />
-
-                      {/* Render name only if not 'Other' */}
-                      {option?.name !== 'Other' && <span>{option?.name}</span>}
-                    </span>
-
-                    {/* Render input only if option is 'Other' */}
-                    {isOther && (
-                      <input
-                        type="text"
-                        id={`${option._id}-other`}
-                        placeholder="Other"
-                        className="border rounded px-2 py-1 w-full"
-                        // onChange={(e) =>
-                        //   handleOptionChange(option._id, e.target.value)
-                        // }
-                      />
-                    )}
+                    <input
+                      type={
+                        viewData.questionType === 'checkbox'
+                          ? 'checkbox'
+                          : 'radio'
+                      }
+                      name={`question-${viewData._id}`}
+                      onChange={(e) =>
+                        handleOptionChange(option._id, e.target.checked)
+                      }
+                    />
+                    {option?.name}
                   </label>
                 );
               })}
