@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import AddCardModal from '../../_components/AddCardModal';
 import { useAddPaymentMethodMutation } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import PaymentMethod from './PaymentMethod';
 
 const MyPayments = () => {
   const [open, setOpen] = useState(false);
@@ -46,6 +47,9 @@ const MyPayments = () => {
           onCardAdded={handleCardAdded}
         />
       </div>
+
+      {/* Payment Method */}
+      <PaymentMethod />
     </div>
   );
 };
