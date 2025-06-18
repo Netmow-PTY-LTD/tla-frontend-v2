@@ -5,6 +5,7 @@ import LeadsRight from '../_component/LeadsRight';
 import { usePathname } from 'next/navigation';
 import LeadsHead from '../_component/LeadsHead';
 import data from '@/data/user';
+import { useGetAllLeadsQuery } from '@/store/features/lawyer/LeadsApiService';
 
 const LeadBoardPage = () => {
   const [showLeadDetails, setShowLeadDetails] = useState(true);
@@ -28,11 +29,13 @@ const LeadBoardPage = () => {
     };
   }, [pathname]);
 
+  const { data: allLeads } = useGetAllLeadsQuery();
+
   useEffect(() => {
-    if (data && data.length > 0) {
-      setSelectedLead(data[0]); // Set first lead
+    if (allLeads?.data && allLeads?.data?.length > 0) {
+      setSelectedLead(allLeads?.data[0]); // Set first lead
     }
-  }, [data]);
+  }, [allLeads?.data]);
 
   return (
     <div className="continer">
@@ -65,7 +68,7 @@ const LeadBoardPage = () => {
                     setSelectedLead(lead);
                     setShowLeadDetails(true);
                   }}
-                  data={data}
+                  data={allLeads?.data ?? []}
                 />
               </div>
             </div>
