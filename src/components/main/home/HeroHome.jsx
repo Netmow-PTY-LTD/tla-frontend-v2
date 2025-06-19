@@ -105,12 +105,12 @@ export default function HeroHome() {
               </div>
             </div>
           </form>
-          <div className="flex flex-wrap justify-center gap-4 w-full mt-5 suggestion-area">
+          <div className="flex flex-wrap justify-center gap-2 w-full suggestion-area">
             {countryWiseServices?.data?.length > 0 &&
               countryWiseServices?.data.map((service) => (
                 <Link
                   href="#"
-                  className="flex flex-col items-center gap-[10px] text-center w-[calc(50%-10px)] sm:w-auto"
+                  className="flex flex-col items-center gap-[10px] text-center w-[calc(50%-10px)] sm:w-auto border py-1 px-3 rounded-full"
                   key={service?._id}
                   onClick={(e) => {
                     e.preventDefault(); // Prevent the default anchor behavior
@@ -118,13 +118,13 @@ export default function HeroHome() {
                     handleModalOpen();
                   }}
                 >
-                  <Image
+                  {/* <Image
                     src={`/assets/img/img-4.png`}
                     width={70}
                     height={70}
                     className="object-cover"
                     alt={'service img'}
-                  />
+                  /> */}
                   <h6>{service?.name}</h6>
                 </Link>
               ))}
