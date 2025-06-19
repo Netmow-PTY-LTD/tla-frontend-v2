@@ -53,6 +53,7 @@ export default function AddQuestionPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [data, setData] = useState([]);
+  const [isDragEnabled, setIsDragEnabled] = useState(false);
 
   const router = useRouter();
 
@@ -107,7 +108,7 @@ export default function AddQuestionPage() {
       ),
     },
     {
-      id: 'actions',
+      // id: 'actions',
       header: 'Actions',
       enableHiding: false,
       cell: ({ row }) => {
@@ -403,11 +404,32 @@ export default function AddQuestionPage() {
           </Card>
         </div>
         <div className="w-2/3 pl-5">
+          {singleServicewiseQuestionsData?.data?.length > 0 && (
+            <div className="mb-2">
+              <label
+                htmlFor="checkbox"
+                className="text-sm flex items-center gap-2 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  id="checkbox"
+                  checked={isDragEnabled}
+                  onChange={(e) => {
+                    setIsDragEnabled(e.target.checked);
+                  }}
+                  className="accent-black"
+                />
+                <span>Enable Drag and Drop</span>
+              </label>
+            </div>
+          )}
+
           <SimpleQuestionTable
             data={singleServicewiseQuestionsData?.data || []}
             setData={setData}
             columns={columns}
             searchColumn="question"
+            isDragEnabled={isDragEnabled}
           />
         </div>
       </div>
