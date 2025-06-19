@@ -10,7 +10,7 @@ import {
 
 export function Modal({
   buttonName,
-  title = 'modal title',
+  title,
   description,
   children,
   open,
@@ -33,7 +33,7 @@ export function Modal({
       </DialogTrigger>
       <DialogContent className={`${width}`}>
         <DialogHeader>
-          <DialogTitle>{title} </DialogTitle>
+          {title && <DialogTitle>{title} </DialogTitle>}
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
         <div>{children}</div>
