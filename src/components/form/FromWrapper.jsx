@@ -9,7 +9,9 @@ export default function FormWrapper({
   defaultValues,
   onSubmit,
   children,
+  ...props
 }) {
+  const { formRef } = props;
   const formConfig = {};
 
   if (!!defaultValues) {
@@ -24,6 +26,12 @@ export default function FormWrapper({
     ...formConfig,
     defaultValues,
   });
+
+  useEffect(() => {
+    if (formRef) {
+      formRef.current = methods; // 👈 expose all methods including reset
+    }
+  }, [formRef, methods]);
 
   useEffect(() => {
     if (defaultValues) {

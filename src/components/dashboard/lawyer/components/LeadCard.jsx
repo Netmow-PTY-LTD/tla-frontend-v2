@@ -95,11 +95,13 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
               isExpanded ? 'text-[13px]' : 'text-[12px]'
             }`}
           >
-            {`If you're facing a divorce, it's crucial to seek professional legal
+            {user?.additionalDetails === ''
+              ? `If you're facing a divorce, it's crucial to seek professional legal
             advice. Our consultations cover everything from asset division to
             child custody arrangements, ensuring you understand your rights and
             options. Let us help you navigate this challenging time with expert
-            guidance.`}
+            guidance.`
+              : user?.additionalDetails}
           </p>
         </div>
       </div>

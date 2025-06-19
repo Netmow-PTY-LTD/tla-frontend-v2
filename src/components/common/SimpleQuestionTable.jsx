@@ -40,7 +40,13 @@ import {
 import { showSuccessToast } from './toasts';
 import { useUpdateQuestionOrderMutation } from '@/store/features/admin/questionApiService';
 
-export function SimpleQuestionTable({ data, setData, columns, searchColumn }) {
+export function SimpleQuestionTable({
+  data,
+  setData,
+  columns,
+  searchColumn,
+  isDragEnabled,
+}) {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
@@ -116,6 +122,8 @@ export function SimpleQuestionTable({ data, setData, columns, searchColumn }) {
     }
   };
 
+  console.log('isDragEnabled within table', isDragEnabled);
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
@@ -174,12 +182,17 @@ export function SimpleQuestionTable({ data, setData, columns, searchColumn }) {
               visibleRows.map((row, index) => (
                 <TableRow
                   key={row.id}
-                  draggable
-                  onDragStart={() => handleDragStart(index)}
-                  onDragOver={handleDragOver}
-                  onDrop={() => handleDrop(index)}
-                  data-state={row.getIsSelected() && 'selected'}
-                  className="cursor-move"
+                  draggable={isDragEnabled}
+                  onDragStart={
+                    isDragEnabled ? () => handleDragStart(index) : undefined
+                  }
+                  onDragOver={isDragEnabled ? handleDragOver : undefined}
+                  onDrop={isDragEnabled ? () => handleDrop(index) : undefined}
+                  className={
+                    isDragEnabled
+                      ? 'cursor-move'
+                      : 'cursor-default pointer-events-none'
+                  }
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
