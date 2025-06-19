@@ -11,8 +11,11 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
       <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 p-3">
         <figure className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
           <Image
-            src="/assets/img/auth-step1.png"
-            alt="John Doe"
+            src={`${
+              user?.userProfileId?.profilePicture ??
+              '/assets/img/auth-step1.png'
+            }`}
+            alt={user?.userProfileId?.name ?? 'John Doe'}
             width={40}
             height={40}
             priority
@@ -27,14 +30,14 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
                 isExpanded ? 'heading-md' : 'text-[13px]'
               }`}
             >
-              {user.name}
+              {user?.userProfileId?.name}
             </div>
             <div
               className={`${
                 isExpanded ? 'text-[13px]' : 'text-[10px]'
               } text-gray-500`}
             >
-              {user.address}
+              {user?.userProfileId?.address ?? ''}
             </div>
           </div>
           <p className="font-medium text-[10px] text-gray-600 sm:ml-4 mt-2 sm:mt-0">

@@ -153,7 +153,7 @@ export const AdminSidebarItems = {
       ],
     },
     {
-      title: 'Packages',
+      title: 'Credit Packages',
       url: '#',
       icon: SquareTerminal,
       isActive: true,

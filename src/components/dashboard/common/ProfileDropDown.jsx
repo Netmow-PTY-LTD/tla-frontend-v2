@@ -15,15 +15,18 @@ import Cookies from 'js-cookie';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { userDummyImage } from '@/data/data';
-import { logOut, selectCurrentUser } from '@/store/features/auth/authSlice';
+import { logOut } from '@/store/features/auth/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { useAuthLogOutMutation } from '@/store/features/auth/authApiService';
+import {
+  useAuthLogOutMutation,
+  useAuthUserInfoQuery,
+} from '@/store/features/auth/authApiService';
 import { useRouter } from 'next/navigation';
 
-export default function ProfileDropDown({ data }) {
+export default function ProfileDropDown() {
   const dispatch = useDispatch();
 
-  const currentUser = useSelector(selectCurrentUser);
+  const { data: currentUser } = useAuthUserInfoQuery();
 
   const router = useRouter();
 
@@ -44,15 +47,20 @@ export default function ProfileDropDown({ data }) {
     <div className="flex items-center">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <div className="flex items-center group gap-2">
+          <div className="flex items-center group gap-[10px]">
             <Avatar>
-              <AvatarImage src={userDummyImage} alt="user" />
+              <AvatarImage
+                src={
+                  currentUser?.data?.profile?.profilePicture ?? userDummyImage
+                }
+                alt={currentUser?.data?.profile?.name || 'Lawyer'}
+              />
               <AvatarFallback>USER</AvatarFallback>
             </Avatar>
-            <span className="ml-2 font-medium">
-              {data?.username || 'username'}
+            <span className="font-medium text-[14px]">
+              {currentUser?.data?.profile?.name || 'Lawyer'}
             </span>
-            <ChevronDown className="ml-auto" />
+            <ChevronDown className="w-5 h-5" />
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent
@@ -78,8 +86,8 @@ export default function ProfileDropDown({ data }) {
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
 
-          {currentUser?.role === 'admin' &&
-            currentUser?.regUserType === 'admin' && (
+          {currentUser?.data?.role === 'admin' &&
+            currentUser?.data?.regUserType === 'admin' && (
               <>
                 <DropdownMenuGroup>
                   <DropdownMenuItem>

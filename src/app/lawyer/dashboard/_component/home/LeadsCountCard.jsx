@@ -1,6 +1,8 @@
+import { useGetAllLeadsQuery } from '@/store/features/lawyer/LeadsApiService';
 import React from 'react';
 
 export default function LeadsCountCard() {
+  const { data: allLeads } = useGetAllLeadsQuery();
   return (
     <div className="bg-white p-4 rounded-[10px] w-full">
       {/* Title */}
@@ -12,7 +14,9 @@ export default function LeadsCountCard() {
       {/* Services Section */}
       <div className="flex items-center justify-between">
         <div>
-          <h4 className="text-[#00C3C0] heading-md font-medium">118</h4>
+          <h4 className="text-[#00C3C0] heading-md font-medium">
+            {allLeads?.data?.length ?? 0}
+          </h4>
           <p className="text-[#34495E] mt-[5px]">Number of leads</p>
         </div>
         <button className="text-[#8E8E8E] text-[14px]">Edit</button>

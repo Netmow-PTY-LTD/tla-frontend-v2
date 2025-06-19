@@ -56,15 +56,18 @@ export default function AdminProfileDropDown({ data }) {
     <div className="flex items-center">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <div className="flex items-center group gap-2">
+          <div className="flex items-center group gap-[10px]">
             <Avatar>
-              <AvatarImage src={userDummyImage} alt="user" />
+              <AvatarImage
+                src={data?.profile?.profilePicture ?? userDummyImage}
+                alt={data?.profile?.name || 'Admin'}
+              />
               <AvatarFallback>USER</AvatarFallback>
             </Avatar>
-            <span className="ml-2 font-medium">
-              {data?.username || 'username'}
+            <span className="font-medium text-[14px]">
+              {data?.profile?.name || 'Admin'}
             </span>
-            <ChevronDown className="ml-auto" />
+            <ChevronDown className="w-5 h-5" />
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent

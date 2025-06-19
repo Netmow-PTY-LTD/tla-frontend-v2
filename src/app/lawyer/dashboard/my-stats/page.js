@@ -69,10 +69,10 @@ const MyStatsPage = () => {
   console.log('check profile data ==>', profileData);
 
   return (
-    <div className="lg:m-5">
-      <h1 className="font-bold text-2xl border-b-2 text-[#0B1C2D] ">
+    <div className="lg:m-4">
+      <h2 className="font-bold heading border-b border-1 text-[#0B1C2D] pb-4">
         Overview of Your Stats
-      </h1>
+      </h2>
 
       <div className="mt-5 grid grid-cols-1  md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-5 mb-10">
         {/* Left Section - Profile */}
@@ -114,7 +114,7 @@ const MyStatsPage = () => {
 
         {/* Right Section - Messages + Lead Settings */}
         <div className="grid grid-rows-2 gap-5 h-full ">
-          <MessageCard messages={messagesData} />
+          {/* <MessageCard messages={messagesData} /> */}
           <LeadSettings className="h-full" />
         </div>
       </div>

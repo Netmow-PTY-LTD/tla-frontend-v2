@@ -1,11 +1,11 @@
 'use client';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
+import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
+import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 import {
-  ArrowDownToLine,
   AtSign,
   BadgeCheck,
   CircleAlert,
-  FileText,
   MoveLeft,
   PhoneOutgoing,
   Zap,
@@ -14,7 +14,12 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 export default function LeadDetailsPage({ onBack, lead }) {
-  const fullText = `If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options. Let us help you navigate this challenging time with expert guidance. If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options. Let us help you navigate this challenging time with expert guidance.`;
+  const { data: singleLead, isLoading } = useGetSingleLeadQuery(lead?._id);
+
+  const fullText =
+    singleLead?.data?.additionalDetails === ''
+      ? `If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options. Let us help you navigate this challenging time with expert guidance. If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options. Let us help you navigate this challenging time with expert guidance.`
+      : singleLead?.data?.additionalDetails;
 
   const getTruncatedText = (text, maxLength) => {
     if (!text || typeof text !== 'string') return '';
@@ -25,7 +30,7 @@ export default function LeadDetailsPage({ onBack, lead }) {
   const toggleReadMore = () => setIsExpanded(!isExpanded);
   const maxLength = 300;
 
-  const shouldTruncate = fullText.length > maxLength;
+  const shouldTruncate = fullText?.length > maxLength;
   const displayText =
     isExpanded || !shouldTruncate
       ? fullText
@@ -35,6 +40,9 @@ export default function LeadDetailsPage({ onBack, lead }) {
     // Scroll to top of the window when this component mounts
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, []);
+
+  const mapUrl = getStaticMapUrl(lead?.userProfileId?.address);
+
   return (
     <div className="">
       <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
@@ -48,8 +56,11 @@ export default function LeadDetailsPage({ onBack, lead }) {
           <div className="flex flex-col items-start gap-4 ">
             <figure className="w-20 h-20 rounded-full overflow-hidden">
               <Image
-                src="/assets/img/auth-step1.png"
-                alt="John Doe"
+                src={`${
+                  lead?.userProfileId?.profilePicture ??
+                  '/assets/img/auth-step1.png'
+                }`}
+                alt={lead?.userProfileId?.name ?? 'John Doe'}
                 width={80}
                 height={80}
                 priority
@@ -57,22 +68,54 @@ export default function LeadDetailsPage({ onBack, lead }) {
               />
             </figure>
             <div>
-              <h2 className="font-medium heading-lg">{lead.name}</h2>
-              <p className="text-gray-500 mt-2">{lead.address}</p>
+              <h2 className="font-medium heading-lg">
+                {lead?.userProfileId?.name ?? ''}
+              </h2>
+              <p className="text-gray-500 mt-2">
+                {lead?.userProfileId?.address ?? ''}
+              </p>
             </div>
           </div>
           <hr className="border-[#F3F3F3] my-5  " />
           <div className="mb-4">
             <div className="flex items-center gap-2 admin-text font-medium">
-              <PhoneOutgoing /> <span>Phone: (480) *******</span>{' '}
+              <PhoneOutgoing className="w-4 h-4" />{' '}
+              <span>
+                Phone:{' '}
+                {(() => {
+                  const phone = lead?.userProfileId?.phone;
+                  return phone
+                    ? `${phone.slice(0, 3)}${'*'.repeat(
+                        Math.max(0, phone.length - 3)
+                      )}`
+                    : '480*******';
+                })()}
+              </span>{' '}
             </div>
             <div className=" flex items-center gap-2 mt-2 admin-text font-medium">
-              <AtSign /> <span>Email: t*******@e********.com</span>{' '}
+              <AtSign className="w-4 h-4" />{' '}
+              <span>
+                Email:{' '}
+                {(() => {
+                  const email = singleLead?.data?.userProfileId?.user?.email;
+                  if (!email) return 't*******@e********.com';
+
+                  const [user, domain] = email.split('@');
+                  const maskedUser =
+                    user[0] + '*'.repeat(Math.max(user.length - 1, 0));
+                  const maskedDomain =
+                    domain[0] +
+                    '*'.repeat(Math.max(domain.indexOf('.'), 0)) +
+                    domain.slice(domain.indexOf('.'));
+
+                  return `${maskedUser}@${maskedDomain}`;
+                })()}
+              </span>{' '}
             </div>
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <button className="btn-default bg-[#00C3C0]">
-              Contact {lead.name}
+              Contact {lead?.userProfileId?.name ?? ''}
             </button>
             <div className="text-[#34495E] ml-2 flex items-center gap-2">
               <span>49 Credits required</span>
@@ -119,46 +162,35 @@ export default function LeadDetailsPage({ onBack, lead }) {
           </div>
           <div className="mt-5">
             <div className=" my-3 ">
-              <h4 className="font-medium my-2 heading-md">File Attached</h4>
-              <div className="flex items-center justify-between  p-3 rounded-lg bg-[#F8F9FA]">
-                <div className="flex items-center gap-2">
-                  <FileText />
-                  <span>Cases brief.pdf</span>{' '}
-                </div>
-
-                <button className="px-5 py-2 w-full sm:w-auto flex gap-2 items-center justify-center rounded-lg font-medium bg-[#EDF0F4] hover:bg-[#00C3C0] text-[#0B1C2D] transition-all duration-200 ease-in-out">
-                  <ArrowDownToLine />
-                  <span>Download</span>
-                </button>
+              <h4 className="font-medium heading-lg my-2 heading-md">
+                Location
+              </h4>
+              <div className="mt-5">
+                <img src={mapUrl} className="rounded-lg" alt="map" />
               </div>
             </div>
           </div>
           <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
-          <div className="mt-5 space-y-3">
-            <h4 className="font-medium heading-md mb-5">
-              Answered some of selected questions
-            </h4>
-            <div className="flex flex-col gap-5">
-              <div>
-                <p className="text-[#34495E]">
-                  What kind of Law service you need?
-                </p>
-                <div className="font-medium text-black"> Family Law</div>
-              </div>
-              <div>
-                <p className="text-[#34495E]">
-                  What kind of Law service you need?
-                </p>
-                <div className="font-medium text-black"> Family Law</div>
-              </div>
-              <div>
-                <p className="text-[#34495E]">
-                  What kind of Law service you need?
-                </p>
-                <div className="font-medium text-black"> Family Law</div>
+          {singleLead?.data?.leadAnswers?.length > 0 && (
+            <div className="mt-5 space-y-3">
+              <h4 className="font-medium heading-md mb-5">
+                Answered some of selected questions
+              </h4>
+              <div className="flex flex-col gap-5">
+                {singleLead?.data?.leadAnswers?.map((leadAnswer) => (
+                  <div key={leadAnswer?._id}>
+                    <p className="text-[#34495E]">{leadAnswer?.question}</p>
+                    <div className="font-medium text-black mt-2">
+                      {leadAnswer?.options &&
+                        leadAnswer?.options
+                          ?.map((option) => option?.option)
+                          .join(', ')}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
