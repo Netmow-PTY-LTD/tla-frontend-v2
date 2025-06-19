@@ -41,9 +41,9 @@ const CreditsPurchase = ({ creditPackage }) => {
       setOpen(true);
     } else {
       const purchaseDetails = {
-        creditPackageId,
-        creditPrice,
+        packageId: creditPackageId,
         autoTopUP,
+        couponCode: null,
       };
       try {
         const result = purchasePackage(purchaseDetails).unwrap();
