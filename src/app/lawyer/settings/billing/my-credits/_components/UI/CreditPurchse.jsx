@@ -5,9 +5,35 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Info } from 'lucide-react';
 import Image from 'next/image';
 import { BrandIcon } from '@/assets/icon';
+import {
+  useAddPaymentMethodMutation,
+  useGetPaymentMethodQuery,
+} from '@/store/features/credit_and_payment/creditAndPaymentApiService';
+import AddCardModal from '../../../_components/AddCardModal';
 
 const CreditsPurchase = () => {
+  const [open, setOpen] = useState(false);
   const [autoTopup, setAutoTopup] = useState(false);
+  const [addPaymentMethod] = useAddPaymentMethodMutation();
+  const { data, isError, isLoading } = useGetPaymentMethodQuery();
+
+  const card = data?.data || null;
+
+  const handleCardAdded = async (paymentMethodId) => {
+    const result = await addPaymentMethod({ paymentMethodId }).unwrap();
+    if (result.success) {
+      showSuccessToast(result?.message);
+    } else {
+      showErrorToast(result?.message);
+    }
+    try {
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+    }
+  };
+
+  console.log('Card data:', card);
 
   return (
     <div className="max-w-[900px] mx-auto">
@@ -64,7 +90,18 @@ const CreditsPurchase = () => {
             />
 
             <div className="px-6 pb-6">
-              <Button className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-8">
+              <Button
+                onClick={() => {
+                  if (!card) {
+                    setOpen(true);
+                  } else {
+                    // Handle the purchase logic here
+                    console.log('Purchase initiated with card:', card);
+                  }
+                }}
+                variant="primary"
+                className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-8"
+              >
                 Buy Now
               </Button>
 
@@ -96,6 +133,11 @@ const CreditsPurchase = () => {
           </div>
         </div>
       </div>
+      <AddCardModal
+        open={open}
+        setOpen={setOpen}
+        onCardAdded={handleCardAdded}
+      />
     </div>
   );
 };
