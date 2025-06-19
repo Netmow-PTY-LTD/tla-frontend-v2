@@ -1,7 +1,6 @@
 'use client';
 import LeadSettingNotificationCard from '@/components/dashboard/lawyer/components/LeadSettingNotificationCard';
 import LeadSettings from '@/components/dashboard/lawyer/components/LeadSettings';
-import MessageCard from '@/components/dashboard/lawyer/components/MessageCard';
 import StatusCard from '@/components/dashboard/lawyer/components/StatusCard';
 import ProfileCard from '@/components/dashboard/lawyer/module/MyStats/ProfileCard';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
@@ -15,37 +14,6 @@ const MyStatsPage = () => {
     { label: 'Today', href: '#/today' },
     { label: 'This Week', href: '#/this-week' },
     { label: 'This Month', href: '#/this-month' },
-  ];
-
-  const messagesData = [
-    {
-      id: 1,
-      name: 'Jerome Bell',
-      message: 'Maplewood Ave, Sunnyvale, California 94086',
-      time: '11:43 AM',
-      avatar: '/assets/img/auth-step1.png',
-    },
-    {
-      id: 2,
-      name: 'Jane Cooper',
-      message: '  Maplewood Ave, Sunnyvale, California 94086',
-      time: '10:30 AM',
-      avatar: '/assets/img/auth-step1.png',
-    },
-    {
-      id: 3,
-      name: 'Cody Fisher',
-      message: '  Maplewood Ave, Sunnyvale, California 94086',
-      time: '9:15 AM',
-      avatar: '/assets/img/auth-step1.png',
-    },
-    {
-      id: 4,
-      name: 'Cody Fisher',
-      message: '  Maplewood Ave, Sunnyvale, California 94086',
-      time: '9:15 AM',
-      avatar: '/assets/img/auth-step1.png',
-    },
   ];
 
   const {

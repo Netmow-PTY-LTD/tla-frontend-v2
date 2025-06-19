@@ -41,6 +41,32 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
       }),
       providesTags: ['credit-payment'],
     }),
+
+    addCreditPackage: builder.mutation({
+      query: (body) => ({
+        url: '/settings/credit-payment/packages/add',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['credit-payment'],
+    }),
+
+    getAllCreditPackages: builder.query({
+      query: () => ({
+        url: '/settings/credit-payment/packages/list',
+        method: 'GET',
+      }),
+      providesTags: ['credit-payment'],
+    }),
+
+    updateCreditPackage: builder.mutation({
+      query: (body) => ({
+        url: `/settings/credit-payment/packages/edit/${body?._id}`,
+        method: 'PATCH',
+        body,
+      }),
+      invalidatesTags: ['credit-payment'],
+    }),
   }),
 });
 
@@ -50,4 +76,7 @@ export const {
   useAddPaymentMethodMutation,
   useSetupPaymentIntentMutation,
   useGetPaymentMethodQuery,
+  useAddCreditPackageMutation,
+  useGetAllCreditPackagesQuery,
+  useUpdateCreditPackageMutation,
 } = creditAndPaymentApiService;
