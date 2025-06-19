@@ -67,6 +67,14 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['credit-payment'],
     }),
+    purchaseCreditPackage: builder.mutation({
+      query: (body) => ({
+        url: `/settings/credit-payment/purchase`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['credit-payment'],
+    }),
   }),
 });
 
@@ -79,4 +87,5 @@ export const {
   useAddCreditPackageMutation,
   useGetAllCreditPackagesQuery,
   useUpdateCreditPackageMutation,
+  usePurchaseCreditPackageMutation,
 } = creditAndPaymentApiService;

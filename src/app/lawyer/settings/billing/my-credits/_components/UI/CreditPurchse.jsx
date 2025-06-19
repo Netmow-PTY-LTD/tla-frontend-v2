@@ -5,29 +5,60 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Info } from 'lucide-react';
 import Image from 'next/image';
 import { BrandIcon } from '@/assets/icon';
+import {
+  useAddPaymentMethodMutation,
+  useGetAllCreditPackagesQuery,
+  useGetPaymentMethodQuery,
+  usePurchaseCreditPackageMutation,
+} from '@/store/features/credit_and_payment/creditAndPaymentApiService';
+import AddCardModal from '../../../_components/AddCardModal';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
-const CreditsPurchase = () => {
-  const [autoTopup, setAutoTopup] = useState(false);
+const CreditsPurchase = ({ creditPackage }) => {
+  const [open, setOpen] = useState(false);
+  const [autoTopUP, setAutoTopUp] = useState(false);
+  const [addPaymentMethod] = useAddPaymentMethodMutation();
+  const [purchasePackage] = usePurchaseCreditPackageMutation();
+  const { data, isError, isLoading } = useGetPaymentMethodQuery();
 
+  const card = data?.data || null;
+
+  const handleCardAdded = async (paymentMethodId) => {
+    const result = await addPaymentMethod({ paymentMethodId }).unwrap();
+    if (result.success) {
+      showSuccessToast(result?.message);
+    } else {
+      showErrorToast(result?.message);
+    }
+    try {
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+    }
+  };
+  const handlePurchase = (creditPackageId, creditPrice) => {
+    if (!card) {
+      setOpen(true);
+    } else {
+      const purchaseDetails = {
+        packageId: creditPackageId,
+        autoTopUP,
+        couponCode: null,
+      };
+      try {
+        const result = purchasePackage(purchaseDetails).unwrap();
+        console.log('Purchase result:', result);
+        if (result.success) {
+          showSuccessToast(result?.message);
+        }
+      } catch (error) {
+        const errorMessage = error?.data?.message || 'An error occurred';
+        showErrorToast(errorMessage);
+      }
+    }
+  };
   return (
-    <div className="max-w-[900px] mx-auto">
-      <div className="mb-6">
-        <h2 className="heading-lg font-bold text-gray-900 mb-2">My credits</h2>
-        <p className="text-gray-600 mb-2">
-          Credits are used to contact customers on LawApp. A small fee, paid in
-          credits, is charged for each customer you contact. Learn more about
-          credits and our charges in the{' '}
-          <span className="text-[#00C3C0] hover:underline cursor-pointer">
-            Help Centre
-          </span>
-          .
-        </p>
-        <p className="text-[#34495E] font-semibold mb-4">
-          We charge a small fee for each customer you contact on Bark. Buy a
-          pack of 50 credits and get 20% OFF
-        </p>
-      </div>
-
+    <div>
       <div className="border-0 bg-white rounded-lg shadow-sm pt-4 px-[17px] relative">
         <div className="bg-[#00C3C0] absolute text-white p-[10px] rounded-tl-md rounded-br-md text-sm font-medium top-0 left-0">
           20% OFF EXCLUSIVE STARTING PACK
@@ -36,22 +67,26 @@ const CreditsPurchase = () => {
         <div className="mt-10">
           <div className="grid md:grid-cols-3 gap-6 items-center">
             <div className="flex items-start space-x-4">
-              <p className="font-medium text-gray-900">About 10 responses</p>
+              <p className="font-medium text-gray-900">{creditPackage?.name}</p>
             </div>
 
             <div className="flex items-center space-x-2">
               <BrandIcon />
-              <p className="font-medium text-gray-900">50 Credits</p>
+              <p className="font-medium text-gray-900">
+                {creditPackage?.credit} Credits
+              </p>
             </div>
 
             <div>
               <p className="font-medium text-gray-900">
-                $128.00{' '}
+                $ {creditPackage?.priceDisplay}{' '}
                 <span className="text-gray-500 text-sm font-normal">
                   (ex GST)
                 </span>
               </p>
-              <p className="text-gray-500 text-sm">$2.56/credit</p>
+              <p className="text-gray-500 text-sm">
+                $ {creditPackage?.pricePerCredit}/credit
+              </p>
             </div>
           </div>
 
@@ -64,15 +99,21 @@ const CreditsPurchase = () => {
             />
 
             <div className="px-6 pb-6">
-              <Button className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-8">
+              <Button
+                onClick={() =>
+                  handlePurchase(creditPackage?._id, creditPackage?.price)
+                }
+                variant="primary"
+                className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-8"
+              >
                 Buy Now
               </Button>
 
               <div className="flex items-start space-x-2 mt-3">
                 <Checkbox
                   id="auto-topup"
-                  checked={autoTopup}
-                  onCheckedChange={(checked) => setAutoTopup(!!checked)}
+                  checked={autoTopUP}
+                  onCheckedChange={(checked) => setAutoTopUp(!!checked)}
                   className="mt-1 text-[#00C3C0]"
                 />
                 <label
@@ -96,6 +137,11 @@ const CreditsPurchase = () => {
           </div>
         </div>
       </div>
+      <AddCardModal
+        open={open}
+        setOpen={setOpen}
+        onCardAdded={handleCardAdded}
+      />
     </div>
   );
 };
