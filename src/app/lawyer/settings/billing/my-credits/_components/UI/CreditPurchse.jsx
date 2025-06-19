@@ -9,13 +9,16 @@ import {
   useAddPaymentMethodMutation,
   useGetAllCreditPackagesQuery,
   useGetPaymentMethodQuery,
+  usePurchaseCreditPackageMutation,
 } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 import AddCardModal from '../../../_components/AddCardModal';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
 const CreditsPurchase = ({ creditPackage }) => {
   const [open, setOpen] = useState(false);
-  const [autoTopup, setAutoTopup] = useState(false);
+  const [autoTopUP, setAutoTopUp] = useState(false);
   const [addPaymentMethod] = useAddPaymentMethodMutation();
+  const [purchasePackage] = usePurchaseCreditPackageMutation();
   const { data, isError, isLoading } = useGetPaymentMethodQuery();
 
   const card = data?.data || null;
@@ -33,9 +36,27 @@ const CreditsPurchase = ({ creditPackage }) => {
       showErrorToast(errorMessage);
     }
   };
-
-  console.log('Card data:', card);
-
+  const handlePurchase = (creditPackageId, creditPrice) => {
+    if (!card) {
+      setOpen(true);
+    } else {
+      const purchaseDetails = {
+        creditPackageId,
+        creditPrice,
+        autoTopUP,
+      };
+      try {
+        const result = purchasePackage(purchaseDetails).unwrap();
+        console.log('Purchase result:', result);
+        if (result.success) {
+          showSuccessToast(result?.message);
+        }
+      } catch (error) {
+        const errorMessage = error?.data?.message || 'An error occurred';
+        showErrorToast(errorMessage);
+      }
+    }
+  };
   return (
     <div>
       <div className="border-0 bg-white rounded-lg shadow-sm pt-4 px-[17px] relative">
@@ -79,14 +100,9 @@ const CreditsPurchase = ({ creditPackage }) => {
 
             <div className="px-6 pb-6">
               <Button
-                onClick={() => {
-                  if (!card) {
-                    setOpen(true);
-                  } else {
-                    // Handle the purchase logic here
-                    console.log('Purchase initiated with card:', card);
-                  }
-                }}
+                onClick={() =>
+                  handlePurchase(creditPackage?._id, creditPackage?.price)
+                }
                 variant="primary"
                 className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-8"
               >
@@ -96,8 +112,8 @@ const CreditsPurchase = ({ creditPackage }) => {
               <div className="flex items-start space-x-2 mt-3">
                 <Checkbox
                   id="auto-topup"
-                  checked={autoTopup}
-                  onCheckedChange={(checked) => setAutoTopup(!!checked)}
+                  checked={autoTopUP}
+                  onCheckedChange={(checked) => setAutoTopUp(!!checked)}
                   className="mt-1 text-[#00C3C0]"
                 />
                 <label
