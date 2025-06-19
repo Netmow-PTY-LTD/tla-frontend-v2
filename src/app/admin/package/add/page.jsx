@@ -25,10 +25,10 @@ import EditCreditPackageModal from '../_components/EditCreditPackageModal';
 
 export default function Page() {
   const [modalOpen, setModalOpen] = useState(false);
-
-  const handleModalOpen = (id) => {
-    console.log('id', id);
+  const [selectedPackage, setSelectedPackage] = useState(null);
+  const handleModalOpen = (item) => {
     setModalOpen(true);
+    setSelectedPackage(item);
   };
 
   const defaultValues = {
@@ -45,11 +45,11 @@ export default function Page() {
     name: z.string().min(2, {
       message: 'Package name must be at least 2 characters.',
     }),
-    creditAmount: z
+    credit: z
       .string()
-      .min(1, { message: 'Credit amount is required.' })
+      .min(1, { message: 'Credit is required.' })
       .refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
-        message: 'Credit amount must be a non-negative number.',
+        message: 'Credit must be a non-negative number.',
       }),
     price: z
       .string()
@@ -88,8 +88,6 @@ export default function Page() {
     refetchOnMountOrArgChange: true,
   });
 
-  console.log('allCreditPackages', allCreditPackages);
-
   const formRef = useRef();
 
   const [addCreditPackage, { isLoading }] = useAddCreditPackageMutation();
@@ -99,7 +97,7 @@ export default function Page() {
 
     const {
       name,
-      creditAmount,
+      credit,
       price,
       priceDisplay,
       pricePerCredit,
@@ -109,20 +107,22 @@ export default function Page() {
 
     const payload = {
       name,
-      creditAmount: Number(creditAmount),
+      credit: Number(credit),
       price: Number(price),
-      priceDisplay,
-      pricePerCredit,
+      priceDisplay: Number(priceDisplay),
+      pricePerCredit: Number(pricePerCredit),
       discountPercentage: discountPercentage
         ? Number(discountPercentage)
         : null,
       isActive: isActive ? true : false,
     };
+
+    console.log('payload', payload);
     try {
       const res = await addCreditPackage(payload).unwrap();
       // Optionally reset form or show success toast
       if (res) {
-        showSuccessToast(res?.message);
+        showSuccessToast(res?.message || 'Package added successfully!');
         refetchCreditPackages();
         formRef.current?.reset();
       }
@@ -138,14 +138,14 @@ export default function Page() {
       accessorKey: 'name',
       header: 'Package Name',
       cell: ({ row }) => (
-        <div className="lowercase">{row.getValue('name')}</div>
+        <div className="capitalize">{row.getValue('name')}</div>
       ),
     },
     {
-      accessorKey: 'creditAmount',
-      header: 'Credit Amount',
+      accessorKey: 'credit',
+      header: 'Credit',
       cell: ({ row }) => (
-        <div className="lowercase">{row.getValue('creditAmount')}</div>
+        <div className="lowercase">{row.getValue('credit')}</div>
       ),
     },
     {
@@ -182,7 +182,7 @@ export default function Page() {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="flex items-center gap-2 cursor-pointer px-2"
-                onClick={() => handleModalOpen(item?._id)}
+                onClick={() => handleModalOpen(item)}
               >
                 <Pencil className="w-4 h-4" />
                 Edit
@@ -215,8 +215,8 @@ export default function Page() {
               />
               <TextInput
                 type="number"
-                label="Credit Amount"
-                name="creditAmount"
+                label="Credit"
+                name="credit"
                 placeholder="Enter credit amount"
               />
 
@@ -267,6 +267,9 @@ export default function Page() {
           <EditCreditPackageModal
             open={modalOpen}
             onClose={() => setModalOpen(false)}
+            selectedPackage={selectedPackage}
+            schema={formSchema}
+            refetchCreditPackages={refetchCreditPackages}
           />
         </Card>
       </div>
