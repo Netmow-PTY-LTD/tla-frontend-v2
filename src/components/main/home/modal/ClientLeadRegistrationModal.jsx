@@ -9,19 +9,21 @@ import {
   ComboboxOption,
   ComboboxOptions,
 } from '@headlessui/react';
-import { Check, ChevronDown } from 'lucide-react';
+import { Check, ChevronDown, Loader } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuthClientRegisterMutation } from '@/store/features/auth/authApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { useRouter } from 'next/navigation';
+import { verifyToken } from '@/utils/verifyToken';
+import { useDispatch } from 'react-redux';
+import { setUser } from '@/store/features/auth/authSlice';
 
 export default function ClientLeadRegistrationModal({
-  open,
-  onClose,
+  modalOpen,
+  setModalOpen,
   selectedServiceWiseQuestions,
   countryId,
   serviceId,
-  isLoading,
 }) {
   const [step, setStep] = useState(0);
 
@@ -48,6 +50,9 @@ export default function ClientLeadRegistrationModal({
   const [clickButtonType, setClickButtonType] = useState('Next');
 
   const [additionalDetails, setAdditionalDetails] = useState('');
+
+  const [questionLoading, setQuestionLoading] = useState(false);
+
   const [zipCode, setZipCode] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -58,6 +63,28 @@ export default function ClientLeadRegistrationModal({
   //   selectedServiceWiseQuestions?.length
   // );
 
+  useEffect(() => {
+    if (!selectedServiceWiseQuestions?.length) return;
+
+    setQuestionLoading(true); // 👈 Start loading
+
+    setStep(0);
+    setClickButtonType(null);
+    setQuestionsPayload([]);
+    setSelectedOptions([]);
+    setCheckedOptions([]);
+    setCheckedOptionsDetails([]);
+    setInitialData([]);
+    setFullClonedQuestions([]);
+    setPartialClonedQuestions([]);
+    setViewData(null);
+  }, [selectedServiceWiseQuestions]);
+
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
+
+  const dispatch = useDispatch();
   const router = useRouter();
 
   //setting initial data
@@ -109,6 +136,7 @@ export default function ClientLeadRegistrationModal({
     }));
 
     setPartialClonedQuestions(cloned);
+    setQuestionLoading(false);
   }, [fullClonedQuestions]);
 
   //console.log('partialClonedQuestions', partialClonedQuestions);
@@ -221,23 +249,13 @@ export default function ClientLeadRegistrationModal({
 
   const [clientRegister] = useAuthClientRegisterMutation();
 
-  let formsPayload = {};
-
+  //handleNext button click and form submission with api call
   const handleNext = async () => {
-    if (step < totalSteps) {
-      setStep((prev) => prev + 1);
-      setClickButtonType('Next');
-    } else if (step === totalSteps) {
-      formsPayload = {
-        additionalDetails,
-        zipCode,
-        name,
-        email,
-        phone,
-      };
-    }
+    const isFinalStep = step === totalSteps;
+    const isQuestionStep = step < totalQuestions;
 
-    if (step < totalQuestions) {
+    // Step 1: Handle question payload update
+    if (isQuestionStep) {
       setQuestionsPayload((prev) => {
         const filtered = prev.filter((item) => item.step !== step);
 
@@ -258,32 +276,66 @@ export default function ClientLeadRegistrationModal({
       });
     }
 
+    // Step 2: Go to next step if not final
+    if (!isFinalStep) {
+      setStep((prev) => prev + 1);
+      setClickButtonType('Next');
+      return;
+    }
+
+    // Step 3: Prepare payloads on final step
+    const leadDetails = {
+      additionalDetails,
+      zipCode,
+      name,
+      email,
+      phone,
+    };
+
     const payload = {
       countryId,
       serviceId,
-      questions: questionsPayload,
-      leadDetails: formsPayload,
+      questions: [...questionsPayload], // ensure fresh snapshot
+      leadDetails,
     };
 
-    console.log('payload', payload);
+    console.log('🚀 Submitting payload:', payload);
 
-    if (step === totalSteps) {
-      try {
-        const res = await clientRegister(payload).unwrap();
-        if (res?.success === true) {
-          showSuccessToast(res?.message || 'Lead registered successfully');
-          onClose();
+    try {
+      const res = await clientRegister(payload).unwrap();
+      console.log('✅ Register response:', res);
+
+      if (!res?.success || !res?.token) {
+        showErrorToast(res?.message || 'Lead registration failed.');
+        return;
+      }
+
+      showSuccessToast(res?.message || 'Lead registered successfully');
+
+      const token = res.token;
+      const userPayload = verifyToken(token);
+
+      if (userPayload) {
+        dispatch(setUser({ user: res?.data, token }));
+
+        const userType = res?.data?.regUserType;
+
+        setQuestionsPayload([]); // Clear form state
+        setModalOpen(false); // Close modal
+
+        if (userType === 'client') {
           setTimeout(() => {
             router.push('/client/dashboard');
           }, 2000);
-          setQuestionsPayload([]);
-          formsPayload = {};
+        } else {
+          router.push('/');
         }
-        console.log('Register response:', res);
-      } catch (err) {
-        console.log('Register error:', err);
-        showErrorToast(err?.data?.message || 'Failed to register lead.');
+      } else {
+        showErrorToast('Invalid token. Registration failed.');
       }
+    } catch (err) {
+      console.error('❌ Register error:', err);
+      showErrorToast(err?.data?.message || 'Failed to register lead.');
     }
   };
 
@@ -300,7 +352,7 @@ export default function ClientLeadRegistrationModal({
 
     //Step: Additional Details (optional)
     if (step === totalQuestions) {
-      return false;
+      return !additionalDetails.trim();
     }
 
     // Step: ZIP Code (required)
@@ -329,9 +381,26 @@ export default function ClientLeadRegistrationModal({
   );
 
   return (
-    <Modal open={open} onOpenChange={onClose} title="" width="max-w-[570px]">
-      {isLoading ? (
-        <div className="text-center">Loading...</div>
+    <Modal
+      open={modalOpen}
+      onOpenChange={(open) => {
+        setModalOpen(open);
+        if (!open) {
+          setViewData(null);
+          setQuestionsPayload([]);
+          setStep(0); // reset form steps, if needed
+        } else {
+          // Start loading when modal opens
+          setQuestionLoading(true);
+        }
+      }}
+      title=""
+      width="max-w-[570px]"
+    >
+      {questionLoading || !selectedServiceWiseQuestions?.length ? (
+        <div className="flex items-center justify-center gap-2">
+          <Loader className="w-4 h-4 animate-spin" /> Loading question...
+        </div>
       ) : step < totalQuestions ? (
         viewData?.question ? (
           <div className="space-y-4 mt-4">
@@ -339,49 +408,52 @@ export default function ClientLeadRegistrationModal({
               {viewData.question}
             </h4>
             <div className="border border-1 flex flex-col gap-2 rounded-lg">
-              {viewData.options?.map((option, index) => {
-                const isLast = index === viewData.options.length - 1;
-                const isOther = option?.name?.toLowerCase() === 'other';
+              {viewData.options?.length > 0 &&
+                viewData.options?.map((option, index) => {
+                  const isLast = index === viewData.options.length - 1;
+                  const isOther = option?.name?.toLowerCase() === 'other';
 
-                return (
-                  <label
-                    key={option._id || index}
-                    className={`flex gap-3 px-4 py-3 ${
-                      !isLast ? 'border-b' : ''
-                    }`}
-                  >
-                    <span className="flex items-center gap-3">
-                      <input
-                        type={
-                          viewData.questionType === 'checkbox'
-                            ? 'checkbox'
-                            : 'radio'
-                        }
-                        name={`question-${viewData._id}`}
-                        onChange={(e) =>
-                          handleOptionChange(option._id, e.target.checked)
-                        }
-                      />
+                  return (
+                    <label
+                      key={option._id || index}
+                      className={`flex gap-3 px-4 py-3 ${
+                        !isLast ? 'border-b' : ''
+                      }`}
+                    >
+                      <span className="flex items-center gap-3">
+                        <input
+                          type={
+                            viewData.questionType === 'checkbox'
+                              ? 'checkbox'
+                              : 'radio'
+                          }
+                          name={`question-${viewData._id}`}
+                          onChange={(e) =>
+                            handleOptionChange(option._id, e.target.checked)
+                          }
+                        />
 
-                      {/* Render name only if not 'Other' */}
-                      {option?.name !== 'Other' && <span>{option?.name}</span>}
-                    </span>
+                        {/* Render name only if not 'Other' */}
+                        {option?.name !== 'Other' && (
+                          <span>{option?.name}</span>
+                        )}
+                      </span>
 
-                    {/* Render input only if option is 'Other' */}
-                    {isOther && (
-                      <input
-                        type="text"
-                        id={`${option._id}-other`}
-                        placeholder="Other"
-                        className="border rounded px-2 py-1 w-full"
-                        // onChange={(e) =>
-                        //   handleOptionChange(option._id, e.target.value)
-                        // }
-                      />
-                    )}
-                  </label>
-                );
-              })}
+                      {/* Render input only if option is 'Other' */}
+                      {isOther && (
+                        <input
+                          type="text"
+                          id={`${option._id}-other`}
+                          placeholder="Other"
+                          className="border rounded px-2 py-1 w-full"
+                          // onChange={(e) =>
+                          //   handleOptionChange(option._id, e.target.value)
+                          // }
+                        />
+                      )}
+                    </label>
+                  );
+                })}
             </div>
           </div>
         ) : (
@@ -395,9 +467,7 @@ export default function ClientLeadRegistrationModal({
             Want to share anything more?
           </h4>
           <label className="flex flex-col gap-2">
-            <span className="text-sm font-medium">
-              Additional Details (Optional)
-            </span>
+            <span className="text-sm font-medium">Additional Details</span>
             <textarea
               className="border rounded px-3 py-2 min-h-[100px]"
               value={additionalDetails}
@@ -476,7 +546,7 @@ export default function ClientLeadRegistrationModal({
               className="border rounded px-3 py-2"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g., example@email.com"
+              placeholder="e.g., Mark Smith"
             />
           </label>
         </div>
@@ -518,30 +588,31 @@ export default function ClientLeadRegistrationModal({
         </div>
       ) : null}
 
-      {!isLoading && (
-        <div
-          className={`flex ${
-            step === 0 ? 'justify-end' : 'justify-between'
-          } mt-8`}
-        >
-          {step !== 0 && (
-            <Button
-              variant="outline"
-              onClick={handleBack}
-              disabled={step === 0}
-            >
-              Back
-            </Button>
-          )}
-
-          <Button
-            onClick={handleNext}
-            disabled={step === totalSteps ? false : isNextDisabled}
+      {questionLoading ||
+        (selectedServiceWiseQuestions?.length > 0 && (
+          <div
+            className={`flex ${
+              step === 0 ? 'justify-end' : 'justify-between'
+            } mt-8`}
           >
-            {step === totalSteps ? 'Finish' : 'Next'}
-          </Button>
-        </div>
-      )}
+            {step !== 0 && (
+              <Button
+                variant="outline"
+                onClick={handleBack}
+                disabled={step === 0}
+              >
+                Back
+              </Button>
+            )}
+
+            <Button
+              onClick={handleNext}
+              disabled={step === totalSteps ? false : isNextDisabled}
+            >
+              {step === totalSteps ? 'Finish' : 'Next'}
+            </Button>
+          </div>
+        ))}
     </Modal>
   );
 }

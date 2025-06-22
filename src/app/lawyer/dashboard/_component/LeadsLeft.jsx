@@ -173,14 +173,16 @@ export default function LeadDetailsPage({ onBack, lead }) {
           <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
           {singleLead?.data?.leadAnswers?.length > 0 && (
             <div className="mt-5 space-y-3">
-              <h4 className="font-medium heading-md mb-5">
+              <h4 className="font-medium heading-lg mb-5">
                 Answered some of selected questions
               </h4>
               <div className="flex flex-col gap-5">
-                {singleLead?.data?.leadAnswers?.map((leadAnswer) => (
-                  <div key={leadAnswer?._id}>
-                    <p className="text-[#34495E]">{leadAnswer?.question}</p>
-                    <div className="font-medium text-black mt-2">
+                {singleLead?.data?.leadAnswers?.map((leadAnswer, i) => (
+                  <div key={i}>
+                    <p className="text-black font-medium">
+                      {leadAnswer?.question}
+                    </p>
+                    <div className="text-[#34495E] mt-2">
                       {leadAnswer?.options &&
                         leadAnswer?.options
                           ?.map((option) => option?.option)
