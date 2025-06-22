@@ -7,10 +7,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
 export function Modal({
   buttonName,
-  title = 'modal title',
+  title,
   description,
   children,
   open,
@@ -33,8 +34,16 @@ export function Modal({
       </DialogTrigger>
       <DialogContent className={`${width}`}>
         <DialogHeader>
-          <DialogTitle>{title} </DialogTitle>
-          {description && <DialogDescription>{description}</DialogDescription>}
+          <DialogTitle>
+            {title ? title : <VisuallyHidden>Dialog</VisuallyHidden>}
+          </DialogTitle>
+          {description ? (
+            <DialogDescription>{description}</DialogDescription>
+          ) : (
+            <DialogDescription>
+              <VisuallyHidden>No additional information</VisuallyHidden>
+            </DialogDescription>
+          )}
         </DialogHeader>
         <div>{children}</div>
       </DialogContent>
