@@ -34,10 +34,10 @@ export default function BuyerDashboardLayout({ children }) {
         <div
           className="flex-1 dashboard-content"
           style={{
-            minHeight: 'calc(100vh - 74px - 42px)',
+            height: 'calc(100vh - 74px - 42px)',
           }}
         >
-          <div className="flex flex-col h-[calc(100vh-70px)] ">
+          <div className="flex flex-col h-[calc(100vh-70px)]">
             <div className="flex-1 p-4 bg-[#F3F3F3]">{children}</div>
             <DashboardFooter />
           </div>
