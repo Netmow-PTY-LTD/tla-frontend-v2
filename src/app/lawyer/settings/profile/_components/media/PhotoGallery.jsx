@@ -1,6 +1,6 @@
 'use client';
 
-import AvatarUploader from '@/components/UIComponents/AvaterUploader';
+import MultipleFileUploader from '@/components/UIComponents/MultipleFileUploader';
 import React from 'react';
 
 export default function PhotoGallery() {
@@ -14,7 +14,7 @@ export default function PhotoGallery() {
       </p>
 
       <div className="mt-11">
-        <AvatarUploader name="photo" label="Upload Photos" />
+        <MultipleFileUploader name="photo" label="Upload Photos" multiple />
       </div>
     </div>
   );
