@@ -2,18 +2,21 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import HeroShowcase from './HeroShowcase';
 import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
 import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
 import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/questionApiService';
 import ClientLeadRegistrationModal from './modal/ClientLeadRegistrationModal';
+import { set } from 'zod';
 
 export default function HeroHome() {
   const [selectedService, setSelectedService] = useState(null);
+  const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleModalOpen = () => {
+    setServiceWiseQuestions(null); // Reset serviceWiseQuestions when opening the modal
     setModalOpen(true);
   };
 
@@ -47,12 +50,9 @@ export default function HeroHome() {
     }
   );
 
-  // console.log('selectedService', selectedService);
-
-  // console.log(
-  //   'singleServicewiseQuestionsData',
-  //   singleServicewiseQuestionsData?.data
-  // );
+  useEffect(() => {
+    setServiceWiseQuestions(singleServicewiseQuestionsData?.data || []);
+  }, [singleServicewiseQuestionsData]);
 
   return (
     <section
@@ -86,21 +86,6 @@ export default function HeroHome() {
               <div className="tla-btn-wrapper w-full md:w-2/3 lg:w-1/6">
                 <button type="submit" className="tla-btn-search">
                   <span>Get Started</span>
-                  {/* <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                  >
-                    <path
-                      d="M10.8048 11.1297L14.6509 14.9642M12.4339 7.20484C12.4339 10.2658 9.95247 12.7473 6.8915 12.7473C3.83049 12.7473 1.34906 10.2658 1.34906 7.20484C1.34906 4.14383 3.83049 1.6624 6.8915 1.6624C9.95247 1.6624 12.4339 4.14383 12.4339 7.20484Z"
-                      stroke="#Fff"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg> */}
                 </button>
               </div>
             </div>
@@ -118,13 +103,6 @@ export default function HeroHome() {
                     handleModalOpen();
                   }}
                 >
-                  {/* <Image
-                    src={`/assets/img/img-4.png`}
-                    width={70}
-                    height={70}
-                    className="object-cover"
-                    alt={'service img'}
-                  /> */}
                   <h6>{service?.name}</h6>
                 </Link>
               ))}
@@ -133,12 +111,10 @@ export default function HeroHome() {
         <HeroShowcase />
       </div>
       <ClientLeadRegistrationModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        selectedServiceWiseQuestions={
-          singleServicewiseQuestionsData?.data ?? []
-        }
-        isLoading={isQuestionsLoading}
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        handleModalOpen={handleModalOpen}
+        selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
         countryId={defaultCountry?._id}
         serviceId={selectedService?._id}
       />
