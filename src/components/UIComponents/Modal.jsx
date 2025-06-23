@@ -17,9 +17,10 @@ export function Modal({
   open,
   onOpenChange,
   width = 'max-w-[500px]',
+  height = '',
 }) {
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange} className="z-[999]">
       <DialogTrigger asChild>
         {buttonName && (
           <DialogTrigger asChild>
@@ -32,7 +33,10 @@ export function Modal({
           </DialogTrigger>
         )}
       </DialogTrigger>
-      <DialogContent className={`${width}`}>
+      <DialogContent
+        className={`${width} ${height} overflow-y-auto w-full z-[9999]`}
+      >
+        {/* Dialog Header */}
         <DialogHeader>
           <DialogTitle>
             {title ? title : <VisuallyHidden>Dialog</VisuallyHidden>}
