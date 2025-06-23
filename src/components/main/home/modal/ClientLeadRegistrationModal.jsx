@@ -380,6 +380,8 @@ export default function ClientLeadRegistrationModal({
     item?.zipcode?.toLowerCase().includes(zipCode.toLowerCase())
   );
 
+  //console.log('questionLoading:', questionLoading);
+
   return (
     <Modal
       open={modalOpen}
@@ -389,13 +391,11 @@ export default function ClientLeadRegistrationModal({
           setViewData(null);
           setQuestionsPayload([]);
           setStep(0); // reset form steps, if needed
-        } else {
-          // Start loading when modal opens
-          setQuestionLoading(true);
         }
       }}
       title=""
       width="max-w-[570px]"
+      height="max-h-[90vh]"
     >
       {questionLoading || !selectedServiceWiseQuestions?.length ? (
         <div className="flex items-center justify-center gap-2">

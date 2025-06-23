@@ -3,8 +3,15 @@ import React from 'react';
 import Image from 'next/image';
 import TagButton from './TagButton';
 import { BadgeCheck, CircleAlert, Zap } from 'lucide-react';
+import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 
 const LeadCard = ({ onViewDetails, user, isExpanded }) => {
+  const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
+
+  const urgentOption = singleLead?.data?.leadAnswers
+    .flatMap((answer) => answer.options || [])
+    .find((option) => option.option === 'Urgent');
+
   return (
     <Card className="w-full max-w-full mx-auto">
       {/* Header Section */}
@@ -50,38 +57,56 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
 
       {/* Matched Criteria */}
       <div className="px-3 pt-3 pb-2">
-        <h4
-          className={`font-medium mb-2 ${
-            isExpanded ? 'heading-md' : 'text-[13px]'
-          }`}
-        >
-          Matched criteria
-        </h4>
+        {(urgentOption?.option ||
+          user?.additionalDetails ||
+          user?.userProfileId?.phone) && (
+          <h4
+            className={`font-medium mb-2 ${
+              isExpanded ? 'heading-md' : 'text-[13px]'
+            }`}
+          >
+            Matched criteria
+          </h4>
+        )}
+
         <div className="flex flex-wrap gap-2">
-          <TagButton
-            text="Urgent"
-            bgColor="#FF86021A"
-            icon={<Zap className="text-[#FF8602] w-4 h-4" />}
-            clas
-          />
-          <TagButton
-            text="Separation Law"
-            bgColor="#004DA61A"
-            icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
-          />
-          <TagButton text="Criminal Law" bgColor="#A600161A" />
+          {urgentOption?.option && (
+            <TagButton
+              text={urgentOption?.option}
+              bgColor="#FF86021A"
+              icon={<Zap className="text-[#FF8602] w-4 h-4" />}
+            />
+          )}
+          {user?.additionalDetails && user?.additionalDetails !== '' && (
+            <TagButton
+              text="Additional Details"
+              bgColor="#004DA61A"
+              icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+            />
+          )}
+
+          {user?.userProfileId?.phone && (
+            <TagButton
+              text="Verified Phone"
+              bgColor="#00C3C01A"
+              icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+            />
+          )}
         </div>
       </div>
 
       {/* Job Description */}
       <div className="p-3">
-        <h3
-          className={`font-medium mb-2 ${
-            isExpanded ? 'heading-md' : 'text-[13px]'
-          }`}
-        >
-          Looking for a divorce law consultation
-        </h3>
+        {user?.serviceId?.name && (
+          <h3
+            className={`font-medium mb-2 ${
+              isExpanded ? 'heading-md' : 'text-[13px]'
+            }`}
+          >
+            Looking for a {user?.serviceId?.name} consultation
+          </h3>
+        )}
+
         <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
           <h4
             className={`font-medium mb-2 ${

@@ -95,7 +95,7 @@ export default function HeroHome() {
               countryWiseServices?.data.map((service) => (
                 <Link
                   href="#"
-                  className="flex flex-col items-center gap-[10px] text-center w-[calc(50%-10px)] sm:w-auto border py-1 px-3 rounded-full"
+                  className="flex justify-center items-center gap-[10px] text-center w-[calc(50%-10px)] sm:w-auto border py-1 px-3 rounded-full"
                   key={service?._id}
                   onClick={(e) => {
                     e.preventDefault(); // Prevent the default anchor behavior
