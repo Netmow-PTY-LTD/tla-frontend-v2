@@ -57,7 +57,7 @@ export default function MultipleFileUploader({
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex  gap-4">
       {/* Image Previews with Remove Buttons */}
       <div className="flex flex-wrap gap-4">
         {previews.map((src, index) => (
@@ -78,7 +78,7 @@ export default function MultipleFileUploader({
       </div>
 
       {/* File Upload Input */}
-      <div className="max-w-sm">
+      <div className="max-w-sm ">
         <label
           htmlFor={`file-upload-${name}`}
           className="flex flex-col items-center justify-center w-full px-5 py-4 border border-dashed border-gray-300 rounded-2xl cursor-pointer text-center hover:bg-gray-50 transition"

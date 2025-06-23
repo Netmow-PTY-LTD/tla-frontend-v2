@@ -44,21 +44,37 @@ export default function VideoGallery() {
   };
 
   return (
-    <div>
+    <div className="mt-10">
       <h3 className="16px text-black font-semibold heading-lg">Videos</h3>
       <p className="text-[#8E8E8E] mt-[10px]">
         Add YouTube videos to showcase your work and expertise – videos of
         previous events for example.
       </p>
 
-      <div className="flex items-center gap-3 mt-11">
-        <label
-          htmlFor="file-upload"
-          className={`flex flex-col items-center justify-center w-full  px-5 py-4 border border-dashed border-gray-300 rounded-2xl cursor-pointer text-center hover:bg-gray-50 transition`}
-          onClick={() => setOpen(true)}
-        >
-          <CloudUpload className="w-6 h-6 text-[#00C3C0] mb-2" />
-        </label>
+      <div className="grid grid-cols-2  gap-3 mt-11">
+        {/* Embedded video preview */}
+        {embedUrl && (
+          <div className=" w-full aspect-video rounded-xl overflow-hidden shadow-lg">
+            <iframe
+              width="100%"
+              height="100%"
+              src={embedUrl}
+              title="Embedded YouTube Video"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        )}
+
+        <div className="w-full aspect-video">
+          <label
+            htmlFor="file-upload"
+            className="flex flex-col items-center justify-center w-full h-full px-5 py-4 border border-dashed border-gray-300 rounded-2xl cursor-pointer text-center hover:bg-gray-50 transition"
+            onClick={() => setOpen(true)}
+          >
+            <CloudUpload className="w-6 h-6 text-[#00C3C0] mb-2" />
+          </label>
+        </div>
 
         <Modal open={open} onOpenChange={setOpen} title={'Add Video Link Here'}>
           <TextInput
@@ -82,19 +98,6 @@ export default function VideoGallery() {
             </button>
           </div>
         </Modal>
-        {/* Embedded video preview */}
-        {embedUrl && (
-          <div className="mt-6 w-full aspect-video rounded-xl overflow-hidden shadow-lg">
-            <iframe
-              width="100%"
-              height="100%"
-              src={embedUrl}
-              title="Embedded YouTube Video"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-        )}
       </div>
     </div>
   );
