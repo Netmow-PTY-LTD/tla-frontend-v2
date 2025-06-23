@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { CloudUpload, X } from 'lucide-react';
+import { CloudUpload, Trash, X } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 export default function MultipleFileUploader({
@@ -71,7 +71,7 @@ export default function MultipleFileUploader({
               onClick={() => handleRemove(index)}
               className="absolute -top-2 -right-2 bg-white text-red-500 rounded-full shadow p-1 hover:bg-red-100"
             >
-              <X className="h-4 w-4" />
+              <Trash className="h-4 w-4" />
             </button>
           </div>
         ))}
