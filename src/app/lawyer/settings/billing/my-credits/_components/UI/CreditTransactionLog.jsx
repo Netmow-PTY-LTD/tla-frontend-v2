@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Search, Download, Filter, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -74,32 +74,41 @@ export const CreditTransactionLog = () => {
     isLoading: transactionIsLoading,
   } = useTransactionHistoryQuery();
 
-  console.log('Transaction Data:', transactionData);
-
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredTransactions, setFilteredTransactions] =
-    useState(mockTransactions);
+  const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const handleSearch = (term) => {
-    setSearchTerm(term);
-    const filtered = mockTransactions.filter(
-      (transaction) =>
-        transaction.id.toLowerCase().includes(term.toLowerCase()) ||
-        transaction.description.toLowerCase().includes(term.toLowerCase())
-    );
-    setFilteredTransactions(filtered);
-    setCurrentPage(1); // reset to page 1 after filtering
-  };
+  // Filter on transactionData or searchTerm change
+  useEffect(() => {
+    if (!transactionData?.data) return;
 
-  // Calculate pagination
+    const filtered = transactionData.data.filter((transaction) => {
+      const id = transaction._id?.toLowerCase() || '';
+      const desc = transaction.description?.toLowerCase() || '';
+      const term = searchTerm.toLowerCase();
+      return id.includes(term) || desc.includes(term);
+    });
+
+    setFilteredTransactions(filtered);
+    setCurrentPage(1);
+  }, [transactionData?.data, searchTerm]);
+
+  // Pagination
   const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedTransactions = filteredTransactions.slice(
     startIndex,
     startIndex + itemsPerPage
   );
+
+  // Format date like '2 Jan 2025'
+  const formatDate = (dateString) =>
+    new Date(dateString).toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    });
 
   return (
     <div className="w-full max-w-7xl mx-auto p-6 bg-gray-50 rounded-lg shadow-sm">
@@ -120,7 +129,7 @@ export const CreditTransactionLog = () => {
           <Input
             placeholder="Search transactions..."
             value={searchTerm}
-            onChange={(e) => handleSearch(e.target.value)}
+            onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10 bg-gray-50 border-gray-200 focus:bg-white transition-colors"
           />
         </div>
@@ -152,7 +161,7 @@ export const CreditTransactionLog = () => {
         </div>
       </div>
 
-      {/* Table Container */}
+      {/* Table */}
       <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -175,28 +184,30 @@ export const CreditTransactionLog = () => {
             <tbody className="divide-y divide-gray-200">
               {paginatedTransactions.map((transaction) => (
                 <tr
-                  key={transaction.id}
+                  key={transaction._id}
                   className="hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
                 >
                   <td className="py-4 px-6 text-sm font-mono text-gray-900">
-                    {transaction.id}
+                    {transaction._id}
                   </td>
                   <td className="py-4 px-6 text-sm text-gray-700">
-                    {transaction.description}
+                    {transaction.description
+                      ? transaction.description
+                      : `${transaction.credit} credits used to reply to customer`}
                   </td>
                   <td className="py-4 px-6 text-sm font-semibold">
                     <span
                       className={
-                        transaction.credits < 0
+                        transaction.credit < 0
                           ? 'text-red-600'
                           : 'text-green-600'
                       }
                     >
-                      {transaction.credits}
+                      {transaction.credit}
                     </span>
                   </td>
                   <td className="py-4 px-6 text-sm text-gray-600">
-                    {transaction.date}
+                    {formatDate(transaction.createdAt)}
                   </td>
                 </tr>
               ))}
@@ -233,7 +244,7 @@ export const CreditTransactionLog = () => {
             <span className="font-semibold text-red-600">
               -
               {filteredTransactions.reduce(
-                (sum, t) => sum + Math.abs(t.credits),
+                (sum, t) => sum + Math.abs(t.credit),
                 0
               )}
             </span>
