@@ -1,0 +1,13 @@
+/*
+  Content-Security-Policy: 
+    default-src 'self';
+    script-src 'self' https://js.stripe.com 'unsafe-inline' 'unsafe-eval';
+    frame-src https://js.stripe.com https://hooks.stripe.com;
+    connect-src https://api.stripe.com https://js.stripe.com;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+    font-src https://fonts.gstatic.com;
+
+
+
+
+    
