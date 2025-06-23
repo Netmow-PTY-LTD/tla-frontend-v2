@@ -36,7 +36,7 @@ const CreditsPurchase = ({ creditPackage }) => {
       showErrorToast(errorMessage);
     }
   };
-  const handlePurchase = (creditPackageId, creditPrice) => {
+  const handlePurchase = async (creditPackageId, creditPrice) => {
     if (!card) {
       setOpen(true);
     } else {
@@ -46,7 +46,7 @@ const CreditsPurchase = ({ creditPackage }) => {
         couponCode: null,
       };
       try {
-        const result = purchasePackage(purchaseDetails).unwrap();
+        const result = await purchasePackage(purchaseDetails).unwrap();
         console.log('Purchase result:', result);
         if (result.success) {
           showSuccessToast(result?.message);
