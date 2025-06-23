@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 
 export default function LeadDetailsPage({ onBack, lead }) {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(lead?._id);
+  console.log('singleLead', singleLead);
 
   const fullText =
     singleLead?.data?.additionalDetails === ''
@@ -42,6 +43,10 @@ export default function LeadDetailsPage({ onBack, lead }) {
   }, []);
 
   const mapUrl = getStaticMapUrl(lead?.userProfileId?.address);
+
+  const urgentOption = singleLead?.data?.leadAnswers
+    .flatMap((answer) => answer.options || [])
+    .find((option) => option.option === 'Urgent');
 
   return (
     <div className="">
@@ -81,7 +86,7 @@ export default function LeadDetailsPage({ onBack, lead }) {
             <div className="flex items-center gap-2 admin-text font-medium">
               <PhoneOutgoing className="w-4 h-4" />{' '}
               <span>
-                Phone:{' '}
+                Phone: {''}
                 {(() => {
                   const phone = lead?.userProfileId?.phone;
                   return phone
@@ -125,17 +130,29 @@ export default function LeadDetailsPage({ onBack, lead }) {
           <div className="mt-5">
             <h4 className="font-medium mb-1 heading-base">Matched criteria</h4>
             <div className="flex flex-wrap gap-2">
-              <TagButton
-                text="Urgent"
-                bgColor="#FF86021A"
-                icon={<Zap className="text-[#FF8602]" />}
-              />
-              <TagButton
-                text="Separation Law"
-                bgColor="#004DA61A"
-                icon={<BadgeCheck className="text-[#00C3C0] " />}
-              />
-              <TagButton text="Criminal Law" bgColor="#A600161A" />
+              {urgentOption?.option && (
+                <TagButton
+                  text={urgentOption?.option}
+                  bgColor="#FF86021A"
+                  icon={<Zap className="text-[#FF8602] w-4 h-4" />}
+                />
+              )}
+              {singleLead?.data?.additionalDetails &&
+                singleLead?.data?.additionalDetails !== '' && (
+                  <TagButton
+                    text="Additional Details"
+                    bgColor="#004DA61A"
+                    icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+                  />
+                )}
+
+              {singleLead?.data?.userProfileId?.phone && (
+                <TagButton
+                  text="Verified Phone"
+                  bgColor="#00C3C01A"
+                  icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+                />
+              )}
             </div>
           </div>
           <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
