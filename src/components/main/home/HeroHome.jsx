@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import HeroShowcase from './HeroShowcase';
@@ -8,7 +7,6 @@ import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesA
 import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
 import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/questionApiService';
 import ClientLeadRegistrationModal from './modal/ClientLeadRegistrationModal';
-import { set } from 'zod';
 
 export default function HeroHome() {
   const [selectedService, setSelectedService] = useState(null);

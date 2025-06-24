@@ -10,12 +10,19 @@ import Media from './_components/Media';
 import ProfileProgress from './_components/ProfileProgress';
 
 import { DynamicAccordion } from '@/components/UIComponents/AcordionComponent';
+import Experiences from './_components/Experiences';
+import PublicProfile from './_components/PublicProfile';
 
 export default function MyProfilePage() {
   const accordionItems = [
     { id: 'about', title: 'About', content: <About /> },
     // { id: 'reviews', title: 'Reviews', content: <Reviews /> },
     { id: 'services', title: 'Services', content: <Services /> },
+    {
+      id: 'public-profile',
+      title: 'Public Profile',
+      content: <PublicProfile />,
+    },
     { id: 'media', title: 'Photos', content: <Media /> },
     {
       id: 'social',
