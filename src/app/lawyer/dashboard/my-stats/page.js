@@ -133,7 +133,7 @@ const MyStatsPage = () => {
 
   return (
     <div className="lg:m-4 w-full">
-      <div className="max-w-[900px] mx-auto px-4">
+      <div className="max-w-[1100px] mx-auto">
         <h2 className="font-bold heading border-b border-1 text-[#0B1C2D] pb-4">
           Overview of Your Stats
         </h2>

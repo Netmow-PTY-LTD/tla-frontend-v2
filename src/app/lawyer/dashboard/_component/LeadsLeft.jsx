@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react';
 
 export default function LeadDetailsPage({ onBack, lead }) {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(lead?._id);
-  console.log('singleLead', singleLead);
+  //console.log('singleLead', singleLead);
 
   const fullText =
     singleLead?.data?.additionalDetails === ''
@@ -196,7 +196,7 @@ export default function LeadDetailsPage({ onBack, lead }) {
               <div className="flex flex-col gap-5">
                 {singleLead?.data?.leadAnswers?.map((leadAnswer, i) => (
                   <div key={i}>
-                    <p className="text-black font-medium">
+                    <p className="text-[var(--color-special)] font-medium">
                       {leadAnswer?.question}
                     </p>
                     <div className="text-[#34495E] mt-2">

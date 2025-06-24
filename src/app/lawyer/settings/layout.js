@@ -41,7 +41,7 @@ const SettingsLayout = ({ children }) => {
     // },
     {
       label: 'Credits & Payments',
-      href: '/lawyer/settings/billing/my-credits',
+      href: '/lawyer/settings/credit-payment',
       icon: <CreditCardIcon className="w-4 h-4" />,
     },
     {
