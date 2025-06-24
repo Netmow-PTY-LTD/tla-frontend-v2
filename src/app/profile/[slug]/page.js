@@ -19,7 +19,9 @@ const DynamicProfilePage = () => {
     isError,
     error,
     refetch,
-  } = useGetUserByIdQuery(id);
+  } = useGetUserByIdQuery(params?.slug);
+
+  console.log('userInfo', userInfo);
 
   console.log('userInfo', userInfo?.data?.profile?.photos);
   return (

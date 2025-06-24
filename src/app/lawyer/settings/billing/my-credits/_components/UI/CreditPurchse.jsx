@@ -59,13 +59,13 @@ const CreditsPurchase = ({ creditPackage }) => {
   };
   return (
     <div>
-      <div className="border-0 bg-white rounded-lg shadow-sm pt-4 px-[17px] relative">
+      <div className="border-0 bg-white rounded-lg shadow-sm pt-4 pb-6 px-[17px] relative">
         <div className="bg-[#00C3C0] absolute text-white p-[10px] rounded-tl-md rounded-br-md text-sm font-medium top-0 left-0">
           20% OFF EXCLUSIVE STARTING PACK
         </div>
 
-        <div className="mt-10">
-          <div className="grid md:grid-cols-3 gap-6 items-center">
+        <div className="mt-12">
+          <div className="grid md:grid-cols-4 gap-6 items-start">
             <div className="flex items-start space-x-4">
               <p className="font-medium text-gray-900">{creditPackage?.name}</p>
             </div>
@@ -88,23 +88,13 @@ const CreditsPurchase = ({ creditPackage }) => {
                 $ {creditPackage?.pricePerCredit}/credit
               </p>
             </div>
-          </div>
-
-          <div className="flex items-center justify-between mt-6">
-            <Image
-              src="/assets/img/Credits/guarantee.png"
-              alt="Guarantee"
-              width={160}
-              height={160}
-            />
-
-            <div className="px-6 pb-6">
+            <div className="">
               <Button
                 onClick={() =>
                   handlePurchase(creditPackage?._id, creditPackage?.price)
                 }
                 variant="primary"
-                className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-8"
+                className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-4"
               >
                 Buy Now
               </Button>
@@ -126,13 +116,21 @@ const CreditsPurchase = ({ creditPackage }) => {
             </div>
           </div>
 
-          <div className="w-full mt-6">
-            <div className="w-[70%] mx-auto flex items-center space-x-2 bg-[#F9C01E33] rounded-t-md p-4">
-              <Info className="h-5 w-5 text-[#00C3C0] flex-shrink-0" />
-              <p className="text-sm text-gray-700">
-                We'll give you your credits back if you don't secure at least
-                one job on Bark using these credits.
-              </p>
+          <div className="flex items-center justify-between">
+            <div className="w-full mt-6 ">
+              <div className="flex items-center space-x-2 bg-[#f9f9fa] rounded-full">
+                <Image
+                  src="/assets/img/Credits/guarantee.png"
+                  alt="Guarantee"
+                  width={80}
+                  height={80}
+                />
+                {/* <Info className="h-5 w-5 text-[#00C3C0] flex-shrink-0" /> */}
+                <p className="text-sm text-gray-700">
+                  We'll give you your credits back if you don't secure at least
+                  one job on Bark using these credits.
+                </p>
+              </div>
             </div>
           </div>
         </div>
