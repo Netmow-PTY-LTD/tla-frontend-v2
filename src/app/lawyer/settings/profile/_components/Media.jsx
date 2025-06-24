@@ -56,6 +56,7 @@ export default function Photos() {
 
   const handlePhotoUpload = async (data) => {
     console.log('Form data:', data);
+
     try {
       const formData = new FormData();
       const { photo, video } = data;
@@ -90,8 +91,8 @@ export default function Photos() {
     <div className="max-w-[900px] mx-auto">
       <FormWrapper
         onSubmit={handlePhotoUpload}
-        defaultValues={defaultValues}
-        schema={lawyerSettingsMediaFormSchema}
+        // defaultValues={defaultValues}
+        // schema={lawyerSettingsMediaFormSchema}
       >
         <div className="flex flex-col gap-3 ">
           <PhotoGallery />

@@ -78,14 +78,26 @@ const videoUrlRegex = new RegExp(
   'i'
 );
 
+// export const lawyerSettingsMediaFormSchema = z.object({
+//   video: z
+//     .string()
+//     .trim()
+//     .regex(videoUrlRegex, {
+//       message: 'Please enter a valid video URL (YouTube, Vimeo, etc.)',
+//     })
+//     .or(z.literal(''))
+//     .optional(),
+//   photo: z.any(),
+// });
+
 export const lawyerSettingsMediaFormSchema = z.object({
   video: z
-    .string()
-    .trim()
-    .regex(videoUrlRegex, {
-      message: 'Please enter a valid video URL (YouTube, Vimeo, etc.)',
-    })
-    .or(z.literal(''))
+    .union([
+      z.string().trim().regex(videoUrlRegex, {
+        message: 'Please enter a valid video URL (YouTube, Vimeo, etc.)',
+      }),
+      z.literal(''),
+    ])
     .optional(),
   photo: z.any(),
 });

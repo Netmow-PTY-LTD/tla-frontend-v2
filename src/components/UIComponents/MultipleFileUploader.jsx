@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { CloudUpload, Trash, X } from 'lucide-react';
+import { CloudUpload, Trash } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 export default function MultipleFileUploader({
@@ -13,12 +13,14 @@ export default function MultipleFileUploader({
   multiple = false,
   icon = <CloudUpload className="w-6 h-6 text-[#00C3C0] mb-2" />,
 }) {
-  const { register, setValue, watch } = useFormContext();
+  const { register, setValue, watch, getValues } = useFormContext();
   const files = watch(name);
   const [previews, setPreviews] = useState(
     Array.isArray(defaultPreview) ? defaultPreview : [defaultPreview]
   );
 
+  console.log('MultipleFileUploader files:', getValues('photos'));
+  console.log('MultipleFileUploader files:');
   // Update previews when file input changes
   useEffect(() => {
     if (!files) return;
