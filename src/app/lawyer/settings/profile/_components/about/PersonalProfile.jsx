@@ -20,7 +20,7 @@ export default function PersonalProfile() {
       <div>
         <div className="flex items-center gap-3 mt-11">
           <AvatarUploader name="userProfileLogo" label="Upload Photo" />
-          <div>
+          {/* <div>
             <label
               htmlFor="open-camera"
               className={`flex flex-col items-center justify-center w-full  px-5 py-4 border border-dashed border-gray-300 rounded-2xl cursor-pointer text-center hover:bg-gray-50 transition`}
@@ -30,7 +30,7 @@ export default function PersonalProfile() {
             <p className="text-gray-700 font-medium text-center mt-2">
               Open Camera
             </p>
-          </div>
+          </div> */}
         </div>
         <div className="mt-[30px]">
           <TextInput
