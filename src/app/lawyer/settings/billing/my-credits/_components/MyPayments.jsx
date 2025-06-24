@@ -70,7 +70,7 @@ const MyPayments = () => {
 
       {/* transaction list*/}
 
-      <div>{card && <CreditTransactionLog />}</div>
+      {/* <div>{card && <CreditTransactionLog />}</div> */}
     </div>
   );
 };
