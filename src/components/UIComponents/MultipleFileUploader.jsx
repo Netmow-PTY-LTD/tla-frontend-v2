@@ -1,6 +1,7 @@
 'use client';
+
 import { useEffect, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useFormState } from 'react-hook-form';
 import { CloudUpload, Trash } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
@@ -11,11 +12,17 @@ export default function MultipleFileUploader({
   multiple = false,
   icon = <CloudUpload className="w-6 h-6 text-[#00C3C0] mb-2" />,
 }) {
-  const { setValue, watch, getValues } = useFormContext();
+  const { register, setValue, watch, getValues, control } = useFormContext();
+  const { isDirty } = useFormState({ control }); // ensures RHF state is ready
   const files = watch(name);
   const [previews, setPreviews] = useState([]);
 
-  // Convert a URL to a File object
+  // Ensure field is registered
+  useEffect(() => {
+    register(name);
+  }, [register, name]);
+
+  // Convert a URL string to a File object
   const urlToFile = async (url, index) => {
     try {
       const res = await fetch(url);
@@ -28,22 +35,24 @@ export default function MultipleFileUploader({
     }
   };
 
-  // ⬇️ On mount: check defaultValues from RHF and convert to Files
+  // Initialize default file values (URLs → File objects)
   useEffect(() => {
     const initDefaultFiles = async () => {
-      const defaultFieldValue = getValues(name);
+      const defaultValue = getValues(name);
 
-      // If it's already File objects, just skip
-      if (!defaultFieldValue || defaultFieldValue[0] instanceof File) return;
+      if (
+        !defaultValue ||
+        (Array.isArray(defaultValue) && defaultValue[0] instanceof File)
+      ) {
+        return;
+      }
 
-      const urls = Array.isArray(defaultFieldValue)
-        ? defaultFieldValue
-        : [defaultFieldValue];
+      const urls = Array.isArray(defaultValue) ? defaultValue : [defaultValue];
 
-      const filesFromUrls = await Promise.all(
+      const fileObjs = await Promise.all(
         urls.map((url, i) => urlToFile(url, i))
       );
-      const validFiles = filesFromUrls.filter(Boolean);
+      const validFiles = fileObjs.filter(Boolean);
 
       setValue(name, multiple ? validFiles : validFiles[0] || null, {
         shouldValidate: true,
@@ -55,9 +64,9 @@ export default function MultipleFileUploader({
     };
 
     initDefaultFiles();
-  }, []);
+  }, [isDirty]);
 
-  // ⬇️ Update previews when files change
+  // Update preview images when files change
   useEffect(() => {
     if (!files) return;
 
@@ -75,7 +84,6 @@ export default function MultipleFileUploader({
     };
   }, [files]);
 
-  // ⬇️ File selection handler
   const handleChange = (e) => {
     const selectedFiles = Array.from(e.target.files || []);
     if (selectedFiles.length > 0) {
@@ -86,7 +94,6 @@ export default function MultipleFileUploader({
     }
   };
 
-  // ⬇️ File removal handler
   const handleRemove = (index) => {
     const updatedPreviews = previews.filter((_, i) => i !== index);
     const updatedFiles = Array.isArray(files)
@@ -99,7 +106,7 @@ export default function MultipleFileUploader({
 
   return (
     <div className="flex gap-4">
-      {/* Image Previews */}
+      {/* Previews */}
       <div className="flex flex-wrap gap-4">
         {previews.map((src, index) => (
           <div key={index} className="relative">
@@ -118,7 +125,7 @@ export default function MultipleFileUploader({
         ))}
       </div>
 
-      {/* File Upload Input */}
+      {/* Upload input */}
       <div className="max-w-sm">
         <label
           htmlFor={`file-upload-${name}`}
