@@ -102,6 +102,7 @@ import StatusCard from '@/components/dashboard/lawyer/components/StatusCard';
 import { Card } from '@/components/ui/card';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { useGetLeadServiceListQuery } from '@/store/features/leadService/leadServiceApiService';
+import LeadSettings from '@/components/dashboard/lawyer/components/LeadSettings';
 
 const MyStatsPage = () => {
   const menuLinks = [
@@ -200,6 +201,7 @@ const MyStatsPage = () => {
             </div>
           </div>
         </Card>
+        <LeadSettings className="h-full " />
       </div>
     </div>
   );
