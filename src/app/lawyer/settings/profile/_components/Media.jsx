@@ -50,35 +50,47 @@ export default function Photos() {
   }
 
   const defaultValues = {
-    video: profile?.photos?.video ?? '',
-    photo: profile?.photos?.photo ?? '',
+    videos: profile?.photos?.videos.map((item) => ({ url: item })) ?? [],
+    photos: profile?.photos?.photos ?? '',
   };
 
+  // console.log('Default values:', defaultValues);
   const handlePhotoUpload = async (data) => {
     console.log('Form data:', data);
 
     try {
       const formData = new FormData();
-      const { photo, video } = data;
+      const { photos, videos } = data;
+
       const payload = {
         photos: {
-          video: video ? video : '', // ✅ Wrap single value in an array
+          videos: videos?.map((item) => item.url) || [],
         },
       };
 
-      // Append serialized JSON data
+      // Add JSON payload to formData
       formData.append('data', JSON.stringify(payload));
 
-      // Conditionally append files
-      if (photo instanceof File) {
-        formData.append('photo', photo);
+      console.log('Payload before appending photos:', formData.getAll('data'));
+      // Append multiple photos
+      if (Array.isArray(photos)) {
+        photos.forEach((file) => {
+          if (file instanceof File) {
+            formData.append('photos', file);
+          }
+        });
+      } else if (photos instanceof File) {
+        formData.append('photos', photos);
       }
 
-      console.log(JSON.parse(formData.get('data')));
+      // ✅ Log files correctly
+      console.log('Photo files:', formData.getAll('photos'));
+
       const res = await updatePhotosData(formData).unwrap();
       if (res?.success === true) {
-        showSuccessToast(res?.message || ' update successful');
+        showSuccessToast(res?.message || 'Update successful');
       }
+
       console.log('Update response:', res);
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
@@ -91,7 +103,7 @@ export default function Photos() {
     <div className="max-w-[900px] mx-auto">
       <FormWrapper
         onSubmit={handlePhotoUpload}
-        // defaultValues={defaultValues}
+        defaultValues={defaultValues}
         // schema={lawyerSettingsMediaFormSchema}
       >
         <div className="flex flex-col gap-3 ">
