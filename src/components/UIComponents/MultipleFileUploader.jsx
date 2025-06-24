@@ -19,8 +19,6 @@ export default function MultipleFileUploader({
     Array.isArray(defaultPreview) ? defaultPreview : [defaultPreview]
   );
 
-  console.log('MultipleFileUploader files:', getValues('photos'));
-  console.log('MultipleFileUploader files:');
   // Update previews when file input changes
   useEffect(() => {
     if (!files) return;

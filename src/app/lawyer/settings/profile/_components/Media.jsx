@@ -54,10 +54,7 @@ export default function Photos() {
     photos: profile?.photos?.photos ?? '',
   };
 
-  // console.log('Default values:', defaultValues);
   const handlePhotoUpload = async (data) => {
-    console.log('Form data:', data);
-
     try {
       const formData = new FormData();
       const { photos, videos } = data;
@@ -71,7 +68,6 @@ export default function Photos() {
       // Add JSON payload to formData
       formData.append('data', JSON.stringify(payload));
 
-      console.log('Payload before appending photos:', formData.getAll('data'));
       // Append multiple photos
       if (Array.isArray(photos)) {
         photos.forEach((file) => {
@@ -84,14 +80,11 @@ export default function Photos() {
       }
 
       // ✅ Log files correctly
-      console.log('Photo files:', formData.getAll('photos'));
 
       const res = await updatePhotosData(formData).unwrap();
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Update successful');
       }
-
-      console.log('Update response:', res);
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);
@@ -104,7 +97,7 @@ export default function Photos() {
       <FormWrapper
         onSubmit={handlePhotoUpload}
         defaultValues={defaultValues}
-        // schema={lawyerSettingsMediaFormSchema}
+        schema={lawyerSettingsMediaFormSchema}
       >
         <div className="flex flex-col gap-3 ">
           <PhotoGallery />

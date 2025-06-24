@@ -2,19 +2,27 @@
 
 import { Input } from '@/components/ui/input';
 import { Modal } from '@/components/UIComponents/Modal';
+import { videoUrlRegex } from '@/schema/dashboard/lawyerSettings';
 import { getEmbedUrl } from '@/utils/embedVideoLink';
 import { CloudUpload, Trash2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useFormContext, useFieldArray } from 'react-hook-form';
 
 export default function VideoGallery() {
-  const { control, watch, setValue, getValues } = useFormContext();
+  const {
+    control,
+    watch,
+    setValue,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useFormContext();
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'videos',
   });
 
-  console.log('VideoGallery getValues:', getValues('videos'));
   const [open, setOpen] = useState(false);
   const [newLink, setNewLink] = useState('');
 
@@ -25,21 +33,44 @@ export default function VideoGallery() {
     }
   }, [setValue, watch]);
 
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setNewLink(value);
+
+    // Clear error immediately if the input becomes valid
+    if (videoUrlRegex.test(value)) {
+      clearErrors('videos');
+    }
+  };
+
   const onSave = () => {
-    console.log('Saving new video link:', newLink);
     if (!newLink) return;
+
+    if (!videoUrlRegex.test(newLink)) {
+      setError('videos', {
+        type: 'manual',
+        message: 'Invalid video URL. Please enter a YouTube, Vimeo, etc. link.',
+      });
+      return;
+    }
+
     const embed = getEmbedUrl(newLink);
     if (embed) {
       append({ url: newLink });
       setNewLink('');
       setOpen(false);
+      clearErrors('videos'); // just in case
     } else {
-      console.warn('Invalid video link');
+      setError('videos', {
+        type: 'manual',
+        message: 'This video link cannot be embedded.',
+      });
     }
   };
 
   const onCancel = () => {
     setNewLink('');
+    clearErrors('videos');
     setOpen(false);
   };
 
@@ -52,7 +83,6 @@ export default function VideoGallery() {
       </p>
 
       <div className="grid grid-cols-2 gap-3 mt-11">
-        {/* Video previews */}
         {fields?.map((field, index) => {
           const embed = getEmbedUrl(field.url);
           if (!embed) return null;
@@ -81,7 +111,6 @@ export default function VideoGallery() {
           );
         })}
 
-        {/* Add new video button */}
         <div className="w-full aspect-video">
           <label
             className="flex flex-col items-center justify-center w-full h-full px-5 py-4 border border-dashed border-gray-300 rounded-2xl cursor-pointer text-center hover:bg-gray-50 transition"
@@ -93,14 +122,16 @@ export default function VideoGallery() {
         </div>
       </div>
 
-      {/* Modal for adding video link */}
       <Modal open={open} onOpenChange={setOpen} title="Add Video Link">
         <Input
           value={newLink}
-          onChange={(e) => setNewLink(e.target.value)}
+          onChange={handleInputChange}
           placeholder="https://www.youtube.com/watch?v=example"
           className="w-full"
         />
+        {errors.videos && (
+          <p className="text-sm text-red-500 mt-2">{errors.videos.message}</p>
+        )}
         <div className="flex justify-between items-center pt-4">
           <button
             onClick={onCancel}
