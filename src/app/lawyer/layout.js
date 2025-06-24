@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/sidebar';
 import { LawyerSideNav } from '@/components/dashboard/lawyer/layout/SellerSideNav';
 import SidebarTop from './dashboard/_component/common/SidebarTop';
-import { useRouter } from 'next/navigation';
 import ScrollToTopOnRouteChange from './dashboard/_component/ScrollToTop';
 
 export default function SellerDashboardLayout({ children }) {
