@@ -1,6 +1,12 @@
 'use client';
 import React from 'react';
-import { ChevronDown, LogOut, SendToBack, Settings } from 'lucide-react';
+import {
+  ChevronDown,
+  LogOut,
+  SendToBack,
+  Settings,
+  UserIcon,
+} from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,6 +36,7 @@ export default function ProfileDropDown() {
 
   const router = useRouter();
 
+  console.log('currentUser', currentUser);
   /**
    * Handles user logout functionality.
    * - Calls the authLogout mutation to invalidate the session on the server.
@@ -114,7 +121,21 @@ export default function ProfileDropDown() {
               >
                 <span>My Profile</span>
                 <DropdownMenuShortcut>
-                  <Settings />
+                  <UserIcon />
+                </DropdownMenuShortcut>
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuGroup>
+            <DropdownMenuItem>
+              <Link
+                href={`/profile/${currentUser?.data?.profile?.slug}`}
+                target="_blank"
+                className="w-full flex items-center justify-between gap-2 cursor-pointer px-2 py-1.5"
+              >
+                <span>Public Profile</span>
+                <DropdownMenuShortcut>
+                  <UserIcon />
                 </DropdownMenuShortcut>
               </Link>
             </DropdownMenuItem>
