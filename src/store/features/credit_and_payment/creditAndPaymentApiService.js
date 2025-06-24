@@ -75,6 +75,16 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['credit-payment'],
     }),
+
+    // tra
+
+    transactionHistory: builder.query({
+      query: () => ({
+        url: '/settings/credit-payment/transactions',
+        method: 'GET',
+      }),
+      providesTags: ['credit-payment'],
+    }),
   }),
 });
 
@@ -88,4 +98,5 @@ export const {
   useGetAllCreditPackagesQuery,
   useUpdateCreditPackageMutation,
   usePurchaseCreditPackageMutation,
+  useTransactionHistoryQuery,
 } = creditAndPaymentApiService;

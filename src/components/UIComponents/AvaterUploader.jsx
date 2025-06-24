@@ -39,7 +39,7 @@ export default function AvatarUploader({
 
   return (
     <div className="flex items-center gap-4 ">
-      <Avatar className="h-[90px] w-[90px]">
+      <Avatar className="h-[90px] w-[90px] ">
         <AvatarImage src={preview} />
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>

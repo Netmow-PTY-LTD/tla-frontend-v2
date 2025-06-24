@@ -54,7 +54,7 @@ export const lawyerSettingAboutSchema = z.object({
   }),
 });
 
-const videoUrlRegex = new RegExp(
+export const videoUrlRegex = new RegExp(
   [
     // YouTube (watch, short, embed, youtu.be)
     '(https?:\\/\\/)?(www\\.)?(youtube\\.com\\/watch\\?v=|youtube\\.com\\/shorts\\/|youtube\\.com\\/embed\\/|youtu\\.be\\/)[\\w-]{11}',
@@ -79,13 +79,14 @@ const videoUrlRegex = new RegExp(
 );
 
 export const lawyerSettingsMediaFormSchema = z.object({
-  video: z
-    .string()
-    .trim()
-    .regex(videoUrlRegex, {
-      message: 'Please enter a valid video URL (YouTube, Vimeo, etc.)',
-    })
-    .or(z.literal(''))
+  videos: z
+    .array(
+      z.object({
+        url: z.string().regex(videoUrlRegex, {
+          message: 'Please enter a valid video URL(YouTube, Vimeo, etc.)',
+        }),
+      })
+    )
     .optional(),
-  photo: z.any(),
+  photos: z.any(),
 });
