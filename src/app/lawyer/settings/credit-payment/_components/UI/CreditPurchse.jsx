@@ -11,7 +11,7 @@ import {
   useGetPaymentMethodQuery,
   usePurchaseCreditPackageMutation,
 } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
-import AddCardModal from '../../../_components/AddCardModal';
+import AddCardModal from '../modal/AddCardModal';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
 const CreditsPurchase = ({ creditPackage }) => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import InvoicingForm from './UI/InvoicingForm';
+import InvoicingForm from '../UI/InvoicingForm';
 
 const InvoicesBillings = () => {
   return (
