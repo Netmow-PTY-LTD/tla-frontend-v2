@@ -58,6 +58,7 @@ export default function About() {
   const defaultValues = {
     companyName: profile?.companyProfile?.companyName ?? '',
     name: profile?.name ?? '',
+    designation: profile?.designation ?? '',
     address: profile?.address ?? '',
     phone: profile?.phone ?? '',
     bio: profile?.bio ?? '',
@@ -82,10 +83,12 @@ export default function About() {
   };
 
   const onSubmit = async (data) => {
+    console.log('data', data);
     try {
       const formData = new FormData();
       const {
         name,
+        designation,
         address,
         phone,
         bio,
@@ -115,6 +118,7 @@ export default function About() {
       const payload = {
         userProfile: {
           name,
+          designation,
           address,
           phone,
           bio,
