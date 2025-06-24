@@ -1,16 +1,16 @@
 'use client';
 import React, { useState } from 'react';
 
-import AddCardModal from '../../_components/AddCardModal';
+import AddCardModal from '../modal/AddCardModal';
 import {
   useAddPaymentMethodMutation,
   useGetPaymentMethodQuery,
   useTransactionHistoryQuery,
 } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
-import PaymentMethod from './PaymentMethod';
+import PaymentMethod from '../PaymentMethod';
 import { Loader } from 'lucide-react';
-import { CreditTransactionLog } from './UI/CreditTransactionLog';
+import { CreditTransactionLog } from '../UI/CreditTransactionLog';
 
 const MyPayments = () => {
   const [open, setOpen] = useState(false);

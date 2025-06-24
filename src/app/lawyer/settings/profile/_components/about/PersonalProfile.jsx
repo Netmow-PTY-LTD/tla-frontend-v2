@@ -32,11 +32,16 @@ export default function PersonalProfile() {
             </p>
           </div> */}
         </div>
-        <div className="mt-[30px]">
+        <div className="mt-[30px] space-y-4">
           <TextInput
             name={'name'}
             label={'Name'}
             placeholder={'Enter Your  Name'}
+          />
+          <TextInput
+            name={'designation'}
+            label={'Designation'}
+            placeholder={'Enter Your Designation'}
           />
         </div>
       </div>

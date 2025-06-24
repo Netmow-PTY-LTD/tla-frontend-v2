@@ -10,7 +10,7 @@ export const lawyerSettingAboutSchema = z.object({
   address: z.string({ invalid_type_error: 'Address must be a string' }),
   companyLogo: z.any().optional(),
   userProfileLogo: z.any().optional(),
-  companyName: z.string(),
+  companyName: z.string().optional(),
   contactEmail: z
     .string()
     .trim()
@@ -34,13 +34,14 @@ export const lawyerSettingAboutSchema = z.object({
       z.undefined(),
     ])
     .optional(),
-  companySize: z.string().min(1, 'Company size is required'),
+  companySize: z.string().default('self_employed'),
   description: z.string().optional(),
   yearsInBusiness: z
     .union([z.string(), z.number()])
     .refine((val) => !isNaN(Number(val)), {
       message: 'Years in business must be a number',
-    }),
+    })
+    .optional(),
   location: z.object({
     address: z.string(),
     hideFromProfile: z.boolean(),

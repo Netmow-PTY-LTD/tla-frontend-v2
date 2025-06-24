@@ -127,7 +127,7 @@ const publicApiService = baseApi.injectEndpoints({
     }),
     getUserById: builder.query({
       query: (slug) => ({
-        url: `/public/user/${slug}`,
+        url: `/public/user/by-slug/${slug}`,
         method: 'GET',
       }),
       providesTags: ['user'],

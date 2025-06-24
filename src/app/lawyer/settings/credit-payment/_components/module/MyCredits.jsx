@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import CreditsPurchase from './UI/CreditPurchse';
+import CreditsPurchase from '../UI/CreditPurchse';
 import { useGetAllCreditPackagesQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 import { Loader } from 'lucide-react';
-import { CreditTransactionLog } from './UI/CreditTransactionLog';
+import { CreditTransactionLog } from '../UI/CreditTransactionLog';
 
 const MyCredits = () => {
   const {

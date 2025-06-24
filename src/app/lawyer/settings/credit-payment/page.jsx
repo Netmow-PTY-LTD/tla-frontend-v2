@@ -1,8 +1,8 @@
 'use client';
 import { DynamicAccordion } from '@/components/UIComponents/AcordionComponent';
-import MyCredits from './_components/MyCredits';
-import InvoicesBillings from './_components/InvoicesBillings';
-import MyPayments from './_components/MyPayments';
+import MyCredits from './_components/module/MyCredits';
+import InvoicesBillings from './_components/module/InvoicesBillings';
+import MyPayments from './_components/module/MyPayments';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 
