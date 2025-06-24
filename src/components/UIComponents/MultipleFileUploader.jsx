@@ -1,5 +1,4 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { CloudUpload, Trash } from 'lucide-react';
@@ -8,16 +7,13 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 export default function MultipleFileUploader({
   name = 'avatar',
   label = 'Upload File(s)',
-  defaultPreview = [],
   accept = 'image/*',
   multiple = false,
   icon = <CloudUpload className="w-6 h-6 text-[#00C3C0] mb-2" />,
 }) {
-  const { register, setValue, watch, getValues } = useFormContext();
+  const { setValue, watch, getValues } = useFormContext();
   const files = watch(name);
-  const [previews, setPreviews] = useState(
-    Array.isArray(defaultPreview) ? defaultPreview : [defaultPreview]
-  );
+  const [previews, setPreviews] = useState([]);
 
   // Convert a URL to a File object
   const urlToFile = async (url, index) => {
@@ -32,34 +28,65 @@ export default function MultipleFileUploader({
     }
   };
 
-  console.log('default files:', getValues('photos'));
-  // Update previews when file input changes
+  // ⬇️ On mount: check defaultValues from RHF and convert to Files
+  useEffect(() => {
+    const initDefaultFiles = async () => {
+      const defaultFieldValue = getValues(name);
+
+      // If it's already File objects, just skip
+      if (!defaultFieldValue || defaultFieldValue[0] instanceof File) return;
+
+      const urls = Array.isArray(defaultFieldValue)
+        ? defaultFieldValue
+        : [defaultFieldValue];
+
+      const filesFromUrls = await Promise.all(
+        urls.map((url, i) => urlToFile(url, i))
+      );
+      const validFiles = filesFromUrls.filter(Boolean);
+
+      setValue(name, multiple ? validFiles : validFiles[0] || null, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+
+      const blobUrls = validFiles.map((file) => URL.createObjectURL(file));
+      setPreviews(blobUrls);
+    };
+
+    initDefaultFiles();
+  }, []);
+
+  // ⬇️ Update previews when files change
   useEffect(() => {
     if (!files) return;
 
     const fileList = Array.isArray(files) ? files : [files];
-
-    const updatedPreviews = fileList.map((file) =>
+    const urls = fileList.map((file) =>
       file instanceof File ? URL.createObjectURL(file) : file
     );
 
-    setPreviews(updatedPreviews);
+    setPreviews(urls);
 
-    // Clean up blobs
     return () => {
-      updatedPreviews.forEach((url) => {
+      urls.forEach((url) => {
         if (url.startsWith('blob:')) URL.revokeObjectURL(url);
       });
     };
   }, [files]);
 
+  // ⬇️ File selection handler
   const handleChange = (e) => {
     const selectedFiles = Array.from(e.target.files || []);
     if (selectedFiles.length > 0) {
-      setValue(name, selectedFiles, { shouldValidate: true });
+      setValue(name, multiple ? selectedFiles : selectedFiles[0], {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
     }
   };
 
+  // ⬇️ File removal handler
   const handleRemove = (index) => {
     const updatedPreviews = previews.filter((_, i) => i !== index);
     const updatedFiles = Array.isArray(files)
@@ -67,12 +94,12 @@ export default function MultipleFileUploader({
       : [];
 
     setPreviews(updatedPreviews);
-    setValue(name, updatedFiles, { shouldValidate: true });
+    setValue(name, multiple ? updatedFiles : null, { shouldValidate: true });
   };
 
   return (
-    <div className="flex  gap-4">
-      {/* Image Previews with Remove Buttons */}
+    <div className="flex gap-4">
+      {/* Image Previews */}
       <div className="flex flex-wrap gap-4">
         {previews.map((src, index) => (
           <div key={index} className="relative">
@@ -92,7 +119,7 @@ export default function MultipleFileUploader({
       </div>
 
       {/* File Upload Input */}
-      <div className="max-w-sm ">
+      <div className="max-w-sm">
         <label
           htmlFor={`file-upload-${name}`}
           className="flex flex-col items-center justify-center w-full px-5 py-4 border border-dashed border-gray-300 rounded-2xl cursor-pointer text-center hover:bg-gray-50 transition"
