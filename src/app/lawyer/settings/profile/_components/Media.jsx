@@ -59,6 +59,8 @@ export default function Photos() {
       const formData = new FormData();
       const { photos, videos } = data;
 
+      console.log('Form data:', data);
+
       const payload = {
         photos: {
           videos: videos?.map((item) => item.url) || [],

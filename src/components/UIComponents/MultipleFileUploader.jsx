@@ -19,6 +19,20 @@ export default function MultipleFileUploader({
     Array.isArray(defaultPreview) ? defaultPreview : [defaultPreview]
   );
 
+  // Convert a URL to a File object
+  const urlToFile = async (url, index) => {
+    try {
+      const res = await fetch(url);
+      const blob = await res.blob();
+      const ext = blob.type.split('/')[1] || 'jpg';
+      return new File([blob], `default-${index}.${ext}`, { type: blob.type });
+    } catch (err) {
+      console.error('Error converting URL to file:', url, err);
+      return null;
+    }
+  };
+
+  console.log('default files:', getValues('photos'));
   // Update previews when file input changes
   useEffect(() => {
     if (!files) return;

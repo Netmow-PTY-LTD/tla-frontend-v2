@@ -88,5 +88,5 @@ export const lawyerSettingsMediaFormSchema = z.object({
       })
     )
     .optional(),
-  photo: z.any(),
+  photos: z.any(),
 });
