@@ -58,6 +58,7 @@ export default function About() {
   const defaultValues = {
     companyName: profile?.companyProfile?.companyName ?? '',
     name: profile?.name ?? '',
+    designation: profile?.designation ?? '',
     address: profile?.address ?? '',
     phone: profile?.phone ?? '',
     bio: profile?.bio ?? '',
@@ -82,10 +83,12 @@ export default function About() {
   };
 
   const onSubmit = async (data) => {
+    console.log('data', data);
     try {
       const formData = new FormData();
       const {
         name,
+        designation,
         address,
         phone,
         bio,
@@ -115,6 +118,7 @@ export default function About() {
       const payload = {
         userProfile: {
           name,
+          designation,
           address,
           phone,
           bio,
@@ -164,7 +168,7 @@ export default function About() {
           <h3 className="text-black font-semibold heading-lg">
             About Your Profile
           </h3>
-          <p className="mt-[10px] mb-7">
+          <p className="mt-[10px] text-[#8E8E8E] mb-7">
             This information will be visible to customers on Bark. Use it to
             showcase your experience and build trust. You can update your
             private contact details in your account settings.

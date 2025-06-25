@@ -115,6 +115,23 @@ const publicApiService = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['range'],
     }),
+
+    //  ------------------ Profile related ------------------
+
+    getUserProfileList: builder.query({
+      query: () => ({
+        url: `/public/user/list`,
+        method: 'GET',
+      }),
+      providesTags: ['user'],
+    }),
+    getUserProfileBySlug: builder.query({
+      query: (slug) => ({
+        url: `/public/user/by-slug/${slug}`,
+        method: 'GET',
+      }),
+      providesTags: ['user'],
+    }),
   }),
 });
 
@@ -134,4 +151,6 @@ export const {
   useGetRangeListQuery,
   useEditRangeMutation,
   useDeleteRangeMutation,
+  useGetUserProfileListQuery,
+  useGetUserProfileBySlugQuery,
 } = publicApiService;

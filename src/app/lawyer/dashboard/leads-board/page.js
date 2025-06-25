@@ -11,23 +11,23 @@ const LeadBoardPage = () => {
   const [showLeadDetails, setShowLeadDetails] = useState(true);
   const [selectedLead, setSelectedLead] = useState(null);
 
-  const pathname = usePathname();
+  // const pathname = usePathname();
 
-  useEffect(() => {
-    const cleanPathname = pathname?.trim().replace(/\/+$/, '');
+  // useEffect(() => {
+  //   const cleanPathname = pathname?.trim().replace(/\/+$/, '');
 
-    if (cleanPathname === '/lawyer/dashboard/leads-board') {
-      window.scrollTo({ top: 0, behavior: 'auto' });
+  //   if (cleanPathname === '/lawyer/dashboard/leads-board') {
+  //     window.scrollTo({ top: 0, behavior: 'auto' });
 
-      document.body.style.setProperty('overflow', 'hidden', 'important');
-    } else {
-      document.body.style.overflow = '';
-    }
+  //     document.body.style.setProperty('overflow', 'hidden', 'important');
+  //   } else {
+  //     document.body.style.overflow = '';
+  //   }
 
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [pathname]);
+  //   return () => {
+  //     document.body.style.overflow = '';
+  //   };
+  // }, [pathname]);
 
   const { data: allLeads } = useGetAllLeadsQuery();
 

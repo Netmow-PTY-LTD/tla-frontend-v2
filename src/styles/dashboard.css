@@ -232,3 +232,27 @@
   top: 0;
   background-color: #f3f3f3;
 }
+
+.dashboard-content {
+  height: calc(100vh - 64px);
+  overflow-y: auto;
+}
+
+.dashboard-content.no-scroll {
+  overflow: hidden;
+}
+
+.content-wrapper {
+  background: #fff;
+  border-radius: 5px;
+}
+
+.simple-editor-content {
+  max-width: 100% !important;
+  min-height: 200px;
+  border-top: 1px solid #eee;
+}
+
+.simple-editor-content .tiptap.ProseMirror {
+  padding: 20px 30px !important;
+}
