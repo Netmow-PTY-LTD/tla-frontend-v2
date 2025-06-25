@@ -36,7 +36,7 @@ export default function PersonalProfile() {
           <TextInput
             name={'name'}
             label={'Name'}
-            placeholder={'Enter Your  Name'}
+            placeholder={'Enter Your Name'}
           />
           <TextInput
             name={'designation'}
