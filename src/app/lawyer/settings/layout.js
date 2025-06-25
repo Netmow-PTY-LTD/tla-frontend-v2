@@ -36,7 +36,7 @@ const SettingsLayout = ({ children }) => {
 
     // {
     //   label: 'Integration',
-    //   href: '/lawyer/settings/integrations/hubspot',
+    //   href: '/lawyer/settings/integrations',
     //   icon: <SettingsIcon className="w-4 h-4" />,
     // },
     {
