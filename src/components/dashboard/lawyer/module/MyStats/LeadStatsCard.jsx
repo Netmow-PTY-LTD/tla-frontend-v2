@@ -1,35 +1,32 @@
 import PencilIcon from '@/assets/icon';
 import { Card } from '@/components/ui/card';
-import DropdownMenu from '@/components/UIComponents/DropdownMenu';
+
 import { MapPin } from 'lucide-react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 
-const defaultServices = ['Family Law', 'Criminal Defense', 'Immigration Law'];
+const LeadStatsCard = ({ locations, profile }) => {
+  const defaultServices = profile?.profile?.serviceIds || [];
 
-const LeadStatsCard = ({ locations, status = 'pending', count, menuItems }) => {
+  console.log('profile:', profile);
   return (
     <Card className="w-full max-w-md md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto bg-white shadow-md rounded-lg">
-      {count ? (
-        <div className="flex  items-center p-4 w-full">
-          <div className="bg-[#F5F6F9]  w-1/2 flex flex-col justify-center items-center p-5 rounded-lg mx-4 my-3">
-            <div className="flex items-center gap-2">
-              <div>📈</div> {/* Replace with an actual icon if needed */}
-              <h4 className="text-2xl font-bold text-black">{count}</h4>
-            </div>
-            <p className="text-sm text-gray-600 mt-1">{status} responses</p>
+      <div className="flex  items-center p-4 w-full">
+        <div className="bg-[#F5F6F9]  w-1/2 flex flex-col justify-center items-center p-5 rounded-lg mx-4 my-3">
+          <div className="flex items-center gap-2">
+            <div>📈</div> {/* Replace with an actual icon if needed */}
+            <h4 className="text-2xl font-bold text-black">20</h4>
           </div>
-          <div className="bg-[#F5F6F9] w-1/2 flex flex-col justify-center items-center p-5 rounded-lg mx-4 my-3">
-            <div className="flex items-center gap-2">
-              <div>📈</div> {/* Replace with an actual icon if needed */}
-              <h4 className="text-2xl font-bold text-black">{count}</h4>
-            </div>
-            <p className="text-sm text-gray-600 mt-1">Hired responses</p>
-          </div>
+          <p className="text-sm text-gray-600 mt-1">pending responses</p>
         </div>
-      ) : (
-        <></>
-      )}
+        <div className="bg-[#F5F6F9] w-1/2 flex flex-col justify-center items-center p-5 rounded-lg mx-4 my-3">
+          <div className="flex items-center gap-2">
+            <div>📈</div> {/* Replace with an actual icon if needed */}
+            <h4 className="text-2xl font-bold text-black">20</h4>
+          </div>
+          <p className="text-sm text-gray-600 mt-1">Hired responses</p>
+        </div>
+      </div>
 
       <div>
         {/* Header */}
@@ -54,14 +51,22 @@ const LeadStatsCard = ({ locations, status = 'pending', count, menuItems }) => {
           </p>
 
           <div className="inline-flex flex-wrap gap-2 mt-2">
-            {defaultServices.map((service, index) => (
-              <span
-                key={index}
-                className="bg-[#F3F3F3] text-sm px-3 py-1 rounded-full text-[#0B1C2D]"
-              >
-                {service}
-              </span>
-            ))}
+            <div className="flex flex-wrap gap-2">
+              {defaultServices?.length > 0 ? (
+                defaultServices.map((service, index) => (
+                  <span
+                    key={service?._id || index}
+                    className="bg-[#F3F3F3] text-sm text-[#0B1C2D] px-3 py-1 rounded-full"
+                  >
+                    {service?.name}
+                  </span>
+                ))
+              ) : (
+                <span className="text-sm text-gray-500 italic">
+                  No practice areas found
+                </span>
+              )}
+            </div>
           </div>
         </div>
         <hr className="border-[#F3F3F3] border" />
@@ -80,7 +85,6 @@ const LeadStatsCard = ({ locations, status = 'pending', count, menuItems }) => {
 
           <div className="mt-[15px] space-y-3">
             {locations?.map((location, index) => {
-              console.log('location:', location);
               return (
                 <p
                   key={location._id || index}
@@ -98,7 +102,7 @@ const LeadStatsCard = ({ locations, status = 'pending', count, menuItems }) => {
         {/* CTA Button */}
         <div className="m-3">
           <Link href={'/lawyer/dashboard/leads-board'}>
-            <button className="px-[19px] py-2 text-[#0B1C2D] font-medium bg-[#EDF0F4] rounded-full text-sm sm:text-base">
+            <button className="px-[19px] py-2 text-[#0B1C2D]  hover:bg-[#00C3C0] hover:text-white  font-medium bg-[#EDF0F4] rounded-full text-sm sm:text-base">
               View Leads
             </button>
           </Link>

@@ -132,10 +132,6 @@ const MyStatsPage = () => {
   const fallbackBio =
     "If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options.";
 
-  console.log(
-    'check leadServicesData data ==>',
-    leadServicesData?.data?.locations
-  );
   return (
     <div className="lg:m-4 w-full">
       <div className="max-w-[1100px] mx-auto">
@@ -178,11 +174,9 @@ const MyStatsPage = () => {
           <div className="flex flex-col h-full">
             <div className="flex flex-1">
               <LeadStatsCard
-                status="pending"
-                count={24}
-                menuItems={menuLinks}
                 className="flex-1"
                 locations={leadServicesData?.data?.locations || []}
+                profile={profileData}
               />
             </div>
           </div>
