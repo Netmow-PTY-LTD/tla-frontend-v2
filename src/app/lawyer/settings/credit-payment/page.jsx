@@ -35,7 +35,7 @@ export default function MyCreditsPage() {
             </div>
           }
         >
-          <DynamicAccordion items={accordionItems} useQueryParam />
+          <DynamicAccordion items={accordionItems} />
         </Suspense>
       </Elements>
     </div>
