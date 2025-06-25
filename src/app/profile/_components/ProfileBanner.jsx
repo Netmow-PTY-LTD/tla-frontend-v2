@@ -33,7 +33,7 @@ export default function ProfileBanner({ data }) {
             <div className="flex flex-col gap-4 mt-10">
               <Link
                 href={`mailto:${data?.email}`}
-                className="text-white text-sm font-semibold flex items-center gap-3"
+                className="text-white text-[16px] font-semibold flex items-center gap-3"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -51,7 +51,7 @@ export default function ProfileBanner({ data }) {
               </Link>
               <Link
                 href={`tel:${data?.phone || ''}`}
-                className="text-white text-sm font-semibold flex items-center gap-3"
+                className="text-white text-[16px] font-semibold flex items-center gap-3"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -69,7 +69,7 @@ export default function ProfileBanner({ data }) {
               </Link>
               <Link
                 href="/lawyer/settings/profile"
-                className="text-white text-sm font-semibold flex items-center gap-3"
+                className="text-white text-[16px] font-semibold flex items-center gap-3"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
