@@ -12,14 +12,8 @@ import EditAccreditationFormModal from './accreditations/EditAccreditationFormMo
 import AddAccreditationModal from './accreditations/AddAccreditationModal';
 
 export default function Accreditations() {
-  const [isHidden, setIsHidden] = useState(false); // ← local state
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedAccreditation, setSelectedAccreditation] = useState(null);
-
-  const handleToggle = (checked) => {
-    console.log('Switch is now:', checked);
-    setIsHidden(checked); // ← update state when toggled
-  };
 
   const handleEditClick = (accreditation) => () => {
     console.log('accreditation', accreditation);
@@ -160,18 +154,17 @@ export default function Accreditations() {
             {/* <ToggleSwitch onToggle={handleToggle} /> */}
           </div>
         </div>
-        {!isHidden && (
-          <div className="flex flex-col gap-3 mt-4">
-            <AccreditationsList
-              profile={profile}
-              handleEditClick={handleEditClick}
-            />
-            <AddAccreditationModal
-              defaultValues={defaultValues}
-              handleSubmit={handleSubmit}
-            />
-          </div>
-        )}
+        <div className="flex flex-col gap-3 mt-4">
+          <AccreditationsList
+            profile={profile}
+            handleEditClick={handleEditClick}
+            refetch={refetch}
+          />
+          <AddAccreditationModal
+            defaultValues={defaultValues}
+            handleSubmit={handleSubmit}
+          />
+        </div>
       </div>
       <EditAccreditationFormModal
         defaultValues={{

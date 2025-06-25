@@ -30,6 +30,20 @@ const userApiService = baseApi.injectEndpoints({
         body,
       }),
     }),
+
+    deleteCustomService: builder.mutation({
+      query: (id) => ({
+        url: `/user/service/delete/${id}`,
+        method: 'DELETE',
+      }),
+    }),
+
+    deleteAccreditation: builder.mutation({
+      query: (id) => ({
+        url: `/user/accreditation/delete/${id}`,
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 
@@ -38,4 +52,6 @@ export const {
   useSingleUserQuery,
   useEditProfileMutation,
   useDeleteUserMutation,
+  useDeleteCustomServiceMutation,
+  useDeleteAccreditationMutation,
 } = userApiService;

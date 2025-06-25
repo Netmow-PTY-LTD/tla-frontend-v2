@@ -23,7 +23,7 @@ body {
   padding: 0 1.25rem;
 }
 
-@media (min-width: 1921px) {
+/* @media (min-width: 1921px) {
   .container {
     max-width: 112.5rem;
   }
@@ -39,7 +39,7 @@ body {
   .container {
     max-width: 80rem;
   }
-}
+} */
 
 .btn-default {
   display: inline-flex;
