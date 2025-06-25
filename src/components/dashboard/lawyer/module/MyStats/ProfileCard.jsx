@@ -105,6 +105,7 @@
 'use client';
 import PencilIcon from '@/assets/icon';
 import { Card } from '@/components/ui/card';
+import { Home, Inbox, PhoneCall } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -141,12 +142,19 @@ const ProfileCard = ({ profile, isLoading, isError, error }) => {
         </h3>
 
         <div className="space-y-4 text-[#34495E]">
-          <p className="heading-base">
-            {' '}
-            Phone: {profile?.profile?.phone} (Verified)
+          <p className="heading-base flex items-center">
+            <PhoneCall className="mr-2 w-5 h-5" />
+            <span> {profile?.profile?.phone} (Verified)</span>
           </p>
-          <p className="heading-base"> Email: {profile?.email}</p>
-          <p className="heading-base"> Address: {profile?.profile?.address} </p>
+          <p className="heading-base flex items-center">
+            {' '}
+            <Inbox className="mr-2 w-5 h-5" /> <span> {profile?.email}</span>
+          </p>
+          <p className="heading-base flex items-center">
+            {' '}
+            <Home className="mr-2 w-5 h-5" />{' '}
+            <span> {profile?.profile?.address}</span>{' '}
+          </p>
         </div>
         <hr className="tet-[#F3F3F3] border" />
       </div>
@@ -163,15 +171,31 @@ const ProfileCard = ({ profile, isLoading, isError, error }) => {
             </Link>
           </h4>
           {profile?.profile?.companyProfile?.companyName && (
-            <p>Name: {profile.profile.companyProfile.companyName}</p>
+            <p>
+              <span className="font-medium">Name:</span>{' '}
+              {profile.profile.companyProfile.companyName}
+            </p>
           )}
 
           {profile?.profile?.companyProfile?.location?.address && (
-            <p>Address: {profile.profile.companyProfile.location.address}</p>
+            <p>
+              <span className="font-medium">Address: </span>
+              {profile.profile.companyProfile.location.address}
+            </p>
           )}
 
           {profile?.profile?.companyProfile?.website && (
-            <p>Website: {profile.profile.companyProfile.website}</p>
+            <p>
+              <span className="font-medium"> Website:</span>{' '}
+              <Link
+                href={profile.profile.companyProfile.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline"
+              >
+                Link
+              </Link>
+            </p>
           )}
         </div>
       </div>
