@@ -137,7 +137,7 @@ const DynamicProfilePage = () => {
                   />
                 </svg>
               </h2>
-              <div className="text-[16px] text-[#00C3C0] font-semibold">
+              {/* <div className="text-[16px] text-[#00C3C0] font-semibold">
                 {userInfo?.data?.name?.split(' ')[0]} works across the spectrum
                 of{' '}
                 {userInfo?.data?.services?.map((service, index, arr) => (
@@ -148,7 +148,7 @@ const DynamicProfilePage = () => {
                 ))}
                 {''}
                 matters, most notably in:
-              </div>
+              </div> */}
               <div
                 className="mt-4 prose prose-sm prose-headings:font-semibold prose-ul:list-disc prose-li:marker:text-black prose-p:text-gray-800 w-full text-base max-w-none"
                 dangerouslySetInnerHTML={{
@@ -191,10 +191,10 @@ const DynamicProfilePage = () => {
                   />
                 </svg>
               </h2>
-              <div className="text-[16px] text-[#00C3C0] font-semibold">
+              {/* <div className="text-[16px] text-[#00C3C0] font-semibold">
                 {`${userInfo?.data?.name?.split(' ')[0]}'s`}
                 career highlights include:
-              </div>
+              </div> */}
               <div
                 className="mt-4 prose prose-sm prose-headings:font-semibold prose-ul:list-disc prose-li:marker:text-black prose-p:text-gray-800 w-full text-base max-w-none"
                 dangerouslySetInnerHTML={{
