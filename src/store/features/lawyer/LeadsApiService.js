@@ -7,7 +7,7 @@ const leadsApiService = baseApi.injectEndpoints({
         url: '/lead/list',
         method: 'GET',
       }),
-      invalidatesTags: ['lead'],
+      providesTags: ['lead'],
     }),
     getSingleLead: builder.query({
       query: (id) => ({
@@ -16,7 +16,18 @@ const leadsApiService = baseApi.injectEndpoints({
       }),
       providesTags: ['lead'],
     }),
+    getAllMyLeads: builder.query({
+      query: () => ({
+        url: '/lead/my',
+        method: 'GET',
+      }),
+      providesTags: ['lead'],
+    }),
   }),
 });
 
-export const { useGetAllLeadsQuery, useGetSingleLeadQuery } = leadsApiService;
+export const {
+  useGetAllLeadsQuery,
+  useGetSingleLeadQuery,
+  useGetAllMyLeadsQuery,
+} = leadsApiService;
