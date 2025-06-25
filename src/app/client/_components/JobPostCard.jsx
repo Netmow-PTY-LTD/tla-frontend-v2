@@ -34,7 +34,7 @@ export default function JobPostCard({ title, date, status, message }) {
       </p>
 
       {/* Button */}
-      <div className="mt-6 flex justify-end">
+      <div className="mt-6 flex justify-center">
         <button className="bg-[#00C3C0] text-white p-[10px] rounded hover:bg-[#00b0ad] transition">
           View Post
         </button>

@@ -5,7 +5,7 @@ import React from 'react';
 export default function ProfileBanner({ data }) {
   return (
     <section
-      className="pt-[100px]"
+      className="pt-[50px] md:pt-[100px] pb-[40px] lg:pb-0"
       style={{
         backgroundImage: 'url("/assets/img/Bg-hero1.png")',
         backgroundSize: 'cover',
@@ -14,14 +14,14 @@ export default function ProfileBanner({ data }) {
       }}
     >
       <div className="container">
-        <div className="flex flex-wrap gap-5 relative top-[30px]">
+        <div className="flex flex-wrap gap-5 relative md:top-[30px]">
           <div className="flex">
             <Image
               src={data?.profilePicture || '/assets/img/profile-img.webp'}
               width={423}
               height={531}
               alt={data?.name || 'Profile Image'}
-              className="max-w-full h-auto rounded-lg object-cover"
+              className="max-w-full h-auto lg:h-[523px] rounded-lg object-cover"
             />
           </div>
           <div className="lg:pl-[100px]">
@@ -86,7 +86,7 @@ export default function ProfileBanner({ data }) {
                 <span>{data?.address}</span>
               </Link>
             </div>
-            <div className="flex items-center gap-4 mt-16">
+            <div className="flex flex-wrap items-center gap-4 mt-16">
               <Link
                 href="/lawyer/settings/profile"
                 className="text-white text-base font-medium flex items-center gap-2 bg-[#FF8602] rounded-[6px] py-[12px] px-[63px] hover:bg-[#e07502] transition-all duration-300"
