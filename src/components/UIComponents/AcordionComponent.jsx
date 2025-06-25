@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Accordion,
   AccordionContent,
@@ -8,6 +8,7 @@ import {
   AccordionTrigger,
 } from '../ui/accordion';
 import CircularProgress from './CircleProgressBar';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const AccordionComponent = ({ title, content }) => {
   return (
@@ -37,8 +38,34 @@ const AccordionComponent = ({ title, content }) => {
 };
 
 export const DynamicAccordion = ({ items }) => {
+  const [openItem, setOpenItem] = useState(null);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  useEffect(() => {
+    const accordionId = searchParams.get('section'); // Get the accordionId from the URL
+    if (accordionId) {
+      setOpenItem(accordionId); // Set the open accordion item based on the search param
+    }
+  }, [searchParams]);
+
+  const handleValueChange = (value) => {
+    setOpenItem(value); // Update the state with the selected accordion item
+    if (!value) {
+      router.replace('?'); // Clear search params when no item is selected
+    } else {
+      router.replace(`?section=${value}`); // Update the URL with the selected accordion item
+    }
+  };
   return (
-    <Accordion type="single" collapsible className="space-y-[10px] ">
+    <Accordion
+      type="single"
+      collapsible
+      className="space-y-[10px] "
+      value={openItem} // Control the open accordion item
+      // onValueChange={(value) => setOpenItem(value)} // Update state when accordion changes
+      onValueChange={handleValueChange} // Handle manua
+    >
       {items.map(({ id, title, content }) => (
         <AccordionItem
           key={id}
