@@ -103,6 +103,7 @@ import { Card } from '@/components/ui/card';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { useGetLeadServiceListQuery } from '@/store/features/leadService/leadServiceApiService';
 import LeadSettings from '@/components/dashboard/lawyer/components/LeadSettings';
+import LeadStatsCard from '@/components/dashboard/lawyer/module/MyStats/LeadStatsCard';
 
 const MyStatsPage = () => {
   const menuLinks = [
@@ -172,7 +173,7 @@ const MyStatsPage = () => {
           {/* Right Column */}
           <div className="flex flex-col h-full">
             <div className="flex flex-1">
-              <StatusCard
+              <LeadStatsCard
                 status="pending"
                 count={24}
                 menuItems={menuLinks}

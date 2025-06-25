@@ -139,16 +139,6 @@ const ProfileCard = ({ profile, isLoading, isError, error }) => {
             <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
           </Link>
         </h3>
-        {/* <div className="font-medium heading-base flex items-center">
-          Personal Details{' '}
-          <Link
-            href={'/lawyer/settings/profile'}
-            aria-label="Edit Name"
-            className="ml-3 rounded "
-          >
-            <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
-          </Link>
-        </div> */}
 
         <div className="space-y-4 text-[#34495E]">
           <p className="heading-base">
@@ -161,29 +151,9 @@ const ProfileCard = ({ profile, isLoading, isError, error }) => {
         <hr className="tet-[#F3F3F3] border" />
       </div>
       <div className="p-3">
-        {/* <div className="mb-4">
-          <h4 className="font-medium heading flex items-center">
-            About Description{' '}
-            <Link
-              href={'/lawyer/settings/profile'}
-              aria-label="Edit Name"
-              className="ml-3 rounded "
-            >
-              <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
-            </Link>
-          </h4>
-          <div className="p-3 bg-[#F3F3F3] mt-5 rounded-lg ">
-            <p className="heading-base">
-              {profile?.profile?.bio
-                ? profile?.profile?.bio
-                : "If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understandyour rights and options."}
-            </p>
-          </div>
-        </div> */}
-        {/* <hr className="tet-[#F3F3F3] border" /> */}
         <div className="space-y-4 my-5">
           <h4 className="font-medium  text-lg flex items-center">
-            Professional Details{' '}
+            Company Details{' '}
             <Link
               href={'/lawyer/settings/profile'}
               aria-label="Edit Name"
@@ -192,12 +162,17 @@ const ProfileCard = ({ profile, isLoading, isError, error }) => {
               <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
             </Link>
           </h4>
-          <p>Company Name: {profile?.profile?.companyProfile?.companyName}</p>
-          <p>
-            Company Address:{' '}
-            {profile?.profile?.companyProfile?.location?.address}
-          </p>
-          <p>Website URL: {profile?.profile?.companyProfile?.website}</p>
+          {profile?.profile?.companyProfile?.companyName && (
+            <p>Name: {profile.profile.companyProfile.companyName}</p>
+          )}
+
+          {profile?.profile?.companyProfile?.location?.address && (
+            <p>Address: {profile.profile.companyProfile.location.address}</p>
+          )}
+
+          {profile?.profile?.companyProfile?.website && (
+            <p>Website: {profile.profile.companyProfile.website}</p>
+          )}
         </div>
       </div>
     </Card>
