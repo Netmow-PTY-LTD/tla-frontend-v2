@@ -1,8 +1,8 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
 export default function ProfileBanner({ data }) {
-  console.log('ProfileBanner data:', data);
   return (
     <section
       className="pt-[100px]"
@@ -16,10 +16,12 @@ export default function ProfileBanner({ data }) {
       <div className="container">
         <div className="flex flex-wrap gap-5 relative top-[30px]">
           <div className="flex">
-            <img
+            <Image
               src={data?.profilePicture || '/assets/img/profile-img.webp'}
+              width={423}
+              height={531}
               alt={data?.name || 'Profile Image'}
-              className="max-w-full h-auto rounded-lg"
+              className="max-w-full h-auto rounded-lg object-cover"
             />
           </div>
           <div className="lg:pl-[100px]">
