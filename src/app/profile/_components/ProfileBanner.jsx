@@ -23,9 +23,7 @@ export default function ProfileBanner({ data }) {
             />
           </div>
           <div className="pl-[100px]">
-            <h2 className="text-[48px] font-medium text-white">
-              {data?.profile?.name}
-            </h2>
+            <h2 className="text-[48px] font-medium text-white">{data?.name}</h2>
             <div className="text-[18px] font-medium text-white mt-4">
               Legal Assistant , CH, IL
             </div>
@@ -47,10 +45,10 @@ export default function ProfileBanner({ data }) {
                     fill="white"
                   />
                 </svg>
-                <span>{data?.email}</span>
+                <span>{data?.email || ''}</span>
               </Link>
               <Link
-                href={`tel:${data?.profile?.phone}`}
+                href={`tel:${data?.phone || ''}`}
                 className="text-white text-sm font-semibold flex items-center gap-3"
               >
                 <svg
@@ -65,7 +63,7 @@ export default function ProfileBanner({ data }) {
                     fill="white"
                   />
                 </svg>
-                <span>{data?.profile?.phone}</span>
+                <span>{data?.phone}</span>
               </Link>
               <Link
                 href="/lawyer/settings/profile"
@@ -83,7 +81,7 @@ export default function ProfileBanner({ data }) {
                     fill="white"
                   />
                 </svg>
-                <span>{data?.profile?.address}</span>
+                <span>{data?.address}</span>
               </Link>
             </div>
             <div className="flex items-center gap-4 mt-16">
