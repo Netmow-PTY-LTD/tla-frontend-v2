@@ -133,7 +133,7 @@ const ProfileCard = ({ profile, isLoading, isError, error }) => {
         <h3 className="font-medium heading flex items-center">
           {profile?.profile?.name}{' '}
           <Link
-            href={'/lawyer/settings/profile'}
+            href={'/lawyer/settings/profile?section=about'}
             aria-label="Edit Name"
             className="ml-3 rounded "
           >
@@ -163,7 +163,7 @@ const ProfileCard = ({ profile, isLoading, isError, error }) => {
           <h4 className="font-medium  text-lg flex items-center">
             Company Details{' '}
             <Link
-              href={'/lawyer/settings/profile'}
+              href={'/lawyer/settings/profile?section=about'}
               aria-label="Edit Name"
               className="ml-3 rounded "
             >

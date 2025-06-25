@@ -189,7 +189,7 @@ const MyStatsPage = () => {
                 About Description
               </h4>
               <Link
-                href="/lawyer/settings/profile"
+                href="/lawyer/settings/profile?section=about"
                 aria-label="Edit About"
                 className="text-gray-500 hover:text-gray-800 transition"
               >

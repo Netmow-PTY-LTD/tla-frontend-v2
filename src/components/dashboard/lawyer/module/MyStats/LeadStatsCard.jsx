@@ -40,12 +40,14 @@ const LeadStatsCard = ({ locations, profile }) => {
 
         {/* Practice Area */}
         <div className="m-3">
-          <h1 className="font-medium flex items-center text-lg">
-            Practice Area
-            <button aria-label="Edit Practice Area" className="ml-3 rounded">
-              <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
-            </button>
-          </h1>
+          <div className="font-medium flex items-center text-lg">
+            <h1> Practice Area</h1>
+            <Link href={'/lawyer/settings/lead-settings'}>
+              <button aria-label="Edit Practice Area" className="ml-3 rounded">
+                <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
+              </button>
+            </Link>
+          </div>
           <p className="my-2 text-sm sm:text-base">
             You'll receive leads in these categories
           </p>
@@ -74,10 +76,12 @@ const LeadStatsCard = ({ locations, profile }) => {
         {/* Locations */}
         <div className="m-3">
           <h1 className="font-medium flex items-center text-lg">
-            Locations
-            <button aria-label="Edit Locations" className="ml-3 rounded">
-              <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
-            </button>
+            <h1> Locations</h1>
+            <Link href={'/lawyer/settings/lead-settings'}>
+              <button aria-label="Edit Locations" className="ml-3 rounded">
+                <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
+              </button>
+            </Link>
           </h1>
           <p className="my-2 text-sm sm:text-base">
             You're receiving customers within
