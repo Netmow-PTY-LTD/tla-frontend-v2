@@ -118,14 +118,14 @@ const publicApiService = baseApi.injectEndpoints({
 
     //  ------------------ Profile related ------------------
 
-    getUserList: builder.query({
+    getUserProfileList: builder.query({
       query: () => ({
         url: `/public/user/list`,
         method: 'GET',
       }),
       providesTags: ['user'],
     }),
-    getUserById: builder.query({
+    getUserProfileBySlug: builder.query({
       query: (slug) => ({
         url: `/public/user/by-slug/${slug}`,
         method: 'GET',
@@ -151,6 +151,6 @@ export const {
   useGetRangeListQuery,
   useEditRangeMutation,
   useDeleteRangeMutation,
-  useGetUserListQuery,
-  useGetUserByIdQuery,
+  useGetUserProfileListQuery,
+  useGetUserProfileBySlugQuery,
 } = publicApiService;
