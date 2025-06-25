@@ -2,7 +2,7 @@
 
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { Checkbox } from '@/components/ui/checkbox';
-import { DeleteConfirmation } from '@/components/UIComponents/DeleteConfirm';
+import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 import { useDeleteLeadServiceMutation } from '@/store/features/leadService/leadServiceApiService';
 import { Trash, Trash2 } from 'lucide-react';
 import React, { useRef, useState } from 'react';
@@ -123,7 +123,7 @@ const LeadServiceAction = ({
       </div>
 
       <div className="flex justify-between items-center mt-6">
-        <DeleteConfirmation
+        <ConfirmationModal
           onConfirm={handleDeleteService}
           open={isOpen}
           onOpenChange={setIsOpen}

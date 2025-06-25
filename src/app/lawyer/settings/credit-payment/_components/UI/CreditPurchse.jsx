@@ -13,9 +13,11 @@ import {
 } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 import AddCardModal from '../modal/AddCardModal';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 
 const CreditsPurchase = ({ creditPackage }) => {
   const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [autoTopUP, setAutoTopUp] = useState(false);
   const [addPaymentMethod] = useAddPaymentMethodMutation();
   const [purchasePackage] = usePurchaseCreditPackageMutation();
@@ -37,24 +39,20 @@ const CreditsPurchase = ({ creditPackage }) => {
     }
   };
   const handlePurchase = async (creditPackageId, creditPrice) => {
-    if (!card) {
-      setOpen(true);
-    } else {
-      const purchaseDetails = {
-        packageId: creditPackageId,
-        autoTopUP,
-        couponCode: null,
-      };
-      try {
-        const result = await purchasePackage(purchaseDetails).unwrap();
-        console.log('Purchase result:', result);
-        if (result.success) {
-          showSuccessToast(result?.message);
-        }
-      } catch (error) {
-        const errorMessage = error?.data?.message || 'An error occurred';
-        showErrorToast(errorMessage);
+    const purchaseDetails = {
+      packageId: creditPackageId,
+      autoTopUP,
+      couponCode: null,
+    };
+    try {
+      const result = await purchasePackage(purchaseDetails).unwrap();
+      console.log('Purchase result:', result);
+      if (result.success) {
+        showSuccessToast(result?.message);
       }
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
     }
   };
   return (
@@ -90,11 +88,15 @@ const CreditsPurchase = ({ creditPackage }) => {
             </div>
             <div className="">
               <Button
-                onClick={() =>
-                  handlePurchase(creditPackage?._id, creditPackage?.price)
-                }
                 variant="primary"
                 className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-4"
+                onClick={() => {
+                  if (!card) {
+                    setOpen(true); // open card modal
+                  } else {
+                    setIsOpen(true); // open confirmation modal
+                  }
+                }}
               >
                 Buy Now
               </Button>
@@ -139,6 +141,14 @@ const CreditsPurchase = ({ creditPackage }) => {
         open={open}
         setOpen={setOpen}
         onCardAdded={handleCardAdded}
+      />
+      <ConfirmationModal
+        onConfirm={() =>
+          handlePurchase(creditPackage?._id, creditPackage?.price)
+        }
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        description="Are you sure you want to purchase this credit package?"
       />
     </div>
   );
