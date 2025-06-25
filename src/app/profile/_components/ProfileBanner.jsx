@@ -17,15 +17,15 @@ export default function ProfileBanner({ data }) {
         <div className="flex flex-wrap gap-5 relative top-[30px]">
           <div className="flex">
             <img
-              src="/assets/img/profile-img.webp"
-              alt="Profile Banner"
+              src={data?.profilePicture || '/assets/img/profile-img.webp'}
+              alt={data?.name || 'Profile Image'}
               className="max-w-full h-auto rounded-lg"
             />
           </div>
-          <div className="pl-[100px]">
+          <div className="lg:pl-[100px]">
             <h2 className="text-[48px] font-medium text-white">{data?.name}</h2>
             <div className="text-[18px] font-medium text-white mt-4">
-              Legal Assistant , CH, IL
+              {data?.designation || 'Lawyer'}
             </div>
             <div className="w-[142px] h-[0.5px] bg-white mt-4 opacity-[0.5]" />
             <div className="flex flex-col gap-4 mt-10">
@@ -63,7 +63,7 @@ export default function ProfileBanner({ data }) {
                     fill="white"
                   />
                 </svg>
-                <span>{data?.phone}</span>
+                <span>{data?.phone ?? ''}</span>
               </Link>
               <Link
                 href="/lawyer/settings/profile"
