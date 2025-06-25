@@ -105,6 +105,7 @@
 'use client';
 import PencilIcon from '@/assets/icon';
 import { Card } from '@/components/ui/card';
+import { Home, Inbox, PhoneCall } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -132,72 +133,70 @@ const ProfileCard = ({ profile, isLoading, isError, error }) => {
         <h3 className="font-medium heading flex items-center">
           {profile?.profile?.name}{' '}
           <Link
-            href={'/lawyer/settings/profile'}
+            href={'/lawyer/settings/profile?section=about'}
             aria-label="Edit Name"
             className="ml-3 rounded "
           >
             <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
           </Link>
         </h3>
-        {/* <div className="font-medium heading-base flex items-center">
-          Personal Details{' '}
-          <Link
-            href={'/lawyer/settings/profile'}
-            aria-label="Edit Name"
-            className="ml-3 rounded "
-          >
-            <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
-          </Link>
-        </div> */}
 
         <div className="space-y-4 text-[#34495E]">
-          <p className="heading-base">
-            {' '}
-            Phone: {profile?.profile?.phone} (Verified)
+          <p className="heading-base flex items-center">
+            <PhoneCall className="mr-2 w-5 h-5" />
+            <span> {profile?.profile?.phone} (Verified)</span>
           </p>
-          <p className="heading-base"> Email: {profile?.email}</p>
-          <p className="heading-base"> Address: {profile?.profile?.address} </p>
+          <p className="heading-base flex items-center">
+            {' '}
+            <Inbox className="mr-2 w-5 h-5" /> <span> {profile?.email}</span>
+          </p>
+          <p className="heading-base flex items-center">
+            {' '}
+            <Home className="mr-2 w-5 h-5" />{' '}
+            <span> {profile?.profile?.address}</span>{' '}
+          </p>
         </div>
         <hr className="tet-[#F3F3F3] border" />
       </div>
       <div className="p-3">
-        {/* <div className="mb-4">
-          <h4 className="font-medium heading flex items-center">
-            About Description{' '}
-            <Link
-              href={'/lawyer/settings/profile'}
-              aria-label="Edit Name"
-              className="ml-3 rounded "
-            >
-              <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
-            </Link>
-          </h4>
-          <div className="p-3 bg-[#F3F3F3] mt-5 rounded-lg ">
-            <p className="heading-base">
-              {profile?.profile?.bio
-                ? profile?.profile?.bio
-                : "If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understandyour rights and options."}
-            </p>
-          </div>
-        </div> */}
-        {/* <hr className="tet-[#F3F3F3] border" /> */}
         <div className="space-y-4 my-5">
           <h4 className="font-medium  text-lg flex items-center">
-            Professional Details{' '}
+            Company Details{' '}
             <Link
-              href={'/lawyer/settings/profile'}
+              href={'/lawyer/settings/profile?section=about'}
               aria-label="Edit Name"
               className="ml-3 rounded "
             >
               <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
             </Link>
           </h4>
-          <p>Company Name: {profile?.profile?.companyProfile?.companyName}</p>
-          <p>
-            Company Address:{' '}
-            {profile?.profile?.companyProfile?.location?.address}
-          </p>
-          <p>Website URL: {profile?.profile?.companyProfile?.website}</p>
+          {profile?.profile?.companyProfile?.companyName && (
+            <p>
+              <span className="font-medium">Name:</span>{' '}
+              {profile.profile.companyProfile.companyName}
+            </p>
+          )}
+
+          {profile?.profile?.companyProfile?.location?.address && (
+            <p>
+              <span className="font-medium">Address: </span>
+              {profile.profile.companyProfile.location.address}
+            </p>
+          )}
+
+          {profile?.profile?.companyProfile?.website && (
+            <p>
+              <span className="font-medium"> Website:</span>{' '}
+              <Link
+                href={profile.profile.companyProfile.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline"
+              >
+                Link
+              </Link>
+            </p>
+          )}
         </div>
       </div>
     </Card>
