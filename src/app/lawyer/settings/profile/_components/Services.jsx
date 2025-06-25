@@ -58,7 +58,11 @@ export default function Services() {
           refetch={refetch}
         />
       </div>
-      <ServicesList profile={profile} handleEditClick={handleEditClick} />
+      <ServicesList
+        profile={profile}
+        handleEditClick={handleEditClick}
+        refetch={refetch}
+      />
       <EditServiceModal
         open={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
