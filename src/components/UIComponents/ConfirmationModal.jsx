@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
-export function DeleteConfirmation({
+export function ConfirmationModal({
   title = 'Are you sure?',
   description = 'You want to delete your service?',
   cancelText = 'Cancel',
