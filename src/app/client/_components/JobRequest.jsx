@@ -3,7 +3,7 @@ import React from 'react';
 const JobRequest = () => {
   return (
     <>
-      <div className="bg-[#f3f3f380] rounded-[10px] h-full w-full py-10 px-6 sm:px-10 md:px-20 lg:px-[100px] xl:px-[180px] 2xl:px-[247px] relative overflow-hidden">
+      <div className="bg-[#fff] rounded-[10px] h-full w-full py-10 px-6 sm:px-10 md:px-20 lg:px-[100px] xl:px-[180px] 2xl:px-[247px] relative overflow-hidden mt-10">
         {/* Soft Glow Effect */}
         <div className="absolute inset-0 flex items-center justify-center z-0">
           <div className="w-[300px] h-[300px] rounded-full bg-[#00C3C080] blur-[120px]"></div>

@@ -10,7 +10,7 @@ export default function CompanyContactDetails() {
       <h3 className="text-black font-semibold heading-lg">
         Company contact details
       </h3>
-      <p className="mt-[10px] mb-7">
+      <p className="mt-[10px] text-[#8E8E8E] mb-7">
         This information will be seen by customers on Bark. Change the details
         Bark uses to contact you privately in {' '}
         <Link
