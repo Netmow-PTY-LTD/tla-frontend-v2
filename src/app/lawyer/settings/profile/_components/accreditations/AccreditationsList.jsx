@@ -2,7 +2,11 @@
 
 import AccreditionCard from './AccreditionCard';
 
-export default function AccreditionsList({ profile, handleEditClick }) {
+export default function AccreditionsList({
+  profile,
+  handleEditClick,
+  refetch,
+}) {
   return (
     <div className="mt-5 space-y-4">
       {profile?.accreditation &&
@@ -12,6 +16,7 @@ export default function AccreditionsList({ profile, handleEditClick }) {
             accreditation={accreditation}
             key={i}
             handleEditClick={handleEditClick}
+            refetch={refetch}
           />
         ))}
     </div>
