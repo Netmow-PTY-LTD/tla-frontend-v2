@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import About from './_components/About';
 import Reviews from './reviews/page';
@@ -12,6 +12,7 @@ import ProfileProgress from './_components/ProfileProgress';
 import { DynamicAccordion } from '@/components/UIComponents/AcordionComponent';
 import Experiences from './_components/Experiences';
 import PublicProfile from './_components/PublicProfile';
+import { Loader } from 'lucide-react';
 
 export default function MyProfilePage() {
   const accordionItems = [
@@ -43,7 +44,18 @@ export default function MyProfilePage() {
   return (
     <div>
       <ProfileProgress />
-      <DynamicAccordion items={accordionItems} />
+      <Suspense
+        fallback={
+          <div className="flex justify-center items-center py-10">
+            <div className="w-6 h-6 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+            <span className="ml-2 text-sm text-gray-500">
+              <Loader /> Loading...
+            </span>
+          </div>
+        }
+      >
+        <DynamicAccordion items={accordionItems} />
+      </Suspense>
     </div>
   );
 }
