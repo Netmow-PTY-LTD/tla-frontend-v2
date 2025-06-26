@@ -79,7 +79,7 @@ export default function PublicProfile() {
     <div className="max-w-[900px] mx-auto">
       <FormWrapper onSubmit={handleSubmit} defaultValues={defaultValues}>
         <h3 className="text-black font-semibold heading-lg">Experiences</h3>
-        <p className="mt-[5px] mb-5">
+        <p className="mt-[5px] mb-5 text-[#8E8E8E]">
           Include all experiences you offer in some detail to give customers the
           confidence they’re looking for when making a hiring decision.
         </p>
@@ -87,7 +87,7 @@ export default function PublicProfile() {
         <h3 className="text-black font-semibold heading-lg">
           Career Highlights
         </h3>
-        <p className="mt-[5px] mb-5">
+        <p className="mt-[5px] mb-5 text-[#8E8E8E]">
           Include all experience highlights you offer in some detail to give
           customers the confidence they’re looking for when making a hiring
           decision.

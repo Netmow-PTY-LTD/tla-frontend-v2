@@ -15,7 +15,7 @@ export default function CompanyProfile() {
         professional. As a sole-trader, you can just enter your name.
       </p>
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mt-8">
+      <div className="flex flex-col md:flex-row justify-between items-start  gap-6 mt-8">
         <div className="w-full md:w-1/2">
           <AvatarUploader name="companyLogo" />
         </div>
