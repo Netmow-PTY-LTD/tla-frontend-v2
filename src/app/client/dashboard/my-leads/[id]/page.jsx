@@ -6,16 +6,47 @@ import {
   AtSign,
   BadgeCheck,
   CircleAlert,
+  Loader,
   MoveLeft,
   PhoneOutgoing,
   Zap,
 } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-export default function LeadDetailsPage({ onBack, lead }) {
-  const { data: singleLead, isLoading } = useGetSingleLeadQuery(lead?._id);
+export default function LeadDetailsPage() {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const params = useParams();
+  const id = params.id;
+
+  const { data: singleLead, isLoading: isSingleLeadLoading } =
+    useGetSingleLeadQuery(id, {
+      skip: !id,
+    });
+
   console.log('singleLead', singleLead);
+
+  const toggleReadMore = () => setIsExpanded(!isExpanded);
+  const maxLength = 300;
+
+  useEffect(() => {
+    // Scroll to top of the window when this component mounts
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, []);
+
+  if (isSingleLeadLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <span className="flex items-center justify-center gap-2">
+          <Loader className="w-4 h-4 animate-spin" />
+          loading...
+        </span>
+      </div>
+    );
+  }
 
   const fullText =
     singleLead?.data?.additionalDetails === ''
@@ -27,45 +58,39 @@ export default function LeadDetailsPage({ onBack, lead }) {
     return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
   };
 
-  const [isExpanded, setIsExpanded] = useState(false);
-  const toggleReadMore = () => setIsExpanded(!isExpanded);
-  const maxLength = 300;
-
   const shouldTruncate = fullText?.length > maxLength;
   const displayText =
     isExpanded || !shouldTruncate
       ? fullText
       : getTruncatedText(fullText, maxLength);
 
-  useEffect(() => {
-    // Scroll to top of the window when this component mounts
-    window.scrollTo({ top: 0, behavior: 'auto' });
-  }, []);
-
-  const mapUrl = getStaticMapUrl(lead?.userProfileId?.address);
+  const mapUrl = getStaticMapUrl(singleLead?.data?.userProfileId?.address);
 
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])
     .find((option) => option.option === 'Urgent');
 
   return (
-    <div className="">
+    <div className="w-full lg:w-9/12 mx-auto">
       <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
         <div className="flex items-center justify-between">
-          <button className="flex py-2 items-center gap-2" onClick={onBack}>
+          <Link
+            className="flex py-2 items-center gap-2"
+            href="/client/dashboard"
+          >
             {' '}
             <MoveLeft /> <span>Back to leads</span>
-          </button>
+          </Link>
         </div>
         <div className="mt-3 max-w-4xl">
           <div className="flex flex-col items-start gap-4 ">
             <figure className="w-20 h-20 rounded-full overflow-hidden">
               <Image
                 src={`${
-                  lead?.userProfileId?.profilePicture ??
+                  singleLead?.data?.userProfileId?.profilePicture ??
                   '/assets/img/auth-step1.png'
                 }`}
-                alt={lead?.userProfileId?.name ?? 'John Doe'}
+                alt={singleLead?.data?.userProfileId?.name ?? 'John Doe'}
                 width={80}
                 height={80}
                 priority
@@ -74,10 +99,10 @@ export default function LeadDetailsPage({ onBack, lead }) {
             </figure>
             <div>
               <h2 className="font-medium heading-lg">
-                {lead?.userProfileId?.name ?? ''}
+                {singleLead?.data?.userProfileId?.name ?? ''}
               </h2>
               <p className="text-gray-500 mt-2">
-                {lead?.userProfileId?.address ?? ''}
+                {singleLead?.data?.userProfileId?.address ?? ''}
               </p>
             </div>
           </div>
@@ -88,7 +113,7 @@ export default function LeadDetailsPage({ onBack, lead }) {
               <span>
                 Phone: {''}
                 {(() => {
-                  const phone = lead?.userProfileId?.phone;
+                  const phone = singleLead?.data?.userProfileId?.phone;
                   return phone
                     ? `${phone.slice(0, 3)}${'*'.repeat(
                         Math.max(0, phone.length - 3)
@@ -120,9 +145,9 @@ export default function LeadDetailsPage({ onBack, lead }) {
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <button className="btn-default bg-[#00C3C0]">
-              Contact {lead?.userProfileId?.name ?? ''}
+              Contact {singleLead?.data?.userProfileId?.name ?? ''}
             </button>
-            {singleLead?.data?.credit && (
+            {singleLead?.data?.data?.credit && (
               <div className="text-[#34495E] ml-2 flex items-center gap-2">
                 <span>
                   {singleLead?.data?.credit}{' '}
