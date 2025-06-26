@@ -9,6 +9,7 @@ import { Loader } from 'lucide-react';
 import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor';
 import FormWrapper from '@/components/form/FromWrapper';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import AboutFormActions from './about/AboutFormAction';
 
 export default function PublicProfile() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -22,7 +23,8 @@ export default function PublicProfile() {
   } = useAuthUserInfoQuery(undefined, {
     refetchOnMountOrArgChange: true, // keep data fresh
   });
-  const [updateUserData] = useUpdateUserDataMutation();
+  const [updateUserData, { isLoading: experienceIsLoading }] =
+    useUpdateUserDataMutation();
 
   if (isLoading)
     return (
@@ -93,11 +95,11 @@ export default function PublicProfile() {
           decision.
         </p>
         <SimpleEditor name="experienceHighlight" />
-        <div className="flex justify-between items-center pt-4 ">
-          <button className="bg-[#12C7C4] text-white px-4 py-2 text-sm rounded-md hover:bg-[#10b0ae]">
-            Save
-          </button>
-        </div>
+
+        <AboutFormActions
+          isLoading={experienceIsLoading}
+          initialValues={defaultValues}
+        />
       </FormWrapper>
       {/* <div
         dangerouslySetInnerHTML={{ __html: profile.experience.experience }}
