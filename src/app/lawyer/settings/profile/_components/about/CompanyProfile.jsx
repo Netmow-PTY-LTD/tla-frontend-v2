@@ -6,25 +6,25 @@ import React from 'react';
 
 export default function CompanyProfile() {
   return (
-    <div>
+    <div className=" py-5 w-full">
       <h3 className="text-black font-semibold heading-lg">
         Company name & logo
       </h3>
-      <div className="text-[#8E8E8E] mt-[10px]">
+      <p className="text-[#8E8E8E] mt-2">
         This is the first thing customers will see when searching for a
         professional. As a sole-trader, you can just enter your name.
-      </div>
+      </p>
 
-      <div>
-        <div className="mt-11">
-          <AvatarUploader name="companyLogo" label="Upload Logo" />
+      <div className="flex flex-col md:flex-row justify-between items-start  gap-6 mt-8">
+        <div className="w-full md:w-1/2">
+          <AvatarUploader name="companyLogo" />
         </div>
 
-        <div className="mt-[30px]">
+        <div className="w-full md:w-1/2">
           <TextInput
-            name={'companyName'}
-            label={'Company Name'}
-            placeholder={'Enter Your Company Name'}
+            name="companyName"
+            label="Company Name"
+            placeholder="Enter Your Company Name"
           />
         </div>
       </div>

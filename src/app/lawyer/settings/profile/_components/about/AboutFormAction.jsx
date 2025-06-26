@@ -1,9 +1,10 @@
 'use client';
 
+import { Loader } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-export default function AboutFormActions({ initialValues }) {
+export default function AboutFormActions({ initialValues, isLoading }) {
   const { reset, control } = useFormContext();
 
   const watched = useWatch({ control });
@@ -31,14 +32,21 @@ export default function AboutFormActions({ initialValues }) {
       </button>
       <button
         type="submit"
-        disabled={!isDirty}
-        className={`px-4 py-2 text-sm rounded-md text-white ${
-          isDirty
+        disabled={!isDirty || isLoading}
+        className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md text-white text-sm transition-all duration-150 ${
+          isDirty && !isLoading
             ? 'bg-[#12C7C4] hover:bg-[#10b0ae]'
             : 'bg-gray-300 cursor-not-allowed'
         }`}
       >
-        Save
+        {isLoading ? (
+          <>
+            <Loader className="w-4 h-4 animate-spin" />
+            <span>Saving...</span>
+          </>
+        ) : (
+          <span>Save</span>
+        )}
       </button>
     </div>
   );

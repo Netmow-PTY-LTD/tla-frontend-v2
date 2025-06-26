@@ -41,7 +41,7 @@ const LeadStatsCard = ({ locations, profile }) => {
         {/* Practice Area */}
         <div className="m-3">
           <div className="font-medium flex items-center text-lg">
-            <h1> Practice Area</h1>
+            <h4> Practice Area</h4>
             <Link href={'/lawyer/settings/lead-settings'}>
               <button aria-label="Edit Practice Area" className="ml-3 rounded">
                 <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
@@ -76,7 +76,7 @@ const LeadStatsCard = ({ locations, profile }) => {
         {/* Locations */}
         <div className="m-3">
           <h1 className="font-medium flex items-center text-lg">
-            <h1> Locations</h1>
+            <h4> Locations</h4>
             <Link href={'/lawyer/settings/lead-settings'}>
               <button aria-label="Edit Locations" className="ml-3 rounded">
                 <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />

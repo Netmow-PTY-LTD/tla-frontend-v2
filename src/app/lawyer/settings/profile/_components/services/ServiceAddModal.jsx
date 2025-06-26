@@ -8,7 +8,6 @@ import FormWrapper from '@/components/form/FromWrapper';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
 const ServiceAddModal = ({ profile, updateUserData, refetch }) => {
-  console.log('profile', profile);
   const [open, setOpen] = useState(false);
   const onCancel = () => setOpen(!open);
 
@@ -35,6 +34,7 @@ const ServiceAddModal = ({ profile, updateUserData, refetch }) => {
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Service updated successfully');
         refetch();
+        onCancel();
       }
       console.log('Update response:', res);
     } catch (error) {

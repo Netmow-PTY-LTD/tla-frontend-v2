@@ -46,7 +46,7 @@ export default function Services() {
         <div>
           <h3 className="text-black font-semibold heading-lg">Services</h3>
 
-          <p className="mt-[10px]">
+          <p className="mt-[10px] text-[#8E8E8E]">
             Include all services you offer in some detail to give customers the
             confidence they’re looking for when making a hiring decision.
           </p>

@@ -9,6 +9,7 @@ import { Loader } from 'lucide-react';
 import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor';
 import FormWrapper from '@/components/form/FromWrapper';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import AboutFormActions from './about/AboutFormAction';
 
 export default function PublicProfile() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -22,7 +23,8 @@ export default function PublicProfile() {
   } = useAuthUserInfoQuery(undefined, {
     refetchOnMountOrArgChange: true, // keep data fresh
   });
-  const [updateUserData] = useUpdateUserDataMutation();
+  const [updateUserData, { isLoading: experienceIsLoading }] =
+    useUpdateUserDataMutation();
 
   if (isLoading)
     return (
@@ -79,25 +81,25 @@ export default function PublicProfile() {
     <div className="max-w-[900px] mx-auto">
       <FormWrapper onSubmit={handleSubmit} defaultValues={defaultValues}>
         <h3 className="text-black font-semibold heading-lg">Experiences</h3>
-        <p className="mt-[5px] mb-5">
+        <p className="mt-[5px] mb-5 text-[#8E8E8E]">
           Include all experiences you offer in some detail to give customers the
           confidence they’re looking for when making a hiring decision.
         </p>
         <SimpleEditor name="experience" />
-        <h3 className="text-black font-semibold heading-lg">
+        <h3 className="text-black font-semibold heading-lg mt-10">
           Career Highlights
         </h3>
-        <p className="mt-[5px] mb-5">
+        <p className="mt-[5px] mb-5 text-[#8E8E8E]">
           Include all experience highlights you offer in some detail to give
           customers the confidence they’re looking for when making a hiring
           decision.
         </p>
         <SimpleEditor name="experienceHighlight" />
-        <div className="flex justify-between items-center pt-4 ">
-          <button className="bg-[#12C7C4] text-white px-4 py-2 text-sm rounded-md hover:bg-[#10b0ae]">
-            Save
-          </button>
-        </div>
+
+        <AboutFormActions
+          isLoading={experienceIsLoading}
+          initialValues={defaultValues}
+        />
       </FormWrapper>
       {/* <div
         dangerouslySetInnerHTML={{ __html: profile.experience.experience }}

@@ -6,8 +6,12 @@ import { CloudUpload, Edit, FileIcon, Trash } from 'lucide-react';
 import FormWrapper from '@/components/form/FromWrapper';
 import { z } from 'zod';
 
-const AddAccreditationModal = ({ defaultValues, handleSubmit }) => {
-  const [open, setOpen] = useState(false);
+const AddAccreditationModal = ({
+  defaultValues,
+  handleSubmit,
+  open,
+  setOpen,
+}) => {
   const onCancel = () => setOpen(!open);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
