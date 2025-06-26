@@ -23,9 +23,9 @@ export default function SocialMediaLink({ profile }) {
     <div>
       <h3 className="16px text-black font-semibold heading-lg">Social media</h3>
       <p className="text-[#8E8E8E] mt-[10px]">
-        Add your company social media accounts to lend credibility to your
-        business - it is often something customers will look for to validate
-        their hiring decisions.
+        Connect with clients beyond your profile — sharing your law firm’s
+        updates and legal content on social media helps build trust and keeps
+        clients engaged.
       </p>
 
       {/* Facebook Field */}

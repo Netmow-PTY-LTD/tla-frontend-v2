@@ -14,6 +14,7 @@ import AddAccreditationModal from './accreditations/AddAccreditationModal';
 export default function Accreditations() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedAccreditation, setSelectedAccreditation] = useState(null);
+  const [open, setOpen] = useState(false);
 
   const handleEditClick = (accreditation) => () => {
     console.log('accreditation', accreditation);
@@ -82,6 +83,7 @@ export default function Accreditations() {
           res?.message || 'Social media info updated successfully'
         );
         refetch();
+        setOpen(false);
       }
       console.log('Update response:', res);
     } catch (error) {
@@ -126,6 +128,7 @@ export default function Accreditations() {
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Accreditation updated successfully');
         refetch();
+        setIsEditModalOpen(false);
       }
       console.log('Update response:', res);
     } catch (error) {
@@ -163,6 +166,8 @@ export default function Accreditations() {
           <AddAccreditationModal
             defaultValues={defaultValues}
             handleSubmit={handleSubmit}
+            setOpen={setOpen}
+            open={open}
           />
         </div>
       </div>

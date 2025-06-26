@@ -40,6 +40,7 @@ const EditServiceModal = ({
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Service updated successfully');
         refetch();
+        onClose();
       }
       console.log('Update response:', res);
     } catch (error) {

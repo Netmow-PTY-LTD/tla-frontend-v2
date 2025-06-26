@@ -8,9 +8,10 @@ export default function PhotoGallery() {
     <div>
       <h3 className="16px text-black font-semibold heading-lg">Photos</h3>
       <p className="text-[#8E8E8E] mt-[10px]">
-        Showcase what your business can do – for certain services, photos are
-        often what customers look for first – previous projects, locations and
-        venues, or before and after shots for example.
+        Showcase your professionalism — while legal services may not be visual
+        by nature, clients still value seeing photos of your office, team,
+        certifications, events, or speaking engagements. It helps build trust
+        and makes your practice more approachable.
       </p>
 
       <div className="mt-11">
