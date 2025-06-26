@@ -50,14 +50,15 @@ const DynamicProfilePage = () => {
             <div className="w-full lg:w-8/12 lg:pr-10">
               <AboutProfile data={userInfo?.data} />
               <ProfilePhotoGallery userInfo={userInfo} />
-              <section className="py-5">
+              {/* Experiences Start */}
+              <section className="py-5 profile-experience">
                 <div className="flex flex-wrap">
                   <div className="w-full">
                     <h2 className="text-[#00C3C0] font-bold mb-4 profile-heading relative flex items-baseline gap-3">
                       <span>Experiences</span>
                     </h2>
                     <div
-                      className="mt-4 prose prose-sm prose-headings:font-semibold prose-ul:list-disc prose-li:marker:text-black prose-p:text-gray-800 w-full text-base max-w-none"
+                      className="mt-4 prose prose-sm prose-headings:font-semibold prose-ul:list-disc prose-li:marker:text-black w-full text-base max-w-none"
                       dangerouslySetInnerHTML={{
                         __html: userInfo?.data?.experience?.experience || '',
                       }}
@@ -66,14 +67,14 @@ const DynamicProfilePage = () => {
                 </div>
               </section>
               {/* Career Highlights Start */}
-              <section className="py-5 relative">
+              <section className="py-5 relative profile-experience">
                 <div className="flex flex-wrap">
                   <div className="w-full">
                     <h2 className="text-[#00C3C0] font-bold mb-4 profile-heading relative flex items-baseline gap-3">
                       <span>Career Highlights</span>
                     </h2>
                     <div
-                      className="mt-4 prose prose-sm prose-headings:font-semibold prose-ul:list-disc prose-li:marker:text-black prose-p:text-gray-800 w-full text-base max-w-none"
+                      className="mt-4 prose prose-sm prose-headings:font-semibold prose-ul:list-disc prose-li:marker:text-black w-full text-base max-w-none"
                       dangerouslySetInnerHTML={{
                         __html:
                           userInfo?.data?.experience?.experienceHighlight || '',
@@ -144,7 +145,7 @@ const DynamicProfilePage = () => {
                   userInfo?.data?.services?.length > 0 ? (
                     userInfo?.data?.services?.map((service, index) => (
                       <div key={service + index}>
-                        <span className="border border-[#00C3C0] py-2 px-4 mr-2 mb-2 rounded-lg text-center inline-block">
+                        <span className="py-2 px-4 mr-2 mb-2 rounded-lg inline-block chip">
                           {service}
                         </span>
                       </div>
@@ -198,6 +199,16 @@ const DynamicProfilePage = () => {
                 height: 100%;
                 background-color: rgba(0, 204, 179, 0.20);
               }
+
+              .related-areas .chip{
+                background-color: hsl(0deg 0% 85.07% / 20%);
+                color: #000000;
+              }
+
+              .profile-experience p{
+                margin: 0 !important;
+              }
+
             `}
             </style>
           </div>
