@@ -10,6 +10,7 @@ import {
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { z } from 'zod';
 import { Loader } from 'lucide-react';
+import AboutFormActions from './about/AboutFormAction';
 
 export default function SocialMediaLinks() {
   const {
@@ -22,9 +23,8 @@ export default function SocialMediaLinks() {
     refetchOnMountOrArgChange: true, // keep data fresh
   });
 
-  //const onSave = () => console.log('Save clicked');
-
-  const [updateUserData] = useUpdateUserDataMutation();
+  const [updateUserData, { isLoading: socialLinksIsLoading }] =
+    useUpdateUserDataMutation();
 
   if (isLoading)
     return (
@@ -36,11 +36,6 @@ export default function SocialMediaLinks() {
       </div>
     );
   const profile = userInfo?.data?.profile;
-
-  const onCancel = () => {
-    console.log('Cancel clicked');
-    //reset(originalValues);
-  };
 
   const socialMediaSchema = z.object({
     facebook: z.string().url('Invalid Facebook URL').optional(),
@@ -100,17 +95,11 @@ export default function SocialMediaLinks() {
           {/* <ExternalLinks /> */}
           {/* Footer Buttons */}
           <div className="border-t border-white mt-5" />
-          <div className="flex justify-between items-center pt-4 ">
-            <button
-              onClick={onCancel}
-              className="text-sm text-gray-600 hover:text-gray-800"
-            >
-              Cancel
-            </button>
-            <button className="bg-[#12C7C4] text-white px-4 py-2 text-sm rounded-md hover:bg-[#10b0ae]">
-              Save
-            </button>
-          </div>
+
+          <AboutFormActions
+            isLoading={socialLinksIsLoading}
+            initialValues={defaultValues}
+          />
         </div>
       </FormWrapper>
     </div>

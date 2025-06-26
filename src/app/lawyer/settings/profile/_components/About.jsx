@@ -30,7 +30,8 @@ export default function About() {
     refetchOnMountOrArgChange: true, // keep data fresh
   });
 
-  const [updateUserData] = useUpdateUserDataMutation();
+  const [updateUserData, { isLoading: userIsLoading }] =
+    useUpdateUserDataMutation();
   const profile = userInfo?.data?.profile;
   if (isLoading)
     return (
@@ -44,14 +45,16 @@ export default function About() {
 
   if (isError) {
     return (
-      <div className="text-red-500">
-        <p>Error loading profile: {error.message}</p>
-        <button
-          onClick={refetch}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Retry
-        </button>
+      <div className="flex items-center justify-center ">
+        <div className="text-red-500 ">
+          <p>Error loading profile: {error.message}</p>
+          <button
+            onClick={refetch}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Retry
+          </button>
+        </div>
       </div>
     );
   }
@@ -203,7 +206,10 @@ export default function About() {
         <CompanyAbout />
         <div className="border-t border-white" />
         {/* Footer Buttons */}
-        <AboutFormActions initialValues={defaultValues} />
+        <AboutFormActions
+          isLoading={userIsLoading}
+          initialValues={defaultValues}
+        />
       </FormWrapper>
     </div>
   );
