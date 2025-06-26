@@ -7,15 +7,13 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 export default function AvatarUploader({
   name = 'avatar',
-  label = 'Upload File',
-  defaultPreview = '',
   accept = 'image/*',
   multiple = false,
   icon = <CloudUpload className="w-6 h-6 text-[#00C3C0] mb-2" />,
 }) {
   const { register, setValue, watch } = useFormContext();
   const file = watch(name);
-  const [preview, setPreview] = useState(defaultPreview || '');
+  const [preview, setPreview] = useState('');
 
   // Handle preview generation for File or string URL
   useEffect(() => {
@@ -38,16 +36,19 @@ export default function AvatarUploader({
   };
 
   return (
-    <div className="flex items-center gap-4 ">
-      <Avatar className="h-[90px] w-[90px] ">
-        <AvatarImage src={preview} />
-        <AvatarFallback>CN</AvatarFallback>
-      </Avatar>
+    <div className="flex items-center gap-4">
+      {/* Shared size classes */}
+      <div className="h-20 w-20 md:h-24 md:w-24 lg:h-28 lg:w-28">
+        <Avatar className="h-full w-full rounded-lg">
+          <AvatarImage src={preview} />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+      </div>
 
       <div className="max-w-sm">
         <label
           htmlFor={`file-upload-${name}`}
-          className="flex flex-col items-center justify-center w-full px-5 py-4 border border-dashed border-gray-300 rounded-2xl cursor-pointer text-center hover:bg-gray-50 transition"
+          className="flex flex-col items-center justify-center h-20 w-20 md:h-24 md:w-24 lg:h-28 lg:w-28 px-2 py-2 border border-dashed border-gray-300 rounded-lg cursor-pointer text-center hover:bg-gray-50 transition"
         >
           {icon}
           <input
@@ -59,7 +60,6 @@ export default function AvatarUploader({
             multiple={multiple}
           />
         </label>
-        <p className="text-gray-700 font-medium text-center mt-2">{label}</p>
       </div>
     </div>
   );
