@@ -6,7 +6,7 @@ import React from 'react';
 
 export default function CompanyProfile() {
   return (
-    <div className="max-w-xl w-full">
+    <div className=" py-5 w-full">
       <h3 className="text-black font-semibold heading-lg">
         Company name & logo
       </h3>
@@ -15,16 +15,18 @@ export default function CompanyProfile() {
         professional. As a sole-trader, you can just enter your name.
       </p>
 
-      <div className="mt-8">
-        <AvatarUploader name="companyLogo" />
-      </div>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mt-8">
+        <div className="w-full md:w-1/2">
+          <AvatarUploader name="companyLogo" />
+        </div>
 
-      <div className="mt-8">
-        <TextInput
-          name="companyName"
-          label="Company Name"
-          placeholder="Enter Your Company Name"
-        />
+        <div className="w-full md:w-1/2">
+          <TextInput
+            name="companyName"
+            label="Company Name"
+            placeholder="Enter Your Company Name"
+          />
+        </div>
       </div>
     </div>
   );

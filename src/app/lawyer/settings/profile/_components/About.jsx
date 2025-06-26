@@ -159,10 +159,8 @@ export default function About() {
         defaultValues={defaultValues}
         schema={lawyerSettingAboutSchema}
       >
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 mb-5">
-          <CompanyProfile />
-          <PersonalProfile />
-        </div>
+        <PersonalProfile />
+
         <div className="border-t border-white" />
         {/* Personal Contact Info */}
         <div className="py-9">
@@ -174,7 +172,7 @@ export default function About() {
             showcase your experience and build trust. You can update your
             private contact details in your account settings.
           </p>
-          <div className="grid grid-cols-2 gap-x-20 gap-y-7 mb-7">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-7 mb-7">
             <TextInput
               label="Phone Number"
               name="phone"
@@ -197,6 +195,7 @@ export default function About() {
           <SimpleEditor name="bio" />
         </div>
         <div className="border-t border-white" />
+        <CompanyProfile />
         <CompanyContactDetails />
         <div className="border-t border-white" />
         <CompanyLocation />
