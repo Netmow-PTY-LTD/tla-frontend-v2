@@ -17,6 +17,7 @@ import { lawyerSettingAboutSchema } from '@/schema/dashboard/lawyerSettings';
 import TextInput from '@/components/form/TextInput';
 import TextareaInput from '@/components/form/TextArea';
 import { Loader } from 'lucide-react';
+import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor';
 
 export default function About() {
   const {
@@ -185,11 +186,15 @@ export default function About() {
               placeholder="Enter your personal address"
             />
           </div>
-          <TextareaInput
+          <label className="text-black label-text mb-3 inline-block">
+            About You
+          </label>
+          {/* <TextareaInput
             label="About You"
             name="bio"
             placeholder="Tell us about your experience, what makes you stand out, or how you help your clients."
-          />
+          /> */}
+          <SimpleEditor name="bio" />
         </div>
         <div className="border-t border-white" />
         <CompanyContactDetails />

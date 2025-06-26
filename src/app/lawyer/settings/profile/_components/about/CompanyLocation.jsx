@@ -61,7 +61,7 @@ export default function CompanyLocation() {
   return (
     <div className="py-9">
       <h3 className="text-black font-semibold heading-lg">Company location</h3>
-      <p className="mt-[10px] mb-7">
+      <p className="mt-[10px] text-[#8E8E8E] mb-7">
         Use a specific address to help customers searching for a local business.
       </p>
 

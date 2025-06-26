@@ -32,7 +32,9 @@ export default function CompanyAbout() {
   return (
     <div className="py-9">
       <h3 className="text-black font-semibold heading-lg">About the company</h3>
-      <p className="mt-[10px] mb-7">Introduce the company to your customers.</p>
+      <p className="mt-[10px] text-[#8E8E8E] mb-7">
+        Introduce the company to your customers.
+      </p>
 
       <div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-20 gap-y-7">
