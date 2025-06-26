@@ -197,7 +197,7 @@ export default function About() {
         </div>
         <div className="border-t border-white" />
         <CompanyProfile />
-        <CompanyContactDetails />
+
         <div className="border-t border-white" />
         <CompanyLocation />
         <div className="border-t border-white" />

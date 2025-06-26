@@ -5,12 +5,10 @@ import AddCardModal from '../modal/AddCardModal';
 import {
   useAddPaymentMethodMutation,
   useGetPaymentMethodQuery,
-  useTransactionHistoryQuery,
 } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import PaymentMethod from '../PaymentMethod';
 import { Loader } from 'lucide-react';
-import { CreditTransactionLog } from '../UI/CreditTransactionLog';
 
 const MyPayments = () => {
   const [open, setOpen] = useState(false);
@@ -20,13 +18,13 @@ const MyPayments = () => {
   const card = data?.data || null;
 
   const handleCardAdded = async (paymentMethodId) => {
-    const result = await addPaymentMethod({ paymentMethodId }).unwrap();
-    if (result.success) {
-      showSuccessToast(result?.message);
-    } else {
-      showErrorToast(result?.message);
-    }
     try {
+      const result = await addPaymentMethod({ paymentMethodId }).unwrap();
+      if (result.success) {
+        showSuccessToast(result?.message);
+      } else {
+        showErrorToast(result?.message);
+      }
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);
@@ -67,10 +65,6 @@ const MyPayments = () => {
           <PaymentMethod card={card} />
         )}
       </div>
-
-      {/* transaction list*/}
-
-      {/* <div>{card && <CreditTransactionLog />}</div> */}
     </div>
   );
 };
