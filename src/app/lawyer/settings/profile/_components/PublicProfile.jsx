@@ -80,32 +80,31 @@ export default function PublicProfile() {
   return (
     <div className="max-w-[900px] mx-auto">
       <FormWrapper onSubmit={handleSubmit} defaultValues={defaultValues}>
-        <h3 className="text-black font-semibold heading-lg">Experiences</h3>
-        <p className="mt-[5px] mb-5 text-[#8E8E8E]">
-          Include all experiences you offer in some detail to give customers the
-          confidence they’re looking for when making a hiring decision.
-        </p>
-        <SimpleEditor name="experience" />
-        <h3 className="text-black font-semibold heading-lg mt-10">
-          Career Highlights
-        </h3>
-        <p className="mt-[5px] mb-5 text-[#8E8E8E]">
-          Include all experience highlights you offer in some detail to give
-          customers the confidence they’re looking for when making a hiring
-          decision.
-        </p>
-        <SimpleEditor name="experienceHighlight" />
+        <div>
+          <h3 className="text-black font-semibold heading-lg">Experiences</h3>
+          <p className="mt-[10px] mb-8 text-[#8E8E8E]">
+            Include all experiences you offer in some detail to give customers
+            the confidence they’re looking for when making a hiring decision.
+          </p>
+          <SimpleEditor name="experience" />
+        </div>
+        <div>
+          <h3 className="text-black font-semibold heading-lg mt-[50px]">
+            Career Highlights
+          </h3>
+          <p className="mt-[10px] mb-8 text-[#8E8E8E]">
+            Include all experience highlights you offer in some detail to give
+            customers the confidence they’re looking for when making a hiring
+            decision.
+          </p>
+          <SimpleEditor name="experienceHighlight" />
+        </div>
 
         <AboutFormActions
           isLoading={experienceIsLoading}
           initialValues={defaultValues}
         />
       </FormWrapper>
-      {/* <div
-        dangerouslySetInnerHTML={{ __html: profile.experience.experience }}
-        className="prose prose-sm prose-headings:font-semibold prose-ul:list-disc prose-li:marker:text-black prose-p:text-gray-800"
-      >
-      </div> */}
     </div>
   );
 }
