@@ -30,7 +30,7 @@ export default function SellerDashboard() {
     error: errorLeadServices,
   } = useGetLeadServiceListQuery();
 
-  const profileData = userInfo?.data?.profile ?? {};
+  const profileData = userInfo?.data ?? {};
   const locations = leadServicesData?.data?.locations ?? [];
 
   return (
@@ -48,7 +48,7 @@ export default function SellerDashboard() {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5 relative z-[1]">
         <LeadSettingsCard
-          services={profileData.serviceIds || []}
+          services={profileData?.profile?.serviceIds || []}
           isLoading={isLoadingUserInfo || isLoadingLeadServices}
           isError={isErrorUserInfo || isErrorLeadServices}
           error={errorUserInfo || errorLeadServices}
@@ -56,7 +56,13 @@ export default function SellerDashboard() {
         />
         <LeadsCountCard />
 
-        <SendNewLeadsCard />
+        <SendNewLeadsCard
+          isLoading={isLoadingUserInfo || isLoadingLeadServices}
+          isError={isErrorUserInfo || isErrorLeadServices}
+          error={errorUserInfo || errorLeadServices}
+          locations={locations}
+          profile={profileData}
+        />
         <ResponseCard />
       </div>
     </div>
