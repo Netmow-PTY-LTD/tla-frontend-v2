@@ -8,7 +8,7 @@ export default function PersonalProfile() {
   return (
     <div className="w-full">
       <h3 className="text-black font-semibold heading-lg">
-        Name and profile picture
+        Personal Information
       </h3>
       <p className="text-[#8E8E8E] mt-2">
         This is the person who will be communicating with customers on Bark. The

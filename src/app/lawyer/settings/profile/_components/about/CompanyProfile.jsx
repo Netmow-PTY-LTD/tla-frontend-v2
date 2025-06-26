@@ -6,9 +6,9 @@ import React from 'react';
 
 export default function CompanyProfile() {
   return (
-    <div className=" py-5 w-full">
+    <div className="  py-5 w-full">
       <h3 className="text-black font-semibold heading-lg">
-        Company name & logo
+        Company Information
       </h3>
       <p className="text-[#8E8E8E] mt-2">
         This is the first thing customers will see when searching for a
@@ -23,7 +23,7 @@ export default function CompanyProfile() {
         <div className="w-full md:w-1/2">
           <TextInput
             name="companyName"
-            label="Company Name"
+            label="Name"
             placeholder="Enter Your Company Name"
           />
         </div>
