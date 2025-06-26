@@ -167,9 +167,7 @@ export default function About() {
         <div className="border-t border-white" />
         {/* Personal Contact Info */}
         <div className="py-9">
-          <h3 className="text-black font-semibold heading-lg">
-            About Your Profile
-          </h3>
+          <h3 className="text-black font-semibold heading-lg">About</h3>
           <p className="mt-[10px] text-[#8E8E8E] mb-7">
             This information will be visible to customers on Bark. Use it to
             showcase your experience and build trust. You can update your
