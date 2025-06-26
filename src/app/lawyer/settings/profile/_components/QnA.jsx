@@ -10,6 +10,7 @@ import {
 
 import { CircleAlert, Loader } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import AboutFormActions from './about/AboutFormAction';
 
 export default function QuestionsAndAnswers() {
   const {
@@ -22,7 +23,8 @@ export default function QuestionsAndAnswers() {
     refetchOnMountOrArgChange: true, // keep data fresh
   });
 
-  const [updateUserData] = useUpdateUserDataMutation();
+  const [updateUserData, { isLoading: qaIsLoading }] =
+    useUpdateUserDataMutation();
 
   const [defaultValues, setDefaultValues] = useState({
     profileQA: [
@@ -61,9 +63,6 @@ export default function QuestionsAndAnswers() {
       </div>
     );
 
-  //console.log('profile', profile);
-
-  const onCancel = () => console.log('Cancel clicked');
   const handleSubmit = async (values) => {
     const payload = {
       profileQA: values.profileQA.map((item, index) => ({
@@ -126,17 +125,10 @@ export default function QuestionsAndAnswers() {
         </div>
         <div className="border-t border-white mt-5" />
         {/* Footer Buttons */}
-        <div className="flex justify-between items-center">
-          <button
-            onClick={onCancel}
-            className="text-sm text-gray-600 hover:text-gray-800"
-          >
-            Cancel
-          </button>
-          <button className="bg-[#12C7C4] text-white px-4 py-2 text-sm rounded-md hover:bg-[#10b0ae]">
-            Save
-          </button>
-        </div>
+        <AboutFormActions
+          isLoading={qaIsLoading}
+          initialValues={defaultValues}
+        />
       </FormWrapper>
     </div>
   );

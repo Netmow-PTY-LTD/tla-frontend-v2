@@ -20,8 +20,8 @@ export default function MyProfilePage() {
     // { id: 'reviews', title: 'Reviews', content: <Reviews /> },
     { id: 'services', title: 'Services', content: <Services /> },
     {
-      id: 'public-profile',
-      title: 'Public Profile',
+      id: 'experiences-career-highlights',
+      title: 'Experiences & Career Highlights',
       content: <PublicProfile />,
     },
     { id: 'media', title: 'Photos', content: <Media /> },

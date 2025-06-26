@@ -18,12 +18,12 @@ export default function ProfileProgress() {
       <Progress completion={completion} />
 
       <p className="text-sm text-gray-400">
-        Take two minutes to improve your profile
+        Take a moment to improve your profile and make it stand out
       </p>
 
       <p className="text-sm text-gray-700">
-        Make the best first impression with a great profile — this is what
-        customers will look at first when choosing which professional to hire.{' '}
+        Make the best first impression with a strong legal profile — this is the
+        first things clients see when deciding which lawyer to trust and hire .
         <Link href="/lawyer/dashboard/my-stats">
           <span className="text-cyan-600 font-semibold hover:underline">
             View profile

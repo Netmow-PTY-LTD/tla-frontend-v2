@@ -22,7 +22,8 @@ export default function Photos() {
   } = useAuthUserInfoQuery(undefined, {
     refetchOnMountOrArgChange: true, // keep data fresh
   });
-  const [updatePhotosData] = useUpdateUserDataMutation();
+  const [updatePhotosData, { isLoading: photosIsLoading }] =
+    useUpdateUserDataMutation();
 
   const profile = userInfo?.data?.profile;
   if (isLoading)
@@ -37,14 +38,16 @@ export default function Photos() {
 
   if (isError) {
     return (
-      <div className="text-red-500">
-        <p>Error loading profile: {error.message}</p>
-        <button
-          onClick={refetch}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Retry
-        </button>
+      <div className="flex items-center justify-center ">
+        <div className="text-red-500 ">
+          <p>Error loading profile: {error.message}</p>
+          <button
+            onClick={refetch}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Retry
+          </button>
+        </div>
       </div>
     );
   }
@@ -106,7 +109,10 @@ export default function Photos() {
           <VideoGallery />
         </div>
         {/* Footer Buttons */}
-        <MediaFormAction initialValues={defaultValues} />
+        <MediaFormAction
+          isLoading={photosIsLoading}
+          initialValues={defaultValues}
+        />
       </FormWrapper>
     </div>
   );
