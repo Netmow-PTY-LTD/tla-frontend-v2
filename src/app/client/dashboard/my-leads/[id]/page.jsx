@@ -71,7 +71,7 @@ export default function LeadDetailsPage() {
     .find((option) => option.option === 'Urgent');
 
   return (
-    <div className="w-full lg:w-9/12 mx-auto">
+    <div className="w-full max-w-[1100px] mx-auto">
       <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
         <div className="flex items-center justify-between">
           <Link
