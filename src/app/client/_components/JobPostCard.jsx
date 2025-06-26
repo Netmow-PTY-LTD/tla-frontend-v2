@@ -45,7 +45,7 @@ const statusStyles = {
 
 export default function JobPostCard({ lead }) {
   return (
-    <div className="relative rounded-lg bg-gradient-to-bl from-white to-cyan-100 shadow p-[20px] w-full ">
+    <div className="relative rounded-lg bg-gradient-to-bl from-white to-cyan-100 shadow py-[30px] px-[30px] w-full ">
       {/* Status Badge */}
       <div
         className={`absolute top-0 left-0  px-[10px] py-[5px] rounded-tl-[10px] rounded-br-[10px] text-white text-sm font-semibold  ${statusStyles[status]?.bg}`}
@@ -57,10 +57,11 @@ export default function JobPostCard({ lead }) {
       <h3 className="text-[19px] font-semibold text-center">
         {lead?.serviceId?.name}
       </h3>
+
       <p className="text-sm text-center text-gray-500 mb-4">
-        {lead?.serviceId?.createdAt &&
+        {lead?.createdAt &&
           (() => {
-            const date = new Date(lead.serviceId.createdAt);
+            const date = new Date(lead?.createdAt);
             const weekday = date.toLocaleDateString('en-GB', {
               weekday: 'long',
             });
@@ -69,6 +70,9 @@ export default function JobPostCard({ lead }) {
             return `${weekday}, ${day} ${month}`;
           })()}
       </p>
+      <div className="text-center text-gray-600 mb-4">
+        {lead?.additionalDetails ?? ''}
+      </div>
 
       {/* <p className="text-center text-sm">
         {status === 'Rejected' ? (
