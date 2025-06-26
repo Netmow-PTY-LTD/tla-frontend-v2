@@ -84,7 +84,7 @@ export default function PublicProfile() {
           confidence they’re looking for when making a hiring decision.
         </p>
         <SimpleEditor name="experience" />
-        <h3 className="text-black font-semibold heading-lg">
+        <h3 className="text-black font-semibold heading-lg mt-10">
           Career Highlights
         </h3>
         <p className="mt-[5px] mb-5 text-[#8E8E8E]">
