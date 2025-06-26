@@ -20,13 +20,13 @@ const MyPayments = () => {
   const card = data?.data || null;
 
   const handleCardAdded = async (paymentMethodId) => {
-    const result = await addPaymentMethod({ paymentMethodId }).unwrap();
-    if (result.success) {
-      showSuccessToast(result?.message);
-    } else {
-      showErrorToast(result?.message);
-    }
     try {
+      const result = await addPaymentMethod({ paymentMethodId }).unwrap();
+      if (result.success) {
+        showSuccessToast(result?.message);
+      } else {
+        showErrorToast(result?.message);
+      }
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);

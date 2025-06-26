@@ -1,7 +1,26 @@
 import React from 'react';
 import CardDisplay from './UI/CardDisplay';
+import { useRemovePaymentMethodMutation } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
 const PaymentMethod = ({ card }) => {
+  const [removeCard] = useRemovePaymentMethodMutation();
+
+  const handleRemoveCard = async (paymentMethodId) => {
+    try {
+      const result = await removeCard(paymentMethodId).unwrap();
+
+      if (result.success) {
+        showSuccessToast(result?.message);
+      } else {
+        showErrorToast(result?.message);
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+    }
+  };
+
   return (
     <div className=" bg-gray-50  p-4 rounded-lg">
       <div className="w-full max-w-2xl">
@@ -10,8 +29,7 @@ const PaymentMethod = ({ card }) => {
           <button
             className="text-sm ml-2 text-red-600 hover:underline focus:outline-none"
             onClick={() => {
-              // Add your remove functionality here
-              console.log('Remove button clicked');
+              handleRemoveCard(card?.paymentMethodId);
             }}
           >
             Remove
