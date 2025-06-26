@@ -143,50 +143,125 @@ export default function ClientLeadRegistrationModal({
 
   const options = selectedServiceWiseQuestions?.[step]?.options || [];
 
+  // const handleOptionChange = (optionId, checked) => {
+  //   // find optionid from fullcloned
+
+  //   // const foundOption = fullClonedQuestions
+  //   //   ?.flatMap((question) => question.options || [])
+  //   //   .find((option) => option?._id === optionId);
+
+  //   // console.log('foundOption', foundOption);
+
+  //   // const newCheckedOptions = checked
+  //   //   ? [...checkedOptions, optionId]
+  //   //   : checkedOptions.filter((id) => id !== optionId);
+
+  //   // setCheckedOptions(newCheckedOptions);
+
+  //   // const tempOption = {};
+
+  //   // if (foundOption?.name === 'Other') {
+  //   //   tempOption.id = optionId;
+  //   //   tempOption.is_checked = true;
+  //   //   tempOption.idExtraData = document.getElementById(
+  //   //     `${optionId}-other`
+  //   //   )?.value;
+  //   // } else {
+  //   //   tempOption.id = optionId;
+  //   //   tempOption.is_checked = true;
+  //   //   tempOption.idExtraData = '';
+  //   // }
+
+  //   // console.log('tempOption', tempOption);
+
+  //   // setCheckedOptionsDetails([...checkedOptionsDetails, tempOption]);
+
+  //   // console.log('checkedOptionsDetails', checkedOptionsDetails);
+
+  //   // const foundOption = fullClonedQuestions
+  //   //   ?.flatMap((question) => question.options || [])
+  //   //   .find((option) => option?._id === optionId);
+
+  //   // console.log('foundOption', foundOption);
+
+  //   const parentQuestion = fullClonedQuestions?.find((question) =>
+  //     question.options?.some((option) => option._id === optionId)
+  //   );
+
+  //   const foundOption = parentQuestion?.options?.find(
+  //     (option) => option._id === optionId
+  //   );
+
+  //   const questionType = parentQuestion?.questionType;
+
+  //   console.log('questionType', questionType);
+
+  //   const newCheckedOptions = checked
+  //     ? [...checkedOptions, optionId]
+  //     : checkedOptions.filter((id) => id !== optionId);
+
+  //   setCheckedOptions(newCheckedOptions);
+
+  //   console.log('newCheckedOptions', newCheckedOptions);
+
+  //   const tempOption = {
+  //     id: optionId,
+  //     name: foundOption?.name,
+  //     is_checked: checked,
+  //     idExtraData:
+  //       foundOption?.name === 'Other'
+  //         ? document.getElementById(`${optionId}-other`)?.value ?? ''
+  //         : '',
+  //   };
+
+  //   setCheckedOptionsDetails((prev) => {
+  //     if (checked) {
+  //       const filtered = prev.filter((item) => item.id !== optionId);
+  //       return [...filtered, tempOption];
+  //     } else {
+  //       return prev.filter((item) => item.id !== optionId);
+  //     }
+  //   });
+
+  //   // Find selected options metadata (if needed for something else)
+  //   const findSelectedOptions = options?.find((item) => item?._id === optionId);
+
+  //   if (checked) {
+  //     setSelectedOptions((prev) => {
+  //       const newOptions = findSelectedOptions?.selected_options || [];
+
+  //       // Merge and filter out duplicates by _id
+  //       const combined = [...prev, ...newOptions];
+  //       const unique = Array.from(
+  //         new Map(combined.map((item) => [item._id, item])).values()
+  //       );
+
+  //       return unique;
+  //     });
+  //   }
+
+  //   if (questionType === 'radio') {
+  //     setCheckedOptions([optionId]);
+  //     setCheckedOptionsDetails([tempOption]);
+  //     setSelectedOptions(findSelectedOptions?.selected_options || []);
+  //   }
+  // };
+
+  // console.log('selectedOptions', selectedOptions);
+  // console.log('checkedOptions', checkedOptions);
+
   const handleOptionChange = (optionId, checked) => {
-    // find optionid from fullcloned
+    const parentQuestion = fullClonedQuestions?.find((question) =>
+      question.options?.some((option) => option._id === optionId)
+    );
 
-    // const foundOption = fullClonedQuestions
-    //   ?.flatMap((question) => question.options || [])
-    //   .find((option) => option?._id === optionId);
+    const foundOption = parentQuestion?.options?.find(
+      (option) => option._id === optionId
+    );
 
-    // console.log('foundOption', foundOption);
+    const questionType = parentQuestion?.questionType;
 
-    // const newCheckedOptions = checked
-    //   ? [...checkedOptions, optionId]
-    //   : checkedOptions.filter((id) => id !== optionId);
-
-    // setCheckedOptions(newCheckedOptions);
-
-    // const tempOption = {};
-
-    // if (foundOption?.name === 'Other') {
-    //   tempOption.id = optionId;
-    //   tempOption.is_checked = true;
-    //   tempOption.idExtraData = document.getElementById(
-    //     `${optionId}-other`
-    //   )?.value;
-    // } else {
-    //   tempOption.id = optionId;
-    //   tempOption.is_checked = true;
-    //   tempOption.idExtraData = '';
-    // }
-
-    // console.log('tempOption', tempOption);
-
-    // setCheckedOptionsDetails([...checkedOptionsDetails, tempOption]);
-
-    // console.log('checkedOptionsDetails', checkedOptionsDetails);
-
-    const foundOption = fullClonedQuestions
-      ?.flatMap((question) => question.options || [])
-      .find((option) => option?._id === optionId);
-
-    const newCheckedOptions = checked
-      ? [...checkedOptions, optionId]
-      : checkedOptions.filter((id) => id !== optionId);
-
-    setCheckedOptions(newCheckedOptions);
+    console.log('questionType', questionType);
 
     const tempOption = {
       id: optionId,
@@ -198,6 +273,29 @@ export default function ClientLeadRegistrationModal({
           : '',
     };
 
+    const findSelectedOptions = options?.find((item) => item?._id === optionId);
+
+    // Handle "radio" type first and return early
+    if (questionType === 'radio') {
+      if (checked) {
+        setCheckedOptions([optionId]);
+        setCheckedOptionsDetails([tempOption]);
+        setSelectedOptions(findSelectedOptions?.selected_options || []);
+      } else {
+        setCheckedOptions([]);
+        setCheckedOptionsDetails([]);
+        setSelectedOptions([]);
+      }
+      return; // skip rest of the logic
+    }
+
+    // Handle multi-select (checkbox) types
+    const newCheckedOptions = checked
+      ? [...checkedOptions, optionId]
+      : checkedOptions.filter((id) => id !== optionId);
+
+    setCheckedOptions(newCheckedOptions);
+
     setCheckedOptionsDetails((prev) => {
       if (checked) {
         const filtered = prev.filter((item) => item.id !== optionId);
@@ -207,26 +305,28 @@ export default function ClientLeadRegistrationModal({
       }
     });
 
-    // Find selected options metadata (if needed for something else)
-    const findSelectedOptions = options?.find((item) => item?._id === optionId);
-
     if (checked) {
       setSelectedOptions((prev) => {
         const newOptions = findSelectedOptions?.selected_options || [];
-
-        // Merge and filter out duplicates by _id
         const combined = [...prev, ...newOptions];
         const unique = Array.from(
           new Map(combined.map((item) => [item._id, item])).values()
         );
-
         return unique;
       });
+    } else {
+      setSelectedOptions((prev) =>
+        prev.filter(
+          (item) =>
+            !findSelectedOptions?.selected_options?.some(
+              (opt) => opt._id === item._id
+            )
+        )
+      );
     }
   };
 
-  // console.log('selectedOptions', selectedOptions);
-  // console.log('checkedOptions', checkedOptions);
+  console.log('checkedOptions', checkedOptionsDetails);
 
   useEffect(() => {
     if (step === 0) {

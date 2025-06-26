@@ -101,6 +101,32 @@ input:focus {
   grid-template-columns: 1fr;
 }
 
+.profile-heading {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-heading:before {
+  content: '';
+  position: absolute;
+  bottom: 10px;
+  right: -24px;
+  width: 12px;
+  height: 4px;
+  background-color: #ff8602;
+  border-radius: 30px;
+}
+
+.profile-heading:after {
+  content: '';
+  position: absolute;
+  bottom: 10px;
+  right: -80px;
+  width: 46px;
+  height: 4px;
+  background-color: #00c3c0;
+  border-radius: 30px;
+}
 /* Utility */
 
 .section-heading {
@@ -471,7 +497,7 @@ input:focus {
 .suggestion-area h6 {
   color: var(--color-text);
   text-align: center;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
   line-height: 1.5;
 }

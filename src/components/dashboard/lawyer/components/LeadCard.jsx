@@ -8,9 +8,35 @@ import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 const LeadCard = ({ onViewDetails, user, isExpanded }) => {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
+  console.log('Single Lead Data:', user);
+
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])
     .find((option) => option.option === 'Urgent');
+
+  const formatRelativeTime = (dateString) => {
+    const now = new Date();
+    const then = new Date(dateString);
+    const diffInSeconds = Math.floor((now - then) / 1000);
+
+    if (diffInSeconds < 5) return 'Just now';
+
+    const units = [
+      { max: 60, value: 1, name: 's' }, // seconds
+      { max: 3600, value: 60, name: 'm' }, // minutes
+      { max: 86400, value: 3600, name: 'h' }, // hours
+      { max: 2592000, value: 86400, name: 'd' }, // days
+      { max: 31536000, value: 2592000, name: 'mo' }, // months
+      { max: Infinity, value: 31536000, name: 'y' }, // years
+    ];
+
+    for (const unit of units) {
+      if (diffInSeconds < unit.max) {
+        const value = Math.floor(diffInSeconds / unit.value);
+        return `${value}${unit.name} ago`;
+      }
+    }
+  };
 
   return (
     <Card className="w-full max-w-full mx-auto">
@@ -48,7 +74,9 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
             </div>
           </div>
           <p className="font-medium text-[10px] text-gray-600 sm:ml-4 mt-2 sm:mt-0">
-            Just now
+            <p className="font-medium text-[11px] text-gray-600 sm:ml-4 mt-2 sm:mt-0">
+              {user?.createdAt && formatRelativeTime(user?.createdAt)}
+            </p>
           </p>
         </div>
       </div>
@@ -113,7 +141,7 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
               isExpanded ? 'heading-base' : 'text-[14px]'
             }`}
           >
-            Position Overview
+            {user?.serviceId?.name}
           </h4>
           <p
             className={`text-[#34495E] ${
@@ -141,14 +169,16 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
         >
           View Job Details
         </button>
-        <p
-          className={`text-[#34495E] ${
-            isExpanded ? 'heading-base' : 'text-[12px]'
-          } flex items-center gap-2`}
-        >
-          <span>49 Credits required</span>
-          <CircleAlert className="w-4 h-4" />
-        </p>
+        {user?.credit && (
+          <p
+            className={`text-[#34495E] ${
+              isExpanded ? 'heading-base' : 'text-[12px]'
+            } flex items-center gap-2`}
+          >
+            <span>{user?.credit} Credits required</span>
+            <CircleAlert className="w-4 h-4" />
+          </p>
+        )}
       </div>
     </Card>
   );

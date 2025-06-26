@@ -196,9 +196,10 @@ const MyStatsPage = () => {
                 <PencilIcon className="w-5 h-5" />
               </Link>
             </div>
-            <div className="bg-gray-100 p-4 rounded-lg text-gray-700 leading-relaxed">
-              {bio || fallbackBio}
-            </div>
+            <div
+              className="bg-gray-100 p-4 rounded-lg text-gray-700 leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: bio || fallbackBio }}
+            ></div>
           </div>
         </Card>
         <LeadSettings className="h-full " />

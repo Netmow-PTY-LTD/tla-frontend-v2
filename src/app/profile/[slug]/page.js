@@ -53,32 +53,8 @@ const DynamicProfilePage = () => {
               <section className="py-5">
                 <div className="flex flex-wrap">
                   <div className="w-full">
-                    <h2 className="text-[24px] font-semibold mb-4 profile-heading relative flex items-baseline gap-3">
+                    <h2 className="text-[#00C3C0] font-bold mb-4 profile-heading relative flex items-baseline gap-3">
                       <span>Experiences</span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="62"
-                        height="4"
-                        viewBox="0 0 62 4"
-                        fill="none"
-                      >
-                        <rect
-                          x="0.138672"
-                          y="0.201172"
-                          width="11.3115"
-                          height="3.40625"
-                          rx="1.70312"
-                          fill="#D9D9D9"
-                        />
-                        <rect
-                          x="17.4512"
-                          y="0.201172"
-                          width="44.5493"
-                          height="3.40625"
-                          rx="1.70312"
-                          fill="#00C3C0"
-                        />
-                      </svg>
                     </h2>
                     <div
                       className="mt-4 prose prose-sm prose-headings:font-semibold prose-ul:list-disc prose-li:marker:text-black prose-p:text-gray-800 w-full text-base max-w-none"
@@ -93,32 +69,8 @@ const DynamicProfilePage = () => {
               <section className="py-5 relative">
                 <div className="flex flex-wrap">
                   <div className="w-full">
-                    <h2 className="text-[24px] font-semibold mb-4 profile-heading relative flex items-baseline gap-3">
+                    <h2 className="text-[#00C3C0] font-bold mb-4 profile-heading relative flex items-baseline gap-3">
                       <span>Career Highlights</span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="62"
-                        height="4"
-                        viewBox="0 0 62 4"
-                        fill="none"
-                      >
-                        <rect
-                          x="0.138672"
-                          y="0.201172"
-                          width="11.3115"
-                          height="3.40625"
-                          rx="1.70312"
-                          fill="#D9D9D9"
-                        />
-                        <rect
-                          x="17.4512"
-                          y="0.201172"
-                          width="44.5493"
-                          height="3.40625"
-                          rx="1.70312"
-                          fill="#00C3C0"
-                        />
-                      </svg>
                     </h2>
                     <div
                       className="mt-4 prose prose-sm prose-headings:font-semibold prose-ul:list-disc prose-li:marker:text-black prose-p:text-gray-800 w-full text-base max-w-none"
@@ -142,32 +94,8 @@ const DynamicProfilePage = () => {
               <section className="py-5">
                 <div className="flex flex-wrap gap-5">
                   <div className="w-full">
-                    <h2 className="text-[24px] font-semibold mb-4 profile-heading relative flex items-baseline gap-3">
+                    <h2 className="text-[#00C3C0] font-bold mb-4 profile-heading relative flex items-baseline gap-3">
                       <span>Videos</span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="62"
-                        height="4"
-                        viewBox="0 0 62 4"
-                        fill="none"
-                      >
-                        <rect
-                          x="0.138672"
-                          y="0.201172"
-                          width="11.3115"
-                          height="3.40625"
-                          rx="1.70312"
-                          fill="#D9D9D9"
-                        />
-                        <rect
-                          x="17.4512"
-                          y="0.201172"
-                          width="44.5493"
-                          height="3.40625"
-                          rx="1.70312"
-                          fill="#00C3C0"
-                        />
-                      </svg>
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                       {userInfo?.data?.photosVideos?.videos?.length > 0 ? (
@@ -208,15 +136,15 @@ const DynamicProfilePage = () => {
             </div>
             <div className="w-full lg:w-1/3 pl-8 flex gap-10 items-start">
               <div className="related-areas relative">
-                <h2 className="text-[24px] font-semibold mb-4">
+                <h4 className="font-semibold mb-4">
                   Related areas of expertise{' '}
-                </h2>
+                </h4>
                 <div className="">
                   {Array.isArray(userInfo?.data?.services) &&
                   userInfo?.data?.services?.length > 0 ? (
                     userInfo?.data?.services?.map((service, index) => (
                       <div key={service + index}>
-                        <span className="border border-gray-300 py-2 px-4 mr-2 mb-2 rounded-lg text-center inline-block">
+                        <span className="border border-[#00C3C0] py-2 px-4 mr-2 mb-2 rounded-lg text-center inline-block">
                           {service}
                         </span>
                       </div>
@@ -259,7 +187,7 @@ const DynamicProfilePage = () => {
               {`
               .related-areas {
                 position: relative;
-                padding-left: 50px; /* Adjust as needed for spacing */
+                padding-left: 40px;
               }
               .related-areas::after {
                 content: '';

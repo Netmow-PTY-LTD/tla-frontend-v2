@@ -7,45 +7,6 @@ import { FilterDropdown } from '../_components/FilterDropDwon';
 import { useGetAllMyLeadsQuery } from '@/store/features/lawyer/LeadsApiService';
 
 export default function BuyerDashboard() {
-  const posts = [
-    {
-      title: 'Family Lawyer',
-      date: 'Monday, 28 April 2025',
-      status: 'Approved',
-      message: 'Congratulations! Your Job Post Is Approved.',
-    },
-    {
-      title: 'Family Lawyer',
-      date: 'Monday, 28 April 2025',
-      status: 'Pending',
-      message: 'Your Request Is Being Pending!',
-    },
-    {
-      title: 'Family Lawyer',
-      date: 'Monday, 28 April 2025',
-      status: 'Rejected',
-      message: '',
-    },
-    {
-      title: 'Family Lawyer',
-      date: 'Monday, 28 April 2025',
-      status: 'Pending',
-      message: 'Your Request Is Being Pending!',
-    },
-    {
-      title: 'Family Lawyer',
-      date: 'Monday, 28 April 2025',
-      status: 'Rejected',
-      message: '',
-    },
-    {
-      title: 'Family Lawyer',
-      date: 'Monday, 28 April 2025',
-      status: 'Approved',
-      message: 'Congratulations! Your Job Post Is Approved.',
-    },
-  ];
-
   const { data: allMyLeads, isLoading } = useGetAllMyLeadsQuery();
 
   console.log('All My Leads:', allMyLeads);
@@ -71,8 +32,8 @@ export default function BuyerDashboard() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-4">
-              {posts?.map((post, index) => (
-                <JobPostCard key={index} {...post} />
+              {allMyLeads?.data?.map((lead, index) => (
+                <JobPostCard key={index} lead={lead} />
               ))}
             </div>
           </>
