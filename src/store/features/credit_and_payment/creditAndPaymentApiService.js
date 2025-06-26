@@ -80,17 +80,25 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['credit-payment'],
+      invalidatesTags: ['credit-payment', 'transaction-history'],
     }),
 
-    // tra
+    // transaction
 
     transactionHistory: builder.query({
       query: () => ({
         url: '/settings/credit-payment/transactions',
         method: 'GET',
       }),
-      providesTags: ['credit-payment'],
+      providesTags: ['transaction-history'],
+    }),
+
+    transactionHistory: builder.query({
+      query: () => ({
+        url: '/settings/credit-payment/transaction/list',
+        method: 'GET',
+      }),
+      providesTags: ['transaction-history'],
     }),
   }),
 });
