@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react';
 
 export default function LeadDetailsPage({ onBack, lead }) {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(lead?._id);
-  //console.log('singleLead', singleLead);
+  console.log('singleLead', singleLead);
 
   const fullText =
     singleLead?.data?.additionalDetails === ''
@@ -122,10 +122,15 @@ export default function LeadDetailsPage({ onBack, lead }) {
             <button className="btn-default bg-[#00C3C0]">
               Contact {lead?.userProfileId?.name ?? ''}
             </button>
-            <div className="text-[#34495E] ml-2 flex items-center gap-2">
-              <span>49 Credits required</span>
-              <CircleAlert />
-            </div>
+            {singleLead?.data?.credit && (
+              <div className="text-[#34495E] ml-2 flex items-center gap-2">
+                <span>
+                  {singleLead?.data?.credit}{' '}
+                  {singleLead?.data?.credit > 1 ? 'credits' : 'credit'} required
+                </span>
+                <CircleAlert />
+              </div>
+            )}
           </div>
           <div className="mt-5">
             <h4 className="font-medium mb-1 heading-base">Matched criteria</h4>
@@ -162,7 +167,7 @@ export default function LeadDetailsPage({ onBack, lead }) {
             </h4>
             <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
               <h5 className="font-medium mb-2 heading-base">
-                Position Overview
+                {singleLead?.data?.serviceId?.name ?? ''}
               </h5>
               <div className="admin-text text-[#34495E] ">
                 {displayText}

@@ -44,12 +44,14 @@ export default function SellerDashboardLayout({ children }) {
 
   return (
     <>
-      <ScrollToTopOnRouteChange />
       <DashboardHeader />
-      <SidebarProvider className="sidebar-main min-h-screen overflow-hidden">
+      <SidebarProvider
+        className="sidebar-main flex h-[calc(100vh-64px)]"
+        style={{ minHeight: 'auto' }}
+      >
         <Sidebar
           collapsible="icon"
-          className="sidebar-width-control sidebar-y-64"
+          className="sidebar-width-control sidebar-y-64 h-full"
         >
           <SidebarHeader>
             <SidebarTop />
@@ -59,19 +61,11 @@ export default function SellerDashboardLayout({ children }) {
           </SidebarContent>
           <SidebarRail />
         </Sidebar>
-        <div
-          className={`flex-1 dashboard-content ${
-            isNoScrollPage ? 'no-scroll' : ''
-          }`}
-
-          // style={{
-          //   minHeight: 'calc(100vh - 74px - 42px)',
-          // }}
-        >
-          <div className="flex flex-col h-full">
-            <div className="flex-1  bg-[#F3F3F3] p-5 w-full">{children}</div>
-            <DashboardFooter />
+        <div className="flex-1 h-full bg-[#F3F3F3] overflow-y-auto">
+          <div className="min-h-full flex flex-col p-5">
+            <div className="flex-1">{children}</div>
           </div>
+          {/* <DashboardFooter /> */}
         </div>
       </SidebarProvider>
     </>

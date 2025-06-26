@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import LeadsHead from '../_component/LeadsHead';
 import data from '@/data/user';
 import { useGetAllLeadsQuery } from '@/store/features/lawyer/LeadsApiService';
+import { Loader } from 'lucide-react';
 
 const LeadBoardPage = () => {
   const [showLeadDetails, setShowLeadDetails] = useState(true);
@@ -29,13 +30,25 @@ const LeadBoardPage = () => {
   //   };
   // }, [pathname]);
 
-  const { data: allLeads } = useGetAllLeadsQuery();
+  const { data: allLeads, isLoading: isAllLeadsLoading } =
+    useGetAllLeadsQuery();
 
   useEffect(() => {
     if (allLeads?.data && allLeads?.data?.length > 0) {
       setSelectedLead(allLeads?.data[0]); // Set first lead
     }
   }, [allLeads?.data]);
+
+  if (isAllLeadsLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <span className="flex items-center justify-center gap-2">
+          <Loader className="w-4 h-4 animate-spin" />
+          loading...
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className="continer">
