@@ -67,13 +67,7 @@ const mockTransactions = [
   },
 ];
 
-export const CreditTransactionLog = () => {
-  const {
-    data: transactionData,
-    isError: transactionIsError,
-    isLoading: transactionIsLoading,
-  } = useTransactionHistoryQuery();
-
+export const BillingTransactionDetails = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -81,9 +75,9 @@ export const CreditTransactionLog = () => {
 
   // Filter on transactionData or searchTerm change
   useEffect(() => {
-    if (!transactionData?.data) return;
+    if (!mockTransactions?.data) return;
 
-    const filtered = transactionData.data.filter((transaction) => {
+    const filtered = mockTransactions.data.filter((transaction) => {
       const id = transaction._id?.toLowerCase() || '';
       const desc = transaction.description?.toLowerCase() || '';
       const term = searchTerm.toLowerCase();
@@ -92,7 +86,7 @@ export const CreditTransactionLog = () => {
 
     setFilteredTransactions(filtered);
     setCurrentPage(1);
-  }, [transactionData?.data, searchTerm]);
+  }, [mockTransactions?.data, searchTerm]);
 
   // Pagination
   const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
@@ -115,11 +109,9 @@ export const CreditTransactionLog = () => {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-gray-900 mb-2">
-          Credit transaction log
+          Billing Details
         </h1>
-        <p className="text-gray-600">
-          Track your credit usage and transaction history
-        </p>
+        <p className="text-gray-600">Track your Billing transaction history</p>
       </div>
 
       {/* Controls */}
@@ -222,7 +214,7 @@ export const CreditTransactionLog = () => {
               <Search className="h-12 w-12 mx-auto" />
             </div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No transactions found
+              No Billing found
             </h3>
             <p className="text-gray-600">
               Try adjusting your search terms or filters.
@@ -236,7 +228,7 @@ export const CreditTransactionLog = () => {
         <div>
           Showing {startIndex + 1}–
           {Math.min(startIndex + itemsPerPage, filteredTransactions.length)} of{' '}
-          {filteredTransactions.length} transactions
+          {filteredTransactions.length} billing
         </div>
         <div className="flex items-center gap-4 mt-2 sm:mt-0">
           <span>

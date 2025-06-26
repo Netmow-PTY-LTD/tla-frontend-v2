@@ -115,7 +115,7 @@ export const CreditTransactionLog = () => {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-gray-900 mb-2">
-          Credit transaction log
+          Transaction Details
         </h1>
         <p className="text-gray-600">
           Track your credit usage and transaction history

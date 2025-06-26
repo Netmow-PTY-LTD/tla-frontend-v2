@@ -27,6 +27,13 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['payment-method'],
     }),
+    removePaymentMethod: builder.mutation({
+      query: (PaymentMethodId) => ({
+        url: `/settings/credit-payment/payment-method/${PaymentMethodId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['payment-method'],
+    }),
     getPaymentMethod: builder.query({
       query: () => ({
         url: '/settings/credit-payment/payment-method',
@@ -99,4 +106,5 @@ export const {
   useUpdateCreditPackageMutation,
   usePurchaseCreditPackageMutation,
   useTransactionHistoryQuery,
+  useRemovePaymentMethodMutation,
 } = creditAndPaymentApiService;

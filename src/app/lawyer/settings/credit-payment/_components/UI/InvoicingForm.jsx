@@ -13,6 +13,7 @@ import {
 } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { CreditTransactionLog } from './CreditTransactionLog';
+import { BillingTransactionDetails } from './BillingTransactionTable';
 
 const InvoicingForm = () => {
   const { data: invoiceBillingData, refetch: refetchBillingDetails } =
@@ -175,7 +176,7 @@ const InvoicingForm = () => {
         </div>
       </FormWrapper>
       <div className="mt-8">
-        <CreditTransactionLog />
+        <BillingTransactionDetails />
       </div>
     </div>
   );

@@ -7,19 +7,6 @@ import React from 'react';
 export default function CompanyContactDetails() {
   return (
     <div className="py-9">
-      <h3 className="text-black font-semibold heading-lg">Contact details</h3>
-      <p className="mt-[10px] text-[#8E8E8E] mb-7">
-        This information will be seen by customers on Bark. Change the details
-        Bark uses to contact you privately in {' '}
-        <Link
-          href="/lawyer/settings/profile"
-          className="text-blue-600 underline hover:text-blue-800"
-        >
-          Account Details
-        </Link>
-        .
-      </p>
-
       <div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-20 gap-y-7">
           <TextInput
