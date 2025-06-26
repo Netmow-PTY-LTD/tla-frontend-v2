@@ -86,8 +86,19 @@ export default function MultipleFileUploader({
 
   const handleChange = (e) => {
     const selectedFiles = Array.from(e.target.files || []);
-    if (selectedFiles.length > 0) {
-      setValue(name, multiple ? selectedFiles : selectedFiles[0], {
+
+    if (!selectedFiles.length) return;
+
+    if (multiple) {
+      const existingFiles = Array.isArray(files) ? [...files] : [];
+      const mergedFiles = [...existingFiles, ...selectedFiles];
+      setValue(name, mergedFiles, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+    } else {
+      // If not multiple, just replace
+      setValue(name, selectedFiles[0], {
         shouldValidate: true,
         shouldDirty: true,
       });
