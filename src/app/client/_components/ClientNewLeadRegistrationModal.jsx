@@ -20,6 +20,7 @@ import { setUser } from '@/store/features/auth/authSlice';
 import TextInput from '@/components/form/TextInput';
 import { Input } from '@/components/ui/input';
 import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/questionApiService';
+import { useCreateLeadMutation } from '@/store/features/client/LeadsApiService';
 
 export default function ClientNewLeadRegistrationModal({
   modalOpen,
@@ -402,7 +403,7 @@ export default function ClientNewLeadRegistrationModal({
         options: mappedOptions,
       };
     } else if (clickButtonType === 'Prev') {
-      updatedPartial[step] = fullClonedQuestions?.[step];
+      updatedPartial[step] = fullClonedQuestions?.[step - 1];
     }
 
     setPartialClonedQuestions(updatedPartial);
@@ -417,7 +418,7 @@ export default function ClientNewLeadRegistrationModal({
 
   const [questionsPayload, setQuestionsPayload] = useState([]);
 
-  const [clientRegister] = useAuthClientRegisterMutation();
+  const [addLead] = useCreateLeadMutation();
 
   //handleNext button click and form submission with api call
   const handleNext = async () => {
@@ -437,16 +438,20 @@ export default function ClientNewLeadRegistrationModal({
     // }
 
     const isFinalStep = step === totalSteps;
-    const isQuestionStep = step < totalQuestions;
+    const isQuestionStep = step > 0 && step <= totalQuestions;
 
     // Step 1: Handle question payload update
     if (isQuestionStep) {
       setQuestionsPayload((prev) => {
         const filtered = prev.filter((item) => item.step !== step);
 
-        const questionId = selectedServiceWiseQuestions?.data?.[step]?._id;
-        const question = selectedServiceWiseQuestions?.data?.[step]?.question;
-        const order = selectedServiceWiseQuestions?.data?.[step]?.order;
+        const questionIndex = step - 1;
+        const questionId =
+          selectedServiceWiseQuestions?.data?.[questionIndex]?._id;
+        const question =
+          selectedServiceWiseQuestions?.data?.[questionIndex]?.question;
+        const order =
+          selectedServiceWiseQuestions?.data?.[questionIndex]?.order;
 
         return [
           ...filtered,
@@ -455,7 +460,7 @@ export default function ClientNewLeadRegistrationModal({
             questionId,
             question,
             order,
-            checkedOptionsDetails,
+            checkedOptionsDetails: [...checkedOptionsDetails],
           },
         ];
       });
@@ -469,38 +474,35 @@ export default function ClientNewLeadRegistrationModal({
     }
 
     // Step 3: Prepare payloads on final step
-    const leadDetails = {
-      additionalDetails,
-    };
+    // const leadDetails = {
+    //   additionalDetails,
+    // };
 
     const payload = {
       countryId: defaultCountry?._id,
       serviceId: service?._id,
       questions: [...questionsPayload], // ensure fresh snapshot
-      leadDetails,
+      additionalDetails,
     };
 
     console.log('🚀 Submitting payload:', payload);
 
     try {
-      const res = await clientRegister(payload).unwrap();
+      const res = await addLead(payload).unwrap();
       console.log('✅ Register response:', res);
 
-      if (!res?.success || !res?.token) {
-        showErrorToast(res?.message || 'Lead registration failed.');
-        return;
+      if (res?.success === true) {
+        showSuccessToast(res?.message || 'Lead registered successfully');
+        setModalOpen(false);
+        // Reset form
+        setStep(0);
+        setService(null);
+        setZipCode(null);
+        setSelectedOptions([]);
+        setCheckedOptions([]);
+        setCheckedOptionsDetails([]);
+        setQuestionsPayload([]);
       }
-
-      showSuccessToast(res?.message || 'Lead registered successfully');
-
-      // Reset form
-      setStep(0);
-      setService(null);
-      setZipCode(null);
-      setSelectedOptions([]);
-      setCheckedOptions([]);
-      setCheckedOptionsDetails([]);
-      setQuestionsPayload([]);
     } catch (err) {
       console.error('❌ Register error:', err);
       showErrorToast(err?.data?.message || 'Failed to register lead.');
@@ -519,7 +521,7 @@ export default function ClientNewLeadRegistrationModal({
       return !service || !zipCode;
     }
 
-    if (step > 0 && step <= totalQuestions - 1) {
+    if (step > 0 && step <= totalQuestions) {
       return checkedOptions.length === 0;
     }
 
@@ -672,7 +674,7 @@ export default function ClientNewLeadRegistrationModal({
             </div>
           </div>
         </>
-      ) : step < totalQuestions ? (
+      ) : step > 0 && step <= totalQuestions ? (
         viewData?.question ? (
           <div className="space-y-4 mt-4">
             <h4 className="text-[24px] font-semibold text-center mb-8">
@@ -733,7 +735,7 @@ export default function ClientNewLeadRegistrationModal({
             No question found
           </div>
         )
-      ) : step === totalQuestions ? (
+      ) : step === totalQuestions + 1 ? (
         <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
             Want to share anything more?
