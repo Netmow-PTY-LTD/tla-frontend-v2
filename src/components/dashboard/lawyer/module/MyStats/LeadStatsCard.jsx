@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 const LeadStatsCard = ({ locations, profile }) => {
   const defaultServices = profile?.profile?.serviceIds || [];
 
-  console.log('profile:', profile);
+  console.log('profile:', profile?.profile?.credit);
   return (
     <Card className="w-full max-w-md md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto bg-white shadow-md rounded-lg">
       <div className="w-full px-3 py-4">
@@ -27,7 +27,9 @@ const LeadStatsCard = ({ locations, profile }) => {
             <div className="bg-[#F5F6F9] flex flex-col items-center justify-center p-4 rounded-lg shadow-sm">
               <div className="flex items-center gap-1">
                 <span className="text-xl">💳</span>
-                <h4 className="text-xl font-bold text-black">120</h4>
+                <h4 className="text-xl font-bold text-black">
+                  {profile?.profile?.credits}
+                </h4>
               </div>
               <p className="text-xs text-gray-600 mt-1">Purchased Credits</p>
             </div>
@@ -36,7 +38,7 @@ const LeadStatsCard = ({ locations, profile }) => {
             <div className="bg-[#F5F6F9] flex flex-col items-center justify-center p-4 rounded-lg shadow-sm">
               <div className="flex items-center gap-1">
                 <span className="text-xl">🔥</span>
-                <h4 className="text-xl font-bold text-black">80</h4>
+                <h4 className="text-xl font-bold text-black">0</h4>
               </div>
               <p className="text-xs text-gray-600 mt-1">Used Credits</p>
             </div>
@@ -45,7 +47,7 @@ const LeadStatsCard = ({ locations, profile }) => {
             <div className="bg-[#F5F6F9] flex flex-col items-center justify-center p-4 rounded-lg shadow-sm">
               <div className="flex items-center gap-1">
                 <span className="text-xl">✅</span>
-                <h4 className="text-xl font-bold text-black">40</h4>
+                <h4 className="text-xl font-bold text-black">0</h4>
               </div>
               <p className="text-xs text-gray-600 mt-1">Remaining Credits</p>
             </div>
