@@ -71,7 +71,7 @@ export default function LeadDetailsPage() {
     .find((option) => option.option === 'Urgent');
 
   return (
-    <div className="w-full max-w-[1100px] mx-auto">
+    <div className="w-full max-w-[900px] mx-auto">
       <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
         <div className="flex items-center justify-between">
           <Link
@@ -112,41 +112,17 @@ export default function LeadDetailsPage() {
               <PhoneOutgoing className="w-4 h-4" />{' '}
               <span>
                 Phone: {''}
-                {(() => {
-                  const phone = singleLead?.data?.userProfileId?.phone;
-                  return phone
-                    ? `${phone.slice(0, 3)}${'*'.repeat(
-                        Math.max(0, phone.length - 3)
-                      )}`
-                    : '480*******';
-                })()}
+                {singleLead?.data?.userProfileId?.phone || ''}
               </span>{' '}
             </div>
             <div className=" flex items-center gap-2 mt-2 admin-text font-medium">
               <AtSign className="w-4 h-4" />{' '}
               <span>
-                Email:{' '}
-                {(() => {
-                  const email = singleLead?.data?.userProfileId?.user?.email;
-                  if (!email) return 't*******@e********.com';
-
-                  const [user, domain] = email.split('@');
-                  const maskedUser =
-                    user[0] + '*'.repeat(Math.max(user.length - 1, 0));
-                  const maskedDomain =
-                    domain[0] +
-                    '*'.repeat(Math.max(domain.indexOf('.'), 0)) +
-                    domain.slice(domain.indexOf('.'));
-
-                  return `${maskedUser}@${maskedDomain}`;
-                })()}
+                Email: {singleLead?.data?.userProfileId?.user?.email || ''}
               </span>{' '}
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <button className="btn-default bg-[#00C3C0]">
-              Contact {singleLead?.data?.userProfileId?.name ?? ''}
-            </button>
+          {/* <div className="flex flex-col sm:flex-row items-center gap-4">
             {singleLead?.data?.data?.credit && (
               <div className="text-[#34495E] ml-2 flex items-center gap-2">
                 <span>
@@ -156,7 +132,7 @@ export default function LeadDetailsPage() {
                 <CircleAlert />
               </div>
             )}
-          </div>
+          </div> */}
           <div className="mt-5">
             <h4 className="font-medium mb-1 heading-base">Matched criteria</h4>
             <div className="flex flex-wrap gap-2">
