@@ -102,10 +102,10 @@ const CreditPurchaseForLead = ({ creditPackage }) => {
                     variant="primary"
                     className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-4"
                     onClick={() => {
-                      if (!card) {
-                        setOpen(true); // open card modal
+                      if (card) {
+                        setIsOpen(true); // ✅ Show confirmation box if card exists
                       } else {
-                        setIsOpen(true); // open confirmation modal
+                        setOpen(true); // ❌ Otherwise show add card form
                       }
                     }}
                   >
