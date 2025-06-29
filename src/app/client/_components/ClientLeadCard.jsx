@@ -1,11 +1,12 @@
 import { Card } from '@/components/ui/card';
 import React from 'react';
 import Image from 'next/image';
-import TagButton from './TagButton';
 import { BadgeCheck, CircleAlert, Zap } from 'lucide-react';
 import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
+import TagButton from '@/components/dashboard/lawyer/components/TagButton';
+import Link from 'next/link';
 
-const LeadCard = ({ onViewDetails, user, isExpanded }) => {
+const ClientLeadCard = ({ user, isExpanded }) => {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
   console.log('Single Lead Data:', user);
@@ -41,7 +42,7 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
   return (
     <Card className="w-full max-w-full mx-auto">
       {/* Header Section */}
-      <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 p-3">
+      <div className="flex flex-wrap bg-[#004DA61A] sm:flex-nowrap items-center gap-3 p-3 rounded-tl-xl rounded-tr-xl">
         <figure className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
           <Image
             src={`${
@@ -141,7 +142,21 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
           >
             {user?.serviceId?.name}
           </h4>
-          <p
+          <p className="text-sm text-gray-500 mb-2">
+            {user?.createdAt &&
+              (() => {
+                const date = new Date(user?.createdAt);
+                const weekday = date.toLocaleDateString('en-GB', {
+                  weekday: 'long',
+                });
+                const day = date.getDate().toString().padStart(2, '0');
+                const month = date.toLocaleDateString('en-GB', {
+                  month: 'long',
+                });
+                return `${weekday}, ${day} ${month}`;
+              })()}
+          </p>
+          <div
             className={`text-[#34495E] ${
               isExpanded ? 'text-[13px]' : 'text-[12px]'
             }`}
@@ -153,20 +168,20 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
             options. Let us help you navigate this challenging time with expert
             guidance.`
               : user?.additionalDetails}
-          </p>
+          </div>
         </div>
       </div>
 
       {/* Footer Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">
-        <button
+        <Link
           className={`px-5 py-3 w-full sm:w-auto rounded-lg ${
             isExpanded ? 'heading-base' : 'text-[12px] '
           } font-medium bg-[var(--color-special)] text-[#0B1C2D]`}
-          onClick={() => onViewDetails(user)}
+          href={`/client/dashboard/my-leads/${user?._id}`}
         >
           View Lead Details
-        </button>
+        </Link>
         {user?.credit && (
           <p
             className={`text-[#34495E] ${
@@ -182,4 +197,4 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
   );
 };
 
-export default LeadCard;
+export default ClientLeadCard;
