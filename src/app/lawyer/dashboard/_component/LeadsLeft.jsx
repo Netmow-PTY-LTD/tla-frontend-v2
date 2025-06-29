@@ -1,6 +1,6 @@
 'use client';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
-import { Modal } from '@/components/UIComponents/Modal';
+
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
 import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 import {
@@ -17,7 +17,6 @@ import LawyerContactModal from './leadBoard/LawyerContactModal';
 
 export default function LeadDetailsPage({ onBack, lead }) {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(lead?._id);
-  console.log('singleLead', singleLead);
 
   const fullText =
     singleLead?.data?.additionalDetails === ''

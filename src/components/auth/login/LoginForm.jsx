@@ -42,7 +42,7 @@ const LoginForm = () => {
 
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Login successful');
-        const user = verifyToken(res?.token);
+        const user = await verifyToken(res?.token);
 
         console.log('user', user);
 
