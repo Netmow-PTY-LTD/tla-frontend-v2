@@ -17,7 +17,6 @@ import { Loader } from 'lucide-react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import CreditPurchaseForLead from './CreditPurchaseForLead';
-import AddCardModal from '@/app/lawyer/settings/credit-payment/_components/modal/AddCardModal';
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
@@ -26,10 +25,6 @@ const stripePromise = loadStripe(
 const LawyerContactModal = ({ leadDetail }) => {
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openPayment, setOpenPayment] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-
-  console.log('lead details ==>', leadDetail);
 
   const {
     data: packageData,
@@ -41,9 +36,10 @@ const LawyerContactModal = ({ leadDetail }) => {
   const { data: userinfo } = useAuthUserInfoQuery();
 
   const userCredit = userinfo?.data?.profile?.credits || 0;
+  console.log('user credit  ==>', userCredit);
 
   const handleContactClick = () => {
-    if (!userCredit > 0) {
+    if (userCredit > 0) {
       setOpenConfirm(true); // Show confirmation modal
     } else {
       setOpenPayment(true); // Show payment modal
@@ -73,48 +69,6 @@ const LawyerContactModal = ({ leadDetail }) => {
     }
   };
 
-  const [autoTopUP, setAutoTopUp] = useState(false);
-  const [addPaymentMethod] = useAddPaymentMethodMutation();
-  const [purchasePackage] = usePurchaseCreditPackageMutation();
-  const {
-    data,
-    isError,
-    isLoading: isLoadingPaymentMethod,
-  } = useGetPaymentMethodQuery();
-
-  const card = data?.data || null;
-
-  const handleCardAdded = async (paymentMethodId) => {
-    const result = await addPaymentMethod({ paymentMethodId }).unwrap();
-    if (result.success) {
-      showSuccessToast(result?.message);
-    } else {
-      showErrorToast(result?.message);
-    }
-    try {
-    } catch (error) {
-      const errorMessage = error?.data?.message || 'An error occurred';
-      showErrorToast(errorMessage);
-    }
-  };
-  const handlePurchase = async (creditPackageId, creditPrice) => {
-    const purchaseDetails = {
-      packageId: creditPackageId,
-      autoTopUP,
-      couponCode: null,
-    };
-    try {
-      const result = await purchasePackage(purchaseDetails).unwrap();
-      console.log('Purchase result:', result);
-      if (result.success) {
-        showSuccessToast(result?.message);
-      }
-    } catch (error) {
-      const errorMessage = error?.data?.message || 'An error occurred';
-      showErrorToast(errorMessage);
-    }
-  };
-
   return (
     <div>
       <button onClick={handleContactClick} className="btn-default bg-[#00C3C0]">
@@ -135,43 +89,7 @@ const LawyerContactModal = ({ leadDetail }) => {
       />
 
       {/* Payment Modal if no credits */}
-      <Modal open={openPayment} onOpenChange={setOpenPayment} width="max-10xl">
-        <div>
-          {packageIsLoading ? (
-            <div className=" text-sm flex justify-center items-center ">
-              <Loader /> Loading...
-            </div>
-          ) : packageIsError ? (
-            <div className="text-red-500 text-sm">
-              Failed to load credit packages. Please try again.
-            </div>
-          ) : packageData?.data?.length > 0 ? (
-            <div className="grid grid-cols-1 gap-6">
-              {packageData?.data?.slice(0, 1).map((creditPackage) => (
-                <CreditPurchaseForLead
-                  key={creditPackage?._id}
-                  creditPackage={creditPackage}
-                  setIsOpen={setIsOpen}
-                  isOpen={isOpen}
-                  setOpen={setOpen}
-                  open={open}
-                  autoTopUP={autoTopUP}
-                  setAutoTopUp={setAutoTopUp}
-                  card={card}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="text-gray-600 bg-gray-50 rounded-lg shadow-sm p-5">
-              We don't have any credit packages available at the moment.
-              <br />
-              <span className="text-[#00C3C0] hover:underline cursor-pointer inline-block mt-2">
-                Please check back later.
-              </span>
-            </div>
-          )}
-        </div>
-      </Modal>
+
       <Elements stripe={stripePromise}>
         <Suspense
           fallback={
@@ -183,22 +101,42 @@ const LawyerContactModal = ({ leadDetail }) => {
             </div>
           }
         >
-          <AddCardModal
-            open={open}
-            setOpen={setOpen}
-            onCardAdded={handleCardAdded}
-          />
+          <Modal
+            open={openPayment}
+            onOpenChange={setOpenPayment}
+            width="max-10xl"
+          >
+            <div>
+              {packageIsLoading ? (
+                <div className=" text-sm flex justify-center items-center ">
+                  <Loader /> Loading...
+                </div>
+              ) : packageIsError ? (
+                <div className="text-red-500 text-sm">
+                  Failed to load credit packages. Please try again.
+                </div>
+              ) : packageData?.data?.length > 0 ? (
+                <div className="grid grid-cols-1 gap-6">
+                  {packageData?.data?.slice(0, 1).map((creditPackage) => (
+                    <CreditPurchaseForLead
+                      key={creditPackage?._id}
+                      creditPackage={creditPackage}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-gray-600 bg-gray-50 rounded-lg shadow-sm p-5">
+                  We don't have any credit packages available at the moment.
+                  <br />
+                  <span className="text-[#00C3C0] hover:underline cursor-pointer inline-block mt-2">
+                    Please check back later.
+                  </span>
+                </div>
+              )}
+            </div>
+          </Modal>
         </Suspense>
       </Elements>
-
-      <ConfirmationModal
-        onConfirm={() =>
-          handlePurchase(creditPackage?._id, creditPackage?.price)
-        }
-        open={isOpen}
-        onOpenChange={setIsOpen}
-        description="Are you sure you want to purchase this credit package?"
-      />
     </div>
   );
 };
