@@ -147,8 +147,11 @@ export default function Accreditations() {
               Accreditations
             </h3>
             <p className="text-sm text-[#8E8E8E] mt-2">
-              Increase your chances of getting hired and boost customer
-              confidence by adding your accreditations.
+              Demonstrate your qualifications and professionalism by showcasing
+              your accreditations. Verified memberships, certifications, and
+              licenses from recognized legal institutions help build trust and
+              credibility, giving clients the confidence to choose your
+              services.
             </p>
           </div>
           <div className="flex items-center gap-2 max-w-sm p-2 rounded-md text-gray-700 text-sm">
