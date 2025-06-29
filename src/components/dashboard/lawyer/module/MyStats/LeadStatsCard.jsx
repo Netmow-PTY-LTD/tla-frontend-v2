@@ -11,6 +11,47 @@ const LeadStatsCard = ({ locations, profile }) => {
   console.log('profile:', profile);
   return (
     <Card className="w-full max-w-md md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto bg-white shadow-md rounded-lg">
+      <div className="w-full px-3 py-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="mb-4 text-center md:text-left">
+            <h2 className="text-lg font-semibold text-gray-800">
+              Credit Overview
+            </h2>
+            <p className="text-xs text-gray-500">
+              Track your credit usage and balance
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {/* Total Purchased Credit */}
+            <div className="bg-[#F5F6F9] flex flex-col items-center justify-center p-4 rounded-lg shadow-sm">
+              <div className="flex items-center gap-1">
+                <span className="text-xl">💳</span>
+                <h4 className="text-xl font-bold text-black">120</h4>
+              </div>
+              <p className="text-xs text-gray-600 mt-1">Purchased Credits</p>
+            </div>
+
+            {/* Used Credit */}
+            <div className="bg-[#F5F6F9] flex flex-col items-center justify-center p-4 rounded-lg shadow-sm">
+              <div className="flex items-center gap-1">
+                <span className="text-xl">🔥</span>
+                <h4 className="text-xl font-bold text-black">80</h4>
+              </div>
+              <p className="text-xs text-gray-600 mt-1">Used Credits</p>
+            </div>
+
+            {/* Remaining Credit */}
+            <div className="bg-[#F5F6F9] flex flex-col items-center justify-center p-4 rounded-lg shadow-sm">
+              <div className="flex items-center gap-1">
+                <span className="text-xl">✅</span>
+                <h4 className="text-xl font-bold text-black">40</h4>
+              </div>
+              <p className="text-xs text-gray-600 mt-1">Remaining Credits</p>
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="flex  items-center p-4 w-full">
         <div className="bg-[#F5F6F9]  w-1/2 flex flex-col justify-center items-center p-5 rounded-lg mx-4 my-3">
           <div className="flex items-center gap-2">
