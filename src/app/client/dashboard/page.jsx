@@ -56,7 +56,9 @@ export default function BuyerDashboard() {
           </button>
         </div>
         <div className="mt-5 mx-auto">
-          {allMyLeads?.data?.length === 0 && <JobRequest />}
+          {allMyLeads?.data?.length === 0 && (
+            <JobRequest modalOpen={modalOpen} setModalOpen={setModalOpen} />
+          )}
 
           {allMyLeads?.data?.length > 0 && (
             <>
