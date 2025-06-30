@@ -92,14 +92,14 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
       providesTags: ['transaction-history'],
     }),
 
-    transactionHistory: builder.query({
+    transactionHistoryList: builder.query({
       query: () => ({
         url: '/settings/credit-payment/transaction/list',
         method: 'GET',
       }),
       providesTags: ['transaction-history'],
     }),
-
+    //  credit transaction
     spendCredit: builder.mutation({
       query: (body) => ({
         url: `/settings/credit-payment/spendCredits`,
@@ -107,6 +107,14 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
         body,
       }),
       invalidatesTags: ['user-credit-stats'],
+    }),
+
+    userCreditTransactionHistory: builder.query({
+      query: () => ({
+        url: `/settings/credit-payment/user-credit-transactions`,
+        method: 'GET',
+      }),
+      providesTags: ['next-offer'],
     }),
 
     getNextOffer: builder.query({
@@ -145,4 +153,6 @@ export const {
   useGetNextOfferQuery,
   useGetUserCreditStatsQuery,
   useSpendCreditMutation,
+  useTransactionHistoryListQuery,
+  useUserCreditTransactionHistoryQuery,
 } = creditAndPaymentApiService;
