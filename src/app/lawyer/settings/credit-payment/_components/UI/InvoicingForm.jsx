@@ -175,9 +175,6 @@ const InvoicingForm = () => {
           </button>
         </div>
       </FormWrapper>
-      <div className="mt-8">
-        <BillingTransactionDetails />
-      </div>
     </div>
   );
 };
