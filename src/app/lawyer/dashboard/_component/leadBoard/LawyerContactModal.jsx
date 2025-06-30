@@ -17,6 +17,7 @@ import { Loader } from 'lucide-react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import CreditPurchaseForLead from './CreditPurchaseForLead';
+import { useCreateResponseMutation } from '@/store/features/lawyer/ResponseApiService';
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
@@ -68,6 +69,28 @@ const LawyerContactModal = ({ leadDetail }) => {
     }
   };
 
+  const [createResponse] = useCreateResponseMutation();
+
+  const handleResponseCreate = async () => {
+    const payload = {
+      leadId: leadDetail?._id,
+      serviceId: leadDetail?.serviceId?._id,
+    };
+
+    try {
+      const result = await createResponse(payload).unwrap();
+      console.log('result', result);
+      if (result.success) {
+        showSuccessToast(result?.message || 'Response created successfully.');
+      }
+    } catch (error) {
+      console.error('Error creating response:', error);
+      showErrorToast(error?.data?.message || 'Failed to create response.');
+    }
+  };
+
+  console.log('leadDetail', leadDetail);
+
   return (
     <div>
       <button onClick={handleContactClick} className="btn-default bg-[#00C3C0]">
@@ -85,6 +108,7 @@ const LawyerContactModal = ({ leadDetail }) => {
         confirmText="Yes, spend credit"
         cancelText="Cancel"
         contentClass={'max-w-xl max-h-xl'}
+        handleResponseCreate={handleResponseCreate}
       />
 
       {/* Payment Modal if no credits */}
