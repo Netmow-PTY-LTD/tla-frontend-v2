@@ -63,7 +63,8 @@ export default function SidebarTop() {
           {greeting}, {userInfo?.data?.profile?.name ?? 'Lawyer'}!{' '}
         </b>
         <br />
-        <b>Welcome To TLA Dashboard</b>
+        <b>Welcome To TLA Dashboard</b> <br />
+        <span>Testing mode version 1.0</span>
       </h2>
       <div className="flex justify-between items-center mt-5">
         <div className="icon flex items-center gap-2">

@@ -24,7 +24,7 @@ export default function ProfilePhotoGallery({ userInfo }) {
       <div className="flex flex-wrap gap-5">
         <div className="w-full">
           <h2 className="text-[#00C3C0] font-bold mb-4 profile-heading relative flex items-baseline gap-3">
-            <span>Galleries</span>
+            <span>Gallery</span>
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
             {photos.length > 0 ? (

@@ -42,8 +42,8 @@ const LeadBoardPage = () => {
   if (isAllLeadsLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <span className="flex items-center justify-center gap-2">
-          <Loader className="w-4 h-4 animate-spin" />
+        <span className="flex items-center justify-center gap-2 text-[14px]">
+          <Loader className="w-10 h-10 animate-spin" />
           loading...
         </span>
       </div>
