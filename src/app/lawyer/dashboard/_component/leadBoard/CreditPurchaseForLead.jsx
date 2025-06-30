@@ -15,9 +15,9 @@ import { useState } from 'react';
 import ConfirmationBox from './ConfirmBox';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
-const CreditPurchaseForLead = ({ creditPackage }) => {
-  const [open, setOpen] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+const CreditPurchaseForLead = ({ creditPackage, setOpenConfirm }) => {
+  const [showCardForm, setShowCardForm] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [autoTopUP, setAutoTopUp] = useState(false);
   const [addPaymentMethod] = useAddPaymentMethodMutation();
 
@@ -33,6 +33,7 @@ const CreditPurchaseForLead = ({ creditPackage }) => {
   const handleCardAdded = async (paymentMethodId) => {
     const result = await addPaymentMethod({ paymentMethodId }).unwrap();
     if (result.success) {
+      setShowCardForm(false);
       showSuccessToast(result?.message);
     } else {
       showErrorToast(result?.message);
@@ -55,6 +56,7 @@ const CreditPurchaseForLead = ({ creditPackage }) => {
       console.log('Purchase result:', result);
       if (result.success) {
         showSuccessToast(result?.message);
+        setOpenConfirm(true);
       }
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
@@ -62,11 +64,15 @@ const CreditPurchaseForLead = ({ creditPackage }) => {
     }
   };
 
+  if (showCardForm) {
+    return <AddCardForm onCardAdded={handleCardAdded} />;
+  }
+
   return (
     <div>
-      {!open ? (
-        <>
-          <div className="border-0 bg-white rounded-lg shadow-sm pt-4 pb-6 px-[17px] relative">
+      <>
+        {!showConfirmModal && (
+          <div className="border-0 bg-white rounded-lg shadow-sm pt-4 relative">
             <div className="bg-[#00C3C0] absolute text-white p-[10px] rounded-tl-md rounded-br-md text-sm font-medium top-0 left-0">
               20% OFF EXCLUSIVE STARTING PACK
             </div>
@@ -103,9 +109,9 @@ const CreditPurchaseForLead = ({ creditPackage }) => {
                     className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-4"
                     onClick={() => {
                       if (card) {
-                        setIsOpen(true); // ✅ Show confirmation box if card exists
+                        setShowConfirmModal(true); // Show confirmation only
                       } else {
-                        setOpen(true); // ❌ Otherwise show add card form
+                        setShowCardForm(true); // No card, ask to add card
                       }
                     }}
                   >
@@ -148,18 +154,16 @@ const CreditPurchaseForLead = ({ creditPackage }) => {
               </div>
             </div>
           </div>
-        </>
-      ) : (
-        <AddCardForm onCardAdded={handleCardAdded} />
-      )}
+        )}
+      </>
 
-      {isOpen && !open && (
+      {showConfirmModal && (
         <ConfirmationBox
           description="Are you sure you want to purchase this credit package?"
-          onCancel={() => setIsOpen(false)}
+          onCancel={() => setShowConfirmModal(false)}
           onConfirm={() => {
             handlePurchase(creditPackage?._id, creditPackage?.price);
-            setIsOpen(false); // Optionally close after confirm
+            setShowConfirmModal(false); // Optionally close after confirm
           }}
         />
       )}

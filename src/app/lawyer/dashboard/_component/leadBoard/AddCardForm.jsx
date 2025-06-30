@@ -77,7 +77,7 @@ const AddCardForm = ({ onCardAdded, onCancel }) => {
         e.preventDefault();
         handleAddCard();
       }}
-      className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md"
+      className=" bg-white  "
     >
       <h2 className="text-2xl font-semibold mb-4 text-center">
         Add card details

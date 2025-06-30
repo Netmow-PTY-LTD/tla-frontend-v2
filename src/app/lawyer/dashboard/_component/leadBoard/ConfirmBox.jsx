@@ -7,7 +7,7 @@ export default function ConfirmationBox({
   onCancel,
 }) {
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md max-w-sm w-full">
+    <div className="bg-white">
       <h2 className="text-lg font-semibold text-center mb-2">
         Confirm Purchase
       </h2>

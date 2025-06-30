@@ -36,7 +36,6 @@ const LawyerContactModal = ({ leadDetail }) => {
   const { data: userinfo } = useAuthUserInfoQuery();
 
   const userCredit = userinfo?.data?.profile?.credits || 0;
-  console.log('user credit  ==>', userCredit);
 
   const handleContactClick = () => {
     if (userCredit > 0) {
@@ -104,7 +103,7 @@ const LawyerContactModal = ({ leadDetail }) => {
           <Modal
             open={openPayment}
             onOpenChange={setOpenPayment}
-            width="max-10xl"
+            width="max-w-screen-md"
           >
             <div>
               {packageIsLoading ? (
@@ -121,6 +120,7 @@ const LawyerContactModal = ({ leadDetail }) => {
                     <CreditPurchaseForLead
                       key={creditPackage?._id}
                       creditPackage={creditPackage}
+                      setOpenConfirm={setOpenConfirm}
                     />
                   ))}
                 </div>
