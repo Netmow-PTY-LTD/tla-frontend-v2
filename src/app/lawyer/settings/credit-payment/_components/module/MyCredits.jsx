@@ -5,6 +5,7 @@ import CreditsPurchase from '../UI/CreditPurchse';
 import { useGetAllCreditPackagesQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 import { Loader } from 'lucide-react';
 import { CreditTransactionLog } from '../UI/CreditTransactionLog';
+import { BillingTransactionDetails } from '../UI/BillingTransactionTable';
 
 const MyCredits = () => {
   const {
@@ -64,7 +65,7 @@ const MyCredits = () => {
           )}
         </div>
         <div className="mt-8">
-          <CreditTransactionLog />
+          <BillingTransactionDetails />
         </div>
       </div>
     </div>

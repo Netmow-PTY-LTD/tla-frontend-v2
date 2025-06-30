@@ -48,11 +48,11 @@ export const CreditTransactionLog = () => {
     });
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-6 bg-gray-50 rounded-lg shadow-sm">
+    <div className="w-full max-w-[900px] mx-auto p-6 bg-gray-50 rounded-lg shadow-sm">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-gray-900 mb-2">
-          Transaction Details
+          Billing Details
         </h1>
         <p className="text-gray-600">
           Track your credit usage and transaction history
