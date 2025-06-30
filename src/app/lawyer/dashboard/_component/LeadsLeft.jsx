@@ -1,5 +1,6 @@
 'use client';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
+
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
 import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 import {
@@ -12,10 +13,10 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import LawyerContactModal from './leadBoard/LawyerContactModal';
 
 export default function LeadDetailsPage({ onBack, lead }) {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(lead?._id);
-  console.log('singleLead', singleLead);
 
   const fullText =
     singleLead?.data?.additionalDetails === ''
@@ -119,9 +120,8 @@ export default function LeadDetailsPage({ onBack, lead }) {
             </div>
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-4">
-            <button className="btn-default bg-[#00C3C0]">
-              Contact {lead?.userProfileId?.name ?? ''}
-            </button>
+            {/*  need to credit purchase modal */}
+            <LawyerContactModal leadDetail={singleLead?.data} />
             {singleLead?.data?.credit && (
               <div className="text-[#34495E] ml-2 flex items-center gap-2">
                 <span>

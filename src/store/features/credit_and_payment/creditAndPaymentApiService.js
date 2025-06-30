@@ -80,19 +80,54 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['credit-payment'],
+      invalidatesTags: ['credit-payment', 'transaction-history', 'next-offer'],
     }),
 
-    // tra
-
+    // transaction
     transactionHistory: builder.query({
       query: () => ({
         url: '/settings/credit-payment/transactions',
         method: 'GET',
       }),
-      providesTags: ['credit-payment'],
+      providesTags: ['transaction-history'],
+    }),
+
+    transactionHistory: builder.query({
+      query: () => ({
+        url: '/settings/credit-payment/transaction/list',
+        method: 'GET',
+      }),
+      providesTags: ['transaction-history'],
+    }),
+
+    spendCredit: builder.mutation({
+      query: (body) => ({
+        url: `/settings/credit-payment/spendCredits`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['user-credit-stats'],
+    }),
+
+    getNextOffer: builder.query({
+      query: (body) => ({
+        url: `/settings/credit-payment/next-offer`,
+        method: 'GET',
+        body,
+      }),
+      providesTags: ['next-offer'],
+    }),
+    getUserCreditStats: builder.query({
+      query: (body) => ({
+        url: `/settings/credit-payment/user-credit-stats`,
+        method: 'GET',
+        body,
+      }),
+      providesTags: ['user-credit-stats'],
     }),
   }),
+
+  // credit transaction / spend credit
 });
 
 export const {
@@ -107,4 +142,7 @@ export const {
   usePurchaseCreditPackageMutation,
   useTransactionHistoryQuery,
   useRemovePaymentMethodMutation,
+  useGetNextOfferQuery,
+  useGetUserCreditStatsQuery,
+  useSpendCreditMutation,
 } = creditAndPaymentApiService;

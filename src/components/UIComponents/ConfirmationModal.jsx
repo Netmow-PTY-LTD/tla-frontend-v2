@@ -10,6 +10,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import clsx from 'clsx';
 
 export function ConfirmationModal({
   title = 'Are you sure?',
@@ -20,11 +21,12 @@ export function ConfirmationModal({
   trigger,
   open,
   onOpenChange,
+  contentClass,
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="max-w-sm rounded-lg p-6">
+      <DialogContent className={clsx('max-w-sm rounded-lg p-6', contentClass)}>
         <DialogHeader>
           <DialogTitle className="text-center">{title}</DialogTitle>
           <DialogDescription className="text-center">
@@ -56,7 +58,7 @@ export function ConfirmationModal({
 
 // use example
 {
-  /* <DeleteConfirmation
+  /* <ConfirmationModal
 onConfirm={handleDelete}
 open={isOpen}
 onOpenChange={setIsOpen}

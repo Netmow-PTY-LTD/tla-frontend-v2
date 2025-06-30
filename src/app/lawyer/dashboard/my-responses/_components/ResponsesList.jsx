@@ -3,7 +3,6 @@ import LeadCard from '@/components/dashboard/lawyer/components/LeadCard';
 import React from 'react';
 
 const LeadsRight = ({ isExpanded, onViewDetails, data }) => {
-  console.log('user data', data);
   return (
     <>
       {/* lead card section */}

@@ -14,7 +14,6 @@ import {
 import { LawyerSideNav } from '@/components/dashboard/lawyer/layout/SellerSideNav';
 import SidebarTop from './dashboard/_component/common/SidebarTop';
 import { usePathname, useRouter } from 'next/navigation';
-import ScrollToTopOnRouteChange from './dashboard/_component/ScrollToTop';
 
 export default function SellerDashboardLayout({ children }) {
   const pathname = usePathname();
@@ -45,10 +44,7 @@ export default function SellerDashboardLayout({ children }) {
   return (
     <>
       <DashboardHeader />
-      <SidebarProvider
-        className="sidebar-main flex h-[calc(100vh-64px)]"
-        style={{ minHeight: 'auto' }}
-      >
+      <SidebarProvider className="sidebar-main flex h-[calc(100vh-64px)]">
         <Sidebar
           collapsible="icon"
           className="sidebar-width-control sidebar-y-64 h-full"

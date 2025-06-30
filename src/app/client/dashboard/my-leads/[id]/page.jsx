@@ -71,7 +71,7 @@ export default function LeadDetailsPage() {
     .find((option) => option.option === 'Urgent');
 
   return (
-    <div className="w-full max-w-[900px] mx-auto">
+    <div className="w-full max-w-[1000px] mx-auto">
       <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
         <div className="flex items-center justify-between">
           <Link
@@ -82,7 +82,7 @@ export default function LeadDetailsPage() {
             <MoveLeft /> <span>Back to leads</span>
           </Link>
         </div>
-        <div className="mt-3 max-w-4xl">
+        <div className="mt-3">
           <div className="flex flex-col items-start gap-4 ">
             <figure className="w-20 h-20 rounded-full overflow-hidden">
               <Image
