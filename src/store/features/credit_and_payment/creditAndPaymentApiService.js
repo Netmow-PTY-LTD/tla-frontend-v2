@@ -84,9 +84,9 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
     }),
 
     // transaction
-    transactionHistory: builder.query({
+    userTransactionHistory: builder.query({
       query: () => ({
-        url: '/settings/credit-payment/transactions',
+        url: '/settings/credit-payment/user-transactions',
         method: 'GET',
       }),
       providesTags: ['transaction-history'],
@@ -148,11 +148,11 @@ export const {
   useGetAllCreditPackagesQuery,
   useUpdateCreditPackageMutation,
   usePurchaseCreditPackageMutation,
-  useTransactionHistoryQuery,
   useRemovePaymentMethodMutation,
   useGetNextOfferQuery,
   useGetUserCreditStatsQuery,
   useSpendCreditMutation,
   useTransactionHistoryListQuery,
   useUserCreditTransactionHistoryQuery,
+  useUserTransactionHistoryQuery,
 } = creditAndPaymentApiService;
