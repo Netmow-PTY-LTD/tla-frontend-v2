@@ -1,20 +1,35 @@
 'use client';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
+import { Button } from '@/components/ui/button';
 import {
   ArrowDownToLine,
   AtSign,
+  BadgeCent,
   BadgeCheck,
   CircleAlert,
+  DollarSign,
   FileText,
+  Mail,
+  MessageSquare,
   MoveLeft,
+  Phone,
   PhoneOutgoing,
+  Tag,
   Zap,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { useGetSingleResponseQuery } from '@/store/features/lawyer/ResponseApiService';
 
 export default function MyResponseDetails({ onBack, response }) {
+  const [activeTab, setActiveTab] = useState('activity');
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const { data: singleResponse, isLoading: isSingleResponseLoading } =
+    useGetSingleResponseQuery(response?._id);
+
+  console.log('singleResponse', singleResponse);
 
   const fullText = `If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options. Let us help you navigate this challenging time with expert guidance. If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options. Let us help you navigate this challenging time with expert guidance.`;
 
@@ -69,47 +84,53 @@ export default function MyResponseDetails({ onBack, response }) {
           <hr className="border-[#F3F3F3] my-5  " />
           <div className="mb-4">
             <div className="flex items-center gap-2 admin-text font-medium">
-              <PhoneOutgoing />{' '}
+              <PhoneOutgoing className="w-5 h-5" />{' '}
               <span>Phone: {response?.leadId?.userProfileId?.phone}</span>{' '}
             </div>
             <div className=" flex items-center gap-2 mt-2 admin-text font-medium">
-              <AtSign />{' '}
+              <AtSign className="w-5 h-5" />{' '}
               <span>Email: {response?.leadId?.userProfileId?.user?.email}</span>{' '}
             </div>
           </div>
-          {/* <div className="flex flex-col sm:flex-row items-center gap-4">
-            <button className="btn-default bg-[#00C3C0]">
-              Contact {response.name}
-            </button>
-            <div className="text-[#34495E] ml-2 flex items-center gap-2">
-              <span>49 Credits required</span>
-              <CircleAlert />
-            </div>
-          </div> */}
-          <div className="mt-5">
-            <h4 className="font-medium mb-1 heading-base">Matched criteria</h4>
-            <div className="flex flex-wrap gap-2">
-              <TagButton
-                text="Urgent"
-                bgColor="#FF86021A"
-                icon={<Zap className="text-[#FF8602]" />}
-              />
-              <TagButton
-                text="Separation Law"
-                bgColor="#004DA61A"
-                icon={<BadgeCheck className="text-[#00C3C0] " />}
-              />
-              <TagButton text="Criminal Law" bgColor="#A600161A" />
-            </div>
+          <div className="flex gap-2">
+            <Button className="bg-[#00C3C0]">
+              <Phone />
+              Show Number
+            </Button>
+            <Button className="bg-[#00C3C0]">
+              <MessageSquare />
+              Send Whatsapp
+            </Button>
+            <Button className="bg-[#00C3C0]">
+              <Mail />
+              Send Email
+            </Button>
+            <Button className="bg-[#00C3C0]">
+              <MessageSquare />
+              Show SMS
+            </Button>
+          </div>
+          <div className="mt-5 flex items-center gap-2">
+            <Tag />
+            <span className="admin-text font-medium">
+              Your estimate:{' '}
+              <Link href="#" className="underline">
+                Send an estimate
+              </Link>
+            </span>
+          </div>
+          <div className="mt-5 flex items-center gap-2">
+            <BadgeCent />
+            <b>5 credits</b>
           </div>
           <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
           <div className="mt-5">
             <h4 className="font-medium mb-1 heading-base">
-              Looking for a divorce law consultation
+              Looking for a {response?.serviceId?.name || ''} consultation
             </h4>
             <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
               <h5 className="font-medium mb-2 heading-base">
-                Position Overview
+                {response?.serviceId?.name || ''}
               </h5>
               <div className="admin-text text-[#34495E] ">
                 {displayText}
@@ -125,29 +146,34 @@ export default function MyResponseDetails({ onBack, response }) {
             </div>
           </div>
           <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
-          <div className="mt-5 space-y-3">
-            <h4 className="font-medium heading-md mb-5">
-              Answered some of selected questions
-            </h4>
-            <div className="flex flex-col gap-5">
-              <div>
-                <p className="text-[#34495E]">
-                  What kind of Law service you need?
-                </p>
-                <div className="font-medium text-black"> Family Law</div>
-              </div>
-              <div>
-                <p className="text-[#34495E]">
-                  What kind of Law service you need?
-                </p>
-                <div className="font-medium text-black"> Family Law</div>
-              </div>
-              <div>
-                <p className="text-[#34495E]">
-                  What kind of Law service you need?
-                </p>
-                <div className="font-medium text-black"> Family Law</div>
-              </div>
+          <div className="flex w-full flex-col gap-6 mt-5">
+            <div className="flex border-b border-gray-200 gap-6">
+              <button
+                onClick={() => setActiveTab('activity')}
+                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                  activeTab === 'activity'
+                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                    : 'hover:text-black'
+                }`}
+              >
+                Activity
+              </button>
+              <button
+                onClick={() => setActiveTab('lead-details')}
+                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                  activeTab === 'lead-details'
+                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                    : 'hover:text-black'
+                }`}
+              >
+                Lead Details
+              </button>
+            </div>
+
+            {/* Tab Content */}
+            <div className="mt-4">
+              {activeTab === 'activity' && <div>Activity</div>}
+              {activeTab === 'lead-details' && <div>Lead Details</div>}
             </div>
           </div>
         </div>
