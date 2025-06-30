@@ -9,7 +9,7 @@ import Link from 'next/link';
 const ClientLeadCard = ({ user, isExpanded }) => {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
-  console.log('Single Lead Data:', user);
+  //console.log('Single Lead Data:', user);
 
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])
