@@ -1,14 +1,17 @@
+'use client';
 import PencilIcon from '@/assets/icon';
 import { Card } from '@/components/ui/card';
+import { useGetUserCreditStatsQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 
 import { MapPin } from 'lucide-react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 
 const LeadStatsCard = ({ locations, profile }) => {
+  const { data } = useGetUserCreditStatsQuery();
   const defaultServices = profile?.profile?.serviceIds || [];
+  const creditStats = data?.data || {};
 
-  console.log('profile:', profile?.profile?.credit);
   return (
     <Card className="w-full max-w-md md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto bg-white shadow-md rounded-lg">
       <div className="w-full px-3 py-4">
@@ -28,7 +31,7 @@ const LeadStatsCard = ({ locations, profile }) => {
               <div className="flex items-center gap-1">
                 <span className="text-xl">💳</span>
                 <h4 className="text-xl font-bold text-black">
-                  {profile?.profile?.credits}
+                  {creditStats?.totalPurchasedCredits}
                 </h4>
               </div>
               <p className="text-xs text-gray-600 mt-1">Purchased Credits</p>
@@ -38,7 +41,10 @@ const LeadStatsCard = ({ locations, profile }) => {
             <div className="bg-[#F5F6F9] flex flex-col items-center justify-center p-4 rounded-lg shadow-sm">
               <div className="flex items-center gap-1">
                 <span className="text-xl">🔥</span>
-                <h4 className="text-xl font-bold text-black">0</h4>
+                <h4 className="text-xl font-bold text-black">
+                  {' '}
+                  {creditStats?.totalUsedCredits}
+                </h4>
               </div>
               <p className="text-xs text-gray-600 mt-1">Used Credits</p>
             </div>
@@ -47,7 +53,9 @@ const LeadStatsCard = ({ locations, profile }) => {
             <div className="bg-[#F5F6F9] flex flex-col items-center justify-center p-4 rounded-lg shadow-sm">
               <div className="flex items-center gap-1">
                 <span className="text-xl">✅</span>
-                <h4 className="text-xl font-bold text-black">0</h4>
+                <h4 className="text-xl font-bold text-black">
+                  {creditStats?.remainingCredits}
+                </h4>
               </div>
               <p className="text-xs text-gray-600 mt-1">Remaining Credits</p>
             </div>
