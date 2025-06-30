@@ -71,6 +71,8 @@ export const baseApi = createApi({
     'notification',
     'credit-payment',
     'payment-method',
+    'user-credit-stats',
+    'next-offer',
   ],
   endpoints: () => ({}),
 });

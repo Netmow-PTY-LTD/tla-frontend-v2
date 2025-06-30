@@ -44,11 +44,11 @@ export default function Services() {
     <div className="max-w-[900px] mx-auto">
       <div className="flex justify-between items-center gap-5">
         <div>
-          <h3 className="text-black font-semibold heading-lg">Services</h3>
+          <h3 className="text-black font-semibold heading-lg">Your Services</h3>
 
           <p className="mt-[10px] text-[#8E8E8E]">
-            Include all services you offer in some detail to give customers the
-            confidence they’re looking for when making a hiring decision.
+            List the legal services you offer so we can connect you with the
+            most relevant clients seeking your expertise.
           </p>
         </div>
         {/*  Services modal */}
