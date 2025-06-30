@@ -2,77 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Search, Download, Filter, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useTransactionHistoryQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
-
-const mockTransactions = [
-  {
-    id: '40601908',
-    description: '5 credits used to reply to customer',
-    credits: -5,
-    date: '12 Jan 2025',
-  },
-  {
-    id: '40601873',
-    description: '6 credits used to reply to customer',
-    credits: -6,
-    date: '12 Jan 2025',
-  },
-  {
-    id: '40066849',
-    description: '5 credits used to reply to customer',
-    credits: -5,
-    date: '2 Jan 2025',
-  },
-  {
-    id: '40044138',
-    description: '6 credits used to reply to customer',
-    credits: -6,
-    date: '2 Jan 2025',
-  },
-  {
-    id: '40044115',
-    description: '7 credits used to reply to customer',
-    credits: -7,
-    date: '2 Jan 2025',
-  },
-  {
-    id: '40044048',
-    description: '6 credits used to reply to customer',
-    credits: -6,
-    date: '2 Jan 2025',
-  },
-  {
-    id: '40044011',
-    description: '6 credits used to reply to customer',
-    credits: -6,
-    date: '2 Jan 2025',
-  },
-  {
-    id: '40043951',
-    description: '6 credits used to reply to customer',
-    credits: -6,
-    date: '2 Jan 2025',
-  },
-  {
-    id: '40043932',
-    description: '5 credits used to reply to customer',
-    credits: -5,
-    date: '2 Jan 2025',
-  },
-  {
-    id: '40043905',
-    description: '5 credits used to reply to customer',
-    credits: -5,
-    date: '2 Jan 2025',
-  },
-];
+import { useUserCreditTransactionHistoryQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 
 export const CreditTransactionLog = () => {
   const {
     data: transactionData,
     isError: transactionIsError,
     isLoading: transactionIsLoading,
-  } = useTransactionHistoryQuery();
+  } = useUserCreditTransactionHistoryQuery();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredTransactions, setFilteredTransactions] = useState([]);
@@ -111,11 +48,11 @@ export const CreditTransactionLog = () => {
     });
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-6 bg-gray-50 rounded-lg shadow-sm">
+    <div className="w-full max-w-[900px] mx-auto p-6 bg-gray-50 rounded-lg shadow-sm">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-gray-900 mb-2">
-          Transaction Details
+          Billing Details
         </h1>
         <p className="text-gray-600">
           Track your credit usage and transaction history
