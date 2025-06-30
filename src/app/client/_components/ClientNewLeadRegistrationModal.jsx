@@ -174,113 +174,6 @@ export default function ClientNewLeadRegistrationModal({
 
   const options = selectedServiceWiseQuestions?.data?.[step - 1]?.options || [];
 
-  // const handleOptionChange = (optionId, checked) => {
-  //   // find optionid from fullcloned
-
-  //   // const foundOption = fullClonedQuestions
-  //   //   ?.flatMap((question) => question.options || [])
-  //   //   .find((option) => option?._id === optionId);
-
-  //   // console.log('foundOption', foundOption);
-
-  //   // const newCheckedOptions = checked
-  //   //   ? [...checkedOptions, optionId]
-  //   //   : checkedOptions.filter((id) => id !== optionId);
-
-  //   // setCheckedOptions(newCheckedOptions);
-
-  //   // const tempOption = {};
-
-  //   // if (foundOption?.name === 'Other') {
-  //   //   tempOption.id = optionId;
-  //   //   tempOption.is_checked = true;
-  //   //   tempOption.idExtraData = document.getElementById(
-  //   //     `${optionId}-other`
-  //   //   )?.value;
-  //   // } else {
-  //   //   tempOption.id = optionId;
-  //   //   tempOption.is_checked = true;
-  //   //   tempOption.idExtraData = '';
-  //   // }
-
-  //   // console.log('tempOption', tempOption);
-
-  //   // setCheckedOptionsDetails([...checkedOptionsDetails, tempOption]);
-
-  //   // console.log('checkedOptionsDetails', checkedOptionsDetails);
-
-  //   // const foundOption = fullClonedQuestions
-  //   //   ?.flatMap((question) => question.options || [])
-  //   //   .find((option) => option?._id === optionId);
-
-  //   // console.log('foundOption', foundOption);
-
-  //   const parentQuestion = fullClonedQuestions?.find((question) =>
-  //     question.options?.some((option) => option._id === optionId)
-  //   );
-
-  //   const foundOption = parentQuestion?.options?.find(
-  //     (option) => option._id === optionId
-  //   );
-
-  //   const questionType = parentQuestion?.questionType;
-
-  //   console.log('questionType', questionType);
-
-  //   const newCheckedOptions = checked
-  //     ? [...checkedOptions, optionId]
-  //     : checkedOptions.filter((id) => id !== optionId);
-
-  //   setCheckedOptions(newCheckedOptions);
-
-  //   console.log('newCheckedOptions', newCheckedOptions);
-
-  //   const tempOption = {
-  //     id: optionId,
-  //     name: foundOption?.name,
-  //     is_checked: checked,
-  //     idExtraData:
-  //       foundOption?.name === 'Other'
-  //         ? document.getElementById(`${optionId}-other`)?.value ?? ''
-  //         : '',
-  //   };
-
-  //   setCheckedOptionsDetails((prev) => {
-  //     if (checked) {
-  //       const filtered = prev.filter((item) => item.id !== optionId);
-  //       return [...filtered, tempOption];
-  //     } else {
-  //       return prev.filter((item) => item.id !== optionId);
-  //     }
-  //   });
-
-  //   // Find selected options metadata (if needed for something else)
-  //   const findSelectedOptions = options?.find((item) => item?._id === optionId);
-
-  //   if (checked) {
-  //     setSelectedOptions((prev) => {
-  //       const newOptions = findSelectedOptions?.selected_options || [];
-
-  //       // Merge and filter out duplicates by _id
-  //       const combined = [...prev, ...newOptions];
-  //       const unique = Array.from(
-  //         new Map(combined.map((item) => [item._id, item])).values()
-  //       );
-
-  //       return unique;
-  //     });
-  //   }
-
-  //   if (questionType === 'radio') {
-  //     setCheckedOptions([optionId]);
-  //     setCheckedOptionsDetails([tempOption]);
-  //     setSelectedOptions(findSelectedOptions?.selected_options || []);
-  //   }
-  // };
-
-  // console.log('selectedOptions', selectedOptions);
-  // console.log('checkedOptions', checkedOptions);
-
   const handleOptionChange = (optionId, checked) => {
     const parentQuestion = fullClonedQuestions?.find((question) =>
       question.options?.some((option) => option._id === optionId)
@@ -359,8 +252,8 @@ export default function ClientNewLeadRegistrationModal({
     }
   };
 
-  console.log('checkedOptions', checkedOptions);
-  console.log('checkedOptionsDetails', checkedOptionsDetails);
+  //   console.log('checkedOptions', checkedOptions);
+  //   console.log('checkedOptionsDetails', checkedOptionsDetails);
 
   //   useEffect(() => {
   //     if (step === 0) {
@@ -422,21 +315,6 @@ export default function ClientNewLeadRegistrationModal({
 
   //handleNext button click and form submission with api call
   const handleNext = async () => {
-    // if (step === 0) {
-    //   if (!service?._id || !zipCode) {
-    //     showErrorToast('Please select a service and zipcode to proceed.');
-    //     return;
-    //   }
-
-    //   // Optionally filter questions here if needed
-    //   setSelectedOptions([]);
-    //   setCheckedOptions([]);
-    //   setCheckedOptionsDetails([]);
-    //   setQuestionsPayload([]);
-    //   setStep(1);
-    //   return;
-    // }
-
     const isFinalStep = step === totalSteps;
     const isQuestionStep = step > 0 && step <= totalQuestions;
 
@@ -473,11 +351,6 @@ export default function ClientNewLeadRegistrationModal({
       return;
     }
 
-    // Step 3: Prepare payloads on final step
-    // const leadDetails = {
-    //   additionalDetails,
-    // };
-
     const payload = {
       countryId: defaultCountry?._id,
       serviceId: service?._id,
@@ -508,8 +381,6 @@ export default function ClientNewLeadRegistrationModal({
       showErrorToast(err?.data?.message || 'Failed to register lead.');
     }
   };
-
-  console.log('🚀 questionsPayload:', questionsPayload);
 
   const handleBack = () => {
     setStep((prev) => Math.max(prev - 1, 0));
