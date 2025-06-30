@@ -1,13 +1,14 @@
 import React from 'react';
 import InvoicingForm from '../UI/InvoicingForm';
-import { BillingTransactionDetails } from '../UI/BillingTransactionTable';
+
+import { CreditTransactionLog } from '../UI/CreditTransactionLog';
 
 const InvoicesBillings = () => {
   return (
     <div className="w-full">
       <InvoicingForm />
       <div className="mt-8">
-        <BillingTransactionDetails />
+        <CreditTransactionLog />
       </div>
     </div>
   );
