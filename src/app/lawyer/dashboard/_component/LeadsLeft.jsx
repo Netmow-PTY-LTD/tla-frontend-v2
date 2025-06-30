@@ -7,6 +7,7 @@ import {
   AtSign,
   BadgeCheck,
   CircleAlert,
+  Loader,
   MoveLeft,
   PhoneOutgoing,
   Zap,
@@ -16,7 +17,8 @@ import { useEffect, useState } from 'react';
 import LawyerContactModal from './leadBoard/LawyerContactModal';
 
 export default function LeadDetailsPage({ onBack, lead }) {
-  const { data: singleLead, isLoading } = useGetSingleLeadQuery(lead?._id);
+  const { data: singleLead, isLoading: isSingleLeadLoading } =
+    useGetSingleLeadQuery(lead?._id);
 
   const fullText =
     singleLead?.data?.additionalDetails === ''

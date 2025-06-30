@@ -58,17 +58,23 @@ export default function MyResponseDetails({ onBack, response }) {
               />
             </figure>
             <div>
-              <h2 className="font-medium heading-md">{response.name}</h2>
-              <p className="text-gray-500 mt-2">{response.address}</p>
+              <h2 className="font-medium heading-md">
+                {response?.leadId?.userProfileId?.name}
+              </h2>
+              <p className="text-gray-500 mt-2">
+                {response?.leadId?.userProfileId?.address}
+              </p>
             </div>
           </div>
           <hr className="border-[#F3F3F3] my-5  " />
           <div className="mb-4">
             <div className="flex items-center gap-2 admin-text font-medium">
-              <PhoneOutgoing /> <span>Phone: (480) *******</span>{' '}
+              <PhoneOutgoing />{' '}
+              <span>Phone: {response?.leadId?.userProfileId?.phone}</span>{' '}
             </div>
             <div className=" flex items-center gap-2 mt-2 admin-text font-medium">
-              <AtSign /> <span>Email: t*******@e********.com</span>{' '}
+              <AtSign />{' '}
+              <span>Email: {response?.leadId?.userProfileId?.user?.email}</span>{' '}
             </div>
           </div>
           {/* <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -115,22 +121,6 @@ export default function MyResponseDetails({ onBack, response }) {
                     {isExpanded ? 'Read less' : 'Read more'}
                   </button>
                 )}
-              </div>
-            </div>
-          </div>
-          <div className="mt-5">
-            <div className=" my-3 ">
-              <h4 className="font-medium my-2 heading-md">File Attached</h4>
-              <div className="flex items-center justify-between  p-3 rounded-lg bg-[#F8F9FA]">
-                <div className="flex items-center gap-2">
-                  <FileText />
-                  <span>Cases brief.pdf</span>{' '}
-                </div>
-
-                <button className="px-5 py-2 w-full sm:w-auto flex gap-2 items-center justify-center rounded-lg font-medium bg-[#EDF0F4] hover:bg-[#00C3C0] text-[#0B1C2D] transition-all duration-200 ease-in-out">
-                  <ArrowDownToLine />
-                  <span>Download</span>
-                </button>
               </div>
             </div>
           </div>

@@ -68,6 +68,7 @@ export const baseApi = createApi({
     'leadService',
     'lead',
     'user',
+    'response',
     'notification',
     'credit-payment',
     'payment-method',

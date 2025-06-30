@@ -1,12 +1,11 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import LeadDetailsPage from '../_component/LeadsLeft';
-import LeadsRight from '../_component/LeadsRight';
 import { usePathname } from 'next/navigation';
-import LeadsHead from '../_component/LeadsHead';
-import data from '@/data/user';
 import MyResponseDetails from './_components/MyResponseDetails';
 import ResponseHead from './_components/ResponseHead';
+import { useGetAllMyResponsesQuery } from '@/store/features/lawyer/ResponseApiService';
+import { Inbox, Loader } from 'lucide-react';
+import LeadsRight from './_components/ResponsesList';
 
 const MyResponsePage = () => {
   const [showResponseDetails, setShowResponseDetails] = useState(true);
@@ -30,17 +29,33 @@ const MyResponsePage = () => {
     };
   }, [pathname]);
 
+  const { data: allMyResponses, isLoading: isAllMyResponsesLoading } =
+    useGetAllMyResponsesQuery();
+
+  //console.log('allMyResponses', allMyResponses);
+
   useEffect(() => {
-    if (data && data.length > 0) {
-      setSelectedResponse(data[0]); // Set first lead
+    if (allMyResponses?.data && allMyResponses?.data.length > 0) {
+      setSelectedResponse(allMyResponses?.data[0]); // Set first lead
     }
-  }, [data]);
+  }, [allMyResponses?.data]);
+
+  if (isAllMyResponsesLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <span className="flex items-center justify-center gap-2 text-[14px]">
+          <Loader className="w-10 h-10 animate-spin" />
+          loading...
+        </span>
+      </div>
+    );
+  }
 
   return (
-    <div className="continer">
-      <div className="lead-board-wrap">
+    <div className="lead-board-wrap">
+      {allMyResponses?.data && allMyResponses?.data?.length > 0 ? (
         <div className="lead-board-container">
-          {showResponseDetails && selectedResponse && (
+          {showResponseDetails && (
             <div className="left-column-7">
               <div className="column-wrap-left">
                 <MyResponseDetails
@@ -67,13 +82,20 @@ const MyResponsePage = () => {
                     setSelectedResponse(response);
                     setShowResponseDetails(true);
                   }}
-                  data={data}
+                  data={allMyResponses?.data}
                 />
               </div>
             </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="flex flex-col justify-center items-center h-full">
+          <Inbox className="w-12 h-12 mb-4 text-gray-400" />
+          <h4 className="italic text-[18px] text-gray-500">
+            Currently you have no responses.
+          </h4>
+        </div>
+      )}
     </div>
   );
 };
