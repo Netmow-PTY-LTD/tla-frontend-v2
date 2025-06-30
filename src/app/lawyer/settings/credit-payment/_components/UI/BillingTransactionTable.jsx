@@ -2,70 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Search, Download, Filter, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useTransactionHistoryQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
-
-const mockTransactions = [
-  {
-    id: '40601908',
-    description: '5 credits used to reply to customer',
-    credits: -5,
-    date: '12 Jan 2025',
-  },
-  {
-    id: '40601873',
-    description: '6 credits used to reply to customer',
-    credits: -6,
-    date: '12 Jan 2025',
-  },
-  {
-    id: '40066849',
-    description: '5 credits used to reply to customer',
-    credits: -5,
-    date: '2 Jan 2025',
-  },
-  {
-    id: '40044138',
-    description: '6 credits used to reply to customer',
-    credits: -6,
-    date: '2 Jan 2025',
-  },
-  {
-    id: '40044115',
-    description: '7 credits used to reply to customer',
-    credits: -7,
-    date: '2 Jan 2025',
-  },
-  {
-    id: '40044048',
-    description: '6 credits used to reply to customer',
-    credits: -6,
-    date: '2 Jan 2025',
-  },
-  {
-    id: '40044011',
-    description: '6 credits used to reply to customer',
-    credits: -6,
-    date: '2 Jan 2025',
-  },
-  {
-    id: '40043951',
-    description: '6 credits used to reply to customer',
-    credits: -6,
-    date: '2 Jan 2025',
-  },
-  {
-    id: '40043932',
-    description: '5 credits used to reply to customer',
-    credits: -5,
-    date: '2 Jan 2025',
-  },
-  {
-    id: '40043905',
-    description: '5 credits used to reply to customer',
-    credits: -5,
-    date: '2 Jan 2025',
-  },
-];
+import { useUserTransactionHistoryQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 
 export const BillingTransactionDetails = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -73,22 +10,26 @@ export const BillingTransactionDetails = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  // Filter on transactionData or searchTerm change
-  useEffect(() => {
-    if (!mockTransactions?.data) return;
+  const {
+    data: transactionData,
+    isError,
+    isLoading,
+  } = useUserTransactionHistoryQuery();
 
-    const filtered = mockTransactions.data.filter((transaction) => {
-      const id = transaction._id?.toLowerCase() || '';
-      const desc = transaction.description?.toLowerCase() || '';
+  useEffect(() => {
+    if (!transactionData?.data) return;
+
+    const filtered = transactionData.data.filter((t) => {
+      const id = t._id?.toLowerCase() || '';
+      const packageName = t.creditPackageId?.name?.toLowerCase() || '';
       const term = searchTerm.toLowerCase();
-      return id.includes(term) || desc.includes(term);
+      return id.includes(term) || packageName.includes(term);
     });
 
     setFilteredTransactions(filtered);
     setCurrentPage(1);
-  }, [mockTransactions?.data, searchTerm]);
+  }, [transactionData, searchTerm]);
 
-  // Pagination
   const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedTransactions = filteredTransactions.slice(
@@ -96,22 +37,21 @@ export const BillingTransactionDetails = () => {
     startIndex + itemsPerPage
   );
 
-  // Format date like '2 Jan 2025'
-  const formatDate = (dateString) =>
-    new Date(dateString).toLocaleDateString('en-GB', {
+  const formatDate = (date) =>
+    new Date(date).toLocaleDateString('en-GB', {
       day: 'numeric',
       month: 'short',
       year: 'numeric',
     });
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-6 bg-gray-50 rounded-lg shadow-sm">
+    <div className="w-full max-w-[900px] mx-auto p-6 bg-gray-50 rounded-lg shadow-sm">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-gray-900 mb-2">
           Billing Details
         </h1>
-        <p className="text-gray-600">Track your Billing transaction history</p>
+        <p className="text-gray-600">Track your credit purchase history</p>
       </div>
 
       {/* Controls */}
@@ -159,47 +99,57 @@ export const BillingTransactionDetails = () => {
           <table className="w-full">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="text-left py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider">
+                <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
                   ID
                 </th>
-                <th className="text-left py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider">
-                  Description
+                <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
+                  Package
                 </th>
-                <th className="text-left py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider">
+                <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
                   Credits
                 </th>
-                <th className="text-left py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider">
+                <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
+                  Amount
+                </th>
+                <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
+                  Status
+                </th>
+                <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
                   Date
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
-              {paginatedTransactions.map((transaction) => (
-                <tr
-                  key={transaction._id}
-                  className="hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
-                >
-                  <td className="py-4 px-6 text-sm font-mono text-gray-900">
-                    {transaction._id}
+            <tbody className="divide-y divide-gray-100">
+              {paginatedTransactions.map((tx) => (
+                <tr key={tx._id} className="hover:bg-gray-50">
+                  <td className="py-4 px-6 text-sm font-mono text-gray-800">
+                    {tx._id.slice(0, 8)}...
                   </td>
-                  <td className="py-4 px-6 text-sm text-gray-700">
-                    {transaction.description
-                      ? transaction.description
-                      : `${transaction.credit} credits used to reply to customer`}
+                  <td className="py-4 px-6 text-sm text-gray-900 font-medium">
+                    {tx.creditPackageId?.name || '-'}
                   </td>
-                  <td className="py-4 px-6 text-sm font-semibold">
+                  <td className="py-4 px-6 text-sm font-semibold text-green-600">
+                    +{tx.creditPackageId?.credit}
+                  </td>
+                  <td className="py-4 px-6 text-sm text-gray-800">
+                    ${tx.amountPaid}{' '}
+                    <span className="text-gray-500">
+                      ({tx.currency.toUpperCase()})
+                    </span>
+                  </td>
+                  <td className="py-4 px-6 text-sm">
                     <span
-                      className={
-                        transaction.credit < 0
-                          ? 'text-red-600'
-                          : 'text-green-600'
-                      }
+                      className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
+                        tx.status === 'completed'
+                          ? 'bg-green-100 text-green-700'
+                          : 'bg-yellow-100 text-yellow-700'
+                      }`}
                     >
-                      {transaction.credit}
+                      {tx.status}
                     </span>
                   </td>
                   <td className="py-4 px-6 text-sm text-gray-600">
-                    {formatDate(transaction.createdAt)}
+                    {formatDate(tx.createdAt)}
                   </td>
                 </tr>
               ))}
@@ -214,7 +164,7 @@ export const BillingTransactionDetails = () => {
               <Search className="h-12 w-12 mx-auto" />
             </div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No Billing found
+              No Transactions Found
             </h3>
             <p className="text-gray-600">
               Try adjusting your search terms or filters.
@@ -223,20 +173,20 @@ export const BillingTransactionDetails = () => {
         )}
       </div>
 
-      {/* Footer Stats */}
+      {/* Pagination Footer */}
       <div className="mt-6 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-600">
         <div>
           Showing {startIndex + 1}–
           {Math.min(startIndex + itemsPerPage, filteredTransactions.length)} of{' '}
-          {filteredTransactions.length} billing
+          {filteredTransactions.length} transactions
         </div>
         <div className="flex items-center gap-4 mt-2 sm:mt-0">
           <span>
-            Total credits used:{' '}
-            <span className="font-semibold text-red-600">
-              -
+            Total credits purchased:{' '}
+            <span className="font-semibold text-green-600">
+              +
               {filteredTransactions.reduce(
-                (sum, t) => sum + Math.abs(t.credit),
+                (sum, t) => sum + (t.credit > 0 ? t.credit : 0),
                 0
               )}
             </span>
