@@ -988,15 +988,15 @@ Home Testimonials
 .newsletter-signup p:after {
   content: '';
   position: absolute;
-  bottom: 18px;
-  right: 44px;
+  bottom: 12px;
+  right: -98px;
   background-color: #fff;
   max-width: 161px;
   width: 100%;
   height: 1px;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 1024px) {
   .newsletter-signup p:after {
     display: none;
   }
