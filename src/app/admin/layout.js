@@ -32,7 +32,7 @@ export default function AdminDashboardLayout({ children }) {
       window.scrollTo({ top: 0, behavior: 'auto' });
       document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = '';
     }
 
     return () => {
