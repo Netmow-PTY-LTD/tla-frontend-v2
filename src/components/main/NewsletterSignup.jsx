@@ -32,8 +32,9 @@ export default function NewsletterSignup() {
                 />
               </g>
             </svg>
-            <p className="text-[25px] lg:text-[40px] text-white relative">
-              Get your desired lawyer or client within a reasonable costing.{' '}
+            <p className="text-[20px] lg:text-[26px] text-white relative">
+              Subscribe today and enjoy exclusive offers, expert insights, and
+              first access to legal updates—tailored just for you.{' '}
             </p>
           </div>
           <div className="w-full lg:max-w-[437px] ">

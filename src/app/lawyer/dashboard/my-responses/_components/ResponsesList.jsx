@@ -4,7 +4,6 @@ import React from 'react';
 import ResponseCard from '../../_component/home/ResponseCard';
 
 const LeadsRight = ({ isExpanded, onViewDetails, data }) => {
-  console.log('data', data);
   return (
     <>
       {/* lead card section */}
