@@ -43,7 +43,10 @@ export default function BuyerDashboardLayout({ children }) {
   return (
     <>
       <BuyerDashboardHeader />
-      <SidebarProvider className="sidebar-main">
+      <SidebarProvider
+        className="sidebar-main h-[calc(100vh-64px)]"
+        style={{ minHeight: 'auto' }}
+      >
         <Sidebar
           collapsible="icon"
           className="sidebar-width-control sidebar-y-64"
@@ -57,12 +60,12 @@ export default function BuyerDashboardLayout({ children }) {
           <SidebarRail />
         </Sidebar>
         <div
-          className={`flex-1 dashboard-content ${
+          className={`flex-1 bg-[#F3F3F3] dashboard-content ${
             isNoScrollPage ? 'no-scroll' : ''
           }`}
         >
-          <div className="flex flex-col h-[calc(100vh-70px)]">
-            <div className="flex-1 p-4 bg-[#F3F3F3]">{children}</div>
+          <div className="flex flex-col h-full">
+            <div className="flex-1 p-4">{children}</div>
             <DashboardFooter />
           </div>
         </div>

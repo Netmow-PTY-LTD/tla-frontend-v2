@@ -16,10 +16,8 @@ import { useEffect } from 'react';
 
 export default function AdminDashboardLayout({ children }) {
   const pathname = usePathname();
-
   const cleanPathname = pathname?.trim().replace(/\/+$/, '');
 
-  // Add all routes where scroll should be disabled
   const noScrollRoutes = [
     '/lawyer/dashboard/leads-board',
     '/lawyer/dashboard/my-responses',
@@ -32,20 +30,24 @@ export default function AdminDashboardLayout({ children }) {
       window.scrollTo({ top: 0, behavior: 'auto' });
       document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = '';
+      document.body.style.overflow = 'hidden'; // ✅ allow internal scroll
     }
 
     return () => {
       document.body.style.overflow = '';
     };
   }, [isNoScrollPage]);
+
   return (
     <>
       <AdminDashboardHeader />
-      <SidebarProvider className="sidebar-main flex h-[calc(100vh-64px)]">
+      <SidebarProvider
+        className="sidebar-main h-[calc(100vh-64px)]"
+        style={{ minHeight: 'auto' }}
+      >
         <Sidebar
           collapsible="icon"
-          className="sidebar-width-control sidebar-y-64"
+          className="sidebar-width-control sidebar-y-64 h-[calc(100vh-64px)]"
         >
           <SidebarHeader>
             <SidebarTop />
@@ -55,8 +57,14 @@ export default function AdminDashboardLayout({ children }) {
           </SidebarContent>
           <SidebarRail />
         </Sidebar>
-        <div className="flex-1 h-full overflow-y-auto">
-          <div className="min-h-full flex flex-col">
+
+        {/* ✅ This is the only scrollable area */}
+        <div
+          className={`flex-1 dashboard-content ${
+            isNoScrollPage ? 'no-scroll' : ''
+          }`}
+        >
+          <div className="flex flex-col">
             <div className="flex-1 p-5">{children}</div>
             <DashboardFooter />
           </div>

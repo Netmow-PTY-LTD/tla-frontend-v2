@@ -7,6 +7,7 @@ import LeadsHead from '../_component/LeadsHead';
 import data from '@/data/user';
 import { useGetAllLeadsQuery } from '@/store/features/lawyer/LeadsApiService';
 import { Loader } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const LeadBoardPage = () => {
   const [showLeadDetails, setShowLeadDetails] = useState(true);
@@ -41,12 +42,22 @@ const LeadBoardPage = () => {
 
   if (isAllLeadsLoading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <span className="flex items-center justify-center gap-2 text-[14px]">
-          <Loader className="w-10 h-10 animate-spin" />
-          loading...
-        </span>
-      </div>
+      <>
+        <div className="flex items-center space-x-4">
+          <Skeleton className="h-12 w-12 rounded-full" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-[800px]" />
+            <Skeleton className="h-4 w-[800px]" />
+          </div>
+        </div>
+        <div className="flex items-center space-x-4 mt-4">
+          <Skeleton className="h-12 w-12 rounded-full" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-[800px]" />
+            <Skeleton className="h-4 w-[800px]" />
+          </div>
+        </div>
+      </>
     );
   }
 
