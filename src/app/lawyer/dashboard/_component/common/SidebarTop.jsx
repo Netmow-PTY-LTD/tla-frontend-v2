@@ -64,6 +64,8 @@ export default function SidebarTop() {
         </b>
         <br />
         <b>Welcome To TLA Dashboard</b>
+        <br />
+        <span className="admin-text">The Law App version 1.0</span>
       </h2>
       <div className="flex justify-between items-center mt-5">
         <div className="icon flex items-center gap-2">
