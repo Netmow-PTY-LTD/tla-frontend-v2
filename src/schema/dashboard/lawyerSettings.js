@@ -80,6 +80,22 @@ export const videoUrlRegex = new RegExp(
   'i'
 );
 
+
+
+const ACCEPTED_FILE_TYPES = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/jfif',
+  'application/pdf',
+];
+
+const fileSchema = z
+  .instanceof(File)
+  .refine((file) => ACCEPTED_FILE_TYPES.includes(file.type), {
+    message: 'Only .jpg, .jpeg, .png, .jfif, or .pdf files are allowed',
+  });
+
 export const lawyerSettingsMediaFormSchema = z.object({
   videos: z
     .array(
@@ -90,5 +106,5 @@ export const lawyerSettingsMediaFormSchema = z.object({
       })
     )
     .optional(),
-  photos: z.any(),
+  photos: z.array(fileSchema),
 });

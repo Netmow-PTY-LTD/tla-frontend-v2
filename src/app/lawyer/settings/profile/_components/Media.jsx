@@ -87,6 +87,7 @@ export default function Photos() {
       // ✅ Log files correctly
 
       const res = await updatePhotosData(formData).unwrap();
+      console.log('response ==>',res)
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Update successful');
       }

@@ -13,10 +13,11 @@ export default function MultipleFileUploader({
   icon = <CloudUpload className="w-6 h-6 text-[#00C3C0] mb-2" />,
 }) {
   const { register, setValue, watch, getValues, control } = useFormContext();
-  const { isDirty } = useFormState({ control }); // ensures RHF state is ready
+  const { isDirty,errors } = useFormState({ control }); // ensures RHF state is ready
   const files = watch(name);
   const [previews, setPreviews] = useState([]);
 
+  console.log('errors ==>',errors)
   // Ensure field is registered
   useEffect(() => {
     register(name);
@@ -116,7 +117,8 @@ export default function MultipleFileUploader({
   };
 
   return (
-    <div className="flex gap-4">
+    <div>
+      <div className="flex gap-4">
       {/* Previews */}
       <div className="flex flex-wrap gap-4">
         {previews.map((src, index) => (
@@ -154,6 +156,8 @@ export default function MultipleFileUploader({
         </label>
         <p className="text-gray-700 font-medium text-center mt-2">{label}</p>
       </div>
+    </div>
+   
     </div>
   );
 }
