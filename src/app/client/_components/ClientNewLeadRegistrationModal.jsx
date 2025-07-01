@@ -59,6 +59,8 @@ export default function ClientNewLeadRegistrationModal({
 
   const [service, setService] = useState(null); // the selected service object
   const [searchTerm, setSearchTerm] = useState(''); // user-typed input string
+  const [budgetAmount, setBudgetAmount] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // console.log(
   //   'selectedServiceWiseQuestions',
@@ -136,7 +138,7 @@ export default function ClientNewLeadRegistrationModal({
 
   const totalQuestions = selectedServiceWiseQuestions?.data?.length;
 
-  const totalFormsSteps = 1;
+  const totalFormsSteps = 2;
 
   const totalSteps = totalQuestions + totalFormsSteps;
 
@@ -351,11 +353,14 @@ export default function ClientNewLeadRegistrationModal({
       return;
     }
 
+    setIsSubmitting(true);
+
     const payload = {
       countryId: defaultCountry?._id,
       serviceId: service?._id,
       questions: [...questionsPayload], // ensure fresh snapshot
       additionalDetails,
+      budgetAmount,
     };
 
     console.log('🚀 Submitting payload:', payload);
@@ -379,6 +384,8 @@ export default function ClientNewLeadRegistrationModal({
     } catch (err) {
       console.error('❌ Register error:', err);
       showErrorToast(err?.data?.message || 'Failed to register lead.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -396,8 +403,12 @@ export default function ClientNewLeadRegistrationModal({
       return checkedOptions.length === 0;
     }
 
-    if (step === totalQuestions) {
+    if (step === totalQuestions + 1) {
       return !additionalDetails.trim();
+    }
+
+    if (step === totalQuestions + 2) {
+      return !budgetAmount.trim();
     }
 
     return false;
@@ -420,6 +431,8 @@ export default function ClientNewLeadRegistrationModal({
         if (!open) {
           setViewData(null);
           setQuestionsPayload([]);
+          setAdditionalDetails('');
+          setBudgetAmount('');
           setStep(0); // reset form steps, if needed
         }
       }}
@@ -621,6 +634,34 @@ export default function ClientNewLeadRegistrationModal({
             />
           </label>
         </div>
+      ) : step === totalQuestions + 2 ? (
+        <div className="space-y-6">
+          <h4 className="text-[24px] font-semibold text-center">
+            What is your estimated budget?
+          </h4>
+
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium">Estimated Budget</label>
+            <div className="flex gap-3 items-center">
+              <input
+                type="number"
+                min={0}
+                step={1}
+                className="border rounded px-3 py-2 w-full"
+                value={budgetAmount}
+                onChange={(e) => setBudgetAmount(e.target.value)}
+                placeholder="Enter amount"
+              />
+              <input
+                type="text"
+                className="border rounded px-3 py-2 w-20 text-center"
+                value="USD"
+                placeholder='currency i.e."USD"'
+                readOnly
+              />
+            </div>
+          </div>
+        </div>
       ) : null}
 
       <div
@@ -637,7 +678,16 @@ export default function ClientNewLeadRegistrationModal({
 
         {/* Show "Next" button on all steps */}
         <Button onClick={handleNext} disabled={isNextDisabled}>
-          {step === totalSteps ? 'Finish' : 'Next'}
+          {isSubmitting ? (
+            <span className="flex items-center gap-2">
+              <Loader className="w-4 h-4 animate-spin" />
+              Submitting...
+            </span>
+          ) : step === totalSteps ? (
+            'Finish'
+          ) : (
+            'Next'
+          )}
         </Button>
       </div>
     </Modal>
