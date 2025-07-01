@@ -17,8 +17,10 @@ import { useRouter } from 'next/navigation';
 import { verifyToken } from '@/utils/verifyToken';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/store/features/auth/authSlice';
+import { useCreateLeadMutation } from '@/store/features/client/LeadsApiService';
+import { set } from 'zod';
 
-export default function ClientLeadRegistrationModal({
+export default function CreateLeadWithAuthModal({
   modalOpen,
   setModalOpen,
   selectedServiceWiseQuestions,
@@ -54,15 +56,7 @@ export default function ClientLeadRegistrationModal({
   const [questionLoading, setQuestionLoading] = useState(false);
 
   const [budgetAmount, setBudgetAmount] = useState('');
-  const [zipCode, setZipCode] = useState('');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-
-  // console.log(
-  //   'selectedServiceWiseQuestions',
-  //   selectedServiceWiseQuestions?.length
-  // );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (!selectedServiceWiseQuestions?.length) return;
@@ -106,7 +100,7 @@ export default function ClientLeadRegistrationModal({
 
   const totalQuestions = selectedServiceWiseQuestions?.length;
 
-  const totalFormsSteps = 5;
+  const totalFormsSteps = 2;
 
   const totalSteps = totalQuestions + totalFormsSteps;
 
@@ -144,113 +138,6 @@ export default function ClientLeadRegistrationModal({
 
   const options = selectedServiceWiseQuestions?.[step]?.options || [];
 
-  // const handleOptionChange = (optionId, checked) => {
-  //   // find optionid from fullcloned
-
-  //   // const foundOption = fullClonedQuestions
-  //   //   ?.flatMap((question) => question.options || [])
-  //   //   .find((option) => option?._id === optionId);
-
-  //   // console.log('foundOption', foundOption);
-
-  //   // const newCheckedOptions = checked
-  //   //   ? [...checkedOptions, optionId]
-  //   //   : checkedOptions.filter((id) => id !== optionId);
-
-  //   // setCheckedOptions(newCheckedOptions);
-
-  //   // const tempOption = {};
-
-  //   // if (foundOption?.name === 'Other') {
-  //   //   tempOption.id = optionId;
-  //   //   tempOption.is_checked = true;
-  //   //   tempOption.idExtraData = document.getElementById(
-  //   //     `${optionId}-other`
-  //   //   )?.value;
-  //   // } else {
-  //   //   tempOption.id = optionId;
-  //   //   tempOption.is_checked = true;
-  //   //   tempOption.idExtraData = '';
-  //   // }
-
-  //   // console.log('tempOption', tempOption);
-
-  //   // setCheckedOptionsDetails([...checkedOptionsDetails, tempOption]);
-
-  //   // console.log('checkedOptionsDetails', checkedOptionsDetails);
-
-  //   // const foundOption = fullClonedQuestions
-  //   //   ?.flatMap((question) => question.options || [])
-  //   //   .find((option) => option?._id === optionId);
-
-  //   // console.log('foundOption', foundOption);
-
-  //   const parentQuestion = fullClonedQuestions?.find((question) =>
-  //     question.options?.some((option) => option._id === optionId)
-  //   );
-
-  //   const foundOption = parentQuestion?.options?.find(
-  //     (option) => option._id === optionId
-  //   );
-
-  //   const questionType = parentQuestion?.questionType;
-
-  //   console.log('questionType', questionType);
-
-  //   const newCheckedOptions = checked
-  //     ? [...checkedOptions, optionId]
-  //     : checkedOptions.filter((id) => id !== optionId);
-
-  //   setCheckedOptions(newCheckedOptions);
-
-  //   console.log('newCheckedOptions', newCheckedOptions);
-
-  //   const tempOption = {
-  //     id: optionId,
-  //     name: foundOption?.name,
-  //     is_checked: checked,
-  //     idExtraData:
-  //       foundOption?.name === 'Other'
-  //         ? document.getElementById(`${optionId}-other`)?.value ?? ''
-  //         : '',
-  //   };
-
-  //   setCheckedOptionsDetails((prev) => {
-  //     if (checked) {
-  //       const filtered = prev.filter((item) => item.id !== optionId);
-  //       return [...filtered, tempOption];
-  //     } else {
-  //       return prev.filter((item) => item.id !== optionId);
-  //     }
-  //   });
-
-  //   // Find selected options metadata (if needed for something else)
-  //   const findSelectedOptions = options?.find((item) => item?._id === optionId);
-
-  //   if (checked) {
-  //     setSelectedOptions((prev) => {
-  //       const newOptions = findSelectedOptions?.selected_options || [];
-
-  //       // Merge and filter out duplicates by _id
-  //       const combined = [...prev, ...newOptions];
-  //       const unique = Array.from(
-  //         new Map(combined.map((item) => [item._id, item])).values()
-  //       );
-
-  //       return unique;
-  //     });
-  //   }
-
-  //   if (questionType === 'radio') {
-  //     setCheckedOptions([optionId]);
-  //     setCheckedOptionsDetails([tempOption]);
-  //     setSelectedOptions(findSelectedOptions?.selected_options || []);
-  //   }
-  // };
-
-  // console.log('selectedOptions', selectedOptions);
-  // console.log('checkedOptions', checkedOptions);
-
   const handleOptionChange = (optionId, checked) => {
     const parentQuestion = fullClonedQuestions?.find((question) =>
       question.options?.some((option) => option._id === optionId)
@@ -261,8 +148,6 @@ export default function ClientLeadRegistrationModal({
     );
 
     const questionType = parentQuestion?.questionType;
-
-    console.log('questionType', questionType);
 
     const tempOption = {
       id: optionId,
@@ -327,8 +212,6 @@ export default function ClientLeadRegistrationModal({
     }
   };
 
-  console.log('checkedOptions', checkedOptionsDetails);
-
   useEffect(() => {
     if (step === 0) {
       partialClonedQuestions[step] = fullClonedQuestions?.[step];
@@ -348,11 +231,11 @@ export default function ClientLeadRegistrationModal({
 
   const [questionsPayload, setQuestionsPayload] = useState([]);
 
-  const [clientRegister] = useAuthClientRegisterMutation();
+  const [createLead] = useCreateLeadMutation();
 
   //handleNext button click and form submission with api call
   const handleNext = async () => {
-    const isFinalStep = step === totalSteps;
+    const isFinalStep = step === totalSteps - 1;
     const isQuestionStep = step < totalQuestions;
 
     // Step 1: Handle question payload update
@@ -384,60 +267,31 @@ export default function ClientLeadRegistrationModal({
       return;
     }
 
-    // Step 3: Prepare payloads on final step
-    const leadDetails = {
-      additionalDetails,
-      budgetAmount,
-      zipCode,
-      name,
-      email,
-      phone,
-    };
+    setIsSubmitting(true);
 
     const payload = {
       countryId,
       serviceId,
-      questions: [...questionsPayload], // ensure fresh snapshot
-      leadDetails,
+      questions: [...questionsPayload],
+      additionalDetails,
+      budgetAmount,
     };
 
     console.log('🚀 Submitting payload:', payload);
 
     try {
-      const res = await clientRegister(payload).unwrap();
+      const res = await createLead(payload).unwrap();
       console.log('✅ Register response:', res);
 
-      if (!res?.success || !res?.token) {
-        showErrorToast(res?.message || 'Lead registration failed.');
-        return;
-      }
-
-      showSuccessToast(res?.message || 'Lead registered successfully');
-
-      const token = res.token;
-      const userPayload = verifyToken(token);
-
-      if (userPayload) {
-        dispatch(setUser({ user: res?.data, token }));
-
-        const userType = res?.data?.regUserType;
-
-        setQuestionsPayload([]); // Clear form state
-        setModalOpen(false); // Close modal
-
-        if (userType === 'client') {
-          setTimeout(() => {
-            router.push('/client/dashboard');
-          }, 2000);
-        } else {
-          router.push('/');
-        }
-      } else {
-        showErrorToast('Invalid token. Registration failed.');
+      if (res?.success === true) {
+        showSuccessToast(res?.message || 'Lead registered successfully');
+        setModalOpen(false);
       }
     } catch (err) {
       console.error('❌ Register error:', err);
       showErrorToast(err?.data?.message || 'Failed to register lead.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -457,36 +311,13 @@ export default function ClientLeadRegistrationModal({
       return !additionalDetails.trim();
     }
 
-    if (step === totalQuestions + 1) {
+    if (step === totalSteps - 1) {
       return !budgetAmount.trim();
-    }
-
-    // Step: ZIP Code (required)
-    if (step === totalQuestions + 2) {
-      return !zipCode.trim();
-    }
-
-    if (step === totalQuestions + 3) {
-      return !name.trim();
-    }
-
-    // Step: Email (required and validated)
-    if (step === totalQuestions + 4) {
-      return !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
     // Step: Phone (optional)
     return false;
   })();
-
-  const { data: allZipCodes, isLoading: isZipCodeLoading } =
-    useGetZipCodeListQuery();
-
-  const filteredZipCodes = allZipCodes?.data?.filter((item) =>
-    item?.zipcode?.toLowerCase().includes(zipCode.toLowerCase())
-  );
-
-  //console.log('questionLoading:', questionLoading);
 
   return (
     <Modal
@@ -582,7 +413,7 @@ export default function ClientLeadRegistrationModal({
             />
           </label>
         </div>
-      ) : step === totalQuestions + 1 ? (
+      ) : step === totalSteps - 1 ? (
         <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
             What is your estimated budget?
@@ -609,116 +440,6 @@ export default function ClientLeadRegistrationModal({
             </div>
           </div>
         </div>
-      ) : step === totalQuestions + 2 ? (
-        <div className="space-y-4">
-          <h4 className="text-[24px] font-semibold text-center">
-            Where do you need the service?
-          </h4>
-          <div className="text-center">
-            The postcode or town for the address where you want the service.
-          </div>
-          <Combobox value={zipCode} onChange={setZipCode}>
-            <div className="relative">
-              <ComboboxInput
-                className="border border-gray-300 rounded-md w-full h-[44px] px-4"
-                onChange={(event) => setZipCode(event.target.value)}
-                displayValue={(val) =>
-                  allZipCodes?.data?.find((z) => z._id === val)?.zipcode || val
-                }
-                placeholder="Select a Zipcode"
-              />
-              <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
-                <ChevronDown className="h-4 w-4 text-gray-500" />
-              </ComboboxButton>
-              {filteredZipCodes?.length > 0 && (
-                <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  {filteredZipCodes.map((item) => (
-                    <ComboboxOption
-                      key={item._id}
-                      value={item._id}
-                      className={({ active }) =>
-                        cn(
-                          'cursor-pointer select-none relative py-2 px-6',
-                          active ? 'bg-blue-100 text-black' : 'text-gray-900'
-                        )
-                      }
-                    >
-                      {({ selected }) => (
-                        <>
-                          <span
-                            className={cn('block truncate', {
-                              'font-medium': selected,
-                              'font-normal': !selected,
-                            })}
-                          >
-                            {item.zipcode}
-                          </span>
-                          {selected && (
-                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
-                              <Check className="h-4 w-4" />
-                            </span>
-                          )}
-                        </>
-                      )}
-                    </ComboboxOption>
-                  ))}
-                </ComboboxOptions>
-              )}
-            </div>
-          </Combobox>
-        </div>
-      ) : step === totalQuestions + 3 ? (
-        <div className="space-y-6">
-          <h4 className="text-[24px] font-semibold text-center">
-            Write a few words about yourself?
-          </h4>
-          <label className="flex flex-col gap-2">
-            <span className="text-sm font-medium">Enter Your Name</span>
-            <input
-              type="text"
-              className="border rounded px-3 py-2"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g., Mark Smith"
-            />
-          </label>
-        </div>
-      ) : step === totalQuestions + 4 ? (
-        <div className="space-y-6">
-          <h4 className="text-[24px] font-semibold text-center">
-            What email address would you like quotes sent to?
-          </h4>
-          <label className="flex flex-col gap-2">
-            <span className="text-sm font-medium">
-              Enter Your Valid Email Address
-            </span>
-            <input
-              type="email"
-              className="border rounded px-3 py-2"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="e.g., example@email.com"
-            />
-          </label>
-        </div>
-      ) : step === totalSteps ? (
-        <div className="space-y-6">
-          <h4 className="text-[24px] font-semibold text-center">
-            What phone number can we reach you on?
-          </h4>
-          <label className="flex flex-col gap-2">
-            <span className="text-sm font-medium">
-              Enter Your Valid Phone Number
-            </span>
-            <input
-              type="tel"
-              className="border rounded px-3 py-2"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="e.g., 0123456789"
-            />
-          </label>
-        </div>
       ) : null}
 
       {questionLoading ||
@@ -740,9 +461,18 @@ export default function ClientLeadRegistrationModal({
 
             <Button
               onClick={handleNext}
-              disabled={step === totalSteps ? false : isNextDisabled}
+              disabled={isNextDisabled || isSubmitting}
             >
-              {step === totalSteps ? 'Finish' : 'Next'}
+              {isSubmitting ? (
+                <span className="flex items-center gap-2">
+                  <Loader className="w-4 h-4 animate-spin" />
+                  Submitting...
+                </span>
+              ) : step === totalSteps - 1 ? (
+                'Finish'
+              ) : (
+                'Next'
+              )}
             </Button>
           </div>
         ))}

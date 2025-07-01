@@ -7,6 +7,8 @@ import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesA
 import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
 import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/questionApiService';
 import ClientLeadRegistrationModal from './modal/ClientLeadRegistrationModal';
+import { useSelector } from 'react-redux';
+import CreateLeadWithAuthModal from './modal/CreateLeadWithAuthModal';
 
 export default function HeroHome() {
   const [selectedService, setSelectedService] = useState(null);
@@ -51,6 +53,10 @@ export default function HeroHome() {
   useEffect(() => {
     setServiceWiseQuestions(singleServicewiseQuestionsData?.data || []);
   }, [singleServicewiseQuestionsData]);
+
+  const token = useSelector((state) => state.auth.token);
+
+  const currentUser = useSelector((state) => state.auth.user);
 
   return (
     <section
@@ -108,14 +114,26 @@ export default function HeroHome() {
         </div>
         <HeroShowcase />
       </div>
-      <ClientLeadRegistrationModal
-        modalOpen={modalOpen}
-        setModalOpen={setModalOpen}
-        handleModalOpen={handleModalOpen}
-        selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
-        countryId={defaultCountry?._id}
-        serviceId={selectedService?._id}
-      />
+
+      {token && currentUser ? (
+        <CreateLeadWithAuthModal
+          modalOpen={modalOpen}
+          setModalOpen={setModalOpen}
+          handleModalOpen={handleModalOpen}
+          selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
+          countryId={defaultCountry?._id}
+          serviceId={selectedService?._id}
+        />
+      ) : (
+        <ClientLeadRegistrationModal
+          modalOpen={modalOpen}
+          setModalOpen={setModalOpen}
+          handleModalOpen={handleModalOpen}
+          selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
+          countryId={defaultCountry?._id}
+          serviceId={selectedService?._id}
+        />
+      )}
     </section>
   );
 }
