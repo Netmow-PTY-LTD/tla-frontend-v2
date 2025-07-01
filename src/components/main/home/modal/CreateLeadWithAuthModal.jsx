@@ -286,6 +286,9 @@ export default function CreateLeadWithAuthModal({
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Lead registered successfully');
         setModalOpen(false);
+        setTimeout(() => {
+          router.push('/client/dashboard');
+        }, 1000);
       }
     } catch (err) {
       console.error('❌ Register error:', err);
@@ -435,7 +438,8 @@ export default function CreateLeadWithAuthModal({
                 type="text"
                 className="border rounded px-3 py-2 w-20 text-center"
                 value="USD"
-                placeholder='currency i.e. "USD"'
+                placeholder='currency i.e."USD"'
+                readOnly
               />
             </div>
           </div>
