@@ -13,7 +13,12 @@ const LeadsRight = ({ isExpanded, onViewDetails, data }) => {
         } gap-4`}
       >
         {data.map((user, i) => (
-          <ResponseCard key={i} onViewDetails={onViewDetails} user={user} />
+          <ResponseCard
+            key={i}
+            onViewDetails={onViewDetails}
+            user={user}
+            isExpanded={isExpanded}
+          />
         ))}
       </section>
     </>
