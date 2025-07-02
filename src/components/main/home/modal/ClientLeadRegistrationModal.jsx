@@ -58,6 +58,7 @@ export default function ClientLeadRegistrationModal({
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // console.log(
   //   'selectedServiceWiseQuestions',
@@ -384,6 +385,8 @@ export default function ClientLeadRegistrationModal({
       return;
     }
 
+    setIsSubmitting(true);
+
     // Step 3: Prepare payloads on final step
     const leadDetails = {
       additionalDetails,
@@ -438,6 +441,8 @@ export default function ClientLeadRegistrationModal({
     } catch (err) {
       console.error('❌ Register error:', err);
       showErrorToast(err?.data?.message || 'Failed to register lead.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -740,9 +745,18 @@ export default function ClientLeadRegistrationModal({
 
             <Button
               onClick={handleNext}
-              disabled={step === totalSteps ? false : isNextDisabled}
+              disabled={isNextDisabled || isSubmitting}
             >
-              {step === totalSteps ? 'Finish' : 'Next'}
+              {isSubmitting ? (
+                <span className="flex items-center gap-2">
+                  <Loader className="w-4 h-4 animate-spin" />
+                  Submitting...
+                </span>
+              ) : step === totalSteps ? (
+                'Finish'
+              ) : (
+                'Next'
+              )}
             </Button>
           </div>
         ))}
