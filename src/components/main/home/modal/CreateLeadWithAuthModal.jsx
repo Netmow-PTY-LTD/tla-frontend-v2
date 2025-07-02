@@ -1,24 +1,11 @@
 import React, { useState, useEffect, use, useMemo } from 'react';
 import { Button } from '@/components/ui/button'; // adjust if your button import path differs
 import { Modal } from '@/components/UIComponents/Modal';
-import { useGetZipCodeListQuery } from '@/store/features/public/publicApiService';
-import {
-  Combobox,
-  ComboboxButton,
-  ComboboxInput,
-  ComboboxOption,
-  ComboboxOptions,
-} from '@headlessui/react';
 import { Check, ChevronDown, Loader } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useAuthClientRegisterMutation } from '@/store/features/auth/authApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { useRouter } from 'next/navigation';
-import { verifyToken } from '@/utils/verifyToken';
 import { useDispatch } from 'react-redux';
-import { setUser } from '@/store/features/auth/authSlice';
 import { useCreateLeadMutation } from '@/store/features/client/LeadsApiService';
-import { set } from 'zod';
 
 export default function CreateLeadWithAuthModal({
   modalOpen,
