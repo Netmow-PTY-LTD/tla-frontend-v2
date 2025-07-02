@@ -75,6 +75,8 @@ import { handleImageUpload, MAX_FILE_SIZE } from '@/lib/tiptap-utils';
 // --- Styles ---
 import '@/components/tiptap-templates/simple/simple-editor.scss';
 import { useFormContext } from 'react-hook-form';
+import { Decoration, DecorationSet } from 'prosemirror-view';
+import { SelectionHighlighter } from '@/components/SelectionHighlighter';
 
 //import content from '@/components/tiptap-templates/simple/data/content.json';
 
@@ -187,6 +189,7 @@ export function SimpleEditor({ name }) {
       Subscript,
 
       Selection,
+      SelectionHighlighter,
       ImageUploadNode.configure({
         accept: 'image/*',
         maxSize: MAX_FILE_SIZE,
