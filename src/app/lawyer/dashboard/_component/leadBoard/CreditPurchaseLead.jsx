@@ -16,52 +16,12 @@ import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { toast } from 'sonner';
 
 const CreditPurchaseLead = ({ recommendedPackage, onSuccess, onClose, needAddCard }) => {
- const [showCardForm, setShowCardForm] = useState(false);
+  const [showCardForm, setShowCardForm] = useState(false);
   const [autoTopUP, setAutoTopUp] = useState(false);
+  const [pendingPackageId, setPendingPackageId] = useState(null);
+  const [pendingPurchase, setPendingPurchase] = useState(false);
   const [addPaymentMethod] = useAddPaymentMethodMutation();
-
   const [purchaseCredits] = usePurchaseCreditPackageMutation();
-
-  // const handleCardAdded = async (paymentMethodId) => {
-  //   const result = await addPaymentMethod({ paymentMethodId }).unwrap();
-  //   if (result.success) {
-  //     setShowCardForm(false);
-  //     showSuccessToast(result?.message);
-  //   } else {
-  //     showErrorToast(result?.message);
-  //   }
-  //   try {
-  //   } catch (error) {
-  //     const errorMessage = error?.data?.message || 'An error occurred';
-  //     showErrorToast(errorMessage);
-  //   }
-  // };
-
-
-  // const handleBuy = async (packageId) => {
-  //   const purchaseDetails = {
-  //     packageId,
-  //     autoTopUP,
-  //     couponCode: null,
-  //   };
-  //   try {
-  //     if(needAddCard){}
-  //     const result = await purchaseCredits(purchaseDetails).unwrap();
-  //     console.log('Purchase result:', result);
-  //     if (result.success) {
-  //       toast.success('Credits purchased');
-  //       onSuccess();
-
-  //     }
-  //   } catch (error) {
-  //     toast.error('Payment failed');
-  //   }
-
-
-  // };
-
-
- const [pendingPackageId, setPendingPackageId] = useState(null);
 
   const handleBuyClick = async () => {
     if (needAddCard) {
@@ -103,6 +63,7 @@ const CreditPurchaseLead = ({ recommendedPackage, onSuccess, onClose, needAddCar
         couponCode: null,
       };
 
+      console.log('purchaseDetails', purchaseDetails)
       const result = await purchaseCredits(purchaseDetails).unwrap();
       if (result.success) {
         toast.success('Credits purchased successfully');
@@ -118,16 +79,6 @@ const CreditPurchaseLead = ({ recommendedPackage, onSuccess, onClose, needAddCar
   };
 
 
-
-
-
-
-
-
-
-
-
-  
 
 
   if (showCardForm) {
@@ -173,7 +124,7 @@ const CreditPurchaseLead = ({ recommendedPackage, onSuccess, onClose, needAddCar
                   variant="primary"
                   className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-4"
                   // onClick={() => handleBuy(recommendedPackage?._id)}
-                   onClick={handleBuyClick}
+                  onClick={handleBuyClick}
                 >
                   Buy Now
                 </Button>
