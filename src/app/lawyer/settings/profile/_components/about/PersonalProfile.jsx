@@ -11,8 +11,7 @@ export default function PersonalProfile() {
         Personal Information
       </h3>
       <p className="text-[#8E8E8E] mt-2">
-        This is the person who will be communicating with customers on Bark. The
-        photo will appear alongside your messages with customers.
+       This identifies the individual who will be communicating with clients on TheLawApp. Your name and photo will appear alongside messages, helping build a personal connection and trust with potential clients.
       </p>
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mt-8">

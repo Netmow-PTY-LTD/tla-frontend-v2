@@ -33,7 +33,7 @@ export default function CompanyAbout() {
     <div className="py-9">
       <h3 className="text-black font-semibold heading-lg">About the company</h3>
       <p className="mt-[10px] text-[#8E8E8E] mb-7">
-        Introduce the company to your customers.
+        Give potential clients a clear introduction to your law firm. Share your mission, areas of legal expertise, years of experience, and what sets your firm apart. This is your opportunity to build trust and make a strong first impression.
       </p>
 
       <div>

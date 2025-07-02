@@ -169,9 +169,7 @@ export default function About() {
         <div className="py-9">
           <h3 className="text-black font-semibold heading-lg">About</h3>
           <p className="mt-[10px] text-[#8E8E8E] mb-7">
-            This information will be visible to customers on Bark. Use it to
-            showcase your experience and build trust. You can update your
-            private contact details in your account settings.
+           This section appears on your public profile on TheLawApp and is your opportunity to make a strong first impression. Use it to highlight your legal experience, areas of expertise, and what sets you apart. Building trust starts with a clear, professional introduction.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-7 mb-7">
             <TextInput

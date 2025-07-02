@@ -20,7 +20,7 @@ const LawyerContactButton = ({ leadDetail }) => {
   const [needAddCard, setNeedAddCard] = useState(false);
   const [pendingPayload, setPendingPayload] = useState(null);
   const [contactLawyer] = useContactLawyerMutation();
- 
+
   const router = useRouter()
   const handleContact = async () => {
     const payload = {
@@ -35,14 +35,14 @@ const LawyerContactButton = ({ leadDetail }) => {
         console.log('response ==>', res)
         toast.success('Contacted successfully');
         setTimeout(() => {
-          router.push('/lawyer/dashboard/my-responses');
+          router.push(`/lawyer/dashboard/my-responses?responseId=${res?.data?.responseId}`);
         }, 500);
 
-      } else if (res?.data?.autoPurchaseCredit ||res?.data?.needAddCard) {
+      } else if (res?.data?.autoPurchaseCredit || res?.data?.needAddCard) {
         setPackageData(res?.data?.recommendedPackage)
         setPendingPayload(payload);
         setShowCreditModal(true);
-        setNeedAddCard(res?.data?.needAddCard?res?.data?.needAddCard:false)
+        setNeedAddCard(res?.data?.needAddCard ? res?.data?.needAddCard : false)
       } else {
         toast.error(res.message || 'Something went wrong');
       }
@@ -59,7 +59,8 @@ const LawyerContactButton = ({ leadDetail }) => {
         if (retryRes.success) {
           toast.success('Contacted successfully after payment');
           setTimeout(() => {
-            router.push('/lawyer/dashboard/my-responses');
+            router.push(`/lawyer/dashboard/my-responses?responseId=${retryRes?.data?.responseId}`);
+            console.log('response id ==>', retryRes?.data?.responseId)
           }, 500);
         } else {
           toast.error(retryRes.message || 'Retry failed');
@@ -96,7 +97,7 @@ const LawyerContactButton = ({ leadDetail }) => {
                   onClose={() => setShowCreditModal(false)}
                   recommendedPackage={packageData}
                   needAddCard={needAddCard}
-                 
+
                 />
               </div>
             </Modal>

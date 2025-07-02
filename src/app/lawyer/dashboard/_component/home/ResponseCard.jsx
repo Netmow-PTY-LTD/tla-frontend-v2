@@ -8,7 +8,8 @@ import React from 'react';
 export default function ResponseCard({ onViewDetails, user, isExpanded }) {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
-  console.log('isExpanded', isExpanded);
+ 
+  
 
   // console.log('Single Lead Data:', user);
 
