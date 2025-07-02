@@ -27,7 +27,7 @@ export default function LeadDetailsPage() {
       skip: !id,
     });
 
-  console.log('singleLead', singleLead);
+  // console.log('singleLead', singleLead);
 
   const toggleReadMore = () => setIsExpanded(!isExpanded);
   const maxLength = 300;
