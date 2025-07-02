@@ -1,17 +1,9 @@
 'use client';
-import React, { useEffect, useState } from 'react';
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from 'next/navigation';
+import React, { Suspense, useEffect, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import MyResponseDetails from './_components/MyResponseDetails';
 import ResponseHead from './_components/ResponseHead';
-import {
-  useGetAllMyResponsesQuery,
-  useGetSingleResponseQuery,
-} from '@/store/features/lawyer/ResponseApiService';
+import { useGetAllMyResponsesQuery } from '@/store/features/lawyer/ResponseApiService';
 import { Inbox, Loader, Loader2 } from 'lucide-react';
 import LeadsRight from './_components/ResponsesList';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -106,53 +98,55 @@ const MyResponsePage = () => {
   }
 
   return (
-    <div className="lead-board-wrap">
-      {allMyResponses?.data && allMyResponses?.data?.length > 0 ? (
-        <div className="lead-board-container">
-          {showResponseDetails && (
-            <div className="left-column-7">
-              <div className="column-wrap-left">
-                <MyResponseDetails
-                  response={selectedResponse}
-                  responseId={responseId}
-                  onBack={() => setShowResponseDetails(false)}
-                />
+    <Suspense fallback={<Loader />}>
+      <div className="lead-board-wrap">
+        {allMyResponses?.data && allMyResponses?.data?.length > 0 ? (
+          <div className="lead-board-container">
+            {showResponseDetails && (
+              <div className="left-column-7">
+                <div className="column-wrap-left">
+                  <MyResponseDetails
+                    response={selectedResponse}
+                    responseId={responseId}
+                    onBack={() => setShowResponseDetails(false)}
+                  />
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          <div
-            className={`${
-              showResponseDetails ? 'right-column-5 ' : 'right-column-full'
-            }`}
-          >
-            <div className="column-wrap-right">
-              <div className="leads-top-row">
-                <ResponseHead isExpanded={!showResponseDetails} />
-              </div>
-              <div className="leads-bottom-row">
-                <LeadsRight
-                  isExpanded={!showResponseDetails}
-                  onViewDetails={(response) => {
-                    setSelectedResponse(response);
-                    setShowResponseDetails(true);
-                    router.push(`?responseId=${response?._id}`);
-                  }}
-                  data={allMyResponses?.data}
-                />
+            <div
+              className={`${
+                showResponseDetails ? 'right-column-5 ' : 'right-column-full'
+              }`}
+            >
+              <div className="column-wrap-right">
+                <div className="leads-top-row">
+                  <ResponseHead isExpanded={!showResponseDetails} />
+                </div>
+                <div className="leads-bottom-row">
+                  <LeadsRight
+                    isExpanded={!showResponseDetails}
+                    onViewDetails={(response) => {
+                      setSelectedResponse(response);
+                      setShowResponseDetails(true);
+                      router.push(`?responseId=${response?._id}`);
+                    }}
+                    data={allMyResponses?.data}
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      ) : (
-        <div className="flex flex-col justify-center items-center h-full">
-          <Inbox className="w-12 h-12 mb-4 text-gray-400" />
-          <h4 className="italic text-[18px] text-gray-500">
-            Currently you have no responses.
-          </h4>
-        </div>
-      )}
-    </div>
+        ) : (
+          <div className="flex flex-col justify-center items-center h-full">
+            <Inbox className="w-12 h-12 mb-4 text-gray-400" />
+            <h4 className="italic text-[18px] text-gray-500">
+              Currently you have no responses.
+            </h4>
+          </div>
+        )}
+      </div>
+    </Suspense>
   );
 };
 
