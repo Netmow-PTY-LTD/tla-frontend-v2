@@ -256,3 +256,14 @@
 .simple-editor-content .tiptap.ProseMirror {
   padding: 20px 30px !important;
 }
+
+.ProseMirror ::selection {
+  background: rgba(0, 123, 255, 0.3);
+}
+
+.ProseMirror {
+  min-height: 150px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  white-space: pre-wrap;
+}
