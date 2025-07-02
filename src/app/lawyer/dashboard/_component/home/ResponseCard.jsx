@@ -1,3 +1,4 @@
+'use client';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import { Card } from '@/components/ui/card';
 import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
@@ -7,9 +8,6 @@ import React from 'react';
 
 export default function ResponseCard({ onViewDetails, user, isExpanded }) {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
-
- 
-  
 
   // console.log('Single Lead Data:', user);
 
@@ -148,13 +146,13 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
               isExpanded ? 'text-[13px]' : 'text-[12px]'
             }`}
           >
-            {user?.additionalDetails === ''
+            {user?.leadId?.additionalDetails === ''
               ? `If you're facing a divorce, it's crucial to seek professional legal
             advice. Our consultations cover everything from asset division to
             child custody arrangements, ensuring you understand your rights and
             options. Let us help you navigate this challenging time with expert
             guidance.`
-              : user?.additionalDetails}
+              : user?.leadId?.additionalDetails}
           </p>
         </div>
       </div>

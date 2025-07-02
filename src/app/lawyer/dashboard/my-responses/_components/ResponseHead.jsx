@@ -1,3 +1,4 @@
+'use client';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import { Database, Files, MapPin, SlidersVertical, X } from 'lucide-react';
 import Link from 'next/link';
@@ -9,7 +10,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
-import StatusButton from '@/components/dashboard/lawyer/components/StatusButton';
 
 export default function ResponseHead({ isExpanded }) {
   return (
