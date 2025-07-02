@@ -77,6 +77,7 @@ import '@/components/tiptap-templates/simple/simple-editor.scss';
 import { useFormContext } from 'react-hook-form';
 import { Decoration, DecorationSet } from 'prosemirror-view';
 import { SelectionHighlighter } from '@/components/SelectionHighlighter';
+import { keymap } from 'prosemirror-keymap';
 
 //import content from '@/components/tiptap-templates/simple/data/content.json';
 
@@ -223,6 +224,17 @@ export function SimpleEditor({ name }) {
       editor.commands.setContent(defaultValue);
     }
   }, [editor, defaultValue]);
+
+  const DebugKeyPlugin = keymap({
+    Backspace: () => {
+      console.log('Backspace pressed');
+      return false; // allow default behavior
+    },
+    Delete: () => {
+      console.log('Delete pressed');
+      return false;
+    },
+  });
 
   return (
     <EditorContext.Provider value={{ editor }}>
