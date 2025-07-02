@@ -23,12 +23,53 @@ export default function MultipleFileUploader({
   }, [register, name]);
 
   // Convert a URL string to a File object
+  // const urlToFile = async (url, index) => {
+  //   try {
+  //     const res = await fetch(url);
+  //     const blob = await res.blob();
+  //     const ext = blob.type.split('/')[1] || 'jpg';
+  //     return new File([blob], `default-${index}.${ext}`, { type: blob.type });
+  //   } catch (err) {
+  //     console.error('Error converting URL to file:', url, err);
+  //     return null;
+  //   }
+  // };
+
   const urlToFile = async (url, index) => {
     try {
       const res = await fetch(url);
       const blob = await res.blob();
-      const ext = blob.type.split('/')[1] || 'jpg';
-      return new File([blob], `default-${index}.${ext}`, { type: blob.type });
+
+      // Normalize known variants
+      let mimeType = blob.type;
+
+      if (!mimeType || mimeType === 'application/octet-stream') {
+        // Try to guess mimeType from file extension in URL
+        const extensionMatch = url.match(/\.([a-zA-Z0-9]+)(?:\?|$)/);
+        if (extensionMatch) {
+          const extFromUrl = extensionMatch[1].toLowerCase();
+          // map common extensions to mime types
+          const mimeMap = {
+            jpg: 'image/jpeg',
+            jpeg: 'image/jpeg',
+            png: 'image/png',
+            gif: 'image/gif',
+            webp: 'image/webp',
+            bmp: 'image/bmp',
+            svg: 'image/svg+xml',
+          };
+          mimeType = mimeMap[extFromUrl] || 'image/jpeg';
+        } else {
+          mimeType = 'image/jpeg'; // default fallback
+        }
+      }
+
+      // Normalize progressive jpeg
+      if (mimeType === 'image/pjpeg') mimeType = 'image/jpeg';
+
+      const ext = mimeType.split('/')[1].split('+')[0]; // handle cases like svg+xml
+
+      return new File([blob], `default-${index}.${ext}`, { type: mimeType });
     } catch (err) {
       console.error('Error converting URL to file:', url, err);
       return null;
