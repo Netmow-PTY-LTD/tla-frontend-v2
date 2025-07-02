@@ -18,8 +18,10 @@ const stripePromise = loadStripe(
 const LawyerContactButton = ({ leadDetail }) => {
   const [packageData, setPackageData] = useState('')
   const [showCreditModal, setShowCreditModal] = useState(false);
+  const [needAddCard, setNeedAddCard] = useState(false);
   const [pendingPayload, setPendingPayload] = useState(null);
   const [contactLawyer] = useContactLawyerMutation();
+ 
   const router = useRouter()
 
   const handleContact = async () => {
@@ -38,10 +40,11 @@ const LawyerContactButton = ({ leadDetail }) => {
           router.push('/lawyer/dashboard/my-responses');
         }, 500);
 
-      } else if (res?.data?.autoPurchaseCredit || res?.data?.needAddCard) {
+      } else if (res?.data?.autoPurchaseCredit ||res?.data?.needAddCard) {
         setPackageData(res?.data?.recommendedPackage)
         setPendingPayload(payload);
         setShowCreditModal(true);
+        setNeedAddCard(res?.data?.needAddCard?res?.data?.needAddCard:false)
       } else {
         toast.error(res.message || 'Something went wrong');
       }
@@ -94,6 +97,8 @@ const LawyerContactButton = ({ leadDetail }) => {
                   onSuccess={handleAfterPayment}
                   onClose={() => setShowCreditModal(false)}
                   recommendedPackage={packageData}
+                  needAddCard={needAddCard}
+                 
                 />
               </div>
             </Modal>
