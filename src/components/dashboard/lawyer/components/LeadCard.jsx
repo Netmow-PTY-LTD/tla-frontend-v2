@@ -7,9 +7,6 @@ import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 
 const LeadCard = ({ onViewDetails, user, isExpanded }) => {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
-
-  console.log('isExpanded', isExpanded);
-
   // console.log('Single Lead Data:', user);
 
   const urgentOption = singleLead?.data?.leadAnswers
