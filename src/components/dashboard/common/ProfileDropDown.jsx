@@ -36,7 +36,6 @@ export default function ProfileDropDown() {
 
   const router = useRouter();
 
-  console.log('currentUser', currentUser);
   /**
    * Handles user logout functionality.
    * - Calls the authLogout mutation to invalidate the session on the server.
