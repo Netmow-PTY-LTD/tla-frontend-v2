@@ -1,9 +1,17 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from 'next/navigation';
 import MyResponseDetails from './_components/MyResponseDetails';
 import ResponseHead from './_components/ResponseHead';
-import { useGetAllMyResponsesQuery } from '@/store/features/lawyer/ResponseApiService';
+import {
+  useGetAllMyResponsesQuery,
+  useGetSingleResponseQuery,
+} from '@/store/features/lawyer/ResponseApiService';
 import { Inbox, Loader, Loader2 } from 'lucide-react';
 import LeadsRight from './_components/ResponsesList';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -14,10 +22,15 @@ const MyResponsePage = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const responseId = searchParams.get('responseId');
+
+  //console.log('responseId', responseId);
+
+  const router = useRouter();
+
   const { data: allMyResponses, isLoading: isAllMyResponsesLoading } =
     useGetAllMyResponsesQuery();
 
-  console.log('selectedResponse', selectedResponse)
+  console.log('selectedResponse', selectedResponse);
 
   // Handle body scroll and layout overflow
   useEffect(() => {
@@ -36,19 +49,11 @@ const MyResponsePage = () => {
     };
   }, [pathname]);
 
-
-  // Set selected response based on URL query param
   useEffect(() => {
-    if (!responseId || !allMyResponses?.data?.length) return;
-
-    const found = allMyResponses.data.find((res) => res._id === responseId);
-    if (found && found._id !== selectedResponse?._id) {
-      // console.log('check response data found ==>',found)
-      setSelectedResponse(found);
-      setShowResponseDetails(true);
+    if (allMyResponses?.data?.length > 0) {
+      setSelectedResponse(allMyResponses?.data[0]);
     }
-  }, [responseId, allMyResponses?.data]);
-
+  }, [allMyResponses?.data]);
 
   // if (isAllMyResponsesLoading) {
   //   return (
@@ -117,8 +122,9 @@ const MyResponsePage = () => {
           )}
 
           <div
-            className={`${showResponseDetails ? 'right-column-5 ' : 'right-column-full'
-              }`}
+            className={`${
+              showResponseDetails ? 'right-column-5 ' : 'right-column-full'
+            }`}
           >
             <div className="column-wrap-right">
               <div className="leads-top-row">
@@ -130,6 +136,7 @@ const MyResponsePage = () => {
                   onViewDetails={(response) => {
                     setSelectedResponse(response);
                     setShowResponseDetails(true);
+                    router.push(`?responseId=${response?._id}`);
                   }}
                   data={allMyResponses?.data}
                 />
