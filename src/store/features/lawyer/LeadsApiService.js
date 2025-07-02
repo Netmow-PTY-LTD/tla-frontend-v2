@@ -23,6 +23,15 @@ const leadsApiService = baseApi.injectEndpoints({
       }),
       providesTags: ['lead'],
     }),
+    contactLawyer: builder.mutation({
+      query: (data) => ({
+        url: '/contact-lawyer',
+        method: 'POST',
+        body:data
+        
+      }),
+      providesTags: ['lead'],
+    }),
   }),
 });
 
@@ -30,4 +39,5 @@ export const {
   useGetAllLeadsQuery,
   useGetSingleLeadQuery,
   useGetAllMyLeadsQuery,
+  useContactLawyerMutation
 } = leadsApiService;
