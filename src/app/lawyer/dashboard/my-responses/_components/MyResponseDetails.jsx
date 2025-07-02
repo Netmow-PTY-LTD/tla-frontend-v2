@@ -19,16 +19,14 @@ import { useGetSingleResponseQuery } from '@/store/features/lawyer/ResponseApiSe
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
 import WhatsApp from '@/components/icon/WhatsApp';
 
-export default function MyResponseDetails({ onBack, response }) {
+export default function MyResponseDetails({ onBack, response, responseId }) {
   console.log('response', response);
   const [activeTab, setActiveTab] = useState('activity');
   const [isExpanded, setIsExpanded] = useState(false);
 
   const { data: singleResponse, isLoading: isSingleResponseLoading } =
-    useGetSingleResponseQuery(response?.leadId?._id,
-      {
-        skip: !response?.leadId?._id, // don't fetch if responseId is falsy
-      }
+    useGetSingleResponseQuery(responseId?responseId:response?.leadId?._id,
+      
     );
 
   console.log('singleResponse', singleResponse);

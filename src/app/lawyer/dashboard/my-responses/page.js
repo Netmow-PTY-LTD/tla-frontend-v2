@@ -109,6 +109,7 @@ const MyResponsePage = () => {
               <div className="column-wrap-left">
                 <MyResponseDetails
                   response={selectedResponse}
+                  responseId={responseId}
                   onBack={() => setShowResponseDetails(false)}
                 />
               </div>
