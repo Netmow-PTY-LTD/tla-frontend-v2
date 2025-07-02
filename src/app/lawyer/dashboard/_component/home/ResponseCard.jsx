@@ -8,7 +8,7 @@ import React from 'react';
 export default function ResponseCard({ onViewDetails, user, isExpanded }) {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
-  console.log('user', user);
+  console.log('isExpanded', isExpanded);
 
   // console.log('Single Lead Data:', user);
 
@@ -40,7 +40,7 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
     }
   };
   return (
-    <Card className="w-full max-w-full mx-auto">
+    <Card className="w-full max-w-full mx-auto flex flex-col">
       {/* Header Section */}
       <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 p-3">
         <figure className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
@@ -61,7 +61,7 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
           <div>
             <div
               className={`font-medium mb-1 ${
-                isExpanded ? 'heading-md' : 'text-[13px]'
+                isExpanded ? 'heading-base' : 'text-[13px]'
               }`}
             >
               {user?.leadId?.userProfileId?.name}
@@ -89,7 +89,7 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
           user?.userProfileId?.phone) && (
           <h4
             className={`font-medium mb-2 ${
-              isExpanded ? 'heading-md' : 'text-[13px]'
+              isExpanded ? 'heading-base' : 'text-[13px]'
             }`}
           >
             Matched criteria
@@ -127,14 +127,14 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
         {user?.serviceId?.name && (
           <h3
             className={`font-medium mb-2 ${
-              isExpanded ? 'heading-md' : 'text-[13px]'
+              isExpanded ? 'heading-base' : 'text-[13px]'
             }`}
           >
             Looking for a {user?.serviceId?.name} consultation
           </h3>
         )}
 
-        <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
+        <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg flex-1">
           <h4
             className={`font-medium mb-2 ${
               isExpanded ? 'heading-base' : 'text-[14px]'

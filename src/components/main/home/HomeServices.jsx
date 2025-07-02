@@ -4,10 +4,10 @@ import Image from 'next/image';
 
 export default function HomeServices() {
   const sectionHeading = {
-    title: 'Quick Lawyer & Unlimited Cases',
-    subtitle: 'Find From Wide Range of Legal Services',
+    title: 'A Full Range of Legal Expertise at Your Fingertips',
+    subtitle: 'Explore Our Legal Services',
     paragraph:
-      'From family law and property disputes to business contracts and criminal defense, The Law App connects you with qualified lawyers across various legal fields. Post your case, compare bids, and choose the right lawyer—all in one place.',
+      'Browse our comprehensive list of freelance legal services—carefully categorized to help you find exactly what you need. From family law to business contracts, property disputes to immigration support, our verified lawyers offer flexible, affordable solutions tailored to your situation. Choose a service, connect with a lawyer, and move forward with confidence',
   };
 
   const data = [

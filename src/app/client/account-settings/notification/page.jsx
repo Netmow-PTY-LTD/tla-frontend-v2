@@ -3,7 +3,7 @@ import EmailNotifications from '../../_components/EmailNotification';
 
 const page = () => {
   return (
-    <div className="max-w-[900px] mb-4">
+    <div className="max-w-[900px] mx-auto mb-4">
       <EmailNotifications />
     </div>
   );

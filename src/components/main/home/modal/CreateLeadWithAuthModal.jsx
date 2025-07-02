@@ -17,17 +17,15 @@ import { useRouter } from 'next/navigation';
 import { verifyToken } from '@/utils/verifyToken';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/store/features/auth/authSlice';
-import TextInput from '@/components/form/TextInput';
-import { Input } from '@/components/ui/input';
-import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/questionApiService';
 import { useCreateLeadMutation } from '@/store/features/client/LeadsApiService';
+import { set } from 'zod';
 
-export default function ClientNewLeadRegistrationModal({
+export default function CreateLeadWithAuthModal({
   modalOpen,
   setModalOpen,
-  defaultCountry,
-  countryWiseServices,
-  allMyLeads,
+  selectedServiceWiseQuestions,
+  countryId,
+  serviceId,
 }) {
   const [step, setStep] = useState(0);
 
@@ -57,47 +55,11 @@ export default function ClientNewLeadRegistrationModal({
 
   const [questionLoading, setQuestionLoading] = useState(false);
 
-  const [service, setService] = useState(null); // the selected service object
-  const [searchTerm, setSearchTerm] = useState(''); // user-typed input string
   const [budgetAmount, setBudgetAmount] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // console.log(
-  //   'selectedServiceWiseQuestions',
-  //   selectedServiceWiseQuestions?.length
-  // );
-  const { data: allZipCodes, isLoading: isZipCodeLoading } =
-    useGetZipCodeListQuery();
-
-  const zipCodeFromLead = allMyLeads[0]?.userProfileId?.address;
-  const matchedZip = allZipCodes?.data?.find(
-    (z) => z.zipcode === zipCodeFromLead
-  );
-  // This is an _id
-  const [zipCode, setZipCode] = useState(matchedZip?._id || '');
-
-  const filteredZipCodes = allZipCodes?.data?.filter((item) =>
-    item?.zipcode?.toLowerCase().includes(zipCode?.toLowerCase())
-  );
-
-  const {
-    data: selectedServiceWiseQuestions,
-    isLoading: isQuestionsLoading,
-    refetch,
-  } = useGetServiceWiseQuestionsQuery(
-    {
-      countryId: defaultCountry?._id,
-      serviceId: service?._id,
-    },
-    {
-      skip: !defaultCountry?._id || !service?._id,
-    }
-  );
-
-  console.log('selectedServiceWiseQuestions', selectedServiceWiseQuestions);
-
   useEffect(() => {
-    if (!selectedServiceWiseQuestions?.data?.length) return;
+    if (!selectedServiceWiseQuestions?.length) return;
 
     setQuestionLoading(true); // 👈 Start loading
 
@@ -111,7 +73,7 @@ export default function ClientNewLeadRegistrationModal({
     setFullClonedQuestions([]);
     setPartialClonedQuestions([]);
     setViewData(null);
-  }, [selectedServiceWiseQuestions?.data]);
+  }, [selectedServiceWiseQuestions]);
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -123,8 +85,8 @@ export default function ClientNewLeadRegistrationModal({
   //setting initial data
 
   useEffect(() => {
-    setInitialData(selectedServiceWiseQuestions?.data);
-  }, [selectedServiceWiseQuestions?.data]);
+    setInitialData(selectedServiceWiseQuestions);
+  }, [selectedServiceWiseQuestions]);
 
   useEffect(() => {
     if (clickButtonType === 'Next') {
@@ -136,7 +98,7 @@ export default function ClientNewLeadRegistrationModal({
 
   //console.log('initialData', initialData);
 
-  const totalQuestions = selectedServiceWiseQuestions?.data?.length;
+  const totalQuestions = selectedServiceWiseQuestions?.length;
 
   const totalFormsSteps = 2;
 
@@ -144,9 +106,9 @@ export default function ClientNewLeadRegistrationModal({
 
   //cloning full with is_checked and isExtraData. This data is needed when previous step is clicked
   useEffect(() => {
-    if (!selectedServiceWiseQuestions?.data?.length) return;
+    if (!selectedServiceWiseQuestions?.length) return;
 
-    const cloned = selectedServiceWiseQuestions?.data?.map((q) => ({
+    const cloned = selectedServiceWiseQuestions.map((q) => ({
       ...q,
       options: q.options.map((opt) => ({
         ...opt,
@@ -156,7 +118,7 @@ export default function ClientNewLeadRegistrationModal({
     }));
 
     setFullClonedQuestions(cloned);
-  }, [selectedServiceWiseQuestions?.data]);
+  }, [selectedServiceWiseQuestions]);
 
   //partial cloning
 
@@ -174,7 +136,7 @@ export default function ClientNewLeadRegistrationModal({
 
   //console.log('partialClonedQuestions', partialClonedQuestions);
 
-  const options = selectedServiceWiseQuestions?.data?.[step - 1]?.options || [];
+  const options = selectedServiceWiseQuestions?.[step]?.options || [];
 
   const handleOptionChange = (optionId, checked) => {
     const parentQuestion = fullClonedQuestions?.find((question) =>
@@ -186,8 +148,6 @@ export default function ClientNewLeadRegistrationModal({
     );
 
     const questionType = parentQuestion?.questionType;
-
-    console.log('questionType', questionType);
 
     const tempOption = {
       id: optionId,
@@ -219,8 +179,6 @@ export default function ClientNewLeadRegistrationModal({
     const newCheckedOptions = checked
       ? [...checkedOptions, optionId]
       : checkedOptions.filter((id) => id !== optionId);
-
-    console.log('newCheckedOptions', newCheckedOptions);
 
     setCheckedOptions(newCheckedOptions);
 
@@ -254,84 +212,40 @@ export default function ClientNewLeadRegistrationModal({
     }
   };
 
-  //   console.log('checkedOptions', checkedOptions);
-  //   console.log('checkedOptionsDetails', checkedOptionsDetails);
-
-  //   useEffect(() => {
-  //     if (step === 0) {
-  //       partialClonedQuestions[step] = fullClonedQuestions?.[step];
-  //       // setViewData(fullClonedQuestions?.[step]);
-  //     } else {
-  //       if (clickButtonType === 'Next') {
-  //         partialClonedQuestions[step] = {
-  //           ...partialClonedQuestions[step],
-  //           options: selectedOptions,
-  //         };
-  //       }
-  //       // setViewData(partialClonedQuestions?.[step]);
-  //     }
-
-  //     setViewData(partialClonedQuestions?.[step]);
-  //   }, [step, partialClonedQuestions]);
-
   useEffect(() => {
-    const updatedPartial = [...partialClonedQuestions];
-
     if (step === 0) {
-      updatedPartial[step] = fullClonedQuestions?.[step - 1];
-    } else if (clickButtonType === 'Next') {
-      const fullStepData = fullClonedQuestions?.[step - 1];
-
-      const mappedOptions = fullStepData?.options?.map((option) => {
-        const isChecked = checkedOptions.includes(option._id);
-        const extra = checkedOptionsDetails.find((o) => o.id === option._id);
-
-        return {
-          ...option,
-          is_checked: isChecked,
-          idExtraData: extra?.idExtraData || '',
+      partialClonedQuestions[step] = fullClonedQuestions?.[step];
+      // setViewData(fullClonedQuestions?.[step]);
+    } else {
+      if (clickButtonType === 'Next') {
+        partialClonedQuestions[step] = {
+          ...partialClonedQuestions[step],
+          options: selectedOptions,
         };
-      });
-
-      updatedPartial[step] = {
-        ...fullStepData,
-        options: mappedOptions,
-      };
-    } else if (clickButtonType === 'Prev') {
-      updatedPartial[step] = fullClonedQuestions?.[step - 1];
+      }
+      // setViewData(partialClonedQuestions?.[step]);
     }
 
-    setPartialClonedQuestions(updatedPartial);
-    setViewData(updatedPartial?.[step]);
-  }, [
-    step,
-    fullClonedQuestions,
-    checkedOptions,
-    checkedOptionsDetails,
-    clickButtonType,
-  ]);
+    setViewData(partialClonedQuestions?.[step]);
+  }, [step, partialClonedQuestions]);
 
   const [questionsPayload, setQuestionsPayload] = useState([]);
 
-  const [addLead] = useCreateLeadMutation();
+  const [createLead] = useCreateLeadMutation();
 
   //handleNext button click and form submission with api call
   const handleNext = async () => {
-    const isFinalStep = step === totalSteps;
-    const isQuestionStep = step > 0 && step <= totalQuestions;
+    const isFinalStep = step === totalSteps - 1;
+    const isQuestionStep = step < totalQuestions;
 
     // Step 1: Handle question payload update
     if (isQuestionStep) {
       setQuestionsPayload((prev) => {
         const filtered = prev.filter((item) => item.step !== step);
 
-        const questionIndex = step - 1;
-        const questionId =
-          selectedServiceWiseQuestions?.data?.[questionIndex]?._id;
-        const question =
-          selectedServiceWiseQuestions?.data?.[questionIndex]?.question;
-        const order =
-          selectedServiceWiseQuestions?.data?.[questionIndex]?.order;
+        const questionId = selectedServiceWiseQuestions?.[step]?._id;
+        const question = selectedServiceWiseQuestions?.[step]?.question;
+        const order = selectedServiceWiseQuestions?.[step]?.order;
 
         return [
           ...filtered,
@@ -340,7 +254,7 @@ export default function ClientNewLeadRegistrationModal({
             questionId,
             question,
             order,
-            checkedOptionsDetails: [...checkedOptionsDetails],
+            checkedOptionsDetails,
           },
         ];
       });
@@ -356,9 +270,9 @@ export default function ClientNewLeadRegistrationModal({
     setIsSubmitting(true);
 
     const payload = {
-      countryId: defaultCountry?._id,
-      serviceId: service?._id,
-      questions: [...questionsPayload], // ensure fresh snapshot
+      countryId,
+      serviceId,
+      questions: [...questionsPayload],
       additionalDetails,
       budgetAmount,
     };
@@ -366,20 +280,15 @@ export default function ClientNewLeadRegistrationModal({
     console.log('🚀 Submitting payload:', payload);
 
     try {
-      const res = await addLead(payload).unwrap();
+      const res = await createLead(payload).unwrap();
       console.log('✅ Register response:', res);
 
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Lead registered successfully');
         setModalOpen(false);
-        // Reset form
-        setStep(0);
-        setService(null);
-        setZipCode(null);
-        setSelectedOptions([]);
-        setCheckedOptions([]);
-        setCheckedOptionsDetails([]);
-        setQuestionsPayload([]);
+        setTimeout(() => {
+          router.push('/client/dashboard');
+        }, 1000);
       }
     } catch (err) {
       console.error('❌ Register error:', err);
@@ -395,33 +304,23 @@ export default function ClientNewLeadRegistrationModal({
   };
 
   const isNextDisabled = (() => {
-    if (step === 0) {
-      return !service || !zipCode;
-    }
-
-    if (step > 0 && step <= totalQuestions) {
+    // Step: Questions (required) — check checkedOptions length instead of answers
+    if (step < totalQuestions) {
       return checkedOptions.length === 0;
     }
 
-    if (step === totalQuestions + 1) {
+    //Step: Additional Details (optional)
+    if (step === totalQuestions) {
       return !additionalDetails.trim();
     }
 
-    if (step === totalQuestions + 2) {
+    if (step === totalSteps - 1) {
       return !budgetAmount.trim();
     }
 
+    // Step: Phone (optional)
     return false;
   })();
-
-  const filteredServices =
-    searchTerm === ''
-      ? countryWiseServices
-      : countryWiseServices?.filter((service) =>
-          service?.name?.toLowerCase().includes(searchTerm?.toLowerCase())
-        );
-
-  console.log('viewData', viewData);
 
   return (
     <Modal
@@ -431,8 +330,6 @@ export default function ClientNewLeadRegistrationModal({
         if (!open) {
           setViewData(null);
           setQuestionsPayload([]);
-          setAdditionalDetails('');
-          setBudgetAmount('');
           setStep(0); // reset form steps, if needed
         }
       }}
@@ -440,125 +337,11 @@ export default function ClientNewLeadRegistrationModal({
       width="max-w-[570px]"
       height="max-h-[90vh]"
     >
-      {step === 0 ? (
-        <>
-          <h4 className="text-[24px] font-semibold text-center mb-8">
-            Place a new request
-          </h4>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <label htmlFor="" className="font-semibold">
-                What service do you need?
-              </label>
-              <Combobox value={service} onChange={setService}>
-                <div className="relative">
-                  <ComboboxInput
-                    className="border border-gray-300 rounded-md w-full h-[44px] px-4"
-                    onChange={(event) => setSearchTerm(event.target.value)}
-                    displayValue={(val) => val?.name || ''}
-                    placeholder="Select a service"
-                  />
-                  {filteredServices?.length > 0 && (
-                    <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      {filteredServices?.map((service) => (
-                        <ComboboxOption
-                          key={service._id}
-                          value={service} // 👈 Pass full object
-                          className={({ active }) =>
-                            cn(
-                              'cursor-pointer select-none relative py-2 px-6',
-                              active
-                                ? 'bg-blue-100 text-black'
-                                : 'text-gray-900'
-                            )
-                          }
-                        >
-                          {({ selected }) => (
-                            <>
-                              <span
-                                className={cn('block truncate', {
-                                  'font-medium': selected,
-                                  'font-normal': !selected,
-                                })}
-                              >
-                                {service.name}
-                              </span>
-                              {selected && (
-                                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
-                                  <Check className="h-4 w-4" />
-                                </span>
-                              )}
-                            </>
-                          )}
-                        </ComboboxOption>
-                      ))}
-                    </ComboboxOptions>
-                  )}
-                </div>
-              </Combobox>
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="" className="font-semibold">
-                Where do you need it?
-              </label>
-              <Combobox value={zipCode} onChange={setZipCode}>
-                <div className="relative">
-                  <ComboboxInput
-                    className="border border-gray-300 rounded-md w-full h-[44px] px-4"
-                    onChange={(event) => setZipCode(event.target.value)}
-                    displayValue={(val) => {
-                      const matched = allZipCodes?.data?.find(
-                        (z) => z._id === val
-                      );
-                      return matched?.zipcode || '';
-                    }}
-                    placeholder="Select a Zipcode"
-                  />
-                  <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
-                    <ChevronDown className="h-4 w-4 text-gray-500" />
-                  </ComboboxButton>
-                  {filteredZipCodes?.length > 0 && (
-                    <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      {filteredZipCodes?.map((item) => (
-                        <ComboboxOption
-                          key={item._id}
-                          value={item._id}
-                          className={({ active }) =>
-                            cn(
-                              'cursor-pointer select-none relative py-2 px-6',
-                              active
-                                ? 'bg-blue-100 text-black'
-                                : 'text-gray-900'
-                            )
-                          }
-                        >
-                          {({ selected }) => (
-                            <>
-                              <span
-                                className={cn('block truncate', {
-                                  'font-medium': selected,
-                                  'font-normal': !selected,
-                                })}
-                              >
-                                {item?.zipcode}
-                              </span>
-                              {selected && (
-                                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
-                                  <Check className="h-4 w-4" />
-                                </span>
-                              )}
-                            </>
-                          )}
-                        </ComboboxOption>
-                      ))}
-                    </ComboboxOptions>
-                  )}
-                </div>
-              </Combobox>
-            </div>
-          </div>
-        </>
-      ) : step > 0 && step <= totalQuestions ? (
+      {questionLoading || !selectedServiceWiseQuestions?.length ? (
+        <div className="flex items-center justify-center gap-2">
+          <Loader className="w-4 h-4 animate-spin" /> Loading question...
+        </div>
+      ) : step < totalQuestions ? (
         viewData?.question ? (
           <div className="space-y-4 mt-4">
             <h4 className="text-[24px] font-semibold text-center mb-8">
@@ -585,7 +368,6 @@ export default function ClientNewLeadRegistrationModal({
                               : 'radio'
                           }
                           name={`question-${viewData._id}`}
-                          checked={option?.is_checked || false}
                           onChange={(e) =>
                             handleOptionChange(option._id, e.target.checked)
                           }
@@ -619,7 +401,7 @@ export default function ClientNewLeadRegistrationModal({
             No question found
           </div>
         )
-      ) : step === totalQuestions + 1 ? (
+      ) : step === totalQuestions ? (
         <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
             Want to share anything more?
@@ -634,7 +416,7 @@ export default function ClientNewLeadRegistrationModal({
             />
           </label>
         </div>
-      ) : step === totalQuestions + 2 ? (
+      ) : step === totalSteps - 1 ? (
         <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
             What is your estimated budget?
@@ -664,32 +446,40 @@ export default function ClientNewLeadRegistrationModal({
         </div>
       ) : null}
 
-      <div
-        className={`flex ${
-          step === 0 ? 'justify-end' : 'justify-between'
-        } mt-8`}
-      >
-        {/* Show "Back" only if step > 0 */}
-        {step !== 0 && (
-          <Button variant="outline" onClick={handleBack}>
-            Back
-          </Button>
-        )}
+      {questionLoading ||
+        (selectedServiceWiseQuestions?.length > 0 && (
+          <div
+            className={`flex ${
+              step === 0 ? 'justify-end' : 'justify-between'
+            } mt-8`}
+          >
+            {step !== 0 && (
+              <Button
+                variant="outline"
+                onClick={handleBack}
+                disabled={step === 0}
+              >
+                Back
+              </Button>
+            )}
 
-        {/* Show "Next" button on all steps */}
-        <Button onClick={handleNext} disabled={isNextDisabled}>
-          {isSubmitting ? (
-            <span className="flex items-center gap-2">
-              <Loader className="w-4 h-4 animate-spin" />
-              Submitting...
-            </span>
-          ) : step === totalSteps ? (
-            'Finish'
-          ) : (
-            'Next'
-          )}
-        </Button>
-      </div>
+            <Button
+              onClick={handleNext}
+              disabled={isNextDisabled || isSubmitting}
+            >
+              {isSubmitting ? (
+                <span className="flex items-center gap-2">
+                  <Loader className="w-4 h-4 animate-spin" />
+                  Submitting...
+                </span>
+              ) : step === totalSteps - 1 ? (
+                'Finish'
+              ) : (
+                'Next'
+              )}
+            </Button>
+          </div>
+        ))}
     </Modal>
   );
 }

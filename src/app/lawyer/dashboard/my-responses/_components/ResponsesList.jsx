@@ -4,7 +4,6 @@ import React from 'react';
 import ResponseCard from '../../_component/home/ResponseCard';
 
 const LeadsRight = ({ isExpanded, onViewDetails, data }) => {
-  console.log('data', data);
   return (
     <>
       {/* lead card section */}
@@ -14,7 +13,12 @@ const LeadsRight = ({ isExpanded, onViewDetails, data }) => {
         } gap-4`}
       >
         {data.map((user, i) => (
-          <ResponseCard key={i} onViewDetails={onViewDetails} user={user} />
+          <ResponseCard
+            key={i}
+            onViewDetails={onViewDetails}
+            user={user}
+            isExpanded={isExpanded}
+          />
         ))}
       </section>
     </>

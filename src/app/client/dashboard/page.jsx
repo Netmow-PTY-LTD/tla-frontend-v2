@@ -49,7 +49,7 @@ export default function BuyerDashboard() {
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">My Leads</h2>
           <button
-            className="text-[#00C3C0] p-[10px] rounded-[5px] border border-[#00C3C0]"
+            className="text-white py-[10px] px-[20px] rounded-[5px] border bg-[#00C3C0]"
             onClick={() => setModalOpen(true)}
           >
             Create New Lead

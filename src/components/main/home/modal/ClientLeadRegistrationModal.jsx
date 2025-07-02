@@ -53,6 +53,7 @@ export default function ClientLeadRegistrationModal({
 
   const [questionLoading, setQuestionLoading] = useState(false);
 
+  const [budgetAmount, setBudgetAmount] = useState('');
   const [zipCode, setZipCode] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -105,7 +106,7 @@ export default function ClientLeadRegistrationModal({
 
   const totalQuestions = selectedServiceWiseQuestions?.length;
 
-  const totalFormsSteps = 4;
+  const totalFormsSteps = 5;
 
   const totalSteps = totalQuestions + totalFormsSteps;
 
@@ -386,6 +387,7 @@ export default function ClientLeadRegistrationModal({
     // Step 3: Prepare payloads on final step
     const leadDetails = {
       additionalDetails,
+      budgetAmount,
       zipCode,
       name,
       email,
@@ -455,17 +457,21 @@ export default function ClientLeadRegistrationModal({
       return !additionalDetails.trim();
     }
 
-    // Step: ZIP Code (required)
     if (step === totalQuestions + 1) {
+      return !budgetAmount.trim();
+    }
+
+    // Step: ZIP Code (required)
+    if (step === totalQuestions + 2) {
       return !zipCode.trim();
     }
 
-    if (step === totalQuestions + 2) {
+    if (step === totalQuestions + 3) {
       return !name.trim();
     }
 
     // Step: Email (required and validated)
-    if (step === totalQuestions + 3) {
+    if (step === totalQuestions + 4) {
       return !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
@@ -577,6 +583,33 @@ export default function ClientLeadRegistrationModal({
           </label>
         </div>
       ) : step === totalQuestions + 1 ? (
+        <div className="space-y-6">
+          <h4 className="text-[24px] font-semibold text-center">
+            What is your estimated budget?
+          </h4>
+
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium">Estimated Budget</label>
+            <div className="flex gap-3 items-center">
+              <input
+                type="number"
+                min={0}
+                step={1}
+                className="border rounded px-3 py-2 w-full"
+                value={budgetAmount}
+                onChange={(e) => setBudgetAmount(e.target.value)}
+                placeholder="Enter amount"
+              />
+              <input
+                type="text"
+                className="border rounded px-3 py-2 w-20 text-center"
+                value="USD"
+                placeholder='currency i.e. "USD"'
+              />
+            </div>
+          </div>
+        </div>
+      ) : step === totalQuestions + 2 ? (
         <div className="space-y-4">
           <h4 className="text-[24px] font-semibold text-center">
             Where do you need the service?
@@ -634,7 +667,7 @@ export default function ClientLeadRegistrationModal({
             </div>
           </Combobox>
         </div>
-      ) : step === totalQuestions + 2 ? (
+      ) : step === totalQuestions + 3 ? (
         <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
             Write a few words about yourself?
@@ -650,7 +683,7 @@ export default function ClientLeadRegistrationModal({
             />
           </label>
         </div>
-      ) : step === totalQuestions + 3 ? (
+      ) : step === totalQuestions + 4 ? (
         <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
             What email address would you like quotes sent to?

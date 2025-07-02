@@ -8,6 +8,8 @@ import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 const LeadCard = ({ onViewDetails, user, isExpanded }) => {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
+  console.log('isExpanded', isExpanded);
+
   // console.log('Single Lead Data:', user);
 
   const urgentOption = singleLead?.data?.leadAnswers
@@ -39,7 +41,7 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
   };
 
   return (
-    <Card className="w-full max-w-full mx-auto">
+    <Card className="w-full max-w-full mx-auto flex flex-col">
       {/* Header Section */}
       <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 p-3">
         <figure className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
@@ -60,7 +62,7 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
           <div>
             <div
               className={`font-medium mb-1 ${
-                isExpanded ? 'heading-md' : 'text-[13px]'
+                isExpanded ? 'heading-base' : 'text-[13px]'
               }`}
             >
               {user?.userProfileId?.name}
@@ -88,7 +90,7 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
           user?.userProfileId?.phone) && (
           <h4
             className={`font-medium mb-2 ${
-              isExpanded ? 'heading-md' : 'text-[13px]'
+              isExpanded ? 'heading-base' : 'text-[13px]'
             }`}
           >
             Matched criteria
@@ -122,11 +124,11 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
       </div>
 
       {/* Job Description */}
-      <div className="p-3">
+      <div className="p-3 flex-1">
         {user?.serviceId?.name && (
           <h3
             className={`font-medium mb-2 ${
-              isExpanded ? 'heading-md' : 'text-[13px]'
+              isExpanded ? 'heading-base' : 'text-[13px]'
             }`}
           >
             Looking for a {user?.serviceId?.name} consultation
