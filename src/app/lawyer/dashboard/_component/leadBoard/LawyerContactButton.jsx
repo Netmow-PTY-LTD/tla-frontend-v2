@@ -10,7 +10,6 @@ import { useContactLawyerMutation } from '@/store/features/lawyer/LeadsApiServic
 import CreditPurchaseLead from './CreditPurchaseLead';
 import { useRouter } from 'next/navigation';
 
-
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
@@ -23,7 +22,6 @@ const LawyerContactButton = ({ leadDetail }) => {
   const [contactLawyer] = useContactLawyerMutation();
  
   const router = useRouter()
-
   const handleContact = async () => {
     const payload = {
       leadId: leadDetail?._id,

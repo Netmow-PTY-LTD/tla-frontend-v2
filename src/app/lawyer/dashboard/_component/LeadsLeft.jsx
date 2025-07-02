@@ -14,7 +14,6 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import LawyerContactModal from './leadBoard/LawyerContactModal';
 import LawyerContactButton from './leadBoard/LawyerContactButton';
 
 export default function LeadDetailsPage({ onBack, lead }) {
@@ -124,7 +123,6 @@ export default function LeadDetailsPage({ onBack, lead }) {
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-4">
             {/*  need to credit purchase modal */}
-            {/* <LawyerContactModal leadDetail={singleLead?.data} /> */}
             <LawyerContactButton leadDetail={singleLead?.data} />
             {singleLead?.data?.credit && (
               <div className="text-[#34495E] ml-2 flex items-center gap-2">

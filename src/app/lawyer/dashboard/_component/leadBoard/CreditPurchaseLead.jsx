@@ -123,7 +123,6 @@ const CreditPurchaseLead = ({ recommendedPackage, onSuccess, onClose, needAddCar
                 <Button
                   variant="primary"
                   className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-4"
-                  // onClick={() => handleBuy(recommendedPackage?._id)}
                   onClick={handleBuyClick}
                 >
                   Buy Now
