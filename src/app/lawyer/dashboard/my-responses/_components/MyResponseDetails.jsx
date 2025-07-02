@@ -19,13 +19,15 @@ import { useGetSingleResponseQuery } from '@/store/features/lawyer/ResponseApiSe
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
 import WhatsApp from '@/components/icon/WhatsApp';
 
-export default function MyResponseDetails({ onBack, response }) {
+export default function MyResponseDetails({ onBack, response, responseId }) {
   console.log('response', response);
   const [activeTab, setActiveTab] = useState('activity');
   const [isExpanded, setIsExpanded] = useState(false);
 
   const { data: singleResponse, isLoading: isSingleResponseLoading } =
-    useGetSingleResponseQuery(response?.leadId?._id);
+    useGetSingleResponseQuery(responseId?responseId:response?.leadId?._id,
+      
+    );
 
   console.log('singleResponse', singleResponse);
 
@@ -234,31 +236,28 @@ export default function MyResponseDetails({ onBack, response }) {
             <div className="flex border-b border-gray-200 gap-6">
               <button
                 onClick={() => setActiveTab('activity')}
-                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                  activeTab === 'activity'
-                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                    : 'hover:text-black'
-                }`}
+                className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
+                  ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                  : 'hover:text-black'
+                  }`}
               >
                 Activity
               </button>
               <button
                 onClick={() => setActiveTab('lead-details')}
-                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                  activeTab === 'lead-details'
-                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                    : 'hover:text-black'
-                }`}
+                className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'lead-details'
+                  ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                  : 'hover:text-black'
+                  }`}
               >
                 Lead Details
               </button>
               <button
                 onClick={() => setActiveTab('note')}
-                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                  activeTab === 'note'
-                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                    : 'hover:text-black'
-                }`}
+                className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'note'
+                  ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                  : 'hover:text-black'
+                  }`}
               >
                 My Notes
               </button>

@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import MyResponseDetails from './_components/MyResponseDetails';
 import ResponseHead from './_components/ResponseHead';
 import { useGetAllMyResponsesQuery } from '@/store/features/lawyer/ResponseApiService';
@@ -11,9 +11,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 const MyResponsePage = () => {
   const [showResponseDetails, setShowResponseDetails] = useState(true);
   const [selectedResponse, setSelectedResponse] = useState(null);
-
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const responseId = searchParams.get('responseId');
+  const { data: allMyResponses, isLoading: isAllMyResponsesLoading } =
+    useGetAllMyResponsesQuery();
 
+  console.log('selectedResponse', selectedResponse)
+
+  // Handle body scroll and layout overflow
   useEffect(() => {
     const cleanPathname = pathname?.trim().replace(/\/+$/, '');
 
@@ -30,16 +36,19 @@ const MyResponsePage = () => {
     };
   }, [pathname]);
 
-  const { data: allMyResponses, isLoading: isAllMyResponsesLoading } =
-    useGetAllMyResponsesQuery();
 
-  //console.log('allMyResponses', allMyResponses);
-
+  // Set selected response based on URL query param
   useEffect(() => {
-    if (allMyResponses?.data && allMyResponses?.data.length > 0) {
-      setSelectedResponse(allMyResponses?.data[0]); // Set first lead
+    if (!responseId || !allMyResponses?.data?.length) return;
+
+    const found = allMyResponses.data.find((res) => res._id === responseId);
+    if (found && found._id !== selectedResponse?._id) {
+      // console.log('check response data found ==>',found)
+      setSelectedResponse(found);
+      setShowResponseDetails(true);
     }
-  }, [allMyResponses?.data]);
+  }, [responseId, allMyResponses?.data]);
+
 
   // if (isAllMyResponsesLoading) {
   //   return (
@@ -100,6 +109,7 @@ const MyResponsePage = () => {
               <div className="column-wrap-left">
                 <MyResponseDetails
                   response={selectedResponse}
+                  responseId={responseId}
                   onBack={() => setShowResponseDetails(false)}
                 />
               </div>
@@ -107,9 +117,8 @@ const MyResponsePage = () => {
           )}
 
           <div
-            className={`${
-              showResponseDetails ? 'right-column-5 ' : 'right-column-full'
-            }`}
+            className={`${showResponseDetails ? 'right-column-5 ' : 'right-column-full'
+              }`}
           >
             <div className="column-wrap-right">
               <div className="leads-top-row">
