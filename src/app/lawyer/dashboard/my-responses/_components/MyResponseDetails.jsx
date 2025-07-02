@@ -20,16 +20,11 @@ import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
 import WhatsApp from '@/components/icon/WhatsApp';
 
 export default function MyResponseDetails({ onBack, response, responseId }) {
-  console.log('response', response);
   const [activeTab, setActiveTab] = useState('activity');
   const [isExpanded, setIsExpanded] = useState(false);
 
   const { data: singleResponse, isLoading: isSingleResponseLoading } =
-    useGetSingleResponseQuery(responseId?responseId:response?.leadId?._id,
-      
-    );
-
-  console.log('singleResponse', singleResponse);
+    useGetSingleResponseQuery(responseId ? responseId : response?._id);
 
   const fallbackText = `If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options. Let us help you navigate this challenging time with expert guidance.`;
 
@@ -179,15 +174,15 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
               <Phone />
               Show Number
             </Button> */}
-            <Button className="bg-[#00C3C0]">
+            <Button className="bg-[#25D366]">
               <WhatsApp />
               Send Whatsapp
             </Button>
-            <Button className="bg-[#00C3C0]">
+            <Button className="bg-[#4285F4]">
               <Mail />
               Send Email
             </Button>
-            <Button className="bg-[#00C3C0]">
+            <Button className="bg-[#34B7F1]">
               <MessageSquare />
               Send SMS
             </Button>
@@ -236,28 +231,31 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
             <div className="flex border-b border-gray-200 gap-6">
               <button
                 onClick={() => setActiveTab('activity')}
-                className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
-                  ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                  : 'hover:text-black'
-                  }`}
+                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                  activeTab === 'activity'
+                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                    : 'hover:text-black'
+                }`}
               >
                 Activity
               </button>
               <button
                 onClick={() => setActiveTab('lead-details')}
-                className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'lead-details'
-                  ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                  : 'hover:text-black'
-                  }`}
+                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                  activeTab === 'lead-details'
+                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                    : 'hover:text-black'
+                }`}
               >
                 Lead Details
               </button>
               <button
                 onClick={() => setActiveTab('note')}
-                className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'note'
-                  ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                  : 'hover:text-black'
-                  }`}
+                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                  activeTab === 'note'
+                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                    : 'hover:text-black'
+                }`}
               >
                 My Notes
               </button>
