@@ -361,6 +361,7 @@ export default function ClientNewLeadRegistrationModal({
       questions: [...questionsPayload], // ensure fresh snapshot
       additionalDetails,
       budgetAmount,
+       locationId:zipCode
     };
 
     console.log('🚀 Submitting payload:', payload);
