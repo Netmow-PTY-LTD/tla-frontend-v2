@@ -25,7 +25,11 @@ export default function MyResponseDetails({ onBack, response }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const { data: singleResponse, isLoading: isSingleResponseLoading } =
-    useGetSingleResponseQuery(response?.leadId?._id);
+    useGetSingleResponseQuery(response?.leadId?._id,
+      {
+        skip: !response?.leadId?._id, // don't fetch if responseId is falsy
+      }
+    );
 
   console.log('singleResponse', singleResponse);
 
@@ -234,31 +238,28 @@ export default function MyResponseDetails({ onBack, response }) {
             <div className="flex border-b border-gray-200 gap-6">
               <button
                 onClick={() => setActiveTab('activity')}
-                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                  activeTab === 'activity'
-                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                    : 'hover:text-black'
-                }`}
+                className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
+                  ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                  : 'hover:text-black'
+                  }`}
               >
                 Activity
               </button>
               <button
                 onClick={() => setActiveTab('lead-details')}
-                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                  activeTab === 'lead-details'
-                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                    : 'hover:text-black'
-                }`}
+                className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'lead-details'
+                  ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                  : 'hover:text-black'
+                  }`}
               >
                 Lead Details
               </button>
               <button
                 onClick={() => setActiveTab('note')}
-                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                  activeTab === 'note'
-                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                    : 'hover:text-black'
-                }`}
+                className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'note'
+                  ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                  : 'hover:text-black'
+                  }`}
               >
                 My Notes
               </button>
