@@ -4,7 +4,6 @@ import LeadDetailsPage from '../_component/LeadsLeft';
 import LeadsRight from '../_component/LeadsRight';
 import { usePathname } from 'next/navigation';
 import LeadsHead from '../_component/LeadsHead';
-import data from '@/data/user';
 import { useGetAllLeadsQuery } from '@/store/features/lawyer/LeadsApiService';
 import { Inbox, Loader } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';

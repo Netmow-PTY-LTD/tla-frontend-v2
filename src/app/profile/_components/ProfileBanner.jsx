@@ -17,7 +17,7 @@ export default function ProfileBanner({ data }) {
         <div className="flex flex-wrap gap-5 relative md:top-[30px]">
           <div className="flex">
             <Image
-              src={data?.profilePicture || '/assets/img/profile-img.webp'}
+              src={data?.profilePicture || '/assets/img/avatar.png'}
               width={423}
               height={531}
               alt={data?.name || 'Profile Image'}
