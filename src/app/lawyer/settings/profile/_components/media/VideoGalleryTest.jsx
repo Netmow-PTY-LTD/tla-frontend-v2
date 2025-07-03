@@ -1,6 +1,6 @@
 'use client';
 
-import { showErrorToast } from '@/components/common/toasts';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import FormWrapper from '@/components/form/FromWrapper';
 import TextInput from '@/components/form/TextInput';
 import { Input } from '@/components/ui/input';
@@ -92,12 +92,6 @@ export default function VideoGalleryTest({ userInfo }) {
     try {
       const { video_url } = data;
 
-      // Merge the existing video URLs with the new one
-      const updatedVideoList = [
-        ...(videos?.map((item) => item.url) || []),
-        video_url,
-      ];
-
       const payload = {
         photos: {
           videos: video_url,
@@ -106,7 +100,10 @@ export default function VideoGalleryTest({ userInfo }) {
 
       console.log('payload', payload);
 
-      const res = await updatePhotosData(payload).unwrap();
+      const formData = new FormData();
+      formData.append('data', JSON.stringify(payload));
+
+      const res = await updatePhotosData(formData).unwrap();
       console.log('res', res);
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Update successful');

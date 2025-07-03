@@ -166,7 +166,7 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
           } font-medium bg-[var(--color-special)] text-white`}
           onClick={() => onViewDetails(user)}
         >
-          View Response Details
+          View Details
         </Button>
         {/* {user?.credit && (
           <p
