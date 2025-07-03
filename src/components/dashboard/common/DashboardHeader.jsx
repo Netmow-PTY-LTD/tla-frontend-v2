@@ -5,6 +5,7 @@ import React from 'react';
 import ProfileDropDown from './ProfileDropDown';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import { useSelector } from 'react-redux';
+import { BellRing } from 'lucide-react';
 
 export default function DashboardHeader() {
   const userInfo = useSelector(selectCurrentUser);
@@ -20,7 +21,15 @@ export default function DashboardHeader() {
           />
         </Link>
       </div>
-      <ProfileDropDown data={userInfo} />
+      <div className="flex items-center gap-4">
+        <Link
+          href="#"
+          className="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-full"
+        >
+          <BellRing className="w-6 h-6 text-gray-500" />
+        </Link>
+        <ProfileDropDown data={userInfo} />
+      </div>
     </header>
   );
 }

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import React from 'react';
 import BuyerProfileDropDown from './BuyerProfileDropDown';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import { BellRing } from 'lucide-react';
 
 export default function BuyerDashboardHeader() {
   const { data: userInfo, isLoading } = useAuthUserInfoQuery();
@@ -20,7 +21,15 @@ export default function BuyerDashboardHeader() {
           />
         </Link>
       </div>
-      <BuyerProfileDropDown data={userInfo?.data ?? []} />
+      <div className="flex items-center gap-4">
+        <Link
+          href="#"
+          className="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-full"
+        >
+          <BellRing className="w-6 h-6 text-gray-500" />
+        </Link>
+        <BuyerProfileDropDown data={userInfo?.data ?? []} />
+      </div>
     </header>
   );
 }
