@@ -18,6 +18,7 @@ import Link from 'next/link';
 import { useGetSingleResponseQuery } from '@/store/features/lawyer/ResponseApiService';
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
 import WhatsApp from '@/components/icon/WhatsApp';
+import ResponseSkeleton from './ResponseSkeleton';
 
 export default function MyResponseDetails({ onBack, response, responseId }) {
   const [activeTab, setActiveTab] = useState('activity');
@@ -58,11 +59,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
   );
 
   if (isSingleResponseLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Loader2 className="animate-spin" />
-      </div>
-    );
+    return <ResponseSkeleton />;
   }
 
   const activities = [

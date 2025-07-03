@@ -74,6 +74,7 @@ export const baseApi = createApi({
     'payment-method',
     'user-credit-stats',
     'next-offer',
+    'transaction-history',
   ],
   endpoints: () => ({}),
 });
