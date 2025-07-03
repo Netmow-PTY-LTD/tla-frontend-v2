@@ -9,6 +9,7 @@ import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/question
 import ClientLeadRegistrationModal from './modal/ClientLeadRegistrationModal';
 import { useSelector } from 'react-redux';
 import CreateLeadWithAuthModal from './modal/CreateLeadWithAuthModal';
+import { Loader } from 'lucide-react';
 
 export default function HeroHome() {
   const [selectedService, setSelectedService] = useState(null);
@@ -27,12 +28,10 @@ export default function HeroHome() {
   );
 
   // Default to Australia (AU) if available
-  const { data: countryWiseServices } = useGetCountryWiseServicesQuery(
-    defaultCountry?._id,
-    {
+  const { data: countryWiseServices, isLoading: isCountryWiseServicesLoading } =
+    useGetCountryWiseServicesQuery(defaultCountry?._id, {
       skip: !defaultCountry?._id, // Skip
-    }
-  );
+    });
 
   //console.log('countryWiseServices', countryWiseServices);
 
@@ -95,21 +94,25 @@ export default function HeroHome() {
             </div>
           </form>
           <div className="flex flex-wrap justify-center gap-2 w-full suggestion-area">
-            {countryWiseServices?.data?.length > 0 &&
-              countryWiseServices?.data.map((service) => (
+            {isCountryWiseServicesLoading ? (
+              <Loader className="w-6 h-6 animate-spin" />
+            ) : (
+              countryWiseServices?.data?.length > 0 &&
+              countryWiseServices.data.map((service) => (
                 <Link
                   href="#"
                   className="flex justify-center items-center gap-[10px] text-center w-[calc(50%-10px)] sm:w-auto border py-1 px-3 rounded-full"
                   key={service?._id}
                   onClick={(e) => {
-                    e.preventDefault(); // Prevent the default anchor behavior
+                    e.preventDefault(); // Prevent default anchor behavior
                     setSelectedService(service);
                     handleModalOpen();
                   }}
                 >
                   <h6>{service?.name}</h6>
                 </Link>
-              ))}
+              ))
+            )}
           </div>
         </div>
         <HeroShowcase />

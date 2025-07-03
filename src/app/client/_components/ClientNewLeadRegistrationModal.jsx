@@ -21,6 +21,7 @@ import TextInput from '@/components/form/TextInput';
 import { Input } from '@/components/ui/input';
 import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/questionApiService';
 import { useCreateLeadMutation } from '@/store/features/client/LeadsApiService';
+import { set } from 'zod';
 
 export default function ClientNewLeadRegistrationModal({
   modalOpen,
@@ -361,7 +362,7 @@ export default function ClientNewLeadRegistrationModal({
       questions: [...questionsPayload], // ensure fresh snapshot
       additionalDetails,
       budgetAmount,
-       locationId:zipCode
+      locationId: zipCode,
     };
 
     console.log('🚀 Submitting payload:', payload);
@@ -434,6 +435,8 @@ export default function ClientNewLeadRegistrationModal({
           setQuestionsPayload([]);
           setAdditionalDetails('');
           setBudgetAmount('');
+          setService(null);
+          setZipCode(null);
           setStep(0); // reset form steps, if needed
         }
       }}
@@ -460,7 +463,7 @@ export default function ClientNewLeadRegistrationModal({
                     placeholder="Select a service"
                   />
                   {filteredServices?.length > 0 && (
-                    <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <ComboboxOptions className="absolute z-[9999] mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       {filteredServices?.map((service) => (
                         <ComboboxOption
                           key={service._id}
