@@ -46,7 +46,7 @@ export const AllTransactionHistory = () => {
     });
 
   return (
-    <div className="w-full  p-6 bg-gray-50 rounded-lg shadow-sm">
+    <div className="w-full  p-6  rounded-lg shadow-lg">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-gray-900 mb-2">
@@ -153,8 +153,8 @@ export const AllTransactionHistory = () => {
                   <td className="py-4 px-6 text-sm">
                     <span
                       className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${tx.status === 'completed'
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-yellow-100 text-yellow-700'
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-yellow-100 text-yellow-700'
                         }`}
                     >
                       {tx.status}
@@ -206,6 +206,7 @@ export const AllTransactionHistory = () => {
         </div>
       </div>
 
+
       {/* Pagination Controls */}
       <div className="mt-6 flex justify-center gap-2">
         <Button
@@ -217,16 +218,57 @@ export const AllTransactionHistory = () => {
           Previous
         </Button>
 
-        {[...Array(totalPages)].map((_, i) => (
-          <Button
-            key={i}
-            size="sm"
-            variant={currentPage === i + 1 ? 'default' : 'outline'}
-            onClick={() => setCurrentPage(i + 1)}
-          >
-            {i + 1}
-          </Button>
-        ))}
+        {/* Page Numbers with dynamic range */}
+        {(() => {
+          const pages = [];
+          const maxVisiblePages = 5;
+          const startPage = Math.floor((currentPage - 1) / maxVisiblePages) * maxVisiblePages + 1;
+          const endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+
+          // Show leading ellipsis if needed
+          if (startPage > 1) {
+            pages.push(
+              <Button
+                key="prev-ellipsis"
+                size="sm"
+                variant="outline"
+                disabled
+              >
+                ...
+              </Button>
+            );
+          }
+
+          // Page buttons
+          for (let i = startPage; i <= endPage; i++) {
+            pages.push(
+              <Button
+                key={i}
+                size="sm"
+                variant={currentPage === i ? 'default' : 'outline'}
+                onClick={() => setCurrentPage(i)}
+              >
+                {i}
+              </Button>
+            );
+          }
+
+          // Show trailing ellipsis if needed
+          if (endPage < totalPages) {
+            pages.push(
+              <Button
+                key="next-ellipsis"
+                size="sm"
+                variant="outline"
+                disabled
+              >
+                ...
+              </Button>
+            );
+          }
+
+          return pages;
+        })()}
 
         <Button
           size="sm"
