@@ -67,13 +67,13 @@ export default function ResponseHead({ isExpanded }) {
               </div>
             )}
             <div className="inline-flex flex-wrap gap-1">
-              <TagButton
+              {/* <TagButton
                 text="1st to responded (29)"
                 bgColor="#00C3C0"
                 textColor="text-[#fff]"
                 fontSize={isExpanded ? 'text-[14px]' : 'text-[9px]'}
                 rounded="rounded-[5px]"
-              />
+              /> */}
               <TagButton
                 text="Urgent(51)"
                 bgColor="#EF8D32"
