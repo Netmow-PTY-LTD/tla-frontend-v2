@@ -93,7 +93,6 @@ const LawyerContactButton = ({ leadDetail }) => {
           </span>
         )}
       </Button>
-     
 
       {showCreditModal && (
         <Elements stripe={stripePromise}>
@@ -118,6 +117,7 @@ const LawyerContactButton = ({ leadDetail }) => {
                   onClose={() => setShowCreditModal(false)}
                   recommendedPackage={packageData}
                   needAddCard={needAddCard}
+                  isLoading={isLoading}
                 />
               </div>
             </Modal>

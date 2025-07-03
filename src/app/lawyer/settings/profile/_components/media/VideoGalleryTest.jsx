@@ -6,13 +6,14 @@ import TextInput from '@/components/form/TextInput';
 import { Input } from '@/components/ui/input';
 import { Modal } from '@/components/UIComponents/Modal';
 import { videoUrlRegex } from '@/schema/dashboard/lawyerSettings';
+import { useDeleteProfileVideoUrlMutation } from '@/store/features/admin/userApiService';
 import { useUpdateUserDataMutation } from '@/store/features/auth/authApiService';
 import { getEmbedUrl } from '@/utils/embedVideoLink';
 import { CloudUpload, Trash2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useFormContext, useFieldArray } from 'react-hook-form';
 
-export default function VideoGalleryTest({ userInfo }) {
+export default function VideoGalleryTest({ userInfo, refetch }) {
   // const {
   //   control,
   //   watch,
@@ -88,7 +89,7 @@ export default function VideoGalleryTest({ userInfo }) {
   const [updatePhotosData, { isLoading: photosIsLoading }] =
     useUpdateUserDataMutation();
   const handlePhotoUpload = async (data) => {
-    console.log('data', data);
+    //console.log('data', data);
     try {
       const { video_url } = data;
 
@@ -107,8 +108,8 @@ export default function VideoGalleryTest({ userInfo }) {
       console.log('res', res);
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Update successful');
-        setVideos(); // ← consider passing updatedVideoList if needed
         refetch();
+        setOpen(false);
       }
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
@@ -117,6 +118,26 @@ export default function VideoGalleryTest({ userInfo }) {
     }
   };
 
+  const [deleteProfileVideo, { isLoading: isDeleting }] =
+    useDeleteProfileVideoUrlMutation();
+
+  const handleDeleteProfileVideo = async (url) => {
+    console.log('url', url);
+    const payload = { type: 'videos', url };
+    console.log('payload', payload);
+    try {
+      const res = await deleteProfileVideo(payload).unwrap();
+      console.log('res', res);
+      if (res?.success === true) {
+        showSuccessToast(res?.message || 'Deleted successfully');
+        refetch();
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+      console.error('Error submitting form:', error);
+    }
+  };
   return (
     <div className="mt-10">
       <h3 className="text-black font-semibold text-lg">Videos</h3>
@@ -147,7 +168,7 @@ export default function VideoGalleryTest({ userInfo }) {
               <button
                 type="button"
                 className="absolute top-2 right-2 bg-white p-1 rounded-full shadow group-hover:opacity-100 opacity-0 transition"
-                onClick={() => remove(index)}
+                onClick={() => handleDeleteProfileVideo(url)}
               >
                 <Trash2 className="w-4 h-4 text-red-500" />
               </button>

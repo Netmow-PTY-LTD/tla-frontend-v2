@@ -15,6 +15,7 @@ import {
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import LawyerContactButton from './leadBoard/LawyerContactButton';
+import ResponseSkeleton from '../my-responses/_components/ResponseSkeleton';
 
 export default function LeadDetailsPage({ onBack, lead }) {
   const { data: singleLead, isLoading: isSingleLeadLoading } =
@@ -50,6 +51,10 @@ export default function LeadDetailsPage({ onBack, lead }) {
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])
     .find((option) => option.option === 'Urgent');
+
+  if (isSingleLeadLoading) {
+    return <ResponseSkeleton />;
+  }
 
   return (
     <div className="">
