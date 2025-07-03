@@ -66,7 +66,7 @@ export default function AvatarUploader({
         <div className="max-w-sm">
           <label
             htmlFor={`file-upload-${name}`}
-            className="flex flex-col items-center justify-center h-20 w-20 md:h-24 md:w-24 lg:h-28 lg:w-28 px-2 py-2 border border-dashed border-gray-300 rounded-lg cursor-pointer text-center hover:bg-gray-50 transition"
+            className="flex flex-col items-center justify-center h-28 w-28 md:h-32 md:w-32 lg:h-36 lg:w-36 px-2 py-2 border border-dashed border-gray-300 rounded-lg cursor-pointer text-center hover:bg-gray-50 transition"
           >
             {icon}
             <input
