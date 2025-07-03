@@ -302,6 +302,13 @@ const columns = [
   },
 ];
 
+
+
+
+
+
+
+
 function DraggableRow({ row }) {
   const { transform, transition, setNodeRef, isDragging } = useSortable({
     id: row.original.id,

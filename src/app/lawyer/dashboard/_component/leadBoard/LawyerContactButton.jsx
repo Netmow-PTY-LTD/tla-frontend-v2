@@ -20,7 +20,7 @@ const LawyerContactButton = ({ leadDetail }) => {
   const [showCreditModal, setShowCreditModal] = useState(false);
   const [needAddCard, setNeedAddCard] = useState(false);
   const [pendingPayload, setPendingPayload] = useState(null);
-  const [contactLawyer] = useContactLawyerMutation();
+  const [contactLawyer, { isLoading }] = useContactLawyerMutation();
 
   const router = useRouter();
   const handleContact = async () => {
@@ -81,10 +81,19 @@ const LawyerContactButton = ({ leadDetail }) => {
   return (
     <div>
       <Button
-        className={`px-4 py-2 w-full sm:w-auto rounded-lg text-[14px]font-medium bg-[var(--primary-color)] text-white`}
+        onClick={handleContact}
+        className={`px-4 py-2 w-full sm:w-auto rounded-lg text-[14px]font-medium bg-[var(--primary-color)] text-white  relative`}
       >
-        Contact {leadDetail?.userProfileId?.name ?? ''}
+        <span className={`${isLoading ? 'invisible' : 'visible'}`}>
+          Contact {leadDetail?.userProfileId?.name}
+        </span>
+        {isLoading && (
+          <span className="absolute inset-0 flex justify-center items-center">
+            <Loader className="w-[46px]" />
+          </span>
+        )}
       </Button>
+     
 
       {showCreditModal && (
         <Elements stripe={stripePromise}>
