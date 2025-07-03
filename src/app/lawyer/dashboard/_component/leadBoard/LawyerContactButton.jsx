@@ -9,19 +9,20 @@ import { Modal } from '@/components/UIComponents/Modal';
 import { useContactLawyerMutation } from '@/store/features/lawyer/LeadsApiService';
 import CreditPurchaseLead from './CreditPurchaseLead';
 import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
 
 const LawyerContactButton = ({ leadDetail }) => {
-  const [packageData, setPackageData] = useState('')
+  const [packageData, setPackageData] = useState('');
   const [showCreditModal, setShowCreditModal] = useState(false);
   const [needAddCard, setNeedAddCard] = useState(false);
   const [pendingPayload, setPendingPayload] = useState(null);
   const [contactLawyer] = useContactLawyerMutation();
 
-  const router = useRouter()
+  const router = useRouter();
   const handleContact = async () => {
     const payload = {
       leadId: leadDetail?._id,
@@ -30,24 +31,27 @@ const LawyerContactButton = ({ leadDetail }) => {
     };
     try {
       const res = await contactLawyer(payload).unwrap();
-      console.log('response ==>', res)
+      console.log('response ==>', res);
       if (res.success) {
-        console.log('response ==>', res)
+        console.log('response ==>', res);
         toast.success('Contacted successfully');
         setTimeout(() => {
-          router.push(`/lawyer/dashboard/my-responses?responseId=${res?.data?.responseId}`);
+          router.push(
+            `/lawyer/dashboard/my-responses?responseId=${res?.data?.responseId}`
+          );
         }, 500);
-
       } else if (res?.data?.autoPurchaseCredit || res?.data?.needAddCard) {
-        setPackageData(res?.data?.recommendedPackage)
+        setPackageData(res?.data?.recommendedPackage);
         setPendingPayload(payload);
         setShowCreditModal(true);
-        setNeedAddCard(res?.data?.needAddCard ? res?.data?.needAddCard : false)
+        setNeedAddCard(res?.data?.needAddCard ? res?.data?.needAddCard : false);
       } else {
         toast.error(res.message || 'Something went wrong');
       }
     } catch (err) {
-      toast.error(err?.data?.message || 'Something went wrong while contacting the lawyer');
+      toast.error(
+        err?.data?.message || 'Something went wrong while contacting the lawyer'
+      );
     }
   };
 
@@ -59,8 +63,10 @@ const LawyerContactButton = ({ leadDetail }) => {
         if (retryRes.success) {
           toast.success('Contacted successfully after payment');
           setTimeout(() => {
-            router.push(`/lawyer/dashboard/my-responses?responseId=${retryRes?.data?.responseId}`);
-            console.log('response id ==>', retryRes?.data?.responseId)
+            router.push(
+              `/lawyer/dashboard/my-responses?responseId=${retryRes?.data?.responseId}`
+            );
+            console.log('response id ==>', retryRes?.data?.responseId);
           }, 500);
         } else {
           toast.error(retryRes.message || 'Retry failed');
@@ -74,9 +80,11 @@ const LawyerContactButton = ({ leadDetail }) => {
 
   return (
     <div>
-      <button onClick={handleContact} className="btn-default bg-[#00C3C0]">
+      <Button
+        className={`px-4 py-2 w-full sm:w-auto rounded-lg text-[14px]font-medium bg-[var(--primary-color)] text-white`}
+      >
         Contact {leadDetail?.userProfileId?.name ?? ''}
-      </button>
+      </Button>
 
       {showCreditModal && (
         <Elements stripe={stripePromise}>
@@ -90,14 +98,17 @@ const LawyerContactButton = ({ leadDetail }) => {
               </div>
             }
           >
-            <Modal open={showCreditModal} onOpenChange={setShowCreditModal} width="max-w-screen-md">
+            <Modal
+              open={showCreditModal}
+              onOpenChange={setShowCreditModal}
+              width="max-w-screen-md"
+            >
               <div>
                 <CreditPurchaseLead
                   onSuccess={handleAfterPayment}
                   onClose={() => setShowCreditModal(false)}
                   recommendedPackage={packageData}
                   needAddCard={needAddCard}
-
                 />
               </div>
             </Modal>

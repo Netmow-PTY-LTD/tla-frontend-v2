@@ -31,9 +31,7 @@ export function Modal({
           </Button>
         </DialogTrigger>
       )}
-      <DialogContent
-        className={`${width} ${height} overflow-y-auto w-full z-[9999]`}
-      >
+      <DialogContent className={`${width} ${height} w-full z-[9999]`}>
         {/* Dialog Header */}
         <DialogHeader>
           <DialogTitle>

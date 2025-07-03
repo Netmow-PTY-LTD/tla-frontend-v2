@@ -44,7 +44,7 @@ export default function FilterSidebar() {
       </SheetTrigger>
       <SheetContent
         side="right"
-        className="top-0 w-full max-w-sm z-[9999] flex flex-col h-full overflow-hidden"
+        className="top-0 w-full max-w-sm z-[9999] flex flex-col h-full"
       >
         <SheetHeader>
           <SheetTitle className="text-left">Filter Leads</SheetTitle>
@@ -53,11 +53,13 @@ export default function FilterSidebar() {
         <Accordion
           type="single"
           collapsible
-          className="w-full flex-1 overflow-y-auto"
+          className="w-full flex-1"
           defaultValue="item-1"
         >
           <AccordionItem value="item-1">
-            <AccordionTrigger>Keyword Search</AccordionTrigger>
+            <AccordionTrigger className="hover:no-underline">
+              Keyword Search
+            </AccordionTrigger>
             <AccordionContent className="overflow-hidden">
               <div className="flex flex-col gap-4 text-balance">
                 <div>
@@ -71,7 +73,9 @@ export default function FilterSidebar() {
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2">
-            <AccordionTrigger>Sort By</AccordionTrigger>
+            <AccordionTrigger className="hover:no-underline">
+              Sort By
+            </AccordionTrigger>
             <AccordionContent className="overflow-hidden">
               <div className="flex flex-col gap-4 text-balance">
                 <label htmlFor="asc" className="flex items-center gap-2">
@@ -86,7 +90,9 @@ export default function FilterSidebar() {
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-3">
-            <AccordionTrigger>View</AccordionTrigger>
+            <AccordionTrigger className="hover:no-underline">
+              View
+            </AccordionTrigger>
             <AccordionContent className="overflow-hidden">
               <div className="flex flex-col gap-4 text-balance ">
                 <label htmlFor="read" className="flex items-center gap-2">
@@ -105,7 +111,9 @@ export default function FilterSidebar() {
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-4">
-            <AccordionTrigger>Lead Spotlight</AccordionTrigger>
+            <AccordionTrigger className="hover:no-underline">
+              Lead Spotlight
+            </AccordionTrigger>
             <AccordionContent className="overflow-hidden">
               <div className="flex flex-col gap-4 text-balance">
                 <label htmlFor="urgent" className="flex items-center gap-2">
@@ -130,7 +138,9 @@ export default function FilterSidebar() {
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-5">
-            <AccordionTrigger>When the lead was submitted</AccordionTrigger>
+            <AccordionTrigger className="hover:no-underline">
+              When the lead was submitted
+            </AccordionTrigger>
             <AccordionContent className="overflow-hidden">
               <div className="flex flex-col gap-4 text-balance">
                 <label htmlFor="last-hour" className="flex items-center gap-2">
@@ -191,7 +201,9 @@ export default function FilterSidebar() {
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-6">
-            <AccordionTrigger>Services</AccordionTrigger>
+            <AccordionTrigger className="hover:no-underline">
+              Services
+            </AccordionTrigger>
             <AccordionContent className="overflow-hidden">
               <div className="flex flex-col gap-4 text-balance">
                 {currentUser?.data?.profile?.serviceIds?.length > 0 &&
@@ -218,7 +230,9 @@ export default function FilterSidebar() {
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-7">
-            <AccordionTrigger>Locations</AccordionTrigger>
+            <AccordionTrigger className="hover:no-underline">
+              Locations
+            </AccordionTrigger>
             <AccordionContent className="overflow-hidden">
               <div className="flex flex-col gap-4 text-balance">
                 <label htmlFor="all" className="flex items-center gap-2">
@@ -250,7 +264,9 @@ export default function FilterSidebar() {
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-8">
-            <AccordionTrigger>Credits</AccordionTrigger>
+            <AccordionTrigger className="hover:no-underline">
+              Credits
+            </AccordionTrigger>
             <AccordionContent className="overflow-hidden">
               <div className="flex flex-col gap-4 text-balance">
                 {creditTiers?.length > 0 &&

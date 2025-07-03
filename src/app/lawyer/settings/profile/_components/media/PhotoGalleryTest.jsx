@@ -5,7 +5,7 @@ import MultipleFileUploader from '@/components/UIComponents/MultipleFileUploader
 import MultipleFileUploaderTest from '@/components/UIComponents/MultipleFileUploaderTest';
 import React from 'react';
 
-export default function PhotoGalleryTest({refetch}) {
+export default function PhotoGalleryTest({ refetch, userInfo }) {
   return (
     <div>
       <h3 className="16px text-black font-semibold heading-lg">Photos</h3>
@@ -17,7 +17,13 @@ export default function PhotoGalleryTest({refetch}) {
       </p>
 
       <div className="mt-11">
-        <MultipleFileUploaderTest  refetch={refetch} name="photos" label="Upload Photos" multiple />
+        <MultipleFileUploaderTest
+          userInfo={userInfo}
+          refetch={refetch}
+          name="photos"
+          label="Upload Photos"
+          multiple
+        />
         {/* <ImageUploadForm/> */}
       </div>
     </div>

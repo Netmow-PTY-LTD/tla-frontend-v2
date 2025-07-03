@@ -9,6 +9,8 @@ import ClientLeadCard from '../_components/ClientLeadCard';
 import ClientNewLeadRegistrationModal from '../_components/ClientNewLeadRegistrationModal';
 import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
 import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function BuyerDashboard() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -34,11 +36,39 @@ export default function BuyerDashboard() {
 
   if (isAllMyLeadsLoading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <span className="flex items-center justify-center gap-2 text-[14px]">
-          <Loader className="w-10 h-10 animate-spin" />
-          loading...
-        </span>
+      <div className="p-6 space-y-8 animate-pulse">
+        {/* Header section */}
+        <div className="space-y-3">
+          <Skeleton className="h-8 w-1/2" />
+          <Skeleton className="h-4 w-1/3" />
+        </div>
+
+        {/* Content blocks */}
+        {Array.from({ length: 5 }).map((_, idx) => (
+          <div key={idx} className="flex gap-4">
+            {/* Avatar skeleton */}
+            <Skeleton className="h-14 w-14 rounded-full flex-shrink-0" />
+            {/* Text block */}
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-2/3" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
+          </div>
+        ))}
+
+        {/* Table or card-like block */}
+        <div className="space-y-4 mt-8">
+          <Skeleton className="h-6 w-1/3" />
+          {Array.from({ length: 4 }).map((_, idx) => (
+            <div key={idx} className="flex gap-4 items-center">
+              <Skeleton className="h-4 w-1/6" />
+              <Skeleton className="h-4 w-1/4" />
+              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="h-4 w-1/5" />
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
@@ -48,12 +78,12 @@ export default function BuyerDashboard() {
       <div className="rounded-xl p-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">My Leads</h2>
-          <button
-            className="text-white py-[10px] px-[20px] rounded-[5px] border bg-[#00C3C0]"
+          <Button
+            className="text-white py-[10px] px-[20px] rounded-[5px] bg-[#00C3C0]"
             onClick={() => setModalOpen(true)}
           >
             Create New Lead
-          </button>
+          </Button>
         </div>
         <div className="mt-5 mx-auto">
           {allMyLeads?.data?.length === 0 && (
