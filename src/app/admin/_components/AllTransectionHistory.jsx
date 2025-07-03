@@ -334,7 +334,7 @@ function DraggableRow({ row }) {
   );
 }
 
-export function AdminHomeDataTable({ data }) {
+export function AllTransectionHistory({ data }) {
   //const [data, setData] = React.useState(data);
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState({});
