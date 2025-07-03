@@ -20,7 +20,7 @@ export default function GetStartedCard() {
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
             <p className="text-sm text-gray-700 leading-snug">
-              Respond to up to 10 customers.{' '}
+              Respond to up to 10 client.{' '}
               <span className="text-[#00C3C0] font-medium">20% OFF</span> and a
               get hired guarantee.
             </p>
