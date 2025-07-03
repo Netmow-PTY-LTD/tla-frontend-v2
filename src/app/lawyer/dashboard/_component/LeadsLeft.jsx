@@ -52,11 +52,13 @@ export default function LeadDetailsPage({ onBack, lead }) {
     .flatMap((answer) => answer.options || [])
     .find((option) => option.option === 'Urgent');
 
-  if (isSingleLeadLoading) {
-    return <ResponseSkeleton />;
-  }
+  // if (isSingleLeadLoading) {
+  //   return <ResponseSkeleton />;
+  // }
 
-  return (
+  return isSingleLeadLoading ? (
+    <ResponseSkeleton />
+  ) : (
     <div className="">
       <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
         <div className="flex items-center justify-between">

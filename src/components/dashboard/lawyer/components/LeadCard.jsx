@@ -45,8 +45,7 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
         <figure className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
           <Image
             src={`${
-              user?.userProfileId?.profilePicture ??
-              '/assets/img/auth-step1.png'
+              user?.userProfileId?.profilePicture ?? '/assets/img/avatar.png'
             }`}
             alt={user?.userProfileId?.name ?? 'John Doe'}
             width={40}
