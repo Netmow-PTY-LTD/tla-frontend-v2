@@ -6,6 +6,7 @@ import { CloudUpload, Trash } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useUpdateUserDataMutation } from '@/store/features/auth/authApiService';
 import { showErrorToast, showSuccessToast } from '../common/toasts';
+import { useDeleteProfileVideoUrlMutation } from '@/store/features/admin/userApiService';
 
 export default function MultipleFileUploaderTest({
   name = 'avatar',
@@ -68,6 +69,28 @@ export default function MultipleFileUploaderTest({
     }
   };
 
+  const [deleteProfilePhoto, { isLoading: isDeleting }] =
+    useDeleteProfileVideoUrlMutation();
+
+  const handleDeleteProfilePhoto = async (url) => {
+    console.log('url', url);
+    const payload = { type: 'photos', url };
+    console.log('payload', payload);
+    try {
+      const res = await deleteProfilePhoto(payload).unwrap();
+      console.log('res', res);
+      if (res?.success === true) {
+        showSuccessToast(res?.message || 'Deleted successfully');
+        setPreviews(res?.data?.photos);
+        refetch();
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+      console.error('Error submitting form:', error);
+    }
+  };
+
   return (
     <div className="flex gap-4">
       {/* Previews */}
@@ -81,6 +104,7 @@ export default function MultipleFileUploaderTest({
             <button
               type="button"
               className="absolute -top-2 -right-2 bg-white text-red-500 rounded-full shadow p-1 hover:bg-red-100"
+              onClick={() => handleDeleteProfilePhoto(src)}
             >
               <Trash className="h-4 w-4" />
             </button>

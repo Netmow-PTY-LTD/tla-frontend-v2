@@ -14,8 +14,15 @@ import { useState } from 'react';
 
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { toast } from 'sonner';
+import { Loader } from 'lucide-react';
 
-const CreditPurchaseLead = ({ recommendedPackage, onSuccess, onClose, needAddCard }) => {
+const CreditPurchaseLead = ({
+  recommendedPackage,
+  onSuccess,
+  onClose,
+  needAddCard,
+  isLoading,
+}) => {
   const [showCardForm, setShowCardForm] = useState(false);
   const [autoTopUP, setAutoTopUp] = useState(false);
   const [pendingPackageId, setPendingPackageId] = useState(null);
@@ -63,7 +70,7 @@ const CreditPurchaseLead = ({ recommendedPackage, onSuccess, onClose, needAddCar
         couponCode: null,
       };
 
-      console.log('purchaseDetails', purchaseDetails)
+      console.log('purchaseDetails', purchaseDetails);
       const result = await purchaseCredits(purchaseDetails).unwrap();
       if (result.success) {
         toast.success('Credits purchased successfully');
@@ -77,9 +84,6 @@ const CreditPurchaseLead = ({ recommendedPackage, onSuccess, onClose, needAddCar
       setPendingPurchase(false);
     }
   };
-
-
-
 
   if (showCardForm) {
     return <AddCardForm onCardAdded={handleCardAdded} />;
@@ -125,7 +129,14 @@ const CreditPurchaseLead = ({ recommendedPackage, onSuccess, onClose, needAddCar
                   className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-4"
                   onClick={handleBuyClick}
                 >
-                  Buy Now
+                  {isLoading ? (
+                    <>
+                      <Loader />
+                      <span>Purchasing...</span>
+                    </>
+                  ) : (
+                    'Buy Now'
+                  )}
                 </Button>
 
                 <div className="flex items-start space-x-2 mt-3">
@@ -165,8 +176,6 @@ const CreditPurchaseLead = ({ recommendedPackage, onSuccess, onClose, needAddCar
           </div>
         </div>
       </>
-
-
     </div>
   );
 };

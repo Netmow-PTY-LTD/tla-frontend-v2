@@ -128,6 +128,7 @@ export default function MediaTest() {
       <VideoGalleryTest
         userInfo={userInfo}
         videos={videos}
+        refetch={refetch}
         // handlePhotoUpload={handlePhotoUpload}
       />
     </div>
