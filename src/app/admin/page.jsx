@@ -3,7 +3,8 @@ import { SectionCards } from './_components/SectionCards';
 import { ChartAreaInteractive } from './_components/ChartAreaInteractive';
 import data from '@/data/data.json';
 import { AdminHomeDataTable } from './_components/AdminHomeDataTable';
-import { AllTransectionHistory } from './_components/AllTransectionHistory';
+import { AllTransactionHistory } from './_components/AllTransactionHistory';
+
 
 const AdminDashboardPage = () => {
   return (
@@ -12,8 +13,8 @@ const AdminDashboardPage = () => {
       <div>
         <ChartAreaInteractive />
       </div>
+       <AllTransactionHistory/>
       <AdminHomeDataTable data={data} />
-      {/* <AllTransectionHistory data={data} /> */}
     </div>
   );
 };
