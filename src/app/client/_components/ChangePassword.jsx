@@ -21,7 +21,7 @@ const ChangePassword = () => {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="text-xs text-[#00C3C0] mt-5 lg:mt-1 block"
+        className="text-sm text-[#00C3C0] mt-5 lg:mt-1 block"
       >
         Change Password
       </button>

@@ -44,6 +44,13 @@ const userApiService = baseApi.injectEndpoints({
         method: 'DELETE',
       }),
     }),
+    deleteProfileVideoUrl: builder.mutation({
+      query: () => ({
+        url: `/user/profile-media/delete/remove`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['userInfo'],
+    }),
   }),
 });
 
