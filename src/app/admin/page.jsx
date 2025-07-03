@@ -13,7 +13,7 @@ const AdminDashboardPage = () => {
         <ChartAreaInteractive />
       </div>
       <AdminHomeDataTable data={data} />
-      <AllTransectionHistory data={data} />
+      {/* <AllTransectionHistory data={data} /> */}
     </div>
   );
 };

@@ -19,7 +19,7 @@ const LawyerContactButton = ({ leadDetail }) => {
   const [showCreditModal, setShowCreditModal] = useState(false);
   const [needAddCard, setNeedAddCard] = useState(false);
   const [pendingPayload, setPendingPayload] = useState(null);
-  const [contactLawyer] = useContactLawyerMutation();
+  const [contactLawyer, { isLoading }] = useContactLawyerMutation();
 
   const router = useRouter()
   const handleContact = async () => {
@@ -74,8 +74,18 @@ const LawyerContactButton = ({ leadDetail }) => {
 
   return (
     <div>
-      <button onClick={handleContact} className="btn-default bg-[#00C3C0]">
-        Contact {leadDetail?.userProfileId?.name ?? ''}
+      <button
+        onClick={handleContact}
+        className="btn-default bg-[#00C3C0] relative"
+      >
+        <span className={`${isLoading ? 'invisible' : 'visible'}`}>
+          Contact {leadDetail?.userProfileId?.name}
+        </span>
+        {isLoading && (
+          <span className="absolute inset-0 flex justify-center items-center">
+            <Loader className="w-[46px]" />
+          </span>
+        )}
       </button>
 
       {showCreditModal && (
