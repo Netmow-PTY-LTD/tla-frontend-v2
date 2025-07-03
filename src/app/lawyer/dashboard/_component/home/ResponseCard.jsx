@@ -47,7 +47,7 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
           <Image
             src={`${
               user?.leadId?.userProfileId?.profilePicture ??
-              '/assets/img/auth-step1.png'
+              '/assets/img/avatar.png'
             }`}
             alt={user?.userProfileId?.name ?? 'John Doe'}
             width={40}

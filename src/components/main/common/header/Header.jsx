@@ -126,7 +126,7 @@ export default function Header() {
                 <span>Log In</span>
               </Link>
               <Link href="/register" className={styles.btn_register}>
-                <span>Register With TLA</span>
+                <span>Register as Lawyer</span>
               </Link>
             </div>
           )}
