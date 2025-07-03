@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PhotoGallery from './media/PhotoGallery';
 import VideoGallery from './media/VideoGallery';
 import FormWrapper from '@/components/form/FromWrapper';
@@ -15,6 +15,8 @@ import PhotoGalleryTest from './media/PhotoGalleryTest';
 import VideoGalleryTest from './media/VideoGalleryTest';
 
 export default function MediaTest() {
+  const [videos, setVideos] = useState(null);
+
   const {
     data: userInfo,
     isLoading,
@@ -25,9 +27,14 @@ export default function MediaTest() {
   const [updatePhotosData, { isLoading: photosIsLoading }] =
     useUpdateUserDataMutation();
 
-    console.log('test data loading ==>',userInfo)
+  console.log('test data loading ==>', userInfo);
 
   const profile = userInfo?.data?.profile;
+  useEffect(() => {
+    if (profile?.photos?.videos) {
+      setVideos(profile?.photos?.videos);
+    }
+  }, [profile?.photos?.videos]);
   if (isLoading)
     return (
       <div>
@@ -59,63 +66,70 @@ export default function MediaTest() {
     photos: profile?.photos?.photos ?? '',
   };
 
-  const handlePhotoUpload = async (data) => {
-    try {
-      const formData = new FormData();
-      const { photos, videos } = data;
+  // const handlePhotoUpload = async (data) => {
+  //   try {
+  //     const formData = new FormData();
+  //     const { photos, videos } = data;
 
-      console.log('Form data:', data);
+  //     console.log('Form data:', data);
 
-      const payload = {
-        photos: {
-          videos: videos?.map((item) => item.url) || [],
-        },
-      };
+  //     const payload = {
+  //       photos: {
+  //         videos: videos?.map((item) => item.url) || [],
+  //       },
+  //     };
 
-      // Add JSON payload to formData
-      formData.append('data', JSON.stringify(payload));
+  //     // Add JSON payload to formData
+  //     formData.append('data', JSON.stringify(payload));
 
-      // Append multiple photos
-      if (Array.isArray(photos)) {
-        photos.forEach((file) => {
-          if (file instanceof File) {
-            formData.append('photos', file);
-          }
-        });
-      } else if (photos instanceof File) {
-        formData.append('photos', photos);
-      }
+  //     // Append multiple photos
+  //     if (Array.isArray(photos)) {
+  //       photos.forEach((file) => {
+  //         if (file instanceof File) {
+  //           formData.append('photos', file);
+  //         }
+  //       });
+  //     } else if (photos instanceof File) {
+  //       formData.append('photos', photos);
+  //     }
 
-      // ✅ Log files correctly
+  //     // ✅ Log files correctly
 
-      const res = await updatePhotosData(formData).unwrap();
-      if (res?.success === true) {
-        showSuccessToast(res?.message || 'Update successful');
-      }
-    } catch (error) {
-      const errorMessage = error?.data?.message || 'An error occurred';
-      showErrorToast(errorMessage);
-      console.error('Error submitting form:', error);
-    }
-  };
+  //     const res = await updatePhotosData(formData).unwrap();
+  //     console.log('res', res);
+  //     if (res?.success === true) {
+  //       showSuccessToast(res?.message || 'Update successful');
+  //       setVideos();
+  //       refetch();
+  //     }
+  //   } catch (error) {
+  //     const errorMessage = error?.data?.message || 'An error occurred';
+  //     showErrorToast(errorMessage);
+  //     console.error('Error submitting form:', error);
+  //   }
+  // };
 
   return (
     <div className="max-w-[900px] mx-auto">
       <FormWrapper
-        onSubmit={handlePhotoUpload}
+        // onSubmit={handlePhotoUpload}
         defaultValues={defaultValues}
         schema={lawyerSettingsMediaFormSchema}
       >
         <div className="flex flex-col gap-3 ">
-          <PhotoGalleryTest  refetch={refetch} />
-          {/* <VideoGalleryTest /> */}
+          <PhotoGalleryTest userInfo={userInfo} refetch={refetch} />
         </div>
         {/* Footer Buttons */}
-        <MediaFormAction
+        {/* <MediaFormAction
           isLoading={photosIsLoading}
           initialValues={defaultValues}
-        />
+        /> */}
       </FormWrapper>
+      <VideoGalleryTest
+        userInfo={userInfo}
+        videos={videos}
+        // handlePhotoUpload={handlePhotoUpload}
+      />
     </div>
   );
 }

@@ -30,7 +30,7 @@ const creditTiers = [
   { id: 8, range: '50-100 credits' },
 ];
 
-export default function FilterSidebar() {
+export default function FilterResponseSidebar() {
   const { data: currentUser } = useAuthUserInfoQuery();
 
   console.log('currentUser ==>', currentUser?.data);
@@ -47,7 +47,7 @@ export default function FilterSidebar() {
         className="top-0 w-full max-w-sm z-[9999] flex flex-col h-full"
       >
         <SheetHeader>
-          <SheetTitle className="text-left">Filter Leads</SheetTitle>
+          <SheetTitle className="text-left">Filter Responses</SheetTitle>
         </SheetHeader>
 
         <Accordion
@@ -65,7 +65,7 @@ export default function FilterSidebar() {
                 <div>
                   <input
                     type="text"
-                    className="w-full border border-gray-300 rounded-lg p-2"
+                    className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none"
                     placeholder="Keyword (e.g. name)"
                   />
                 </div>
@@ -74,72 +74,160 @@ export default function FilterSidebar() {
           </AccordionItem>
           <AccordionItem value="item-2">
             <AccordionTrigger className="hover:no-underline">
-              Sort By
-            </AccordionTrigger>
-            <AccordionContent className="overflow-hidden">
-              <div className="flex flex-col gap-4 text-balance">
-                <label htmlFor="asc" className="flex items-center gap-2">
-                  <input type="radio" id="asc" name="sort" value="asc" />
-                  Newest First
-                </label>
-                <label htmlFor="desc" className="flex items-center gap-2">
-                  <input type="radio" id="desc" name="sort" value="desc" />
-                  Oldest First
-                </label>
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-3">
-            <AccordionTrigger className="hover:no-underline">
-              View
-            </AccordionTrigger>
-            <AccordionContent className="overflow-hidden">
-              <div className="flex flex-col gap-4 text-balance ">
-                <label htmlFor="read" className="flex items-center gap-2">
-                  <input type="radio" id="read" name="view" value="read" />
-                  Read
-                </label>
-                <label htmlFor="unread" className="flex items-center gap-2">
-                  <input type="radio" id="unread" name="view" value="unread" />
-                  Unread
-                </label>
-                <label htmlFor="any" className="flex items-center gap-2">
-                  <input type="radio" id="any" name="view" value="any" />
-                  Any
-                </label>
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-4">
-            <AccordionTrigger className="hover:no-underline">
               Lead Spotlight
             </AccordionTrigger>
             <AccordionContent className="overflow-hidden">
               <div className="flex flex-col gap-4 text-balance">
                 <label htmlFor="urgent" className="flex items-center gap-2">
                   <input
-                    type="radio"
+                    type="checkbox"
                     id="urgent"
                     name="spotlight"
                     value="urgent"
                   />
                   Urgent
                 </label>
-                <label htmlFor="lead-any" className="flex items-center gap-2">
+                <label
+                  htmlFor="client-requested"
+                  className="flex items-center gap-2"
+                >
                   <input
-                    type="radio"
-                    id="lead-any"
+                    type="checkbox"
+                    id="client-requested"
                     name="spotlight"
-                    value="lead-any"
+                    value="client-requested"
                   />
-                  Any
+                  Client Requested
+                </label>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-3">
+            <AccordionTrigger className="hover:no-underline">
+              Actions Client has taken
+            </AccordionTrigger>
+            <AccordionContent className="overflow-hidden">
+              <div className="flex flex-col gap-4 text-balance">
+                <label
+                  htmlFor="client-quote"
+                  className="flex items-center gap-2"
+                >
+                  <input
+                    type="checkbox"
+                    id="client-quote"
+                    name="client-action"
+                    value="client-quote"
+                  />
+                  Client has requested a quote
+                </label>
+                <label
+                  htmlFor="client-interest"
+                  className="flex items-center gap-2"
+                >
+                  <input
+                    type="checkbox"
+                    id="client-interest"
+                    name="client-action"
+                    value="client-interest"
+                  />
+                  ⁠Client has expressed an interest
+                </label>
+                <label
+                  htmlFor="client-message"
+                  className="flex items-center gap-2"
+                >
+                  <input
+                    type="checkbox"
+                    id="client-message"
+                    name="client-action"
+                    value="client-message"
+                  />
+                  ⁠Client send a message
+                </label>
+                <label
+                  htmlFor="client-callback"
+                  className="flex items-center gap-2"
+                >
+                  <input
+                    type="checkbox"
+                    id="client-callback"
+                    name="client-action"
+                    value="client-callback"
+                  />
+                  ⁠Client has requested a callback
+                </label>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-4">
+            <AccordionTrigger className="hover:no-underline">
+              Actions has taken
+            </AccordionTrigger>
+            <AccordionContent className="overflow-hidden">
+              <div className="flex flex-col gap-4 text-balance">
+                <label htmlFor="no-action" className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="no-action"
+                    name="action-taken"
+                    value="no-action"
+                  />
+                  Taken no action
+                </label>
+                <label htmlFor="called" className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="called"
+                    name="action-taken"
+                    value="called"
+                  />
+                  Called
+                </label>
+                <label htmlFor="send-email" className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="send-email"
+                    name="action-taken"
+                    value="send-email"
+                  />
+                  Send Email
+                </label>
+                <label htmlFor="send-sms" className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="send-sms"
+                    name="action-taken"
+                    value="send-sms"
+                  />
+                  Send SMS
+                </label>
+                <label htmlFor="made-note" className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="made-note"
+                    name="action-taken"
+                    value="made-note"
+                  />
+                  Made Note
+                </label>
+                <label
+                  htmlFor="one-click-response"
+                  className="flex items-center gap-2"
+                >
+                  <input
+                    type="checkbox"
+                    id="one-click-response"
+                    name="action-taken"
+                    value="one-click-response"
+                  />
+                  Sent One Click Response
                 </label>
               </div>
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-5">
             <AccordionTrigger className="hover:no-underline">
-              When the lead was submitted
+              Data wise Response
             </AccordionTrigger>
             <AccordionContent className="overflow-hidden">
               <div className="flex flex-col gap-4 text-balance">
@@ -197,96 +285,45 @@ export default function FilterSidebar() {
                   />
                   Less than 2 weeks ago
                 </label>
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-6">
-            <AccordionTrigger className="hover:no-underline">
-              Services
-            </AccordionTrigger>
-            <AccordionContent className="overflow-hidden">
-              <div className="flex flex-col gap-4 text-balance">
-                {currentUser?.data?.profile?.serviceIds?.length > 0 &&
-                  currentUser?.data?.profile?.serviceIds?.map(
-                    (service, index) => {
-                      return (
-                        <label
-                          htmlFor={service?.name}
-                          className="flex items-center gap-2"
-                          key={index}
-                        >
-                          <input
-                            type="checkbox"
-                            id={service?.name}
-                            name="service"
-                            value={service?.name}
-                          />
-                          {service?.name}
-                        </label>
-                      );
-                    }
-                  )}
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-7">
-            <AccordionTrigger className="hover:no-underline">
-              Locations
-            </AccordionTrigger>
-            <AccordionContent className="overflow-hidden">
-              <div className="flex flex-col gap-4 text-balance">
-                <label htmlFor="all" className="flex items-center gap-2">
-                  <input type="radio" id="all" name="location" value="all" />
-                  All
-                </label>
-                <label htmlFor="nationwide" className="flex items-center gap-2">
+                <label htmlFor="last-month" className="flex items-center gap-2">
                   <input
                     type="radio"
-                    id="nationwide"
-                    name="location"
-                    value="nationwide"
+                    id="last-month"
+                    name="lead-submission"
+                    value="last-month"
                   />
-                  Nationwide
+                  Within Last Month
+                </label>
+                <label htmlFor="six-month" className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    id="six-month"
+                    name="lead-submission"
+                    value="six-month"
+                  />
+                  Within Six Month
+                </label>
+                <label htmlFor="last-year" className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    id="last-year"
+                    name="lead-submission"
+                    value="last-year"
+                  />
+                  Within last year
                 </label>
                 <label
-                  htmlFor="location-4217"
+                  htmlFor="one-year-ago"
                   className="flex items-center gap-2"
                 >
                   <input
                     type="radio"
-                    id="location-4217"
-                    name="location"
-                    value="location-4217"
+                    id="one-year-ago"
+                    name="lead-submission"
+                    value="one-year-ago"
                   />
-                  Within 50 Miles of 4217
+                  Over 1 year ago
                 </label>
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-8">
-            <AccordionTrigger className="hover:no-underline">
-              Credits
-            </AccordionTrigger>
-            <AccordionContent className="overflow-hidden">
-              <div className="flex flex-col gap-4 text-balance">
-                {creditTiers?.length > 0 &&
-                  creditTiers?.map((credit, index) => {
-                    return (
-                      <label
-                        htmlFor={credit?.range}
-                        className="flex items-center gap-2"
-                        key={index}
-                      >
-                        <input
-                          type="checkbox"
-                          id={credit?.range}
-                          name="service"
-                          value={credit?.range}
-                        />
-                        {credit?.range}
-                      </label>
-                    );
-                  })}
               </div>
             </AccordionContent>
           </AccordionItem>

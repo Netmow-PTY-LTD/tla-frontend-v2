@@ -21,21 +21,17 @@ export function Modal({
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange} className="z-[999]">
-      <DialogTrigger asChild>
-        {buttonName && (
-          <DialogTrigger asChild>
-            <Button
-              variant="outline"
-              className="bg-[#12C7C4CC] hover:bg-teal-300 px-4 py-3 text-sm rounded-lg text-white mt-5 "
-            >
-              {buttonName}
-            </Button>
-          </DialogTrigger>
-        )}
-      </DialogTrigger>
-      <DialogContent
-        className={`${width} ${height} overflow-y-auto w-full z-[9999]`}
-      >
+      {buttonName && (
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            className="bg-[#12C7C4CC] hover:bg-teal-300 px-4 py-3 text-sm rounded-lg text-white mt-5 "
+          >
+            {buttonName}
+          </Button>
+        </DialogTrigger>
+      )}
+      <DialogContent className={`${width} ${height} w-full z-[9999]`}>
         {/* Dialog Header */}
         <DialogHeader>
           <DialogTitle>

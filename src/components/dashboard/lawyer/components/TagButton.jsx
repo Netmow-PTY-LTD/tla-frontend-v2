@@ -22,7 +22,7 @@ const TagButton = ({
             textColor ? textColor : 'text-[black]'
           } px-3 py-1.5 ${
             rounded ? rounded : 'rounded-[30px]'
-          } flex items-center gap-2 transition-all duration-200 active:scale-95`,
+          } flex items-center gap-2 transition-all duration-200 active:scale-95 hover:bg-gray-950`,
         className
       )}
       style={{ backgroundColor: bgColor }}
