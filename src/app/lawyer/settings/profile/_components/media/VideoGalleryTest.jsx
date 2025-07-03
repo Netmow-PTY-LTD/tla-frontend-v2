@@ -1,47 +1,59 @@
 'use client';
 
+import { showErrorToast } from '@/components/common/toasts';
+import FormWrapper from '@/components/form/FromWrapper';
+import TextInput from '@/components/form/TextInput';
 import { Input } from '@/components/ui/input';
 import { Modal } from '@/components/UIComponents/Modal';
 import { videoUrlRegex } from '@/schema/dashboard/lawyerSettings';
+import { useUpdateUserDataMutation } from '@/store/features/auth/authApiService';
 import { getEmbedUrl } from '@/utils/embedVideoLink';
 import { CloudUpload, Trash2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useFormContext, useFieldArray } from 'react-hook-form';
 
-export default function VideoGalleryTest() {
-  const {
-    control,
-    watch,
-    setValue,
-    setError,
-    clearErrors,
-    formState: { errors },
-  } = useFormContext();
+export default function VideoGalleryTest({ userInfo }) {
+  // const {
+  //   control,
+  //   watch,
+  //   setValue,
+  //   setError,
+  //   clearErrors,
+  //   formState: { errors },
+  // } = useFormContext();
 
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'videos',
-  });
+  // const { fields, append, remove } = useFieldArray({
+  //   control,
+  //   name: 'videos',
+  // });
+
+  const [videos, setVideos] = useState(null);
 
   const [open, setOpen] = useState(false);
   const [newLink, setNewLink] = useState('');
 
   useEffect(() => {
-    const current = watch('videos');
-    if (!Array.isArray(current)) {
-      setValue('videos', []);
+    if (userInfo?.data?.profile?.photos?.videos) {
+      setVideos(userInfo?.data?.profile?.photos?.videos);
     }
-  }, [setValue, watch]);
+  }, [userInfo?.data?.profile?.photos?.videos]);
 
-  const handleInputChange = (e) => {
-    const value = e.target.value;
-    setNewLink(value);
+  // useEffect(() => {
+  //   const current = watch('videos');
+  //   if (!Array.isArray(current)) {
+  //     setValue('videos', []);
+  //   }
+  // }, [setValue, watch]);
 
-    // Clear error immediately if the input becomes valid
-    if (videoUrlRegex.test(value)) {
-      clearErrors('videos');
-    }
-  };
+  // const handleInputChange = (e) => {
+  //   const value = e.target.value;
+  //   setNewLink(value);
+
+  //   // Clear error immediately if the input becomes valid
+  //   if (videoUrlRegex.test(value)) {
+  //     clearErrors('videos');
+  //   }
+  // };
 
   const onSave = () => {
     if (!newLink) return;
@@ -73,6 +85,40 @@ export default function VideoGalleryTest() {
     clearErrors('videos');
     setOpen(false);
   };
+  const [updatePhotosData, { isLoading: photosIsLoading }] =
+    useUpdateUserDataMutation();
+  const handlePhotoUpload = async (data) => {
+    console.log('data', data);
+    try {
+      const { video_url } = data;
+
+      // Merge the existing video URLs with the new one
+      const updatedVideoList = [
+        ...(videos?.map((item) => item.url) || []),
+        video_url,
+      ];
+
+      const payload = {
+        photos: {
+          videos: video_url,
+        },
+      };
+
+      console.log('payload', payload);
+
+      const res = await updatePhotosData(payload).unwrap();
+      console.log('res', res);
+      if (res?.success === true) {
+        showSuccessToast(res?.message || 'Update successful');
+        setVideos(); // ← consider passing updatedVideoList if needed
+        refetch();
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+      console.error('Error submitting form:', error);
+    }
+  };
 
   return (
     <div className="mt-10">
@@ -84,13 +130,13 @@ export default function VideoGalleryTest() {
       </p>
 
       <div className="grid grid-cols-2 gap-3 mt-11">
-        {fields?.map((field, index) => {
-          const embed = getEmbedUrl(field.url);
+        {videos?.map((url, index) => {
+          const embed = getEmbedUrl(url);
           if (!embed) return null;
 
           return (
             <div
-              key={field.id}
+              key={index}
               className="relative group w-full aspect-video rounded-xl overflow-hidden shadow-lg"
             >
               <iframe
@@ -124,29 +170,34 @@ export default function VideoGalleryTest() {
       </div>
 
       <Modal open={open} onOpenChange={setOpen} title="Add Video Link">
-        <Input
-          value={newLink}
-          onChange={handleInputChange}
-          placeholder="https://www.youtube.com/watch?v=example"
-          className="w-full"
-        />
-        {errors.videos && (
-          <p className="text-sm text-red-500 mt-2">{errors.videos.message}</p>
-        )}
-        <div className="flex justify-between items-center pt-4">
-          <button
-            onClick={onCancel}
-            className="text-sm text-gray-600 hover:text-gray-800"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onSave}
-            className="bg-[#12C7C4] text-white px-4 py-2 text-sm rounded-md hover:bg-[#10b0ae]"
-          >
-            Add Link
-          </button>
-        </div>
+        <FormWrapper
+          onSubmit={handlePhotoUpload}
+          // schema={lawyerSettingsMediaFormSchema}
+        >
+          <TextInput
+            label=""
+            name="video_url"
+            placeholder="https://www.youtube.com/watch?v=example"
+          />
+          {/* {errors.videos && (
+            <p className="text-sm text-red-500 mt-2">{errors.videos.message}</p>
+          )} */}
+          <div className="flex justify-between items-center pt-4">
+            <button
+              onClick={onCancel}
+              className="text-sm text-gray-600 hover:text-gray-800"
+            >
+              Cancel
+            </button>
+            <button
+              // onClick={onSave}
+              type="submit"
+              className="bg-[#12C7C4] text-white px-4 py-2 text-sm rounded-md hover:bg-[#10b0ae]"
+            >
+              Add Link
+            </button>
+          </div>
+        </FormWrapper>
       </Modal>
     </div>
   );

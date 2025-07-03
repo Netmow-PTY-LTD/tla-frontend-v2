@@ -44,7 +44,7 @@ export default function FilterResponseSidebar() {
       </SheetTrigger>
       <SheetContent
         side="right"
-        className="top-0 w-full max-w-sm z-[9999] flex flex-col h-full overflow-hidden"
+        className="top-0 w-full max-w-sm z-[9999] flex flex-col h-full"
       >
         <SheetHeader>
           <SheetTitle className="text-left">Filter Responses</SheetTitle>
@@ -53,7 +53,7 @@ export default function FilterResponseSidebar() {
         <Accordion
           type="single"
           collapsible
-          className="w-full flex-1 overflow-y-auto"
+          className="w-full flex-1"
           defaultValue="item-1"
         >
           <AccordionItem value="item-1">

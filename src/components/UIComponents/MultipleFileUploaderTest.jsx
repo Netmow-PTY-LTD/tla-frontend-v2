@@ -13,7 +13,8 @@ export default function MultipleFileUploaderTest({
   accept = 'image/*',
   multiple = false,
   icon = <CloudUpload className="w-6 h-6 text-[#00C3C0] mb-2" />,
- refetch={refetch}
+  refetch,
+  userInfo,
 }) {
   const [updatePhotosData, { isLoading: photosIsLoading }] =
     useUpdateUserDataMutation();
@@ -21,18 +22,12 @@ export default function MultipleFileUploaderTest({
 
   const [previews, setPreviews] = useState([]);
 
-
-  console.log('get field Values ==>', getValues(name))
   useEffect(() => {
-
-    setPreviews(getValues(name))
-  }, [])
-
+    setPreviews(userInfo?.data?.profile?.photos?.photos || []);
+  }, []);
 
   const handleChange = async (e) => {
-
     try {
-
       const files = e.target.files;
 
       if (!files || files.length === 0) return;
@@ -54,29 +49,24 @@ export default function MultipleFileUploaderTest({
         formData.append('photos', files[i]); // field name should match backend
       }
 
-      console.log('check photos data==>',formData.get('photos'))
-
+      console.log('check photos data==>', formData.get('photos'));
 
       // ✅ Log files correctly
 
       const res = await updatePhotosData(formData).unwrap();
+      console.log('res', res);
 
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Update successful');
-        refetch()
+        setPreviews(res?.data?.photos || []);
+        refetch();
       }
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);
       console.error('Error submitting form:', error);
     }
-
-
-  }
-
-
-
-
+  };
 
   return (
     <div className="flex gap-4">
