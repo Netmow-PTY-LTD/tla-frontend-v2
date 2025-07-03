@@ -11,20 +11,17 @@ import {
 import MediaFormAction from './media/MediaFormAction';
 import { lawyerSettingsMediaFormSchema } from '@/schema/dashboard/lawyerSettings';
 import { Loader } from 'lucide-react';
+import PhotoGalleryTest from './media/PhotoGalleryTest';
+import VideoGalleryTest from './media/VideoGalleryTest';
 
-export default function Photos() {
+export default function MediaTest() {
   const {
     data: userInfo,
     isLoading,
     isError,
     error,
     refetch,
-  } = useAuthUserInfoQuery(undefined, {
-  refetchOnMountOrArgChange: false,
-  refetchOnReconnect: false,
-  refetchOnFocus: false,
-  keepUnusedDataFor: 600, // keep data for 10 minutes
-});
+  } = useAuthUserInfoQuery();
   const [updatePhotosData, { isLoading: photosIsLoading }] =
     useUpdateUserDataMutation();
 
@@ -110,8 +107,8 @@ export default function Photos() {
         schema={lawyerSettingsMediaFormSchema}
       >
         <div className="flex flex-col gap-3 ">
-          <PhotoGallery />
-          <VideoGallery />
+          <PhotoGalleryTest  refetch={refetch} />
+          {/* <VideoGalleryTest /> */}
         </div>
         {/* Footer Buttons */}
         <MediaFormAction

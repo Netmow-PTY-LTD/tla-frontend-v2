@@ -10,9 +10,9 @@ import Media from './_components/Media';
 import ProfileProgress from './_components/ProfileProgress';
 
 import { DynamicAccordion } from '@/components/UIComponents/AcordionComponent';
-import Experiences from './_components/Experiences';
 import PublicProfile from './_components/PublicProfile';
 import { Loader } from 'lucide-react';
+import MediaTest from './_components/MediaTest';
 
 export default function MyProfilePage() {
   const accordionItems = [
@@ -24,7 +24,8 @@ export default function MyProfilePage() {
       title: 'Experiences & Career Highlights',
       content: <PublicProfile />,
     },
-    { id: 'media', title: 'Photos', content: <Media /> },
+    // { id: 'media', title: 'Photos', content: <Media /> },
+    { id: 'media', title: 'Photos', content: <MediaTest /> },
     {
       id: 'social',
       title: 'Social Media Links',
