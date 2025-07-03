@@ -13,7 +13,7 @@ const authApi = baseApi.injectEndpoints({
 
     authRegister: builder.mutation({
       query: (data) => ({
-        url: '/auth/register',
+        url: '/auth/register/lawyer',
         method: 'POST',
         body: data,
       }),
