@@ -30,7 +30,7 @@ const EmailNotifications = () => {
         />
 
         <NotificationOption
-          title="Updates about new features on Bark"
+          title="Updates about new features on TheLawApp"
           defaultChecked={false}
         />
       </div>

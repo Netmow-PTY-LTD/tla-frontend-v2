@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { Search, Download, Filter, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useUserTransactionHistoryQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
+import { useTransactionHistoryListQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 
-export const BillingTransactionDetails = () => {
+export const AllTransactionHistory = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -15,7 +15,7 @@ export const BillingTransactionDetails = () => {
     data: transactionData,
     isError,
     isLoading,
-  } = useUserTransactionHistoryQuery();
+  } = useTransactionHistoryListQuery();
 
   useEffect(() => {
     if (!transactionData?.data) return;
@@ -46,13 +46,13 @@ export const BillingTransactionDetails = () => {
     });
 
   return (
-    <div className="w-full max-w-[900px] mx-auto p-6 bg-gray-50 rounded-lg shadow-sm">
+    <div className="w-full  p-6  rounded-lg shadow-lg">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-gray-900 mb-2">
-          Transaction Details
+          Transaction History
         </h1>
-        <p className="text-gray-600">Track your credit purchase history</p>
+        <p className="text-gray-600">Track users credit purchase history</p>
       </div>
 
       {/* Controls */}
@@ -104,6 +104,12 @@ export const BillingTransactionDetails = () => {
                   ID
                 </th>
                 <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
+                  User Name
+                </th>
+                <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
+                  User Email
+                </th>
+                <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
                   Package
                 </th>
                 <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
@@ -127,6 +133,12 @@ export const BillingTransactionDetails = () => {
                     {tx._id.slice(0, 8)}...
                   </td>
                   <td className="py-4 px-6 text-sm text-gray-900 font-medium">
+                    {tx.userId?.profile?.name || '-'}
+                  </td>
+                  <td className="py-4 px-6 text-sm text-gray-900 font-medium">
+                    {tx.userId?.email || '-'}
+                  </td>
+                  <td className="py-4 px-6 text-sm text-gray-900 font-medium">
                     {tx.creditPackageId?.name || '-'}
                   </td>
                   <td className="py-4 px-6 text-sm font-semibold text-green-600">
@@ -140,11 +152,10 @@ export const BillingTransactionDetails = () => {
                   </td>
                   <td className="py-4 px-6 text-sm">
                     <span
-                      className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
-                        tx.status === 'completed'
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-yellow-100 text-yellow-700'
-                      }`}
+                      className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${tx.status === 'completed'
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-yellow-100 text-yellow-700'
+                        }`}
                     >
                       {tx.status}
                     </span>
@@ -195,6 +206,7 @@ export const BillingTransactionDetails = () => {
         </div>
       </div>
 
+
       {/* Pagination Controls */}
       <div className="mt-6 flex justify-center gap-2">
         <Button
@@ -206,16 +218,57 @@ export const BillingTransactionDetails = () => {
           Previous
         </Button>
 
-        {[...Array(totalPages)].map((_, i) => (
-          <Button
-            key={i}
-            size="sm"
-            variant={currentPage === i + 1 ? 'default' : 'outline'}
-            onClick={() => setCurrentPage(i + 1)}
-          >
-            {i + 1}
-          </Button>
-        ))}
+        {/* Page Numbers with dynamic range */}
+        {(() => {
+          const pages = [];
+          const maxVisiblePages = 5;
+          const startPage = Math.floor((currentPage - 1) / maxVisiblePages) * maxVisiblePages + 1;
+          const endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+
+          // Show leading ellipsis if needed
+          if (startPage > 1) {
+            pages.push(
+              <Button
+                key="prev-ellipsis"
+                size="sm"
+                variant="outline"
+                disabled
+              >
+                ...
+              </Button>
+            );
+          }
+
+          // Page buttons
+          for (let i = startPage; i <= endPage; i++) {
+            pages.push(
+              <Button
+                key={i}
+                size="sm"
+                variant={currentPage === i ? 'default' : 'outline'}
+                onClick={() => setCurrentPage(i)}
+              >
+                {i}
+              </Button>
+            );
+          }
+
+          // Show trailing ellipsis if needed
+          if (endPage < totalPages) {
+            pages.push(
+              <Button
+                key="next-ellipsis"
+                size="sm"
+                variant="outline"
+                disabled
+              >
+                ...
+              </Button>
+            );
+          }
+
+          return pages;
+        })()}
 
         <Button
           size="sm"
