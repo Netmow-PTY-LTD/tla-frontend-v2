@@ -40,7 +40,7 @@ export default function SendNewLeadsCard({
           <div>
             <h4 className="text-black font-medium heading-base">Locations</h4>
             <p className="text-[#34495E] text-[15px] mt-[5px]">
-              You're receiving customers within
+              You're receiving client within
             </p>
             {/* Location Display */}
 
