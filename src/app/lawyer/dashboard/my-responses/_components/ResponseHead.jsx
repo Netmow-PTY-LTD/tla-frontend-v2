@@ -10,6 +10,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
+import FilterResponseSidebar from '../../_component/FilterResponseSidebar';
 
 export default function ResponseHead({ isExpanded }) {
   return (
@@ -84,47 +85,7 @@ export default function ResponseHead({ isExpanded }) {
           </div>
         </div>
 
-        <Sheet>
-          <SheetTrigger asChild>
-            <button className="font-medium text-[#0194EF] flex items-center gap-2 text-[14px]">
-              <SlidersVertical className="w-4 h-4" /> <span>Filter(5)</span>
-            </button>
-          </SheetTrigger>
-          <SheetContent side="right" className="top-0 w-full max-w-sm">
-            <SheetHeader>
-              <SheetTitle className="text-left">Filter Leads</SheetTitle>
-            </SheetHeader>
-
-            {/* Filter Form Example */}
-            <div className="mt-4 space-y-4">
-              <div>
-                <label className="text-sm font-medium block mb-1">
-                  Service Type
-                </label>
-                <select className="w-full border border-gray-300 rounded-lg p-2">
-                  <option value="all">All</option>
-                  <option value="family">Family Law</option>
-                  <option value="divorce">Divorce Law</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium block mb-1">
-                  Location
-                </label>
-                <input
-                  type="text"
-                  className="w-full border border-gray-300 rounded-lg p-2"
-                  placeholder="Search by location"
-                />
-              </div>
-
-              <button className="w-full mt-2 px-4 py-2 bg-[#0194EF] text-white rounded-lg font-medium hover:bg-[#007ccd] transition">
-                Apply Filters
-              </button>
-            </div>
-          </SheetContent>
-        </Sheet>
+        <FilterResponseSidebar />
       </div>
 
       <hr className="border border-[#F3F3F3]" />

@@ -1,5 +1,6 @@
 'use client';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 import { BadgeCheck, Zap } from 'lucide-react';
@@ -122,7 +123,7 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
       </div>
 
       {/* Job Description */}
-      <div className="p-3">
+      <div className="p-3 flex-1">
         {user?.serviceId?.name && (
           <h3
             className={`font-medium mb-2 ${
@@ -159,14 +160,14 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
 
       {/* Footer Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">
-        <button
+        <Button
           className={`px-5 py-3 w-full sm:w-auto rounded-lg ${
             isExpanded ? 'heading-base' : 'text-[12px] '
-          } font-medium bg-[var(--color-special)] text-[#0B1C2D]`}
+          } font-medium bg-[var(--color-special)] text-white`}
           onClick={() => onViewDetails(user)}
         >
           View Response Details
-        </button>
+        </Button>
         {/* {user?.credit && (
           <p
             className={`text-[#34495E] ${

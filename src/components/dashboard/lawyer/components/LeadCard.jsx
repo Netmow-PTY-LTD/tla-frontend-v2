@@ -4,6 +4,7 @@ import Image from 'next/image';
 import TagButton from './TagButton';
 import { BadgeCheck, CircleAlert, Zap } from 'lucide-react';
 import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
+import { Button } from '@/components/ui/button';
 
 const LeadCard = ({ onViewDetails, user, isExpanded }) => {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
@@ -158,14 +159,14 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
 
       {/* Footer Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">
-        <button
-          className={`px-5 py-3 w-full sm:w-auto rounded-lg ${
-            isExpanded ? 'heading-base' : 'text-[12px] '
-          } font-medium bg-[var(--color-special)] text-[#0B1C2D]`}
+        <Button
+          className={`px-4 py-2 w-full sm:w-auto rounded-lg ${
+            isExpanded ? 'text-[14px]' : 'text-[12px] '
+          } font-medium bg-[var(--color-special)] text-white`}
           onClick={() => onViewDetails(user)}
         >
           View Lead Details
-        </button>
+        </Button>
         {user?.credit && (
           <p
             className={`text-[#34495E] ${
