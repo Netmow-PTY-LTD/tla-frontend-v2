@@ -6,10 +6,11 @@ import LeadsCountCard from './_component/home/LeadsCountCard';
 import GetStartedCard from './_component/home/GetStartedCard';
 
 import { useSelector } from 'react-redux';
-import ResponseCard from './_component/home/ResponseCard';
 import SendNewLeadsCard from './_component/home/SendNewLeadsCard';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { useGetLeadServiceListQuery } from '@/store/features/leadService/leadServiceApiService';
+import ResponseStatsCard from './_component/home/ResponseStatsCard';
+
 
 export default function SellerDashboard() {
   const currentUser = useSelector((state) => state.auth.user);
@@ -63,7 +64,7 @@ export default function SellerDashboard() {
           locations={locations}
           profile={profileData}
         />
-        <ResponseCard />
+        <ResponseStatsCard />
       </div>
     </div>
   );
