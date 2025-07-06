@@ -21,7 +21,7 @@ const CreditPurchaseLead = ({
   onSuccess,
   onClose,
   needAddCard,
-  isLoading,
+ 
 }) => {
   const [showCardForm, setShowCardForm] = useState(false);
   const [autoTopUP, setAutoTopUp] = useState(false);
