@@ -14,6 +14,7 @@ import { useState } from 'react';
 
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { toast } from 'sonner';
+import { Loader } from 'lucide-react';
 
 const CreditPurchaseLead = ({ recommendedPackage, onSuccess, onClose, needAddCard }) => {
   const [showCardForm, setShowCardForm] = useState(false);
@@ -21,7 +22,7 @@ const CreditPurchaseLead = ({ recommendedPackage, onSuccess, onClose, needAddCar
   const [pendingPackageId, setPendingPackageId] = useState(null);
   const [pendingPurchase, setPendingPurchase] = useState(false);
   const [addPaymentMethod] = useAddPaymentMethodMutation();
-  const [purchaseCredits] = usePurchaseCreditPackageMutation();
+  const [purchaseCredits, { isLoading }] = usePurchaseCreditPackageMutation();
 
   const handleBuyClick = async () => {
     if (needAddCard) {
@@ -66,13 +67,13 @@ const CreditPurchaseLead = ({ recommendedPackage, onSuccess, onClose, needAddCar
       console.log('purchaseDetails', purchaseDetails)
       const result = await purchaseCredits(purchaseDetails).unwrap();
       if (result.success) {
-        toast.success('Credits purchased successfully');
+        toast.success('Credits purchased successfully', { position: 'top-right' });
         onSuccess();
       } else {
-        toast.error(result.message || 'Purchase failed');
+        toast.error(result.message || 'Purchase failed', { position: 'top-right' });
       }
     } catch (error) {
-      toast.error(error?.data?.message || 'Payment failed');
+      toast.error(error?.data?.message || 'Payment failed', { position: 'top-right' });
     } finally {
       setPendingPurchase(false);
     }
@@ -122,10 +123,18 @@ const CreditPurchaseLead = ({ recommendedPackage, onSuccess, onClose, needAddCar
               <div className="">
                 <Button
                   variant="primary"
+                  disabled={isLoading}
                   className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-4"
                   onClick={handleBuyClick}
                 >
-                  Buy Now
+                  {isLoading ? (
+                    <>
+                      <Loader className="mr-2" />
+                      Purchasing...
+                    </>
+                  ) : (
+                    'Buy Now'
+                  )}
                 </Button>
 
                 <div className="flex items-start space-x-2 mt-3">

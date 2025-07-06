@@ -34,7 +34,7 @@ const LawyerContactButton = ({ leadDetail }) => {
       console.log('response ==>', res);
       if (res.success) {
         console.log('response ==>', res);
-        toast.success('Contacted successfully');
+        toast.success('Contacted successfully',{position:'top-right'});
         setTimeout(() => {
           router.push(
             `/lawyer/dashboard/my-responses?responseId=${res?.data?.responseId}`
@@ -46,11 +46,11 @@ const LawyerContactButton = ({ leadDetail }) => {
         setShowCreditModal(true);
         setNeedAddCard(res?.data?.needAddCard ? res?.data?.needAddCard : false);
       } else {
-        toast.error(res.message || 'Something went wrong');
+        toast.error(res.message || 'Something went wrong',{position:'top-right'});
       }
     } catch (err) {
       toast.error(
-        err?.data?.message || 'Something went wrong while contacting the lawyer'
+        err?.data?.message || 'Something went wrong while contacting the lawyer',{position:'top-right'}
       );
     }
   };
@@ -61,7 +61,7 @@ const LawyerContactButton = ({ leadDetail }) => {
       try {
         const retryRes = await contactLawyer(pendingPayload).unwrap();
         if (retryRes.success) {
-          toast.success('Contacted successfully after payment');
+          toast.success('Contacted successfully after payment',{position:'top-right'});
           setTimeout(() => {
             router.push(
               `/lawyer/dashboard/my-responses?responseId=${retryRes?.data?.responseId}`
@@ -69,10 +69,10 @@ const LawyerContactButton = ({ leadDetail }) => {
             console.log('response id ==>', retryRes?.data?.responseId);
           }, 500);
         } else {
-          toast.error(retryRes.message || 'Retry failed');
+          toast.error(retryRes.message || 'Retry failed',{position:'top-right'});
         }
       } catch (err) {
-        toast.error(err?.data?.message || 'Retry failed');
+        toast.error(err?.data?.message || 'Retry failed',{position:'top-right'});
       }
       setPendingPayload(null);
     }
