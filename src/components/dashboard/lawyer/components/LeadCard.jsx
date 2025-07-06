@@ -8,11 +8,14 @@ import { Button } from '@/components/ui/button';
 
 const LeadCard = ({ onViewDetails, user, isExpanded }) => {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
-  // console.log('Single Lead Data:', user);
+  console.log('Single Lead Data:', singleLead);
 
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])
     .find((option) => option.option === 'Urgent');
+
+  const badges = singleLead?.data?.badges
+
 
   const formatRelativeTime = (dateString) => {
     const now = new Date();
@@ -44,10 +47,9 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
       <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 p-3">
         <figure className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
           <Image
-            src={`${
-              user?.userProfileId?.profilePicture ??
+            src={`${user?.userProfileId?.profilePicture ??
               '/assets/img/auth-step1.png'
-            }`}
+              }`}
             alt={user?.userProfileId?.name ?? 'John Doe'}
             width={40}
             height={40}
@@ -59,16 +61,14 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
           <div>
             <div
-              className={`font-medium mb-1 ${
-                isExpanded ? 'heading-base' : 'text-[13px]'
-              }`}
+              className={`font-medium mb-1 ${isExpanded ? 'heading-base' : 'text-[13px]'
+                }`}
             >
               {user?.userProfileId?.name}
             </div>
             <div
-              className={`${
-                isExpanded ? 'text-[13px]' : 'text-[10px]'
-              } text-gray-500`}
+              className={`${isExpanded ? 'text-[13px]' : 'text-[10px]'
+                } text-gray-500`}
             >
               {user?.userProfileId?.address ?? ''}
             </div>
@@ -86,16 +86,27 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
         {(urgentOption?.option ||
           user?.additionalDetails ||
           user?.userProfileId?.phone) && (
-          <h4
-            className={`font-medium mb-2 ${
-              isExpanded ? 'heading-base' : 'text-[13px]'
-            }`}
-          >
-            Matched criteria
-          </h4>
-        )}
+            <h4
+              className={`font-medium mb-2 ${isExpanded ? 'heading-base' : 'text-[13px]'
+                }`}
+            >
+              Matched criteria
+            </h4>
+          )}
 
         <div className="flex flex-wrap gap-2">
+           {badges && badges.length > 0 && (
+            <>
+              {badges.map((item) => (
+                <TagButton
+                  key={item}
+                  text={item}
+                  bgColor="#004DA61A"
+                  icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+                />
+              ))}
+            </>
+          )}
           {urgentOption?.option && (
             <TagButton
               text={urgentOption?.option}
@@ -110,6 +121,7 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
               icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
             />
           )}
+         
 
           {user?.userProfileId?.phone && (
             <TagButton
@@ -125,9 +137,8 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
       <div className="p-3 flex-1">
         {user?.serviceId?.name && (
           <h3
-            className={`font-medium mb-2 ${
-              isExpanded ? 'heading-base' : 'text-[13px]'
-            }`}
+            className={`font-medium mb-2 ${isExpanded ? 'heading-base' : 'text-[13px]'
+              }`}
           >
             Looking for a {user?.serviceId?.name} consultation
           </h3>
@@ -135,16 +146,14 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
 
         <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
           <h4
-            className={`font-medium mb-2 ${
-              isExpanded ? 'heading-base' : 'text-[14px]'
-            }`}
+            className={`font-medium mb-2 ${isExpanded ? 'heading-base' : 'text-[14px]'
+              }`}
           >
             {user?.serviceId?.name}
           </h4>
           <p
-            className={`text-[#34495E] ${
-              isExpanded ? 'text-[13px]' : 'text-[12px]'
-            }`}
+            className={`text-[#34495E] ${isExpanded ? 'text-[13px]' : 'text-[12px]'
+              }`}
           >
             {user?.additionalDetails === ''
               ? `If you're facing a divorce, it's crucial to seek professional legal
@@ -160,18 +169,16 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
       {/* Footer Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">
         <Button
-          className={`px-4 py-2 w-full sm:w-auto rounded-lg ${
-            isExpanded ? 'text-[14px]' : 'text-[12px] '
-          } font-medium bg-[var(--color-special)] text-white`}
+          className={`px-4 py-2 w-full sm:w-auto rounded-lg ${isExpanded ? 'text-[14px]' : 'text-[12px] '
+            } font-medium bg-[var(--color-special)] text-white`}
           onClick={() => onViewDetails(user)}
         >
           View Lead Details
         </Button>
         {user?.credit && (
           <p
-            className={`text-[#34495E] ${
-              isExpanded ? 'heading-base' : 'text-[12px]'
-            } flex items-center gap-2`}
+            className={`text-[#34495E] ${isExpanded ? 'heading-base' : 'text-[12px]'
+              } flex items-center gap-2`}
           >
             <span>{user?.credit} Credits required</span>
             <CircleAlert className="w-4 h-4" />
