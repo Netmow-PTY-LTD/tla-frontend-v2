@@ -62,6 +62,10 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
     return <ResponseSkeleton />;
   }
 
+  const handleUpdateStatus=()=>{
+
+    
+  }
   const activities = [
     {
       date: 'Fri 23 May',
@@ -120,12 +124,11 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
             <select
               className="p-2 border border-gray-300 rounded-lg bg-white text-[13px]"
               defaultValue={currentStatus}
-              onChange={(e) =>
-                console.log('Status changed to:', e.target.value)
-              }
+              onChange={(e) => handleUpdateStatus(e.target.value)}
             >
-              <option value="Pending">Pending</option>
-              <option value="Hired">Hired</option>
+              <option value="pending">Pending</option>
+              <option value="hired">Hired</option>
+              <option value="archive">Hired</option>
             </select>
           </div>
         </div>
@@ -228,31 +231,28 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
             <div className="flex border-b border-gray-200 gap-6">
               <button
                 onClick={() => setActiveTab('activity')}
-                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                  activeTab === 'activity'
-                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                    : 'hover:text-black'
-                }`}
+                className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
+                  ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                  : 'hover:text-black'
+                  }`}
               >
                 Activity
               </button>
               <button
                 onClick={() => setActiveTab('lead-details')}
-                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                  activeTab === 'lead-details'
-                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                    : 'hover:text-black'
-                }`}
+                className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'lead-details'
+                  ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                  : 'hover:text-black'
+                  }`}
               >
                 Lead Details
               </button>
               <button
                 onClick={() => setActiveTab('note')}
-                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                  activeTab === 'note'
-                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                    : 'hover:text-black'
-                }`}
+                className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'note'
+                  ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                  : 'hover:text-black'
+                  }`}
               >
                 My Notes
               </button>
