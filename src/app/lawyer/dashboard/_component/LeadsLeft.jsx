@@ -69,17 +69,17 @@ export default function LeadDetailsPage({ onBack, lead }) {
         </div>
         <div className="mt-3 max-w-4xl">
           <div className="flex flex-col items-start gap-4 ">
-            <figure className="w-20 h-20 rounded-full overflow-hidden">
+            <figure className="w-20 h-20 overflow-hidden">
               <Image
                 src={`${
                   lead?.userProfileId?.profilePicture ??
-                  '/assets/img/auth-step1.png'
+                  '/assets/img/avatar.png'
                 }`}
                 alt={lead?.userProfileId?.name ?? 'John Doe'}
                 width={80}
                 height={80}
                 priority
-                className="rounded-full object-cover"
+                className="rounded-full object-cover w-full h-full"
               />
             </figure>
             <div>

@@ -58,8 +58,13 @@ const ServiceAddModal = ({ profile, updateUserData, refetch }) => {
               label="Service Title"
               name="title"
               placeholder={'Service Type'}
+              textColor="text-[#8E8E8E]"
             />
-            <TextArea label="Service Description" name="description" />
+            <TextArea
+              label="Service Description"
+              name="description"
+              textColor="text-[#8E8E8E]"
+            />
           </div>
           {/* Footer Buttons */}
           <div className="flex justify-between items-center pt-4 ">

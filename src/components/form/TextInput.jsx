@@ -21,6 +21,7 @@ export default function TextInput({
   inputClassName = '',
   itemClassName = '',
   labelClassName = '',
+  textColor = 'text-black',
   ...props
 }) {
   const { control } = useFormContext();
@@ -56,6 +57,7 @@ export default function TextInput({
                 value={value ?? ''}
                 className={clsx(
                   'bg-white border-[#DCE2EA] text-black placeholder:text-[#a6a8ab] h-[44px]',
+                  textColor,
                   inputClassName
                 )}
                 {...props}

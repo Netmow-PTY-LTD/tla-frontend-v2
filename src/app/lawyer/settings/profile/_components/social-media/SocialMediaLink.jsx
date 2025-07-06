@@ -35,6 +35,7 @@ export default function SocialMediaLink({ profile }) {
             label="Facebook"
             name="facebook"
             placeholder="https://facebook.com/"
+            textColor="text-[#8E8E8E]"
           />
         </div>
         <div className="flex items-center gap-2 max-w-sm p-2 rounded-md text-gray-700 text-sm">
@@ -50,6 +51,7 @@ export default function SocialMediaLink({ profile }) {
             label="Twitter"
             name="twitter"
             placeholder="https://twitter.com"
+            textColor="text-[#8E8E8E]"
           />
         </div>
         <div className="flex items-center gap-2 max-w-sm p-2 rounded-md text-gray-700 text-sm">
@@ -79,6 +81,7 @@ export default function SocialMediaLink({ profile }) {
             label="Describe your company"
             name="website"
             placeholder="Enter one link per line"
+            textColor="text-[#8E8E8E]"
           />
         </div>
       </div>

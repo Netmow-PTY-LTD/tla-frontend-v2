@@ -43,7 +43,7 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
     <Card className="w-full max-w-full mx-auto flex flex-col">
       {/* Header Section */}
       <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 p-3">
-        <figure className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+        <figure className="w-10 h-10 overflow-hidden flex-shrink-0">
           <Image
             src={`${
               user?.leadId?.userProfileId?.profilePicture ??
@@ -53,7 +53,7 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
             width={40}
             height={40}
             priority
-            className="rounded-full object-cover"
+            className="w-full h-full rounded-full object-cover"
           />
         </figure>
 
