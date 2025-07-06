@@ -131,7 +131,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
         </div>
         <div className="mt-3 max-w-4xl">
           <div className="flex flex-col items-start gap-4 ">
-            <figure className="w-20 h-20 rounded-full overflow-hidden">
+            <figure className="w-20 h-20 overflow-hidden">
               <Image
                 src={
                   singleResponse?.data?.leadId?.userProfileId?.profilePicture ||
@@ -141,7 +141,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                 width={80}
                 height={80}
                 priority
-                className="rounded-full object-cover"
+                className="w-full h-full rounded-full object-cover"
               />
             </figure>
             <div>

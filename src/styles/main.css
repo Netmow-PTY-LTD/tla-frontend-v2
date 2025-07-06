@@ -53,6 +53,133 @@ h6 {
   line-height: 1.3;
 }
 
+/* Preloader  */
+
+.loader-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+  perspective: 2000px;
+  transform: rotateX(-30deg) rotateY(-45deg);
+}
+
+.holder {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+  transform: translate3d(0em, 1.5em, 0.75em);
+}
+
+.holder:last-child {
+  transform: rotateY(-90deg) rotateX(90deg) translate3d(0, 1.5em, 0.75em);
+}
+
+.holder:first-child {
+  transform: rotateZ(-90deg) rotateX(-90deg) translate3d(0, 1.5em, 0.75em);
+}
+
+.holder:nth-child(1) .box {
+  background-color: #34495e;
+}
+.holder:nth-child(1) .box:before {
+  background-color: #10161c;
+}
+.holder:nth-child(1) .box:after {
+  background-color: #22303d;
+}
+.holder:nth-child(2) .box {
+  background-color: #00c3c0;
+}
+.holder:nth-child(2) .box:before {
+  background-color: #005d5c;
+}
+.holder:nth-child(2) .box:after {
+  background-color: #00908e;
+}
+.holder:nth-child(3) .box {
+  background-color: #ff8602;
+}
+.holder:nth-child(3) .box:before {
+  background-color: #9b5100;
+}
+.holder:nth-child(3) .box:after {
+  background-color: #ce6b00;
+}
+
+.box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1.5em;
+  height: 1.5em;
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+  animation: ani-box 6s infinite;
+}
+
+.box:before,
+.box:after {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  content: '';
+}
+.box:before {
+  left: 100%;
+  bottom: 0;
+  transform: rotateY(90deg);
+  transform-origin: 0 50%;
+}
+.box:after {
+  left: 0;
+  bottom: 100%;
+  transform: rotateX(90deg);
+  transform-origin: 0 100%;
+}
+
+@keyframes ani-box {
+  8.33% {
+    transform: translate3d(-50%, -50%, 0) scaleZ(2);
+  }
+  16.7% {
+    transform: translate3d(-50%, -50%, -1.5em) scaleZ(1);
+  }
+  25% {
+    transform: translate3d(-50%, -100%, -1.5em) scaleY(2);
+  }
+  33.3% {
+    transform: translate3d(-50%, -150%, -1.5em) scaleY(1);
+  }
+  41.7% {
+    transform: translate3d(-100%, -150%, -1.5em) scaleX(2);
+  }
+  50% {
+    transform: translate3d(-150%, -150%, -1.5em) scaleX(1);
+  }
+  58.3% {
+    transform: translate3d(-150%, -150%, 0) scaleZ(2);
+  }
+  66.7% {
+    transform: translate3d(-150%, -150%, 0) scaleZ(1);
+  }
+  75% {
+    transform: translate3d(-150%, -100%, 0) scaleY(2);
+  }
+  83.3% {
+    transform: translate3d(-150%, -50%, 0) scaleY(1);
+  }
+  91.7% {
+    transform: translate3d(-100%, -50%, 0) scaleX(2);
+  }
+  100% {
+    transform: translate3d(-50%, -50%, 0) scaleX(1);
+  }
+}
+
 /* Reset CSS */
 
 input:focus {

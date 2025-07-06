@@ -169,18 +169,23 @@ export default function About() {
         <div className="py-9">
           <h3 className="text-black font-semibold heading-lg">About</h3>
           <p className="mt-[10px] text-[#8E8E8E] mb-7">
-           This section appears on your public profile on TheLawApp and is your opportunity to make a strong first impression. Use it to highlight your legal experience, areas of expertise, and what sets you apart. Building trust starts with a clear, professional introduction.
+            This section appears on your public profile on TheLawApp and is your
+            opportunity to make a strong first impression. Use it to highlight
+            your legal experience, areas of expertise, and what sets you apart.
+            Building trust starts with a clear, professional introduction.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-7 mb-7">
             <TextInput
               label="Phone Number"
               name="phone"
               placeholder="+8801XXXXXXX"
+              textColor="text-[#8E8E8E]"
             />
             <TextInput
               label="Address"
               name="address"
               placeholder="Enter your personal address"
+              textColor="text-[#8E8E8E]"
             />
           </div>
           <label className="text-black label-text mb-3 inline-block">
