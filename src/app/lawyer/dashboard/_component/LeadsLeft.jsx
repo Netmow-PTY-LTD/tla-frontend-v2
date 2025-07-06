@@ -51,6 +51,8 @@ export default function LeadDetailsPage({ onBack, lead }) {
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])
     .find((option) => option.option === 'Urgent');
+    
+  const badges = singleLead?.data?.badges
 
   // if (isSingleLeadLoading) {
   //   return <ResponseSkeleton />;
@@ -101,8 +103,8 @@ export default function LeadDetailsPage({ onBack, lead }) {
                   const phone = lead?.userProfileId?.phone;
                   return phone
                     ? `${phone.slice(0, 3)}${'*'.repeat(
-                        Math.max(0, phone.length - 3)
-                      )}`
+                      Math.max(0, phone.length - 3)
+                    )}`
                     : '480*******';
                 })()}
               </span>{' '}
@@ -144,6 +146,19 @@ export default function LeadDetailsPage({ onBack, lead }) {
           <div className="mt-5">
             <h4 className="font-medium mb-1 heading-base">Matched criteria</h4>
             <div className="flex flex-wrap gap-2">
+
+              {badges && badges.length > 0 && (
+                <>
+                  {badges.map((item) => (
+                    <TagButton
+                      key={item}
+                      text={item}
+                      bgColor="#004DA61A"
+                      icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+                    />
+                  ))}
+                </>
+              )}
               {urgentOption?.option && (
                 <TagButton
                   text={urgentOption?.option}

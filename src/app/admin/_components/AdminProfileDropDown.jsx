@@ -109,7 +109,7 @@ export default function AdminProfileDropDown({ data }) {
           <DropdownMenuGroup>
             <DropdownMenuItem>
               <Link
-                href="/admin/account-settings"
+                href="/admin/settings"
                 className="w-full flex items-center justify-between gap-2 cursor-pointer px-2 py-1.5"
               >
                 <span>Settings</span>
