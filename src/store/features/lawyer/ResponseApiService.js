@@ -31,6 +31,14 @@ const responseApiService = baseApi.injectEndpoints({
       }),
       providesTags: ['response'],
     }),
+    updateResponseStatus: builder.mutation({
+      query: (body) => ({
+        url: `/response/${body.responseId}/status`,
+        method: 'POST',
+        body: body.data,
+      }),
+      invalidatesTags: ['response'],
+    }),
   }),
 });
 
@@ -39,4 +47,5 @@ export const {
   useGetAllResponsesQuery,
   useGetSingleResponseQuery,
   useGetAllMyResponsesQuery,
+  useUpdateResponseStatusMutation
 } = responseApiService;
