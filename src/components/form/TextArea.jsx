@@ -21,6 +21,7 @@ export default function TextareaInput({
   textareaClassName = '',
   itemClassName = '',
   labelClassName = '',
+  textColor = 'text-black',
 }) {
   const { control } = useFormContext();
 
@@ -38,7 +39,8 @@ export default function TextareaInput({
               placeholder={placeholder}
               disabled={disabled}
               className={clsx(
-                'bg-white border-[#DCE2EA] text-black placeholder:text-[#a6a8ab] w-full ',
+                'bg-white border-[#DCE2EA] placeholder:text-[#a6a8ab] w-full ',
+                textColor,
                 textareaClassName
               )}
             />

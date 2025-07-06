@@ -58,12 +58,19 @@ const EditAccreditationFormModal = ({
             label="Institution"
             name="institution"
             placeholder="Institution Name"
+            textColor="text-[#8E8E8E]"
           />
-          <TextInput label="Address" name="address" placeholder="Address" />
+          <TextInput
+            label="Address"
+            name="address"
+            placeholder="Address"
+            textColor="text-[#8E8E8E]"
+          />
           <TextInput
             label="Certificate Title"
             name="certificate_title"
             placeholder="Certificate Title"
+            textColor="text-[#8E8E8E]"
           />
           {previewUrl && (
             <div className="relative mt-2 inline-block">

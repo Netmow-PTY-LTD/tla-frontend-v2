@@ -1,5 +1,6 @@
 import React from 'react';
 export default function AboutProfile({ data }) {
+  if (!data?.bio) return null;
   return (
     <section className="pb-8 profile-about">
       <div className="flex flex-wrap">

@@ -22,17 +22,17 @@ const MyCredits = () => {
             My credits
           </h2>
           <p className="text-gray-600 mb-2">
-            Credits are used to contact customers on LawApp. A small fee, paid
-            in credits, is charged for each customer you contact. Learn more
-            about credits and our charges in the{' '}
+            Credits are used to contact customers on The Law App. A small fee,
+            paid in credits, is charged for each customer you contact. Learn
+            more about credits and our charges in the{' '}
             <span className="text-[#00C3C0] hover:underline cursor-pointer">
               Help Centre
             </span>
             .
           </p>
           <p className="text-[#34495E] font-semibold mb-4">
-            We charge a small fee for each customer you contact on Bark. Buy a
-            pack of 50 credits and get 20% OFF
+            We charge a small fee for each customer you contact on The Law App.
+            Buy a pack of 50 credits and get 20% OFF
           </p>
         </div>
 

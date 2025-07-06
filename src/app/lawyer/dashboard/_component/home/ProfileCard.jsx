@@ -24,7 +24,7 @@ export default function ProfileCard() {
             {userInfo?.data?.profile?.name ?? 'Lawyer'}
           </h2>
           <p className="text-gray-500 mt-1 admin-text">
-            Completing your profile is a great way to appeal to customers.
+            Completing your profile is a great way to appeal to clients.
           </p>
         </div>
       </div>

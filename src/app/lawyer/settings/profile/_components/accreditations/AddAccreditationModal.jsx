@@ -52,6 +52,7 @@ const AddAccreditationModal = ({
                 label="Name of Institution"
                 name="institution"
                 placeholder="Add institution name"
+                textColor="text-[#8E8E8E]"
               />
             </div>
             <div>
@@ -59,6 +60,7 @@ const AddAccreditationModal = ({
                 label="Address"
                 name="address"
                 placeholder="Add address"
+                textColor="text-[#8E8E8E]"
               />
             </div>
             <div>
@@ -66,6 +68,7 @@ const AddAccreditationModal = ({
                 label="Certificate Title"
                 name="certificate_title"
                 placeholder="Add certificate title"
+                textColor="text-[#8E8E8E]"
               />
             </div>
             {previewUrl && (

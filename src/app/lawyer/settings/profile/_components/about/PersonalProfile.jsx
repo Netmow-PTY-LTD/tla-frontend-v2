@@ -11,7 +11,9 @@ export default function PersonalProfile() {
         Personal Information
       </h3>
       <p className="text-[#8E8E8E] mt-2">
-       This identifies the individual who will be communicating with clients on TheLawApp. Your name and photo will appear alongside messages, helping build a personal connection and trust with potential clients.
+        This identifies the individual who will be communicating with clients on
+        TheLawApp. Your name and photo will appear alongside messages, helping
+        build a personal connection and trust with potential clients.
       </p>
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mt-8">
@@ -20,11 +22,17 @@ export default function PersonalProfile() {
         </div>
 
         <div className="w-full md:w-1/2 space-y-5">
-          <TextInput name="name" label="Name" placeholder="Enter Your Name" />
+          <TextInput
+            name="name"
+            label="Name"
+            placeholder="Enter Your Name"
+            textColor="text-[#8E8E8E]"
+          />
           <TextInput
             name="designation"
             label="Designation"
             placeholder="Enter Your Designation"
+            textColor="text-[#8E8E8E]"
           />
         </div>
       </div>

@@ -130,7 +130,7 @@ const CreditsPurchase = ({ creditPackage }) => {
                 {/* <Info className="h-5 w-5 text-[#00C3C0] flex-shrink-0" /> */}
                 <p className="text-sm text-gray-700">
                   We'll give you your credits back if you don't secure at least
-                  one job on Bark using these credits.
+                  one job on The Law App using these credits.
                 </p>
               </div>
             </div>

@@ -27,6 +27,7 @@ export default function SelectInput({
   triggerClassName = '',
   itemClassName = '',
   labelClassName = '',
+  textColor = 'text-black',
 }) {
   const { control } = useFormContext();
 
@@ -45,7 +46,11 @@ export default function SelectInput({
                 value={field.value ?? ''}
               >
                 <SelectTrigger
-                  className={clsx('bg-white h-[44px]', triggerClassName)}
+                  className={clsx(
+                    'bg-white h-[44px]',
+                    textColor,
+                    triggerClassName
+                  )}
                 >
                   <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
