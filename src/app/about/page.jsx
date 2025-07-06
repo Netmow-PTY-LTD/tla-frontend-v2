@@ -1,3 +1,4 @@
+'use client';
 import Faq from '@/components/main/about/Faq';
 import CallToAction from '@/components/main/CallToAction';
 import MainLayout from '@/components/main/common/layout';
@@ -13,6 +14,7 @@ const AboutPage = () => {
     paragraph:
       'The Law App is a cutting-edge legal services marketplace designed to help clients and lawyers connect effortlessly. We provide a smart, user-friendly platform where clients can post their legal needs and receive competitive offers from qualified lawyers.',
   };
+
   return (
     <MainLayout>
       <section className="about-section section">

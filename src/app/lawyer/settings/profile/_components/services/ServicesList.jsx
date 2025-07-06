@@ -55,7 +55,7 @@ const ServiceCard = ({ service, handleEditClick, refetch }) => {
           </button>
         </div>
       </div>
-      <p className="text-sm text-gray-600">{description}</p>
+      <p className="text-sm text-[#8E8E8E]">{description}</p>
     </div>
   );
 };
