@@ -38,7 +38,7 @@ export default function AuthHeader() {
                 href="/register"
                 className="btn_register bg-[var(--primary-color)]"
               >
-                <span>Register With TLA</span>
+                <span>Register as Lawyer</span>
               </Link>
             )}
           </div>

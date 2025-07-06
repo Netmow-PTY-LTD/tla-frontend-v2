@@ -15,6 +15,7 @@ import {
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import LawyerContactButton from './leadBoard/LawyerContactButton';
+import ResponseSkeleton from '../my-responses/_components/ResponseSkeleton';
 
 export default function LeadDetailsPage({ onBack, lead }) {
   const { data: singleLead, isLoading: isSingleLeadLoading } =
@@ -53,7 +54,13 @@ export default function LeadDetailsPage({ onBack, lead }) {
     
   const badges = singleLead?.data?.badges
 
-  return (
+  // if (isSingleLeadLoading) {
+  //   return <ResponseSkeleton />;
+  // }
+
+  return isSingleLeadLoading ? (
+    <ResponseSkeleton />
+  ) : (
     <div className="">
       <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
         <div className="flex items-center justify-between">
@@ -64,16 +71,17 @@ export default function LeadDetailsPage({ onBack, lead }) {
         </div>
         <div className="mt-3 max-w-4xl">
           <div className="flex flex-col items-start gap-4 ">
-            <figure className="w-20 h-20 rounded-full overflow-hidden">
+            <figure className="w-20 h-20 overflow-hidden">
               <Image
-                src={`${lead?.userProfileId?.profilePicture ??
-                  '/assets/img/auth-step1.png'
-                  }`}
+                src={`${
+                  lead?.userProfileId?.profilePicture ??
+                  '/assets/img/avatar.png'
+                }`}
                 alt={lead?.userProfileId?.name ?? 'John Doe'}
                 width={80}
                 height={80}
                 priority
-                className="rounded-full object-cover"
+                className="rounded-full object-cover w-full h-full"
               />
             </figure>
             <div>

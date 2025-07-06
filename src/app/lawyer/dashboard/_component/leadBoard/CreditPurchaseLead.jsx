@@ -16,7 +16,13 @@ import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { toast } from 'sonner';
 import { Loader } from 'lucide-react';
 
-const CreditPurchaseLead = ({ recommendedPackage, onSuccess, onClose, needAddCard }) => {
+const CreditPurchaseLead = ({
+  recommendedPackage,
+  onSuccess,
+  onClose,
+  needAddCard,
+  isLoading,
+}) => {
   const [showCardForm, setShowCardForm] = useState(false);
   const [autoTopUP, setAutoTopUp] = useState(false);
   const [pendingPackageId, setPendingPackageId] = useState(null);
@@ -64,7 +70,7 @@ const CreditPurchaseLead = ({ recommendedPackage, onSuccess, onClose, needAddCar
         couponCode: null,
       };
 
-      console.log('purchaseDetails', purchaseDetails)
+      console.log('purchaseDetails', purchaseDetails);
       const result = await purchaseCredits(purchaseDetails).unwrap();
       if (result.success) {
         toast.success('Credits purchased successfully', { position: 'top-right' });
@@ -78,9 +84,6 @@ const CreditPurchaseLead = ({ recommendedPackage, onSuccess, onClose, needAddCar
       setPendingPurchase(false);
     }
   };
-
-
-
 
   if (showCardForm) {
     return <AddCardForm onCardAdded={handleCardAdded} />;
@@ -174,8 +177,6 @@ const CreditPurchaseLead = ({ recommendedPackage, onSuccess, onClose, needAddCar
           </div>
         </div>
       </>
-
-
     </div>
   );
 };

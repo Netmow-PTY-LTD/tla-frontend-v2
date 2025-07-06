@@ -70,7 +70,7 @@ export default function Experiences() {
         updateUserData={updateUserData}
         refetch={refetch}
       />
-      <SimpleEditor />
+      <SimpleEditor className="text-[#8E8E8E]" />
     </div>
   );
 }

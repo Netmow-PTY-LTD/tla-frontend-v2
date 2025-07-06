@@ -62,7 +62,9 @@ export default function CompanyLocation() {
     <div className="py-9">
       <h3 className="text-black font-semibold heading-lg">Company location</h3>
       <p className="mt-[10px] text-[#8E8E8E] mb-7">
-        Provide a specific business address to improve visibility for clients searching for legal services in your area. A clear and accurate location helps build trust and connects you with local clients more effectively.
+        Provide a specific business address to improve visibility for clients
+        searching for legal services in your area. A clear and accurate location
+        helps build trust and connects you with local clients more effectively.
       </p>
 
       <div className="flex flex-wrap lg:flex-nowrap justify-between gap-20">
@@ -89,6 +91,7 @@ export default function CompanyLocation() {
               name={'location.locationReason'}
               options={options}
               placeholder="Select a reason"
+              textColor="text-[#8E8E8E]"
             />
           </div>
         </div>

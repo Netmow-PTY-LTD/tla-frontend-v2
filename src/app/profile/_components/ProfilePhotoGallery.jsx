@@ -5,6 +5,8 @@ import Link from 'next/link';
 export default function ProfilePhotoGallery({ userInfo }) {
   const photos = userInfo?.data?.photosVideos?.photos || [];
 
+  if (!photos.length) return null;
+
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 

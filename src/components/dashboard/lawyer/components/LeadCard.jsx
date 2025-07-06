@@ -45,16 +45,16 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
     <Card className="w-full max-w-full mx-auto flex flex-col">
       {/* Header Section */}
       <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 p-3">
-        <figure className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+        <figure className="w-10 h-10 overflow-hidden flex-shrink-0">
           <Image
-            src={`${user?.userProfileId?.profilePicture ??
-              '/assets/img/auth-step1.png'
-              }`}
+            src={`${
+              user?.userProfileId?.profilePicture ?? '/assets/img/avatar.png'
+            }`}
             alt={user?.userProfileId?.name ?? 'John Doe'}
             width={40}
             height={40}
             priority
-            className="rounded-full object-cover"
+            className="rounded-full object-cover w-full h-full"
           />
         </figure>
 
@@ -173,7 +173,7 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
             } font-medium bg-[var(--color-special)] text-white`}
           onClick={() => onViewDetails(user)}
         >
-          View Lead Details
+          View Details
         </Button>
         {user?.credit && (
           <p

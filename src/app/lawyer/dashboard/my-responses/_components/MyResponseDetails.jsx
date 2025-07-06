@@ -18,6 +18,7 @@ import Link from 'next/link';
 import { useGetSingleResponseQuery } from '@/store/features/lawyer/ResponseApiService';
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
 import WhatsApp from '@/components/icon/WhatsApp';
+import ResponseSkeleton from './ResponseSkeleton';
 
 export default function MyResponseDetails({ onBack, response, responseId }) {
   const [activeTab, setActiveTab] = useState('activity');
@@ -58,11 +59,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
   );
 
   if (isSingleResponseLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Loader2 className="animate-spin" />
-      </div>
-    );
+    return <ResponseSkeleton />;
   }
 
   const activities = [
@@ -134,7 +131,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
         </div>
         <div className="mt-3 max-w-4xl">
           <div className="flex flex-col items-start gap-4 ">
-            <figure className="w-20 h-20 rounded-full overflow-hidden">
+            <figure className="w-20 h-20 overflow-hidden">
               <Image
                 src={
                   singleResponse?.data?.leadId?.userProfileId?.profilePicture ||
@@ -144,7 +141,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                 width={80}
                 height={80}
                 priority
-                className="rounded-full object-cover"
+                className="w-full h-full rounded-full object-cover"
               />
             </figure>
             <div>

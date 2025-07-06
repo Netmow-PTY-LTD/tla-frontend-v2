@@ -332,9 +332,9 @@ export default function FilterResponseSidebar() {
           <Button variant="outline" className="cursor-pointer">
             Cancel
           </Button>
-          <button className="px-4 py-2 bg-[#0194EF] text-white rounded-lg font-medium hover:bg-[#007ccd] transition">
+          <Button className="px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg font-medium transition">
             Apply Filters
-          </button>
+          </Button>
         </div>
       </SheetContent>
     </Sheet>
