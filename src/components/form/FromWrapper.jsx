@@ -24,7 +24,7 @@ export default function FormWrapper({
 
   const methods = useForm({
     ...formConfig,
-    defaultValues,
+    // defaultValues,
   });
 
   useEffect(() => {
