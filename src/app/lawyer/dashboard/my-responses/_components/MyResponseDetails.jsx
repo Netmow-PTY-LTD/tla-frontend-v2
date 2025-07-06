@@ -100,6 +100,147 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
     },
   ];
 
+  const moreDummyActivityLogs = [
+    {
+      date: '2025-07-13T20:30:00.000Z',
+      activityNote: 'Marked feedback for escalation',
+      createdBy: '64fadmin001admin456admin789',
+      activityType: 'escalate',
+      extraField: {
+        reason: 'Negative review',
+      },
+      createdAt: '2025-07-13T20:30:01.000Z',
+    },
+    {
+      date: '2025-07-13T17:40:00.000Z',
+      activityNote: 'Reviewed client feedback',
+      createdBy: '64f999abc999def456789999',
+      activityType: 'review',
+      extraField: {
+        feedbackCount: 6,
+        sentiment: 'mostly positive',
+      },
+      createdAt: '2025-07-13T17:40:06.000Z',
+    },
+    {
+      date: '2025-07-12T13:15:00.000Z',
+      activityNote: 'Changed user role',
+      createdBy: '64fadmin001admin456admin789',
+      activityType: 'role_change',
+      extraField: {
+        userId: '64f123abc987def456789012',
+        oldRole: 'User',
+        newRole: 'Manager',
+      },
+      createdAt: '2025-07-12T13:15:05.000Z',
+    },
+    {
+      date: '2025-07-11T18:45:00.000Z',
+      activityNote: 'Assigned case to lawyer',
+      createdBy: '64fadmin001admin456admin789',
+      activityType: 'assign',
+      extraField: {
+        caseId: 'case_98765',
+        lawyerId: 'lawyer_24680',
+      },
+      createdAt: '2025-07-11T18:45:04.000Z',
+    },
+    {
+      date: '2025-07-10T15:15:00.000Z',
+      activityNote: 'Reviewed uploaded evidence',
+      createdBy: '64fabcdedcba321098765432',
+      activityType: 'review',
+      extraField: {
+        reviewedBy: 'lawyer_001',
+      },
+      createdAt: '2025-07-10T15:15:01.000Z',
+    },
+    {
+      date: '2025-07-10T09:00:00.000Z',
+      activityNote: 'Uploaded supporting documents',
+      createdBy: '64fabcdedcba321098765432',
+      activityType: 'upload',
+      extraField: {
+        count: 3,
+        fileNames: ['contract.pdf', 'summary.docx', 'evidence.jpg'],
+      },
+      createdAt: '2025-07-10T09:00:03.000Z',
+    },
+    {
+      date: '2025-07-09T16:00:00.000Z',
+      activityNote: 'Logged out',
+      createdBy: '64f123abc987def456789012',
+      activityType: 'logout',
+      extraField: {
+        ipAddress: '192.168.0.5',
+        duration: '2h 35m',
+      },
+      createdAt: '2025-07-09T16:00:01.000Z',
+    },
+    {
+      date: '2025-07-08T14:25:00.000Z',
+      activityNote: 'Invited new team member',
+      createdBy: '64f999abc999def456789999',
+      activityType: 'invite',
+      extraField: {
+        email: 'team.new@domain.com',
+        role: 'Assistant',
+      },
+      createdAt: '2025-07-08T14:25:03.000Z',
+    },
+    {
+      date: '2025-07-07T13:00:00.000Z',
+      activityNote: 'Downloaded billing statement',
+      createdBy: '64fabcdedcba321098765432',
+      activityType: 'download',
+      extraField: {
+        file: 'invoice_0725.pdf',
+      },
+      createdAt: '2025-07-07T13:00:01.000Z',
+    },
+    {
+      date: '2025-07-07T11:30:00.000Z',
+      activityNote: 'Exported case files',
+      createdBy: '64fabcdedcba321098765432',
+      activityType: 'export',
+      extraField: {
+        fileCount: 4,
+        format: 'PDF',
+      },
+      createdAt: '2025-07-07T11:30:02.000Z',
+    },
+    {
+      date: '2025-07-06T08:10:00.000Z',
+      activityNote: 'User changed password',
+      createdBy: '64f123abc987def456789012',
+      activityType: 'security',
+      extraField: {
+        method: 'via settings',
+      },
+      createdAt: '2025-07-06T08:10:01.000Z',
+    },
+  ];
+
+  const groupedByDate = moreDummyActivityLogs.reduce((acc, log) => {
+    const dateKey = new Date(log.date).toISOString().split('T')[0];
+
+    if (!acc[dateKey]) {
+      acc[dateKey] = [];
+    }
+
+    acc[dateKey].push(log);
+    return acc;
+  }, {});
+
+  const groupedLogsArray = Object.entries(groupedByDate)
+    .map(([date, logs]) => ({
+      date,
+      logs: logs.sort((a, b) => new Date(a.date) - new Date(b.date)), // inner sort ascending
+    }))
+    .sort((a, b) => new Date(b.date) - new Date(a.date)); // outer sort descending
+
+  console.log(groupedLogsArray);
+
   const currentStatus = singleResponse?.data?.status || 'Pending';
 
   return (
@@ -261,30 +402,97 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
             {/* Tab Content */}
             <div className="mt-4">
               {activeTab === 'activity' && (
-                <div className="bg-white rounded-lg">
-                  {activities.map((activity, index) => (
-                    <div key={index} className="mb-6">
-                      <h3 className="text-base font-semibold text-gray-500 mb-2 text-center">
-                        {activity.date}
-                      </h3>
-                      {activity.items.map((item, i) => (
+                <div className="bg-white rounded-lg relative">
+                  {groupedLogsArray.map((activity, index) => {
+                    const parts = new Intl.DateTimeFormat('en-GB', {
+                      weekday: 'short',
+                      day: 'numeric',
+                      month: 'short',
+                    }).formatToParts(new Date(activity.date));
+
+                    const formattedDate = parts
+                      .filter(({ type }) =>
+                        ['weekday', 'day', 'month'].includes(type)
+                      )
+                      .map(({ value }) => value)
+                      .join(' ');
+
+                    return (
+                      <>
                         <div
-                          key={i}
-                          className="flex items-start justify-between mb-4 py-3 px-4 rounded-lg border border-gray-200"
+                          className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${
+                            index === 0
+                              ? 'first-item'
+                              : 'border-l border-[#e6e7ec]'
+                          }`}
                         >
-                          <div className="flex flex-col">
-                            <div className="text-gray-500">{item.user}</div>
-                            <div className="text-sm text-black font-medium">
-                              {item.action}
+                          {formattedDate}
+                        </div>
+                        {activity.logs.map((item, i) => (
+                          <div
+                            className={`activity-log-item flex gap-2 ${
+                              i === 0 ? 'first-log-item' : ''
+                            }`}
+                            key={i}
+                          >
+                            <div className="left-track flex-grow-0 flex flex-col w-[32px] items-center">
+                              <div
+                                className={`line-top h-[16] w-[1] border-l border-[#e6e7ec] ${
+                                  i === 0 ? '' : 'first'
+                                }`}
+                              ></div>
+                              <div className="icon-wrapper">
+                                <div className="icon w-[32px] h-[32px] bg-[#000] rounded-full flex justify-center items-center">
+                                  <img
+                                    src="https://d1w7gvu0kpf6fl.cloudfront.net/img/icons/activities-icons/svg/status_pending.svg"
+                                    alt="icon"
+                                  />
+                                </div>
+                              </div>
+                              <div className="line-bottom flex-1 w-[1] border-l border-[#e6e7ec]"></div>
+                            </div>
+                            <div className="flex-1 flex items-start justify-between mb-4 py-3 px-4 rounded-lg border border-gray-200">
+                              <div className="flex flex-col">
+                                <div className="text-gray-500">
+                                  {item.createdBy}
+                                </div>
+                                <div className="text-sm text-black font-medium">
+                                  {item.activityNote}
+                                </div>
+                              </div>
+                              <span className="text-xs text-gray-400">
+                                {new Date(item.date)
+                                  .toLocaleTimeString('en-US', {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: true,
+                                  })
+                                  .replace(/ (AM|PM)/, '')}
+                              </span>
                             </div>
                           </div>
-                          <span className="text-xs text-gray-400">
-                            {item.time}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  ))}
+                        ))}
+                        {/* <div className="relative">
+                          {activity.items.map((item, i) => (
+                            <div
+                              key={i}
+                              className="flex items-start justify-between mb-4 py-3 px-4 rounded-lg border border-gray-200"
+                            >
+                              <div className="flex flex-col">
+                                <div className="text-gray-500">{item.user}</div>
+                                <div className="text-sm text-black font-medium">
+                                  {item.action}
+                                </div>
+                              </div>
+                              <span className="text-xs text-gray-400">
+                                {item.time}
+                              </span>
+                            </div>
+                          ))}
+                        </div> */}
+                      </>
+                    );
+                  })}
                 </div>
               )}
               {activeTab === 'lead-details' && (
