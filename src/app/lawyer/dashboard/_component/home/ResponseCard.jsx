@@ -10,7 +10,10 @@ import React from 'react';
 export default function ResponseCard({ onViewDetails, user, isExpanded }) {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
-  // console.log('Single Lead Data:', user);
+  // console.log('Single Lead Data:',singleLead);
+  // console.log('Single Lead user Data:',user);
+  //  const badges = singleLead?.data?.badges
+   const badges = user?.leadBadges
 
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])
@@ -97,6 +100,18 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
         )}
 
         <div className="flex flex-wrap gap-2">
+           {badges && badges.length > 0 && (
+            <>
+              {badges.map((item) => (
+                <TagButton
+                  key={item}
+                  text={item}
+                  bgColor="#004DA61A"
+                  icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+                />
+              ))}
+            </>
+          )}
           {urgentOption?.option && (
             <TagButton
               text={urgentOption?.option}

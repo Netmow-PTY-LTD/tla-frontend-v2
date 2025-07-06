@@ -7,6 +7,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import { Suspense } from 'react';
 import { Loader } from 'lucide-react';
+import CreditSummary from './_components/module/CreditSummary';
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
@@ -19,6 +20,11 @@ export default function MyCreditsPage() {
       id: 'invoices-billing',
       title: 'Invoices And Billing Details',
       content: <InvoicesBillings />,
+    },
+    {
+      id: 'credit-summary',
+      title: 'Credit Summary',
+      content: <CreditSummary />,
     },
     { id: 'my-payments', title: 'My Payment Details', content: <MyPayments /> },
   ];
