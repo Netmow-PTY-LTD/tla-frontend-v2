@@ -276,7 +276,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
               <Image
                 src={
                   singleResponse?.data?.leadId?.userProfileId?.profilePicture ||
-                  '/assets/img/auth-step1.png'
+                  '/assets/img/avatar.png'
                 }
                 alt="John Doe"
                 width={80}
@@ -428,50 +428,51 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                         >
                           {formattedDate}
                         </div>
-                        {activity.logs.map((item, i) => (
-                          <div
-                            className={`activity-log-item flex gap-2 ${
-                              i === 0 ? 'first-log-item' : ''
-                            }`}
-                            key={i}
-                          >
-                            <div className="left-track flex-grow-0 flex flex-col w-[32px] items-center">
-                              <div
-                                className={`line-top h-[16] w-[1] border-l border-[#e6e7ec] ${
-                                  i === 0 ? '' : 'first'
-                                }`}
-                              ></div>
-                              <div className="icon-wrapper">
-                                <div className="icon w-[32px] h-[32px] bg-[#000] rounded-full flex justify-center items-center">
-                                  <img
-                                    src="https://d1w7gvu0kpf6fl.cloudfront.net/img/icons/activities-icons/svg/status_pending.svg"
-                                    alt="icon"
-                                  />
+                        {activity.logs.map((item, i) => {
+                          return (
+                            <div
+                              row-id={i}
+                              className={`activity-log-item flex gap-2 ${
+                                index === 0 && i === 0 ? 'first-log-item' : ''
+                              }`}
+                              key={i}
+                            >
+                              <div className="left-track flex-grow-0 flex flex-col w-[32px] items-center">
+                                <div
+                                  className={`line-top h-1/2 w-[1] border-l border-[#e6e7ec]`}
+                                ></div>
+                                <div className="icon-wrapper mt-[-16px]">
+                                  <div className="icon w-[32px] h-[32px] bg-[#000] rounded-full flex justify-center items-center">
+                                    <img
+                                      src="https://d1w7gvu0kpf6fl.cloudfront.net/img/icons/activities-icons/svg/status_pending.svg"
+                                      alt="icon"
+                                    />
+                                  </div>
                                 </div>
+                                <div className="line-bottom h-1/2 w-[1] border-l border-[#e6e7ec]"></div>
                               </div>
-                              <div className="line-bottom flex-1 w-[1] border-l border-[#e6e7ec]"></div>
-                            </div>
-                            <div className="flex-1 flex items-start justify-between mb-4 py-3 px-4 rounded-lg border border-gray-200">
-                              <div className="flex flex-col">
-                                <div className="text-gray-500">
-                                  {item.createdBy}
+                              <div className="flex-1 flex items-start justify-between mb-4 py-3 px-4 rounded-lg border border-gray-200">
+                                <div className="flex flex-col">
+                                  <div className="text-gray-500">
+                                    {item.createdBy}
+                                  </div>
+                                  <div className="text-sm text-black font-medium">
+                                    {item.activityNote}
+                                  </div>
                                 </div>
-                                <div className="text-sm text-black font-medium">
-                                  {item.activityNote}
-                                </div>
+                                <span className="text-xs text-gray-400">
+                                  {new Date(item.date)
+                                    .toLocaleTimeString('en-US', {
+                                      hour: '2-digit',
+                                      minute: '2-digit',
+                                      hour12: true,
+                                    })
+                                    .replace(/ (AM|PM)/, '')}
+                                </span>
                               </div>
-                              <span className="text-xs text-gray-400">
-                                {new Date(item.date)
-                                  .toLocaleTimeString('en-US', {
-                                    hour: '2-digit',
-                                    minute: '2-digit',
-                                    hour12: true,
-                                  })
-                                  .replace(/ (AM|PM)/, '')}
-                              </span>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                         {/* <div className="relative">
                           {activity.items.map((item, i) => (
                             <div
