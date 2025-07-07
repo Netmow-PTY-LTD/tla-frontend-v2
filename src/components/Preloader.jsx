@@ -2,15 +2,15 @@ import React from 'react';
 
 export default function Preloader() {
   return (
-    <div class="loader-container">
-      <div class="holder">
-        <div class="box"></div>
+    <div className="loader-container">
+      <div className="holder">
+        <div className="box"></div>
       </div>
-      <div class="holder">
-        <div class="box"></div>
+      <div className="holder">
+        <div className="box"></div>
       </div>
-      <div class="holder">
-        <div class="box"></div>
+      <div className="holder">
+        <div className="box"></div>
       </div>
     </div>
   );

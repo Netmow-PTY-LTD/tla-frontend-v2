@@ -255,9 +255,18 @@
 
 .simple-editor-content .tiptap.ProseMirror {
   padding: 20px 30px !important;
+  color: #8e8e8e;
 }
 
 .selected {
   background-color: rgba(0, 150, 255, 0.3);
   border-radius: 3px;
+}
+
+.activity-log-item.first-log-item .line-top.first {
+  border: none;
+}
+
+.activity-log-item:last-of-type .line-bottom {
+  border: none;
 }

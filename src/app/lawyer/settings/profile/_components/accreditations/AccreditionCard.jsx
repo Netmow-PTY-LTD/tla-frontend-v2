@@ -27,8 +27,8 @@ const AccreditionCard = ({ accreditation, handleEditClick, refetch }) => {
           <h4 className=" font-semibold">
             {accreditation?.institution ?? 'Title'}
           </h4>
-          <h4 className="font-medium text-[12px]">
-            {accreditation?.certificate_title ?? 'Title'}
+          <h4 className="font-medium text-[12px] text-[#8E8E8E]">
+            {accreditation?.certificate_title ?? 'Certificate title'}
           </h4>
           {accreditation?.attachment && (
             <a

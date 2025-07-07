@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import { useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
+import Preloader from '@/components/Preloader';
 
 export default function Header() {
   const [isHeaderFixed, setIsHeaderFixed] = useState();

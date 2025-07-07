@@ -72,13 +72,19 @@ const CreditPurchaseLead = ({
       console.log('purchaseDetails', purchaseDetails);
       const result = await purchaseCredits(purchaseDetails).unwrap();
       if (result.success) {
-        toast.success('Credits purchased successfully', { position: 'top-right' });
+        toast.success('Credits purchased successfully', {
+          position: 'top-right',
+        });
         onSuccess();
       } else {
-        toast.error(result.message || 'Purchase failed', { position: 'top-right' });
+        toast.error(result.message || 'Purchase failed', {
+          position: 'top-right',
+        });
       }
     } catch (error) {
-      toast.error(error?.data?.message || 'Payment failed', { position: 'top-right' });
+      toast.error(error?.data?.message || 'Payment failed', {
+        position: 'top-right',
+      });
     } finally {
       setPendingPurchase(false);
     }
