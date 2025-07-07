@@ -15,7 +15,10 @@ import {
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useGetSingleResponseQuery, useUpdateResponseStatusMutation } from '@/store/features/lawyer/ResponseApiService';
+import {
+  useGetSingleResponseQuery,
+  useUpdateResponseStatusMutation,
+} from '@/store/features/lawyer/ResponseApiService';
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
 import WhatsApp from '@/components/icon/WhatsApp';
 import ResponseSkeleton from './ResponseSkeleton';
@@ -28,7 +31,9 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
   const { data: singleResponse, isLoading: isSingleResponseLoading } =
     useGetSingleResponseQuery(responseId ? responseId : response?._id);
 
-  const [updateStatus] = useUpdateResponseStatusMutation()
+  console.log('singleResponse activity', singleResponse?.data?.activity);
+
+  const [updateStatus] = useUpdateResponseStatusMutation();
 
   const fallbackText = `If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options. Let us help you navigate this challenging time with expert guidance.`;
 
@@ -66,24 +71,21 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
   }
 
   const handleUpdateStatus = async (status) => {
-
     try {
       const statusData = {
         responseId: response?._id,
-        data: { status }
-      }
+        data: { status },
+      };
 
-      const result = await updateStatus(statusData).unwrap()
+      const result = await updateStatus(statusData).unwrap();
       if (result.success) {
-        showSuccessToast(result.message)
+        showSuccessToast(result.message);
       }
-
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);
     }
-
-  }
+  };
   const activities = [
     {
       date: 'Fri 23 May',
@@ -243,16 +245,19 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
     },
   ];
 
-  const groupedByDate = moreDummyActivityLogs.reduce((acc, log) => {
-    const dateKey = new Date(log.date).toISOString().split('T')[0];
+  const groupedByDate =
+    singleResponse?.data?.activity?.length > 0
+      ? singleResponse?.data?.activity
+      : moreDummyActivityLogs.reduce((acc, log) => {
+          const dateKey = new Date(log.date).toISOString().split('T')[0];
 
-    if (!acc[dateKey]) {
-      acc[dateKey] = [];
-    }
+          if (!acc[dateKey]) {
+            acc[dateKey] = [];
+          }
 
-    acc[dateKey].push(log);
-    return acc;
-  }, {});
+          acc[dateKey].push(log);
+          return acc;
+        }, {});
 
   const groupedLogsArray = Object.entries(groupedByDate)
     .map(([date, logs]) => ({
@@ -390,28 +395,31 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
             <div className="flex border-b border-gray-200 gap-6">
               <button
                 onClick={() => setActiveTab('activity')}
-                className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
-                  ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                  : 'hover:text-black'
-                  }`}
+                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                  activeTab === 'activity'
+                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                    : 'hover:text-black'
+                }`}
               >
                 Activity
               </button>
               <button
                 onClick={() => setActiveTab('lead-details')}
-                className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'lead-details'
-                  ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                  : 'hover:text-black'
-                  }`}
+                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                  activeTab === 'lead-details'
+                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                    : 'hover:text-black'
+                }`}
               >
                 Lead Details
               </button>
               <button
                 onClick={() => setActiveTab('note')}
-                className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'note'
-                  ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                  : 'hover:text-black'
-                  }`}
+                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                  activeTab === 'note'
+                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                    : 'hover:text-black'
+                }`}
               >
                 My Notes
               </button>
