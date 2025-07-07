@@ -7,10 +7,12 @@ import LeadsHead from '../_component/LeadsHead';
 import { useGetAllLeadsQuery } from '@/store/features/lawyer/LeadsApiService';
 import { Inbox, Loader } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import ResponseSkeleton from '../my-responses/_components/ResponseSkeleton';
 
 const LeadBoardPage = () => {
   const [showLeadDetails, setShowLeadDetails] = useState(true);
   const [selectedLead, setSelectedLead] = useState(null);
+  const [selectedLeadId, setSelectedLeadId] = useState(null);
 
   // const pathname = usePathname();
 
@@ -33,11 +35,21 @@ const LeadBoardPage = () => {
   const { data: allLeads, isLoading: isAllLeadsLoading } =
     useGetAllLeadsQuery();
 
+  // useEffect(() => {
+  //   if (allLeads?.data && allLeads?.data?.length > 0) {
+  //     setSelectedLead(allLeads?.data[0]); // Set first lead
+  //   }
+  // }, [allLeads?.data]);
   useEffect(() => {
-    if (allLeads?.data && allLeads?.data?.length > 0) {
-      setSelectedLead(allLeads?.data[0]); // Set first lead
+    if (selectedLeadId && allLeads?.data?.length > 0) {
+      const leadData = allLeads.data.find(
+        (lead) => lead._id === selectedLeadId
+      );
+      if (leadData) {
+        setSelectedLead(leadData);
+      }
     }
-  }, [allLeads?.data]);
+  }, [selectedLeadId, allLeads?.data]);
 
   if (isAllLeadsLoading) {
     return (
@@ -82,7 +94,7 @@ const LeadBoardPage = () => {
     <div className="lead-board-wrap">
       {allLeads?.data?.length > 0 ? (
         <div className="lead-board-container">
-          {showLeadDetails && selectedLead && (
+          {showLeadDetails && selectedLead ? (
             <div className="left-column-7">
               <div className="column-wrap-left">
                 <LeadDetailsPage
@@ -91,7 +103,13 @@ const LeadBoardPage = () => {
                 />
               </div>
             </div>
-          )}
+          ) : showLeadDetails ? (
+            <div className="left-column-7">
+              <div className="column-wrap-left">
+                <ResponseSkeleton /> {/* Show while selectedLead is loading */}
+              </div>
+            </div>
+          ) : null}
 
           <div
             className={`${
@@ -108,6 +126,7 @@ const LeadBoardPage = () => {
                   onViewDetails={(lead) => {
                     setSelectedLead(lead);
                     setShowLeadDetails(true);
+                    setSelectedLeadId(lead._id);
                   }}
                   data={allLeads?.data ?? []}
                 />
