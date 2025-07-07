@@ -4,7 +4,7 @@ import LeadDetailsPage from '../_component/LeadsLeft';
 import LeadsRight from '../_component/LeadsRight';
 import { usePathname } from 'next/navigation';
 import LeadsHead from '../_component/LeadsHead';
-import { useGetAllLeadsQuery } from '@/store/features/lawyer/LeadsApiService';
+import { useGetAllLeadsQuery, useGetAllMyLeadsQuery } from '@/store/features/lawyer/LeadsApiService';
 import { Inbox, Loader } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -31,7 +31,7 @@ const LeadBoardPage = () => {
   // }, [pathname]);
 
   const { data: allLeads, isLoading: isAllLeadsLoading } =
-    useGetAllLeadsQuery();
+    useGetAllMyLeadsQuery();
 
   useEffect(() => {
     if (allLeads?.data && allLeads?.data?.length > 0) {
