@@ -29,9 +29,11 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const { data: singleResponse, isLoading: isSingleResponseLoading } =
-    useGetSingleResponseQuery(responseId ? responseId : response?._id);
+    useGetSingleResponseQuery(responseId ? responseId : response?._id, {
+      skip: !responseId && !response?._id,
+    });
 
-  console.log('singleResponse activity', singleResponse?.data?.activity);
+  //console.log('singleResponse data', singleResponse?.data);
 
   const [updateStatus] = useUpdateResponseStatusMutation();
 
@@ -73,7 +75,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
   const handleUpdateStatus = async (status) => {
     try {
       const statusData = {
-        responseId: response?._id,
+        responseId: responseId || response?._id,
         data: { status },
       };
 
@@ -86,43 +88,6 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
       showErrorToast(errorMessage);
     }
   };
-  const activities = [
-    {
-      date: 'Fri 23 May',
-      items: [
-        {
-          user: 'You',
-          action: 'Updated the status to pending',
-          time: '17:01',
-        },
-        {
-          user: 'You',
-          action: 'Updated the status to hired',
-          time: '17:01',
-        },
-      ],
-    },
-    {
-      date: 'Fri 3 Jan',
-      items: [
-        {
-          user: 'You',
-          action: 'Set a reminder to call them back Fri 3 Jan at 08:47',
-          time: '04:47',
-        },
-        {
-          user: 'You',
-          action: 'Called and spoke with Anita',
-          time: '04:47',
-        },
-        {
-          user: 'You',
-          action: 'Purchased the lead',
-          time: '04:45',
-        },
-      ],
-    },
-  ];
 
   const moreDummyActivityLogs = [
     {
@@ -245,24 +210,25 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
     },
   ];
 
-  const groupedByDate =
-    singleResponse?.data?.activity?.length > 0
-      ? singleResponse?.data?.activity
-      : moreDummyActivityLogs.reduce((acc, log) => {
-          const dateKey = new Date(log.date).toISOString().split('T')[0];
+  const groupedByDate = (() => {
+    const logs = singleResponse?.data?.activity?.length
+      ? singleResponse.data.activity
+      : moreDummyActivityLogs;
 
-          if (!acc[dateKey]) {
-            acc[dateKey] = [];
-          }
-
-          acc[dateKey].push(log);
-          return acc;
-        }, {});
+    return logs.reduce((acc, log) => {
+      const dateKey = new Date(log.date).toISOString().split('T')[0];
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
+      }
+      acc[dateKey].push(log);
+      return acc;
+    }, {});
+  })();
 
   const groupedLogsArray = Object.entries(groupedByDate)
     .map(([date, logs]) => ({
       date,
-      logs: logs.sort((a, b) => new Date(a.date) - new Date(b.date)), // inner sort ascending
+      logs: logs?.sort((a, b) => new Date(a.date) - new Date(b.date)), // inner sort ascending
     }))
     .sort((a, b) => new Date(b.date) - new Date(a.date)); // outer sort descending
 
