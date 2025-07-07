@@ -13,7 +13,7 @@ import {
   Tag,
 } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   useGetSingleResponseQuery,
@@ -444,7 +444,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                       .join(' ');
 
                     return (
-                      <>
+                      <Fragment key={index}>
                         <div
                           className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${
                             index === 0
@@ -517,7 +517,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                             </div>
                           ))}
                         </div> */}
-                      </>
+                      </Fragment>
                     );
                   })}
                 </div>

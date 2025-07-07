@@ -13,7 +13,7 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
   // console.log('Single Lead Data:',singleLead);
   // console.log('Single Lead user Data:',user);
   //  const badges = singleLead?.data?.badges
-   const badges = user?.leadBadges
+  const badges = user?.leadBadges;
 
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])
@@ -74,7 +74,7 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
                 isExpanded ? 'text-[13px]' : 'text-[10px]'
               } text-gray-500`}
             >
-              {user?.leadId.userProfileId?.address ?? ''}
+              {user?.leadId?.userProfileId?.address ?? ''}
             </div>
           </div>
           <p className="font-medium text-[11px] text-gray-600 sm:ml-4 mt-2 sm:mt-0">
@@ -100,7 +100,7 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
         )}
 
         <div className="flex flex-wrap gap-2">
-           {badges && badges.length > 0 && (
+          {badges && badges.length > 0 && (
             <>
               {badges.map((item) => (
                 <TagButton
