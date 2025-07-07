@@ -15,10 +15,11 @@ import {
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useGetSingleResponseQuery } from '@/store/features/lawyer/ResponseApiService';
+import { useGetSingleResponseQuery, useUpdateResponseStatusMutation } from '@/store/features/lawyer/ResponseApiService';
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
 import WhatsApp from '@/components/icon/WhatsApp';
 import ResponseSkeleton from './ResponseSkeleton';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
 export default function MyResponseDetails({ onBack, response, responseId }) {
   const [activeTab, setActiveTab] = useState('activity');
@@ -26,6 +27,8 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
 
   const { data: singleResponse, isLoading: isSingleResponseLoading } =
     useGetSingleResponseQuery(responseId ? responseId : response?._id);
+
+  const [updateStatus] = useUpdateResponseStatusMutation()
 
   const fallbackText = `If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options. Let us help you navigate this challenging time with expert guidance.`;
 
@@ -62,9 +65,24 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
     return <ResponseSkeleton />;
   }
 
-  const handleUpdateStatus=()=>{
+  const handleUpdateStatus = async (status) => {
 
-    
+    try {
+      const statusData = {
+        responseId: response?._id,
+        data: { status }
+      }
+
+      const result = await updateStatus(statusData).unwrap()
+      if (result.success) {
+        showSuccessToast(result.message)
+      }
+
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+    }
+
   }
   const activities = [
     {
@@ -128,7 +146,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
             >
               <option value="pending">Pending</option>
               <option value="hired">Hired</option>
-              <option value="archive">Hired</option>
+              <option value="archive">Archive</option>
             </select>
           </div>
         </div>

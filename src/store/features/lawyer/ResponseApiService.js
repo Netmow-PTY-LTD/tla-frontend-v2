@@ -32,11 +32,15 @@ const responseApiService = baseApi.injectEndpoints({
       providesTags: ['response'],
     }),
     updateResponseStatus: builder.mutation({
-      query: (body) => ({
+      query: (body) => {
+        console.log('body ==>',body)
+
+        return{
         url: `/response/${body.responseId}/status`,
-        method: 'POST',
+        method: 'PATCH',
         body: body.data,
-      }),
+      }
+      },
       invalidatesTags: ['response'],
     }),
   }),
