@@ -13,9 +13,12 @@ import {
   Tag,
 } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useGetSingleResponseQuery, useUpdateResponseStatusMutation } from '@/store/features/lawyer/ResponseApiService';
+import {
+  useGetSingleResponseQuery,
+  useUpdateResponseStatusMutation,
+} from '@/store/features/lawyer/ResponseApiService';
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
 import WhatsApp from '@/components/icon/WhatsApp';
 import ResponseSkeleton from './ResponseSkeleton';
@@ -28,7 +31,9 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
   const { data: singleResponse, isLoading: isSingleResponseLoading } =
     useGetSingleResponseQuery(responseId ? responseId : response?._id);
 
-  const [updateStatus] = useUpdateResponseStatusMutation()
+  console.log('singleResponse activity', singleResponse?.data?.activity);
+
+  const [updateStatus] = useUpdateResponseStatusMutation();
 
   const fallbackText = `If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options. Let us help you navigate this challenging time with expert guidance.`;
 
@@ -66,24 +71,21 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
   }
 
   const handleUpdateStatus = async (status) => {
-
     try {
       const statusData = {
         responseId: response?._id,
-        data: { status }
-      }
+        data: { status },
+      };
 
-      const result = await updateStatus(statusData).unwrap()
+      const result = await updateStatus(statusData).unwrap();
       if (result.success) {
-        showSuccessToast(result.message)
+        showSuccessToast(result.message);
       }
-
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);
     }
-
-  }
+  };
   const activities = [
     {
       date: 'Fri 23 May',
@@ -243,16 +245,19 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
     },
   ];
 
-  const groupedByDate = moreDummyActivityLogs.reduce((acc, log) => {
-    const dateKey = new Date(log.date).toISOString().split('T')[0];
+  const groupedByDate =
+    singleResponse?.data?.activity?.length > 0
+      ? singleResponse?.data?.activity
+      : moreDummyActivityLogs.reduce((acc, log) => {
+          const dateKey = new Date(log.date).toISOString().split('T')[0];
 
-    if (!acc[dateKey]) {
-      acc[dateKey] = [];
-    }
+          if (!acc[dateKey]) {
+            acc[dateKey] = [];
+          }
 
-    acc[dateKey].push(log);
-    return acc;
-  }, {});
+          acc[dateKey].push(log);
+          return acc;
+        }, {});
 
   const groupedLogsArray = Object.entries(groupedByDate)
     .map(([date, logs]) => ({
@@ -297,7 +302,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
               <Image
                 src={
                   singleResponse?.data?.leadId?.userProfileId?.profilePicture ||
-                  '/assets/img/auth-step1.png'
+                  '/assets/img/avatar.png'
                 }
                 alt="John Doe"
                 width={80}
@@ -390,28 +395,31 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
             <div className="flex border-b border-gray-200 gap-6">
               <button
                 onClick={() => setActiveTab('activity')}
-                className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
-                  ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                  : 'hover:text-black'
-                  }`}
+                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                  activeTab === 'activity'
+                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                    : 'hover:text-black'
+                }`}
               >
                 Activity
               </button>
               <button
                 onClick={() => setActiveTab('lead-details')}
-                className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'lead-details'
-                  ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                  : 'hover:text-black'
-                  }`}
+                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                  activeTab === 'lead-details'
+                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                    : 'hover:text-black'
+                }`}
               >
                 Lead Details
               </button>
               <button
                 onClick={() => setActiveTab('note')}
-                className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'note'
-                  ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                  : 'hover:text-black'
-                  }`}
+                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                  activeTab === 'note'
+                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                    : 'hover:text-black'
+                }`}
               >
                 My Notes
               </button>
@@ -436,7 +444,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                       .join(' ');
 
                     return (
-                      <>
+                      <Fragment key={index}>
                         <div
                           className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${
                             index === 0
@@ -446,50 +454,51 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                         >
                           {formattedDate}
                         </div>
-                        {activity.logs.map((item, i) => (
-                          <div
-                            className={`activity-log-item flex gap-2 ${
-                              i === 0 ? 'first-log-item' : ''
-                            }`}
-                            key={i}
-                          >
-                            <div className="left-track flex-grow-0 flex flex-col w-[32px] items-center">
-                              <div
-                                className={`line-top h-[16] w-[1] border-l border-[#e6e7ec] ${
-                                  i === 0 ? '' : 'first'
-                                }`}
-                              ></div>
-                              <div className="icon-wrapper">
-                                <div className="icon w-[32px] h-[32px] bg-[#000] rounded-full flex justify-center items-center">
-                                  <img
-                                    src="https://d1w7gvu0kpf6fl.cloudfront.net/img/icons/activities-icons/svg/status_pending.svg"
-                                    alt="icon"
-                                  />
+                        {activity.logs.map((item, i) => {
+                          return (
+                            <div
+                              row-id={i}
+                              className={`activity-log-item flex gap-2 ${
+                                index === 0 && i === 0 ? 'first-log-item' : ''
+                              }`}
+                              key={i}
+                            >
+                              <div className="left-track flex-grow-0 flex flex-col w-[32px] items-center">
+                                <div
+                                  className={`line-top h-1/2 w-[1] border-l border-[#e6e7ec]`}
+                                ></div>
+                                <div className="icon-wrapper mt-[-16px]">
+                                  <div className="icon w-[32px] h-[32px] bg-[#000] rounded-full flex justify-center items-center">
+                                    <img
+                                      src="https://d1w7gvu0kpf6fl.cloudfront.net/img/icons/activities-icons/svg/status_pending.svg"
+                                      alt="icon"
+                                    />
+                                  </div>
                                 </div>
+                                <div className="line-bottom h-1/2 w-[1] border-l border-[#e6e7ec]"></div>
                               </div>
-                              <div className="line-bottom flex-1 w-[1] border-l border-[#e6e7ec]"></div>
-                            </div>
-                            <div className="flex-1 flex items-start justify-between mb-4 py-3 px-4 rounded-lg border border-gray-200">
-                              <div className="flex flex-col">
-                                <div className="text-gray-500">
-                                  {item.createdBy}
+                              <div className="flex-1 flex items-start justify-between mb-4 py-3 px-4 rounded-lg border border-gray-200">
+                                <div className="flex flex-col">
+                                  <div className="text-gray-500">
+                                    {item.createdBy}
+                                  </div>
+                                  <div className="text-sm text-black font-medium">
+                                    {item.activityNote}
+                                  </div>
                                 </div>
-                                <div className="text-sm text-black font-medium">
-                                  {item.activityNote}
-                                </div>
+                                <span className="text-xs text-gray-400">
+                                  {new Date(item.date)
+                                    .toLocaleTimeString('en-US', {
+                                      hour: '2-digit',
+                                      minute: '2-digit',
+                                      hour12: true,
+                                    })
+                                    .replace(/ (AM|PM)/, '')}
+                                </span>
                               </div>
-                              <span className="text-xs text-gray-400">
-                                {new Date(item.date)
-                                  .toLocaleTimeString('en-US', {
-                                    hour: '2-digit',
-                                    minute: '2-digit',
-                                    hour12: true,
-                                  })
-                                  .replace(/ (AM|PM)/, '')}
-                              </span>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                         {/* <div className="relative">
                           {activity.items.map((item, i) => (
                             <div
@@ -508,7 +517,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                             </div>
                           ))}
                         </div> */}
-                      </>
+                      </Fragment>
                     );
                   })}
                 </div>
