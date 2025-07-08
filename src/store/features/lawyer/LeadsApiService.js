@@ -3,9 +3,10 @@ import { baseApi } from '../../baseApi/baseApi';
 const leadsApiService = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllLeads: builder.query({
-      query: () => ({
+      query: ({ page, limit }) => ({
         url: '/lead/list',
         method: 'GET',
+        params: { page, limit },
       }),
       providesTags: ['lead'],
     }),
@@ -17,9 +18,10 @@ const leadsApiService = baseApi.injectEndpoints({
       providesTags: ['lead'],
     }),
     getAllMyLeads: builder.query({
-      query: () => ({
+      query: ({ page, limit }) => ({
         url: '/lead/my',
         method: 'GET',
+        params: { page, limit },
       }),
       providesTags: ['lead'],
     }),
@@ -27,8 +29,7 @@ const leadsApiService = baseApi.injectEndpoints({
       query: (data) => ({
         url: '/contact-lawyer',
         method: 'POST',
-        body:data
-        
+        body: data,
       }),
       providesTags: ['lead'],
     }),
@@ -39,5 +40,5 @@ export const {
   useGetAllLeadsQuery,
   useGetSingleLeadQuery,
   useGetAllMyLeadsQuery,
-  useContactLawyerMutation
+  useContactLawyerMutation,
 } = leadsApiService;

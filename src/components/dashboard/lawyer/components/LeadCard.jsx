@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 
 const LeadCard = ({ onViewDetails, user, isExpanded }) => {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
-  console.log('Single Lead Data:', singleLead);
+  //console.log('Single Lead Data:', singleLead);
 
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])

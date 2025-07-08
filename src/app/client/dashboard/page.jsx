@@ -16,7 +16,10 @@ export default function BuyerDashboard() {
   const [modalOpen, setModalOpen] = useState(false);
 
   const { data: allMyLeads, isLoading: isAllMyLeadsLoading } =
-    useGetAllMyLeadsQuery();
+    useGetAllMyLeadsQuery(
+      { page: 1, limit: 10 },
+      { keepPreviousData: true, refetchOnMountOrArgChange: true }
+    );
 
   console.log('All My Leads:', allMyLeads);
 

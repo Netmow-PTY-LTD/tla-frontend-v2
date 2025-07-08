@@ -2,9 +2,12 @@ import { useGetAllLeadsQuery } from '@/store/features/lawyer/LeadsApiService';
 import React from 'react';
 
 export default function LeadsCountCard() {
-  const { data: allLeads, isLoading } = useGetAllLeadsQuery();
+  const { data: allLeads, isLoading } = useGetAllLeadsQuery({
+    page: 1,
+    limit: 10,
+  });
 
-  const totalLeads = allLeads?.data?.length ?? 0;
+  const totalLeads = allLeads?.pagination?.total ?? 0;
   const approvedLeads =
     allLeads?.data?.filter((lead) => lead.status === 'approved')?.length ?? 0;
   const pendingLeads =
