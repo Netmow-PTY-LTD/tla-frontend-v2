@@ -30,7 +30,7 @@ const LeadBoardPage = () => {
   //   };
   // }, [pathname]);
 
-  const { data: allLeads, isLoading: isAllLeadsLoading } =useGetAllMyLeadsQuery();
+  const { data: allLeads, isLoading: isAllLeadsLoading } =useGetAllLeadsQuery();
 
 
   useEffect(() => {
