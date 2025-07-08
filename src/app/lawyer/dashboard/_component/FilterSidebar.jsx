@@ -33,7 +33,7 @@ const creditTiers = [
 export default function FilterSidebar() {
   const { data: currentUser } = useAuthUserInfoQuery();
 
-  console.log('currentUser ==>', currentUser?.data);
+  //console.log('currentUser ==>', currentUser?.data);
 
   return (
     <Sheet className="z-[9999]">

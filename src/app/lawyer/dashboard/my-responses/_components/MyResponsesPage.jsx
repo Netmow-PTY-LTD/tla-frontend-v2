@@ -102,7 +102,7 @@ export default function MyResponsesPage() {
       <div className="lead-board-wrap">
         {allMyResponses?.data && allMyResponses?.data?.length > 0 ? (
           <div className="lead-board-container">
-            {showResponseDetails && (
+            {showResponseDetails && selectedResponse && (
               <div className="left-column-7">
                 <div className="column-wrap-left">
                   <MyResponseDetails
