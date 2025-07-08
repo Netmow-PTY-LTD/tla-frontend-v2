@@ -61,6 +61,7 @@ const LeadBoardPage = () => {
     isFetching: isSingleLeadFetching,
   } = useGetSingleLeadQuery(selectedLeadId, { skip: !selectedLeadId });
 
+
   // Scroll event handler for infinite loading
   useEffect(() => {
     const container = scrollContainerRef.current;
