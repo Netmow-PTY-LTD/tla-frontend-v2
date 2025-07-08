@@ -37,8 +37,8 @@ const LeadBoardPage = () => {
   useEffect(() => {
     if (!data) return;
 
-    setLeads((prev) => [...prev, ...data.data]);
-    const totalPage = data.pagination.totalPage;
+    setLeads((prev) => [...prev, ...data?.data]);
+    const totalPage = data?.pagination?.totalPage;
     setHasMore(page < totalPage);
   }, [data, page]);
 
@@ -47,7 +47,7 @@ const LeadBoardPage = () => {
 
   // Set first lead on initial load or leads update
   useEffect(() => {
-    if (leads.length > 0 && !selectedLead) {
+    if (leads?.length > 0 && !selectedLead) {
       setSelectedLead(leads[0]);
     }
   }, [leads, selectedLead]);
@@ -61,11 +61,9 @@ const LeadBoardPage = () => {
     isFetching: isSingleLeadFetching,
   } = useGetSingleLeadQuery(selectedLeadId, { skip: !selectedLeadId });
 
-
   // Scroll event handler for infinite loading
   useEffect(() => {
     const container = scrollContainerRef.current;
-    console.log('container', container);
     if (!container) return;
 
     const handleScroll = () => {
