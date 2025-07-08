@@ -22,6 +22,7 @@ const LawyerContactButton = ({ leadDetail }) => {
   const [pendingPayload, setPendingPayload] = useState(null);
   const [contactLawyer, { isLoading }] = useContactLawyerMutation();
 
+  console.log('isseus ==> render check',)
   const router = useRouter();
   const handleContact = async () => {
     const payload = {
@@ -55,6 +56,7 @@ const LawyerContactButton = ({ leadDetail }) => {
     }
   };
 
+  console.log('showCreditModal',showCreditModal)
   const handleAfterPayment = async () => {
     setShowCreditModal(false);
     if (pendingPayload) {
@@ -78,6 +80,7 @@ const LawyerContactButton = ({ leadDetail }) => {
     }
   };
 
+    console.log('showCreditModal',showCreditModal)
   return (
     <div>
       <Button

@@ -83,7 +83,7 @@ const LeadBoardPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasMore, isFetching, scrollContainerRef?.current]);
 
-  console.log('scrollContainerRef', scrollContainerRef?.current);
+  // console.log('scrollContainerRef', scrollContainerRef?.current);
 
   if (isLoading && page === 1) {
     return (
@@ -120,6 +120,7 @@ const LeadBoardPage = () => {
                     lead={selectedLead}
                     singleLead={selectedLeadData?.data}
                     onBack={() => setShowLeadDetails(false)}
+                    isSingleLeadLoading={isSingleLeadLoading}
                   />
                 )}
               </div>
