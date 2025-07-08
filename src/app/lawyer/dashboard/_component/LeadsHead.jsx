@@ -5,7 +5,7 @@ import React from 'react';
 
 import FilterSidebar from './FilterSidebar';
 
-export default function LeadsHead({ isExpanded }) {
+export default function LeadsHead({ isExpanded, total }) {
   return (
     <section className={`${isExpanded ? 'pr-4' : 'px-4'}`}>
       <div className="flex justify-between items-center gap-4">
@@ -15,7 +15,7 @@ export default function LeadsHead({ isExpanded }) {
               isExpanded ? 'heading' : 'heading-base'
             } text-[#0B1C2D] text-left`}
           >
-            112 Matching Leads
+            {total} Matching Leads
           </h2>
           <div className="flex items-center gap-2">
             <Files className="w-4 h-4" />

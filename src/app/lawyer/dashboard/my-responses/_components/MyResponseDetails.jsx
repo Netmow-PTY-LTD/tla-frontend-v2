@@ -4,13 +4,26 @@ import { Button } from '@/components/ui/button';
 import {
   AtSign,
   BadgeCent,
+  BadgeCheck,
+  BadgeX,
+  Bell,
+  CalendarCheck,
+  Delete,
+  Edit,
   Loader2,
+  LogIn,
   Mail,
+  MailCheck,
   MessageSquare,
   MoveLeft,
   Phone,
+  PhoneCall,
   PhoneOutgoing,
+  PlusCircle,
+  Rss,
+  Send,
   Tag,
+  Trash2,
 } from 'lucide-react';
 import Image from 'next/image';
 import { Fragment, useEffect, useState } from 'react';
@@ -112,6 +125,26 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
   console.log(groupedLogsArray);
 
   const currentStatus = singleResponse?.data?.status || 'Pending';
+
+  const generateActivityIcon = (type) => {
+    const iconStyles = {
+      login: { Icon: LogIn, fill: '#3B82F6' }, // Blue
+      update: { Icon: Edit, fill: '#F59E0B' }, // Amber/Yellow
+      delete: { Icon: Trash2, fill: '#EF4444' }, // Red
+      create: { Icon: PlusCircle, fill: '#10B981' }, // Green
+      schedule: { Icon: CalendarCheck, fill: '#6366F1' }, // Indigo
+      sendsms: { Icon: Send, fill: '#0EA5E9' }, // Sky blue
+      contact: { Icon: PhoneCall, fill: '#8B5CF6' }, // Violet
+      sendemail: { Icon: Mail, fill: '#2563EB' }, // Blue
+      whatsapp: { Icon: WhatsApp, fill: '#25D366' }, // WhatsApp green
+      status: { Icon: BadgeCheck, fill: '#22C55E' }, // Success green
+      other: { Icon: Bell, fill: '#6B7280' }, // Gray
+    };
+
+    const { Icon, fill } = iconStyles[type] || iconStyles.other;
+
+    return <Icon className="w-5 h-5" fill={fill} />;
+  };
 
   return (
     <div className="">
@@ -290,17 +323,14 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                       <Fragment key={index}>
                         <div
                           className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${
-                            index === 0
-                              ? 'first-item'
-                              : 'border-l border-[#e6e7ec]'
+                            index === 0 ? '' : 'border-l border-[#e6e7ec]'
                           }`}
                         >
                           {formattedDate}
                         </div>
-                        {activity.logs.map((item, i) => {
+                        {activity?.logs?.map((item, i) => {
                           return (
                             <div
-                              row-id={i}
                               className={`activity-log-item flex gap-2 ${
                                 index === 0 && i === 0 ? 'first-log-item' : ''
                               }`}
@@ -312,10 +342,15 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                                 ></div>
                                 <div className="icon-wrapper mt-[-16px]">
                                   <div className="icon w-[32px] h-[32px] bg-[#000] rounded-full flex justify-center items-center">
-                                    <img
-                                      src="https://d1w7gvu0kpf6fl.cloudfront.net/img/icons/activities-icons/svg/status_pending.svg"
-                                      alt="icon"
-                                    />
+                                    {/* {item?.activityType === 'update' &&
+                                      item?.status === 'pending' && (
+                                        <img
+                                          src="https://d1w7gvu0kpf6fl.cloudfront.net/img/icons/activities-icons/svg/status_pending.svg"
+                                          alt="icon"
+                                        />
+                                      )} */}
+                                    {item?.activityType &&
+                                      generateActivityIcon(item?.activityType)}
                                   </div>
                                 </div>
                                 <div className="line-bottom h-1/2 w-[1] border-l border-[#e6e7ec]"></div>
@@ -323,14 +358,14 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                               <div className="flex-1 flex items-start justify-between mb-4 py-3 px-4 rounded-lg border border-gray-200">
                                 <div className="flex flex-col">
                                   <div className="text-gray-500">
-                                    {item.createdBy?.profile?.name || ''}
+                                    {item?.createdBy?.profile?.name || ''}
                                   </div>
                                   <div className="text-sm text-black font-medium">
-                                    {item.activityNote}
+                                    {item?.activityNote}
                                   </div>
                                 </div>
                                 <span className="text-xs text-gray-400">
-                                  {new Date(item.date)
+                                  {new Date(item?.date)
                                     .toLocaleTimeString('en-US', {
                                       hour: '2-digit',
                                       minute: '2-digit',
