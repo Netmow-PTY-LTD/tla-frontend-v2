@@ -8,7 +8,7 @@ const leadServiceApiService = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['leadService'],
+      invalidatesTags: ['leadService','lead'],
     }),
     getLeadServiceList: builder.query({
       query: () => ({
@@ -23,7 +23,7 @@ const leadServiceApiService = baseApi.injectEndpoints({
         url: `/settings/lead-service/delete/${leadServiceId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['leadService'],
+      invalidatesTags: ['leadService','lead'],
     }),
     leadServiceSelectedOptionsUpdate: builder.mutation({
       query: ({ leadServiceId, answers }) => {
