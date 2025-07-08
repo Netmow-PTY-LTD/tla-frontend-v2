@@ -9,7 +9,7 @@ export default function PhotoGalleryTest({ refetch, userInfo }) {
   return (
     <div>
       <h3 className="16px text-black font-semibold heading-lg">Photos</h3>
-      <p className="text-[#8E8E8E] mt-[10px]">
+      <p className="text-[#6e6e6e] mt-[10px]">
         Showcase your professionalism — while legal services may not be visual
         by nature, clients still value seeing photos of your office, team,
         certifications, events, or speaking engagements. It helps build trust

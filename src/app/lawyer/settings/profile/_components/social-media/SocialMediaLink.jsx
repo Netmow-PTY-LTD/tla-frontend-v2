@@ -22,7 +22,7 @@ export default function SocialMediaLink({ profile }) {
   return (
     <div>
       <h3 className="16px text-black font-semibold heading-lg">Social media</h3>
-      <p className="text-[#8E8E8E] mt-[10px]">
+      <p className="text-[#6e6e6e] mt-[10px]">
         Connect with clients beyond your profile — sharing your law firm’s
         updates and legal content on social media helps build trust and keeps
         clients engaged.
@@ -35,7 +35,7 @@ export default function SocialMediaLink({ profile }) {
             label="Facebook"
             name="facebook"
             placeholder="https://facebook.com/"
-            textColor="text-[#8E8E8E]"
+            textColor="text-[#6e6e6e]"
           />
         </div>
         <div className="flex items-center gap-2 max-w-sm p-2 rounded-md text-gray-700 text-sm">
@@ -51,7 +51,7 @@ export default function SocialMediaLink({ profile }) {
             label="Twitter"
             name="twitter"
             placeholder="https://twitter.com"
-            textColor="text-[#8E8E8E]"
+            textColor="text-[#6e6e6e]"
           />
         </div>
         <div className="flex items-center gap-2 max-w-sm p-2 rounded-md text-gray-700 text-sm">
@@ -65,7 +65,7 @@ export default function SocialMediaLink({ profile }) {
         <div className="flex items-center justify-between gap-5">
           <div>
             <h2 className="text-base font-semibold text-black">Links</h2>
-            <p className="text-sm text-[#8E8E8E] mt-2">
+            <p className="text-sm text-[#6e6e6e] mt-2">
               Link to your own website, articles about your business, or any
               other content that will help promote your business.
             </p>
@@ -81,7 +81,7 @@ export default function SocialMediaLink({ profile }) {
             label="Describe your company"
             name="website"
             placeholder="Enter one link per line"
-            textColor="text-[#8E8E8E]"
+            textColor="text-[#6e6e6e]"
           />
         </div>
       </div>

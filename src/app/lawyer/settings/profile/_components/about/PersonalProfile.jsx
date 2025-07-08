@@ -10,7 +10,7 @@ export default function PersonalProfile() {
       <h3 className="text-black font-semibold heading-lg">
         Personal Information
       </h3>
-      <p className="text-[#8E8E8E] mt-2">
+      <p className="text-[#6e6e6e] mt-2">
         This identifies the individual who will be communicating with clients on
         TheLawApp. Your name and photo will appear alongside messages, helping
         build a personal connection and trust with potential clients.
@@ -26,13 +26,13 @@ export default function PersonalProfile() {
             name="name"
             label="Name"
             placeholder="Enter Your Name"
-            textColor="text-[#8E8E8E]"
+            textColor="text-[#6e6e6e]"
           />
           <TextInput
             name="designation"
             label="Designation"
             placeholder="Enter Your Designation"
-            textColor="text-[#8E8E8E]"
+            textColor="text-[#6e6e6e]"
           />
         </div>
       </div>

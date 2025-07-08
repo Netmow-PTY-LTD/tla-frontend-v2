@@ -82,7 +82,7 @@ export default function PublicProfile() {
       <FormWrapper onSubmit={handleSubmit} defaultValues={defaultValues}>
         <div>
           <h3 className="text-black font-semibold heading-lg">Experiences</h3>
-          <p className="mt-[10px] mb-8 text-[#8E8E8E]">
+          <p className="mt-[10px] mb-8 text-[#6e6e6e]">
             Clearly describe your areas of legal practice and past experience —
             providing specific details helps clients feel assured they’re
             choosing a knowledgeable and capable lawyer.
@@ -93,7 +93,7 @@ export default function PublicProfile() {
           <h3 className="text-black font-semibold heading-lg mt-[50px]">
             Career Highlights
           </h3>
-          <p className="mt-[10px] mb-8 text-[#8E8E8E]">
+          <p className="mt-[10px] mb-8 text-[#6e6e6e]">
             Highlight major accomplishments in your legal career — from
             successful case outcomes to leadership roles and professional
             recognitions, these details help clients feel confident in choosing

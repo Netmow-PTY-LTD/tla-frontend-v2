@@ -64,12 +64,12 @@ const EditServiceModal = ({
               label="Service Title"
               name="title"
               placeholder={'Service Type'}
-              textColor="text-[#8E8E8E]"
+              textColor="text-[#6e6e6e]"
             />
             <TextArea
               label="Service Description"
               name="description"
-              textColor="text-[#8E8E8E]"
+              textColor="text-[#6e6e6e]"
             />
           </div>
           {/* Footer Buttons */}
