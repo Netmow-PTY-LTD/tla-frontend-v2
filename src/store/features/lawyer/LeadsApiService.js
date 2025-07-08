@@ -31,7 +31,7 @@ const leadsApiService = baseApi.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      providesTags: ['lead'],
+      invalidatesTags: ['lead','response'],
     }),
   }),
 });
