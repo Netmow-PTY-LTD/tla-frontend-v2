@@ -46,7 +46,7 @@ export default function Services() {
         <div>
           <h3 className="text-black font-semibold heading-lg">Your Services</h3>
 
-          <p className="mt-[10px] text-[#8E8E8E]">
+          <p className="mt-[10px] text-[#6e6e6e]">
             List the legal services you offer so we can connect you with the
             most relevant clients seeking your expertise.
           </p>

@@ -100,7 +100,7 @@ export default function QuestionsAndAnswers() {
               <h3 className="heading-lg font-semibold text-black">
                 Question & Answer
               </h3>
-              <p className="text-sm text-[#8E8E8E] mt-2">
+              <p className="text-sm text-[#6e6e6e] mt-2">
                 Provide clear answers to common legal questions — resolving
                 doubts about your services or approach brings potential clients
                 closer to making an informed hiring decision.
@@ -120,7 +120,7 @@ export default function QuestionsAndAnswers() {
                   label={qa.question}
                   name={`profileQA[${index}].answer`}
                   placeholder="Write your answer..."
-                  textColor="text-[#8E8E8E]"
+                  textColor="text-[#6e6e6e]"
                 />
                 <p className="mt-2">Minimum 50 characters</p>
               </div>

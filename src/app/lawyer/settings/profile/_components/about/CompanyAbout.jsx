@@ -32,7 +32,7 @@ export default function CompanyAbout() {
   return (
     <div className="py-9">
       <h3 className="text-black font-semibold heading-lg">About the company</h3>
-      <p className="mt-[10px] text-[#8E8E8E] mb-7">
+      <p className="mt-[10px] text-[#6e6e6e] mb-7">
         Give potential clients a clear introduction to your law firm. Share your
         mission, areas of legal expertise, years of experience, and what sets
         your firm apart. This is your opportunity to build trust and make a
@@ -47,20 +47,20 @@ export default function CompanyAbout() {
             options={options}
             placeholder="Select company size"
             defaultValue="Self-employed / Sole Trader"
-            textColor="text-[#8E8E8E]"
+            textColor="text-[#6e6e6e]"
           />
 
           <TextInput
             label="Years in business"
             name="yearsInBusiness"
             placeholder="Number of years"
-            textColor="text-[#8E8E8E]"
+            textColor="text-[#6e6e6e]"
           />
           <TextareaInput
             label="Describe your company "
             name="description"
             placeholder="What sets you apart from businesses?"
-            textColor="text-[#8E8E8E]"
+            textColor="text-[#6e6e6e]"
           />
         </div>
       </div>
