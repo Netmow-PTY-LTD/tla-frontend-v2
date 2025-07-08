@@ -189,36 +189,16 @@ import { Skeleton } from '@/components/ui/skeleton';
 const LeadBoardPage = () => {
   const [showLeadDetails, setShowLeadDetails] = useState(true);
   const [selectedLead, setSelectedLead] = useState(null);
+  const [page, setPage] = useState(1);
 
-  // const pathname = usePathname();
+  const { data: allLeads, isLoading: isAllLeadsLoading } = useGetAllLeadsQuery({ page, limit: 10 });
 
-  // useEffect(() => {
-  //   const cleanPathname = pathname?.trim().replace(/\/+$/, '');
-
-  //   if (cleanPathname === '/lawyer/dashboard/leads-board') {
-  //     window.scrollTo({ top: 0, behavior: 'auto' });
-
-  //     document.body.style.setProperty('overflow', 'hidden', 'important');
-  //   } else {
-  //     document.body.style.overflow = '';
-  //   }
-
-  //   return () => {
-  //     document.body.style.overflow = '';
-  //   };
-  // }, [pathname]);
-
-  const { data: allLeads, isLoading: isAllLeadsLoading } =useGetAllLeadsQuery({page:1,limit:10});
-
-
-    // Fetch detailed data for selected lead
+  // Fetch detailed data for selected lead
   const {
     data: selectedLeadData,
     isLoading: isSingleLeadLoading,
     isFetching: isSingleLeadFetching,
   } = useGetSingleLeadQuery(selectedLead?._id, { skip: !selectedLead?._id });
-
-
 
   useEffect(() => {
     if (allLeads?.data && allLeads?.data?.length > 0) {
@@ -283,9 +263,8 @@ const LeadBoardPage = () => {
           )}
 
           <div
-            className={`${
-              showLeadDetails ? 'right-column-5 ' : 'right-column-full'
-            }`}
+            className={`${showLeadDetails ? 'right-column-5 ' : 'right-column-full'
+              }`}
           >
             <div className="column-wrap-right">
               <div className="leads-top-row">
