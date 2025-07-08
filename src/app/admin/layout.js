@@ -64,7 +64,7 @@ export default function AdminDashboardLayout({ children }) {
             isNoScrollPage ? 'no-scroll' : ''
           }`}
         >
-          <div className="flex flex-col">
+          <div className="flex flex-col h-full">
             <div className="flex-1 p-5">{children}</div>
             <DashboardFooter />
           </div>

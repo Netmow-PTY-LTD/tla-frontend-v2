@@ -17,14 +17,13 @@ import { useEffect, useState } from 'react';
 import LawyerContactButton from './leadBoard/LawyerContactButton';
 import ResponseSkeleton from '../my-responses/_components/ResponseSkeleton';
 
-export default function LeadDetailsPage({ onBack, lead }) {
-  const { data: singleLead, isLoading: isSingleLeadLoading } =
-    useGetSingleLeadQuery(lead?._id);
+export default function LeadDetailsPage({ onBack, lead, singleLead, isSingleLeadLoading }) {
+
 
   const fullText =
-    singleLead?.data?.additionalDetails === ''
+    singleLead?.additionalDetails === ''
       ? `If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options. Let us help you navigate this challenging time with expert guidance. If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options. Let us help you navigate this challenging time with expert guidance.`
-      : singleLead?.data?.additionalDetails;
+      : singleLead?.additionalDetails;
 
   const getTruncatedText = (text, maxLength) => {
     if (!text || typeof text !== 'string') return '';
@@ -48,15 +47,13 @@ export default function LeadDetailsPage({ onBack, lead }) {
 
   const mapUrl = getStaticMapUrl(lead?.userProfileId?.address);
 
-  const urgentOption = singleLead?.data?.leadAnswers
+  const urgentOption = singleLead?.leadAnswers
     .flatMap((answer) => answer.options || [])
     .find((option) => option.option === 'Urgent');
-    
-  const badges = singleLead?.data?.badges
 
-  // if (isSingleLeadLoading) {
-  //   return <ResponseSkeleton />;
-  // }
+  const badges = singleLead?.badges
+
+
 
   return isSingleLeadLoading ? (
     <ResponseSkeleton />
@@ -73,10 +70,9 @@ export default function LeadDetailsPage({ onBack, lead }) {
           <div className="flex flex-col items-start gap-4 ">
             <figure className="w-20 h-20 overflow-hidden">
               <Image
-                src={`${
-                  lead?.userProfileId?.profilePicture ??
+                src={`${lead?.userProfileId?.profilePicture ??
                   '/assets/img/avatar.png'
-                }`}
+                  }`}
                 alt={lead?.userProfileId?.name ?? 'John Doe'}
                 width={80}
                 height={80}
@@ -114,7 +110,7 @@ export default function LeadDetailsPage({ onBack, lead }) {
               <span>
                 Email:{' '}
                 {(() => {
-                  const email = singleLead?.data?.userProfileId?.user?.email;
+                  const email = singleLead?.userProfileId?.user?.email;
                   if (!email) return 't*******@e********.com';
 
                   const [user, domain] = email.split('@');
@@ -132,12 +128,12 @@ export default function LeadDetailsPage({ onBack, lead }) {
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-4">
             {/*  need to credit purchase modal */}
-            <LawyerContactButton leadDetail={singleLead?.data} />
-            {singleLead?.data?.credit && (
+            <LawyerContactButton leadDetail={singleLead} />
+            {singleLead?.credit && (
               <div className="text-[#34495E] ml-2 flex items-center gap-2">
                 <span>
-                  {singleLead?.data?.credit}{' '}
-                  {singleLead?.data?.credit > 1 ? 'credits' : 'credit'} required
+                  {singleLead?.credit}{' '}
+                  {singleLead?.credit > 1 ? 'credits' : 'credit'} required
                 </span>
                 <CircleAlert />
               </div>
@@ -166,8 +162,8 @@ export default function LeadDetailsPage({ onBack, lead }) {
                   icon={<Zap className="text-[#FF8602] w-4 h-4" />}
                 />
               )}
-              {singleLead?.data?.additionalDetails &&
-                singleLead?.data?.additionalDetails !== '' && (
+              {singleLead?.additionalDetails &&
+                singleLead?.additionalDetails !== '' && (
                   <TagButton
                     text="Additional Details"
                     bgColor="#004DA61A"
@@ -175,7 +171,7 @@ export default function LeadDetailsPage({ onBack, lead }) {
                   />
                 )}
 
-              {singleLead?.data?.userProfileId?.phone && (
+              {singleLead?.userProfileId?.phone && (
                 <TagButton
                   text="Verified Phone"
                   bgColor="#00C3C01A"
@@ -188,7 +184,7 @@ export default function LeadDetailsPage({ onBack, lead }) {
           <div className="mt-5">
             <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
               <h5 className="font-medium mb-2 heading-base">
-                {singleLead?.data?.serviceId?.name ?? ''}
+                {singleLead?.serviceId?.name ?? ''}
               </h5>
               <div className="admin-text text-[#34495E] ">
                 {displayText}
@@ -214,13 +210,13 @@ export default function LeadDetailsPage({ onBack, lead }) {
             </div>
           </div>
           <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
-          {singleLead?.data?.leadAnswers?.length > 0 && (
+          {singleLead?.leadAnswers?.length > 0 && (
             <div className="mt-5 space-y-3">
               <h4 className="font-medium heading-lg mb-5">
                 Answered some of selected questions
               </h4>
               <div className="flex flex-col gap-5">
-                {singleLead?.data?.leadAnswers?.map((leadAnswer, i) => (
+                {singleLead?.leadAnswers?.map((leadAnswer, i) => (
                   <div key={i}>
                     <p className="text-[var(--color-special)] font-medium">
                       {leadAnswer?.question}

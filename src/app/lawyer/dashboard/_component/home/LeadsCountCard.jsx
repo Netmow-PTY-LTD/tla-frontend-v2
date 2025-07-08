@@ -58,20 +58,23 @@
 //   );
 // }
 
-
 'use client';
 
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { useGetAllMyLeadsQuery } from '@/store/features/lawyer/LeadsApiService';
-
-
+import {
+  useGetAllLeadsQuery,
+  useGetAllMyLeadsQuery,
+} from '@/store/features/lawyer/LeadsApiService';
 
 export default function LeadsCountCard() {
-  const { data: allLeads, isLoading } = useGetAllMyLeadsQuery();
+  const { data: allLeads, isLoading } = useGetAllMyLeadsQuery({
+    page: 1,
+    limit: 10,
+  });
 
-  const totalLeads = allLeads?.data?.length ?? 0;
+  const totalLeads = allLeads?.pagination?.total ?? 0;
   const approvedLeads =
     allLeads?.data?.filter((lead) => lead.status === 'approved')?.length ?? 0;
   const pendingLeads =
@@ -100,7 +103,6 @@ export default function LeadsCountCard() {
             <div className="flex items-center justify-center w-16 h-16 rounded-full bg-slate-900 text-white">
               <p className="text-2xl font-bold">
                 {isLoading ? '...' : totalLeads}
-               
               </p>
             </div>
             <span className="text-sm font-medium mt-1">Total</span>
