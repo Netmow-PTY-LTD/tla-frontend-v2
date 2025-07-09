@@ -15,7 +15,7 @@ export default function LeadsHead({ isExpanded, total }) {
               isExpanded ? 'heading' : 'heading-base'
             } text-[#0B1C2D] text-left`}
           >
-            {total} Matching Leads
+            {total} Matches
           </h2>
           <div className="flex items-center gap-2">
             <Files className="w-4 h-4" />

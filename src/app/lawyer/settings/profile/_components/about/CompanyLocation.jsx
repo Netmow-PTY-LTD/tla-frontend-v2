@@ -73,7 +73,7 @@ export default function CompanyLocation() {
             label="What's the business location?"
             name="location.address"
             placeholder="Enter the company address"
-            textColor="text-[#8E8E8E]"
+            textColor="text-[#6e6e6e]"
           />
 
           <div className="flex items-center justify-start space-x-3 pt-4">
@@ -92,7 +92,7 @@ export default function CompanyLocation() {
               name={'location.locationReason'}
               options={options}
               placeholder="Select a reason"
-              textColor="text-[#8E8E8E]"
+              textColor="text-[#6e6e6e]"
             />
           </div>
         </div>

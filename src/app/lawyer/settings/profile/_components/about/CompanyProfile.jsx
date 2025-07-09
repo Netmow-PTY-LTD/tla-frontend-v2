@@ -10,7 +10,7 @@ export default function CompanyProfile() {
       <h3 className="text-black font-semibold heading-lg">
         Company Information
       </h3>
-      <p className="text-[#8E8E8E] mt-2">
+      <p className="text-[#6e6e6e] mt-2">
         This is the first detail clients will see when searching for legal
         services on TheLawApp. If you're a sole practitioner, simply use your
         full name. If you're part of a firm, enter your official business name
@@ -27,13 +27,13 @@ export default function CompanyProfile() {
             name="companyName"
             label="Name"
             placeholder="Enter Your Company Name"
-            textColor="text-[#8E8E8E]"
+            textColor="text-[#6e6e6e]"
           />
           <TextInput
             name="contactEmail"
             label="Email Address"
-            placeholder="netmow@gmail.com"
-            textColor="text-[#8E8E8E]"
+            placeholder="example@example.com"
+            textColor="text-[#6e6e6e]"
           />
         </div>
       </div>
@@ -43,13 +43,13 @@ export default function CompanyProfile() {
           name="phoneNumber"
           label="Phone Number"
           placeholder="+8801XXXXXXX"
-          textColor="text-[#8E8E8E]"
+          textColor="text-[#6e6e6e]"
         />
         <TextInput
           name="website"
           label="Website"
           placeholder="Company Website"
-          textColor="text-[#8E8E8E]"
+          textColor="text-[#6e6e6e]"
         />
       </div>
     </div>
