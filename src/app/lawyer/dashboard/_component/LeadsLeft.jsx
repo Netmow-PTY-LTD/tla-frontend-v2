@@ -16,10 +16,14 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import LawyerContactButton from './leadBoard/LawyerContactButton';
 import ResponseSkeleton from '../my-responses/_components/ResponseSkeleton';
+import { formatRelativeTime } from '@/helpers/formatTime';
 
-export default function LeadDetailsPage({ onBack, lead, singleLead, isSingleLeadLoading }) {
-
-
+export default function LeadDetailsPage({
+  onBack,
+  lead,
+  singleLead,
+  isSingleLeadLoading,
+}) {
   const fullText =
     singleLead?.additionalDetails === ''
       ? `If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options. Let us help you navigate this challenging time with expert guidance. If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options. Let us help you navigate this challenging time with expert guidance.`
@@ -51,15 +55,13 @@ export default function LeadDetailsPage({ onBack, lead, singleLead, isSingleLead
     .flatMap((answer) => answer.options || [])
     .find((option) => option.option === 'Urgent');
 
-  const badges = singleLead?.badges
-
-
+  const badges = singleLead?.badges;
 
   return isSingleLeadLoading ? (
     <ResponseSkeleton />
   ) : (
-    <div className="">
-      <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
+    <div className="bg-white">
+      <div className="max-w-[900px]">
         <div className="flex items-center justify-between">
           <button className="flex py-2 items-center gap-2" onClick={onBack}>
             {' '}
@@ -67,29 +69,35 @@ export default function LeadDetailsPage({ onBack, lead, singleLead, isSingleLead
           </button>
         </div>
         <div className="mt-3 max-w-4xl">
-          <div className="flex flex-col items-start gap-4 ">
-            <figure className="w-20 h-20 overflow-hidden">
-              <Image
-                src={`${lead?.userProfileId?.profilePicture ??
-                  '/assets/img/avatar.png'
+          <div className="flex justify-between">
+            <div className="flex flex-col items-start gap-4 ">
+              <figure className="w-20 h-20 overflow-hidden">
+                <Image
+                  src={`${
+                    lead?.userProfileId?.profilePicture ??
+                    '/assets/img/avatar.png'
                   }`}
-                alt={lead?.userProfileId?.name ?? 'John Doe'}
-                width={80}
-                height={80}
-                priority
-                className="rounded-full object-cover w-full h-full"
-              />
-            </figure>
-            <div>
-              <h2 className="font-medium heading-lg">
-                {lead?.userProfileId?.name ?? ''}
-              </h2>
-              <p className="text-gray-500 mt-2">
-                {lead?.userProfileId?.address ?? ''}
-              </p>
+                  alt={lead?.userProfileId?.name ?? 'John Doe'}
+                  width={80}
+                  height={80}
+                  priority
+                  className="rounded-full object-cover w-full h-full"
+                />
+              </figure>
+              <div>
+                <h2 className="font-medium heading-lg">
+                  {lead?.userProfileId?.name ?? ''}
+                </h2>
+                <p className="text-gray-500 mt-2">
+                  {lead?.userProfileId?.address ?? ''}
+                </p>
+              </div>
             </div>
+            <p className="font-medium text-[12px] text-gray-600 sm:ml-4 mt-2 sm:mt-0">
+              {lead?.createdAt && formatRelativeTime(lead?.createdAt)}
+            </p>
           </div>
-          <hr className="border-[#F3F3F3] my-5  " />
+          <hr className="border-[#F3F3F3] my-5" />
           <div className="mb-4">
             <div className="flex items-center gap-2 admin-text font-medium">
               <PhoneOutgoing className="w-4 h-4" />{' '}
@@ -99,8 +107,8 @@ export default function LeadDetailsPage({ onBack, lead, singleLead, isSingleLead
                   const phone = lead?.userProfileId?.phone;
                   return phone
                     ? `${phone.slice(0, 3)}${'*'.repeat(
-                      Math.max(0, phone.length - 3)
-                    )}`
+                        Math.max(0, phone.length - 3)
+                      )}`
                     : '480*******';
                 })()}
               </span>{' '}
@@ -142,7 +150,6 @@ export default function LeadDetailsPage({ onBack, lead, singleLead, isSingleLead
           <div className="mt-5">
             <h4 className="font-medium mb-1 heading-base">Matched criteria</h4>
             <div className="flex flex-wrap gap-2">
-
               {badges && badges.length > 0 && (
                 <>
                   {badges.map((item) => (
