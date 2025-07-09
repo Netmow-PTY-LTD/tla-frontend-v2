@@ -29,6 +29,8 @@ import Image from 'next/image';
 import { Fragment, useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
+
+  useActivityLogMutation,
   useGetSingleResponseQuery,
   useUpdateResponseStatusMutation,
 } from '@/store/features/lawyer/ResponseApiService';
@@ -36,19 +38,27 @@ import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
 import WhatsApp from '@/components/icon/WhatsApp';
 import ResponseSkeleton from './ResponseSkeleton';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import { useRouter } from 'next/navigation';
+import SendMailModal from './modal/SendMailModal';
+import SendSmsModal from './modal/SendSmsModal';
 
 export default function MyResponseDetails({ onBack, response, responseId }) {
   const [activeTab, setActiveTab] = useState('activity');
   const [isExpanded, setIsExpanded] = useState(false);
+  const [openMail, setOpenMail] = useState(false);
+  const [openSms, setOpenSms] = useState(false);
 
   const { data: singleResponse, isLoading: isSingleResponseLoading } =
     useGetSingleResponseQuery(responseId ? responseId : response?._id, {
       skip: !responseId && !response?._id,
     });
 
-  console.log('singleResponse activity', singleResponse?.data?.activity);
 
+console.log
   const [updateStatus] = useUpdateResponseStatusMutation();
+  const [updateActivity] = useActivityLogMutation();
+
+  const router = useRouter();
 
   const fallbackText = `If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options. Let us help you navigate this challenging time with expert guidance.`;
 
@@ -122,7 +132,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
     })
   );
 
-  console.log(groupedLogsArray);
+  
 
   const currentStatus = singleResponse?.data?.status || 'Pending';
 
@@ -146,238 +156,287 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
     return <Icon className="w-5 h-5" fill={fill} />;
   };
 
-  return (
-    <div className="">
-      <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
-        <div className="flex items-center justify-between">
-          <button className="flex py-2 items-center gap-2" onClick={onBack}>
-            {' '}
-            <MoveLeft /> <span>Back to Responses</span>
-          </button>
-        </div>
-        <div className="mt-4 mb-8 flex items-center justify-between bg-[#F5F6F9] rounded-lg py-2 px-4">
-          <span className="text-gray-500 text-[13px]">
-            Last activity 1m ago
-          </span>
-          <div className="flex items-center gap-2">
-            <b className="text-black text-[14px]">Current Status:</b>
-            <select
-              className="p-2 border border-gray-300 rounded-lg bg-white text-[13px]"
-              defaultValue={currentStatus}
-              onChange={(e) => handleUpdateStatus(e.target.value)}
-            >
-              <option value="pending">Pending</option>
-              <option value="hired">Hired</option>
-              <option value="archive">Archive</option>
-            </select>
-          </div>
-        </div>
-        <div className="mt-3 max-w-4xl">
-          <div className="flex flex-col items-start gap-4 ">
-            <figure className="w-20 h-20 overflow-hidden">
-              <Image
-                src={
-                  singleResponse?.data?.leadId?.userProfileId?.profilePicture ||
-                  '/assets/img/avatar.png'
-                }
-                alt="John Doe"
-                width={80}
-                height={80}
-                priority
-                className="w-full h-full rounded-full object-cover"
-              />
-            </figure>
-            <div>
-              <h2 className="font-medium heading-md">
-                {response?.leadId?.userProfileId?.name}
-              </h2>
-              <p className="text-gray-500 mt-2">
-                {response?.leadId?.userProfileId?.address}
-              </p>
-            </div>
-          </div>
-          {/* Current Status */}
 
-          <hr className="border-[#F3F3F3] my-5  " />
-          <div className="mb-4">
-            <div className="flex items-center gap-2 admin-text font-medium">
-              <PhoneOutgoing className="w-5 h-5" />{' '}
-              <span>Phone: {response?.leadId?.userProfileId?.phone}</span>{' '}
-            </div>
-            <div className=" flex items-center gap-2 mt-2 admin-text font-medium">
-              <AtSign className="w-5 h-5" />{' '}
-              <span>Email: {response?.leadId?.userProfileId?.user?.email}</span>{' '}
+  const handleActivity = async (type) => {
+
+    if (type === 'whatsapp') {
+      const whatsappActivityPayload = {
+        activityNote: 'you triet to contact  via WhatsApp',
+        activityType: 'whatsapp',
+        module: 'response',
+        objectId: response?._id,
+        extraField: {
+          fieldChanged: 'avatar',
+        },
+      };
+
+      try {
+        const result = await updateActivity(whatsappActivityPayload).unwrap();
+
+        console.log("whats app activity ==>",result)
+
+        if (result.success) {
+
+          const phone = response?.leadId?.userProfileId?.phone
+          window.open(`https://api.whatsapp.com/send?phone=${phone}&text=`, '_blank');
+        }
+
+
+      } catch (error) {
+
+      }
+
+
+    }
+    if (type === "sendemail") {
+      setOpenMail(true)
+      return
+
+    }
+    if (type === "sendsms") {
+      setOpenSms(true)
+      return
+
+    }
+    if (type === "Sendestimate") {
+
+    }
+
+  }
+
+
+
+  return (
+    <>
+      <div className="">
+        <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
+          <div className="flex items-center justify-between">
+            <button className="flex py-2 items-center gap-2" onClick={onBack}>
+              {' '}
+              <MoveLeft /> <span>Back to Responses</span>
+            </button>
+          </div>
+          <div className="mt-4 mb-8 flex items-center justify-between bg-[#F5F6F9] rounded-lg py-2 px-4">
+            <span className="text-gray-500 text-[13px]">
+              Last activity 1m ago
+            </span>
+            <div className="flex items-center gap-2">
+              <b className="text-black text-[14px]">Current Status:</b>
+              <select
+                className="p-2 border border-gray-300 rounded-lg bg-white text-[13px]"
+                defaultValue={currentStatus}
+                onChange={(e) => handleUpdateStatus(e.target.value)}
+              >
+                <option value="pending">Pending</option>
+                <option value="hired">Hired</option>
+                <option value="archive">Archive</option>
+              </select>
             </div>
           </div>
-          <div className="flex gap-2">
-            {/* <Button className="bg-[#00C3C0]">
+          <div className="mt-3 max-w-4xl">
+            <div className="flex flex-col items-start gap-4 ">
+              <figure className="w-20 h-20 overflow-hidden">
+                <Image
+                  src={
+                    singleResponse?.data?.leadId?.userProfileId?.profilePicture ||
+                    '/assets/img/avatar.png'
+                  }
+                  alt="John Doe"
+                  width={80}
+                  height={80}
+                  priority
+                  className="w-full h-full rounded-full object-cover"
+                />
+              </figure>
+              <div>
+                <h2 className="font-medium heading-md">
+                  {response?.leadId?.userProfileId?.name}
+                </h2>
+                <p className="text-gray-500 mt-2">
+                  {response?.leadId?.userProfileId?.address}
+                </p>
+              </div>
+            </div>
+            {/* Current Status */}
+
+            <hr className="border-[#F3F3F3] my-5  " />
+            <div className="mb-4">
+              <div className="flex items-center gap-2 admin-text font-medium">
+                <PhoneOutgoing className="w-5 h-5" />{' '}
+                <span>Phone: {response?.leadId?.userProfileId?.phone}</span>{' '}
+              </div>
+              <div className=" flex items-center gap-2 mt-2 admin-text font-medium">
+                <AtSign className="w-5 h-5" />{' '}
+                <span>Email: {response?.leadId?.userProfileId?.user?.email}</span>{' '}
+              </div>
+            </div>
+            <div className="flex gap-2">
+              {/* <Button className="bg-[#00C3C0]">
               <Phone />
               Show Number
             </Button> */}
-            <Button className="bg-[#25D366]">
-              <WhatsApp />
-              Send Whatsapp
-            </Button>
-            <Button className="bg-[#4285F4]">
-              <Mail />
-              Send Email
-            </Button>
-            <Button className="bg-[#34B7F1]">
-              <MessageSquare />
-              Send SMS
-            </Button>
-          </div>
-          <div className="mt-5 flex items-center gap-2">
-            <Tag />
-            <span className="admin-text font-medium">
-              Your estimate:{' '}
-              <Link href="#" className="underline">
-                Send an estimate
-              </Link>
-            </span>
-          </div>
-          <div className="mt-5 flex items-center gap-2">
-            <BadgeCent />
-            <b>
-              {' '}
-              {singleResponse?.data?.credit}{' '}
-              {singleResponse?.data?.credit > 1 ? 'credits' : 'credit'}{' '}
-            </b>
-          </div>
-          <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
-          <div className="mt-5">
-            <h4 className="font-medium mb-1 heading-base">
-              Looking for a {response?.serviceId?.name || ''} consultation
-            </h4>
-            <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
-              <h5 className="font-medium mb-2 heading-base">
-                {response?.serviceId?.name || ''}
-              </h5>
-              <div className="admin-text text-[#34495E] ">
-                {displayText}
-                {shouldTruncate && (
-                  <button
-                    onClick={toggleReadMore}
-                    className="text-[var(--color-black)] font-semibold hover:underline focus:outline-none ml-2"
-                  >
-                    {isExpanded ? 'Read less' : 'Read more'}
+              <Button onClick={() => handleActivity('whatsapp')} className="bg-[#25D366]">
+                <WhatsApp />
+                Send Whatsapp
+              </Button>
+              <Button onClick={() => handleActivity('sendemail')} className="bg-[#4285F4]">
+                <Mail />
+                Send Email
+              </Button>
+              <Button onClick={() => handleActivity('sendsms')} className="bg-[#34B7F1]">
+                <MessageSquare />
+                Send SMS
+              </Button>
+            </div>
+            <div className="mt-5 flex items-center gap-2">
+              <Tag />
+              <span className="admin-text font-medium">
+                Your estimate:{' '}
+                <Link href="#" className="underline">
+                  <button className='text-[#ff8602]' onClick={() => handleActivity('Sendestimate')}>
+                    Send an estimate
                   </button>
-                )}
+
+                </Link>
+              </span>
+            </div>
+            <div className="mt-5 flex items-center gap-2">
+              <BadgeCent />
+              <b>
+                {' '}
+                {singleResponse?.data?.credit}{' '}
+                {singleResponse?.data?.credit > 1 ? 'credits' : 'credit'}{' '}
+              </b>
+            </div>
+            <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
+            <div className="mt-5">
+              <h4 className="font-medium mb-1 heading-base">
+                Looking for a {response?.serviceId?.name || ''} consultation
+              </h4>
+              <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
+                <h5 className="font-medium mb-2 heading-base">
+                  {response?.serviceId?.name || ''}
+                </h5>
+                <div className="admin-text text-[#34495E] ">
+                  {displayText}
+                  {shouldTruncate && (
+                    <button
+                      onClick={toggleReadMore}
+                      className="text-[var(--color-black)] font-semibold hover:underline focus:outline-none ml-2"
+                    >
+                      {isExpanded ? 'Read less' : 'Read more'}
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-          <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
-          <div className="flex w-full flex-col gap-4 mt-5">
-            <div className="flex border-b border-gray-200 gap-6">
-              <button
-                onClick={() => setActiveTab('activity')}
-                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                  activeTab === 'activity'
+            <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
+            <div className="flex w-full flex-col gap-4 mt-5">
+              <div className="flex border-b border-gray-200 gap-6">
+                <button
+                  onClick={() => setActiveTab('activity')}
+                  className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
                     ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
                     : 'hover:text-black'
-                }`}
-              >
-                Activity
-              </button>
-              <button
-                onClick={() => setActiveTab('lead-details')}
-                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                  activeTab === 'lead-details'
+                    }`}
+                >
+                  Activity
+                </button>
+                <button
+                  onClick={() => setActiveTab('lead-details')}
+                  className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'lead-details'
                     ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
                     : 'hover:text-black'
-                }`}
-              >
-                Lead Details
-              </button>
-              <button
-                onClick={() => setActiveTab('note')}
-                className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                  activeTab === 'note'
+                    }`}
+                >
+                  Lead Details
+                </button>
+                <button
+                  onClick={() => setActiveTab('note')}
+                  className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'note'
                     ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
                     : 'hover:text-black'
-                }`}
-              >
-                My Notes
-              </button>
-            </div>
+                    }`}
+                >
+                  My Notes
+                </button>
+              </div>
 
-            {/* Tab Content */}
-            <div className="mt-4">
-              {activeTab === 'activity' && (
-                <div className="bg-white rounded-lg relative">
-                  {groupedLogsArray?.map((activity, index) => {
-                    const parts = new Intl.DateTimeFormat('en-GB', {
-                      weekday: 'short',
-                      day: 'numeric',
-                      month: 'short',
-                    }).formatToParts(new Date(activity.date));
+              {/* Tab Content */}
+              <div className="mt-4">
+                {activeTab === 'activity' && (
+                  <div className="bg-white rounded-lg relative">
+                    {groupedLogsArray?.map((activity, index) => {
+                      const parts = new Intl.DateTimeFormat('en-GB', {
+                        weekday: 'short',
+                        day: 'numeric',
+                        month: 'short',
+                      }).formatToParts(new Date(activity.date));
 
-                    const formattedDate = parts
-                      .filter(({ type }) =>
-                        ['weekday', 'day', 'month'].includes(type)
-                      )
-                      .map(({ value }) => value)
-                      .join(' ');
+                      const formattedDate = parts
+                        .filter(({ type }) =>
+                          ['weekday', 'day', 'month'].includes(type)
+                        )
+                        .map(({ value }) => value)
+                        .join(' ');
 
-                    return (
-                      <Fragment key={index}>
-                        <div
-                          className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${
-                            index === 0 ? '' : 'border-l border-[#e6e7ec]'
-                          }`}
-                        >
-                          {formattedDate}
-                        </div>
-                        {activity?.logs?.map((item, i) => {
-                          return (
-                            <div
-                              className={`activity-log-item flex gap-2 ${
-                                index === 0 && i === 0 ? 'first-log-item' : ''
+                      return (
+                        <Fragment key={index}>
+                          <div
+                            className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${index === 0 ? '' : 'border-l border-[#e6e7ec]'
                               }`}
-                              key={i}
-                            >
-                              <div className="left-track flex-grow-0 flex flex-col w-[32px] items-center">
-                                <div
-                                  className={`line-top h-1/2 w-[1] border-l border-[#e6e7ec]`}
-                                ></div>
-                                <div className="icon-wrapper mt-[-16px]">
-                                  <div className="icon w-[32px] h-[32px] bg-[#000] rounded-full flex justify-center items-center">
-                                    {/* {item?.activityType === 'update' &&
+                          >
+                            {formattedDate}
+                          </div>
+                          {activity?.logs?.map((item, i) => {
+                            return (
+                              <div
+                                className={`activity-log-item flex gap-2 ${index === 0 && i === 0 ? 'first-log-item' : ''
+                                  }`}
+                                key={i}
+                              >
+                                <div className="left-track flex-grow-0 flex flex-col w-[32px] items-center">
+                                  <div
+                                    className={`line-top h-1/2 w-[1] border-l border-[#e6e7ec]`}
+                                  ></div>
+                                  <div className="icon-wrapper mt-[-16px]">
+                                    <div className="icon w-[32px] h-[32px] bg-[#000] rounded-full flex justify-center items-center">
+                                      {/* {item?.activityType === 'update' &&
                                       item?.status === 'pending' && (
                                         <img
                                           src="https://d1w7gvu0kpf6fl.cloudfront.net/img/icons/activities-icons/svg/status_pending.svg"
                                           alt="icon"
                                         />
                                       )} */}
-                                    {item?.activityType &&
-                                      generateActivityIcon(item?.activityType)}
+                                      {item?.activityType &&
+                                        generateActivityIcon(item?.activityType)}
+                                    </div>
                                   </div>
+                                  <div className="line-bottom h-1/2 w-[1] border-l border-[#e6e7ec]"></div>
                                 </div>
-                                <div className="line-bottom h-1/2 w-[1] border-l border-[#e6e7ec]"></div>
-                              </div>
-                              <div className="flex-1 flex items-start justify-between mb-4 py-3 px-4 rounded-lg border border-gray-200">
-                                <div className="flex flex-col">
-                                  <div className="text-gray-500">
-                                    {item?.createdBy?.profile?.name || ''}
+                                <div className="flex-1 flex items-start justify-between mb-4 py-3 px-4 rounded-lg border border-gray-200">
+                                  <div className="flex flex-col">
+                                    <div className="text-gray-500">
+                                      {item?.createdBy?.profile?.name || ''}
+                                    </div>
+                                    <div className="text-sm text-black font-medium">
+                                      {item?.activityNote}
+                                    </div>
                                   </div>
-                                  <div className="text-sm text-black font-medium">
-                                    {item?.activityNote}
-                                  </div>
+                                  <span className="text-xs text-gray-400">
+                                    {new Date(item?.date)
+                                      .toLocaleTimeString('en-US', {
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        hour12: true,
+                                      })
+                                      .replace(/ (AM|PM)/, '')}
+                                  </span>
                                 </div>
-                                <span className="text-xs text-gray-400">
-                                  {new Date(item?.date)
-                                    .toLocaleTimeString('en-US', {
-                                      hour: '2-digit',
-                                      minute: '2-digit',
-                                      hour12: true,
-                                    })
-                                    .replace(/ (AM|PM)/, '')}
-                                </span>
                               </div>
-                            </div>
-                          );
-                        })}
-                        {/* <div className="relative">
+                            );
+                          })}
+                          {/* <div className="relative">
                           {activity.items.map((item, i) => (
                             <div
                               key={i}
@@ -395,38 +454,42 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                             </div>
                           ))}
                         </div> */}
-                      </Fragment>
-                    );
-                  })}
-                </div>
-              )}
-              {activeTab === 'lead-details' && (
-                <div className="flex flex-col gap-5">
-                  {singleResponse?.data?.leadAnswers?.map((leadAnswer, i) => (
-                    <div key={i}>
-                      <p className="text-[var(--color-special)] font-medium">
-                        {leadAnswer?.question}
-                      </p>
-                      <div className="text-[#34495E] mt-2">
-                        {leadAnswer?.options &&
-                          leadAnswer?.options
-                            ?.map((option) => option?.option)
-                            .join(', ')}
-                      </div>
-                    </div>
-                  ))}
-                  <div className="mt-5">
-                    <img src={mapUrl} className="rounded-lg" alt="map" />
+                        </Fragment>
+                      );
+                    })}
                   </div>
-                </div>
-              )}
-              {activeTab === 'note' && (
-                <div className="bg-white rounded-lg p-4">My Note</div>
-              )}
+                )}
+                {activeTab === 'lead-details' && (
+                  <div className="flex flex-col gap-5">
+                    {singleResponse?.data?.leadAnswers?.map((leadAnswer, i) => (
+                      <div key={i}>
+                        <p className="text-[var(--color-special)] font-medium">
+                          {leadAnswer?.question}
+                        </p>
+                        <div className="text-[#34495E] mt-2">
+                          {leadAnswer?.options &&
+                            leadAnswer?.options
+                              ?.map((option) => option?.option)
+                              .join(', ')}
+                        </div>
+                      </div>
+                    ))}
+                    <div className="mt-5">
+                      <img src={mapUrl} className="rounded-lg" alt="map" />
+                    </div>
+                  </div>
+                )}
+                {activeTab === 'note' && (
+                  <div className="bg-white rounded-lg p-4">My Note</div>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <SendMailModal info={singleResponse?.data} openMail={openMail} setOpenMail={setOpenMail} />
+      <SendSmsModal info={singleResponse?.data} openSms={openSms} setOpenSms={setOpenSms} />
+    </>
   );
 }

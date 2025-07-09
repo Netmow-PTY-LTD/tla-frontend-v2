@@ -19,7 +19,7 @@ export function Modal({
   width = 'max-w-[500px]',
   height = '',
 }) {
-  console.log('Modal open prop:', open);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange} className="z-[999]">
       {buttonName && (

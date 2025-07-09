@@ -15,14 +15,13 @@ export default function MyResponsesPage() {
   const searchParams = useSearchParams();
   const responseId = searchParams.get('responseId');
 
-  //console.log('responseId', responseId);
 
   const router = useRouter();
 
   const { data: allMyResponses, isLoading: isAllMyResponsesLoading } =
     useGetAllMyResponsesQuery();
 
-  console.log('selectedResponse', selectedResponse);
+ 
 
   // Handle body scroll and layout overflow
   useEffect(() => {
