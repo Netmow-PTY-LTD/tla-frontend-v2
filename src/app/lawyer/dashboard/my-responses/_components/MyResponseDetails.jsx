@@ -53,8 +53,8 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
       skip: !responseId && !response?._id,
     });
 
-  console.log('response', response?.leadId?.userProfileId?.phone);
 
+console.log
   const [updateStatus] = useUpdateResponseStatusMutation();
   const [updateActivity] = useActivityLogMutation();
 
@@ -132,7 +132,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
     })
   );
 
-  console.log(groupedLogsArray);
+  
 
   const currentStatus = singleResponse?.data?.status || 'Pending';
 
@@ -202,7 +202,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
 
   }
 
-  console.log('openMail ==>', openMail)
+
 
   return (
     <>
@@ -486,8 +486,8 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
         </div>
       </div>
 
-      <SendMailModal openMail={openMail} setOpenMail={setOpenMail} />
-      <SendSmsModal openSms={openSms} setOpenSms={setOpenSms} />
+      <SendMailModal info={singleResponse?.data} openMail={openMail} setOpenMail={setOpenMail} />
+      <SendSmsModal info={singleResponse?.data} openSms={openSms} setOpenSms={setOpenSms} />
     </>
   );
 }
