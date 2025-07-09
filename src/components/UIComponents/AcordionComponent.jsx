@@ -10,13 +10,16 @@ import {
 import CircularProgress from './CircleProgressBar';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-const AccordionComponent = ({ title, content }) => {
+const AccordionComponent = ({ title, content, openValue,
+  onChange, }) => {
   return (
     <div>
       <Accordion
         type="single"
         collapsible
         className="bg-[#F3F3F3]  rounded-[5px]  "
+        value={openValue === title ? title : ''}
+        onValueChange={(val) => onChange(val === '' ? null : val)}
       >
         <AccordionItem value={title} className="border-none">
           <AccordionTrigger className="h-[44px] px-2">

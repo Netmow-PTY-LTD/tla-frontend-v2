@@ -22,13 +22,16 @@ const CreditPurchaseLead = ({
   onSuccess,
   onClose,
   needAddCard,
+  lead
 }) => {
   const [showCardForm, setShowCardForm] = useState(false);
   const [autoTopUP, setAutoTopUp] = useState(false);
   const [pendingPackageId, setPendingPackageId] = useState(null);
   const [pendingPurchase, setPendingPurchase] = useState(false);
+  const [openAccordion, setOpenAccordion] = useState(null);
   const [addPaymentMethod] = useAddPaymentMethodMutation();
   const [purchaseCredits, { isLoading }] = usePurchaseCreditPackageMutation();
+
 
   const handleBuyClick = async () => {
     if (needAddCard) {
@@ -70,7 +73,6 @@ const CreditPurchaseLead = ({
         couponCode: null,
       };
 
-      console.log('purchaseDetails', purchaseDetails);
       const result = await purchaseCredits(purchaseDetails).unwrap();
       if (result.success) {
         toast.success('Credits purchased successfully', {
@@ -96,13 +98,13 @@ const CreditPurchaseLead = ({
   }
 
   return (
-   
+
 
     <div className="space-y-6  bg-white rounded-2xl shadow-sm">
       {/* Header */}
       <div>
         <h1 className="text-xl font-semibold text-gray-800">
-          You need <span className="text-primary-600 font-bold">4 credits</span> to contact <span className="font-bold">Raguram</span>
+          You need <span className="text-primary-600 font-bold"> {lead?.credit} credits</span> to contact <span className="font-bold">{lead?.userProfileId?.name} </span>
         </h1>
         <p className="text-gray-600 mt-2">
           To get some credits, you need to buy a <span className="font-medium text-primary-600">starter pack of credits</span>
@@ -116,13 +118,22 @@ const CreditPurchaseLead = ({
         <AccordionComponent
           content="Credits are The LawApp online currency. If you see a job that you like and you want to get in contact with that customer, then you use credits to purchase their contact details (you will receive their personal phone number and email address). The amount of credits required to contact a customer varies depending on the potential value of the job e.g. you will need less credits to contact a customer looking for a cleaner once a month for a 1 bedroomed flat than a customer looking for a cleaner once a week for a 5 bedroomed house."
           title="What are credits?"
+          openValue={openAccordion}
+          onChange={setOpenAccordion}
         />
         <AccordionComponent
           content="The starter pack is the only way to get started and trial The LawApp properly. It provides enough credits to contact roughly 10 customers and is designed so that you get hired at least once and get a great return on your investment. We’re so confident that you’ll get hired at least once from the starter pack that we offer a full Get Hired Guarantee. We also offer a massive 20% discount off the standard price."
-          title="What is the starter pack?" />
+          title="What is the starter pack?"
+          openValue={openAccordion}
+          onChange={setOpenAccordion}
+        />
         <AccordionComponent
           content="The Get Hired Guarantee is there as we’re so confident that you’ll get hired at least once that if you don’t, we’ll return all of the credits so you can try again."
-          title="What is the Get Hired Guarantee?" />
+          title="What is the Get Hired Guarantee?"
+          openValue={openAccordion}
+          onChange={setOpenAccordion}
+        />
+
       </div>
 
       {/* Offer Card */}
