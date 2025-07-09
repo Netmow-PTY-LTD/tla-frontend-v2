@@ -60,15 +60,13 @@ export default function SidebarTop() {
       <span className="capitalize">{dateTime}</span>
       <h2>
         <b>
-          {greeting}, {userInfo?.data?.profile?.name ?? 'Lawyer'}!{' '}
+          {greeting}, {userInfo?.data?.profile?.name.split(' ')[0] ?? 'Lawyer'}!{' '}
         </b>
         <br />
         <b>Welcome To TLA Dashboard</b>
-        <br />
-        <span className="admin-text">The Law App version 1.0</span>
       </h2>
-      <div className="flex justify-between items-center mt-5">
-        <div className="icon flex items-center gap-2">
+      <div className="flex justify-between items-center">
+        {/* <div className="icon flex items-center gap-2">
           <svg
             width="16"
             height="16"
@@ -117,7 +115,7 @@ export default function SidebarTop() {
             </defs>
           </svg>
           <span>You have 3 jobs</span>
-        </div>
+        </div> */}
         <Link href={`/client/dashboard?trigger=new-request`}>
           Create Request
         </Link>

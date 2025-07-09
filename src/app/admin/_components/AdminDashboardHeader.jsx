@@ -5,6 +5,7 @@ import React from 'react';
 import AdminProfileDropDown from './AdminProfileDropDown';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { BellRing } from 'lucide-react';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 
 export default function AdminDashboardHeader() {
   const { data: currentUser } = useAuthUserInfoQuery();
