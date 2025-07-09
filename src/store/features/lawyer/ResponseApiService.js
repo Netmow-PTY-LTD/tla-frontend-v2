@@ -55,9 +55,17 @@ const responseApiService = baseApi.injectEndpoints({
         body,
       }),
       invalidatesTags: ['response'],
-    })
-
-
+    }),
+    contactLead: builder.mutation({
+      query: (body) => {
+        return {
+          url: '/contact/contact-lead',
+          method: 'POST',
+          body,
+        }
+      },
+      invalidatesTags: ['response'],
+    }),
 
 
   }),
@@ -69,6 +77,9 @@ export const {
   useGetSingleResponseQuery,
   useGetAllMyResponsesQuery,
   useUpdateResponseStatusMutation,
-  useActivityLogMutation
+  useActivityLogMutation,
+  useContactLeadMutation
+  
+
 
 } = responseApiService;

@@ -1,16 +1,39 @@
-
+"use client"
 
 import FormWrapper from '@/components/form/FromWrapper';
 import TextareaInput from '@/components/form/TextArea';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/UIComponents/Modal'
+import { useContactLeadMutation } from '@/store/features/lawyer/ResponseApiService';
 import React from 'react'
+import { toast } from 'sonner';
 
-export default function SendMailModal({ openMail, setOpenMail,info }) {
-      const onSubmit = (data) => {
-        console.log('data', data)
-    }
+export default function SendMailModal({ openMail, setOpenMail, info }) {
+    const [sendemail] = useContactLeadMutation()
     const lead = info?.leadId?.userProfileId;
+
+    const onSubmit = async (data) => {
+        console.log('data', data)
+        try {
+            const emailContactPayload = {
+                method: 'email',
+                toEmail: info?.leadId?.userProfileId?.user?.email,
+                subject: "You're being contacted about your request",
+                emailText: data?.email,
+                leadId: info?.leadId?._id,
+                responseId: info?._id,
+            };
+            const sendMailResult = await sendemail(emailContactPayload).unwrap()
+            console.log("sendMailResult", sendMailResult)
+            if(sendMailResult.success){
+                toast.success(sendMailResult?.message)
+            }
+
+        } catch (error) {
+
+        }
+    }
+
     return (
         <div>
             <Modal
