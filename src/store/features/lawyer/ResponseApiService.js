@@ -31,18 +31,36 @@ const responseApiService = baseApi.injectEndpoints({
       }),
       providesTags: ['response'],
     }),
+    
     updateResponseStatus: builder.mutation({
       query: (body) => {
-        console.log('body ==>',body)
+        console.log('body ==>', body)
 
-        return{
-        url: `/response/${body.responseId}/status`,
-        method: 'PATCH',
-        body: body.data,
-      }
+        return {
+          url: `/response/${body.responseId}/status`,
+          method: 'PATCH',
+          body: body.data,
+        }
       },
       invalidatesTags: ['response'],
     }),
+
+
+    activityLog: builder.mutation({
+      query: (body) => {
+        return {
+          url: `/activity-log`,
+          method: 'POST',
+          body,
+        }
+      },
+      invalidatesTags: ['response'],
+    })
+
+
+
+
+
   }),
 });
 
@@ -52,4 +70,5 @@ export const {
   useGetSingleResponseQuery,
   useGetAllMyResponsesQuery,
   useUpdateResponseStatusMutation
+  
 } = responseApiService;
