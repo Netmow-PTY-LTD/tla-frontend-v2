@@ -10,6 +10,7 @@ const responseApiService = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['response'],
     }),
+
     getAllResponses: builder.query({
       query: () => ({
         url: '/response/list',
@@ -17,6 +18,7 @@ const responseApiService = baseApi.injectEndpoints({
       }),
       providesTags: ['response'],
     }),
+
     getSingleResponse: builder.query({
       query: (id) => ({
         url: `/response/${id}`,
@@ -31,7 +33,7 @@ const responseApiService = baseApi.injectEndpoints({
       }),
       providesTags: ['response'],
     }),
-    
+
     updateResponseStatus: builder.mutation({
       query: (body) => {
         console.log('body ==>', body)
@@ -45,18 +47,15 @@ const responseApiService = baseApi.injectEndpoints({
       invalidatesTags: ['response'],
     }),
 
-
+    // activity log
     activityLog: builder.mutation({
-      query: (body) => {
-        return {
-          url: `/activity-log`,
-          method: 'POST',
-          body,
-        }
-      },
+      query: (body) => ({
+        url: `/activity-log`,
+        method: 'POST',
+        body,
+      }),
       invalidatesTags: ['response'],
     })
-
 
 
 
@@ -69,6 +68,7 @@ export const {
   useGetAllResponsesQuery,
   useGetSingleResponseQuery,
   useGetAllMyResponsesQuery,
-  useUpdateResponseStatusMutation
-  
+  useUpdateResponseStatusMutation,
+  useActivityLogMutation
+
 } = responseApiService;

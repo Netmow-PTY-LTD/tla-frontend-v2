@@ -29,6 +29,8 @@ import Image from 'next/image';
 import { Fragment, useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
+
+  useActivityLogMutation,
   useGetSingleResponseQuery,
   useUpdateResponseStatusMutation,
 } from '@/store/features/lawyer/ResponseApiService';
@@ -36,6 +38,7 @@ import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
 import WhatsApp from '@/components/icon/WhatsApp';
 import ResponseSkeleton from './ResponseSkeleton';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import { useRouter } from 'next/navigation';
 
 export default function MyResponseDetails({ onBack, response, responseId }) {
   const [activeTab, setActiveTab] = useState('activity');
@@ -46,9 +49,12 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
       skip: !responseId && !response?._id,
     });
 
-  console.log('singleResponse activity', singleResponse?.data?.activity);
+  console.log('response', response?.leadId?.userProfileId?.phone);
 
   const [updateStatus] = useUpdateResponseStatusMutation();
+  const [updateActivity] = useActivityLogMutation();
+
+  const router = useRouter();
 
   const fallbackText = `If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options. Let us help you navigate this challenging time with expert guidance.`;
 
@@ -147,19 +153,48 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
   };
 
 
-  const handleActivity = (type) => {
+  const handleActivity = async (type) => {
     console.log('chdck activity type ==>', type)
-    if(type==='whatsapp'){
+
+
+
+    if (type === 'whatsapp') {
+      const whatsappActivityPayload = {
+        activityNote: 'you triet to contact  via WhatsApp',
+        activityType: 'whatsapp',
+        module: 'response',
+        objectId: response?._id,
+        extraField: {
+          fieldChanged: 'avatar',
+        },
+      };
+
+      try {
+        const result = await updateActivity(whatsappActivityPayload).unwrap();
+
+        if (result.success) {
+          console.log('restult ==>', result)
+          const phone = response?.leadId?.userProfileId?.phone
+          window.open(`https://api.whatsapp.com/send?phone=${phone}&text=`, '_blank');
+
+        }
+
+
+
+      } catch (error) {
+
+      }
+
 
     }
-    if(type==="sendmail"){
+    if (type === "sendmail") {
 
     }
-    if(type==="sendsms"){
+    if (type === "sendsms") {
 
     }
-    if(type==="Sendestimate"){
-      
+    if (type === "Sendestimate") {
+
     }
 
   }
@@ -293,8 +328,8 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
               <button
                 onClick={() => setActiveTab('activity')}
                 className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
-                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                    : 'hover:text-black'
+                  ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                  : 'hover:text-black'
                   }`}
               >
                 Activity
@@ -302,8 +337,8 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
               <button
                 onClick={() => setActiveTab('lead-details')}
                 className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'lead-details'
-                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                    : 'hover:text-black'
+                  ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                  : 'hover:text-black'
                   }`}
               >
                 Lead Details
@@ -311,8 +346,8 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
               <button
                 onClick={() => setActiveTab('note')}
                 className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'note'
-                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                    : 'hover:text-black'
+                  ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                  : 'hover:text-black'
                   }`}
               >
                 My Notes
