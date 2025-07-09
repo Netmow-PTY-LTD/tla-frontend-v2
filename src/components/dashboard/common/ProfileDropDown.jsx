@@ -64,7 +64,7 @@ export default function ProfileDropDown() {
               <AvatarFallback>USER</AvatarFallback>
             </Avatar>
             <span className="font-medium text-[14px]">
-              {currentUser?.data?.profile?.name || 'Lawyer'}
+              {currentUser?.data?.profile?.name.split(' ')[0] || 'Lawyer'}
             </span>
             <ChevronDown className="w-5 h-5" />
           </div>

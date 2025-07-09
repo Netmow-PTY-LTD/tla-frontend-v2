@@ -30,11 +30,7 @@ const creditTiers = [
   { id: 8, range: '50-100 credits' },
 ];
 
-export default function FilterSidebar() {
-  const { data: currentUser } = useAuthUserInfoQuery();
-
-  //console.log('currentUser ==>', currentUser?.data);
-
+export default function FilterSidebar({ data }) {
   return (
     <Sheet className="z-[9999]">
       <SheetTrigger asChild>
@@ -206,26 +202,24 @@ export default function FilterSidebar() {
             </AccordionTrigger>
             <AccordionContent className="overflow-hidden">
               <div className="flex flex-col gap-4 text-balance">
-                {currentUser?.data?.profile?.serviceIds?.length > 0 &&
-                  currentUser?.data?.profile?.serviceIds?.map(
-                    (service, index) => {
-                      return (
-                        <label
-                          htmlFor={service?.name}
-                          className="flex items-center gap-2"
-                          key={index}
-                        >
-                          <input
-                            type="checkbox"
-                            id={service?.name}
-                            name="service"
-                            value={service?.name}
-                          />
-                          {service?.name}
-                        </label>
-                      );
-                    }
-                  )}
+                {data?.profile?.serviceIds?.length > 0 &&
+                  data?.profile?.serviceIds?.map((service, index) => {
+                    return (
+                      <label
+                        htmlFor={service?.name}
+                        className="flex items-center gap-2"
+                        key={index}
+                      >
+                        <input
+                          type="checkbox"
+                          id={service?.name}
+                          name="service"
+                          value={service?.name}
+                        />
+                        {service?.name}
+                      </label>
+                    );
+                  })}
               </div>
             </AccordionContent>
           </AccordionItem>
