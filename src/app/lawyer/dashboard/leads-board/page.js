@@ -1,11 +1,13 @@
-
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import LeadDetailsPage from '../_component/LeadsLeft';
 import LeadsRight from '../_component/LeadsRight';
 
 import LeadsHead from '../_component/LeadsHead';
-import { useGetAllLeadsQuery, useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
+import {
+  useGetAllLeadsQuery,
+  useGetSingleLeadQuery,
+} from '@/store/features/lawyer/LeadsApiService';
 import { Inbox, Loader } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -18,8 +20,11 @@ const LeadBoardPage = () => {
 
   const scrollContainerRef = useRef(null);
 
-
-  const { data, isLoading: isAllLeadsLoading, isFetching } = useGetAllLeadsQuery({ page, limit: 10 });
+  const {
+    data,
+    isLoading: isAllLeadsLoading,
+    isFetching,
+  } = useGetAllLeadsQuery({ page, limit: 10 });
 
   // Fetch detailed data for selected lead
   const {
@@ -28,14 +33,12 @@ const LeadBoardPage = () => {
     isFetching: isSingleLeadFetching,
   } = useGetSingleLeadQuery(selectedLead?._id, { skip: !selectedLead?._id });
 
-
   // Set first lead on initial load or leads update
   useEffect(() => {
     if (leads?.length > 0 && !selectedLead) {
       setSelectedLead(leads[0]);
     }
   }, [leads, selectedLead]);
-
 
   useEffect(() => {
     if (!data) return;
@@ -45,12 +48,10 @@ const LeadBoardPage = () => {
     setHasMore(page < totalPage);
   }, [data, page]);
 
-
-
   // Scroll event handler for infinite loading
   useEffect(() => {
     const container = scrollContainerRef.current;
-    console.log('container ===>', container)
+    console.log('container ===>', container);
     if (!container) return;
 
     const handleScroll = () => {
@@ -71,8 +72,6 @@ const LeadBoardPage = () => {
   }, [hasMore, isFetching, scrollContainerRef?.current]);
 
   // console.log('scrollContainerRef', scrollContainerRef?.current);
-
-
 
   if (isAllLeadsLoading) {
     return (
@@ -118,8 +117,8 @@ const LeadBoardPage = () => {
       {leads?.length > 0 ? (
         <div className="lead-board-container">
           {showLeadDetails && selectedLead && (
-            <div className="left-column-7">
-              <div className="column-wrap-left">
+            <div className="left-column-8">
+              <div className="column-wrap-left bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
                 <LeadDetailsPage
                   lead={selectedLead}
                   onBack={() => setShowLeadDetails(false)}
@@ -131,14 +130,18 @@ const LeadBoardPage = () => {
           )}
 
           <div
-            className={`${showLeadDetails ? 'right-column-5 ' : 'right-column-full'
-              }`}
+            className={`${
+              showLeadDetails ? 'right-column-4 ' : 'right-column-full'
+            }`}
           >
-            <div className="column-wrap-right">
+            <div className="column-wrap-right" ref={scrollContainerRef}>
               <div className="leads-top-row">
-                <LeadsHead isExpanded={!showLeadDetails} />
+                <LeadsHead
+                  isExpanded={!showLeadDetails}
+                  total={data?.pagination?.total ?? 0}
+                />
               </div>
-              <div className="leads-bottom-row" ref={scrollContainerRef}>
+              <div className="leads-bottom-row">
                 <LeadsRight
                   isExpanded={!showLeadDetails}
                   onViewDetails={(lead) => {
