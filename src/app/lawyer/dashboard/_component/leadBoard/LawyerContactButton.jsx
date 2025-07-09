@@ -22,7 +22,7 @@ const LawyerContactButton = ({ leadDetail }) => {
   const [pendingPayload, setPendingPayload] = useState(null);
   const [contactLawyer, { isLoading }] = useContactLawyerMutation();
 
-  console.log('isseus ==> render check',)
+ 
   const router = useRouter();
   const handleContact = async () => {
     const payload = {
@@ -32,9 +32,9 @@ const LawyerContactButton = ({ leadDetail }) => {
     };
     try {
       const res = await contactLawyer(payload).unwrap();
-      console.log('response ==>', res);
+      
       if (res.success) {
-        console.log('response ==>', res);
+       
         toast.success('Contacted successfully',{position:'top-right'});
         setTimeout(() => {
           router.push(
@@ -56,7 +56,7 @@ const LawyerContactButton = ({ leadDetail }) => {
     }
   };
 
-  console.log('showCreditModal',showCreditModal)
+ 
   const handleAfterPayment = async () => {
     setShowCreditModal(false);
     if (pendingPayload) {
@@ -68,7 +68,7 @@ const LawyerContactButton = ({ leadDetail }) => {
             router.push(
               `/lawyer/dashboard/my-responses?responseId=${retryRes?.data?.responseId}`
             );
-            console.log('response id ==>', retryRes?.data?.responseId);
+         
           }, 500);
         } else {
           toast.error(retryRes.message || 'Retry failed',{position:'top-right'});
@@ -80,7 +80,7 @@ const LawyerContactButton = ({ leadDetail }) => {
     }
   };
 
-    console.log('showCreditModal',showCreditModal)
+    
   return (
     <div>
       <Button
@@ -121,6 +121,7 @@ const LawyerContactButton = ({ leadDetail }) => {
                   recommendedPackage={packageData}
                   needAddCard={needAddCard}
                   isLoading={isLoading}
+                  lead={leadDetail}
                 />
               </div>
             </Modal>
