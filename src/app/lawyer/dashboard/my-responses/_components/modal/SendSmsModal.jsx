@@ -4,13 +4,51 @@ import FormWrapper from '@/components/form/FromWrapper'
 import TextareaInput from '@/components/form/TextArea'
 import { Button } from '@/components/ui/button'
 import { Modal } from '@/components/UIComponents/Modal'
+import { useContactLeadMutation } from '@/store/features/lawyer/ResponseApiService'
 import React from 'react'
+import { toast } from 'sonner'
 
 export default function SendSmsModal({ openSms, setOpenSms, info }) {
-    const onSubmit = (data) => {
-        console.log('data', data)
-    }
+    const [sendSMS] = useContactLeadMutation()
     const lead = info?.leadId?.userProfileId;
+
+    const onSubmit = async (data) => {
+        try {
+            if (!data?.message?.trim()) {
+                toast.error('Message is required to send SMS');
+                return;
+            }
+
+            const toPhone = info?.leadId?.userProfileId?.phone;
+            const leadId = info?.leadId?._id;
+            const responseId = info?._id;
+
+            if (!toPhone || !leadId || !responseId) {
+                toast.error('Missing lead/contact information');
+                return;
+            }
+
+            const smsPayload = {
+                method: 'sms',
+                toPhone,
+                message: data.message.trim(),
+                leadId,
+                responseId,
+            };
+
+            const result = await sendSMS(smsPayload).unwrap();
+
+            if (result?.success) {
+                toast.success(result?.message || 'SMS sent successfully');
+                setOpenSms(false)
+            } else {
+                toast.error(result?.message || 'Failed to send SMS');
+            }
+        } catch (error) {
+            console.error('SMS send error:', error);
+            toast.error(error?.data?.message || 'An error occurred while sending SMS');
+        }
+    };
 
     return (
         <div>

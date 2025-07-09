@@ -13,26 +13,44 @@ export default function SendMailModal({ openMail, setOpenMail, info }) {
     const lead = info?.leadId?.userProfileId;
 
     const onSubmit = async (data) => {
-        console.log('data', data)
         try {
-            const emailContactPayload = {
-                method: 'email',
-                toEmail: info?.leadId?.userProfileId?.user?.email,
-                subject: "You're being contacted about your request",
-                emailText: data?.email,
-                leadId: info?.leadId?._id,
-                responseId: info?._id,
-            };
-            const sendMailResult = await sendemail(emailContactPayload).unwrap()
-            console.log("sendMailResult", sendMailResult)
-            if(sendMailResult.success){
-                toast.success(sendMailResult?.message)
+            const toEmail = info?.leadId?.userProfileId?.user?.email;
+            const leadId = info?.leadId?._id;
+            const responseId = info?._id;
+            const emailText = data?.email?.trim();
+
+            if (!emailText) {
+                toast.error('Email message is required');
+                return;
             }
 
-        } catch (error) {
+            if (!toEmail || !leadId || !responseId) {
+                toast.error('Missing recipient email or reference IDs');
+                return;
+            }
 
+            const emailPayload = {
+                method: 'email',
+                toEmail,
+                subject: "You're being contacted about your request",
+                emailText,
+                leadId,
+                responseId,
+            };
+
+            const result = await sendemail(emailPayload).unwrap();
+
+            if (result?.success) {
+                toast.success(result.message || 'Email sent successfully');
+                setOpenMail(false)
+            } else {
+                toast.error(result.message || 'Failed to send email');
+            }
+        } catch (error) {
+            console.error('Email send error:', error);
+            toast.error(error?.data?.message || 'An error occurred while sending the email');
         }
-    }
+    };
 
     return (
         <div>

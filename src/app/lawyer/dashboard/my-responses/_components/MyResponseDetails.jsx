@@ -173,6 +173,8 @@ console.log
       try {
         const result = await updateActivity(whatsappActivityPayload).unwrap();
 
+        console.log("whats app activity ==>",result)
+
         if (result.success) {
 
           const phone = response?.leadId?.userProfileId?.phone
