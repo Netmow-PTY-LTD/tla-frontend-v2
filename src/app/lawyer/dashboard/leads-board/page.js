@@ -10,6 +10,7 @@ import {
 } from '@/store/features/lawyer/LeadsApiService';
 import { Inbox, Loader } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import ResponseSkeleton from '../my-responses/_components/ResponseSkeleton';
 
 const LeadBoardPage = () => {
   const [showLeadDetails, setShowLeadDetails] = useState(true);
@@ -118,14 +119,18 @@ const LeadBoardPage = () => {
         <div className="lead-board-container">
           {showLeadDetails && selectedLead && (
             <div className="left-column-8">
-              <div className="column-wrap-left bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
-                <LeadDetailsPage
-                  lead={selectedLead}
-                  onBack={() => setShowLeadDetails(false)}
-                  singleLead={selectedLeadData?.data}
-                  isSingleLeadLoading={isSingleLeadLoading}
-                />
-              </div>
+              {isSingleLeadLoading || isSingleLeadFetching ? (
+                <ResponseSkeleton />
+              ) : (
+                <div className="column-wrap-left bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
+                  <LeadDetailsPage
+                    lead={selectedLead}
+                    onBack={() => setShowLeadDetails(false)}
+                    singleLead={selectedLeadData?.data}
+                    isSingleLeadLoading={isSingleLeadLoading}
+                  />
+                </div>
+              )}
             </div>
           )}
 

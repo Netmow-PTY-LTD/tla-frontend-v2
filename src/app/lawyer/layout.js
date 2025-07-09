@@ -1,21 +1,18 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import '@/styles/dashboard.css';
 import DashboardHeader from '@/components/dashboard/common/DashboardHeader';
 import DashboardFooter from '@/components/dashboard/common/DashboardFooter';
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarProvider,
-  SidebarRail,
-} from '@/components/ui/sidebar';
 import { LawyerSideNav } from '@/components/dashboard/lawyer/layout/SellerSideNav';
 import SidebarTop from './dashboard/_component/common/SidebarTop';
 import { usePathname, useRouter } from 'next/navigation';
+import Sidebar from '@/components/dashboard/lawyer/layout/SellerSideNav';
 
 export default function SellerDashboardLayout({ children }) {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const toggleSidebar = () => setIsCollapsed((prev) => !prev);
+
   const pathname = usePathname();
 
   const cleanPathname = pathname?.trim().replace(/\/+$/, '');
@@ -41,25 +38,13 @@ export default function SellerDashboardLayout({ children }) {
     };
   }, [isNoScrollPage]);
 
+  console.log('isCollapsed', isCollapsed);
+
   return (
     <>
-      <DashboardHeader />
-      <SidebarProvider
-        className="sidebar-main h-[calc(100vh-64px)]"
-        style={{ minHeight: 'auto' }}
-      >
-        <Sidebar
-          collapsible="icon"
-          className="sidebar-width-control sidebar-y-64 h-[calc(100vh-64px)]"
-        >
-          <SidebarHeader>
-            <SidebarTop />
-          </SidebarHeader>
-          <SidebarContent>
-            <LawyerSideNav />
-          </SidebarContent>
-          <SidebarRail />
-        </Sidebar>
+      <DashboardHeader onToggleSidebar={toggleSidebar} />
+      <div className="flex">
+        <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
         <div
           className={`flex-1 bg-[#f3f3f3] dashboard-content ${
             isNoScrollPage ? 'no-scroll' : ''
@@ -70,7 +55,7 @@ export default function SellerDashboardLayout({ children }) {
           </div>
           {/* <DashboardFooter /> */}
         </div>
-      </SidebarProvider>
+      </div>
     </>
   );
 }
