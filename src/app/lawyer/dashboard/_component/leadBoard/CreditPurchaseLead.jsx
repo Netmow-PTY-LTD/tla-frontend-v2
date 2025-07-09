@@ -102,7 +102,7 @@ const CreditPurchaseLead = ({
 
     <div className="space-y-6  bg-white rounded-2xl shadow-sm">
       {/* Header */}
-      <div>
+      <div className='text-center'>
         <h1 className="text-xl font-semibold text-gray-800">
           You need <span className="text-primary-600 font-bold"> {lead?.credit} credits</span> to contact <span className="font-bold">{lead?.userProfileId?.name} </span>
         </h1>
@@ -139,7 +139,7 @@ const CreditPurchaseLead = ({
       {/* Offer Card */}
       <div className="relative  shadow-sm p-6 pt-10">
         {/* Ribbon Tag */}
-        <div className="bg-[#00C3C0] absolute text-white px-3 py-1 text-sm font-semibold rounded-tl-md rounded-br-md top-0 left-0">
+        <div className="bg-[#00C3C0] absolute text-white px-3 py-1 text-sm font-semibold rounded-tl-md rounded-br-md top-0 left-[30%]">
           20% OFF EXCLUSIVE STARTING PACK
         </div>
 
