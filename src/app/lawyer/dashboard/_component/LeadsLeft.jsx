@@ -57,6 +57,8 @@ export default function LeadDetailsPage({
 
   const badges = singleLead?.badges;
 
+  console.log('check lead data ==>', lead)
+
   return isSingleLeadLoading ? (
     <ResponseSkeleton />
   ) : (
@@ -73,10 +75,9 @@ export default function LeadDetailsPage({
             <div className="flex flex-col items-start gap-4 ">
               <figure className="w-20 h-20 overflow-hidden">
                 <Image
-                  src={`${
-                    lead?.userProfileId?.profilePicture ??
+                  src={`${lead?.userProfileId?.profilePicture ??
                     '/assets/img/avatar.png'
-                  }`}
+                    }`}
                   alt={lead?.userProfileId?.name ?? 'John Doe'}
                   width={80}
                   height={80}
@@ -107,8 +108,8 @@ export default function LeadDetailsPage({
                   const phone = lead?.userProfileId?.phone;
                   return phone
                     ? `${phone.slice(0, 3)}${'*'.repeat(
-                        Math.max(0, phone.length - 3)
-                      )}`
+                      Math.max(0, phone.length - 3)
+                    )}`
                     : '480*******';
                 })()}
               </span>{' '}
@@ -136,7 +137,10 @@ export default function LeadDetailsPage({
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-4">
             {/*  need to credit purchase modal */}
-            <LawyerContactButton leadDetail={singleLead} />
+            {
+              !lead?.isContact? <LawyerContactButton leadDetail={singleLead} />:<></>
+            }
+           
             {singleLead?.credit && (
               <div className="text-[#34495E] ml-2 flex items-center gap-2">
                 <span>

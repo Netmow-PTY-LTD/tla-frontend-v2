@@ -43,6 +43,7 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
             >
               {user?.userProfileId?.name}
             </div>
+            <div>Status:{singleLead?.data?.isContact?'Lawyer Contacted':'no Contact'}</div>
             <div
               className={`${
                 isExpanded ? 'text-[13px]' : 'text-[10px]'
