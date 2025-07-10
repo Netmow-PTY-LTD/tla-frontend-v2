@@ -142,7 +142,7 @@ const LeadBoardPage = () => {
                   total={data?.pagination?.total ?? 0}
                 />
               </div>
-              <div className="leads-bottom-row">
+              <div className="leads-bottom-row max-w-[1400px] mx-auto">
                 <LeadsRight
                   isExpanded={!showLeadDetails}
                   onViewDetails={(lead) => {

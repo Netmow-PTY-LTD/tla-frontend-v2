@@ -8,8 +8,8 @@ const LawCard = ({ service }) => {
       <div className="law-card ">
         <figure className="relative h-[277px]">
           <Image
-            alt={service.serviceName}
-            src={service?.image?.url}
+            alt={service.serviceName || 'Service'}
+            src={service?.image?.url || '/assets/img/services/img1.png'}
             fill
             sizes="(min-width: 808px) 50vw, 100vw"
             className="rounded-xl"
