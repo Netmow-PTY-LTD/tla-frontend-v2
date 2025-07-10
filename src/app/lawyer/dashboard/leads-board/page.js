@@ -28,11 +28,8 @@ const LeadBoardPage = () => {
   } = useGetAllLeadsQuery({ page, limit: 10 });
 
   // Fetch detailed data for selected lead
-  const {
-    data: selectedLeadData,
-    isLoading: isSingleLeadLoading,
-    isFetching: isSingleLeadFetching,
-  } = useGetSingleLeadQuery(selectedLead?._id, { skip: !selectedLead?._id });
+  const { data: selectedLeadData, isLoading: isSingleLeadLoading } =
+    useGetSingleLeadQuery(selectedLead?._id, { skip: !selectedLead?._id });
 
   // Set first lead on initial load or leads update
   useEffect(() => {
@@ -52,7 +49,6 @@ const LeadBoardPage = () => {
   // Scroll event handler for infinite loading
   useEffect(() => {
     const container = scrollContainerRef.current;
-    console.log('container ===>', container);
     if (!container) return;
 
     const handleScroll = () => {
@@ -119,7 +115,7 @@ const LeadBoardPage = () => {
         <div className="lead-board-container">
           {showLeadDetails && selectedLead && (
             <div className="left-column-8">
-              {isSingleLeadLoading || isSingleLeadFetching ? (
+              {isSingleLeadLoading ? (
                 <ResponseSkeleton />
               ) : (
                 <div className="column-wrap-left bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">

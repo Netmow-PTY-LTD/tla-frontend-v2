@@ -44,7 +44,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
   return (
     <aside
       ref={sidebarRef}
-      className={`h-[calc(100vh-64px)] w-[320px] bg-white border-r shadow z-20 overflow-y-auto
+      className={`h-[calc(100vh-64px)] w-[250px] lg:w-[320px] bg-white border-r shadow z-20 overflow-y-auto
         fixed top-16 left-0 transform transition-transform duration-300 ease-in-out
         ${isCollapsed ? 'translate-x-0' : '-translate-x-full'}
         xl:static xl:translate-x-0 xl:transform-none xl:z-auto`}

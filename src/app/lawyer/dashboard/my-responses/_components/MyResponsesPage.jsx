@@ -15,13 +15,10 @@ export default function MyResponsesPage() {
   const searchParams = useSearchParams();
   const responseId = searchParams.get('responseId');
 
-
   const router = useRouter();
 
   const { data: allMyResponses, isLoading: isAllMyResponsesLoading } =
     useGetAllMyResponsesQuery();
-
- 
 
   // Handle body scroll and layout overflow
   useEffect(() => {
@@ -102,7 +99,7 @@ export default function MyResponsesPage() {
         {allMyResponses?.data && allMyResponses?.data?.length > 0 ? (
           <div className="lead-board-container">
             {showResponseDetails && selectedResponse && (
-              <div className="left-column-7">
+              <div className="left-column-8">
                 <div className="column-wrap-left">
                   <MyResponseDetails
                     response={selectedResponse}
@@ -115,12 +112,15 @@ export default function MyResponsesPage() {
 
             <div
               className={`${
-                showResponseDetails ? 'right-column-5 ' : 'right-column-full'
+                showResponseDetails ? 'right-column-4 ' : 'right-column-full'
               }`}
             >
               <div className="column-wrap-right">
                 <div className="leads-top-row">
-                  <ResponseHead isExpanded={!showResponseDetails} />
+                  <ResponseHead
+                    isExpanded={!showResponseDetails}
+                    data={allMyResponses?.data}
+                  />
                 </div>
                 <div className="leads-bottom-row">
                   <LeadsRight
@@ -140,7 +140,7 @@ export default function MyResponsesPage() {
           <div className="flex flex-col justify-center items-center h-full">
             <Inbox className="w-12 h-12 mb-4 text-gray-400" />
             <h4 className="italic text-[18px] text-gray-500">
-              Currently you have no responses.
+              There are currently no responses.
             </h4>
           </div>
         )}
