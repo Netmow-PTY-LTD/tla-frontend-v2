@@ -158,7 +158,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
   const handleActivity = async (type) => {
     if (type === 'whatsapp') {
       const whatsappActivityPayload = {
-        activityNote: 'you tried to contact via WhatsApp',
+        activityNote: 'You tried to contact via WhatsApp',
         activityType: 'whatsapp',
         module: 'response',
         objectId: response?._id,
@@ -170,7 +170,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
       try {
         const result = await updateActivity(whatsappActivityPayload).unwrap();
 
-        console.log('whats app activity ==>', result);
+      
 
         if (result.success) {
           const phone = response?.leadId?.userProfileId?.phone;
