@@ -21,7 +21,7 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
     <Card className="w-full max-w-full mx-auto flex flex-col">
       {/* Header Section */}
       <div className="flex flex-wrap sm:flex-nowrap items-start justify-between gap-3 p-3">
-        <div>
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
           <figure className="w-10 h-10 overflow-hidden flex-shrink-0">
             <Image
               src={`${
@@ -62,18 +62,6 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
 
       {/* Matched Criteria */}
       <div className="px-3 pt-3 pb-2">
-        {(urgentOption?.option ||
-          user?.additionalDetails ||
-          user?.userProfileId?.phone) && (
-          <h4
-            className={`font-medium mb-2 ${
-              isExpanded ? 'heading-base' : 'text-[13px]'
-            }`}
-          >
-            Matched criteria
-          </h4>
-        )}
-
         <div className="flex flex-wrap gap-2">
           {/* {badge && (
             <>
