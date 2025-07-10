@@ -162,7 +162,7 @@ export const CreditTransactionLog = () => {
               No transactions found
             </h3>
             <p className="text-gray-600">
-              Try adjusting your search terms or filters.
+              Try adjusting your search terms or filters
             </p>
           </div>
         )}
