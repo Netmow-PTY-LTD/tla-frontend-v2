@@ -13,7 +13,7 @@ export default function LeadsHead({ isExpanded, total }) {
   return (
     <section className={`${isExpanded ? '' : 'pl-4 pr-1'}`}>
       <div className="flex justify-between items-start gap-4">
-        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-3">
           <h2
             className={`font-bold ${
               isExpanded ? 'heading' : 'heading-base'
@@ -22,13 +22,13 @@ export default function LeadsHead({ isExpanded, total }) {
             {total} Matches
           </h2>
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               <Files className="w-4 h-4" />
               <span className={`${isExpanded ? 'text-[14px]' : 'text-[11px]'}`}>
                 {currentUser?.data?.profile?.serviceIds?.length || 0} Services
               </span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               <MapPin className="w-4 h-4" />
               <span className={`${isExpanded ? 'text-[14px]' : 'text-[11px]'}`}>
                 4 Locations
