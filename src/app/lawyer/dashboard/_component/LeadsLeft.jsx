@@ -71,9 +71,10 @@ export default function LeadDetailsPage({
             <div className="flex flex-col items-start gap-4 ">
               <figure className="w-20 h-20 overflow-hidden">
                 <Image
-                  src={`${lead?.userProfileId?.profilePicture ??
+                  src={`${
+                    lead?.userProfileId?.profilePicture ??
                     '/assets/img/avatar.png'
-                    }`}
+                  }`}
                   alt={lead?.userProfileId?.name ?? 'John Doe'}
                   width={80}
                   height={80}
@@ -104,8 +105,8 @@ export default function LeadDetailsPage({
                   const phone = lead?.userProfileId?.phone;
                   return phone
                     ? `${phone.slice(0, 3)}${'*'.repeat(
-                      Math.max(0, phone.length - 3)
-                    )}`
+                        Math.max(0, phone.length - 3)
+                      )}`
                     : '480*******';
                 })()}
               </span>{' '}
@@ -133,10 +134,16 @@ export default function LeadDetailsPage({
           </div>
           <div className="flex flex-wrap items-center gap-4">
             {/*  need to credit purchase modal */}
-            {
-              !lead?.isContact? <LawyerContactButton leadDetail={singleLead} />:<></>
-            }
-           
+            {!lead?.isContact ? (
+              <LawyerContactButton leadDetail={singleLead} />
+            ) : (
+              <>
+                <p className="text-[14px] font-medium bg-[#FF8602] py-1 px-2 rounded text-white">
+                  Contacted
+                </p>
+              </>
+            )}
+
             {singleLead?.credit && (
               <div className="text-[#34495E] ml-2 flex items-center gap-2">
                 <span>
