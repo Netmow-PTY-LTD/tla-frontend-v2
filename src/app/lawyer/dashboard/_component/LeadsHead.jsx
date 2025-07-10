@@ -11,7 +11,7 @@ export default function LeadsHead({ isExpanded, total }) {
 
   //console.log('currentUser ==>', currentUser?.data);
   return (
-    <section className={`${isExpanded ? 'md:pr-4' : 'px-4'}`}>
+    <section className={`${isExpanded ? '' : 'pl-4 pr-1'}`}>
       <div className="flex justify-between items-start gap-4">
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
           <h2
@@ -43,7 +43,7 @@ export default function LeadsHead({ isExpanded, total }) {
           } py-1 px-2 bg-[#FF8602] rounded-[5px] text-white hover:bg-[#FF8602] transition-all flex items-center gap-2`}
         >
           <span>Edit</span>
-          <SquarePen className="w-4 h-4 hidden sm:inline" />
+          {/* <SquarePen className="w-4 h-4 hidden sm:inline" /> */}
         </Link>
       </div>
 
