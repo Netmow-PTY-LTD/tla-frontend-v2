@@ -20,60 +20,48 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
   return (
     <Card className="w-full max-w-full mx-auto flex flex-col">
       {/* Header Section */}
-      <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 p-3">
-        <figure className="w-10 h-10 overflow-hidden flex-shrink-0">
-          <Image
-            src={`${
-              user?.userProfileId?.profilePicture ?? '/assets/img/avatar.png'
-            }`}
-            alt={user?.userProfileId?.name ?? 'John Doe'}
-            width={40}
-            height={40}
-            priority
-            className="rounded-full object-cover w-full h-full"
-          />
-        </figure>
-
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
-          <div>
-            <div
-              className={`font-medium mb-1 ${
-                isExpanded ? 'heading-base' : 'text-[13px]'
+      <div className="flex flex-wrap sm:flex-nowrap items-start justify-between gap-3 p-3">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
+          <figure className="w-10 h-10 overflow-hidden flex-shrink-0">
+            <Image
+              src={`${
+                user?.userProfileId?.profilePicture ?? '/assets/img/avatar.png'
               }`}
-            >
-              {user?.userProfileId?.name}
-            </div>
-            <div>Status:{singleLead?.data?.isContact?'Lawyer Contacted':'no Contact'}</div>
-            <div
-              className={`${
-                isExpanded ? 'text-[13px]' : 'text-[10px]'
-              } text-gray-500`}
-            >
-              {user?.userProfileId?.address ?? ''}
+              alt={user?.userProfileId?.name ?? 'John Doe'}
+              width={40}
+              height={40}
+              priority
+              className="rounded-full object-cover w-full h-full"
+            />
+          </figure>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
+            <div>
+              <div
+                className={`font-medium mb-1 ${
+                  isExpanded ? 'heading-base' : 'text-[13px]'
+                }`}
+              >
+                {user?.userProfileId?.name}
+              </div>
+              <div
+                className={`${
+                  isExpanded ? 'text-[13px]' : 'text-[10px]'
+                } text-gray-500`}
+              >
+                {user?.userProfileId?.address ?? ''}
+              </div>
             </div>
           </div>
-          <p className="font-medium text-[11px] text-gray-600 sm:ml-4 mt-2 sm:mt-0">
-            {user?.createdAt && formatRelativeTime(user?.createdAt)}
-          </p>
         </div>
+        <p className="font-medium text-[11px] text-gray-600 sm:ml-4 mt-2 sm:mt-0">
+          {user?.createdAt && formatRelativeTime(user?.createdAt)}
+        </p>
       </div>
 
       <hr className="border-[#F3F3F3] border" />
 
       {/* Matched Criteria */}
       <div className="px-3 pt-3 pb-2">
-        {(urgentOption?.option ||
-          user?.additionalDetails ||
-          user?.userProfileId?.phone) && (
-          <h4
-            className={`font-medium mb-2 ${
-              isExpanded ? 'heading-base' : 'text-[13px]'
-            }`}
-          >
-            Matched criteria
-          </h4>
-        )}
-
         <div className="flex flex-wrap gap-2">
           {/* {badge && (
             <>

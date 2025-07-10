@@ -150,6 +150,7 @@ const Sidebar = React.forwardRef(
       collapsible = 'offcanvas',
       className,
       children,
+      isCollapsed,
       ...props
     },
     ref
@@ -196,7 +197,9 @@ const Sidebar = React.forwardRef(
     return (
       <div
         ref={ref}
-        className="group peer hidden text-sidebar-foreground md:block"
+        className={`group peer text-sidebar-foreground sidebar ${
+          isCollapsed ? 'collapsed' : ''
+        }`}
         data-state={state}
         data-collapsible={state === 'collapsed' ? collapsible : ''}
         data-variant={variant}

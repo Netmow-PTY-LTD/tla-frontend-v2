@@ -57,11 +57,7 @@ export default function LeadDetailsPage({
 
   const badges = singleLead?.badges;
 
-  console.log('check lead data ==>', lead)
-
-  return isSingleLeadLoading ? (
-    <ResponseSkeleton />
-  ) : (
+  return (
     <div className="bg-white">
       <div className="max-w-[900px]">
         <div className="flex items-center justify-between">
@@ -135,7 +131,7 @@ export default function LeadDetailsPage({
               </span>{' '}
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             {/*  need to credit purchase modal */}
             {
               !lead?.isContact? <LawyerContactButton leadDetail={singleLead} />:<></>

@@ -1,104 +1,124 @@
 'use client';
 import { ChevronRight } from 'lucide-react';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible';
-import {
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-} from '@/components/ui/sidebar';
-
 import Link from 'next/link';
 import { SellerSidebarItems } from './SellerSidebarItems';
 import { usePathname } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import SidebarTop from '@/app/lawyer/dashboard/_component/common/SidebarTop';
 
-export function LawyerSideNav() {
+export default function Sidebar({ isCollapsed, setIsCollapsed }) {
   const pathname = usePathname();
+  const [openMenus, setOpenMenus] = useState({});
+  const sidebarRef = useRef(null);
+
+  const toggleMenu = (title) => {
+    setOpenMenus((prev) => ({
+      ...prev,
+      [title]: !prev[title],
+    }));
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const isMobile = window.innerWidth < 1280;
+
+      if (!isMobile) return; // ✅ ignore on desktop
+
+      const clickedInsideSidebar = sidebarRef.current?.contains(event.target);
+      const clickedToggle = event.target.closest('[data-sidebar-toggle]');
+
+      if (!clickedInsideSidebar && !clickedToggle) {
+        setIsCollapsed(false); // ✅ hide sidebar
+      }
+    };
+
+    if (isCollapsed) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isCollapsed, setIsCollapsed]);
 
   return (
-    <>
-      <SidebarGroup className="nav-group">
-        <SidebarGroupLabel className="text-lg mb-2 text-black">
-          Lawyer Menu
-        </SidebarGroupLabel>
-        <SidebarMenu>
-          {SellerSidebarItems?.navMain?.map((item) => {
-            const isParentActive =
-              pathname.startsWith(item.url || '') ||
-              (item.items?.length &&
-                item.items.some((sub) => pathname.startsWith(sub.url || '')));
+    <aside
+      ref={sidebarRef}
+      className={`h-[calc(100vh-64px)] w-[250px] lg:w-[320px] bg-white border-r shadow z-20 overflow-y-auto
+        fixed top-16 left-0 transform transition-transform duration-300 ease-in-out
+        ${isCollapsed ? 'translate-x-0' : '-translate-x-full'}
+        xl:static xl:translate-x-0 xl:transform-none xl:z-auto`}
+    >
+      <div className="p-4">
+        <SidebarTop />
+      </div>
+      <nav className="p-4 space-y-1">
+        {SellerSidebarItems?.navMain?.map((item) => {
+          const hasSubItems =
+            Array.isArray(item.items) && item.items.length > 0;
+          const isParentActive =
+            pathname.startsWith(item.url || '') ||
+            (hasSubItems &&
+              item.items.some((sub) => pathname.startsWith(sub.url || '')));
 
-            return item.items ? (
-              <Collapsible
-                key={item.title}
-                asChild
-                defaultOpen={false}
-                className="group/collapsible"
-              >
-                <SidebarMenuItem
-                  className={isParentActive ? 'bg-[#f3f3f3]' : ''}
+          if (hasSubItems) {
+            return (
+              <div key={item.title}>
+                <button
+                  onClick={() => toggleMenu(item.title)}
+                  className={`w-full flex items-center gap-2 p-2 rounded hover:bg-gray-100 transition ${
+                    isParentActive ? 'bg-gray-100 font-medium' : ''
+                  }`}
                 >
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton tooltip={item.title}>
-                      {item.icon && <item.icon />}
-                      <span>{item.title}</span>
-                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                    </SidebarMenuButton>
-                  </CollapsibleTrigger>
-
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                      {item.items?.map((subItem) => {
-                        const isActive = pathname === subItem.url;
-                        return (
-                          <SidebarMenuSubItem
-                            key={subItem.title}
-                            className={
-                              isActive
-                                ? 'bg-blue-100 text-blue-700 font-medium'
-                                : ''
-                            }
-                          >
-                            <SidebarMenuSubButton asChild>
-                              <Link
-                                href={subItem.url}
-                                className="flex gap-2 w-full"
-                              >
-                                {subItem.icon && <subItem.icon />}
-                                <span>{subItem.title}</span>
-                              </Link>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        );
-                      })}
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
-                </SidebarMenuItem>
-              </Collapsible>
-            ) : (
-              <SidebarMenuSubItem
-                key={item.title}
-                className={pathname === item.url ? 'bg-[#f3f3f3]' : ''}
-              >
-                <SidebarMenuSubButton asChild>
-                  <Link href={item.url} className="flex gap-2 w-full">
-                    {item.icon && <item.icon />}
-                    <span>{item.title}</span>
-                  </Link>
-                </SidebarMenuSubButton>
-              </SidebarMenuSubItem>
+                  {item.icon && <item.icon className="w-5 h-5" />}
+                  <span className="flex-1 text-left">{item.title}</span>
+                  <ChevronRight
+                    className={`transition-transform duration-200 ${
+                      openMenus[item.title] ? 'rotate-90' : ''
+                    }`}
+                  />
+                </button>
+                {openMenus[item.title] && (
+                  <div className="pl-6 mt-1 space-y-1">
+                    {item.items.map((subItem) => {
+                      const isActive = pathname === subItem.url;
+                      return (
+                        <Link
+                          key={subItem.title}
+                          href={subItem.url}
+                          className={`flex items-center gap-2 px-2 py-1 rounded text-sm transition ${
+                            isActive
+                              ? 'bg-blue-100 text-blue-700 font-medium'
+                              : 'hover:bg-gray-100'
+                          }`}
+                        >
+                          {subItem.icon && <subItem.icon className="w-4 h-4" />}
+                          <span>{subItem.title}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             );
-          })}
-        </SidebarMenu>
-      </SidebarGroup>
-    </>
+          }
+
+          return (
+            <Link
+              key={item.title}
+              href={item.url}
+              className={`flex items-center gap-2 p-2 rounded transition ${
+                pathname === item.url
+                  ? 'bg-gray-100 font-medium'
+                  : 'hover:bg-gray-100'
+              }`}
+            >
+              {item.icon && <item.icon className="w-5 h-5" />}
+              <span>{item.title}</span>
+            </Link>
+          );
+        })}
+      </nav>
+    </aside>
   );
 }

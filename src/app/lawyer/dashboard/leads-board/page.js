@@ -10,6 +10,7 @@ import {
 } from '@/store/features/lawyer/LeadsApiService';
 import { Inbox, Loader } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import ResponseSkeleton from '../my-responses/_components/ResponseSkeleton';
 
 const LeadBoardPage = () => {
   const [showLeadDetails, setShowLeadDetails] = useState(true);
@@ -27,11 +28,8 @@ const LeadBoardPage = () => {
   } = useGetAllLeadsQuery({ page, limit: 10 });
 
   // Fetch detailed data for selected lead
-  const {
-    data: selectedLeadData,
-    isLoading: isSingleLeadLoading,
-    isFetching: isSingleLeadFetching,
-  } = useGetSingleLeadQuery(selectedLead?._id, { skip: !selectedLead?._id });
+  const { data: selectedLeadData, isLoading: isSingleLeadLoading } =
+    useGetSingleLeadQuery(selectedLead?._id, { skip: !selectedLead?._id });
 
   // Set first lead on initial load or leads update
   useEffect(() => {
@@ -51,7 +49,6 @@ const LeadBoardPage = () => {
   // Scroll event handler for infinite loading
   useEffect(() => {
     const container = scrollContainerRef.current;
-    console.log('container ===>', container);
     if (!container) return;
 
     const handleScroll = () => {
@@ -118,14 +115,18 @@ const LeadBoardPage = () => {
         <div className="lead-board-container">
           {showLeadDetails && selectedLead && (
             <div className="left-column-8">
-              <div className="column-wrap-left bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
-                <LeadDetailsPage
-                  lead={selectedLead}
-                  onBack={() => setShowLeadDetails(false)}
-                  singleLead={selectedLeadData?.data}
-                  isSingleLeadLoading={isSingleLeadLoading}
-                />
-              </div>
+              {isSingleLeadLoading ? (
+                <ResponseSkeleton />
+              ) : (
+                <div className="column-wrap-left bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
+                  <LeadDetailsPage
+                    lead={selectedLead}
+                    onBack={() => setShowLeadDetails(false)}
+                    singleLead={selectedLeadData?.data}
+                    isSingleLeadLoading={isSingleLeadLoading}
+                  />
+                </div>
+              )}
             </div>
           )}
 
