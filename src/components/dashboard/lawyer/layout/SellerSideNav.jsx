@@ -45,14 +45,18 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
     <aside
       ref={sidebarRef}
       className={`h-[calc(100vh-64px)] w-[250px] lg:w-[320px] bg-white border-r shadow z-20 overflow-y-auto
-        fixed top-16 left-0 transform transition-transform duration-300 ease-in-out
-        ${isCollapsed ? 'translate-x-0' : '-translate-x-full'}
-        xl:static xl:translate-x-0 xl:transform-none xl:z-auto`}
+        fixed top-16 left-0 transform transition-transform duration-300 ease-in-out ${
+          isCollapsed ? 'translate-x-0' : '-translate-x-full'
+        } xl:static xl:translate-x-0 xl:transform-none xl:z-auto`}
     >
       <div className="p-4">
         <SidebarTop />
       </div>
+
       <nav className="p-4 space-y-1">
+        <h3 className="text-black font-medium heading-md border-b border-[#f2f2f2] pb-2 mb-2">
+          Lawyer Menu
+        </h3>
         {SellerSidebarItems?.navMain?.map((item) => {
           const hasSubItems =
             Array.isArray(item.items) && item.items.length > 0;
