@@ -1,12 +1,5 @@
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
-import {
-  Database,
-  Files,
-  MapPin,
-  SlidersVertical,
-  SquarePen,
-  X,
-} from 'lucide-react';
+import { Files, MapPin, SlidersVertical, SquarePen, X } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
@@ -16,7 +9,7 @@ import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 export default function LeadsHead({ isExpanded, total }) {
   const { data: currentUser } = useAuthUserInfoQuery();
 
-  console.log('currentUser ==>', currentUser?.data);
+  //console.log('currentUser ==>', currentUser?.data);
   return (
     <section className={`${isExpanded ? 'md:pr-4' : 'px-4'}`}>
       <div className="flex justify-between items-start gap-4">
@@ -50,7 +43,7 @@ export default function LeadsHead({ isExpanded, total }) {
           } py-1 px-2 bg-[#FF8602] rounded-[5px] text-white hover:bg-[#FF8602] transition-all flex items-center gap-2`}
         >
           <span>Edit</span>
-          {/* <SquarePen className="w-4 h-4" /> */}
+          <SquarePen className="w-4 h-4 hidden sm:inline" />
         </Link>
       </div>
 

@@ -29,7 +29,6 @@ import Image from 'next/image';
 import { Fragment, useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
-
   useActivityLogMutation,
   useGetSingleResponseQuery,
   useUpdateResponseStatusMutation,
@@ -41,6 +40,7 @@ import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { useRouter } from 'next/navigation';
 import SendMailModal from './modal/SendMailModal';
 import SendSmsModal from './modal/SendSmsModal';
+import { getCompactTimeAgo } from '@/helpers/formatTime';
 
 export default function MyResponseDetails({ onBack, response, responseId }) {
   const [activeTab, setActiveTab] = useState('activity');
@@ -53,8 +53,9 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
       skip: !responseId && !response?._id,
     });
 
+  console.log('singleResponse', singleResponse?.data);
+  console.log('response', response);
 
-console.log
   const [updateStatus] = useUpdateResponseStatusMutation();
   const [updateActivity] = useActivityLogMutation();
 
@@ -132,8 +133,6 @@ console.log
     })
   );
 
-  
-
   const currentStatus = singleResponse?.data?.status || 'Pending';
 
   const generateActivityIcon = (type) => {
@@ -156,12 +155,10 @@ console.log
     return <Icon className="w-5 h-5" fill={fill} />;
   };
 
-
   const handleActivity = async (type) => {
-
     if (type === 'whatsapp') {
       const whatsappActivityPayload = {
-        activityNote: 'you triet to contact  via WhatsApp',
+        activityNote: 'you tried to contact via WhatsApp',
         activityType: 'whatsapp',
         module: 'response',
         objectId: response?._id,
@@ -173,43 +170,33 @@ console.log
       try {
         const result = await updateActivity(whatsappActivityPayload).unwrap();
 
-        console.log("whats app activity ==>",result)
+        console.log('whats app activity ==>', result);
 
         if (result.success) {
-
-          const phone = response?.leadId?.userProfileId?.phone
-          window.open(`https://api.whatsapp.com/send?phone=${phone}&text=`, '_blank');
+          const phone = response?.leadId?.userProfileId?.phone;
+          window.open(
+            `https://api.whatsapp.com/send?phone=${phone}&text=`,
+            '_blank'
+          );
         }
-
-
-      } catch (error) {
-
-      }
-
-
+      } catch (error) {}
     }
-    if (type === "sendemail") {
-      setOpenMail(true)
-      return
-
+    if (type === 'sendemail') {
+      setOpenMail(true);
+      return;
     }
-    if (type === "sendsms") {
-      setOpenSms(true)
-      return
-
+    if (type === 'sendsms') {
+      setOpenSms(true);
+      return;
     }
-    if (type === "Sendestimate") {
-
+    if (type === 'Sendestimate') {
     }
-
-  }
-
-
+  };
 
   return (
     <>
-      <div className="">
-        <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
+      <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
+        <div className="max-w-[900]">
           <div className="flex items-center justify-between">
             <button className="flex py-2 items-center gap-2" onClick={onBack}>
               {' '}
@@ -218,7 +205,8 @@ console.log
           </div>
           <div className="mt-4 mb-8 flex items-center justify-between bg-[#F5F6F9] rounded-lg py-2 px-4">
             <span className="text-gray-500 text-[13px]">
-              Last activity 1m ago
+              Last activity{' '}
+              {getCompactTimeAgo(singleResponse?.data?.activity[0]?.updatedAt)}
             </span>
             <div className="flex items-center gap-2">
               <b className="text-black text-[14px]">Current Status:</b>
@@ -233,15 +221,15 @@ console.log
               </select>
             </div>
           </div>
-          <div className="mt-3 max-w-4xl">
+          <div className="mt-3">
             <div className="flex flex-col items-start gap-4 ">
               <figure className="w-20 h-20 overflow-hidden">
                 <Image
                   src={
-                    singleResponse?.data?.leadId?.userProfileId?.profilePicture ||
-                    '/assets/img/avatar.png'
+                    singleResponse?.data?.leadId?.userProfileId
+                      ?.profilePicture || '/assets/img/avatar.png'
                   }
-                  alt="John Doe"
+                  alt={singleResponse?.data?.leadId?.userProfileId?.name || ''}
                   width={80}
                   height={80}
                   priority
@@ -250,10 +238,10 @@ console.log
               </figure>
               <div>
                 <h2 className="font-medium heading-md">
-                  {response?.leadId?.userProfileId?.name}
+                  {singleResponse?.data?.leadId?.userProfileId?.name}
                 </h2>
                 <p className="text-gray-500 mt-2">
-                  {response?.leadId?.userProfileId?.address}
+                  {singleResponse?.data?.leadId?.userProfileId?.address}
                 </p>
               </div>
             </div>
@@ -263,11 +251,18 @@ console.log
             <div className="mb-4">
               <div className="flex items-center gap-2 admin-text font-medium">
                 <PhoneOutgoing className="w-5 h-5" />{' '}
-                <span>Phone: {response?.leadId?.userProfileId?.phone}</span>{' '}
+                <span>
+                  Phone:{' '}
+                  {singleResponse?.data?.leadId?.userProfileId?.phone || ''}
+                </span>{' '}
               </div>
               <div className=" flex items-center gap-2 mt-2 admin-text font-medium">
                 <AtSign className="w-5 h-5" />{' '}
-                <span>Email: {response?.leadId?.userProfileId?.user?.email}</span>{' '}
+                <span>
+                  Email:{' '}
+                  {singleResponse?.data?.leadId?.userProfileId?.user?.email ||
+                    ''}
+                </span>{' '}
               </div>
             </div>
             <div className="flex gap-2">
@@ -275,15 +270,24 @@ console.log
               <Phone />
               Show Number
             </Button> */}
-              <Button onClick={() => handleActivity('whatsapp')} className="bg-[#25D366]">
+              <Button
+                onClick={() => handleActivity('whatsapp')}
+                className="bg-[#25D366]"
+              >
                 <WhatsApp />
                 Send Whatsapp
               </Button>
-              <Button onClick={() => handleActivity('sendemail')} className="bg-[#4285F4]">
+              <Button
+                onClick={() => handleActivity('sendemail')}
+                className="bg-[#4285F4]"
+              >
                 <Mail />
                 Send Email
               </Button>
-              <Button onClick={() => handleActivity('sendsms')} className="bg-[#34B7F1]">
+              <Button
+                onClick={() => handleActivity('sendsms')}
+                className="bg-[#34B7F1]"
+              >
                 <MessageSquare />
                 Send SMS
               </Button>
@@ -293,10 +297,12 @@ console.log
               <span className="admin-text font-medium">
                 Your estimate:{' '}
                 <Link href="#" className="underline">
-                  <button className='text-[#ff8602]' onClick={() => handleActivity('Sendestimate')}>
+                  <button
+                    className="text-[#ff8602]"
+                    onClick={() => handleActivity('Sendestimate')}
+                  >
                     Send an estimate
                   </button>
-
                 </Link>
               </span>
             </div>
@@ -311,11 +317,12 @@ console.log
             <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
             <div className="mt-5">
               <h4 className="font-medium mb-1 heading-base">
-                Looking for a {response?.serviceId?.name || ''} consultation
+                Looking for a {singleResponse?.data?.serviceId?.name || ''}{' '}
+                consultation
               </h4>
               <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
                 <h5 className="font-medium mb-2 heading-base">
-                  {response?.serviceId?.name || ''}
+                  {singleResponse?.data?.serviceId?.name || ''}
                 </h5>
                 <div className="admin-text text-[#34495E] ">
                   {displayText}
@@ -335,28 +342,31 @@ console.log
               <div className="flex border-b border-gray-200 gap-6">
                 <button
                   onClick={() => setActiveTab('activity')}
-                  className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
-                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                    : 'hover:text-black'
-                    }`}
+                  className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                    activeTab === 'activity'
+                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                      : 'hover:text-black'
+                  }`}
                 >
                   Activity
                 </button>
                 <button
                   onClick={() => setActiveTab('lead-details')}
-                  className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'lead-details'
-                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                    : 'hover:text-black'
-                    }`}
+                  className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                    activeTab === 'lead-details'
+                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                      : 'hover:text-black'
+                  }`}
                 >
                   Lead Details
                 </button>
                 <button
                   onClick={() => setActiveTab('note')}
-                  className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'note'
-                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                    : 'hover:text-black'
-                    }`}
+                  className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                    activeTab === 'note'
+                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                      : 'hover:text-black'
+                  }`}
                 >
                   My Notes
                 </button>
@@ -383,16 +393,18 @@ console.log
                       return (
                         <Fragment key={index}>
                           <div
-                            className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${index === 0 ? '' : 'border-l border-[#e6e7ec]'
-                              }`}
+                            className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${
+                              index === 0 ? '' : 'border-l border-[#e6e7ec]'
+                            }`}
                           >
                             {formattedDate}
                           </div>
                           {activity?.logs?.map((item, i) => {
                             return (
                               <div
-                                className={`activity-log-item flex gap-2 ${index === 0 && i === 0 ? 'first-log-item' : ''
-                                  }`}
+                                className={`activity-log-item flex gap-2 ${
+                                  index === 0 && i === 0 ? 'first-log-item' : ''
+                                }`}
                                 key={i}
                               >
                                 <div className="left-track flex-grow-0 flex flex-col w-[32px] items-center">
@@ -409,7 +421,9 @@ console.log
                                         />
                                       )} */}
                                       {item?.activityType &&
-                                        generateActivityIcon(item?.activityType)}
+                                        generateActivityIcon(
+                                          item?.activityType
+                                        )}
                                     </div>
                                   </div>
                                   <div className="line-bottom h-1/2 w-[1] border-l border-[#e6e7ec]"></div>
@@ -488,8 +502,16 @@ console.log
         </div>
       </div>
 
-      <SendMailModal info={singleResponse?.data} openMail={openMail} setOpenMail={setOpenMail} />
-      <SendSmsModal info={singleResponse?.data} openSms={openSms} setOpenSms={setOpenSms} />
+      <SendMailModal
+        info={singleResponse?.data}
+        openMail={openMail}
+        setOpenMail={setOpenMail}
+      />
+      <SendSmsModal
+        info={singleResponse?.data}
+        openSms={openSms}
+        setOpenSms={setOpenSms}
+      />
     </>
   );
 }

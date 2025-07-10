@@ -65,8 +65,8 @@ export default function SidebarTop() {
         <br />
         <b>Welcome To TLA Dashboard</b>
       </h2>
-      <div className="flex justify-between items-center">
-        {/* <div className="icon flex items-center gap-2">
+      {/* <div className="flex justify-between items-center">
+        <div className="icon flex items-center gap-2">
           <svg
             width="16"
             height="16"
@@ -115,11 +115,11 @@ export default function SidebarTop() {
             </defs>
           </svg>
           <span>You have 3 jobs</span>
-        </div> */}
+        </div>
         <Link href={`/client/dashboard?trigger=new-request`}>
           Create Request
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 }
