@@ -120,24 +120,23 @@
   }
 }
 
-.sidebar-top {
+/* .sidebar-top {
   display: flex;
   flex-direction: column;
   gap: 10px;
   padding: 20px;
   border-radius: 8px;
-  /* background: lightgray 400.285px 233.221px / -128.734% -145.496% no-repeat, #0B1C2D; */
+  background: lightgray 400.285px 233.221px / -128.734% -145.496% no-repeat, #0B1C2D;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
   @media (max-width: 1366px) {
-    /* height: 250px; */
     gap: 5px;
     padding: 15px;
   }
-}
+} */
 
-.sidebar-top span {
+/* .sidebar-top span {
   color: var(--brand-surface-2-text-on-dark, #fff);
   font-family: Inter;
   font-size: 14px;
@@ -152,7 +151,7 @@
   color: var(--brand-brand-primary-action, #00c3c0);
   font-size: 18px;
   font-weight: 700;
-  line-height: 28px; /* 140% */
+  line-height: 28px;
 
   @media (max-width: 1366px) {
     font-size: 14px;
@@ -163,7 +162,7 @@
   color: var(--brand-surface-2-text-on-dark, #fff);
   font-size: 16px;
   font-weight: 500;
-  line-height: 24px; /* 150% */
+  line-height: 24px; 
   text-decoration-line: underline;
   text-decoration-style: solid;
   text-decoration-skip-ink: none;
@@ -174,6 +173,59 @@
   @media (max-width: 1366px) {
     font-size: 12px;
   }
+} */
+
+.sidebar-top {
+  max-width: 320px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), #00c3c0);
+  color: white;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-top::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* background-image: url('/assets/img/bg-shape.png'); */
+  background-size: cover;
+  background-position: right top;
+  background-repeat: no-repeat;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.sidebar-top * {
+  position: relative;
+  z-index: 1;
+}
+
+.sidebar-top .date {
+  display: block;
+  font-size: 12px;
+  text-transform: capitalize;
+  margin-bottom: 6px;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.sidebar-top h2 {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.sidebar-top .highlight {
+  color: #facc15; /* Yellow-400 */
+}
+
+.sidebar-top .dashboard {
+  color: #e0f2f1; /* Light mint */
 }
 
 .nav-group ul li {
