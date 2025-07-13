@@ -24,14 +24,14 @@ const notificationApiService = baseApi.injectEndpoints({
         method: 'GET',
         params
       }),
-      providesTags: ['notificationPreferences'],
+      providesTags: ['notification'],
     }),
     getAllNotificationsPreferences: builder.query({
       query: () => ({
         url: `/settings/notification/preferences`,
         method: 'GET',
       }),
-      providesTags: ['notification'],
+      providesTags: ['notificationPreferences'],
     }),
      markAsRedNotification: builder.mutation({
       query: (notificationId) => ({
