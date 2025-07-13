@@ -75,10 +75,6 @@ import { handleImageUpload, MAX_FILE_SIZE } from '@/lib/tiptap-utils';
 // --- Styles ---
 import '@/components/tiptap-templates/simple/simple-editor.scss';
 import { useFormContext } from 'react-hook-form';
-import { Decoration, DecorationSet } from 'prosemirror-view';
-import { SelectionHighlighter } from '@/components/SelectionHighlighter';
-import { keymap } from 'prosemirror-keymap';
-
 //import content from '@/components/tiptap-templates/simple/data/content.json';
 
 const MainToolbarContent = ({ onHighlighterClick, onLinkClick, isMobile }) => {
@@ -166,6 +162,7 @@ export function SimpleEditor({ name }) {
 
   const { setValue, watch } = useFormContext();
   const defaultValue = watch(name) ?? '';
+  const hasInitialized = React.useRef(false);
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -177,6 +174,7 @@ export function SimpleEditor({ name }) {
         'aria-label': 'Main content area, start typing to enter text.',
       },
     },
+
     extensions: [
       StarterKit,
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
@@ -190,7 +188,6 @@ export function SimpleEditor({ name }) {
       Subscript,
 
       Selection,
-      SelectionHighlighter,
       ImageUploadNode.configure({
         accept: 'image/*',
         maxSize: MAX_FILE_SIZE,
@@ -220,21 +217,11 @@ export function SimpleEditor({ name }) {
   }, [isMobile, mobileView]);
 
   React.useEffect(() => {
-    if (editor && defaultValue) {
+    if (editor && defaultValue && !hasInitialized.current) {
       editor.commands.setContent(defaultValue);
+      hasInitialized.current = true;
     }
   }, [editor, defaultValue]);
-
-  const DebugKeyPlugin = keymap({
-    Backspace: () => {
-      console.log('Backspace pressed');
-      return false; // allow default behavior
-    },
-    Delete: () => {
-      console.log('Delete pressed');
-      return false;
-    },
-  });
 
   return (
     <EditorContext.Provider value={{ editor }}>

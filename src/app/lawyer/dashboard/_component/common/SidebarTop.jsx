@@ -57,7 +57,7 @@ export default function SidebarTop() {
       className="sidebar-top"
       // style={{ backgroundImage: `url(/assets/img/bg-shape.png)` }}
     >
-      <span className="capitalize date">{dateTime}</span>
+      <span className="date">{dateTime}</span>
       <h2>
         {greeting},{' '}
         <span className="highlight">

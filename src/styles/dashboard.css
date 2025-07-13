@@ -176,15 +176,19 @@
 } */
 
 .sidebar-top {
-  max-width: 320px;
-  margin: 0 auto;
+  width: 100%;
   background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), #00c3c0);
-  color: white;
+  color: #fff;
   padding: 16px;
   border-radius: 12px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
   position: relative;
   overflow: hidden;
+  min-height: 130px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
 }
 
 .sidebar-top::before {

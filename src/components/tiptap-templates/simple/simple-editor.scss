@@ -63,6 +63,18 @@ body {
   margin: 0 auto;
 }
 
+/* Ensure selection is visible inside the editor */
+.simple-editor-content ::selection {
+  background: #b3d4fc;
+  color: inherit;
+}
+
+/* For Firefox */
+.simple-editor-content ::-moz-selection {
+  background: #b3d4fc;
+  color: inherit;
+}
+
 .simple-editor-content .tiptap.ProseMirror {
   padding: 3rem 3rem;
 }
