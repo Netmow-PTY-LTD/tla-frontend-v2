@@ -36,15 +36,13 @@ const responseApiService = baseApi.injectEndpoints({
 
     updateResponseStatus: builder.mutation({
       query: (body) => {
-        console.log('body ==>', body)
-
         return {
           url: `/response/${body.responseId}/status`,
           method: 'PATCH',
           body: body.data,
         }
       },
-      invalidatesTags: ['response'],
+      invalidatesTags: ['response','notification'],
     }),
 
     // activity log
