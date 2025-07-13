@@ -170,8 +170,6 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
       try {
         const result = await updateActivity(whatsappActivityPayload).unwrap();
 
-      
-
         if (result.success) {
           const phone = response?.leadId?.userProfileId?.phone;
           window.open(
@@ -196,14 +194,14 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
   return (
     <>
       <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
-        <div className="max-w-[900]">
+        <div className="max-w-[900px]">
           <div className="flex items-center justify-between">
             <button className="flex py-2 items-center gap-2" onClick={onBack}>
               {' '}
               <MoveLeft /> <span>Back to Responses</span>
             </button>
           </div>
-          <div className="mt-4 mb-8 flex items-center justify-between bg-[#F5F6F9] rounded-lg py-2 px-4">
+          <div className="mt-4 mb-6 flex items-center justify-between bg-[#F5F6F9] rounded-lg py-2 px-4">
             <span className="text-gray-500 text-[13px]">
               Last activity{' '}
               {getCompactTimeAgo(singleResponse?.data?.activity[0]?.updatedAt)}

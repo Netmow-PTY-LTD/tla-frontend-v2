@@ -40,11 +40,12 @@ const columns = [
     enableHiding: false,
   },
   {
-    accessorKey: 'profile?.name',
+    id: 'profile.name',
+    accessorKey: 'profile.name',
     header: 'Name',
     cell: ({ row }) => {
       const profile = row.original.profile;
-      return <div className="capitalize">{profile?.name || 'N/A'}</div>;
+      return <div className="capitalize">{profile.name || 'N/A'}</div>;
     },
   },
   {
@@ -110,7 +111,11 @@ export default function Page() {
   return (
     <div>
       <h1>Users List Page</h1>
-      <DataTable data={userList?.data || []} columns={columns} />
+      <DataTable
+        data={userList?.data || []}
+        columns={columns}
+        searchColumn="profile.name"
+      />
     </div>
   );
 }

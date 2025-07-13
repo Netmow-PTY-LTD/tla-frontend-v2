@@ -122,7 +122,7 @@ export default function MyResponsesPage() {
                     data={allMyResponses?.data}
                   />
                 </div>
-                <div className="leads-bottom-row">
+                <div className="leads-bottom-row max-w-[1400px] mx-auto">
                   <LeadsRight
                     isExpanded={!showResponseDetails}
                     onViewDetails={(response) => {

@@ -1,26 +1,11 @@
 'use client';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
-import {
-  Database,
-  Files,
-  MapPin,
-  SlidersVertical,
-  SquarePen,
-  X,
-} from 'lucide-react';
+import { X } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
-import {
-  Sheet,
-  SheetTrigger,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
 import FilterResponseSidebar from '../../_component/FilterResponseSidebar';
 
 export default function ResponseHead({ isExpanded, data }) {
-  console.log('data ==>', data);
   const pendingStatusLength = data?.filter(
     (item) => item.status === 'pending'
   )?.length;
@@ -64,12 +49,11 @@ export default function ResponseHead({ isExpanded, data }) {
             isExpanded ? 'admin-text' : 'text-[12px]'
           } py-1 px-2 bg-[#FF8602] rounded-[5px] text-white hover:bg-[#FF8602] transition-all flex items-center gap-2`}
         >
-          <span>Edit</span>
-          <SquarePen className="w-4 h-4 hidden sm:inline" />
+          <span>View All</span>
         </Link>
       </div>
 
-      <div className="flex flex-wrap justify-between items-center mt-5 mb-3 gap-2">
+      <div className="flex flex-wrap justify-between items-center mt-3 mb-3 gap-2">
         <div className="flex flex-wrap items-center gap-2 text-[#34495E]">
           <div className="lg:flex items-center gap-2">
             {!isExpanded && (
@@ -102,7 +86,7 @@ export default function ResponseHead({ isExpanded, data }) {
         <FilterResponseSidebar />
       </div>
 
-      <hr className="border border-[#F3F3F3]" />
+      <hr className="w-full bg-[#F3F3F3] h-[1px]" />
     </section>
   );
 }

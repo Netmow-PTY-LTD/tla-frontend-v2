@@ -27,7 +27,7 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
               src={`${
                 user?.userProfileId?.profilePicture ?? '/assets/img/avatar.png'
               }`}
-              alt={user?.userProfileId?.name ?? 'John Doe'}
+              alt={user?.userProfileId?.name ?? ''}
               width={40}
               height={40}
               priority
@@ -133,6 +133,13 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
           </p>
         </div>
       </div>
+      {user?.isContact === true ? (
+        <div className="px-3 py-2">
+          <span className="text-[12px] font-medium bg-[#FF8602] py-1 px-2 rounded text-white">
+            Contacted
+          </span>
+        </div>
+      ) : null}
 
       {/* Footer Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">

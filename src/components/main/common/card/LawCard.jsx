@@ -8,8 +8,8 @@ const LawCard = ({ service }) => {
       <div className="law-card ">
         <figure className="relative h-[277px]">
           <Image
-            alt={service.serviceName}
-            src={service?.image?.url}
+            alt={service.serviceName || 'Service'}
+            src={service?.image?.url || '/assets/img/services/img1.png'}
             fill
             sizes="(min-width: 808px) 50vw, 100vw"
             className="rounded-xl"
@@ -20,14 +20,14 @@ const LawCard = ({ service }) => {
         </figure>
         <div className="card-body bg-[#EDF0F4] mt-2 rounded-xl p-3 sm:p-4 ">
           <div className="flex justify-between items-center gap-2">
-            <p>
+            <p className="text-[12px]">
               {' '}
               <span className="text-[#34495E] ">Case Listed:</span>{' '}
               <span className="font-semibold">
                 {service?.caseListed ? service?.caseListed : 0}{' '}
               </span>
             </p>
-            <p>
+            <p className="text-[12px]">
               {' '}
               <span className="text-[#34495E] ">Lawyer Available:</span>{' '}
               <span className="font-semibold">
@@ -35,9 +35,9 @@ const LawCard = ({ service }) => {
               </span>
             </p>
           </div>
-          <h1 className="card-title font-medium sm:text-2xl text-[27px] mt-2 ">
+          <h4 className="card-title font-medium leading-1 text-[18px] mt-2 ">
             {service?.name}{' '}
-          </h1>
+          </h4>
         </div>
       </div>
     </Link>
