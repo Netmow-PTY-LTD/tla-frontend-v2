@@ -18,10 +18,11 @@ const notificationApiService = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['notificationPreferences'],
     }),
-    getAllNotifications: builder.query({
-      query: () => ({
+    getNotifications: builder.query({
+      query: (params) => ({
         url: `/settings/notification`,
         method: 'GET',
+        params
       }),
       providesTags: ['notificationPreferences'],
     }),
@@ -33,10 +34,10 @@ const notificationApiService = baseApi.injectEndpoints({
       providesTags: ['notification'],
     }),
      markAsRedNotification: builder.mutation({
-      query: (body) => ({
-        url: `/settings/notification/${body.notificationId}/red`,
+      query: (notificationId) => ({
+        url: `/settings/notification/${notificationId}/red`,
         method: 'PUT',
-        body:body.data,
+        
       }),
       invalidatesTags: ['notification'],
     }),
@@ -46,7 +47,7 @@ const notificationApiService = baseApi.injectEndpoints({
 export const {
   useUpdateEmailNotificationMutation,
   useUpdateBrowserNotificationMutation,
-  useGetAllNotificationsQuery,
+ useGetNotificationsQuery,
   useGetAllNotificationsPreferencesQuery,
   useMarkAsRedNotificationMutation
 
