@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Switch } from '@/components/ui/switch';
 import { browserNotificationOptions } from '@/data/notifications';
 import {
-  useGetAllNotificationsQuery,
+  useGetAllNotificationsPreferencesQuery,
   useUpdateBrowserNotificationMutation,
 } from '@/store/features/notification/notificationApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
@@ -24,7 +24,7 @@ const BrowserNotification = () => {
     isLoading: isNotificationsLoading,
     isError: isNotificationsError,
     refetch: refetchNotifications,
-  } = useGetAllNotificationsQuery();
+  } = useGetAllNotificationsPreferencesQuery();
 
   const [updateBrowserNotification] = useUpdateBrowserNotificationMutation();
 

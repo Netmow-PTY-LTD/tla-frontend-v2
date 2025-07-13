@@ -5,11 +5,13 @@ import React from 'react';
 import ProfileDropDown from './ProfileDropDown';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import { useSelector } from 'react-redux';
-import { BellRing, PanelLeft } from 'lucide-react';
-import { useSidebarToggle } from '@/contexts/SidebarToggleContext';
+import { PanelLeft } from 'lucide-react';
+import { useGetNotificationsQuery } from '@/store/features/notification/notificationApiService';
+import NotificationDropdown from './NotificationDropdown';
 
 export default function DashboardHeader({ onToggleSidebar }) {
   const userInfo = useSelector(selectCurrentUser);
+    const { data } = useGetNotificationsQuery({ read: false });
 
   return (
     <header className="db-header">
@@ -35,7 +37,8 @@ export default function DashboardHeader({ onToggleSidebar }) {
           href="#"
           className="w-10 h-10 items-center justify-center border border-gray-300 rounded-full hidden sm:flex"
         >
-          <BellRing className="w-6 h-6 text-gray-500" />
+        
+          <NotificationDropdown/>
         </Link>
         <ProfileDropDown data={userInfo} />
       </div>
