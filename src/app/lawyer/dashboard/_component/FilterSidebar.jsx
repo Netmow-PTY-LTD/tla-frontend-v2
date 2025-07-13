@@ -13,10 +13,6 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { SlidersVertical } from 'lucide-react';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
-import { useSelector } from 'react-redux';
-import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import { showSuccessToast } from '@/components/common/toasts';
