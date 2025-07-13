@@ -58,9 +58,13 @@ const CreditsPurchase = ({ creditPackage }) => {
   return (
     <div>
       <div className="border-0 bg-white rounded-lg shadow-sm pt-4 pb-6 px-[17px] relative">
-        <div className="bg-[#00C3C0] absolute text-white p-[10px] rounded-tl-md rounded-br-md text-sm font-medium top-0 left-0">
-          20% OFF EXCLUSIVE STARTING PACK
-        </div>
+          {creditPackage.discountPercentage > 0 && (
+          <div className="bg-[#00C3C0] absolute text-white p-[10px] rounded-tl-md rounded-br-md text-sm font-medium top-0 left-0">
+            <h2 className="text-sm font-medium text-white whitespace-nowrap">
+              {creditPackage.discountPercentage}% OFF {creditPackage.name}
+            </h2>
+          </div>
+        )}
 
         <div className="mt-12">
           <div className="grid md:grid-cols-4 gap-6 items-start">
