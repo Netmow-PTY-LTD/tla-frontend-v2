@@ -10,6 +10,10 @@ export default function LeadsHead({ isExpanded, total }) {
   const { data: currentUser } = useAuthUserInfoQuery();
 
   //console.log('currentUser ==>', currentUser?.data);
+
+  const stored = localStorage.getItem('lead-filters');
+
+  console.log('stored ==>', stored);
   return (
     <section className={`${isExpanded ? '' : 'pl-4 pr-1'}`}>
       <div className="flex justify-between items-start gap-4">
@@ -54,14 +58,22 @@ export default function LeadsHead({ isExpanded, total }) {
           }`}
         >
           <div className={`lg:flex items-center gap-2`}>
-            {!isExpanded && (
-              <div className="text-[#C72C41] text-[11px] flex items-center gap-2">
+            {stored && !isExpanded && (
+              <div
+                className="text-[#C72C41] text-[11px] flex items-center gap-2 cursor-pointer"
+                onClick={() => {
+                  localStorage.removeItem('lead-filters');
+                  alert('filter removed');
+                  window.location.reload();
+                }}
+              >
                 <span>Clear</span>
                 <div className="bg-[#D9D9D9] rounded-full cursor-pointer p-1">
                   <X className="w-4 h-4" />
                 </div>
               </div>
             )}
+
             <div className="inline-flex flex-wrap gap-1">
               <TagButton
                 text="Urgent(51)"
