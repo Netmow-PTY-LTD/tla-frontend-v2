@@ -75,6 +75,8 @@ export const baseApi = createApi({
     'user-credit-stats',
     'next-offer',
     'transaction-history',
+    "notificationPreferences"
+
   ],
   endpoints: () => ({}),
 });

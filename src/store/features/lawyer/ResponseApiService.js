@@ -64,7 +64,7 @@ const responseApiService = baseApi.injectEndpoints({
           body,
         }
       },
-      invalidatesTags: ['response'],
+      invalidatesTags: ['response','notification'],
     }),
 
 
