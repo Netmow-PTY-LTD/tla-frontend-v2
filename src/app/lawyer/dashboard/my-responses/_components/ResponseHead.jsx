@@ -53,7 +53,7 @@ export default function ResponseHead({ isExpanded, data }) {
         </Link>
       </div>
 
-      <div className="flex flex-wrap justify-between items-center mt-5 mb-3 gap-2">
+      <div className="flex flex-wrap justify-between items-center mt-3 mb-3 gap-2">
         <div className="flex flex-wrap items-center gap-2 text-[#34495E]">
           <div className="lg:flex items-center gap-2">
             {!isExpanded && (
@@ -86,7 +86,7 @@ export default function ResponseHead({ isExpanded, data }) {
         <FilterResponseSidebar />
       </div>
 
-      <hr className="border border-[#F3F3F3]" />
+      <hr className="w-full bg-[#F3F3F3] h-[1px]" />
     </section>
   );
 }
