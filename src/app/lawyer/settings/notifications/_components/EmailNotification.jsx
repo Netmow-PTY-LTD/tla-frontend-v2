@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Switch } from '@/components/ui/switch';
 import {
-  useGetAllNotificationsQuery,
+  useGetAllNotificationsPreferencesQuery,
   useUpdateEmailNotificationMutation,
 } from '@/store/features/notification/notificationApiService';
 import { emailNotificationOptions } from '@/data/notifications';
@@ -24,7 +24,7 @@ const EmailNotification = () => {
     isLoading: isNotificationsLoading,
     isError: isNotificationsError,
     refetch: refetchNotifications,
-  } = useGetAllNotificationsQuery();
+  } = useGetAllNotificationsPreferencesQuery();
 
   const [updateEmailNotification] = useUpdateEmailNotificationMutation();
 
