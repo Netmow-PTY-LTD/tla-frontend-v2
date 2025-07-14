@@ -5,17 +5,33 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useUserTransactionHistoryQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 
-export const BillingTransactionDetails = () => {
+export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+
+
 
   const {
     data: transactionData,
     isError,
     isLoading,
   } = useUserTransactionHistoryQuery();
+
+
+  // set proggression
+
+  useEffect(() => {
+
+    if (transactionData?.data?.length > 0) {
+      setMyCreditsProgress(100)
+    }
+
+
+  }, [transactionData?.data])
+
+
 
   useEffect(() => {
     if (!transactionData?.data) return;
@@ -30,6 +46,8 @@ export const BillingTransactionDetails = () => {
     setFilteredTransactions(filtered);
     setCurrentPage(1);
   }, [transactionData, searchTerm]);
+
+
 
   const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;

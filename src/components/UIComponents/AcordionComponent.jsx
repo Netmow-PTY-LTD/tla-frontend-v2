@@ -40,6 +40,10 @@ const AccordionComponent = ({ title, content, openValue,
   );
 };
 
+/* 
+
+// Note: Don't remove this commented code because it will be use in next time 
+
 export const DynamicAccordion = ({ items }) => {
   const [openItem, setOpenItem] = useState(null);
   const searchParams = useSearchParams();
@@ -78,7 +82,7 @@ export const DynamicAccordion = ({ items }) => {
           <AccordionTrigger className="h-[44px] px-2">
             <div className="flex items-center gap-[16px]">
               {' '}
-              {/* Horizontal gap */}
+              
               <CircularProgress progress={27} size={30} />
               <span className="text-sm font-medium text-gray-700 leading-none">
                 {title}
@@ -93,5 +97,70 @@ export const DynamicAccordion = ({ items }) => {
     </Accordion>
   );
 };
+
+
+*/
+
+export const DynamicAccordion = ({ items }) => {
+  const [openItem, setOpenItem] = useState(null);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  useEffect(() => {
+    const accordionId = searchParams.get('section');
+    if (accordionId) {
+      setOpenItem(accordionId);
+    }
+  }, [searchParams]);
+
+  const handleValueChange = (value) => {
+    setOpenItem(value);
+    if (!value) {
+      router.replace('?', { scroll: false });
+    } else {
+      router.replace(`?section=${value}`, { scroll: false });
+    }
+  };
+
+  return (
+    <Accordion
+      type="single"
+      collapsible
+      className="space-y-[10px]"
+      value={openItem}
+      onValueChange={handleValueChange}
+    >
+      {items.map(({ id, title, content, progress }) => {
+        const isOpen = openItem === id;
+
+        return (
+          <AccordionItem
+            key={id}
+            value={id}
+            className="border-none bg-[#F3F3F3] p-[10px] rounded-[5px]"
+          >
+            <AccordionTrigger className="h-[44px] px-2">
+              <div className="flex items-center gap-[16px]">
+                <CircularProgress progress={progress ?? 27} size={30} />
+                <span className="text-sm font-medium text-gray-700 leading-none">
+                  {title}
+                </span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent forceMount>
+              <div
+                className="px-2 py-5"
+                style={{ display: isOpen ? 'block' : 'none' }}
+              >
+                {content}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        );
+      })}
+    </Accordion>
+  );
+};
+
 
 export default AccordionComponent;

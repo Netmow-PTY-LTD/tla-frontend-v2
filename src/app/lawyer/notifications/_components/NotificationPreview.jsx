@@ -81,7 +81,7 @@ export default function NotificationPreview() {
                 <p className="font-medium">{n.title}</p>
               </div>
               <div className="flex items-center space-x-3">
-                {!n.isRead && <span className="text-xs text-red-500"> {dayjs(n.createdAt).fromNow()}</span>}
+                { <span className="text-xs text-red-500"> {dayjs(n.createdAt).fromNow()}</span>}
                 {!n.isRead && (
                   <button
                     className="text-sm text-blue-600 hover:underline"
