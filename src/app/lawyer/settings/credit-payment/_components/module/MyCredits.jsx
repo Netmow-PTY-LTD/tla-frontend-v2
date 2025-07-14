@@ -1,18 +1,19 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import CreditsPurchase from '../UI/CreditPurchse';
 import { useGetAllCreditPackagesQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 import { Loader } from 'lucide-react';
-import { CreditTransactionLog } from '../UI/CreditTransactionLog';
 import { BillingTransactionDetails } from '../UI/BillingTransactionTable';
 
-const MyCredits = () => {
+const MyCredits = ({setMyCreditsProgress}) => {
   const {
     data: packageData,
     isError,
     isLoading,
   } = useGetAllCreditPackagesQuery();
+
+
 
   return (
     <div className="w-full ">
@@ -65,7 +66,7 @@ const MyCredits = () => {
           )}
         </div>
         <div className="mt-8">
-          <BillingTransactionDetails />
+          <BillingTransactionDetails setMyCreditsProgress={setMyCreditsProgress} />
         </div>
       </div>
     </div>

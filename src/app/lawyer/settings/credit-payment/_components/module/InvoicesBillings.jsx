@@ -3,10 +3,10 @@ import InvoicingForm from '../UI/InvoicingForm';
 
 // import { CreditTransactionLog } from '../UI/CreditTransactionLog';
 
-const InvoicesBillings = () => {
+const InvoicesBillings = ({setInvoicesBillingsProgress}) => {
   return (
     <div className="w-full">
-      <InvoicingForm />
+      <InvoicingForm setInvoicesBillingsProgress={setInvoicesBillingsProgress} />
       {/* <div className="mt-8">
         <CreditTransactionLog />
       </div> */}

@@ -3,12 +3,12 @@ import { CreditTransactionLog } from '../UI/CreditTransactionLog';
 
 
 
-const CreditSummary = () => {
+const CreditSummary = ({setCreditSummaryProgress}) => {
   return (
     <div className="w-full">
    
       <div className="mt-8">
-        <CreditTransactionLog />
+        <CreditTransactionLog setCreditSummaryProgress={setCreditSummaryProgress} />
       </div>
     </div>
   );
