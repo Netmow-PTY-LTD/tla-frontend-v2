@@ -65,7 +65,7 @@ export default function AdminProfileDropDown({ data }) {
               <AvatarFallback>USER</AvatarFallback>
             </Avatar>
             <span className="font-medium text-[14px]">
-              {data?.profile?.name || 'Admin'}
+              {data?.profile?.name.split(' ')[0] || 'Admin'}
             </span>
             <ChevronDown className="w-5 h-5" />
           </div>
