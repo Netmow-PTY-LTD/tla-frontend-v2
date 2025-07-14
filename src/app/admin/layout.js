@@ -2,15 +2,7 @@
 import DashboardFooter from '@/components/dashboard/common/DashboardFooter';
 import AdminDashboardHeader from './_components/AdminDashboardHeader';
 import '@/styles/dashboard.css';
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarProvider,
-  SidebarRail,
-} from '@/components/ui/sidebar';
 import AdminSidebar, { SideNav } from '@/components/dashboard/common/SideNav';
-import SidebarTop from '../lawyer/dashboard/_component/common/SidebarTop';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -53,10 +45,10 @@ export default function AdminDashboardLayout({ children }) {
             isNoScrollPage ? 'no-scroll' : ''
           }`}
         >
-          <div className="flex flex-col p-5">
-            <div className="flex-1">{children}</div>
+          <div className="flex flex-col h-full">
+            <div className="flex-1 py-4 px-5">{children}</div>
+            <DashboardFooter />
           </div>
-          <DashboardFooter />
         </div>
       </div>
     </>

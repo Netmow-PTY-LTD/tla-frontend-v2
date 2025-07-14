@@ -53,8 +53,8 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }) {
         <SidebarTop />
       </div>
 
-      <nav className="p-3 lg:p-4 space-y-1">
-        <h3 className="text-black font-semibold text-[20px] border-b border-[#f2f2f2] pb-2 mb-3">
+      <nav className="p-3 lg:pt-2 lg:pb-3 lg:px-4 space-y-1">
+        <h3 className="text-black leading-none font-semibold text-[20px] border-b border-[#f2f2f2] pb-2 mb-3">
           Admin Menu
         </h3>
         {AdminSidebarItems?.navMain?.map((item) => {
@@ -111,10 +111,8 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }) {
             <Link
               key={item.title}
               href={item.url}
-              className={`flex items-center gap-2 p-2 rounded transition ${
-                pathname === item.url
-                  ? 'bg-gray-100 font-medium'
-                  : 'hover:bg-gray-100'
+              className={`flex items-center gap-2 p-2 rounded transition font-medium ${
+                pathname === item.url ? 'bg-gray-100' : 'hover:bg-gray-100'
               }`}
             >
               {item.icon && <item.icon className="w-5 h-5" />}
