@@ -17,6 +17,7 @@ export default function MyCreditsPage() {
   const [mycreditsProgress,setMyCreditsProgress]=useState(0)
   const [invoicesBillingsProgress,setInvoicesBillingsProgress]=useState(0)
   const [creditSummaryProgress,setCreditSummaryProgress]=useState(0)
+  const [myPayments,setMyPayments]=useState(0)
   const accordionItems = [
     {
       id: 'my-credits',
@@ -39,8 +40,8 @@ export default function MyCreditsPage() {
     {
       id: 'my-payments',
       title: 'My Payment Details',
-      content: <MyPayments />,
-       progress: 70
+      content: <MyPayments setMyPayments={setMyPayments} />,
+       progress: myPayments
     },
   ];
   return (
