@@ -152,8 +152,11 @@ const ProfileCard = ({ profile, isLoading, isError, error }) => {
           </p>
           <p className="heading-base flex items-center">
             {' '}
-            <Home className="mr-2 w-5 h-5" />{' '}
-            <span> {profile?.profile?.address}</span>{' '}
+            {profile?.profile?.address && <>
+              <Home className="mr-2 w-5 h-5" />
+              <span> {profile?.profile?.address}</span>
+            </>}
+
           </p>
         </div>
         <hr className="tet-[#F3F3F3] border" />
