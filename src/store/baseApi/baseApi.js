@@ -23,7 +23,13 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
 
   if (result.error?.status === 404 || result.error?.status === 403) {
     const errorData = result.error.data;
-    toast.error(errorData?.message || 'Request failed');
+    const url = typeof arg === 'string' ? arg : arg.url || '';
+
+    // Check if the URL matches your change-password endpoint
+    if (!url.includes('/auth/change-password')) {
+      toast.error(errorData?.message || 'Request failed', { position: 'top-right', style: { backgroundColor: 'red', color: 'white' } });
+    }
+
   }
 
   if (result.error?.status === 401) {

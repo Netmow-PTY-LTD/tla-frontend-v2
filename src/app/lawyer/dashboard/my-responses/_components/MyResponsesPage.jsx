@@ -94,57 +94,55 @@ export default function MyResponsesPage() {
   }
 
   return (
-    <Suspense fallback={<Loader />}>
-      <div className="lead-board-wrap">
-        {allMyResponses?.data && allMyResponses?.data?.length > 0 ? (
-          <div className="lead-board-container">
-            {showResponseDetails && selectedResponse && (
-              <div className="left-column-8">
-                <div className="column-wrap-left">
-                  <MyResponseDetails
-                    response={selectedResponse}
-                    responseId={responseId}
-                    onBack={() => setShowResponseDetails(false)}
-                  />
-                </div>
+    <div className="lead-board-wrap">
+      {allMyResponses?.data && allMyResponses?.data?.length > 0 ? (
+        <div className="lead-board-container">
+          {showResponseDetails && selectedResponse && (
+            <div className="left-column-8">
+              <div className="column-wrap-left">
+                <MyResponseDetails
+                  response={selectedResponse}
+                  responseId={responseId}
+                  onBack={() => setShowResponseDetails(false)}
+                />
               </div>
-            )}
+            </div>
+          )}
 
-            <div
-              className={`${
-                showResponseDetails ? 'right-column-4 ' : 'right-column-full'
-              }`}
-            >
-              <div className="column-wrap-right">
-                <div className="leads-top-row">
-                  <ResponseHead
-                    isExpanded={!showResponseDetails}
-                    data={allMyResponses?.data}
-                  />
-                </div>
-                <div className="leads-bottom-row max-w-[1400px] mx-auto">
-                  <LeadsRight
-                    isExpanded={!showResponseDetails}
-                    onViewDetails={(response) => {
-                      setSelectedResponse(response);
-                      setShowResponseDetails(true);
-                      router.push(`?responseId=${response?._id}`);
-                    }}
-                    data={allMyResponses?.data}
-                  />
-                </div>
+          <div
+            className={`${
+              showResponseDetails ? 'right-column-4 ' : 'right-column-full'
+            }`}
+          >
+            <div className="column-wrap-right">
+              <div className="leads-top-row">
+                <ResponseHead
+                  isExpanded={!showResponseDetails}
+                  data={allMyResponses?.data}
+                />
+              </div>
+              <div className="leads-bottom-row max-w-[1400px] mx-auto">
+                <LeadsRight
+                  isExpanded={!showResponseDetails}
+                  onViewDetails={(response) => {
+                    setSelectedResponse(response);
+                    setShowResponseDetails(true);
+                    router.push(`?responseId=${response?._id}`);
+                  }}
+                  data={allMyResponses?.data}
+                />
               </div>
             </div>
           </div>
-        ) : (
-          <div className="flex flex-col justify-center items-center h-full">
-            <Inbox className="w-12 h-12 mb-4 text-gray-400" />
-            <h4 className="italic text-[18px] text-gray-500">
-              There are currently no responses.
-            </h4>
-          </div>
-        )}
-      </div>
-    </Suspense>
+        </div>
+      ) : (
+        <div className="flex flex-col justify-center items-center h-full">
+          <Inbox className="w-12 h-12 mb-4 text-gray-400" />
+          <h4 className="italic text-[18px] text-gray-500">
+            There are currently no responses.
+          </h4>
+        </div>
+      )}
+    </div>
   );
 }

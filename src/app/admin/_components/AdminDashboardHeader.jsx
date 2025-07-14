@@ -4,15 +4,15 @@ import Link from 'next/link';
 import React from 'react';
 import AdminProfileDropDown from './AdminProfileDropDown';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
-import { BellRing } from 'lucide-react';
+import { BellRing, PanelLeft } from 'lucide-react';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 
-export default function AdminDashboardHeader() {
+export default function AdminDashboardHeader({ onToggleSidebar }) {
   const { data: currentUser } = useAuthUserInfoQuery();
 
   return (
     <header className="db-header">
-      <div className="db-header-container">
+      <div className="db-header-container flex">
         <Link href="/admin">
           <Image
             src={'/assets/img/logo.png'}
@@ -21,6 +21,13 @@ export default function AdminDashboardHeader() {
             height={40}
           />
         </Link>
+        <button
+          data-sidebar-toggle
+          onClick={() => onToggleSidebar()}
+          className="xl:hidden"
+        >
+          <PanelLeft />
+        </button>
       </div>
       <div className="flex items-center gap-4">
         <Link

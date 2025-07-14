@@ -109,6 +109,8 @@ const LeadBoardPage = () => {
     );
   }
 
+  console.log('leads', leads);
+
   return (
     <div className="lead-board-wrap">
       {leads?.length > 0 ? (
