@@ -17,7 +17,6 @@ import {
   useAuthUserInfoQuery,
   useUpdateUserDataMutation,
 } from '@/store/features/auth/authApiService';
-import Image from 'next/image';
 import FormWrapper from '@/components/form/FromWrapper';
 import TextInput from '@/components/form/TextInput';
 import AvatarUploader from '@/components/UIComponents/AvaterUploader';
@@ -26,7 +25,7 @@ import { useEffect, useState } from 'react';
 
 const page = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+const [open, setOpen] = useState(false);
   const {
     data: currentUser,
     isLoading: isLoadingUserInfo,
@@ -85,7 +84,7 @@ const page = () => {
     }
   };
 
-  console.log('currentUser', currentUser?.data);
+
   return (
     <div className="max-w-[900px] mx-auto my-8">
       <div className="bg-[#F5F5F5] p-6 rounded-lg shadow-sm mx-auto">
@@ -103,17 +102,6 @@ const page = () => {
             {/* Avatar + Upload */}
             <div className="flex items-center gap-2 mb-6">
               <AvatarUploader name="userProfileLogo" />
-              {/* <div className="flex gap-2">
-                <button className="w-24 h-[70px] border border-dashed border-gray-300 text-xs text-center p-2 rounded flex flex-col items-center">
-                  <CloudUpload className="text-[#00C3C0] w-6 h-6" />
-
-                  <span className="mt-2"> Upload photo</span>
-                </button>
-                <button className="w-24 h-[70px] border border-dashed border-gray-300 text-xs text-center p-2 rounded flex flex-col items-center">
-                <Camera className="text-[#00C3C0] w-6 h-6" />
-                <span className="mt-2">Open camera</span>
-              </button>
-              </div> */}
             </div>
 
             {/* Inputs */}
@@ -139,10 +127,17 @@ const page = () => {
                   placeholder="Enter Your Password"
                 /> */}
 
-                <ChangePassword />
+
               </div>
             </div>
           </div>
+          <button
+          type='button'
+            onClick={() => setOpen(true)}
+            className="text-sm text-[#00C3C0] mt-5 lg:mt-1 block"
+          >
+            Change Password
+          </button>
 
           <Button
             type="submit"
@@ -159,6 +154,7 @@ const page = () => {
             )}
           </Button>
         </FormWrapper>
+        <ChangePassword setOpen={setOpen} open={open} />
       </div>
     </div>
   );
