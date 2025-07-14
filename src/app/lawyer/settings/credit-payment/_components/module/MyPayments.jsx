@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import AddCardModal from '../modal/AddCardModal';
 import {
@@ -10,12 +10,19 @@ import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import PaymentMethod from '../PaymentMethod';
 import { Loader } from 'lucide-react';
 
-const MyPayments = () => {
+const MyPayments = ({ setMyPayments }) => {
   const [open, setOpen] = useState(false);
   const [addPaymentMethod] = useAddPaymentMethodMutation();
   const { data, isError, isLoading } = useGetPaymentMethodQuery();
 
   const card = data?.data || null;
+
+  useEffect(() => {
+    if (card?.paymentMethodId) {
+      setMyPayments(100)
+    }
+
+  }, [card])
 
   const handleCardAdded = async (paymentMethodId) => {
     try {
