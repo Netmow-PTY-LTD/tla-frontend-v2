@@ -11,7 +11,6 @@ import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { useGetLeadServiceListQuery } from '@/store/features/leadService/leadServiceApiService';
 import ResponseStatsCard from './_component/home/ResponseStatsCard';
 
-
 export default function SellerDashboard() {
   const currentUser = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
@@ -35,7 +34,7 @@ export default function SellerDashboard() {
   const locations = leadServicesData?.data?.locations ?? [];
 
   return (
-    <div className=" max-w-[1100px] mx-auto">
+    <div className=" max-w-[1100px] mx-auto relative z-0">
       {/* <WelcomeCard /> */}
 
       <ProfileCard />
