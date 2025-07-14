@@ -2,6 +2,7 @@
 import PencilIcon from '@/assets/icon';
 import { Card } from '@/components/ui/card';
 import { useGetUserCreditStatsQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
+import { useGetAllMyResponsesQuery } from '@/store/features/lawyer/ResponseApiService';
 
 import { MapPin } from 'lucide-react';
 import Link from 'next/link';
@@ -11,6 +12,20 @@ const LeadStatsCard = ({ locations, profile }) => {
   const { data } = useGetUserCreditStatsQuery();
   const defaultServices = profile?.profile?.serviceIds || [];
   const creditStats = data?.data || {};
+
+  const { data: allMyResponses, isLoading } =
+    useGetAllMyResponsesQuery();
+
+    console.log('pending ===>',allMyResponses)
+
+  const totalResponse = allMyResponses?.data.length?? 0;
+  const hiredResponse =
+    allMyResponses?.data?.filter((response) => response.status === 'hired')?.length??0;
+  const pendingResponse =
+    allMyResponses?.data?.filter((response) => response.status === 'pending')?.length??0;
+  const archiveResponse =
+    allMyResponses?.data?.filter((response) => response.status === 'archive')?.length??0;
+
 
   return (
     <Card className="w-full max-w-md md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto bg-white shadow-md rounded-lg">
@@ -66,14 +81,14 @@ const LeadStatsCard = ({ locations, profile }) => {
         <div className="bg-[#F5F6F9]  w-1/2 flex flex-col justify-center items-center p-5 rounded-lg mx-4 my-3">
           <div className="flex items-center gap-2">
             <div>📈</div> {/* Replace with an actual icon if needed */}
-            <h4 className="text-2xl font-bold text-black">20</h4>
+            <h4 className="text-2xl font-bold text-black"> {pendingResponse}</h4>
           </div>
           <p className="text-sm text-gray-600 mt-1">pending responses</p>
         </div>
         <div className="bg-[#F5F6F9] w-1/2 flex flex-col justify-center items-center p-5 rounded-lg mx-4 my-3">
           <div className="flex items-center gap-2">
             <div>📈</div> {/* Replace with an actual icon if needed */}
-            <h4 className="text-2xl font-bold text-black">20</h4>
+            <h4 className="text-2xl font-bold text-black">{hiredResponse}</h4>
           </div>
           <p className="text-sm text-gray-600 mt-1">Hired responses</p>
         </div>
