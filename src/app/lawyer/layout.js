@@ -38,8 +38,6 @@ export default function SellerDashboardLayout({ children }) {
     };
   }, [isNoScrollPage]);
 
-  console.log('isCollapsed', isCollapsed);
-
   return (
     <>
       <DashboardHeader onToggleSidebar={toggleSidebar} />

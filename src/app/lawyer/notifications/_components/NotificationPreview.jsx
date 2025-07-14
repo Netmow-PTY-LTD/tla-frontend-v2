@@ -179,56 +179,59 @@ export default function NotificationPreview() {
           ))}
         </ul> */}
 
-        <div className="bg-white rounded-lg relative p-4">
-          {groupedData.map((group, groupIndex) => (
-            <Fragment key={groupIndex}>
-              <div
-                className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${
-                  groupIndex === 0 ? '' : 'border-l border-[#e6e7ec]'
-                }`}
-              >
-                {group.date}
-              </div>
-
-              {group.items.map((n, index) => (
+        {groupedData.length > 0 && (
+          <div className="bg-white rounded-lg relative p-4">
+            {groupedData.map((group, groupIndex) => (
+              <Fragment key={groupIndex}>
                 <div
-                  key={n._id}
-                  className={`activity-log-item flex gap-2 ${
-                    groupIndex === 0 && index === 0 ? 'first-log-item' : ''
+                  className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${
+                    groupIndex === 0 ? '' : 'border-l border-[#e6e7ec]'
                   }`}
                 >
-                  <div className="left-track flex-grow-0 flex flex-col w-[32px] items-center">
-                    <div className="line-top h-1/2 w-[1] border-l border-[#e6e7ec]"></div>
-                    <div className="icon-wrapper mt-[-16px]">
-                      <div className="icon w-[32px] h-[32px] bg-[#000] rounded-full flex justify-center items-center">
-                        {n?.type && generateActivityIcon(n?.type)}
-                      </div>
-                    </div>
-                    <div className="line-bottom h-1/2 w-[1] border-l border-[#e6e7ec]"></div>
-                  </div>
-
-                  <div className="flex-1 flex items-start justify-between mb-4 py-3 px-4 rounded-lg border border-gray-200">
-                    <div className="flex flex-col">
-                      <div className="text-gray-500">{n.title || ''}</div>
-                      <div className="text-sm text-black font-medium">
-                        {n?.message}
-                      </div>
-                    </div>
-                    <span className="text-xs text-gray-400">
-                      {new Date(n?.createdAt)
-                        .toLocaleTimeString('en-US', {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                          hour12: true,
-                        })
-                        .replace(/ (AM|PM)/, '')}
-                    </span>
-                  </div>
+                  {group.date}
                 </div>
-              ))}
-            </Fragment>
-          ))}
-        </div>
+
+                {group.items.map((n, index) => (
+                  <div
+                    key={n._id}
+                    className={`activity-log-item flex gap-2 ${
+                      groupIndex === 0 && index === 0 ? 'first-log-item' : ''
+                    }`}
+                  >
+                    <div className="left-track flex-grow-0 flex flex-col w-[32px] items-center">
+                      <div className="line-top h-1/2 w-[1] border-l border-[#e6e7ec]"></div>
+                      <div className="icon-wrapper mt-[-16px]">
+                        <div className="icon w-[32px] h-[32px] bg-[#000] rounded-full flex justify-center items-center">
+                          {n?.type && generateActivityIcon(n?.type)}
+                        </div>
+                      </div>
+                      <div className="line-bottom h-1/2 w-[1] border-l border-[#e6e7ec]"></div>
+                    </div>
+
+                    <div className="flex-1 flex items-start justify-between mb-4 py-3 px-4 rounded-lg border border-gray-200">
+                      <div className="flex flex-col">
+                        <div className="text-gray-500">{n.title || ''}</div>
+                        <div className="text-sm text-black font-medium">
+                          {n?.message}
+                        </div>
+                      </div>
+                      <span className="text-xs text-gray-400">
+                        {new Date(n?.createdAt)
+                          .toLocaleTimeString('en-US', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true,
+                          })
+                          .replace(/ (AM|PM)/, '')}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </Fragment>
+            ))}
+          </div>
+        )}
+
         {paginatedData?.length === 0 && <p>No notifications found.</p>}
         {paginatedData?.length > 0 && (
           <div className="flex justify-center gap-1 mt-10 flex-wrap">

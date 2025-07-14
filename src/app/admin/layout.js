@@ -9,12 +9,14 @@ import {
   SidebarProvider,
   SidebarRail,
 } from '@/components/ui/sidebar';
-import { SideNav } from '@/components/dashboard/common/SideNav';
+import AdminSidebar, { SideNav } from '@/components/dashboard/common/SideNav';
 import SidebarTop from '../lawyer/dashboard/_component/common/SidebarTop';
 import { usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function AdminDashboardLayout({ children }) {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const toggleSidebar = () => setIsCollapsed((prev) => !prev);
   const pathname = usePathname();
   const cleanPathname = pathname?.trim().replace(/\/+$/, '');
 
@@ -40,36 +42,23 @@ export default function AdminDashboardLayout({ children }) {
 
   return (
     <>
-      <AdminDashboardHeader />
-      <SidebarProvider
-        className="sidebar-main h-[calc(100vh-64px)]"
-        style={{ minHeight: 'auto' }}
-      >
-        <Sidebar
-          collapsible="icon"
-          className="sidebar-width-control sidebar-y-64 h-[calc(100vh-64px)]"
-        >
-          <SidebarHeader>
-            <SidebarTop />
-          </SidebarHeader>
-          <SidebarContent>
-            <SideNav />
-          </SidebarContent>
-          <SidebarRail />
-        </Sidebar>
-
-        {/* ✅ This is the only scrollable area */}
+      <AdminDashboardHeader onToggleSidebar={toggleSidebar} />
+      <div className="flex">
+        <AdminSidebar
+          isCollapsed={isCollapsed}
+          setIsCollapsed={setIsCollapsed}
+        />
         <div
           className={`flex-1 dashboard-content ${
             isNoScrollPage ? 'no-scroll' : ''
           }`}
         >
-          <div className="flex flex-col h-full">
-            <div className="flex-1 p-5">{children}</div>
-            <DashboardFooter />
+          <div className="flex flex-col p-5">
+            <div className="flex-1">{children}</div>
           </div>
+          <DashboardFooter />
         </div>
-      </SidebarProvider>
+      </div>
     </>
   );
 }
