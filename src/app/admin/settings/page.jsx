@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import FileUploader from '@/components/UIComponents/fileUploader';
 import { CloudUpload } from 'lucide-react';
 import React, { useState } from 'react';
+import SettingsForm from '../_components/app-settings/page';
 
 export default function Settings() {
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -230,6 +231,9 @@ export default function Settings() {
             </CardContent>
           </Card>
         </div>
+       <div className="w-full lg:w-[calc(50%-10px)]">
+         <SettingsForm/>
+       </div>
       </div>
     </div>
   );
