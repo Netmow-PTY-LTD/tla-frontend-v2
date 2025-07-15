@@ -118,8 +118,8 @@ export default function HeroHome() {
             )}
           </div>
         </div>
-        {/* <HeroSlider /> */}
-        <HeroShowcase />
+        <HeroSlider />
+        {/* <HeroShowcase /> */}
       </div>
 
       {token && currentUser ? (

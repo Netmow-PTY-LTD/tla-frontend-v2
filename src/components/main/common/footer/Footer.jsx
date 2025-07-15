@@ -11,7 +11,7 @@ import Twiiter from '@/components/icon/Twiiter';
 export default function Footer() {
   return (
     <>
-      <NewsletterSignup />
+      {/* <NewsletterSignup /> */}
       <footer
         className="main-footer"
         style={{ backgroundImage: `url('/assets/img/footer_bg.png')` }}
