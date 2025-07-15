@@ -1,6 +1,6 @@
 'use client';
 import DashboardFooter from '@/components/dashboard/common/DashboardFooter';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import '@/styles/dashboard.css';
 import { SideNav } from '@/components/dashboard/common/SideNav';
 import BuyerDashboardHeader from './_components/BuyerDashboardHeader';
@@ -11,11 +11,12 @@ import {
   SidebarProvider,
   SidebarRail,
 } from '@/components/ui/sidebar';
-import SidebarTop from '../lawyer/dashboard/_component/common/SidebarTop';
-import { ClientSideNav } from './_components/ClientSideNav';
 import { usePathname } from 'next/navigation';
+import ClientSideNav from './_components/ClientSideNav';
 
 export default function BuyerDashboardLayout({ children }) {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const toggleSidebar = () => setIsCollapsed((prev) => !prev);
   const pathname = usePathname();
 
   const cleanPathname = pathname?.trim().replace(/\/+$/, '');
@@ -42,34 +43,23 @@ export default function BuyerDashboardLayout({ children }) {
   }, [isNoScrollPage]);
   return (
     <>
-      <BuyerDashboardHeader />
-      <SidebarProvider
-        className="sidebar-main h-[calc(100vh-64px)]"
-        style={{ minHeight: 'auto' }}
-      >
-        <Sidebar
-          collapsible="icon"
-          className="sidebar-width-control sidebar-y-64"
-        >
-          <SidebarHeader>
-            <SidebarTop />
-          </SidebarHeader>
-          <SidebarContent>
-            <ClientSideNav />
-          </SidebarContent>
-          <SidebarRail />
-        </Sidebar>
+      <BuyerDashboardHeader onToggleSidebar={toggleSidebar} />
+      <div className="flex">
+        <ClientSideNav
+          isCollapsed={isCollapsed}
+          setIsCollapsed={setIsCollapsed}
+        />
         <div
-          className={`flex-1 bg-[#F3F3F3] dashboard-content ${
+          className={`flex-1 bg-[#f3f3f3] dashboard-content ${
             isNoScrollPage ? 'no-scroll' : ''
           }`}
         >
           <div className="flex flex-col h-full">
-            <div className="flex-1 p-4">{children}</div>
+            <div className="flex-1 py-4 px-5">{children}</div>
             <DashboardFooter />
           </div>
         </div>
-      </SidebarProvider>
+      </div>
     </>
   );
 }

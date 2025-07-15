@@ -150,7 +150,7 @@ export default function LeadDetailsPage({
             ) : (
               <>
                 <p className="text-[14px] font-medium bg-[#FF8602] py-1 px-2 rounded text-white">
-                  Contacted
+                  In Response
                 </p>
               </>
             )}

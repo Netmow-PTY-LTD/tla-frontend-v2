@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect, useMemo } from 'react';
@@ -19,12 +18,15 @@ export default function InvoicingForm({ setInvoicesBillingsProgress }) {
   const defaultValues = useMemo(
     () => ({
       contactName: invoiceBillingData?.data?.billingAddress?.contactName ?? '',
-      addressLine1: invoiceBillingData?.data?.billingAddress?.addressLine1 ?? '',
-      addressLine2: invoiceBillingData?.data?.billingAddress?.addressLine2 ?? '',
+      addressLine1:
+        invoiceBillingData?.data?.billingAddress?.addressLine1 ?? '',
+      addressLine2:
+        invoiceBillingData?.data?.billingAddress?.addressLine2 ?? '',
       city: invoiceBillingData?.data?.billingAddress?.city ?? '',
       postcode: invoiceBillingData?.data?.billingAddress?.postcode ?? '',
       phoneNumber: invoiceBillingData?.data?.billingAddress?.phoneNumber ?? '',
-      isVatRegistered: invoiceBillingData?.data?.billingAddress?.isVatRegistered ?? false,
+      isVatRegistered:
+        invoiceBillingData?.data?.billingAddress?.isVatRegistered ?? false,
       // vatNumber: invoiceBillingData?.data?.billingAddress?.vatNumber ?? '',
     }),
     [invoiceBillingData]
@@ -83,19 +85,33 @@ export default function InvoicingForm({ setInvoicesBillingsProgress }) {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit)} className="max-w-[900px] mx-auto p-6 space-y-6">
-        <h2 className="heading-lg font-bold text-gray-900">Invoices and billing details</h2>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="max-w-[900px] mx-auto p-6 space-y-6"
+      >
+        <h2 className="heading-lg font-bold text-gray-900">
+          Invoices and billing details
+        </h2>
 
-        <div className="flex items-start gap-3 p-4 rounded-md bg-gray-100">
-          <InfoIcon className="h-6 w-6 text-[#00C3C0] mt-1" />
+        <div className="flex items-center gap-3 p-4 rounded-md bg-gray-100">
+          <InfoIcon className="h-6 w-6 text-[#00C3C0]" />
           <p className="text-sm text-gray-700">
-            We use these billing details to contact you but don’t share them with customers.
+            We use these billing details to contact you but don’t share them
+            with customers.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <TextInput name="contactName" label="Contact Name" placeholder="Name" />
-          <TextInput name="phoneNumber" label="Phone Number" placeholder="Phone" />
+          <TextInput
+            name="contactName"
+            label="Contact Name"
+            placeholder="Name"
+          />
+          <TextInput
+            name="phoneNumber"
+            label="Phone Number"
+            placeholder="Phone"
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -121,22 +137,6 @@ export default function InvoicingForm({ setInvoicesBillingsProgress }) {
     </FormProvider>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // 'use client';
 // import { useEffect, useMemo, useState } from 'react';
@@ -320,7 +320,3 @@ export default function InvoicingForm({ setInvoicesBillingsProgress }) {
 // };
 
 // export default InvoicingForm;
-
-
-
-

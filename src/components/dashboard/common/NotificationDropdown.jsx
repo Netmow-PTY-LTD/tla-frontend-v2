@@ -1,16 +1,14 @@
+'use client';
 
-"use client";
-
-import { useState, useRef, useEffect } from "react";
-import { Bell } from "lucide-react";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import Link from "next/link";
+import { useState, useRef, useEffect } from 'react';
+import { Bell } from 'lucide-react';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import Link from 'next/link';
 import {
-
-    useGetNotificationsQuery,
+  useGetNotificationsQuery,
   useMarkAsRedNotificationMutation,
-} from "@/store/features/notification/notificationApiService";
+} from '@/store/features/notification/notificationApiService';
 
 dayjs.extend(relativeTime);
 
@@ -30,8 +28,8 @@ export default function NotificationDropdown() {
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const handleNotificationClick = async (n) => {
@@ -51,7 +49,7 @@ export default function NotificationDropdown() {
         className="cursor-pointer relative"
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <Bell className="w-6 h-6" />
+        <Bell className="w-5 h-5 text-[#919FAC]" />
         {notifications.length > 0 && (
           <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs px-1.5">
             {notifications.length}
@@ -69,7 +67,7 @@ export default function NotificationDropdown() {
                 <li
                   key={n._id}
                   onClick={() => handleNotificationClick(n)}
-                  className="border-b px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                  className="border-b px-3 py-2 hover:bg-gray-100 cursor-pointer text-left"
                 >
                   <div className="text-sm font-medium">{n.title}</div>
                   <p className="text-xs text-gray-500">{n.message}</p>

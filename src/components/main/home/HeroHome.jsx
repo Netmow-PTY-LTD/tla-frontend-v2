@@ -10,7 +10,8 @@ import ClientLeadRegistrationModal from './modal/ClientLeadRegistrationModal';
 import { useSelector } from 'react-redux';
 import CreateLeadWithAuthModal from './modal/CreateLeadWithAuthModal';
 import { Loader } from 'lucide-react';
-
+import HeroSlider from '../common/HeroSlider';
+import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 export default function HeroHome() {
   const [selectedService, setSelectedService] = useState(null);
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
@@ -55,7 +56,9 @@ export default function HeroHome() {
 
   const token = useSelector((state) => state.auth.token);
 
-  const currentUser = useSelector((state) => state.auth.user);
+  const { data: currentUser } = useAuthUserInfoQuery(undefined, {
+    skip: !token,
+  });
 
   return (
     <section
@@ -115,6 +118,7 @@ export default function HeroHome() {
             )}
           </div>
         </div>
+        {/* <HeroSlider /> */}
         <HeroShowcase />
       </div>
 
@@ -126,6 +130,7 @@ export default function HeroHome() {
           selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
+          locationId={currentUser?.data?.profile?.zipCode}
         />
       ) : (
         <ClientLeadRegistrationModal
