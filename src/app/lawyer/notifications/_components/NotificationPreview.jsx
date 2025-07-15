@@ -45,24 +45,24 @@ export default function NotificationPreview() {
   const { data } = useGetNotificationsQuery();
   const [markAsRead] = useMarkAsRedNotificationMutation();
 
-  const generateActivityIcon = (type) => {
-    const iconStyles = {
-      login: { Icon: LogIn, fill: '#3B82F6' }, // Blue
-      update: { Icon: Edit, fill: '#F59E0B' }, // Amber/Yellow
-      delete: { Icon: Trash2, fill: '#EF4444' }, // Red
-      create: { Icon: PlusCircle, fill: '#10B981' }, // Green
-      schedule: { Icon: CalendarCheck, fill: '#6366F1' }, // Indigo
-      sendsms: { Icon: Send, fill: '#0EA5E9' }, // Sky blue
-      contact: { Icon: PhoneCall, fill: '#8B5CF6' }, // Violet
-      sendemail: { Icon: Mail, fill: '#2563EB' }, // Blue
-      whatsapp: { Icon: WhatsApp, fill: '#25D366' }, // WhatsApp green
-      status: { Icon: BadgeCheck, fill: '#22C55E' }, // Success green
-      other: { Icon: Bell, fill: '#6B7280' }, // Gray
-    };
+  const iconStyles = {
+    login: { Icon: LogIn, fill: '#3B82F6' }, // Blue
+    update: { Icon: Edit, fill: '#F59E0B' }, // Amber/Yellow
+    delete: { Icon: Trash2, fill: '#EF4444' }, // Red
+    create: { Icon: PlusCircle, fill: '#10B981' }, // Green
+    schedule: { Icon: CalendarCheck, fill: '#6366F1' }, // Indigo
+    sendsms: { Icon: Send, fill: '#0EA5E9' }, // Sky blue
+    contact: { Icon: PhoneCall, fill: '#8B5CF6' }, // Violet
+    sendemail: { Icon: Mail, fill: '#2563EB' }, // Blue
+    whatsapp: { Icon: Bell, fill: '#25D366' }, // WhatsApp green
+    status: { Icon: BadgeCheck, fill: '#22C55E' }, // Success green
+    other: { Icon: Bell, fill: '#6B7280' }, // Gray
+  };
 
+  const generateActivityIcon = (type) => {
     const { Icon, fill } = iconStyles[type] || iconStyles.other;
 
-    return <Icon className="w-5 h-5 inline" stroke={fill} />;
+    return <Icon className="w-5 h-5 inline" stroke={'#fff'} />;
   };
 
   const handleMarkAsRead = async (id) => {
@@ -201,9 +201,18 @@ export default function NotificationPreview() {
                     <div className="left-track flex-grow-0 flex flex-col w-[32px] items-center">
                       <div className="line-top h-1/2 w-[1] border-l border-[#e6e7ec]"></div>
                       <div className="icon-wrapper mt-[-16px]">
-                        <div className="icon w-[32px] h-[32px] bg-[#000] rounded-full flex justify-center items-center">
-                          {n?.type && generateActivityIcon(n?.type)}
-                        </div>
+                        {(() => {
+                          const iconStyle =
+                            iconStyles[n?.type] || iconStyles.other;
+                          return (
+                            <div
+                              className="icon w-[32px] h-[32px] rounded-full flex justify-center items-center"
+                              style={{ backgroundColor: iconStyle.fill }}
+                            >
+                              {n?.type && generateActivityIcon(n?.type)}
+                            </div>
+                          );
+                        })()}
                       </div>
                       <div className="line-bottom h-1/2 w-[1] border-l border-[#e6e7ec]"></div>
                     </div>
@@ -217,15 +226,25 @@ export default function NotificationPreview() {
                           {n?.message}
                         </div>
                       </div>
-                      <span className="text-xs text-gray-400">
-                        {new Date(n?.createdAt)
-                          .toLocaleTimeString('en-US', {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12: true,
-                          })
-                          .replace(/ (AM|PM)/, '')}
-                      </span>
+                      <div className="flex items-center gap-3">
+                        {!n.isRead && (
+                          <button
+                            className="text-sm text-blue-600 hover:underline"
+                            onClick={() => handleMarkAsRead(n._id)}
+                          >
+                            Mark as Read
+                          </button>
+                        )}
+                        <span className="text-xs text-gray-400">
+                          {new Date(n?.createdAt)
+                            .toLocaleTimeString('en-US', {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                              hour12: true,
+                            })
+                            .replace(/ (AM|PM)/, '')}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 ))}

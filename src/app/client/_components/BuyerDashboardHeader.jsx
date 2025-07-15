@@ -4,14 +4,14 @@ import Link from 'next/link';
 import React from 'react';
 import BuyerProfileDropDown from './BuyerProfileDropDown';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
-import { BellRing } from 'lucide-react';
+import { BellRing, PanelLeft } from 'lucide-react';
 
-export default function BuyerDashboardHeader() {
+export default function BuyerDashboardHeader({ onToggleSidebar }) {
   const { data: userInfo, isLoading } = useAuthUserInfoQuery();
 
   return (
     <header className="db-header">
-      <div className="db-header-container">
+      <div className="db-header-container flex items-center gap-2">
         <Link href="/client/dashboard">
           <Image
             src={'/assets/img/logo.png'}
@@ -20,13 +20,20 @@ export default function BuyerDashboardHeader() {
             height={40}
           />
         </Link>
+        <button
+          data-sidebar-toggle
+          onClick={() => onToggleSidebar()}
+          className="xl:hidden"
+        >
+          <PanelLeft className="w-5 h-6 text-gray-800" />
+        </button>
       </div>
       <div className="flex items-center gap-4">
         <Link
           href="#"
-          className="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-full"
+          className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full"
         >
-          <BellRing className="w-6 h-6 text-gray-500" />
+          <BellRing className="w-5 h-5 text-gray-500" />
         </Link>
         <BuyerProfileDropDown data={userInfo?.data ?? []} />
       </div>

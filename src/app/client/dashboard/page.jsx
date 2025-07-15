@@ -10,6 +10,8 @@ import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { useGetLeadServiceListQuery } from '@/store/features/leadService/leadServiceApiService';
 import LeadSettings from '@/components/dashboard/lawyer/components/LeadSettings';
 import LeadStatsCard from '@/components/dashboard/lawyer/module/MyStats/LeadStatsCard';
+import { useGetAllMyLeadsQuery } from '@/store/features/lawyer/LeadsApiService';
+import ResponseSkeleton from '@/app/lawyer/dashboard/my-responses/_components/ResponseSkeleton';
 
 export default function BuyerDashboard() {
   const menuLinks = [
@@ -38,11 +40,15 @@ export default function BuyerDashboard() {
   const fallbackBio =
     "If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options.";
 
+  if (isLoadingUserInfo || isLoadingLeadServices) {
+    return <ResponseSkeleton />;
+  }
+
   return (
     <div className="lg:m-4 w-full">
       <div className="max-w-[1100px] mx-auto">
         <h2 className="font-bold heading border-b border-1 text-[#0B1C2D] pb-4">
-          Overview of Your Stats
+          Dashboard
         </h2>
 
         <div className="my-5 grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">

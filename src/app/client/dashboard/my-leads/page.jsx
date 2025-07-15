@@ -20,6 +20,8 @@ export default function MyLeads() {
 
   console.log('All My Leads:', allMyLeads);
 
+  const totalLeads = allMyLeads?.pagination?.total ?? 0;
+
   const { data: countryList } = useGetCountryListQuery();
 
   const defaultCountry = countryList?.data?.find(

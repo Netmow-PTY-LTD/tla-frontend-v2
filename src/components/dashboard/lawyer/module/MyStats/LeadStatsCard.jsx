@@ -27,6 +27,14 @@ const LeadStatsCard = ({ locations, profile }) => {
     allMyResponses?.data?.filter((response) => response.status === 'archive')
       ?.length ?? 0;
 
+  const { data: allMyLeads, isLoading: isAllMyLeadsLoading } =
+    useGetAllMyLeadsQuery(
+      { page: 1, limit: 10 },
+      { keepPreviousData: true, refetchOnMountOrArgChange: true }
+    );
+
+  const totalLeads = allMyLeads?.pagination?.total ?? 0;
+
   return (
     <Card className="w-full max-w-md md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto bg-white shadow-md rounded-lg">
       <div className="w-full p-4">
@@ -44,9 +52,7 @@ const LeadStatsCard = ({ locations, profile }) => {
           <div className="bg-[#F5F6F9] flex flex-col items-center justify-center p-4 rounded-lg shadow-sm">
             <div className="flex items-center gap-1">
               <span className="text-xl">💳</span>
-              <h4 className="text-xl font-bold text-black">
-                {creditStats?.totalPurchasedCredits}
-              </h4>
+              <h4 className="text-xl font-bold text-black">{totalLeads}</h4>
             </div>
             <p className="text-xs text-gray-600 mt-1">Total Leads</p>
           </div>
