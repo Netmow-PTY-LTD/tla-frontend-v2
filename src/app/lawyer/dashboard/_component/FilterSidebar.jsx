@@ -46,7 +46,6 @@ export default function FilterSidebar({ data }) {
 
   useEffect(() => {
     const stored = localStorage.getItem('lead-filters');
-    console.log('stored in filter ==>', stored);
     if (stored) {
       const parsed = JSON.parse(stored);
       reset({
@@ -82,6 +81,8 @@ export default function FilterSidebar({ data }) {
     // Show toast
     showSuccessToast('Filters applied and saved.');
   };
+
+  console.log('data:', data);
 
   return (
     <Sheet className="z-[9999]">

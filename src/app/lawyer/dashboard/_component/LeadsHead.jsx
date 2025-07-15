@@ -13,7 +13,6 @@ export default function LeadsHead({ isExpanded, total }) {
 
   const stored = localStorage.getItem('lead-filters');
 
-  console.log('stored ==>', stored);
   return (
     <section className={`${isExpanded ? '' : 'pl-4 pr-1'}`}>
       <div className="flex justify-between items-start gap-4">
@@ -51,7 +50,7 @@ export default function LeadsHead({ isExpanded, total }) {
         </Link>
       </div>
 
-      <div className="flex flex-wrap justify-between items-center my-3 gap-2">
+      <div className="flex flex-wrap justify-between items-center mt-2 mb-3 gap-2">
         <div
           className={`flex flex-wrap items-center gap-2 text-[#34495E] ${
             isExpanded ? 'w-[calc(100%-100px)]' : ''
@@ -64,7 +63,7 @@ export default function LeadsHead({ isExpanded, total }) {
                 onClick={() => {
                   localStorage.removeItem('lead-filters');
                   alert('filter removed');
-                  window.location.reload();
+                  window.location.href = '/lawyer/dashboard/leads-board';
                 }}
               >
                 <span>Clear</span>

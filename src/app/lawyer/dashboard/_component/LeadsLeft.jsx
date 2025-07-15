@@ -135,7 +135,18 @@ export default function LeadDetailsPage({
           <div className="flex flex-wrap items-center gap-4">
             {/*  need to credit purchase modal */}
             {!lead?.isContact ? (
-              <LawyerContactButton leadDetail={singleLead} />
+              <>
+                <LawyerContactButton leadDetail={singleLead} />
+                {singleLead?.credit && (
+                  <div className="text-[#34495E] ml-2 flex items-center gap-2">
+                    <span>
+                      {singleLead?.credit}{' '}
+                      {singleLead?.credit > 1 ? 'credits' : 'credit'} required
+                    </span>
+                    <CircleAlert />
+                  </div>
+                )}
+              </>
             ) : (
               <>
                 <p className="text-[14px] font-medium bg-[#FF8602] py-1 px-2 rounded text-white">
@@ -143,19 +154,8 @@ export default function LeadDetailsPage({
                 </p>
               </>
             )}
-
-            {singleLead?.credit && (
-              <div className="text-[#34495E] ml-2 flex items-center gap-2">
-                <span>
-                  {singleLead?.credit}{' '}
-                  {singleLead?.credit > 1 ? 'credits' : 'credit'} required
-                </span>
-                <CircleAlert />
-              </div>
-            )}
           </div>
           <div className="mt-5">
-            <h4 className="font-medium mb-1 heading-base">Matched criteria</h4>
             <div className="flex flex-wrap gap-2">
               {badges && badges.length > 0 && (
                 <>
