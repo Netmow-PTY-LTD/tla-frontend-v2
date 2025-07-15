@@ -10,7 +10,7 @@ import ClientLeadRegistrationModal from './modal/ClientLeadRegistrationModal';
 import { useSelector } from 'react-redux';
 import CreateLeadWithAuthModal from './modal/CreateLeadWithAuthModal';
 import { Loader } from 'lucide-react';
-
+import HeroSlider from '../common/HeroSlider';
 export default function HeroHome() {
   const [selectedService, setSelectedService] = useState(null);
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
@@ -115,6 +115,7 @@ export default function HeroHome() {
             )}
           </div>
         </div>
+        {/* <HeroSlider /> */}
         <HeroShowcase />
       </div>
 

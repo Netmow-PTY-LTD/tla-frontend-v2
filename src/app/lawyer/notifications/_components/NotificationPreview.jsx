@@ -210,7 +210,9 @@ export default function NotificationPreview() {
 
                     <div className="flex-1 flex items-start justify-between mb-4 py-3 px-4 rounded-lg border border-gray-200">
                       <div className="flex flex-col">
-                        <div className="text-gray-500">{n.title || ''}</div>
+                        <div className="text-gray-500 mb-1">
+                          {n.title || ''}
+                        </div>
                         <div className="text-sm text-black font-medium">
                           {n?.message}
                         </div>

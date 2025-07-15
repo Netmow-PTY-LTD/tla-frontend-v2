@@ -10,8 +10,7 @@ import {
 import CircularProgress from './CircleProgressBar';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-const AccordionComponent = ({ title, content, openValue,
-  onChange, }) => {
+const AccordionComponent = ({ title, content, openValue, onChange }) => {
   return (
     <div>
       <Accordion
@@ -147,13 +146,11 @@ export const DynamicAccordion = ({ items }) => {
                 </span>
               </div>
             </AccordionTrigger>
-            <AccordionContent forceMount>
-              <div
-                className="px-2 py-5"
-                style={{ display: isOpen ? 'block' : 'none' }}
-              >
-                {content}
-              </div>
+            <AccordionContent
+              forceMount
+              style={{ display: isOpen ? 'block' : 'none' }}
+            >
+              <div className="px-2 py-5">{content}</div>
             </AccordionContent>
           </AccordionItem>
         );
@@ -161,6 +158,5 @@ export const DynamicAccordion = ({ items }) => {
     </Accordion>
   );
 };
-
 
 export default AccordionComponent;

@@ -5,7 +5,7 @@ import Image from 'next/image';
 export default function Login() {
   return (
     <section
-      className="tla-auth-section flex justify-center items-center"
+      className="tla-auth-section flex justify-center items-center py-8"
       style={{ backgroundImage: `url('/assets/img/auth-bg.png')` }}
     >
       <div className="tla-auth-box max-w-[900px] w-full mx-auto">
