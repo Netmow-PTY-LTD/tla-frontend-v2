@@ -127,7 +127,7 @@ export default function Header() {
           </nav>
           {token && currentUser ? (
             <div className="flex items-center gap-4 ml-auto">
-              <Link href={dashboardUrl} className={styles.nav_link}>
+              <Link href={dashboardUrl} className={styles.btn_register}>
                 <span>Dashboard</span>
               </Link>
             </div>

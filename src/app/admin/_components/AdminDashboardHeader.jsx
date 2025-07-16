@@ -5,7 +5,6 @@ import React from 'react';
 import AdminProfileDropDown from './AdminProfileDropDown';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { BellRing, PanelLeft } from 'lucide-react';
-import { SidebarTrigger } from '@/components/ui/sidebar';
 
 export default function AdminDashboardHeader({ onToggleSidebar }) {
   const { data: currentUser } = useAuthUserInfoQuery();
@@ -32,9 +31,9 @@ export default function AdminDashboardHeader({ onToggleSidebar }) {
       <div className="flex items-center gap-4">
         <Link
           href="#"
-          className="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-full"
+          className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full"
         >
-          <BellRing className="w-6 h-6 text-gray-500" />
+          <BellRing className="w-5 h-5 text-gray-500" />
         </Link>
         <AdminProfileDropDown data={currentUser?.data ?? []} />
       </div>

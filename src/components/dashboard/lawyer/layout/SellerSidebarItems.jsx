@@ -6,6 +6,7 @@ import {
   CircleHelp,
   BookText,
   Settings,
+  Users,
 } from 'lucide-react';
 
 export const SellerSidebarItems = {
@@ -20,7 +21,7 @@ export const SellerSidebarItems = {
     {
       title: 'Leads',
       url: '/lawyer/dashboard/leads-board',
-      icon: LayoutDashboard,
+      icon: Users,
       isActive: true,
     },
     {
