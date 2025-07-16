@@ -1,17 +1,27 @@
 import React, { useState } from 'react';
 import styles from './carousel.module.css';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+
 const slidesData = [
   {
-    image: 'https://picsum.photos/id/1015/1200/500',
-    caption: 'Legal Services for Everyone',
+    image: '/assets/img/services/service-slider-1.webp',
+    caption: 'Family Law',
   },
   {
-    image: 'https://picsum.photos/id/1025/1200/500',
-    caption: 'Protecting Your Rights',
+    image: '/assets/img/services/service-slider-2.webp',
+    caption: 'Property Law',
   },
   {
-    image: 'https://picsum.photos/id/1033/1200/500',
-    caption: 'Family Law Experts',
+    image: '/assets/img/services/service-slider-3.webp',
+    caption: 'Traffic Law',
+  },
+  {
+    image: '/assets/img/services/service-slider-4.webp',
+    caption: 'Administrative Law',
+  },
+  {
+    image: '/assets/img/services/service-slider-5.webp',
+    caption: 'Criminal Law',
   },
 ];
 
@@ -51,18 +61,35 @@ export default function HeroSlider() {
           </div>
         ))}
       </div>
-      <button
-        className={`${styles.carouselButton} ${styles.prev}`}
-        onClick={prevSlide}
-      >
-        &#10094;
-      </button>
-      <button
-        className={`${styles.carouselButton} ${styles.next}`}
-        onClick={nextSlide}
-      >
-        &#10095;
-      </button>
+
+      {/* Controls Wrapper */}
+      <div className={styles.controlsWrapper}>
+        <button
+          className={`${styles.carouselButton} ${styles.prev}`}
+          onClick={prevSlide}
+        >
+          <ArrowLeft className="w-6 h-6 text-gray-500" />
+        </button>
+
+        <div className={styles.sliderDots}>
+          {slidesData.map((_, index) => (
+            <span
+              key={index}
+              className={`${styles.sliderDot} ${
+                index === current ? styles.activeDot : ''
+              }`}
+              onClick={() => updateSlides(index)}
+            />
+          ))}
+        </div>
+
+        <button
+          className={`${styles.carouselButton} ${styles.next}`}
+          onClick={nextSlide}
+        >
+          <ArrowRight className="w-6 h-6 text-gray-500" />
+        </button>
+      </div>
     </div>
   );
 }

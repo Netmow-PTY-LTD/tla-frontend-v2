@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import '@/styles/slider.css';
 
 const testimonials = [
   {
@@ -53,36 +54,77 @@ const fixedSlots = ['img1', 'img2', 'img3', 'img4', 'img5', 'img6'];
 export default function TestimonialSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [step, setStep] = useState(1);
+  const [images, setImages] = useState([]);
   const intervalRef = useRef(null);
   const sliderRef = useRef(null);
+  const activeCardRef = useRef(null);
+
+  useEffect(() => {
+    const initialImages = fixedSlots.map((_, i) => testimonials[i + 1]);
+    setImages(initialImages);
+  }, []);
 
   const cardHTML = (t) => (
     <>
+      <div className="testimonial-icon text-4xl w-10 h-10 bg-[var(--primary-color)] text-white flex items-center justify-center rounded-full mb-10">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="14"
+          viewBox="0 0 24 14"
+          fill="none"
+        >
+          <path
+            d="M13.2782 8.64693C13.3215 7.21891 13.5595 5.89908 13.9922 4.68743C14.4249 3.43251 14.8576 2.43723 15.2904 1.70158C15.7664 0.922662 16.0044 0.533203 16.0044 0.533203L20.1586 0.598112C20.1586 0.598112 20.0072 0.901024 19.7042 1.50685C19.4013 2.11267 19.0984 2.9565 18.7955 4.03833C19.9639 4.21143 20.9592 4.75234 21.7814 5.66108C22.6036 6.56981 23.0146 7.63001 23.0146 8.84166C23.0146 10.1831 22.5386 11.3299 21.5866 12.2819C20.6346 13.2339 19.4879 13.7099 18.1464 13.7099C16.8049 13.7099 15.6582 13.2339 14.7062 12.2819C13.7542 11.2866 13.2782 10.0749 13.2782 8.64693ZM0.945312 8.64693C0.988586 7.21891 1.22659 5.89908 1.65932 4.68743C2.09205 3.43251 2.52478 2.43723 2.95752 1.70158C3.43352 0.922662 3.67153 0.533203 3.67153 0.533203L7.82575 0.598112C7.82575 0.598112 7.6743 0.901024 7.37138 1.50685C7.06847 2.11267 6.76556 2.9565 6.46265 4.03833C7.63102 4.21143 8.62631 4.75234 9.4485 5.66108C10.2707 6.56981 10.6818 7.63001 10.6818 8.84166C10.6818 10.1831 10.2058 11.3299 9.25377 12.2819C8.30176 13.2339 7.15502 13.7099 5.81355 13.7099C4.47208 13.7099 3.32534 13.2339 2.37333 12.2819C1.42132 11.2866 0.945312 10.0749 0.945312 8.64693Z"
+            fill="white"
+          />
+        </svg>
+      </div>
+
       <img src={t.image} alt={t.name} />
+      <div className="text mt-10">{t.text}</div>
       <div className="name">{t.name}</div>
       <div className="stars">
         {'★'.repeat(t.rating)}
         {'☆'.repeat(5 - t.rating)}
       </div>
-      <div className="text">{t.text}</div>
     </>
   );
 
   const imageHTML = (t) => <img src={t.image} alt={t.name} />;
 
-  const goToSlide = (index) => {
-    if (index === currentIndex) return;
-    setStep((prev) => (prev % 6) + 1);
+  const updateSlide = (index) => {
+    const targetImage = images.slice();
+    targetImage[(step - 1) % 6] = testimonials[currentIndex];
+    setImages(targetImage);
     setCurrentIndex(index);
+    setStep((prev) => (prev % 6) + 1);
+  };
+
+  const fadeToSlide = (index) => {
+    if (index === currentIndex) return;
+    const card = activeCardRef.current;
+    const imgBox = sliderRef.current.querySelector(
+      `#${fixedSlots[(step - 1) % 6]}`
+    );
+
+    card.style.opacity = 0;
+    imgBox.style.opacity = 0;
+
+    setTimeout(() => {
+      updateSlide(index);
+      card.style.opacity = 1;
+      imgBox.style.opacity = 1;
+    }, 300);
   };
 
   const nextSlide = () => {
-    let nextIndex = currentIndex + 1;
-    if (nextIndex >= MAX_VISIBLE_DOTS || nextIndex >= testimonials.length) {
-      nextIndex = 0;
-    }
-    setStep((prev) => (prev % 6) + 1);
-    setCurrentIndex(nextIndex);
+    const nextIndex =
+      currentIndex + 1 >= MAX_VISIBLE_DOTS ||
+      currentIndex + 1 >= testimonials.length
+        ? 0
+        : currentIndex + 1;
+    fadeToSlide(nextIndex);
   };
 
   useEffect(() => {
@@ -115,220 +157,40 @@ export default function TestimonialSlider() {
   }, [currentIndex]);
 
   return (
-    <section className="flex flex-col items-center justify-center px-5 bg-[#f0f4f8] section">
-      <div className="relative w-full max-w-[1000px] h-[500px]" ref={sliderRef}>
-        {fixedSlots.map((slotId, i) => (
-          <div
-            key={slotId}
-            className="img-box absolute w-[70px] h-[70px] rounded-full overflow-hidden bg-white shadow"
-            style={{
-              ...[
-                { top: '5%', left: '5%' },
-                { top: '30%', left: '10%' },
-                { bottom: '5%', left: '5%' },
-                { top: '5%', right: '5%' },
-                { top: '30%', right: '10%' },
-                { bottom: '5%', right: '5%' },
-              ][i],
-            }}
-          >
-            {testimonials[(currentIndex + i + 1) % testimonials.length] &&
-              imageHTML(
-                testimonials[(currentIndex + i + 1) % testimonials.length]
-              )}
+    <section className="slider-wrapper">
+      <div className="slider" ref={sliderRef}>
+        {fixedSlots.map((id, i) => (
+          <div key={id} id={id} className="img-box" style={{ opacity: 1 }}>
+            {images[i] && imageHTML(images[i])}
           </div>
         ))}
 
-        <div className="active-card absolute w-[90%] max-w-[340px] h-[320px] bg-white rounded-[20px] shadow-xl p-5 text-center top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+        <div
+          className="active-card"
+          id="img0"
+          ref={activeCardRef}
+          style={{ opacity: 1 }}
+        >
           {cardHTML(testimonials[currentIndex])}
         </div>
       </div>
 
-      <div className="dots mt-6 flex gap-2 justify-center flex-wrap">
+      <div className="dots">
         {Array(MAX_VISIBLE_DOTS)
           .fill(0)
           .map((_, i) => (
             <div
               key={i}
-              className={`dot w-[12px] h-[12px] rounded-full cursor-pointer transition-colors duration-300 ${
-                i === currentIndex ? 'bg-[#00c3c0]' : 'bg-[#ccc]'
-              }`}
-              onClick={() => goToSlide(i)}
+              className={`dot ${i === currentIndex ? 'active' : ''}`}
+              style={
+                i >= testimonials.length
+                  ? { opacity: 0.3, pointerEvents: 'none' }
+                  : {}
+              }
+              onClick={() => fadeToSlide(i)}
             />
           ))}
       </div>
-      <style>
-        {`
-            .slider {
-            position: relative;
-            width: 100%;
-            max-width: 1000px;
-            height: 500px;
-        }
-
-        .img-box,
-        .active-card {
-            transition: opacity 0.5s ease;
-        }
-
-        .img-box {
-            position: absolute;
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            overflow: hidden;
-            background: #fff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            z-index: 1;
-        }
-
-        .img-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .active-card {
-            position: absolute;
-            width: 90%;
-            max-width: 340px;
-            height: 320px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            padding: 20px;
-            text-align: center;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .active-card img {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 10px;
-        }
-
-        .active-card .name {
-            font-weight: bold;
-            color: #00c3c0;
-            margin-bottom: 5px;
-        }
-
-        .active-card .stars {
-            color: #facc15;
-            font-size: 16px;
-            margin-bottom: 8px;
-        }
-
-        .active-card .text {
-            font-size: 14px;
-            color: #333;
-            position: relative;
-            padding-left: 20px;
-        }
-
-        .active-card .text::before {
-            content: "❝";
-            position: absolute;
-            left: 0;
-            top: -5px;
-            font-size: 22px;
-            color: #00c3c0;
-        }
-
-        /* Fixed Positions */
-        #img1 {
-            top: 5%;
-            left: 5%;
-        }
-
-        #img2 {
-            top: 30%;
-            left: 10%;
-        }
-
-        #img3 {
-            bottom: 5%;
-            left: 5%;
-        }
-
-        #img4 {
-            top: 5%;
-            right: 5%;
-        }
-
-        #img5 {
-            top: 30%;
-            right: 10%;
-        }
-
-        #img6 {
-            bottom: 5%;
-            right: 5%;
-        }
-
-        /* Dots */
-        .dots {
-            margin-top: 25px;
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .dot {
-            width: 12px;
-            height: 12px;
-            background-color: #ccc;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .dot.active {
-            background-color: #00c3c0;
-        }
-
-        @media (max-width: 768px) {
-            .slider {
-                height: 440px;
-            }
-
-            .img-box {
-                width: 60px;
-                height: 60px;
-            }
-
-            .active-card {
-                max-width: 280px;
-                padding: 15px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .slider {
-                height: 380px;
-            }
-
-            .img-box {
-                width: 50px;
-                height: 50px;
-            }
-
-            .active-card {
-                max-width: 240px;
-                padding: 10px;
-            }
-        }
-        `}
-      </style>
     </section>
   );
 }
