@@ -1,19 +1,18 @@
 "use client"
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Search, Download, Filter, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useUserTransactionHistoryQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 import InvoiceModal from '../modal/InvoiceMoadal';
-
 export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [open, setOpen] = useState(false)
   const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
 
+  const itemsPerPage = 5;
 
 
   const {
@@ -65,8 +64,14 @@ export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
       year: 'numeric',
     });
 
+
+
+
   return (
     <>
+
+
+
       <div className="w-full max-w-[900px] mx-auto p-6 bg-gray-50 rounded-lg shadow-sm">
         {/* Header */}
         <div className="mb-8">
@@ -186,6 +191,7 @@ export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
                       >
                         Click
                       </button>
+
                     </td>
                   </tr>
                 ))}
