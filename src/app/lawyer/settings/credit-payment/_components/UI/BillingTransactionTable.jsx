@@ -7,6 +7,7 @@ import { useUserTransactionHistoryQuery } from '@/store/features/credit_and_paym
 import InvoiceModal from '../modal/InvoiceMoadal';
 
 export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [open, setOpen] = useState(false)
   const [filteredTransactions, setFilteredTransactions] = useState([]);
@@ -20,7 +21,6 @@ export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
     isError,
     isLoading,
   } = useUserTransactionHistoryQuery();
-
 
   // set proggression
 
@@ -177,7 +177,11 @@ export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
                     </td>
                     <td className="py-4 px-6 text-sm text-gray-600">
                       <button
-                        onClick={() => setOpen(true)}
+                        onClick={() => {
+                          setSelectedTransaction(tx);
+                          setOpen(true)
+                        }
+                        }
                         className="px-4 py-1.5 bg-green-100 text-green-700 text-sm font-medium rounded-md hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-green-300 transition"
                       >
                         Click
@@ -301,7 +305,7 @@ export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
           </Button>
         </div>
       </div>
-      <InvoiceModal open={open} setOpen={setOpen} />
+      <InvoiceModal open={open} setOpen={setOpen} transaction={selectedTransaction} />
     </>
   );
 };
