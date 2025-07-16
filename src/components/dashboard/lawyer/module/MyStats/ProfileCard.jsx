@@ -115,7 +115,7 @@ const ProfileCard = ({ profile, isLoading, isError, error }) => {
   return (
     // figma base
     <Card>
-      <div className="p-3 space-y-5">
+      <div className="p-4 space-y-4">
         <figure className="w-20 h-20 rounded-full overflow-hidden">
           <Image
             src={
@@ -152,18 +152,17 @@ const ProfileCard = ({ profile, isLoading, isError, error }) => {
           </p>
           <p className="heading-base flex items-center">
             {' '}
-            {profile?.profile?.address && <>
-              <Home className="mr-2 w-5 h-5" />
-              <span> {profile?.profile?.address}</span>
-            </>}
-
+            {profile?.profile?.address && (
+              <>
+                <Home className="mr-2 w-5 h-5" />
+                <span> {profile?.profile?.address}</span>
+              </>
+            )}
           </p>
         </div>
-        <hr className="tet-[#F3F3F3] border" />
-      </div>
-      <div className="p-3">
-        <div className="space-y-4 my-5">
-          <h4 className="font-medium  text-lg flex items-center">
+        <hr className="border-[#F3F3F3] border" />
+        <div className="space-y-2">
+          <h4 className="font-medium text-lg flex items-center">
             Company Details{' '}
             <Link
               href={'/lawyer/settings/profile?section=about'}

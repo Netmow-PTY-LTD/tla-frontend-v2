@@ -2,6 +2,7 @@
 import PencilIcon from '@/assets/icon';
 import { Card } from '@/components/ui/card';
 import { useGetUserCreditStatsQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
+import { useGetAllMyLeadsQuery } from '@/store/features/lawyer/LeadsApiService';
 import { useGetAllMyResponsesQuery } from '@/store/features/lawyer/ResponseApiService';
 
 import { MapPin } from 'lucide-react';
@@ -13,140 +14,93 @@ const LeadStatsCard = ({ locations, profile }) => {
   const defaultServices = profile?.profile?.serviceIds || [];
   const creditStats = data?.data || {};
 
-  const { data: allMyResponses, isLoading } =
-    useGetAllMyResponsesQuery();
+  const { data: allMyResponses, isLoading } = useGetAllMyResponsesQuery();
 
-    console.log('pending ===>',allMyResponses)
-
-  const totalResponse = allMyResponses?.data.length?? 0;
+  const totalResponse = allMyResponses?.data.length ?? 0;
   const hiredResponse =
-    allMyResponses?.data?.filter((response) => response.status === 'hired')?.length??0;
+    allMyResponses?.data?.filter((response) => response.status === 'hired')
+      ?.length ?? 0;
   const pendingResponse =
-    allMyResponses?.data?.filter((response) => response.status === 'pending')?.length??0;
+    allMyResponses?.data?.filter((response) => response.status === 'pending')
+      ?.length ?? 0;
   const archiveResponse =
-    allMyResponses?.data?.filter((response) => response.status === 'archive')?.length??0;
+    allMyResponses?.data?.filter((response) => response.status === 'archive')
+      ?.length ?? 0;
 
+  const { data: allMyLeads, isLoading: isAllMyLeadsLoading } =
+    useGetAllMyLeadsQuery(
+      { page: 1, limit: 10 },
+      { keepPreviousData: true, refetchOnMountOrArgChange: true }
+    );
+
+  const totalLeads = allMyLeads?.pagination?.total ?? 0;
 
   return (
     <Card className="w-full max-w-md md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto bg-white shadow-md rounded-lg">
-      <div className="w-full px-3 py-4">
-        <div className="max-w-5xl mx-auto">
-          <div className="mb-4 text-center md:text-left">
-            <h2 className="text-lg font-semibold text-gray-800">
-              Credit Overview
-            </h2>
-            <p className="text-xs text-gray-500">
-              Track your credit usage and balance
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {/* Total Purchased Credit */}
-            <div className="bg-[#F5F6F9] flex flex-col items-center justify-center p-4 rounded-lg shadow-sm">
-              <div className="flex items-center gap-1">
-                <span className="text-xl">💳</span>
-                <h4 className="text-xl font-bold text-black">
-                  {creditStats?.totalPurchasedCredits}
-                </h4>
-              </div>
-              <p className="text-xs text-gray-600 mt-1">Purchased Credits</p>
-            </div>
-
-            {/* Used Credit */}
-            <div className="bg-[#F5F6F9] flex flex-col items-center justify-center p-4 rounded-lg shadow-sm">
-              <div className="flex items-center gap-1">
-                <span className="text-xl">🔥</span>
-                <h4 className="text-xl font-bold text-black">
-                  {' '}
-                  {creditStats?.totalUsedCredits}
-                </h4>
-              </div>
-              <p className="text-xs text-gray-600 mt-1">Used Credits</p>
-            </div>
-
-            {/* Remaining Credit */}
-            <div className="bg-[#F5F6F9] flex flex-col items-center justify-center p-4 rounded-lg shadow-sm">
-              <div className="flex items-center gap-1">
-                <span className="text-xl">✅</span>
-                <h4 className="text-xl font-bold text-black">
-                  {creditStats?.remainingCredits}
-                </h4>
-              </div>
-              <p className="text-xs text-gray-600 mt-1">Remaining Credits</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="flex  items-center p-4 w-full">
-        <div className="bg-[#F5F6F9]  w-1/2 flex flex-col justify-center items-center p-5 rounded-lg mx-4 my-3">
-          <div className="flex items-center gap-2">
-            <div>📈</div> {/* Replace with an actual icon if needed */}
-            <h4 className="text-2xl font-bold text-black"> {pendingResponse}</h4>
-          </div>
-          <p className="text-sm text-gray-600 mt-1">pending responses</p>
-        </div>
-        <div className="bg-[#F5F6F9] w-1/2 flex flex-col justify-center items-center p-5 rounded-lg mx-4 my-3">
-          <div className="flex items-center gap-2">
-            <div>📈</div> {/* Replace with an actual icon if needed */}
-            <h4 className="text-2xl font-bold text-black">{hiredResponse}</h4>
-          </div>
-          <p className="text-sm text-gray-600 mt-1">Hired responses</p>
-        </div>
-      </div>
-
-      <div>
-        {/* Header */}
-        <div className="m-3 flex justify-between items-center flex-wrap">
-          <h2 className="font-medium text-lg">Lead Settings</h2>
-          <h2 className="text-sm sm:text-base">
-            <span>456</span> New Leads
+      <div className="w-full p-4">
+        <div className="mb-4 text-center md:text-left">
+          <h2 className="text-lg font-semibold text-gray-800">
+            My Leads Overview
           </h2>
-        </div>
-        <hr className="border-[#F3F3F3] border" />
-
-        {/* Practice Area */}
-        <div className="m-3">
-          <div className="font-medium flex items-center text-lg">
-            <h4> Practice Area</h4>
-            <Link href={'/lawyer/settings/lead-settings'}>
-              <button aria-label="Edit Practice Area" className="ml-3 rounded">
-                <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
-              </button>
-            </Link>
-          </div>
-          <p className="my-2 text-sm sm:text-base">
-            You'll receive leads in these categories
+          <p className="text-xs text-gray-500">
+            Track your credit usage and balance
           </p>
+        </div>
 
-          <div className="inline-flex flex-wrap gap-2 mt-2">
-            <div className="flex flex-wrap gap-2">
-              {defaultServices?.length > 0 ? (
-                defaultServices.map((service, index) => (
-                  <span
-                    key={service?._id || index}
-                    className="bg-[#F3F3F3] text-sm text-[#0B1C2D] px-3 py-1 rounded-full"
-                  >
-                    {service?.name}
-                  </span>
-                ))
-              ) : (
-                <span className="text-sm text-gray-500 italic">
-                  No practice areas found
-                </span>
-              )}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {/* Total Purchased Credit */}
+          <div className="bg-[#F5F6F9] flex flex-col items-center justify-center p-4 rounded-lg shadow-sm">
+            <div className="flex items-center gap-1">
+              <span className="text-xl">💳</span>
+              <h4 className="text-xl font-bold text-black">{totalLeads}</h4>
             </div>
+            <p className="text-xs text-gray-600 mt-1">Total Leads</p>
+          </div>
+
+          {/* Used Credit */}
+          <div className="bg-[#F5F6F9] flex flex-col items-center justify-center p-4 rounded-lg shadow-sm">
+            <div className="flex items-center gap-1">
+              <span className="text-xl">🔥</span>
+              <h4 className="text-xl font-bold text-black">
+                {' '}
+                {creditStats?.totalUsedCredits}
+              </h4>
+            </div>
+            <p className="text-xs text-gray-600 mt-1">Approved Leads</p>
+          </div>
+
+          {/* Remaining Credit */}
+          <div className="bg-[#F5F6F9] flex flex-col items-center justify-center p-4 rounded-lg shadow-sm">
+            <div className="flex items-center gap-1">
+              <span className="text-xl">✅</span>
+              <h4 className="text-xl font-bold text-black">
+                {creditStats?.remainingCredits}
+              </h4>
+            </div>
+            <p className="text-xs text-gray-600 mt-1">Pending Leads</p>
+          </div>
+          {/* Remaining Credit */}
+          <div className="bg-[#F5F6F9] flex flex-col items-center justify-center p-4 rounded-lg shadow-sm">
+            <div className="flex items-center gap-1">
+              <span className="text-xl">✅</span>
+              <h4 className="text-xl font-bold text-black">
+                {creditStats?.remainingCredits}
+              </h4>
+            </div>
+            <p className="text-xs text-gray-600 mt-1">Hired Leads</p>
           </div>
         </div>
+      </div>
+
+      <div className="w-full px-4 pb-4 pt-2">
         <hr className="border-[#F3F3F3] border" />
 
         {/* Locations */}
-        <div className="m-3">
-          <div className="font-medium flex items-center text-lg">
-            <h4> Locations</h4>
+        <div className="mt-4">
+          <div className="font-medium flex items-center gap-2 text-lg">
+            <h4 className="leading-none"> Locations</h4>
             <Link href={'/lawyer/settings/lead-settings'}>
-              <button aria-label="Edit Locations" className="ml-3 rounded">
-                <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
-              </button>
+              <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
             </Link>
           </div>
           <p className="my-2 text-sm sm:text-base">
@@ -167,10 +121,10 @@ const LeadStatsCard = ({ locations, profile }) => {
             })}
           </div>
         </div>
-        <hr className="border-[#F3F3F3] border" />
+        <hr className="border-[#F3F3F3] border mt-4" />
 
         {/* CTA Button */}
-        <div className="m-3">
+        <div className="mt-4">
           <Link href={'/lawyer/dashboard/leads-board'}>
             <button className="px-[19px] py-2 text-[#0B1C2D]  hover:bg-[#00C3C0] hover:text-white  font-medium bg-[#EDF0F4] rounded-full text-sm sm:text-base">
               View Leads

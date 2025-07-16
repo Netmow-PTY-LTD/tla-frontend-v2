@@ -430,7 +430,7 @@ export default function ClientLeadRegistrationModal({
 
         if (userType === 'client') {
           setTimeout(() => {
-            router.push('/client/dashboard');
+            router.push('/client/dashboard/my-leads');
           }, 2000);
         } else {
           router.push('/');

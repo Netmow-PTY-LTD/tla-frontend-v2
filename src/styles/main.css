@@ -3,7 +3,7 @@
   --subtitle: 0.875rem;
   --title: 2.25rem;
   /* --hero-title: clamp(2.2rem, 3vw, 3.5rem); */
-  --hero-title: 3.5rem;
+  --hero-title: 3rem;
 }
 
 body {
@@ -187,7 +187,7 @@ input:focus {
 }
 
 .container-lg {
-  max-width: 112.5rem;
+  max-width: 100%;
   margin: 0 auto;
   padding: 0 20px;
 }
@@ -570,27 +570,9 @@ input:focus {
   background-position: center center;
 }
 
-.hero-content h3 {
-  border-radius: 82px;
-  background: var(--secondary-color);
-  display: flex;
-  padding: 4px 20px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  color: var(--color-white);
-  text-align: center;
-  font-size: var(--subtitle);
-  font-style: normal;
-  font-weight: 500;
-  line-height: 27px; /* 168.75% */
-}
-
 .hero-content {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   max-width: 886px;
   margin: 0 auto;
   gap: 20px;
@@ -598,10 +580,9 @@ input:focus {
 
 .hero-content h1 {
   color: var(--color-text);
-  text-align: center;
   font-size: var(--hero-title);
   font-style: normal;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 110%; /* 72.6px */
   letter-spacing: -0.5px;
 }
@@ -1133,6 +1114,7 @@ Home Testimonials
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
+  padding-top: 50px;
 }
 
 .footer-top {

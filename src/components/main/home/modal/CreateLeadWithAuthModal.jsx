@@ -13,6 +13,7 @@ export default function CreateLeadWithAuthModal({
   selectedServiceWiseQuestions,
   countryId,
   serviceId,
+  locationId,
 }) {
   const [step, setStep] = useState(0);
 
@@ -44,6 +45,8 @@ export default function CreateLeadWithAuthModal({
 
   const [budgetAmount, setBudgetAmount] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  console.log('locationId', locationId);
 
   useEffect(() => {
     if (!selectedServiceWiseQuestions?.length) return;
@@ -259,6 +262,7 @@ export default function CreateLeadWithAuthModal({
     const payload = {
       countryId,
       serviceId,
+      locationId,
       questions: [...questionsPayload],
       additionalDetails,
       budgetAmount,
@@ -274,7 +278,7 @@ export default function CreateLeadWithAuthModal({
         showSuccessToast(res?.message || 'Lead registered successfully');
         setModalOpen(false);
         setTimeout(() => {
-          router.push('/client/dashboard');
+          router.push('/client/dashboard/my-leads');
         }, 1000);
       }
     } catch (err) {

@@ -136,7 +136,7 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
       {user?.isContact === true ? (
         <div className="px-3 py-2">
           <span className="text-[12px] font-medium bg-[#FF8602] py-1 px-2 rounded text-white">
-            Contacted
+            In Response
           </span>
         </div>
       ) : null}

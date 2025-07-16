@@ -10,7 +10,8 @@ import ClientLeadRegistrationModal from './modal/ClientLeadRegistrationModal';
 import { useSelector } from 'react-redux';
 import CreateLeadWithAuthModal from './modal/CreateLeadWithAuthModal';
 import { Loader } from 'lucide-react';
-
+import HeroSlider from '../common/HeroSlider';
+import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 export default function HeroHome() {
   const [selectedService, setSelectedService] = useState(null);
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
@@ -55,21 +56,19 @@ export default function HeroHome() {
 
   const token = useSelector((state) => state.auth.token);
 
-  const currentUser = useSelector((state) => state.auth.user);
+  const { data: currentUser } = useAuthUserInfoQuery(undefined, {
+    skip: !token,
+  });
 
   return (
-    <section
-      className="hero-home section"
-      style={{ backgroundImage: `url('/assets/img/auth-bg.png')` }}
-    >
+    <section className="hero-home section">
       <div className="container">
-        <div className="hero-content">
-          <h3>Get a quote for legal services.</h3>
-          <h1>
-            Need legal help? <br /> Find a{' '}
-            <span className="text-[var(--primary-color)]">lawyer</span> . On
-            your terms.
-          </h1>
+        <div className="hero-content py-[50px]">
+          {/* <h3>Get a quote for legal services.</h3> */}
+          <h1>Need a Lawyer?</h1>
+          <p className="text-[#444] text-2xl font-medium">
+            Get Free Quotes in Minutes.
+          </p>
           <form className="w-full">
             <div className="hero-search-area flex flex-wrap md:flex-nowrap gap-2 items-center w-full">
               <div className="tla-form-group w-full lg:w-5/12">
@@ -93,12 +92,13 @@ export default function HeroHome() {
               </div>
             </div>
           </form>
-          <div className="flex flex-wrap justify-center gap-2 w-full suggestion-area">
+          <div className="flex flex-wrap gap-2 w-full suggestion-area">
+            <b>Popular</b>:
             {isCountryWiseServicesLoading ? (
               <Loader className="w-6 h-6 animate-spin" />
             ) : (
               countryWiseServices?.data?.length > 0 &&
-              countryWiseServices.data.map((service) => (
+              countryWiseServices?.data?.slice(0, 5).map((service) => (
                 <Link
                   href="#"
                   className="flex justify-center items-center gap-[10px] text-center w-[calc(50%-10px)] sm:w-auto border py-1 px-3 rounded-full"
@@ -115,7 +115,8 @@ export default function HeroHome() {
             )}
           </div>
         </div>
-        <HeroShowcase />
+        <HeroSlider />
+        {/* <HeroShowcase /> */}
       </div>
 
       {token && currentUser ? (
@@ -126,6 +127,7 @@ export default function HeroHome() {
           selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
+          locationId={currentUser?.data?.profile?.zipCode}
         />
       ) : (
         <ClientLeadRegistrationModal

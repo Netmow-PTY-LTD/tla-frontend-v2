@@ -358,7 +358,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                 >
                   Lead Details
                 </button>
-                <button
+                {/* <button
                   onClick={() => setActiveTab('note')}
                   className={`relative pb-2 text-gray-600 font-normal transition-colors ${
                     activeTab === 'note'
@@ -367,7 +367,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                   }`}
                 >
                   My Notes
-                </button>
+                </button> */}
               </div>
 
               {/* Tab Content */}
