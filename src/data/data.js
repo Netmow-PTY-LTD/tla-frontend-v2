@@ -240,3 +240,188 @@ export const faqData = [
       "We understand that finding the right lawyer can be challenging. However, we encourage you to continue exploring the platform and learning about the law. If you're not satisfied with the lawyer you chose, you can reach out to our support team and we'll do our best to help you find a better match.",
   },
 ];
+
+
+
+export const clientsfaqsData = [
+  {
+    id: 1,
+    question: 'What happens when you sign up with your free account?',
+    answer: `You, as the client, set out the details of your case and specify an approximate budget or rate you wish to pay.
+
+You gain access to experienced lawyers, at a lower cost, who will service your case professionally and provide legal services.
+
+As part of your client login, you will have your own profile dashboard area that you can modify should you wish to.
+
+You will have access to a full suite of online communication tools including chat, video, and voice conferencing to meet confidentially with your lawyer at any time.
+
+List as many cases as you like, for free.
+
+Select the most suitable legal representative to handle your case.`,
+  },
+  {
+    id: 2,
+    question: 'How much does it cost to set up an account?',
+    answer: `Nothing, it is completely FREE, forever. This is a free service we provide to clients. Just click on the Register button to create your profile and post your legal requirements and get help with your case.`,
+  },
+  {
+    id: 3,
+    question: 'How do I find the lawyer that is right for me?',
+    answer: `Once you have Registered and created your profile, you can post your case and wait for the lawyers to provide a cost overview and bid on providing legal services to you. Choose the bid that is most suitable to start the process.
+
+Funds are paid to The Law App via our secure payment portal and then sent to the lawyer so they can commence working.`,
+  },
+  {
+    id: 4,
+    question: 'What if I change my mind on the lawyer I choose?',
+    answer: `Once you are happy with your choice, the funds will be transferred to the lawyer for them to begin working (less the 10% fee taken by The Law App). If you change your mind before the work has commenced, and decide the lawyer is not the right match for you, The Law App returns the funds transferred (less a small administrative fee) and you can go back to the other lawyers who originally bid or start the process from the beginning.`,
+  },
+  {
+    id: 5,
+    question: 'How do I post my legal case requirements?',
+    answer: `Once you log in to your account, you can post your legal requirements and list your case. This will ensure that the lawyers give you the best possible price based on your specific legal requirements. The case will be available to verify lawyers who are qualified to work in that particular field of law. Once your case is submitted you will receive bids from lawyers interested in taking on your case.`,
+  },
+  {
+    id: 6,
+    question: 'Can I ask questions about my case?',
+    answer: `Yes of course! Engaging a lawyer with The Law App is similar to engaging any lawyer, but with added convenience. Lawyers will NOT provide ANY legal advice without you engaging their services.
+
+However, some suggested questions could include:
+
+- "Do you think my budget will cover these requirements?"
+- "Have you had similar cases before?"
+- "Have you found the outcome to be a common outcome in these cases?"
+- "What are the repercussions, if any, of the steps I would like to take?"`,
+  },
+  {
+    id: 7,
+    question: 'Will my post be anonymous?',
+    answer: `Yes, all personal details will remain anonymous until you accept a lawyer’s bid. At this time they will be given your details and you can get started.`,
+  },
+  {
+    id: 8,
+    question: 'How long do I have to wait until I receive the lawyer bids?',
+    answer: `It varies... Once you post your requirements, you may receive a response within minutes if your case is more common. Don't worry though, if you haven't received a bid on your matter, then we can help find suitable lawyers for you. As word spreads of The Law App, and more lawyers come aboard, access to every field of law will become available.`,
+  },
+  {
+    id: 9,
+    question: 'How do I choose which lawyer is best for me?',
+    answer: `When reviewing the bids from lawyers, you will be able to see the years of experience they have, whether they are a specialist in that field and what rates they are bidding to take on your case. You can interview your prospective lawyer and choose a lawyer that suits your timeframe, budget and overall needs and legal requirements.`,
+  },
+  {
+    id: 10,
+    question: 'Once I have chosen the lawyer and agree to their bid, what happens next?',
+    answer: `To make your decision easier, the lawyers are required to provide you with a free online video or telephone consultation before you make your choice. Once you are satisfied with your choice and accept the bid, you will sign a legal services agreement, you pay the invoice and your funds will be provided to the lawyer (less a 10% administrative fee which is paid to The Law App).`,
+  },
+  {
+    id: 11,
+    question: 'Can I give feedback on the website for lawyers once they have completed my matter?',
+    answer: `Absolutely yes, the rating of the lawyers on the website is important so we value your feedback and so do they. It will help other users decide which lawyer to choose in the future. Google reviews are easy to fake and are often manipulated by clever marketers to improve their online reputation. The Law App is different. All our reviews are certified as real by verifying the work was performed well. We only publish reviews that we have verified as correct. This keeps the playing field level at all times.`,
+  },
+  {
+    id: 12,
+    question: 'How do I make payments?',
+    answer: `You as a client will pay the agreed bid amount in the overview given by your chosen lawyer via The Law App website. A 10% commission will be taken from this amount by The Law App. The remainder will be transferred to your lawyer’s bank account once you are satisfied to proceed. You will also need to sign the lawyer’s Legal Service Agreement so they can commence work for you.`,
+  },
+  {
+    id: 13,
+    question: 'How do I set up my free profile?',
+    answer: `You will be asked to set up a free profile before you can submit your legal project. You will be required to scan and upload any necessary documents for the lawyer to look at. You will need to provide a valid phone number, email address, and residential address. You will also be required to upload a scanned copy of your photo ID.`,
+  },
+  {
+    id: 14,
+    question: 'How do I know if the lawyer I chose is legitimate?',
+    answer: `We have stringent guidelines and verification methods to ensure that all lawyers are currently qualified and able to practice within a Jurisdiction and field of law. We thoroughly confirm all details and certificates with the Law body in a particular Jurisdiction before they are eligible to bid on cases. Inside your profile dashboard, you can review the one that suits you the most. When you pay your invoice, you can feel confident knowing that the lawyer has passed our verification process and is bound by the rules set out in the legal code in their Jurisdiction. We verify with the Federal, State and Territory Law Societies that they can provide the legal services offered.`,
+  }
+];
+
+
+export const lawyerfaqsData = [
+  {
+    id: 1,
+    question: 'What happens when you sign up as a lawyer with The Law App?',
+    answer: `Create your lawyer profile from The Law App Dashboard.
+
+Set out what fields of law you are qualified to service, your location, and relevant experience to give you the best opportunity to secure new clients.
+
+Once your account is set up, you will be able to bid on cases and set out how you can best serve the client and at what price you are willing to take on the case.
+
+Bid only on those cases that meet your needs and that you wish to service.
+
+Upgrade to a Basic or Premium account to unlock more opportunities, added benefits, and more features.`,
+  },
+  {
+    id: 2,
+    question: 'How much does it cost to set up an account?',
+    answer: `Nothing, it is completely FREE, forever. This is a free service we provide to clients. Just click on the Register button to create your profile and post your legal requirements and get help with your case.`,
+  },
+  {
+    id: 3,
+    question: 'How do I find the lawyer that is right for me?',
+    answer: `Once you have Registered and created your profile, you can post your case and wait for the lawyers to provide a cost overview and bid on providing legal services to you. Choose the bid that is most suitable to start the process.
+
+Funds are paid to The Law App via our secure payment portal and then sent to the lawyer so they can commence working.`,
+  },
+  {
+    id: 4,
+    question: 'What if I change my mind on the lawyer I choose?',
+    answer: `Once you are happy with your choice, the funds will be transferred to the lawyer for them to begin working (less the 10% fee taken by The Law App). If you change your mind before the work has commenced, and decide the lawyer is not the right match for you, The Law App returns the funds transferred (less a small administrative fee) and you can go back to the other lawyers who originally bid or start the process from the beginning.`,
+  },
+  {
+    id: 5,
+    question: 'How do I post my legal case requirements?',
+    answer: `Once you log in to your account, you can post your legal requirements and list your case. This will ensure that the lawyers give you the best possible price based on your specific legal requirements. The case will be available to verify lawyers who are qualified to work in that particular field of law. Once your case is submitted you will receive bids from lawyers interested in taking on your case.`,
+  },
+  {
+    id: 6,
+    question: 'Can I ask questions about my case?',
+    answer: `Yes of course! Engaging a lawyer with The Law App is similar to engaging any lawyer, but with added convenience. Lawyers will NOT provide ANY legal advice without you engaging their services.
+
+However, some suggested questions could include:
+
+"Do you think my budget will cover these requirements?"
+"Have you had similar cases before?"
+"Have you found the outcome to be a common outcome in these cases?"
+"What are the repercussions, if any, of the steps I would like to take?"`,
+  },
+  {
+    id: 7,
+    question: 'Will my post be anonymous?',
+    answer: `Yes, all personal details will remain anonymous until you accept a lawyer’s bid. At this time they will be given your details and you can get started.`,
+  },
+  {
+    id: 8,
+    question: 'How long do I have to wait until I receive the lawyer bids?',
+    answer: `It varies... Once you post your requirements, you may receive a response within minutes if your case is more common. Don't worry though, if you haven't received a bid on your matter, then we can help find suitable lawyers for you. As word spreads of The Law App, and more lawyers come aboard, access to every field of law will become available.`,
+  },
+  {
+    id: 9,
+    question: 'How do I choose which lawyer is best for me?',
+    answer: `When reviewing the bids from lawyers, you will be able to see the years of experience they have, whether they are a specialist in that field and what rates they are bidding to take on your case. You can interview your prospective lawyer and choose a lawyer that suits your timeframe, budget and overall needs and legal requirements.`,
+  },
+  {
+    id: 10,
+    question: 'Once I have chosen the lawyer and agree to their bid, what happens next?',
+    answer: `To make your decision easier, the lawyers are required to provide you with a free online video or telephone consultation before you make your choice. Once you are satisfied with your choice and accept the bid, you will sign a legal services agreement, you pay the invoice and your funds will be provided to the lawyer (less a 10% administrative fee which is paid to The Law App).`,
+  },
+  {
+    id: 11,
+    question: 'Can I give feedback on the website for lawyers once they have completed my matter?',
+    answer: `Absolutely yes, the rating of the lawyers on the website is important so we value your feedback and so do they. It will help other users decide which lawyer to choose in the future. Google reviews are easy to fake and are often manipulated by clever marketers to improve their online reputation. The Law App is different. All our reviews are certified as real by verifying the work was performed well. We only publish reviews that we have verified as correct. This keeps the playing field level at all times.`,
+  },
+  {
+    id: 12,
+    question: 'How do I make payments?',
+    answer: `You as a client will pay the agreed bid amount in the overview given by your chosen lawyer via The Law App website. A 10% commission will be taken from this amount by The Law App. The remainder will be transferred to your lawyer’s bank account once you are satisfied to proceed. You will also need to sign the lawyer’s Legal Service Agreement so they can commence work for you.`,
+  },
+  {
+    id: 13,
+    question: 'How do I setup my free profile?',
+    answer: `You will be asked to setup a free profile before you can submit your legal project. You will be required to scan and upload any necessary documents for the lawyer to look at. You will need to provide a valid phone number, email address, and residential address. You will also be required to upload a scanned copy of your photo ID.`,
+  },
+  {
+    id: 14,
+    question: 'How do I know if the lawyer I chose is legitimate?',
+    answer: `We have stringent guidelines and verification methods to ensure that all lawyers are currently qualified and able to practice within a Jurisdiction and field of law. We thoroughly confirm all details and certificates with the Law body in a particular Jurisdiction before they are eligible to bid on cases. Inside your profile dashboard, you can review the one that suits you the most. When you pay your invoice, you can feel confident knowing that the lawyer has passed our verification process and is bound by the rules set out in the legal code in their Jurisdiction. We verify with the Federal, State and Territory Law Societies that they can provide the legal services offered.`,
+  }
+];
