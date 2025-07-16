@@ -6,6 +6,7 @@ import {
   Plus,
   Settings,
   SquareTerminal,
+  Users,
 } from 'lucide-react';
 
 export const AdminSidebarItems = {
@@ -22,7 +23,7 @@ export const AdminSidebarItems = {
       icon: Settings,
       isActive: true,
     },
-  
+
     {
       title: 'Countries',
       url: '/admin/country/list',
@@ -39,6 +40,12 @@ export const AdminSidebarItems = {
       title: 'Ranges',
       url: '/admin/ranges/list',
       icon: MapPinHouse,
+      isActive: true,
+    },
+    {
+      title: 'Categories',
+      url: '/admin/category/list',
+      icon: SquareTerminal,
       isActive: true,
     },
     {
@@ -108,6 +115,13 @@ export const AdminSidebarItems = {
     //     },
     //   ],
     // },
+
+    {
+      title: 'Category Wise Services',
+      url: '/admin/category-wise-service/list',
+      icon: List,
+      isActive: true,
+    },
     {
       title: 'Country Wise Services',
       url: '/admin/country-wise-service/list',
@@ -177,7 +191,7 @@ export const AdminSidebarItems = {
     {
       title: 'Users',
       url: '#',
-      icon: SquareTerminal,
+      icon: Users,
       isActive: true,
       items: [
         {
