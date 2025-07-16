@@ -6,7 +6,8 @@ import Image from 'next/image';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import { useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
-import Preloader from '@/components/Preloader';
+import { Arrow } from '@radix-ui/react-dropdown-menu';
+import { ArrowDown, ChevronDown } from 'lucide-react';
 
 export default function Header() {
   const [isHeaderFixed, setIsHeaderFixed] = useState();
@@ -40,8 +41,8 @@ export default function Header() {
     <header
       className={`${styles.main_header} ${isHeaderFixed ? styles.sticky : ''}`}
     >
-      <div className="container">
-        <div className="flex items-center justify-between">
+      <div className="container-lg">
+        <div className="flex items-center">
           <Link href="/">
             <Image
               src={'/assets/img/logo.png'}
@@ -52,6 +53,12 @@ export default function Header() {
           </Link>
           <nav className="hidden lg:flex">
             <ul className="flex items-center gap-6">
+              <li>
+                <Link href="/" className={styles.nav_link}>
+                  <span>Explore</span>
+                  <ChevronDown />
+                </Link>
+              </li>
               {/* <li>
                 <Link href="/services" className={styles.nav_link}>
                   <span>Find Clients</span>
@@ -90,7 +97,8 @@ export default function Header() {
                   </svg>
                 </Link>
               </li> */}
-              <li>
+
+              {/* <li>
                 <Link href="/" className={styles.nav_link}>
                   <span>Home</span>
                 </Link>
@@ -114,20 +122,22 @@ export default function Header() {
                 <Link href="/contact" className={styles.nav_link}>
                   <span>Contact</span>
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </nav>
           {token && currentUser ? (
-            <Link href={dashboardUrl} className={styles.btn_register}>
-              <span>Dashboard</span>
-            </Link>
+            <div className="flex items-center gap-4 ml-auto">
+              <Link href={dashboardUrl} className={styles.nav_link}>
+                <span>Dashboard</span>
+              </Link>
+            </div>
           ) : (
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 ml-auto">
               <Link href="/login" className={styles.nav_link}>
                 <span>Log In</span>
               </Link>
               <Link href="/register" className={styles.btn_register}>
-                <span>Register as Lawyer</span>
+                <span>Join as a Lawyer</span>
               </Link>
             </div>
           )}

@@ -61,18 +61,14 @@ export default function HeroHome() {
   });
 
   return (
-    <section
-      className="hero-home section"
-      style={{ backgroundImage: `url('/assets/img/auth-bg.png')` }}
-    >
+    <section className="hero-home section">
       <div className="container">
-        <div className="hero-content">
-          <h3>Get a quote for legal services.</h3>
-          <h1>
-            Need legal help? <br /> Find a{' '}
-            <span className="text-[var(--primary-color)]">lawyer</span> . On
-            your terms.
-          </h1>
+        <div className="hero-content py-[50px]">
+          {/* <h3>Get a quote for legal services.</h3> */}
+          <h1>Need a Lawyer?</h1>
+          <p className="text-[#444] text-2xl font-medium">
+            Get Free Quotes in Minutes.
+          </p>
           <form className="w-full">
             <div className="hero-search-area flex flex-wrap md:flex-nowrap gap-2 items-center w-full">
               <div className="tla-form-group w-full lg:w-5/12">
@@ -96,12 +92,13 @@ export default function HeroHome() {
               </div>
             </div>
           </form>
-          <div className="flex flex-wrap justify-center gap-2 w-full suggestion-area">
+          <div className="flex flex-wrap gap-2 w-full suggestion-area">
+            <b>Popular</b>:
             {isCountryWiseServicesLoading ? (
               <Loader className="w-6 h-6 animate-spin" />
             ) : (
               countryWiseServices?.data?.length > 0 &&
-              countryWiseServices.data.map((service) => (
+              countryWiseServices?.data?.slice(0, 5).map((service) => (
                 <Link
                   href="#"
                   className="flex justify-center items-center gap-[10px] text-center w-[calc(50%-10px)] sm:w-auto border py-1 px-3 rounded-full"
