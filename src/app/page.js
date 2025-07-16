@@ -5,13 +5,15 @@ import HomeFeatures from '@/components/main/home/HomeFeatures';
 import HomeCTA from '@/components/main/home/HomeCTA';
 import HomeAboutPreview from '@/components/main/home/HomeAboutPreview';
 import TestimonialSlider from '@/components/main/home/HomeTestimonials';
+import HomeCategoryWiseServices from '@/components/main/home/HomeCategoryWiseServices';
 
 export default function Home() {
   return (
     <MainLayout>
       <HeroHome />
       {/* <HomeAboutPreview /> */}
-      <HomeServices />
+      {/* <HomeServices /> */}
+      <HomeCategoryWiseServices />
       {/* <HomeFeatures /> */}
       {/* <HomeTestimonials /> */}
       <TestimonialSlider />
