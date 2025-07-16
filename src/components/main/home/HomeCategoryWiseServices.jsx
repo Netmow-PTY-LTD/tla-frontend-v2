@@ -7,7 +7,7 @@ export default function HomeCategoryWiseServices() {
     {
       id: 1,
       name: 'Family Law',
-      icon: '/assets/img/familyLaw.png',
+      icon: '/assets/img/familylaw.png',
       services: [
         {
           id: 1,
@@ -88,7 +88,7 @@ export default function HomeCategoryWiseServices() {
     {
       id: 4,
       name: 'Criminal Law',
-      icon: '/assets/img/criminalLaw.png',
+      icon: '/assets/img/criminallaw.png',
       services: [
         {
           id: 1,
@@ -200,7 +200,7 @@ export default function HomeCategoryWiseServices() {
         </div>
         <div className="space-y-10 mt-20">
           {categories?.length > 0 &&
-            categories.map((category) => (
+            categories?.map((category) => (
               <div key={category.id}>
                 <div className="flex items-center justify-between mb-2">
                   <h4 className="text-lg font-semibold">{category.name}</h4>
