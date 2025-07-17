@@ -26,10 +26,10 @@ const categoryApiService = baseApi.injectEndpoints({
       providesTags: ['category'],
     }),
     editcategory: builder.mutation({
-      query: (body) => ({
-        url: `/category/edit/${body?.id}`,
+      query: (payload) => ({
+        url: `/category/edit/${payload?.id}`,
         method: 'PATCH',
-        body,
+        body:payload.data,
       }),
       invalidatesTags: ['category'],
     }),
