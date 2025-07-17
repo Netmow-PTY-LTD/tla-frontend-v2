@@ -42,12 +42,12 @@ export default function Header() {
       className={`${styles.main_header} ${isHeaderFixed ? styles.sticky : ''}`}
     >
       <div className="container-lg">
-        <div className="flex items-center">
+        <div className="flex items-center gap-4">
           <Link href="/">
             <Image
               src={'/assets/img/logo.png'}
               alt="TLA Logo"
-              width={150}
+              width={166}
               height={40}
             />
           </Link>

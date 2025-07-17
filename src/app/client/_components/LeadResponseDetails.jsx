@@ -1,103 +1,59 @@
-'use client';
-import TagButton from '@/components/dashboard/lawyer/components/TagButton';
+import SendMailModal from '@/app/lawyer/dashboard/my-responses/_components/modal/SendMailModal';
+import SendSmsModal from '@/app/lawyer/dashboard/my-responses/_components/modal/SendSmsModal';
+import ResponseSkeleton from '@/app/lawyer/dashboard/my-responses/_components/ResponseSkeleton';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import WhatsApp from '@/components/icon/WhatsApp';
 import { Button } from '@/components/ui/button';
-import {
-  AtSign,
-  BadgeCent,
-  BadgeCheck,
-  BadgeX,
-  Bell,
-  CalendarCheck,
-  Delete,
-  Edit,
-  Loader2,
-  LogIn,
-  Mail,
-  MailCheck,
-  MessageSquare,
-  MoveLeft,
-  Phone,
-  PhoneCall,
-  PhoneOutgoing,
-  PlusCircle,
-  Rss,
-  Send,
-  Tag,
-  Trash2,
-} from 'lucide-react';
-import Image from 'next/image';
-import { Fragment, useEffect, useState } from 'react';
-import Link from 'next/link';
+import { getCompactTimeAgo } from '@/helpers/formatTime';
+import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
 import {
   useActivityLogMutation,
   useGetSingleResponseQuery,
   useUpdateResponseStatusMutation,
 } from '@/store/features/lawyer/ResponseApiService';
-import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
-import WhatsApp from '@/components/icon/WhatsApp';
-import ResponseSkeleton from './ResponseSkeleton';
-import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
-import { useRouter } from 'next/navigation';
-import SendMailModal from './modal/SendMailModal';
-import SendSmsModal from './modal/SendSmsModal';
-import { getCompactTimeAgo } from '@/helpers/formatTime';
+import {
+  AtSign,
+  BadgeCent,
+  BadgeCheck,
+  Bell,
+  CalendarCheck,
+  Edit,
+  LogIn,
+  Mail,
+  MessageSquare,
+  MoveLeft,
+  PhoneCall,
+  PhoneOutgoing,
+  PlusCircle,
+  Send,
+  Tag,
+  Trash2,
+} from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import React, { Fragment, useState } from 'react';
 
-export default function MyResponseDetails({ onBack, response, responseId }) {
+export default function LeadResponseDetails({ onBack, response }) {
   const [activeTab, setActiveTab] = useState('activity');
   const [isExpanded, setIsExpanded] = useState(false);
   const [openMail, setOpenMail] = useState(false);
   const [openSms, setOpenSms] = useState(false);
 
   const { data: singleResponse, isLoading: isSingleResponseLoading } =
-    useGetSingleResponseQuery(responseId ? responseId : response?._id, {
-      skip: !responseId && !response?._id,
+    useGetSingleResponseQuery(response?._id, {
+      skip: !response?._id,
     });
 
-  console.log('singleResponse', singleResponse?.data);
-  console.log('response', response);
+  console.log('singleResponse in details', singleResponse);
+  const currentStatus = singleResponse?.data?.status || 'Pending';
 
   const [updateStatus] = useUpdateResponseStatusMutation();
   const [updateActivity] = useActivityLogMutation();
 
-  const router = useRouter();
-
-  const fallbackText = `If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options. Let us help you navigate this challenging time with expert guidance.`;
-
-  const additionalDetails = singleResponse?.data?.leadId?.additionalDetails;
-  const fullText =
-    additionalDetails && additionalDetails.trim() !== ''
-      ? additionalDetails
-      : fallbackText;
-
-  const getTruncatedText = (text, maxLength) => {
-    if (!text || typeof text !== 'string') return '';
-    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
-  };
-
-  const toggleReadMore = () => setIsExpanded(!isExpanded);
-  const maxLength = 300;
-
-  const shouldTruncate = fullText.length > maxLength;
-  const displayText =
-    isExpanded || !shouldTruncate
-      ? fullText
-      : getTruncatedText(fullText, maxLength);
-
-  useEffect(() => {
-    // Scroll to top of the window when this component mounts
-    window.scrollTo({ top: 0, behavior: 'auto' });
-  }, []);
-
-  const mapUrl = getStaticMapUrl(singleResponse?.data?.responseBy?.address);
-
-  if (isSingleResponseLoading) {
-    return <ResponseSkeleton />;
-  }
-
   const handleUpdateStatus = async (status) => {
     try {
       const statusData = {
-        responseId: responseId || response?._id,
+        responseId: response?._id,
         data: { status },
       };
 
@@ -130,8 +86,6 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
       logs, // no sorting applied
     })
   );
-
-  const currentStatus = singleResponse?.data?.status || 'Pending';
 
   const generateActivityIcon = (type) => {
     const iconStyles = {
@@ -169,7 +123,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
         const result = await updateActivity(whatsappActivityPayload).unwrap();
 
         if (result.success) {
-          const phone = response?.leadId?.userProfileId?.phone;
+          const phone = singleResponse?.data?.responseBy?.phone;
           window.open(
             `https://api.whatsapp.com/send?phone=${phone}&text=`,
             '_blank'
@@ -189,6 +143,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
     }
   };
 
+  if (isSingleResponseLoading) return <ResponseSkeleton />;
   return (
     <>
       <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
@@ -196,10 +151,10 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
           <div className="flex items-center justify-between">
             <button className="flex py-2 items-center gap-2" onClick={onBack}>
               {' '}
-              <MoveLeft /> <span>Back to Responses</span>
+              <MoveLeft /> <span>Back to Lead Responses</span>
             </button>
           </div>
-          <div className="mt-4 mb-6 flex items-center justify-between bg-[#F5F6F9] rounded-lg py-2 px-4">
+          <div className="mt-3 mb-4 flex items-center justify-between bg-[#F5F6F9] rounded-lg py-2 px-4">
             <span className="text-gray-500 text-[13px]">
               Last activity{' '}
               {getCompactTimeAgo(singleResponse?.data?.activity[0]?.updatedAt)}
@@ -222,10 +177,10 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
               <figure className="w-20 h-20 overflow-hidden">
                 <Image
                   src={
-                    singleResponse?.data?.leadId?.userProfileId
-                      ?.profilePicture || '/assets/img/avatar.png'
+                    singleResponse?.data?.responseBy?.profilePicture ||
+                    '/assets/img/avatar.png'
                   }
-                  alt={singleResponse?.data?.leadId?.userProfileId?.name || ''}
+                  alt={singleResponse?.data?.responseBy?.name || ''}
                   width={80}
                   height={80}
                   priority
@@ -234,38 +189,35 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
               </figure>
               <div>
                 <h2 className="font-medium heading-md">
-                  {singleResponse?.data?.leadId?.userProfileId?.name}
+                  {singleResponse?.data?.responseBy?.name}
                 </h2>
                 <p className="text-gray-500 mt-2">
-                  {singleResponse?.data?.leadId?.userProfileId?.address}
+                  {singleResponse?.data?.responseBy?.address}
                 </p>
               </div>
             </div>
             {/* Current Status */}
 
-            <hr className="border-[#F3F3F3] my-5  " />
+            <hr className="border-[#F3F3F3] my-3  " />
             <div className="mb-4">
               <div className="flex items-center gap-2 admin-text font-medium">
                 <PhoneOutgoing className="w-5 h-5" />{' '}
                 <span>
-                  Phone:{' '}
-                  {singleResponse?.data?.leadId?.userProfileId?.phone || ''}
+                  Phone: {singleResponse?.data?.responseBy?.phone || ''}
                 </span>{' '}
               </div>
               <div className=" flex items-center gap-2 mt-2 admin-text font-medium">
                 <AtSign className="w-5 h-5" />{' '}
                 <span>
-                  Email:{' '}
-                  {singleResponse?.data?.leadId?.userProfileId?.user?.email ||
-                    ''}
+                  Email: {singleResponse?.data?.responseBy?.user?.email || ''}
                 </span>{' '}
               </div>
             </div>
             <div className="flex gap-2">
               {/* <Button className="bg-[#00C3C0]">
-              <Phone />
-              Show Number
-            </Button> */}
+                        <Phone />
+                        Show Number
+                      </Button> */}
               <Button
                 onClick={() => handleActivity('whatsapp')}
                 className="bg-[#25D366]"
@@ -302,35 +254,12 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                 </Link>
               </span>
             </div>
-            <div className="mt-5 flex items-center gap-2">
-              <BadgeCent />
-              <b>
-                {' '}
-                {singleResponse?.data?.credit}{' '}
-                {singleResponse?.data?.credit > 1 ? 'credits' : 'credit'}{' '}
-              </b>
-            </div>
             <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
             <div className="mt-5">
-              <h4 className="font-medium mb-1 heading-base">
-                Looking for a {singleResponse?.data?.serviceId?.name || ''}{' '}
-                consultation
-              </h4>
               <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
                 <h5 className="font-medium mb-2 heading-base">
                   {singleResponse?.data?.serviceId?.name || ''}
                 </h5>
-                <div className="admin-text text-[#34495E] ">
-                  {displayText}
-                  {shouldTruncate && (
-                    <button
-                      onClick={toggleReadMore}
-                      className="text-[var(--color-black)] font-semibold hover:underline focus:outline-none ml-2"
-                    >
-                      {isExpanded ? 'Read less' : 'Read more'}
-                    </button>
-                  )}
-                </div>
               </div>
             </div>
             <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
@@ -346,26 +275,6 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                 >
                   Activity
                 </button>
-                <button
-                  onClick={() => setActiveTab('lead-details')}
-                  className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                    activeTab === 'lead-details'
-                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                      : 'hover:text-black'
-                  }`}
-                >
-                  Lead Details
-                </button>
-                {/* <button
-                  onClick={() => setActiveTab('note')}
-                  className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                    activeTab === 'note'
-                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                      : 'hover:text-black'
-                  }`}
-                >
-                  My Notes
-                </button> */}
               </div>
 
               {/* Tab Content */}
@@ -409,13 +318,6 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                                   ></div>
                                   <div className="icon-wrapper mt-[-16px]">
                                     <div className="icon w-[32px] h-[32px] bg-[#000] rounded-full flex justify-center items-center">
-                                      {/* {item?.activityType === 'update' &&
-                                      item?.status === 'pending' && (
-                                        <img
-                                          src="https://d1w7gvu0kpf6fl.cloudfront.net/img/icons/activities-icons/svg/status_pending.svg"
-                                          alt="icon"
-                                        />
-                                      )} */}
                                       {item?.activityType &&
                                         generateActivityIcon(
                                           item?.activityType
@@ -446,51 +348,10 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                               </div>
                             );
                           })}
-                          {/* <div className="relative">
-                          {activity.items.map((item, i) => (
-                            <div
-                              key={i}
-                              className="flex items-start justify-between mb-4 py-3 px-4 rounded-lg border border-gray-200"
-                            >
-                              <div className="flex flex-col">
-                                <div className="text-gray-500">{item.user}</div>
-                                <div className="text-sm text-black font-medium">
-                                  {item.action}
-                                </div>
-                              </div>
-                              <span className="text-xs text-gray-400">
-                                {item.time}
-                              </span>
-                            </div>
-                          ))}
-                        </div> */}
                         </Fragment>
                       );
                     })}
                   </div>
-                )}
-                {activeTab === 'lead-details' && (
-                  <div className="flex flex-col gap-5">
-                    {singleResponse?.data?.leadAnswers?.map((leadAnswer, i) => (
-                      <div key={i}>
-                        <p className="text-[var(--color-special)] font-medium">
-                          {leadAnswer?.question}
-                        </p>
-                        <div className="text-[#34495E] mt-2">
-                          {leadAnswer?.options &&
-                            leadAnswer?.options
-                              ?.map((option) => option?.option)
-                              .join(', ')}
-                        </div>
-                      </div>
-                    ))}
-                    <div className="mt-5">
-                      <img src={mapUrl} className="rounded-lg" alt="map" />
-                    </div>
-                  </div>
-                )}
-                {activeTab === 'note' && (
-                  <div className="bg-white rounded-lg p-4">My Note</div>
                 )}
               </div>
             </div>

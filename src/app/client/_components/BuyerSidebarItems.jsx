@@ -6,6 +6,7 @@ import {
   CircleHelp,
   BookText,
   Settings,
+  Users,
 } from 'lucide-react';
 
 export const BuyerSidebarItems = {
@@ -20,7 +21,7 @@ export const BuyerSidebarItems = {
     {
       title: 'My Leads',
       url: '/client/dashboard/my-leads',
-      icon: LayoutDashboard,
+      icon: Users,
       isActive: true,
     },
     {
