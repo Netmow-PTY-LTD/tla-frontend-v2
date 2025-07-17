@@ -11,7 +11,7 @@ export default function AvatarUploader({
   multiple = false,
   icon = <CloudUpload className="w-6 h-6 text-[#00C3C0] mb-2" />,
 }) {
-  const { register, setValue, watch, getValues } = useFormContext();
+  const { register, setValue, watch, getValues, } = useFormContext();
   const file = watch(name);
   const [preview, setPreview] = useState(null);
 
