@@ -82,7 +82,8 @@ export const baseApi = createApi({
     'next-offer',
     'transaction-history',
     "notificationPreferences",
-    "app-settings"
+    "app-settings",
+    "category",
 
   ],
   endpoints: () => ({}),
