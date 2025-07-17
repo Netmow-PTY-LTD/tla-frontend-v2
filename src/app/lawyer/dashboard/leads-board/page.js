@@ -68,8 +68,6 @@ const LeadBoardPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasMore, isFetching, scrollContainerRef?.current]);
 
-  // console.log('scrollContainerRef', scrollContainerRef?.current);
-
   if (isAllLeadsLoading) {
     return (
       <div className="p-6 space-y-8 animate-pulse">
@@ -108,8 +106,6 @@ const LeadBoardPage = () => {
       </div>
     );
   }
-
-  console.log('leads', leads);
 
   return (
     <div className="lead-board-wrap">
@@ -167,7 +163,7 @@ const LeadBoardPage = () => {
         <div className="flex flex-col justify-center items-center h-full">
           <Inbox className="w-12 h-12 mb-4 text-gray-400" />
           <h4 className="italic text-[18px] text-gray-500">
-            Currently you have no leads.
+            Currently there are no leads.
           </h4>
         </div>
       )}
