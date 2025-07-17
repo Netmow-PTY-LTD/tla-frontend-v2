@@ -138,17 +138,6 @@ export default function LeadDetailsPage() {
                     </span>{' '}
                   </div>
                 </div>
-                {/* <div className="flex flex-col sm:flex-row items-center gap-4">
-            {singleLead?.data?.data?.credit && (
-              <div className="text-[#34495E] ml-2 flex items-center gap-2">
-                <span>
-                  {singleLead?.data?.credit}{' '}
-                  {singleLead?.data?.credit > 1 ? 'credits' : 'credit'} required
-                </span>
-                <CircleAlert />
-              </div>
-            )}
-          </div> */}
                 <div className="mt-5">
                   <div className="flex flex-wrap gap-2">
                     {urgentOption?.option && (
