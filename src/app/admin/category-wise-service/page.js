@@ -12,13 +12,12 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { useAllcategorysQuery } from '@/store/features/admin/categoryApiService';
 import { useAllServicesQuery } from '@/store/features/admin/servicesApiService';
+import { CategoryDataTable } from './_components/CategoryDataTable';
 
 export default function Page() {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedServices, setSelectedServices] = useState([]);
   const [rowSelection, setRowSelection] = useState({});
-
-  console.log('slected serviceIds ===>',selectedServices)
   const { data: categoryList, isLoading } = useAllcategorysQuery();
   const { data: servicesList } = useAllServicesQuery();
 
@@ -121,7 +120,7 @@ export default function Page() {
       </div>
 
       {selectedCategory && (
-        <DataTable
+        <CategoryDataTable
           // data={selectedCategoryData?.serviceIds || []}
           data={servicesList?.data || []}
           columns={columns}
