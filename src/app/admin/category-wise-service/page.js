@@ -11,19 +11,23 @@ import {
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useAllcategorysQuery } from '@/store/features/admin/categoryApiService';
+import { useAllServicesQuery } from '@/store/features/admin/servicesApiService';
 
 export default function Page() {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedServices, setSelectedServices] = useState([]);
   const [rowSelection, setRowSelection] = useState({});
 
+  console.log('slected serviceIds ===>',selectedServices)
   const { data: categoryList, isLoading } = useAllcategorysQuery();
+  const { data: servicesList } = useAllServicesQuery();
 
   const selectedCategoryData = categoryList?.data?.find(
     (cat) => cat._id === selectedCategory
   );
 
   const serviceData = selectedCategoryData?.serviceIds || [];
+  
 
   const columns = [
     {
@@ -88,17 +92,17 @@ export default function Page() {
       cell: ({ row }) => <div>{row.original.name}</div>,
     },
   ];
-  const handleCountryWiseServiceChange = (val) => {
+  const handleCategoryWiseServiceChange = (val) => {
     setSelectedCategory(val);
   };
 
   return (
     <div>
-      <h1 className="font-bold text-lg mb-4">Country wise service</h1>
+      <h1 className="font-bold text-lg mb-4">Category wise service</h1>
 
       <div className="flex justify-between mb-4">
         <div className="w-[300px]">
-          <Select value={selectedCategory} onValueChange={handleCountryWiseServiceChange}>
+          <Select value={selectedCategory} onValueChange={handleCategoryWiseServiceChange}>
             <SelectTrigger>
               <SelectValue placeholder="Select a category" />
             </SelectTrigger>
@@ -118,7 +122,8 @@ export default function Page() {
 
       {selectedCategory && (
         <DataTable
-          data={selectedCategoryData?.serviceIds || []}
+          // data={selectedCategoryData?.serviceIds || []}
+          data={servicesList?.data || []}
           columns={columns}
           searchColumn="name"
           rowSelection={rowSelection}
