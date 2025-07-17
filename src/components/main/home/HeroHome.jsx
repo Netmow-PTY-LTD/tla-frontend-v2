@@ -4,18 +4,31 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import HeroShowcase from './HeroShowcase';
 import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
-import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
+import {
+  useGetCountryListQuery,
+  useGetZipCodeListQuery,
+} from '@/store/features/public/publicApiService';
 import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/questionApiService';
 import ClientLeadRegistrationModal from './modal/ClientLeadRegistrationModal';
 import { useSelector } from 'react-redux';
 import CreateLeadWithAuthModal from './modal/CreateLeadWithAuthModal';
-import { Loader } from 'lucide-react';
+import { ChevronDown, Loader } from 'lucide-react';
 import HeroSlider from '../common/HeroSlider';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import {
+  Combobox,
+  ComboboxButton,
+  ComboboxInput,
+  ComboboxOption,
+  ComboboxOptions,
+} from '@headlessui/react';
+import { cn } from '@/lib/utils';
 export default function HeroHome() {
   const [selectedService, setSelectedService] = useState(null);
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [service, setService] = useState(null);
+  const [zipCode, setZipCode] = useState(null);
 
   const handleModalOpen = () => {
     setServiceWiseQuestions(null); // Reset serviceWiseQuestions when opening the modal
@@ -60,6 +73,13 @@ export default function HeroHome() {
     skip: !token,
   });
 
+  const { data: allZipCodes, isLoading: isZipCodeLoading } =
+    useGetZipCodeListQuery();
+
+  const filteredZipCodes = allZipCodes?.data?.filter((item) =>
+    item?.zipcode?.toLowerCase().includes(zipCode?.toLowerCase())
+  );
+
   return (
     <section className="hero-home section">
       <div className="container">
@@ -72,18 +92,112 @@ export default function HeroHome() {
           <form className="w-full">
             <div className="hero-search-area flex flex-wrap md:flex-nowrap gap-2 items-center w-full">
               <div className="tla-form-group w-full lg:w-5/12">
-                <input
-                  type="text"
-                  className="tla-form-control"
-                  placeholder="What area of law are you interested in?"
-                />
+                <Combobox value={service} onChange={setService}>
+                  <div className="relative">
+                    <ComboboxInput
+                      className="border border-gray-300 rounded-md w-full h-[44px] px-4 tla-form-control"
+                      onChange={(event) => setZipCode(event.target.value)}
+                      displayValue={(val) =>
+                        allZipCodes?.data?.find((z) => z._id === val)
+                          ?.zipcode || val
+                      }
+                      placeholder="What area of law are you interested in?"
+                    />
+                    {/* <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
+                      <ChevronDown className="h-4 w-4 text-gray-500" />
+                    </ComboboxButton> */}
+                    {filteredZipCodes?.length > 0 && (
+                      <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        {filteredZipCodes.map((item) => (
+                          <ComboboxOption
+                            key={item._id}
+                            value={item._id}
+                            className={({ active }) =>
+                              cn(
+                                'cursor-pointer select-none relative py-2 px-6',
+                                active
+                                  ? 'bg-blue-100 text-black'
+                                  : 'text-gray-900'
+                              )
+                            }
+                          >
+                            {({ selected }) => (
+                              <>
+                                <span
+                                  className={cn('block truncate', {
+                                    'font-medium': selected,
+                                    'font-normal': !selected,
+                                  })}
+                                >
+                                  {item.zipcode}
+                                </span>
+                                {selected && (
+                                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
+                                    <Check className="h-4 w-4" />
+                                  </span>
+                                )}
+                              </>
+                            )}
+                          </ComboboxOption>
+                        ))}
+                      </ComboboxOptions>
+                    )}
+                  </div>
+                </Combobox>
               </div>
               <div className="tla-form-group w-full md:w-5/12">
-                <input
-                  type="text"
-                  className="tla-form-control"
-                  placeholder="Your location"
-                />
+                <Combobox value={zipCode} onChange={setZipCode}>
+                  <div className="relative">
+                    <ComboboxInput
+                      className="border border-gray-300 rounded-md w-full h-[44px] px-4 tla-form-control"
+                      onChange={(event) => setZipCode(event.target.value)}
+                      displayValue={(val) =>
+                        allZipCodes?.data?.find((z) => z._id === val)
+                          ?.zipcode || val
+                      }
+                      placeholder="Your location"
+                    />
+                    {/* <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
+                      <ChevronDown className="h-4 w-4 text-gray-500" />
+                    </ComboboxButton> */}
+                    {filteredZipCodes?.length > 0 && (
+                      <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        {filteredZipCodes.map((item) => (
+                          <ComboboxOption
+                            key={item._id}
+                            value={item._id}
+                            className={({ active }) =>
+                              cn(
+                                'cursor-pointer select-none relative py-2 px-6',
+                                active
+                                  ? 'bg-blue-100 text-black'
+                                  : 'text-gray-900'
+                              )
+                            }
+                          >
+                            {({ selected }) => (
+                              <>
+                                <span
+                                  className={cn('block truncate', {
+                                    'font-medium': selected,
+                                    'font-normal': !selected,
+                                  })}
+                                >
+                                  {item.zipcode}
+                                </span>
+                                {selected && (
+                                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
+                                    <Check className="h-4 w-4" />
+                                  </span>
+                                )}
+                              </>
+                            )}
+                          </ComboboxOption>
+                        ))}
+                      </ComboboxOptions>
+                    )}
+                  </div>
+                </Combobox>
               </div>
               <div className="tla-btn-wrapper w-full md:w-2/3 lg:w-1/6">
                 <button type="submit" className="tla-btn-search">
