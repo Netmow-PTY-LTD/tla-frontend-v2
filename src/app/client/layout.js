@@ -25,9 +25,16 @@ export default function BuyerDashboardLayout({ children }) {
   const noScrollRoutes = [
     '/lawyer/dashboard/leads-board',
     '/lawyer/dashboard/my-responses',
+    '/client/dashboard/my-leads',
   ];
 
-  const isNoScrollPage = noScrollRoutes.includes(cleanPathname);
+  const noScrollRoutePatterns = [
+    /^\/client\/dashboard\/my-leads\/[a-zA-Z0-9]+$/, // Matches /client/dashboard/my-leads/:id
+  ];
+
+  const isNoScrollPage =
+    noScrollRoutes.includes(cleanPathname) ||
+    noScrollRoutePatterns.some((pattern) => pattern.test(cleanPathname));
 
   useEffect(() => {
     if (isNoScrollPage) {

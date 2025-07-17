@@ -87,7 +87,7 @@ export default function MyLeads() {
             Create New Lead
           </Button>
         </div>
-        <div className="mt-5 mx-auto">
+        <div className="mt-5 max-w-[1400px] mx-auto">
           {allMyLeads?.data?.length === 0 && (
             <JobRequest modalOpen={modalOpen} setModalOpen={setModalOpen} />
           )}
@@ -101,7 +101,7 @@ export default function MyLeads() {
               </button>
             </div> */}
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-4 mt-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-4 mt-5 max-h-[calc(100vh-170px)] overflow-y-auto pr-2">
                 {allMyLeads?.data?.map((lead, index) => (
                   // <JobPostCard key={index} lead={lead} />
                   <ClientLeadCard key={index} user={lead} />

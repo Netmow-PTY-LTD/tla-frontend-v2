@@ -10,7 +10,15 @@ const leadsApiService = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['lead'],
     }),
+    getAllLeadWiseResponses: builder.query({
+      query: (id) => ({
+        url: `/response/lead-wise/${id}`,
+        method: 'GET',
+      }),
+      providesTags: ['response', 'lead'],
+    }),
   }),
 });
 
-export const { useCreateLeadMutation } = leadsApiService;
+export const { useCreateLeadMutation, useGetAllLeadWiseResponsesQuery } =
+  leadsApiService;
