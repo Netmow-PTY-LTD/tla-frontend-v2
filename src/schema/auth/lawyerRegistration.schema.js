@@ -33,7 +33,7 @@ export const lawyerRegistrationStepThreeFormValidation = z
       .string()
       .min(1, 'Phone number is required')
       .refine((val) => bdPhoneRegex.test(val) || auPhoneRegex.test(val), {
-        message: 'Phone number must be a valid BD or AU number',
+        message: 'Phone number must be a valid Bangladeshi or Australian number (e.g., +8801712345678 or +61412345678)',
       }),
 
     password: z.string().min(6, 'Password must be at least 6 characters'),
