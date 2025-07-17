@@ -1,19 +1,18 @@
 'use client';
-import React, { useEffect } from 'react';
+import React  from 'react';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+
 import z from 'zod';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
-import AvatarUploader from '@/components/UIComponents/AvaterUploader';
 import { useAddCategoryMutation } from '@/store/features/admin/categoryApiService';
 import FormWrapper from '@/components/form/FromWrapper';
-import TextInput from '@/components/form/TextInput';
+
+import FormField from './FormField';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -32,16 +31,7 @@ const formSchema = z.object({
 export default function AddCategoryModal({ open, onClose }) {
   const [addCategory, { isLoading }] = useAddCategoryMutation();
 
-  // const name = form.watch('name');
-
-  // useEffect(() => {
-  //   const slug = name
-  //     .toLowerCase()
-  //     .trim()
-  //     .replace(/[^\w\s-]/g, '')
-  //     .replace(/\s+/g, '-');
-  //   form.setValue('slug', slug);
-  // }, [name, form]);
+ 
 
   const onSubmit = async (values) => {
     if (!values?.image || values.image.size === 0) {
@@ -78,18 +68,7 @@ export default function AddCategoryModal({ open, onClose }) {
         </DialogHeader>
 
         <FormWrapper onSubmit={onSubmit} schema={formSchema}>
-          <TextInput name={'name'} placeholder='Category Name' />
-          <TextInput name={'slug'} placeholder='Slug' />
-          <AvatarUploader name='image' />
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? 'Adding...' : 'Add'}
-            </Button>
-
-          </DialogFooter>
+         <FormField onClose={onClose} isLoading={isLoading}/>
         </FormWrapper>
 
       </DialogContent>

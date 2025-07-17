@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
+
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -13,8 +13,8 @@ import {
 import { showSuccessToast, showErrorToast } from '@/components/common/toasts';
 import { useEditcategoryMutation, useSinglecategoryQuery } from '@/store/features/admin/categoryApiService';
 import FormWrapper from '@/components/form/FromWrapper';
-import TextInput from '@/components/form/TextInput';
-import AvatarUploader from '@/components/UIComponents/AvaterUploader';
+import FormField from './FormField';
+import { Loader } from 'lucide-react';
 
 export default function EditCategoryModal({ id, open, onClose }) {
   const [defaultValues, setDefaultValues] = useState({ name: '', slug: '', image: null });
@@ -82,23 +82,12 @@ export default function EditCategoryModal({ id, open, onClose }) {
 
         {isLoaingSingleCategory ? (
           <div className="flex justify-center items-center py-10">
-            <p>Loading category details...</p>
-            {/* Replace with a <Loader /> if you have a spinner */}
+            <p> <Loader /> Loading category details...</p>
+
           </div>
         ) : (
           <FormWrapper onSubmit={onSubmit} defaultValues={defaultValues}  >
-            <TextInput name={'name'} placeholder='Category Name' />
-            <TextInput name={'slug'} placeholder='Slug' />
-            <AvatarUploader name='image' />
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={onClose}>
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? 'Adding...' : 'Add'}
-              </Button>
-
-            </DialogFooter>
+            <FormField onClose={onClose} isLoading={isLoading} />
           </FormWrapper>
         )}
       </DialogContent>

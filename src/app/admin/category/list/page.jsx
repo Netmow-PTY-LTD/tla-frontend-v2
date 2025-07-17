@@ -117,7 +117,7 @@ export default function ServicesList() {
   return (
     <div>
       <div className="flex justify-between">
-        <h1>Services List</h1>
+        <h1>Category List</h1>
         <Button onClick={() => setIsModalOpen(true)}>Add New Category</Button>
       </div>
       <DataTable
