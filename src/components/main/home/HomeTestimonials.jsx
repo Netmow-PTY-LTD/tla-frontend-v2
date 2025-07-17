@@ -5,43 +5,43 @@ import '@/styles/slider.css';
 
 const testimonials = [
   {
-    image: 'https://randomuser.me/api/portraits/women/68.jpg',
+    image: '/assets/img/testimonials/testimonial-1.webp',
     name: 'Alicia Green',
     rating: 5,
     text: 'Amazing legal service. Fast and professional.',
   },
   {
-    image: 'https://randomuser.me/api/portraits/men/44.jpg',
+    image: '/assets/img/testimonials/testimonial-2.webp',
     name: 'Mark Benson',
     rating: 4,
     text: 'Best legal experience I’ve had. Highly recommend.',
   },
   {
-    image: 'https://randomuser.me/api/portraits/women/21.jpg',
+    image: '/assets/img/testimonials/testimonial-3.webp',
     name: 'Sara Lee',
     rating: 5,
     text: 'Very supportive and timely updates.',
   },
   {
-    image: 'https://randomuser.me/api/portraits/men/32.jpg',
+    image: '/assets/img/testimonials/testimonial-4.webp',
     name: 'John Smith',
     rating: 4,
     text: 'Confident, clear, and trustworthy advice.',
   },
   {
-    image: 'https://randomuser.me/api/portraits/women/45.jpg',
+    image: '/assets/img/testimonials/testimonial-5.webp',
     name: 'Emily Reed',
     rating: 5,
     text: 'Truly helpful legal team. Great results.',
   },
   {
-    image: 'https://randomuser.me/api/portraits/men/58.jpg',
+    image: '/assets/img/testimonials/testimonial-6.webp',
     name: 'Paul Stone',
     rating: 3,
     text: 'Listened, understood, and delivered perfectly.',
   },
   {
-    image: 'https://randomuser.me/api/portraits/women/11.jpg',
+    image: '/assets/img/testimonials/testimonial-7.webp',
     name: 'Jasmine Wu',
     rating: 5,
     text: 'Professional, friendly, and results-driven.',
