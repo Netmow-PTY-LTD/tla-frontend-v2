@@ -21,19 +21,26 @@ export default function Footer() {
             <div className="footer-top-widgets flex flex-wrap justify-between">
               <div className="max-w-full lg:max-w-[380px] pr-0 lg:pr-5">
                 <div className="footer-info">
-                  <Link href="/">
+                  {/* <Link href="/">
                     <Image
                       src={'/assets/img/logo.png'}
                       alt="TLA Logo"
                       width={220}
                       height={50}
                     />
-                  </Link>
-                  <div className="footer-text mt-[30px]">
-                    {`The Law App is changing the way people find legal help and how
+                  </Link> */}
+                  <div className="footer-text mt-[30px] flex items-start">
+                    <div className="">
+                      <img
+                        src="/assets/img/favicon.png"
+                        alt="favicon"
+                        className="float-left"
+                      />
+                      {`he Law App is changing the way people find legal help and how
                   lawyers grow their practice. Whether you’re a client in need
                   of expert advice or a lawyer looking to expand your reach, TLA
                   makes the process seamless, transparent, and efficient.`}
+                    </div>
                   </div>
                 </div>
               </div>
