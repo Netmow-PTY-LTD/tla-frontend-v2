@@ -12,7 +12,7 @@ import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/question
 import ClientLeadRegistrationModal from './modal/ClientLeadRegistrationModal';
 import { useSelector } from 'react-redux';
 import CreateLeadWithAuthModal from './modal/CreateLeadWithAuthModal';
-import { ChevronDown, Loader } from 'lucide-react';
+import { Check, ChevronDown, Loader } from 'lucide-react';
 import HeroSlider from '../common/HeroSlider';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import {
@@ -28,7 +28,9 @@ export default function HeroHome() {
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [service, setService] = useState(null);
-  const [zipCode, setZipCode] = useState(null);
+  const [location, setLocation] = useState(null);
+  const [filteredServices, setFilteredServices] = useState([]);
+  const [filteredZipCodes, setFilteredZipCodes] = useState([]);
 
   const handleModalOpen = () => {
     setServiceWiseQuestions(null); // Reset serviceWiseQuestions when opening the modal
@@ -76,42 +78,74 @@ export default function HeroHome() {
   const { data: allZipCodes, isLoading: isZipCodeLoading } =
     useGetZipCodeListQuery();
 
-  const filteredZipCodes = allZipCodes?.data?.filter((item) =>
-    item?.zipcode?.toLowerCase().includes(zipCode?.toLowerCase())
-  );
+  // const filteredZipCodes = allZipCodes?.data?.filter((item) =>
+  //   item?.zipcode?.toLowerCase().includes(location?.toLowerCase())
+  // );
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const matchedService =
+      typeof service === 'string'
+        ? countryWiseServices?.data?.find(
+            (s) => s.name.toLowerCase() === service.toLowerCase()
+          )
+        : service;
+
+    const matchedZip = allZipCodes?.data?.find(
+      (z) => z._id === location || z.zipcode === location
+    );
+
+    if (!matchedService || !matchedZip) {
+      toast.error('Please select both service and location.');
+      return;
+    }
+
+    setSelectedService(matchedService);
+    setLocation(matchedZip._id); // ensure location holds the ID
+    setModalOpen(true);
+  };
 
   return (
     <section className="hero-home section">
       <div className="container">
         <div className="hero-content py-[50px]">
           {/* <h3>Get a quote for legal services.</h3> */}
-          <h1>Need a Lawyer?</h1>
-          <p className="text-[#444] text-2xl font-medium">
-            Get Free Quotes in Minutes.
-          </p>
-          <form className="w-full">
+          <div className="mb-[30px]">
+            <h1 className="mb-[15px]">Need a Lawyer?</h1>
+            <p className="text-[#444] text-2xl font-medium">
+              Get Free Quotes in Minutes.
+            </p>
+          </div>
+          <form className="w-full" onSubmit={handleSubmit}>
             <div className="hero-search-area flex flex-wrap md:flex-nowrap gap-2 items-center w-full">
               <div className="tla-form-group w-full lg:w-5/12">
-                <Combobox value={service} onChange={setService}>
+                <Combobox value={service} onChange={(val) => setService(val)}>
                   <div className="relative">
                     <ComboboxInput
                       className="border border-gray-300 rounded-md w-full h-[44px] px-4 tla-form-control"
-                      onChange={(event) => setZipCode(event.target.value)}
-                      displayValue={(val) =>
-                        allZipCodes?.data?.find((z) => z._id === val)
-                          ?.zipcode || val
-                      }
+                      onChange={(e) => {
+                        const query = e.target.value.toLowerCase();
+                        const matched = countryWiseServices?.data?.filter((s) =>
+                          s.name.toLowerCase().includes(query)
+                        );
+                        setFilteredServices(
+                          query ? matched : countryWiseServices?.data
+                        );
+                        setService(e.target.value);
+                      }}
+                      displayValue={(val) => val?.name || ''}
                       placeholder="What area of law are you interested in?"
+                      onFocus={() =>
+                        setFilteredServices(countryWiseServices?.data ?? [])
+                      }
                     />
-                    {/* <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
-                      <ChevronDown className="h-4 w-4 text-gray-500" />
-                    </ComboboxButton> */}
-                    {filteredZipCodes?.length > 0 && (
+                    {filteredServices?.length > 0 && (
                       <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {filteredZipCodes.map((item) => (
+                        {filteredServices.map((item) => (
                           <ComboboxOption
                             key={item._id}
-                            value={item._id}
+                            value={item}
                             className={({ active }) =>
                               cn(
                                 'cursor-pointer select-none relative py-2 px-6',
@@ -129,7 +163,7 @@ export default function HeroHome() {
                                     'font-normal': !selected,
                                   })}
                                 >
-                                  {item.zipcode}
+                                  {item.name}
                                 </span>
                                 {selected && (
                                   <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
@@ -146,20 +180,29 @@ export default function HeroHome() {
                 </Combobox>
               </div>
               <div className="tla-form-group w-full md:w-5/12">
-                <Combobox value={zipCode} onChange={setZipCode}>
+                <Combobox value={location} onChange={setLocation}>
                   <div className="relative">
                     <ComboboxInput
                       className="border border-gray-300 rounded-md w-full h-[44px] px-4 tla-form-control"
-                      onChange={(event) => setZipCode(event.target.value)}
+                      onChange={(e) => {
+                        const query = e.target.value.toLowerCase();
+                        const filtered = allZipCodes?.data?.filter((z) =>
+                          z.zipcode.toLowerCase().includes(query)
+                        );
+                        setFilteredZipCodes(
+                          query ? filtered : allZipCodes?.data
+                        );
+                        setLocation(e.target.value);
+                      }}
                       displayValue={(val) =>
                         allZipCodes?.data?.find((z) => z._id === val)
                           ?.zipcode || val
                       }
                       placeholder="Your location"
+                      onFocus={() =>
+                        setFilteredZipCodes(allZipCodes?.data ?? [])
+                      }
                     />
-                    {/* <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
-                      <ChevronDown className="h-4 w-4 text-gray-500" />
-                    </ComboboxButton> */}
                     {filteredZipCodes?.length > 0 && (
                       <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         {filteredZipCodes.map((item) => (
@@ -251,6 +294,7 @@ export default function HeroHome() {
           selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
+          locationId={location}
         />
       )}
     </section>
