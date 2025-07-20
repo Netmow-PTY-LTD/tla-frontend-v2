@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import '@/styles/slider.css';
+import ResponseSkeleton from '@/app/lawyer/dashboard/my-responses/_components/ResponseSkeleton';
 
 const testimonials = [
   {
@@ -55,14 +56,96 @@ export default function TestimonialSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [step, setStep] = useState(1);
   const [images, setImages] = useState([]);
+  const [allLoaded, setAllLoaded] = useState(false);
   const intervalRef = useRef(null);
   const sliderRef = useRef(null);
   const activeCardRef = useRef(null);
 
+  // 1️⃣ Preload all images and set initial images only once
   useEffect(() => {
-    const initialImages = fixedSlots.map((_, i) => testimonials[i + 1]);
-    setImages(initialImages);
+    const loadImages = async () => {
+      const imagePromises = testimonials.map((t) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.src = t.image;
+          img.onload = resolve;
+          img.onerror = resolve;
+        });
+      });
+
+      await Promise.all(imagePromises);
+      setImages(fixedSlots.map((_, i) => testimonials[i + 1]));
+      setAllLoaded(true);
+    };
+
+    loadImages();
   }, []);
+
+  // 2️⃣ Slide rendering and interval only when all images are loaded
+  useEffect(() => {
+    if (!allLoaded) return;
+
+    const nextSlide = () => {
+      const nextIndex =
+        currentIndex + 1 >= MAX_VISIBLE_DOTS ||
+        currentIndex + 1 >= testimonials.length
+          ? 0
+          : currentIndex + 1;
+      fadeToSlide(nextIndex);
+    };
+
+    intervalRef.current = setInterval(nextSlide, 4000);
+    const slider = sliderRef.current;
+
+    const pause = () => clearInterval(intervalRef.current);
+    const resume = () => (intervalRef.current = setInterval(nextSlide, 4000));
+
+    slider.addEventListener('mouseenter', pause);
+    slider.addEventListener('mouseleave', resume);
+
+    let startX = 0;
+    const onTouchStart = (e) => (startX = e.touches[0].clientX);
+    const onTouchEnd = (e) => {
+      const endX = e.changedTouches[0].clientX;
+      if (endX < startX - 50 || endX > startX + 50) nextSlide();
+    };
+
+    slider.addEventListener('touchstart', onTouchStart);
+    slider.addEventListener('touchend', onTouchEnd);
+
+    return () => {
+      clearInterval(intervalRef.current);
+      slider.removeEventListener('mouseenter', pause);
+      slider.removeEventListener('mouseleave', resume);
+      slider.removeEventListener('touchstart', onTouchStart);
+      slider.removeEventListener('touchend', onTouchEnd);
+    };
+  }, [allLoaded, currentIndex]);
+
+  const updateSlide = (index) => {
+    const targetImage = images.slice();
+    targetImage[(step - 1) % 6] = testimonials[currentIndex];
+    setImages(targetImage);
+    setCurrentIndex(index);
+    setStep((prev) => (prev % 6) + 1);
+  };
+
+  const fadeToSlide = (index) => {
+    if (index === currentIndex) return;
+    const card = activeCardRef.current;
+    const imgBox = sliderRef.current.querySelector(
+      `#${fixedSlots[(step - 1) % 6]}`
+    );
+
+    card.style.opacity = 0;
+    imgBox.style.opacity = 0;
+
+    setTimeout(() => {
+      updateSlide(index);
+      card.style.opacity = 1;
+      imgBox.style.opacity = 1;
+    }, 300);
+  };
 
   const cardHTML = (t) => (
     <>
@@ -93,74 +176,22 @@ export default function TestimonialSlider() {
 
   const imageHTML = (t) => <img src={t.image} alt={t.name} />;
 
-  const updateSlide = (index) => {
-    const targetImage = images.slice();
-    targetImage[(step - 1) % 6] = testimonials[currentIndex];
-    setImages(targetImage);
-    setCurrentIndex(index);
-    setStep((prev) => (prev % 6) + 1);
-  };
-
-  const fadeToSlide = (index) => {
-    if (index === currentIndex) return;
-    const card = activeCardRef.current;
-    const imgBox = sliderRef.current.querySelector(
-      `#${fixedSlots[(step - 1) % 6]}`
-    );
-
-    card.style.opacity = 0;
-    imgBox.style.opacity = 0;
-
-    setTimeout(() => {
-      updateSlide(index);
-      card.style.opacity = 1;
-      imgBox.style.opacity = 1;
-    }, 300);
-  };
-
-  const nextSlide = () => {
-    const nextIndex =
-      currentIndex + 1 >= MAX_VISIBLE_DOTS ||
-      currentIndex + 1 >= testimonials.length
-        ? 0
-        : currentIndex + 1;
-    fadeToSlide(nextIndex);
-  };
-
-  useEffect(() => {
-    intervalRef.current = setInterval(nextSlide, 4000);
-    const slider = sliderRef.current;
-
-    const pause = () => clearInterval(intervalRef.current);
-    const resume = () => (intervalRef.current = setInterval(nextSlide, 4000));
-
-    slider.addEventListener('mouseenter', pause);
-    slider.addEventListener('mouseleave', resume);
-
-    let startX = 0;
-    const onTouchStart = (e) => (startX = e.touches[0].clientX);
-    const onTouchEnd = (e) => {
-      const endX = e.changedTouches[0].clientX;
-      if (endX < startX - 50 || endX > startX + 50) nextSlide();
-    };
-
-    slider.addEventListener('touchstart', onTouchStart);
-    slider.addEventListener('touchend', onTouchEnd);
-
-    return () => {
-      clearInterval(intervalRef.current);
-      slider.removeEventListener('mouseenter', pause);
-      slider.removeEventListener('mouseleave', resume);
-      slider.removeEventListener('touchstart', onTouchStart);
-      slider.removeEventListener('touchend', onTouchEnd);
-    };
-  }, [currentIndex]);
+  // 3️⃣ Show nothing until images are fully loaded
+  if (!allLoaded) return null;
 
   return (
     <section className="slider-wrapper">
       <div className="slider" ref={sliderRef}>
         {fixedSlots.map((id, i) => (
-          <div key={id} id={id} className="img-box" style={{ opacity: 1 }}>
+          <div
+            key={id}
+            id={id}
+            className="img-box"
+            style={{
+              opacity: 1,
+              transition: 'opacity 0.3s ease-in-out',
+            }}
+          >
             {images[i] && imageHTML(images[i])}
           </div>
         ))}

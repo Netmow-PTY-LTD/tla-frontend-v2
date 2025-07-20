@@ -85,54 +85,43 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
 
       <hr className="border-[#F3F3F3] border" />
 
-      {/* Matched Criteria */}
-      <div className="px-3 pt-3 pb-2">
-        {(urgentOption?.option ||
-          user?.additionalDetails ||
-          user?.userProfileId?.phone) && (
-          <h4
-            className={`font-medium mb-2 ${
-              isExpanded ? 'heading-base' : 'text-[13px]'
-            }`}
-          >
-            Matched criteria
-          </h4>
-        )}
-
-        <div className="flex flex-wrap gap-2">
-          {badge && (
-            <>
+      {(urgentOption?.option ||
+        (user?.additionalDetails && user.additionalDetails !== '') ||
+        user?.userProfileId?.phone ||
+        badge) && (
+        <div className="px-3 pt-3 pb-2">
+          <div className="flex flex-wrap gap-2">
+            {urgentOption?.option && (
+              <TagButton
+                text={urgentOption.option}
+                bgColor="#FF86021A"
+                icon={<Zap className="text-[#FF8602] w-4 h-4" />}
+              />
+            )}
+            {user?.additionalDetails && user.additionalDetails !== '' && (
+              <TagButton
+                text="Additional Details"
+                bgColor="#004DA61A"
+                icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+              />
+            )}
+            {user?.userProfileId?.phone && (
+              <TagButton
+                text="Verified Phone"
+                bgColor="#00C3C01A"
+                icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+              />
+            )}
+            {badge && (
               <TagButton
                 text={badge}
                 bgColor="#004DA61A"
                 icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
               />
-            </>
-          )}
-          {urgentOption?.option && (
-            <TagButton
-              text={urgentOption?.option}
-              bgColor="#FF86021A"
-              icon={<Zap className="text-[#FF8602] w-4 h-4" />}
-            />
-          )}
-          {user?.additionalDetails && user?.additionalDetails !== '' && (
-            <TagButton
-              text="Additional Details"
-              bgColor="#004DA61A"
-              icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
-            />
-          )}
-
-          {user?.userProfileId?.phone && (
-            <TagButton
-              text="Verified Phone"
-              bgColor="#00C3C01A"
-              icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
-            />
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Job Description */}
       <div className="p-3 flex-1">

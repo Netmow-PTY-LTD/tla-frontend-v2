@@ -61,42 +61,43 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
       <hr className="border-[#F3F3F3] border" />
 
       {/* Matched Criteria */}
-      <div className="px-3 pt-3 pb-2">
-        <div className="flex flex-wrap gap-2">
-          {/* {badge && (
-            <>
+      {(user?.additionalDetails && user.additionalDetails !== '') ||
+      urgentOption?.option ||
+      user?.userProfileId?.phone ||
+      badge ? (
+        <div className="px-3 pt-3 pb-2">
+          <div className="flex flex-wrap gap-2">
+            {user?.additionalDetails && user.additionalDetails !== '' && (
+              <TagButton
+                text="Additional Details"
+                bgColor="#004DA61A"
+                icon={<BadgeCheck className="text-[#000] w-4 h-4" />}
+              />
+            )}
+            {urgentOption?.option && (
+              <TagButton
+                text={urgentOption.option}
+                bgColor="#FF86021A"
+                icon={<Zap className="text-[#FF8602] w-4 h-4" />}
+              />
+            )}
+            {user?.userProfileId?.phone && (
+              <TagButton
+                text="Verified Phone"
+                bgColor="#00C3C01A"
+                icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+              />
+            )}
+            {badge && (
               <TagButton
                 text={badge}
                 bgColor="#004DA61A"
                 icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
               />
-            </>
-          )} */}
-
-          {user?.additionalDetails && user?.additionalDetails !== '' && (
-            <TagButton
-              text="Additional Details"
-              bgColor="#004DA61A"
-              icon={<BadgeCheck className="text-[#000] w-4 h-4" />}
-            />
-          )}
-          {urgentOption?.option && (
-            <TagButton
-              text={urgentOption?.option}
-              bgColor="#FF86021A"
-              icon={<Zap className="text-[#FF8602] w-4 h-4" />}
-            />
-          )}
-
-          {user?.userProfileId?.phone && (
-            <TagButton
-              text="Verified Phone"
-              bgColor="#00C3C01A"
-              icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
-            />
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      ) : null}
 
       {/* Job Description */}
       <div className="p-3 flex-1">
@@ -109,6 +110,14 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
             Looking for a {user?.serviceId?.name} consultation
           </h3>
         )}
+
+        {user?.isContact === true ? (
+          <div className="py-1">
+            <span className="text-[12px] font-medium bg-[#FF8602] py-1 px-2 rounded text-white">
+              In Response
+            </span>
+          </div>
+        ) : null}
 
         <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
           <h4
@@ -133,13 +142,6 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
           </p>
         </div>
       </div>
-      {user?.isContact === true ? (
-        <div className="px-3 py-2">
-          <span className="text-[12px] font-medium bg-[#FF8602] py-1 px-2 rounded text-white">
-            In Response
-          </span>
-        </div>
-      ) : null}
 
       {/* Footer Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">

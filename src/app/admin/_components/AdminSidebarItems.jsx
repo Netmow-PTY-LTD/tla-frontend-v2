@@ -54,12 +54,6 @@ export const AdminSidebarItems = {
       icon: SquareTerminal,
       isActive: true,
     },
-    {
-      title: 'Category',
-      url: '/admin/category/list',
-      icon: SquareTerminal,
-      isActive: true,
-    },
     // {
     //   title: 'Country',
     //   url: '/admin/country/list',
@@ -121,10 +115,9 @@ export const AdminSidebarItems = {
     //     },
     //   ],
     // },
-
     {
       title: 'Category Wise Services',
-      url: '/admin/category-wise-service/list',
+      url: '/admin/category-wise-service',
       icon: List,
       isActive: true,
     },
@@ -134,12 +127,7 @@ export const AdminSidebarItems = {
       icon: List,
       isActive: true,
     },
-    {
-      title: 'Category Wise Services',
-      url: '/admin/category-wise-service',
-      icon: List,
-      isActive: true,
-    },
+
     {
       title: 'Manage Services',
       url: '/admin/manage-services',
