@@ -3,10 +3,10 @@ import { baseApi } from '../../baseApi/baseApi';
 const leadsApiService = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllLeads: builder.query({
-      query: ({ page, limit }) => ({
+      query: ({ page, limit,searchKeyword }) => ({
         url: '/lead/list',
         method: 'GET',
-        params: { page, limit },
+        params: { page, limit, searchKeyword },
       }),
       providesTags: ['lead'],
     }),
@@ -42,3 +42,5 @@ export const {
   useGetAllMyLeadsQuery,
   useContactLawyerMutation,
 } = leadsApiService;
+
+

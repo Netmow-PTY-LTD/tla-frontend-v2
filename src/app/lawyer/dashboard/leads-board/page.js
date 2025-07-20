@@ -19,13 +19,18 @@ const LeadBoardPage = () => {
   const [leads, setLeads] = useState([]);
   const [hasMore, setHasMore] = useState(true);
 
+
+  const [searchKeyword,setSearchKeyword]=useState({})
+ 
+
+
   const scrollContainerRef = useRef(null);
 
   const {
     data,
     isLoading: isAllLeadsLoading,
     isFetching,
-  } = useGetAllLeadsQuery({ page, limit: 10 });
+  } = useGetAllLeadsQuery({ page, limit: 10 ,  searchKeyword: JSON.stringify(searchKeyword),});
 
   // Fetch detailed data for selected lead
   const { data: selectedLeadData, isLoading: isSingleLeadLoading } =
@@ -67,6 +72,10 @@ const LeadBoardPage = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasMore, isFetching, scrollContainerRef?.current]);
+
+
+  console.log('lead ===>',leads)
+
 
   if (isAllLeadsLoading) {
     return (
@@ -138,6 +147,8 @@ const LeadBoardPage = () => {
                 <LeadsHead
                   isExpanded={!showLeadDetails}
                   total={data?.pagination?.total ?? 0}
+                  setSearchKeyword={setSearchKeyword}
+                  
                 />
               </div>
               <div className="leads-bottom-row max-w-[1400px] mx-auto">
