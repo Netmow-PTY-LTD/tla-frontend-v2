@@ -118,7 +118,7 @@ export default function MyResponsesPage() {
               <div className="leads-top-row">
                 <ResponseHead
                   isExpanded={!showResponseDetails}
-                  data={allMyResponses?.data}
+                  data={allMyResponses?.data || []}
                 />
               </div>
               <div className="leads-bottom-row max-w-[1400px] mx-auto">
@@ -129,7 +129,7 @@ export default function MyResponsesPage() {
                     setShowResponseDetails(true);
                     router.push(`?responseId=${response?._id}`);
                   }}
-                  data={allMyResponses?.data}
+                  data={allMyResponses?.data || []}
                 />
               </div>
             </div>

@@ -6,14 +6,12 @@ import { useGetAllCreditPackagesQuery } from '@/store/features/credit_and_paymen
 import { Loader } from 'lucide-react';
 import { BillingTransactionDetails } from '../UI/BillingTransactionTable';
 
-const MyCredits = ({setMyCreditsProgress}) => {
+const MyCredits = ({ setMyCreditsProgress }) => {
   const {
     data: packageData,
     isError,
     isLoading,
   } = useGetAllCreditPackagesQuery();
-
-
 
   return (
     <div className="w-full ">
@@ -66,7 +64,9 @@ const MyCredits = ({setMyCreditsProgress}) => {
           )}
         </div>
         <div className="mt-8">
-          <BillingTransactionDetails setMyCreditsProgress={setMyCreditsProgress} />
+          <BillingTransactionDetails
+            setMyCreditsProgress={setMyCreditsProgress}
+          />
         </div>
       </div>
     </div>
