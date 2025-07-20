@@ -55,7 +55,7 @@ export default function LeadDetailsPage({
     .flatMap((answer) => answer.options || [])
     .find((option) => option.option === 'Urgent');
 
-  const badges = singleLead?.badges;
+  const badge = singleLead?.badge;
 
   return (
     <div className="bg-white">
@@ -157,16 +157,14 @@ export default function LeadDetailsPage({
           </div>
           <div className="mt-5">
             <div className="flex flex-wrap gap-2">
-              {badges && badges.length > 0 && (
+              {badge && (
                 <>
-                  {badges.map((item) => (
-                    <TagButton
-                      key={item}
-                      text={item}
-                      bgColor="#004DA61A"
-                      icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
-                    />
-                  ))}
+                  <TagButton
+                    key={item}
+                    text={item}
+                    bgColor="#004DA61A"
+                    icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+                  />
                 </>
               )}
               {urgentOption?.option && (

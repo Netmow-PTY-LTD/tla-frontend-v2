@@ -5,26 +5,32 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
-
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
 
 import { showSuccessToast, showErrorToast } from '@/components/common/toasts';
-import { useEditcategoryMutation, useSinglecategoryQuery } from '@/store/features/admin/categoryApiService';
+import {
+  useEditCategoryMutation,
+  useGetCategoryByIdQuery,
+} from '@/store/features/admin/categoryApiService';
 import FormWrapper from '@/components/form/FromWrapper';
 import FormField from './FormField';
 import { Loader } from 'lucide-react';
 
 export default function EditCategoryModal({ id, open, onClose }) {
-  const [defaultValues, setDefaultValues] = useState({ name: '', slug: '', image: null });
+  const [defaultValues, setDefaultValues] = useState({
+    name: '',
+    slug: '',
+    image: null,
+  });
 
   const {
     data: singleCategory,
     isSuccess,
     isLoading: isLoaingSingleCategory,
     refetch,
-  } = useSinglecategoryQuery(id, {
+  } = useGetCategoryByIdQuery(id, {
     skip: !id,
   });
 
@@ -44,17 +50,15 @@ export default function EditCategoryModal({ id, open, onClose }) {
     }
   }, [isSuccess, singleCategory]);
 
-  const [editCategory, { isLoading }] = useEditcategoryMutation();
+  const [editCategory, { isLoading }] = useEditCategoryMutation();
 
   async function onSubmit(values) {
-
     try {
-
       const formData = new FormData();
       const payload = {
         name: values.name,
-        slug: values.slug
-      }
+        slug: values.slug,
+      };
 
       formData.append('data', JSON.stringify(payload));
       if (values.image instanceof File) {
@@ -82,11 +86,13 @@ export default function EditCategoryModal({ id, open, onClose }) {
 
         {isLoaingSingleCategory ? (
           <div className="flex justify-center items-center py-10">
-            <p> <Loader /> Loading category details...</p>
-
+            <p>
+              {' '}
+              <Loader /> Loading category details...
+            </p>
           </div>
         ) : (
-          <FormWrapper onSubmit={onSubmit} defaultValues={defaultValues}  >
+          <FormWrapper onSubmit={onSubmit} defaultValues={defaultValues}>
             <FormField onClose={onClose} isLoading={isLoading} />
           </FormWrapper>
         )}
