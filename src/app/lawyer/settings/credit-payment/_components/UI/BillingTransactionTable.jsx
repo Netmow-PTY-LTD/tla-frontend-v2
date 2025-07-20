@@ -1,19 +1,20 @@
-"use client"
+'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import { Search, Download, Filter, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useUserTransactionHistoryQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 import InvoiceModal from '../modal/InvoiceMoadal';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import InvoiceDocument from '@/components/dashboard/lawyer/invoice/InvoiceDocument';
 export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
   const itemsPerPage = 5;
-
 
   const {
     data: transactionData,
@@ -24,15 +25,10 @@ export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
   // set proggression
 
   useEffect(() => {
-
     if (transactionData?.data?.length > 0) {
-      setMyCreditsProgress(100)
+      setMyCreditsProgress(100);
     }
-
-
-  }, [transactionData?.data])
-
-
+  }, [transactionData?.data]);
 
   useEffect(() => {
     if (!transactionData?.data) return;
@@ -48,8 +44,6 @@ export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
     setCurrentPage(1);
   }, [transactionData, searchTerm]);
 
-
-
   const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedTransactions = filteredTransactions.slice(
@@ -64,14 +58,8 @@ export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
       year: 'numeric',
     });
 
-
-
-
   return (
     <>
-
-
-
       <div className="w-full max-w-[900px] mx-auto p-6 bg-gray-50 rounded-lg shadow-sm">
         {/* Header */}
         <div className="mb-8">
@@ -150,51 +138,63 @@ export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {paginatedTransactions.map((tx) => (
-                  <tr key={tx._id} className="hover:bg-gray-50">
-                    <td className="py-4 px-6 text-sm font-mono text-gray-800">
-                      {tx._id.slice(0, 8)}...
-                    </td>
-                    <td className="py-4 px-6 text-sm text-gray-900 font-medium">
-                      {tx.creditPackageId?.name || '-'}
-                    </td>
-                    <td className="py-4 px-6 text-sm font-semibold text-green-600">
-                      +{tx.creditPackageId?.credit}
-                    </td>
-                    <td className="py-4 px-6 text-sm text-gray-800">
-                      ${tx.amountPaid}{' '}
-                      <span className="text-gray-500">
-                        ({tx.currency.toUpperCase()})
-                      </span>
-                    </td>
-                    <td className="py-4 px-6 text-sm">
-                      <span
-                        className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${tx.status === 'completed'
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-yellow-100 text-yellow-700'
+                {paginatedTransactions.map((tx) => {
+                  return (
+                    <tr key={tx._id} className="hover:bg-gray-50">
+                      <td className="py-4 px-6 text-sm font-mono text-gray-800">
+                        {tx._id.slice(0, 8)}...
+                      </td>
+                      <td className="py-4 px-6 text-sm text-gray-900 font-medium">
+                        {tx.creditPackageId?.name || '-'}
+                      </td>
+                      <td className="py-4 px-6 text-sm font-semibold text-green-600">
+                        +{tx.creditPackageId?.credit}
+                      </td>
+                      <td className="py-4 px-6 text-sm text-gray-800">
+                        ${tx.amountPaid}{' '}
+                        <span className="text-gray-500">
+                          ({tx.currency.toUpperCase()})
+                        </span>
+                      </td>
+                      <td className="py-4 px-6 text-sm">
+                        <span
+                          className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
+                            tx.status === 'completed'
+                              ? 'bg-green-100 text-green-700'
+                              : 'bg-yellow-100 text-yellow-700'
                           }`}
-                      >
-                        {tx.status}
-                      </span>
-                    </td>
-                    <td className="py-4 px-6 text-sm text-gray-600">
-                      {formatDate(tx.createdAt)}
-                    </td>
-                    <td className="py-4 px-6 text-sm text-gray-600">
-                      <button
-                        onClick={() => {
-                          setSelectedTransaction(tx);
-                          setOpen(true)
-                        }
-                        }
-                        className="px-4 py-1.5 bg-green-100 text-green-700 text-sm font-medium rounded-md hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-green-300 transition"
-                      >
-                        Click
-                      </button>
-
-                    </td>
-                  </tr>
-                ))}
+                        >
+                          {tx.status}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6 text-sm text-gray-600">
+                        {formatDate(tx.createdAt)}
+                      </td>
+                      <td className="py-4 px-6 text-sm text-gray-600">
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => {
+                              setSelectedTransaction(tx);
+                              setOpen(true);
+                            }}
+                            className="px-4 py-1.5 bg-green-100 text-green-700 text-sm font-medium rounded-md hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-green-300 transition"
+                          >
+                            view
+                          </button>
+                          <PDFDownloadLink
+                            document={<InvoiceDocument transaction={tx} />}
+                            fileName={`invoice_${tx._id}.pdf`}
+                            className="px-4 py-1.5 bg-gray-100 text-gray-800 text-sm font-medium rounded-md hover:bg-gray-200 transition"
+                          >
+                            {({ loading }) =>
+                              loading ? 'Loading...' : 'Download'
+                            }
+                          </PDFDownloadLink>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -219,8 +219,8 @@ export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
         <div className="mt-6 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-600">
           <div>
             Showing {startIndex + 1}–
-            {Math.min(startIndex + itemsPerPage, filteredTransactions.length)} of{' '}
-            {filteredTransactions.length} transactions
+            {Math.min(startIndex + itemsPerPage, filteredTransactions.length)}{' '}
+            of {filteredTransactions.length} transactions
           </div>
           <div className="flex items-center gap-4 mt-2 sm:mt-0">
             <span>
@@ -235,8 +235,6 @@ export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
             </span>
           </div>
         </div>
-
-
 
         {/* Pagination Controls */}
         <div className="mt-6 flex justify-center gap-2">
@@ -253,8 +251,14 @@ export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
           {(() => {
             const pages = [];
             const maxVisiblePages = 5;
-            const startPage = Math.floor((currentPage - 1) / maxVisiblePages) * maxVisiblePages + 1;
-            const endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+            const startPage =
+              Math.floor((currentPage - 1) / maxVisiblePages) *
+                maxVisiblePages +
+              1;
+            const endPage = Math.min(
+              startPage + maxVisiblePages - 1,
+              totalPages
+            );
 
             // Show leading ellipsis if needed
             if (startPage > 1) {
@@ -311,7 +315,11 @@ export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
           </Button>
         </div>
       </div>
-      <InvoiceModal open={open} setOpen={setOpen} transaction={selectedTransaction} />
+      <InvoiceModal
+        open={open}
+        setOpen={setOpen}
+        transaction={selectedTransaction}
+      />
     </>
   );
 };
