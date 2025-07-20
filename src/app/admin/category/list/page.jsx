@@ -14,15 +14,18 @@ import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
 import AddCategoryModal from '../_components/AddCategoryModal ';
 import EditCategoryModal from '../_components/EditCategoryModal';
-import { useAllcategorysQuery, useDeletecategoryMutation } from '@/store/features/admin/categoryApiService';
+import {
+  useAllCategoriesQuery,
+  useDeleteCategoryMutation,
+} from '@/store/features/admin/categoryApiService';
 
 export default function ServicesList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState(null);
 
-  const { data: categoryList, refetch } = useAllcategorysQuery();
-  const [deleteCategory] = useDeletecategoryMutation();
+  const { data: categoryList, refetch } = useAllCategoriesQuery();
+  const [deleteCategory] = useDeleteCategoryMutation();
 
   const handleDeleteCategory = async (id) => {
     try {

@@ -9,46 +9,43 @@ const categoryApiService = baseApi.injectEndpoints({
         body,
       }),
       invalidatesTags: ['category'],
-     
     }),
-    allcategorys: builder.query({
+    allCategories: builder.query({
       query: () => ({
         url: '/category/list',
         method: 'GET',
       }),
       providesTags: ['category'],
     }),
-    singlecategory: builder.query({
+    getCategoryById: builder.query({
       query: (id) => ({
         url: `/category/${id}`,
         method: 'GET',
       }),
       providesTags: ['category'],
     }),
-    editcategory: builder.mutation({
+    editCategory: builder.mutation({
       query: (payload) => ({
         url: `/category/edit/${payload?.id}`,
         method: 'PATCH',
-        body:payload.data,
+        body: payload.data,
       }),
       invalidatesTags: ['category'],
     }),
-    deletecategory: builder.mutation({
+    deleteCategory: builder.mutation({
       query: (id) => ({
         url: `/category/delete/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['category'],
     }),
-    
   }),
 });
 
 export const {
-    useAddCategoryMutation,
-    useAllcategorysQuery,
-    useSinglecategoryQuery,
-    useEditcategoryMutation,
-    useDeletecategoryMutation
-
+  useAddCategoryMutation,
+  useAllCategoriesQuery,
+  useGetCategoryByIdQuery,
+  useEditCategoryMutation,
+  useDeleteCategoryMutation,
 } = categoryApiService;
