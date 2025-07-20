@@ -24,6 +24,7 @@ export default function ClientLeadRegistrationModal({
   selectedServiceWiseQuestions,
   countryId,
   serviceId,
+  locationId,
 }) {
   const [step, setStep] = useState(0);
 
@@ -88,6 +89,22 @@ export default function ClientLeadRegistrationModal({
 
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const { data: allZipCodes, isLoading: isZipCodeLoading } =
+    useGetZipCodeListQuery();
+
+  const filteredZipCodes = allZipCodes?.data?.filter((item) =>
+    item?.zipcode?.toLowerCase().includes(zipCode.toLowerCase())
+  );
+
+  useEffect(() => {
+    if (locationId && allZipCodes?.data?.length > 0) {
+      const matched = allZipCodes.data.find((item) => item._id === locationId);
+      if (matched) {
+        setZipCode(matched._id); // Set ID, not zipcode text
+      }
+    }
+  }, [locationId, allZipCodes?.data]);
 
   //setting initial data
 
@@ -328,7 +345,7 @@ export default function ClientLeadRegistrationModal({
     }
   };
 
-  console.log('checkedOptions', checkedOptionsDetails);
+  //console.log('checkedOptions', checkedOptionsDetails);
 
   useEffect(() => {
     if (step === 0) {
@@ -483,13 +500,6 @@ export default function ClientLeadRegistrationModal({
     // Step: Phone (optional)
     return false;
   })();
-
-  const { data: allZipCodes, isLoading: isZipCodeLoading } =
-    useGetZipCodeListQuery();
-
-  const filteredZipCodes = allZipCodes?.data?.filter((item) =>
-    item?.zipcode?.toLowerCase().includes(zipCode.toLowerCase())
-  );
 
   //console.log('questionLoading:', questionLoading);
 
