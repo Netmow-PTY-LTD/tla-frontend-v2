@@ -323,8 +323,8 @@ export default function FilterSidebar({ data, setSearchKeyword }) {
                         >
                           <input
                             type="checkbox"
-                            id={service?.name}
-                            value={service?.name}
+                            id={service?._id}
+                            value={service?._id}
                             {...register('service')}
                           />
                           {service?.name}

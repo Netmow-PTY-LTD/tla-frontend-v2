@@ -18,9 +18,11 @@ const LeadBoardPage = () => {
   const [page, setPage] = useState(1);
   const [leads, setLeads] = useState([]);
   const [hasMore, setHasMore] = useState(true);
+ const stored = localStorage.getItem('lead-filters');
+     const parsed = JSON.parse(stored);
 
 
-  const [searchKeyword,setSearchKeyword]=useState({})
+  const [searchKeyword,setSearchKeyword]=useState(parsed)
  
 
 
