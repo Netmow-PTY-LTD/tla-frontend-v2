@@ -28,7 +28,7 @@ const creditTiers = [
   { id: 8, range: '50-100 credits' },
 ];
 
-export default function FilterSidebar({ data }) {
+export default function FilterSidebar({ data, setSearchKeyword }) {
   const { register, handleSubmit, reset, watch, setValue, getValues } = useForm(
     {
       defaultValues: {
@@ -76,13 +76,14 @@ export default function FilterSidebar({ data }) {
     };
 
     console.log('Filter Payload:', payload);
+    setSearchKeyword(payload);
     // Now you can call API or update state
     localStorage.setItem('lead-filters', JSON.stringify(payload));
     // Show toast
     showSuccessToast('Filters applied and saved.');
   };
 
-  console.log('data:', data);
+
 
   return (
     <Sheet className="z-[9999]">
@@ -322,8 +323,8 @@ export default function FilterSidebar({ data }) {
                         >
                           <input
                             type="checkbox"
-                            id={service?.name}
-                            value={service?.name}
+                            id={service?._id}
+                            value={service?._id}
                             {...register('service')}
                           />
                           {service?.name}
