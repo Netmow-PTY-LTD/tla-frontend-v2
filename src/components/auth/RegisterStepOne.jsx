@@ -141,8 +141,8 @@ export default function RegisterStepOne() {
           </h5>
 
           <Form {...form}>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <div className="flex flex-wrap">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="flex flex-wrap space-y-5">
                 <div className="w-full">
                   <FormField
                     control={control}
@@ -172,7 +172,7 @@ export default function RegisterStepOne() {
                     )}
                   />
                 </div>
-                <div className="w-full md:w-1/2 hidden">
+                <div className="w-full">
                   <FormItem>
                     <FormLabel>
                       What type of legal service do you provide?
@@ -190,7 +190,7 @@ export default function RegisterStepOne() {
                         {selectedServices.map((service) => (
                           <Badge
                             key={service._id}
-                            className="cursor-pointer"
+                            className="cursor-pointer py-1 px-2 flex items-center gap-2"
                             onClick={() => handleSelectService(service._id)}
                           >
                             {service.name} ✕
@@ -269,15 +269,15 @@ export default function RegisterStepOne() {
               )} */}
 
               <div
-                className={`popular-services mb-8 ${
+                className={`popular-services mt-3 mb-8 ${
                   hasServiceError ? 'border border-red-500 p-4 rounded-md' : ''
                 }`}
               >
                 <label className="font-medium text-[16px]">
-                  Select at least onel legal service from below:
+                  Popular Services:
                 </label>
                 <div className="flex flex-wrap gap-2 mt-4">
-                  {countryWiseServices?.data?.slice(0, 9).map((service) => (
+                  {countryWiseServices?.data?.slice(0, 5).map((service) => (
                     <div
                       key={service._id}
                       className="w-full sm:w-1/2 md:w-auto"

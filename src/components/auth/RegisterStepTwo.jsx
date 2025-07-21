@@ -38,7 +38,6 @@ import {
   nextStep,
   prevStep,
 } from '@/store/features/auth/lawyerRegistrationSlice';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { lawyerRegistrationStepTwoFormValidation } from '@/schema/auth/lawyerRegistration.schema';
 import Link from 'next/link';
@@ -186,7 +185,7 @@ export default function RegisterStepTwo() {
                     <FormLabel className="ml-2 font-bold">
                       I will practice within
                     </FormLabel>
-                    <FormMessage />
+                    <FormMessage className="text-red-600" />
                   </FormItem>
                 )}
               />
@@ -262,7 +261,7 @@ export default function RegisterStepTwo() {
                         )}
                       </div>
                     </Combobox>
-                    <FormMessage />
+                    <FormMessage className="text-red-600" />
                   </FormItem>
                 )}
               />
@@ -362,7 +361,7 @@ export default function RegisterStepTwo() {
                         })}
                       </SelectContent>
                     </Select>
-                    <FormMessage />
+                    <FormMessage className="text-red-600" />
                   </FormItem>
                 )}
               />
@@ -382,7 +381,7 @@ export default function RegisterStepTwo() {
                     <FormLabel className="ml-2 font-bold">
                       I will practice internationally all over the world
                     </FormLabel>
-                    <FormMessage />
+                    <FormMessage className="text-red-600" />
                   </FormItem>
                 )}
               />
