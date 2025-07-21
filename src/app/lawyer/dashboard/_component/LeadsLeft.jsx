@@ -7,6 +7,7 @@ import {
   AtSign,
   BadgeCheck,
   CircleAlert,
+  Inbox,
   Loader,
   MoveLeft,
   PhoneOutgoing,
@@ -59,192 +60,203 @@ export default function LeadDetailsPage({
 
   return (
     <div className="bg-white">
-      <div className="max-w-[900px]">
-        <div className="flex items-center justify-between">
-          <button className="flex py-2 items-center gap-2" onClick={onBack}>
-            {' '}
-            <MoveLeft /> <span>Back to leads</span>
-          </button>
-        </div>
-        <div className="mt-3 max-w-4xl">
-          <div className="flex justify-between">
-            <div className="flex flex-col items-start gap-4 ">
-              <figure className="w-20 h-20 overflow-hidden">
-                <Image
-                  src={`${
-                    lead?.userProfileId?.profilePicture ??
-                    '/assets/img/avatar.png'
-                  }`}
-                  alt={lead?.userProfileId?.name ?? 'John Doe'}
-                  width={80}
-                  height={80}
-                  priority
-                  className="rounded-full object-cover w-full h-full"
-                />
-              </figure>
-              <div>
-                <h2 className="font-medium heading-lg">
-                  {lead?.userProfileId?.name ?? ''}
-                </h2>
-                <p className="text-gray-500 mt-2">
-                  {lead?.userProfileId?.address ?? ''}
-                </p>
+      {lead ? (
+        <div className="max-w-[900px]">
+          <div className="flex items-center justify-between">
+            <button className="flex py-2 items-center gap-2" onClick={onBack}>
+              {' '}
+              <MoveLeft /> <span>Back to leads</span>
+            </button>
+          </div>
+          <div className="mt-3 max-w-4xl">
+            <div className="flex justify-between">
+              <div className="flex flex-col items-start gap-4 ">
+                <figure className="w-20 h-20 overflow-hidden">
+                  <Image
+                    src={`${
+                      lead?.userProfileId?.profilePicture ??
+                      '/assets/img/avatar.png'
+                    }`}
+                    alt={lead?.userProfileId?.name ?? 'John Doe'}
+                    width={80}
+                    height={80}
+                    priority
+                    className="rounded-full object-cover w-full h-full"
+                  />
+                </figure>
+                <div>
+                  <h2 className="font-medium heading-lg">
+                    {lead?.userProfileId?.name ?? ''}
+                  </h2>
+                  <p className="text-gray-500 mt-2">
+                    {lead?.userProfileId?.address ?? ''}
+                  </p>
+                </div>
+              </div>
+              <p className="font-medium text-[12px] text-gray-600 sm:ml-4 mt-2 sm:mt-0">
+                {lead?.createdAt && formatRelativeTime(lead?.createdAt)}
+              </p>
+            </div>
+            <hr className="border-[#F3F3F3] my-5" />
+            <div className="mb-4">
+              <div className="flex items-center gap-2 admin-text font-medium">
+                <PhoneOutgoing className="w-4 h-4" />{' '}
+                <span>
+                  Phone: {''}
+                  {(() => {
+                    const phone = lead?.userProfileId?.phone;
+                    return phone
+                      ? `${phone.slice(0, 3)}${'*'.repeat(
+                          Math.max(0, phone.length - 3)
+                        )}`
+                      : '480*******';
+                  })()}
+                </span>{' '}
+              </div>
+              <div className=" flex items-center gap-2 mt-2 admin-text font-medium">
+                <AtSign className="w-4 h-4" />{' '}
+                <span>
+                  Email:{' '}
+                  {(() => {
+                    const email = singleLead?.userProfileId?.user?.email;
+                    if (!email) return 't*******@e********.com';
+
+                    const [user, domain] = email.split('@');
+                    const maskedUser =
+                      user[0] + '*'.repeat(Math.max(user.length - 1, 0));
+                    const maskedDomain =
+                      domain[0] +
+                      '*'.repeat(Math.max(domain.indexOf('.'), 0)) +
+                      domain.slice(domain.indexOf('.'));
+
+                    return `${maskedUser}@${maskedDomain}`;
+                  })()}
+                </span>{' '}
               </div>
             </div>
-            <p className="font-medium text-[12px] text-gray-600 sm:ml-4 mt-2 sm:mt-0">
-              {lead?.createdAt && formatRelativeTime(lead?.createdAt)}
-            </p>
-          </div>
-          <hr className="border-[#F3F3F3] my-5" />
-          <div className="mb-4">
-            <div className="flex items-center gap-2 admin-text font-medium">
-              <PhoneOutgoing className="w-4 h-4" />{' '}
-              <span>
-                Phone: {''}
-                {(() => {
-                  const phone = lead?.userProfileId?.phone;
-                  return phone
-                    ? `${phone.slice(0, 3)}${'*'.repeat(
-                        Math.max(0, phone.length - 3)
-                      )}`
-                    : '480*******';
-                })()}
-              </span>{' '}
-            </div>
-            <div className=" flex items-center gap-2 mt-2 admin-text font-medium">
-              <AtSign className="w-4 h-4" />{' '}
-              <span>
-                Email:{' '}
-                {(() => {
-                  const email = singleLead?.userProfileId?.user?.email;
-                  if (!email) return 't*******@e********.com';
-
-                  const [user, domain] = email.split('@');
-                  const maskedUser =
-                    user[0] + '*'.repeat(Math.max(user.length - 1, 0));
-                  const maskedDomain =
-                    domain[0] +
-                    '*'.repeat(Math.max(domain.indexOf('.'), 0)) +
-                    domain.slice(domain.indexOf('.'));
-
-                  return `${maskedUser}@${maskedDomain}`;
-                })()}
-              </span>{' '}
-            </div>
-          </div>
-          <div className="flex flex-wrap items-center gap-4">
-            {/*  need to credit purchase modal */}
-            {!lead?.isContact ? (
-              <>
-                <LawyerContactButton leadDetail={singleLead} />
-                {singleLead?.credit && (
-                  <div className="text-[#34495E] ml-2 flex items-center gap-2">
-                    <span>
-                      {singleLead?.credit}{' '}
-                      {singleLead?.credit > 1 ? 'credits' : 'credit'} required
-                    </span>
-                    <CircleAlert />
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
-                <p className="text-[14px] font-medium bg-[#FF8602] py-1 px-2 rounded text-white">
-                  In Response
-                </p>
-              </>
-            )}
-          </div>
-          <div className="mt-5">
-            <div className="flex flex-wrap gap-2">
-              {badge && (
+            <div className="flex flex-wrap items-center gap-4">
+              {/*  need to credit purchase modal */}
+              {!lead?.isContact ? (
                 <>
-                  <TagButton
-                    text={badge}
-                    bgColor="#004DA61A"
-                    icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
-                  />
+                  <LawyerContactButton leadDetail={singleLead} />
+                  {singleLead?.credit && (
+                    <div className="text-[#34495E] ml-2 flex items-center gap-2">
+                      <span>
+                        {singleLead?.credit}{' '}
+                        {singleLead?.credit > 1 ? 'credits' : 'credit'} required
+                      </span>
+                      <CircleAlert />
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <p className="text-[14px] font-medium bg-[#FF8602] py-1 px-2 rounded text-white">
+                    In Response
+                  </p>
                 </>
               )}
-              {urgentOption?.option && (
-                <TagButton
-                  text={urgentOption?.option}
-                  bgColor="#FF86021A"
-                  icon={<Zap className="text-[#FF8602] w-4 h-4" />}
-                />
-              )}
-              {singleLead?.additionalDetails &&
-                singleLead?.additionalDetails !== '' && (
+            </div>
+            <div className="mt-5">
+              <div className="flex flex-wrap gap-2">
+                {badge && (
+                  <>
+                    <TagButton
+                      text={badge}
+                      bgColor="#004DA61A"
+                      icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+                    />
+                  </>
+                )}
+                {urgentOption?.option && (
                   <TagButton
-                    text="Additional Details"
-                    bgColor="#004DA61A"
+                    text={urgentOption?.option}
+                    bgColor="#FF86021A"
+                    icon={<Zap className="text-[#FF8602] w-4 h-4" />}
+                  />
+                )}
+                {singleLead?.additionalDetails &&
+                  singleLead?.additionalDetails !== '' && (
+                    <TagButton
+                      text="Additional Details"
+                      bgColor="#004DA61A"
+                      icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+                    />
+                  )}
+
+                {singleLead?.userProfileId?.phone && (
+                  <TagButton
+                    text="Verified Phone"
+                    bgColor="#00C3C01A"
                     icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
                   />
                 )}
-
-              {singleLead?.userProfileId?.phone && (
-                <TagButton
-                  text="Verified Phone"
-                  bgColor="#00C3C01A"
-                  icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
-                />
-              )}
-            </div>
-          </div>
-          <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
-          <div className="mt-5">
-            <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
-              <h5 className="font-medium mb-2 heading-base">
-                {singleLead?.serviceId?.name ?? ''}
-              </h5>
-              <div className="admin-text text-[#34495E] ">
-                {displayText}
-                {shouldTruncate && (
-                  <button
-                    onClick={toggleReadMore}
-                    className="text-[var(--color-black)] font-semibold hover:underline focus:outline-none ml-2"
-                  >
-                    {isExpanded ? 'Read less' : 'Read more'}
-                  </button>
-                )}
               </div>
             </div>
-          </div>
-          <div className="mt-5">
-            <div className=" my-3 ">
-              <h4 className="font-medium heading-lg my-2 heading-md">
-                Location
-              </h4>
-              <div className="mt-5">
-                <img src={mapUrl} className="rounded-lg" alt="map" />
+            <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
+            <div className="mt-5">
+              <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
+                <h5 className="font-medium mb-2 heading-base">
+                  {singleLead?.serviceId?.name ?? ''}
+                </h5>
+                <div className="admin-text text-[#34495E] ">
+                  {displayText}
+                  {shouldTruncate && (
+                    <button
+                      onClick={toggleReadMore}
+                      className="text-[var(--color-black)] font-semibold hover:underline focus:outline-none ml-2"
+                    >
+                      {isExpanded ? 'Read less' : 'Read more'}
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-          <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
-          {singleLead?.leadAnswers?.length > 0 && (
-            <div className="mt-5 space-y-3">
-              <h4 className="font-medium heading-lg mb-5">
-                Answered some of selected questions
-              </h4>
-              <div className="flex flex-col gap-5">
-                {singleLead?.leadAnswers?.map((leadAnswer, i) => (
-                  <div key={i}>
-                    <p className="text-[var(--color-special)] font-medium">
-                      {leadAnswer?.question}
-                    </p>
-                    <div className="text-[#34495E] mt-2">
-                      {leadAnswer?.options &&
-                        leadAnswer?.options
-                          ?.map((option) => option?.option)
-                          .join(', ')}
+            <div className="mt-5">
+              <div className=" my-3 ">
+                <h4 className="font-medium heading-lg my-2 heading-md">
+                  Location
+                </h4>
+                <div className="mt-5">
+                  <img src={mapUrl} className="rounded-lg" alt="map" />
+                </div>
+              </div>
+            </div>
+            <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
+            {singleLead?.leadAnswers?.length > 0 && (
+              <div className="mt-5 space-y-3">
+                <h4 className="font-medium heading-lg mb-5">
+                  Answered some of selected questions
+                </h4>
+                <div className="flex flex-col gap-5">
+                  {singleLead?.leadAnswers?.map((leadAnswer, i) => (
+                    <div key={i}>
+                      <p className="text-[var(--color-special)] font-medium">
+                        {leadAnswer?.question}
+                      </p>
+                      <div className="text-[#34495E] mt-2">
+                        {leadAnswer?.options &&
+                          leadAnswer?.options
+                            ?.map((option) => option?.option)
+                            .join(', ')}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      ) : (
+        <>
+          <div className="flex flex-col justify-center items-center h-full">
+            <Inbox className="w-12 h-12 mb-4 text-gray-400" />
+            <h4 className="italic text-[18px] text-gray-500">
+              Currently there are no leads.
+            </h4>
+          </div>
+        </>
+      )}
     </div>
   );
 }
