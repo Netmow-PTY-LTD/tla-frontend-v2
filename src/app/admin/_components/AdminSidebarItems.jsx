@@ -1,10 +1,15 @@
 'use client';
 import {
+  ChartBarStacked,
+  ChartColumnStacked,
+  Earth,
+  LandPlot,
   LayoutDashboard,
   List,
   MapPinHouse,
   Plus,
   Settings,
+  SquareKanban,
   SquareTerminal,
   Users,
 } from 'lucide-react';
@@ -27,7 +32,7 @@ export const AdminSidebarItems = {
     {
       title: 'Countries',
       url: '/admin/country/list',
-      icon: MapPinHouse,
+      icon: Earth,
       isActive: true,
     },
     {
@@ -39,13 +44,13 @@ export const AdminSidebarItems = {
     {
       title: 'Ranges',
       url: '/admin/ranges/list',
-      icon: MapPinHouse,
+      icon: LandPlot,
       isActive: true,
     },
     {
       title: 'Categories',
       url: '/admin/category/list',
-      icon: SquareTerminal,
+      icon: ChartColumnStacked,
       isActive: true,
     },
     {
@@ -118,7 +123,7 @@ export const AdminSidebarItems = {
     {
       title: 'Category Wise Services',
       url: '/admin/category-wise-service',
-      icon: List,
+      icon: ChartBarStacked,
       isActive: true,
     },
     {
@@ -131,13 +136,13 @@ export const AdminSidebarItems = {
     {
       title: 'Manage Services',
       url: '/admin/manage-services',
-      icon: SquareTerminal,
+      icon: SquareKanban,
       isActive: true,
     },
     {
       title: 'Service Wise Questions',
       url: '/admin/question/add',
-      icon: SquareTerminal,
+      icon: SquareKanban,
       isActive: true,
     },
 
