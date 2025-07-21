@@ -2,12 +2,16 @@
 import {
   ChartBarStacked,
   ChartColumnStacked,
+  CircleEllipsis,
   Earth,
+  FileQuestionMark,
   LandPlot,
   LayoutDashboard,
   List,
   MapPinHouse,
+  Package,
   Plus,
+  Podcast,
   Settings,
   SquareKanban,
   SquareTerminal,
@@ -142,20 +146,20 @@ export const AdminSidebarItems = {
     {
       title: 'Service Wise Questions',
       url: '/admin/question/add',
-      icon: SquareKanban,
+      icon: FileQuestionMark,
       isActive: true,
     },
 
     {
       title: 'Question Wise Options',
       url: '/admin/option/add',
-      icon: SquareTerminal,
+      icon: CircleEllipsis,
       isActive: true,
     },
     {
       title: 'Subscriptions',
       url: '#',
-      icon: SquareTerminal,
+      icon: Podcast,
       isActive: true,
       items: [
         {
@@ -175,7 +179,7 @@ export const AdminSidebarItems = {
     {
       title: 'Credit Packages',
       url: '#',
-      icon: SquareTerminal,
+      icon: Package,
       isActive: true,
       items: [
         {
