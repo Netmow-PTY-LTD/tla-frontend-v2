@@ -31,6 +31,7 @@ const LeadBoardPage = () => {
 
   const [searchKeyword, setSearchKeyword] = useState(parsed || {});
 
+ 
   const scrollContainerRef = useRef(null);
 
   const {
@@ -84,7 +85,7 @@ const LeadBoardPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasMore, isFetching, scrollContainerRef?.current]);
 
-  console.log('lead ===>', leads);
+
 
   if (isAllLeadsLoading) {
     return (
@@ -127,67 +128,83 @@ const LeadBoardPage = () => {
 
   return (
     <div className="lead-board-wrap">
-      {leads?.length > 0 ? (
-        <div className="lead-board-container">
-          {showLeadDetails && selectedLead && (
-            <div className="left-column-8">
-              {isSingleLeadLoading ? (
-                <ResponseSkeleton />
-              ) : (
-                <div className="column-wrap-left bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
-                  <LeadDetailsPage
-                    lead={selectedLead}
-                    onBack={() => setShowLeadDetails(false)}
-                    singleLead={selectedLeadData?.data}
-                    isSingleLeadLoading={isSingleLeadLoading}
-                  />
+
+      <div className="lead-board-container">
+        { (
+          <div className="left-column-8">
+            {isSingleLeadLoading ? (
+              <ResponseSkeleton />
+            ) : (
+              <div className="column-wrap-left bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
+                <LeadDetailsPage
+                  lead={selectedLead}
+                  onBack={() => setShowLeadDetails(false)}
+                  singleLead={selectedLeadData?.data}
+                  isSingleLeadLoading={isSingleLeadLoading}
+                />
+              </div>
+            )
+            
+            }
+          </div>
+        )}
+
+        <div
+          className={`${showLeadDetails ? 'right-column-4 ' : 'right-column-full'
+            }`}
+        >
+          <div className="column-wrap-right" ref={scrollContainerRef}>
+            <div className="leads-top-row">
+              <LeadsHead
+                isExpanded={!showLeadDetails}
+                total={data?.pagination?.total ?? 0}
+                setSearchKeyword={setSearchKeyword}
+
+              />
+            </div>
+            <div className="leads-bottom-row max-w-[1400px] mx-auto">
+              <LeadsRight
+                isExpanded={!showLeadDetails}
+                onViewDetails={(lead) => {
+                  setSelectedLead(lead);
+                  setShowLeadDetails(true);
+                }}
+                // data={allLeads?.data ?? []}
+                data={leads ?? []}
+              />
+              {hasMore && (
+                <div className="py-6 text-center">
+                  <Loader className="w-5 h-5 animate-spin text-gray-500 mx-auto" />
                 </div>
               )}
             </div>
-          )}
-
-          <div
-            className={`${
-              showLeadDetails ? 'right-column-4 ' : 'right-column-full'
-            }`}
-          >
-            <div className="column-wrap-right" ref={scrollContainerRef}>
-              <div className="leads-top-row">
-                <LeadsHead
-                  isExpanded={!showLeadDetails}
-                  total={data?.pagination?.total ?? 0}
-                  setSearchKeyword={setSearchKeyword}
-                />
-              </div>
-              <div className="leads-bottom-row max-w-[1400px] mx-auto">
-                <LeadsRight
-                  isExpanded={!showLeadDetails}
-                  onViewDetails={(lead) => {
-                    setSelectedLead(lead);
-                    setShowLeadDetails(true);
-                  }}
-                  // data={allLeads?.data ?? []}
-                  data={leads ?? []}
-                />
-                {hasMore && (
-                  <div className="py-6 text-center">
-                    <Loader className="w-5 h-5 animate-spin text-gray-500 mx-auto" />
-                  </div>
-                )}
-              </div>
-            </div>
           </div>
         </div>
-      ) : (
-        <div className="flex flex-col justify-center items-center h-full">
-          <Inbox className="w-12 h-12 mb-4 text-gray-400" />
-          <h4 className="italic text-[18px] text-gray-500">
-            Currently there are no leads.
-          </h4>
-        </div>
-      )}
+      </div>
+
+
+
     </div>
   );
 };
 
 export default LeadBoardPage;
+
+
+
+/* 
+
+------------------------ NOT FOUND UI -------------------------------- 
+
+<div className="flex flex-col justify-center items-center h-full">
+         <Inbox className="w-12 h-12 mb-4 text-gray-400" />
+        <h4 className="italic text-[18px] text-gray-500">
+            Currently there are no leads.
+        </h4>
+</div>
+
+
+
+
+
+*/
