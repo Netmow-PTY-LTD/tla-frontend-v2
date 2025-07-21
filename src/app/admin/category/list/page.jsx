@@ -118,9 +118,9 @@ export default function ServicesList() {
     },
   ];
   return (
-    <div>
+    <>
       <div className="flex justify-between">
-        <h1>Category List</h1>
+        <h2 className="text-2xl font-bold">Category List</h2>
         <Button onClick={() => setIsModalOpen(true)}>Add New Category</Button>
       </div>
       <DataTable
@@ -140,6 +140,6 @@ export default function ServicesList() {
           setEditId(null); // reset after close
         }}
       />
-    </div>
+    </>
   );
 }
