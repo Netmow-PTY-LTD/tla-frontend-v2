@@ -232,76 +232,62 @@ export default function FilterSidebar({ data, setSearchKeyword }) {
               </AccordionTrigger>
               <AccordionContent className="overflow-hidden">
                 <div className="flex flex-col gap-4 text-balance">
-                  <label
-                    htmlFor="last-hour"
-                    className="flex items-center gap-2"
-                  >
+                  <label htmlFor="last_1_hour" className="flex items-center gap-2">
                     <input
                       type="radio"
-                      id="last-hour"
-                      value="last-hour"
+                      id="last_1_hour"
+                      value="last_1_hour"
                       {...register('lead-submission')}
                     />
                     Last Hour
                   </label>
-                  <label htmlFor="today" className="flex items-center gap-2">
+                  <label htmlFor="last_24_hours" className="flex items-center gap-2">
                     <input
                       type="radio"
-                      id="today"
-                      value="today"
+                      id="last_24_hours"
+                      value="last_24_hours"
                       {...register('lead-submission')}
                     />
                     Today
                   </label>
-                  <label
-                    htmlFor="yesterday"
-                    className="flex items-center gap-2"
-                  >
+                  <label htmlFor="last_48_hours" className="flex items-center gap-2">
                     <input
                       type="radio"
-                      id="yesterday"
-                      value="yesterday"
+                      id="last_48_hours"
+                      value="last_48_hours"
                       {...register('lead-submission')}
                     />
                     Yesterday
                   </label>
-                  <label
-                    htmlFor="3days-ago"
-                    className="flex items-center gap-2"
-                  >
+                  <label htmlFor="last_3_days" className="flex items-center gap-2">
                     <input
                       type="radio"
-                      id="3days-ago"
-                      value="3days-ago"
+                      id="last_3_days"
+                      value="last_3_days"
                       {...register('lead-submission')}
                     />
                     Less than 3 days ago
                   </label>
-                  <label
-                    htmlFor="7days-ago"
-                    className="flex items-center gap-2"
-                  >
+                  <label htmlFor="last_7_days" className="flex items-center gap-2">
                     <input
                       type="radio"
-                      id="7days-ago"
-                      value="7days-ago"
+                      id="last_7_days"
+                      value="last_7_days"
                       {...register('lead-submission')}
                     />
                     Less than 7 days ago
                   </label>
-                  <label
-                    htmlFor="2weeks-ago"
-                    className="flex items-center gap-2"
-                  >
+                  <label htmlFor="last_14_days" className="flex items-center gap-2">
                     <input
                       type="radio"
-                      id="2weeks-ago"
-                      value="2weeks-ago"
+                      id="last_14_days"
+                      value="last_14_days"
                       {...register('lead-submission')}
                     />
                     Less than 2 weeks ago
                   </label>
                 </div>
+
               </AccordionContent>
             </AccordionItem>
 
