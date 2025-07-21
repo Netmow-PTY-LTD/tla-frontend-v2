@@ -133,9 +133,9 @@ export default function ServicesList() {
     },
   ];
   return (
-    <div>
-      <div className="flex justify-between">
-        <h1>Services List</h1>
+    <>
+      <div className="flex justify-between items-center mb-2">
+        <h2 className="text-2xl font-bold">Services List</h2>
         <Button onClick={() => setIsModalOpen(true)}>Add New Service</Button>
       </div>
       <DataTable
@@ -155,6 +155,6 @@ export default function ServicesList() {
           setEditId(null); // reset after close
         }}
       />
-    </div>
+    </>
   );
 }

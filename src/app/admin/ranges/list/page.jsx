@@ -151,9 +151,10 @@ export default function Page() {
   ];
 
   return (
-    <div>
-      <h1 className="font-bold text-lg mb-4">Ranges List</h1>
-      <div className="flex justify-end mb-4">
+    <>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="font-bold text-2xl">Ranges List</h2>
+
         {/* <div className="w-[300px]">
           <Select
             value={selectedCountry || ''}
@@ -189,6 +190,6 @@ export default function Page() {
         columns={columns}
         searchColumn="name"
       />
-    </div>
+    </>
   );
 }

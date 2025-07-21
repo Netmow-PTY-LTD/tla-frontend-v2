@@ -141,9 +141,9 @@ export default function Page() {
   ];
 
   return (
-    <div>
-      <div className="flex justify-between">
-        <h1>Country List Page</h1>
+    <>
+      <div className="flex justify-between items-center mb-2">
+        <h2 className="text-2xl font-bold">Country List Page</h2>
         <Button onClick={() => setAddOpen(true)}>Add Country</Button>
       </div>
       <AddCountryModal open={addOpen} onClose={() => setAddOpen(false)} />
@@ -161,6 +161,6 @@ export default function Page() {
         columns={columns}
         searchColumn={'name'}
       />
-    </div>
+    </>
   );
 }

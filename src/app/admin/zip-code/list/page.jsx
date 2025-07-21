@@ -170,7 +170,7 @@ export default function Page() {
 
   return (
     <div>
-      <h1 className="font-bold text-lg mb-4">Zip Code List</h1>
+      <h2 className="font-bold text-2xl mb-4">Zip Code List</h2>
       <div className="flex justify-between mb-4">
         <div className="w-[300px]">
           <Select

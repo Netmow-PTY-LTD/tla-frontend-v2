@@ -82,6 +82,7 @@ export default function RegisterStepOne() {
   const { control, handleSubmit } = form;
 
   const onSubmit = (data) => {
+    console.log('data', data);
     if (!selectedServiceIds.length) {
       setHasServiceError(true);
       return;
@@ -120,6 +121,18 @@ export default function RegisterStepOne() {
       ) || []
     );
   }, [inputValue, selectedServiceIds, countryWiseServices]);
+
+  const topFiveServices = countryWiseServices?.data?.slice(0, 5) || [];
+
+  // Add any selected services that are not in topFiveServices
+  const uniquePopularServices = [
+    ...topFiveServices,
+    ...selectedServices.filter(
+      (sel) => !topFiveServices.some((s) => s._id === sel._id)
+    ),
+  ];
+
+  console.log('uniquePopularServices', uniquePopularServices);
 
   return (
     <div className="flex flex-wrap lg:flex-nowrap">
@@ -277,7 +290,7 @@ export default function RegisterStepOne() {
                   Popular Services:
                 </label>
                 <div className="flex flex-wrap gap-2 mt-4">
-                  {countryWiseServices?.data?.slice(0, 5).map((service) => (
+                  {uniquePopularServices?.map((service) => (
                     <div
                       key={service._id}
                       className="w-full sm:w-1/2 md:w-auto"
