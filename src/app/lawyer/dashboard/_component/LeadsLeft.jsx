@@ -60,8 +60,8 @@ export default function LeadDetailsPage({
 
   return (
     <div className="bg-white">
-      {
-        lead ? (<div className="max-w-[900px]">
+      {lead ? (
+        <div className="max-w-[900px]">
           <div className="flex items-center justify-between">
             <button className="flex py-2 items-center gap-2" onClick={onBack}>
               {' '}
@@ -73,9 +73,10 @@ export default function LeadDetailsPage({
               <div className="flex flex-col items-start gap-4 ">
                 <figure className="w-20 h-20 overflow-hidden">
                   <Image
-                    src={`${lead?.userProfileId?.profilePicture ??
+                    src={`${
+                      lead?.userProfileId?.profilePicture ??
                       '/assets/img/avatar.png'
-                      }`}
+                    }`}
                     alt={lead?.userProfileId?.name ?? 'John Doe'}
                     width={80}
                     height={80}
@@ -106,8 +107,8 @@ export default function LeadDetailsPage({
                     const phone = lead?.userProfileId?.phone;
                     return phone
                       ? `${phone.slice(0, 3)}${'*'.repeat(
-                        Math.max(0, phone.length - 3)
-                      )}`
+                          Math.max(0, phone.length - 3)
+                        )}`
                       : '480*******';
                   })()}
                 </span>{' '}
@@ -161,8 +162,7 @@ export default function LeadDetailsPage({
                 {badge && (
                   <>
                     <TagButton
-                      key={item}
-                      text={item}
+                      text={badge}
                       bgColor="#004DA61A"
                       icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
                     />
@@ -246,18 +246,17 @@ export default function LeadDetailsPage({
               </div>
             )}
           </div>
-        </div>) : <>
+        </div>
+      ) : (
+        <>
           <div className="flex flex-col justify-center items-center h-full">
             <Inbox className="w-12 h-12 mb-4 text-gray-400" />
             <h4 className="italic text-[18px] text-gray-500">
               Currently there are no leads.
             </h4>
           </div>
-
         </>
-      }
+      )}
     </div>
   );
 }
-
-

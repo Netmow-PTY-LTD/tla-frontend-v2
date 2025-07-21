@@ -15,7 +15,7 @@ export default function LeadsHead({ isExpanded, total, setSearchKeyword }) {
   const stored = localStorage.getItem('lead-filters');
 
   return (
-    <section className={`${isExpanded ? '' : 'pl-4 pr-1'}`}>
+    <section className={`pr-2 ${isExpanded ? '' : 'pl-4'}`}>
       <div className="flex justify-between items-start gap-4">
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-3">
           <h2
