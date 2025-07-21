@@ -160,8 +160,7 @@ export default function LeadDetailsPage({
               {badge && (
                 <>
                   <TagButton
-                    key={item}
-                    text={item}
+                    text={badge}
                     bgColor="#004DA61A"
                     icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
                   />

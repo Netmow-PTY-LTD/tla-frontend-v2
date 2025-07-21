@@ -23,10 +23,6 @@ const LeadBoardPage = () => {
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem('lead-filters'));
     setParsed(stored);
-
-    return () => {
-      localStorage.removeItem('lead-filters');
-    };
   }, []);
 
   const [searchKeyword, setSearchKeyword] = useState(parsed || {});

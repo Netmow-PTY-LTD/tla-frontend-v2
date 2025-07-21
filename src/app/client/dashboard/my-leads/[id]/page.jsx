@@ -225,32 +225,40 @@ export default function LeadDetailsPage() {
         </div>
         <div className="right-column-5">
           <div className="column-wrap-right px-4">
-            <div className="leads-top-row">
-              <h2 className={`font-bold heading-base text-[#0B1C2D] text-left`}>
-                Lawyers who responded
-              </h2>
-            </div>
-            <hr className="bg-[#F3F3F3] h-1 w-full my-2" />
-            {showLeadResponseDetails && selectedLeadResponse ? (
-              <LeadResponseDetails
-                onBack={() => setShowLeadResponseDetails(false)}
-                response={selectedLeadResponse}
-              />
+            {isSingleLeadResponseLoading ? (
+              <ResponseSkeleton />
             ) : (
-              <div className="leads-bottom-row">
-                <div className={`grid grid-cols-1 gap-y-4`}>
-                  {leadWiseResponses?.data?.map((response, i) => (
-                    <LeadResponseCard
-                      key={i}
-                      response={response}
-                      isExpanded={isExpanded}
-                      handleShowLeadResponseDetails={
-                        handleShowLeadResponseDetails
-                      }
-                    />
-                  ))}
+              <>
+                <div className="leads-top-row">
+                  <h2
+                    className={`font-bold heading-base text-[#0B1C2D] text-left`}
+                  >
+                    Lawyers who responded
+                  </h2>
                 </div>
-              </div>
+                <hr className="bg-[#F3F3F3] h-1 w-full my-2" />
+                {showLeadResponseDetails && selectedLeadResponse ? (
+                  <LeadResponseDetails
+                    onBack={() => setShowLeadResponseDetails(false)}
+                    response={selectedLeadResponse}
+                  />
+                ) : (
+                  <div className="leads-bottom-row">
+                    <div className={`grid grid-cols-1 gap-y-4`}>
+                      {leadWiseResponses?.data?.map((response, i) => (
+                        <LeadResponseCard
+                          key={i}
+                          response={response}
+                          isExpanded={isExpanded}
+                          handleShowLeadResponseDetails={
+                            handleShowLeadResponseDetails
+                          }
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

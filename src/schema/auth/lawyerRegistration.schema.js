@@ -1,20 +1,61 @@
 import { z } from 'zod';
 
-export const lawyerRegistrationStepTwoFormValidation = z.object({
-  practiceWithin: z.boolean(),
-  AreaZipcode: z
-    .string()
-    .regex(/^[0-9a-fA-F]{24}$/, 'Invalid Zipcode ObjectId'),
-  rangeInKm: z
-    .number({
-      invalid_type_error: 'Please select a valid range',
-      required_error: 'Range is required',
-    })
-    .refine((val) => [1, 2, 10, 20, 50, 75, 100, 125, 150].includes(val), {
-      message: 'Invalid range selection',
-    }),
-  practiceInternational: z.boolean(),
-});
+export const lawyerRegistrationStepTwoFormValidation = z
+  .object({
+    practiceWithin: z.boolean(),
+    AreaZipcode: z.string().optional(),
+    rangeInKm: z.any().optional(), // ← Accept any type for now, refine later
+    practiceInternational: z.boolean(),
+  })
+  .superRefine((data, ctx) => {
+    // Must select at least one option
+    if (!data.practiceWithin && !data.practiceInternational) {
+      ctx.addIssue({
+        path: ['practiceWithin'],
+        code: z.ZodIssueCode.custom,
+        message: 'Please select at least one practice option.',
+      });
+    }
+
+    // If practiceWithin is true, validate AreaZipcode and rangeInKm
+    if (data.practiceWithin) {
+      // AreaZipcode required and must match ObjectId format
+      if (!data.AreaZipcode || data.AreaZipcode.trim() === '') {
+        ctx.addIssue({
+          path: ['AreaZipcode'],
+          code: z.ZodIssueCode.custom,
+          message: 'Area Zipcode is required.',
+        });
+      } else if (!/^[0-9a-fA-F]{24}$/.test(data.AreaZipcode)) {
+        ctx.addIssue({
+          path: ['AreaZipcode'],
+          code: z.ZodIssueCode.custom,
+          message: 'Invalid Zipcode ObjectId.',
+        });
+      }
+
+      // rangeInKm required and must be valid number
+      const parsedRange = Number(data.rangeInKm);
+      if (
+        data.rangeInKm === undefined ||
+        data.rangeInKm === null ||
+        data.rangeInKm === '' ||
+        isNaN(parsedRange)
+      ) {
+        ctx.addIssue({
+          path: ['rangeInKm'],
+          code: z.ZodIssueCode.custom,
+          message: 'Range is required.',
+        });
+      } else if (![1, 2, 10, 20, 50, 75, 100, 125, 150].includes(parsedRange)) {
+        ctx.addIssue({
+          path: ['rangeInKm'],
+          code: z.ZodIssueCode.custom,
+          message: 'Invalid range selection.',
+        });
+      }
+    }
+  });
 
 export const lawyerRegistrationStepOneFormValidation = z.object({
   name: z
@@ -33,7 +74,8 @@ export const lawyerRegistrationStepThreeFormValidation = z
       .string()
       .min(1, 'Phone number is required')
       .refine((val) => bdPhoneRegex.test(val) || auPhoneRegex.test(val), {
-        message: 'Phone number must be a valid Bangladeshi or Australian number (e.g., +8801712345678 or +61412345678)',
+        message:
+          'Phone number must be a valid Bangladeshi or Australian number (e.g., +8801712345678 or +61412345678)',
       }),
 
     password: z.string().min(6, 'Password must be at least 6 characters'),
