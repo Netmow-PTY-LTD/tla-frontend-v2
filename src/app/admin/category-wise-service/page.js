@@ -192,7 +192,7 @@ export default function Page() {
 
   return (
     <div>
-      <h1 className="font-bold text-lg mb-4">Category wise service</h1>
+      <h2 className="text-2xl font-bold mb-4">Category wise service</h2>
 
       <div className="flex justify-between mb-4">
         <div className="w-[300px]">
