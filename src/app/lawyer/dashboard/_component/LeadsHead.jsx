@@ -1,3 +1,4 @@
+'use client';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import { Files, MapPin, SlidersVertical, SquarePen, X } from 'lucide-react';
 import Link from 'next/link';
@@ -86,7 +87,10 @@ export default function LeadsHead({ isExpanded, total, setSearchKeyword }) {
           </div>
         </div>
 
-        <FilterSidebar data={currentUser?.data} setSearchKeyword={setSearchKeyword} />
+        <FilterSidebar
+          data={currentUser?.data}
+          setSearchKeyword={setSearchKeyword}
+        />
       </div>
 
       <hr className=" bg-[#F3F3F3] h-1 w-full" />
