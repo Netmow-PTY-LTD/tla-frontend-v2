@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import CompanyProfile from './about/CompanyProfile';
 import PersonalProfile from './about/PersonalProfile';
 import CompanyContactDetails from './about/CompanyContactDetails';
@@ -18,8 +18,11 @@ import TextInput from '@/components/form/TextInput';
 import TextareaInput from '@/components/form/TextArea';
 import { Loader } from 'lucide-react';
 import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor';
+import { Button } from '@/components/ui/button';
+import ChangePassword from '@/app/client/_components/ChangePassword';
 
 export default function About() {
+  const [open, setOpen] = useState(false);
   const {
     data: userInfo,
     isLoading,
@@ -187,6 +190,19 @@ export default function About() {
               placeholder="Enter your personal address"
               textColor="text-[#8E8E8E]"
             />
+            <TextInput
+              label="Contact Email"
+              name="contactEmail"
+              placeholder="contact@gmail.com"
+              textColor="text-[#8E8E8E]"
+            />
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              className="inline-flex items-center justify-center px-4 py-1 mt-7 text-sm font-medium text-[#00C3C0] border border-[#00C3C0] rounded-md hover:bg-[#00C3C0] hover:text-white transition-all duration-300"
+            >
+              Change Password
+            </button>
           </div>
           <label className="text-black label-text mb-3 inline-block">
             About You
@@ -212,6 +228,9 @@ export default function About() {
           initialValues={defaultValues}
         />
       </FormWrapper>
+      <>
+        <ChangePassword setOpen={setOpen} open={open} />
+      </>
     </div>
   );
 }
