@@ -15,10 +15,13 @@ const frontendSteps = [
   'stop-frontend',
   'pull-frontend',
   'update-env-frontend',
-  'yarn-install-frontend',
   'npm-install-frontend',
   'build-frontend',
   'restart-frontend',
+];
+
+const steps = [
+  'run-all', // 👈 Add this
 ];
 
 export default function DeployStepPage() {
@@ -103,6 +106,34 @@ export default function DeployStepPage() {
             ))}
           </div>
         </div>
+      </div>
+
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 10,
+          marginTop: 40,
+        }}
+      >
+        {steps.map((step) => (
+          <button
+            key={step}
+            onClick={() => runStep(step)}
+            disabled={deploying !== null}
+            style={{
+              padding: '8px 12px',
+              backgroundColor: step === 'run-all' ? '#FF80ED' : '#0070f3',
+              fontWeight: step === 'run-all' ? 'bold' : 'normal',
+              color: 'white',
+              border: 'none',
+              borderRadius: 4,
+              cursor: deploying ? 'not-allowed' : 'pointer',
+            }}
+          >
+            {step}
+          </button>
+        ))}
       </div>
 
       {/* Logs Output */}
