@@ -8,6 +8,13 @@ export const lawyerSettingAboutSchema = z.object({
   designation: z.string().optional(),
   phone: z.string({ invalid_type_error: 'phone must be a string' }),
   bio: z.string({ invalid_type_error: 'Bio must be a string' }),
+  lawyerContactEmail: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .email('Please enter a valid email address')
+    .optional()
+    .or(z.literal('')),
   address: z.string({ invalid_type_error: 'Address must be a string' }),
   companyLogo: z.any().optional(),
   userProfileLogo: z.any().optional(),

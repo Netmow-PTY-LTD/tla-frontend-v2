@@ -69,6 +69,7 @@ export default function About() {
     address: profile?.address ?? '',
     phone: profile?.phone ?? '',
     bio: profile?.bio ?? '',
+    lawyerContactEmail:profile?.lawyerContactEmail??'',
     contactEmail: profile?.companyProfile?.contactEmail ?? '',
     phoneNumber: profile?.companyProfile?.phoneNumber ?? '',
     website: profile?.companyProfile?.website ?? '',
@@ -99,6 +100,7 @@ export default function About() {
         address,
         phone,
         bio,
+        lawyerContactEmail,
         companyLogo,
         userProfileLogo,
         ...rest
@@ -129,6 +131,7 @@ export default function About() {
           address,
           phone,
           bio,
+          lawyerContactEmail
         },
         companyInfo,
       };
@@ -192,7 +195,7 @@ export default function About() {
             />
             <TextInput
               label="Contact Email"
-              name="contactEmail"
+              name="lawyerContactEmail"
               placeholder="contact@gmail.com"
               textColor="text-[#8E8E8E]"
             />
