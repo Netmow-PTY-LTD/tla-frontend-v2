@@ -18,19 +18,31 @@ const LeadBoardPage = () => {
   const [page, setPage] = useState(1);
   const [leads, setLeads] = useState([]);
   const [hasMore, setHasMore] = useState(true);
-  const stored = localStorage.getItem('lead-filters');
-  const parsed = JSON.parse(stored);
+  const [parsed, setParsed] = useState(null);
 
-  const [searchKeyword, setSearchKeyword] = useState(parsed)
+  useEffect(() => {
+    const stored = JSON.parse(localStorage.getItem('lead-filters'));
+    setParsed(stored);
+
+    return () => {
+      localStorage.removeItem('lead-filters');
+    };
+  }, []);
+
+  const [searchKeyword, setSearchKeyword] = useState(parsed || {});
+
+ 
   const scrollContainerRef = useRef(null);
 
   const {
     data,
     isLoading: isAllLeadsLoading,
     isFetching,
-   
-  } = useGetAllLeadsQuery({ page, limit: 10, searchKeyword: JSON.stringify(searchKeyword), });
-
+  } = useGetAllLeadsQuery({
+    page,
+    limit: 10,
+    searchKeyword: JSON.stringify(searchKeyword),
+  });
 
   // Fetch detailed data for selected lead
   const { data: selectedLeadData, isLoading: isSingleLeadLoading } =
@@ -73,8 +85,6 @@ const LeadBoardPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasMore, isFetching, scrollContainerRef?.current]);
 
-
-  console.log('lead ===>', leads)
 
 
   if (isAllLeadsLoading) {

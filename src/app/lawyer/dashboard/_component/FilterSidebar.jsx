@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect } from 'react';
 import {
   Sheet,
@@ -82,8 +83,6 @@ export default function FilterSidebar({ data, setSearchKeyword }) {
     // Show toast
     showSuccessToast('Filters applied and saved.');
   };
-
-
 
   return (
     <Sheet className="z-[9999]">
