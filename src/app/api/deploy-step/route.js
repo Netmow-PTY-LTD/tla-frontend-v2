@@ -11,12 +11,18 @@ export async function POST(req) {
   }
 
   const validSteps = [
+    'run-all', // 👈
     'stop-backend',
     'pull-backend',
+    'update-env-backend',
+    'yarn-install-backend',
     'build-backend',
     'restart-backend',
     'stop-frontend',
     'pull-frontend',
+    'update-env-frontend',
+    'yarn-install-frontend',
+    'npm-install-frontend',
     'build-frontend',
     'restart-frontend',
   ];

@@ -177,7 +177,7 @@ export default function RegisterStepOne() {
                     <FormLabel>
                       What type of legal service do you provide?
                     </FormLabel>
-                    <div className="space-y-2">
+                    <div className="space-y-1 relative">
                       <Input
                         placeholder="Type to search..."
                         value={inputValue}
@@ -190,7 +190,7 @@ export default function RegisterStepOne() {
                         {selectedServices.map((service) => (
                           <Badge
                             key={service._id}
-                            className="cursor-pointer py-1 px-2 flex items-center gap-2"
+                            className="cursor-pointer py-1 px-2 flex items-center gap-2 mt-1"
                             onClick={() => handleSelectService(service._id)}
                           >
                             {service.name} ✕
@@ -199,7 +199,7 @@ export default function RegisterStepOne() {
                       </div>
 
                       {inputValue && filteredServices.length > 0 && (
-                        <div className="bg-white border rounded shadow max-h-40 overflow-y-auto p-2">
+                        <div className="bg-white border rounded shadow max-h-48 overflow-y-auto p-2 absolute top-[41px] left-0 z-10 w-full">
                           {filteredServices.map((s) => (
                             <div
                               key={s._id}
@@ -295,7 +295,7 @@ export default function RegisterStepOne() {
                           src={service.image || '/assets/img/no-image.jpg'}
                           width={30}
                           height={30}
-                          className="object-cover rounded-full"
+                          className="object-cover rounded-full w-6 h-6"
                           alt={service.name}
                         />
                         <span className="service-title text-[var(--color-black)] text-[13px]">
