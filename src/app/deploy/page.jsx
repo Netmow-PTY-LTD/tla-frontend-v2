@@ -1,17 +1,22 @@
-// 🔧 3. Create Frontend Page with Buttons for Each Step
-// /app/deploy/page.js
-
 'use client';
 
 import { useState } from 'react';
 
-const steps = [
+const backendSteps = [
   'stop-backend',
   'pull-backend',
+  'update-env-backend',
+  'yarn-install-backend',
   'build-backend',
   'restart-backend',
+];
+
+const frontendSteps = [
   'stop-frontend',
   'pull-frontend',
+  'update-env-frontend',
+  'yarn-install-frontend',
+  'npm-install-frontend',
   'build-frontend',
   'restart-frontend',
 ];
@@ -24,7 +29,6 @@ export default function DeployStepPage() {
     setDeploying(step);
     setLogs([]);
 
-    // BUT: EventSource does not support POST. So use fetch + stream workaround.
     fetch('/api/deploy-step', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -47,38 +51,82 @@ export default function DeployStepPage() {
 
   return (
     <div style={{ padding: 20, fontFamily: 'monospace' }}>
-      <h1>⚙ Manual Deploy Steps</h1>
+      <h1>⚙ Manual Deployment Panel</h1>
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-        {steps.map((step) => (
-          <button
-            key={step}
-            onClick={() => runStep(step)}
-            disabled={deploying !== null}
-            style={{
-              padding: '8px 12px',
-              backgroundColor: '#0070f3',
-              color: 'white',
-              border: 'none',
-              borderRadius: 4,
-              cursor: deploying ? 'not-allowed' : 'pointer',
-            }}
-          >
-            {step}
-          </button>
-        ))}
+      <div
+        style={{ display: 'flex', gap: 40, flexWrap: 'wrap', marginTop: 30 }}
+      >
+        {/* Backend Column */}
+        <div style={{ flex: 1, minWidth: 250 }}>
+          <h2>🧩 Backend</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {backendSteps.map((step) => (
+              <button
+                key={step}
+                onClick={() => runStep(step)}
+                disabled={deploying !== null}
+                style={{
+                  padding: '10px',
+                  backgroundColor: '#0070f3',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: 4,
+                  cursor: deploying ? 'not-allowed' : 'pointer',
+                }}
+              >
+                {step}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Frontend Column */}
+        <div style={{ flex: 1, minWidth: 250 }}>
+          <h2>🎨 Frontend</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {frontendSteps.map((step) => (
+              <button
+                key={step}
+                onClick={() => runStep(step)}
+                disabled={deploying !== null}
+                style={{
+                  padding: '10px',
+                  backgroundColor: '#28a745',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: 4,
+                  cursor: deploying ? 'not-allowed' : 'pointer',
+                }}
+              >
+                {step}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
-      <div style={{ marginTop: 30 }}>
-        {logs.map((log, i) => (
-          <div key={i}>
-            {log.includes('ERROR') ? (
-              <span style={{ color: 'red' }}>❌ {log}</span>
-            ) : (
-              <span>🔄 {log}</span>
-            )}
-          </div>
-        ))}
+      {/* Logs Output */}
+      <div
+        style={{
+          marginTop: 40,
+          background: '#111',
+          color: '#fff',
+          padding: 20,
+          borderRadius: 8,
+        }}
+      >
+        <h3>📜 Logs</h3>
+        <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+          {logs.map((log, i) => (
+            <div key={i}>
+              {log.includes('ERROR') || log.includes('❌') ? (
+                <span style={{ color: 'red' }}>❌ {log}</span>
+              ) : (
+                <span>🔄 {log}</span>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
