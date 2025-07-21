@@ -157,42 +157,46 @@ export default function LeadDetailsPage({
                 </>
               )}
             </div>
-            <div className="mt-5">
-              <div className="flex flex-wrap gap-2">
-                {badge && (
-                  <>
+            {(singleLead?.additionalDetails &&
+              singleLead.additionalDetails !== '') ||
+            urgentOption?.option ||
+            singleLead?.userProfileId?.phone ||
+            badge ? (
+              <div className="mt-5">
+                <div className="flex flex-wrap gap-2">
+                  {singleLead?.additionalDetails &&
+                    singleLead.additionalDetails !== '' && (
+                      <TagButton
+                        text="Additional Details"
+                        bgColor="#004DA61A"
+                        icon={<BadgeCheck className="text-[#000] w-4 h-4" />}
+                      />
+                    )}
+                  {urgentOption?.option && (
+                    <TagButton
+                      text={urgentOption.option}
+                      bgColor="#FF86021A"
+                      icon={<Zap className="text-[#FF8602] w-4 h-4" />}
+                    />
+                  )}
+                  {singleLead?.userProfileId?.phone && (
+                    <TagButton
+                      text="Verified Phone"
+                      bgColor="#00C3C01A"
+                      icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+                    />
+                  )}
+                  {badge && (
                     <TagButton
                       text={badge}
                       bgColor="#004DA61A"
                       icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
                     />
-                  </>
-                )}
-                {urgentOption?.option && (
-                  <TagButton
-                    text={urgentOption?.option}
-                    bgColor="#FF86021A"
-                    icon={<Zap className="text-[#FF8602] w-4 h-4" />}
-                  />
-                )}
-                {singleLead?.additionalDetails &&
-                  singleLead?.additionalDetails !== '' && (
-                    <TagButton
-                      text="Additional Details"
-                      bgColor="#004DA61A"
-                      icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
-                    />
                   )}
-
-                {singleLead?.userProfileId?.phone && (
-                  <TagButton
-                    text="Verified Phone"
-                    bgColor="#00C3C01A"
-                    icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
-                  />
-                )}
+                </div>
               </div>
-            </div>
+            ) : null}
+
             <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
             <div className="mt-5">
               <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
