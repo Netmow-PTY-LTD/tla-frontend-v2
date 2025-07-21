@@ -28,7 +28,7 @@ export default function SendNewLeadsCard({
           </h4>
           <p className="text-[#34495E] mt-[5px] admin-text">{profile?.email}</p>
         </div>
-        <button className="text-[#00C3C0] text-[14px] mt-2">Change</button>
+      <Link href={'/lawyer/settings/profile?section=about'}>  <button className="text-[#00C3C0] text-[14px] mt-2">Change</button></Link>
       </div>
 
       {/* Divider */}
