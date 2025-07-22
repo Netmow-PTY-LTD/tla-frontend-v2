@@ -232,7 +232,10 @@ export default function FilterSidebar({ data, setSearchKeyword }) {
               </AccordionTrigger>
               <AccordionContent className="overflow-hidden">
                 <div className="flex flex-col gap-4 text-balance">
-                  <label htmlFor="last_1_hour" className="flex items-center gap-2">
+                  <label
+                    htmlFor="last_1_hour"
+                    className="flex items-center gap-2"
+                  >
                     <input
                       type="radio"
                       id="last_1_hour"
@@ -241,7 +244,10 @@ export default function FilterSidebar({ data, setSearchKeyword }) {
                     />
                     Last Hour
                   </label>
-                  <label htmlFor="last_24_hours" className="flex items-center gap-2">
+                  <label
+                    htmlFor="last_24_hours"
+                    className="flex items-center gap-2"
+                  >
                     <input
                       type="radio"
                       id="last_24_hours"
@@ -250,7 +256,10 @@ export default function FilterSidebar({ data, setSearchKeyword }) {
                     />
                     Today
                   </label>
-                  <label htmlFor="last_48_hours" className="flex items-center gap-2">
+                  <label
+                    htmlFor="last_48_hours"
+                    className="flex items-center gap-2"
+                  >
                     <input
                       type="radio"
                       id="last_48_hours"
@@ -259,7 +268,10 @@ export default function FilterSidebar({ data, setSearchKeyword }) {
                     />
                     Yesterday
                   </label>
-                  <label htmlFor="last_3_days" className="flex items-center gap-2">
+                  <label
+                    htmlFor="last_3_days"
+                    className="flex items-center gap-2"
+                  >
                     <input
                       type="radio"
                       id="last_3_days"
@@ -268,7 +280,10 @@ export default function FilterSidebar({ data, setSearchKeyword }) {
                     />
                     Less than 3 days ago
                   </label>
-                  <label htmlFor="last_7_days" className="flex items-center gap-2">
+                  <label
+                    htmlFor="last_7_days"
+                    className="flex items-center gap-2"
+                  >
                     <input
                       type="radio"
                       id="last_7_days"
@@ -277,7 +292,10 @@ export default function FilterSidebar({ data, setSearchKeyword }) {
                     />
                     Less than 7 days ago
                   </label>
-                  <label htmlFor="last_14_days" className="flex items-center gap-2">
+                  <label
+                    htmlFor="last_14_days"
+                    className="flex items-center gap-2"
+                  >
                     <input
                       type="radio"
                       id="last_14_days"
@@ -287,7 +305,6 @@ export default function FilterSidebar({ data, setSearchKeyword }) {
                     Less than 2 weeks ago
                   </label>
                 </div>
-
               </AccordionContent>
             </AccordionItem>
 
