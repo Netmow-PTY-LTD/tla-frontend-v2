@@ -7,7 +7,12 @@ import React from 'react';
 import FilterSidebar from './FilterSidebar';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 
-export default function LeadsHead({ isExpanded, total, setSearchKeyword }) {
+export default function LeadsHead({
+  isExpanded,
+  total,
+  setSearchKeyword,
+  setLeads,
+}) {
   const { data: currentUser } = useAuthUserInfoQuery();
 
   //console.log('currentUser ==>', currentUser?.data);
@@ -90,6 +95,7 @@ export default function LeadsHead({ isExpanded, total, setSearchKeyword }) {
         <FilterSidebar
           data={currentUser?.data}
           setSearchKeyword={setSearchKeyword}
+          setLeads={setLeads}
         />
       </div>
 

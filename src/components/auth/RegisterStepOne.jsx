@@ -122,7 +122,7 @@ export default function RegisterStepOne() {
     );
   }, [inputValue, selectedServiceIds, countryWiseServices]);
 
-  const topFiveServices = countryWiseServices?.data?.slice(0, 5) || [];
+  const topFiveServices = countryWiseServices?.data?.slice(0, 7) || [];
 
   // Add any selected services that are not in topFiveServices
   const uniquePopularServices = [
@@ -131,8 +131,6 @@ export default function RegisterStepOne() {
       (sel) => !topFiveServices.some((s) => s._id === sel._id)
     ),
   ];
-
-  console.log('uniquePopularServices', uniquePopularServices);
 
   return (
     <div className="flex flex-wrap lg:flex-nowrap">
@@ -144,7 +142,7 @@ export default function RegisterStepOne() {
           <h3 className="tla-auth-title mb-3 text-center">
             Expand your legal practice area
           </h3>
-          <p className="tla-auth-subtitle mb-10 text-center">
+          <p className="tla-auth-subtitle mb-8 text-center">
             1000’s of local and remote clients are already waiting for your
             services
           </p>
@@ -155,90 +153,91 @@ export default function RegisterStepOne() {
 
           <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="flex flex-wrap space-y-5">
-                <div className="w-full">
-                  <FormField
-                    control={control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Your Name</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="John Doe"
-                            className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA]"
-                            {...field}
-                            onChange={(e) => {
-                              field.onChange(e);
-                              dispatch(
-                                updateNestedField({
-                                  section: 'profile',
-                                  field: 'name',
-                                  value: e.target.value,
-                                })
-                              );
-                            }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="w-full">
-                  <FormItem>
-                    <FormLabel>
-                      What type of legal service do you provide?
-                    </FormLabel>
-                    <div className="space-y-1 relative">
-                      <Input
-                        placeholder="Type to search..."
-                        value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
-                        className="tla-form-control"
-                        autoComplete="off"
-                      />
-
-                      <div className="flex flex-wrap gap-2">
-                        {selectedServices.map((service) => (
-                          <Badge
-                            key={service._id}
-                            className="cursor-pointer py-1 px-2 flex items-center gap-2 mt-1"
-                            onClick={() => handleSelectService(service._id)}
-                          >
-                            {service.name} ✕
-                          </Badge>
-                        ))}
-                      </div>
-
-                      {inputValue && filteredServices.length > 0 && (
-                        <div className="bg-white border rounded shadow max-h-48 overflow-y-auto p-2 absolute top-[41px] left-0 z-10 w-full">
-                          {filteredServices.map((s) => (
-                            <div
-                              key={s._id}
-                              className="cursor-pointer p-1 hover:bg-gray-100 rounded"
-                              onClick={() => {
-                                handleSelectService(s._id);
-                                setInputValue('');
+              <div className="h-[350px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400">
+                <div className="flex flex-wrap space-y-5">
+                  <div className="w-full">
+                    <FormField
+                      control={control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Your Name</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="John Doe"
+                              className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA]"
+                              {...field}
+                              onChange={(e) => {
+                                field.onChange(e);
+                                dispatch(
+                                  updateNestedField({
+                                    section: 'profile',
+                                    field: 'name',
+                                    value: e.target.value,
+                                  })
+                                );
                               }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="w-full">
+                    <FormItem>
+                      <FormLabel>
+                        What type of legal service do you provide?
+                      </FormLabel>
+                      <div className="space-y-1 relative">
+                        <Input
+                          placeholder="Type to search..."
+                          value={inputValue}
+                          onChange={(e) => setInputValue(e.target.value)}
+                          className="tla-form-control"
+                          autoComplete="off"
+                        />
+
+                        <div className="flex flex-wrap gap-2">
+                          {selectedServices.map((service) => (
+                            <Badge
+                              key={service._id}
+                              className="cursor-pointer py-1 px-2 flex items-center gap-2 mt-1"
+                              onClick={() => handleSelectService(service._id)}
                             >
-                              {s.name}
-                            </div>
+                              {service.name} ✕
+                            </Badge>
                           ))}
                         </div>
-                      )}
 
-                      {hasServiceError && (
-                        <FormMessage>
-                          At least one service must be selected.
-                        </FormMessage>
-                      )}
-                    </div>
-                  </FormItem>
+                        {inputValue && filteredServices.length > 0 && (
+                          <div className="bg-white border rounded shadow max-h-48 overflow-y-auto p-2 absolute top-[41px] left-0 z-10 w-full">
+                            {filteredServices.map((s) => (
+                              <div
+                                key={s._id}
+                                className="cursor-pointer p-1 hover:bg-gray-100 rounded"
+                                onClick={() => {
+                                  handleSelectService(s._id);
+                                  setInputValue('');
+                                }}
+                              >
+                                {s.name}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {hasServiceError && (
+                          <FormMessage>
+                            At least one service must be selected.
+                          </FormMessage>
+                        )}
+                      </div>
+                    </FormItem>
+                  </div>
                 </div>
-              </div>
 
-              {/* {selectedServices?.length > 0 && (
+                {/* {selectedServices?.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {selectedServices.map((service) => (
                     <div
@@ -281,57 +280,60 @@ export default function RegisterStepOne() {
                 </div>
               )} */}
 
-              <div
-                className={`popular-services mt-3 mb-8 ${
-                  hasServiceError ? 'border border-red-500 p-4 rounded-md' : ''
-                }`}
-              >
-                <label className="font-medium text-[16px]">
-                  Popular Services:
-                </label>
-                <div className="flex flex-wrap gap-2 mt-4">
-                  {uniquePopularServices?.map((service) => (
-                    <div
-                      key={service._id}
-                      className="w-full sm:w-1/2 md:w-auto"
-                    >
-                      <button
-                        type="button"
-                        onClick={() => handleSelectService(service._id)}
-                        className={`relative service-box flex gap-2 items-center w-full border border-1 border-[#DCE2EA] ${
-                          selectedServiceIds.includes(service._id)
-                            ? 'selected'
-                            : ''
-                        }`}
+                <div
+                  className={`popular-services mt-3 ${
+                    hasServiceError
+                      ? 'border border-red-500 p-4 rounded-md'
+                      : ''
+                  }`}
+                >
+                  <label className="font-medium text-[16px]">
+                    Popular Services:
+                  </label>
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {topFiveServices?.map((service) => (
+                      <div
+                        key={service._id}
+                        className="w-full sm:w-1/2 md:w-auto"
                       >
-                        <Image
-                          src={service.image || '/assets/img/no-image.jpg'}
-                          width={30}
-                          height={30}
-                          className="object-cover rounded-full w-6 h-6"
-                          alt={service.name}
-                        />
-                        <span className="service-title text-[var(--color-black)] text-[13px]">
-                          {service.name}
-                        </span>
-                        {selectedServiceIds.includes(service._id) && (
-                          <span
-                            className="text-sm text-white"
-                            onClick={(e) => {
-                              e.stopPropagation(); // Prevent parent click
-                              handleSelectService(service._id); // Toggle off
-                            }}
-                          >
-                            ✕
+                        <button
+                          type="button"
+                          onClick={() => handleSelectService(service._id)}
+                          className={`relative service-box flex gap-2 items-center w-full border border-1 border-[#DCE2EA] ${
+                            selectedServiceIds.includes(service._id)
+                              ? 'selected'
+                              : ''
+                          }`}
+                        >
+                          <Image
+                            src={service.image || '/assets/img/no-image.jpg'}
+                            width={30}
+                            height={30}
+                            className="object-cover rounded-full w-6 h-6"
+                            alt={service.name}
+                          />
+                          <span className="service-title text-[var(--color-black)] text-[13px]">
+                            {service.name}
                           </span>
-                        )}
-                      </button>
-                    </div>
-                  ))}
+                          {selectedServiceIds.includes(service._id) && (
+                            <span
+                              className="text-sm text-white"
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevent parent click
+                                handleSelectService(service._id); // Toggle off
+                              }}
+                            >
+                              ✕
+                            </span>
+                          )}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              <button type="submit" className="btn-auth-register">
+              <button type="submit" className="btn-auth-register mt-5">
                 Get Started
               </button>
             </form>
@@ -347,7 +349,7 @@ export default function RegisterStepOne() {
       </div>
       <div className="hidden lg:block lg:max-w-[31.25rem] overflow-hidden">
         <Image
-          src="/assets/img/reg-bg.png"
+          src="/assets/img/register.webp"
           width={500}
           height={627}
           alt="Auth"

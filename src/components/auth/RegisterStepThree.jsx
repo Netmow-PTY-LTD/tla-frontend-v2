@@ -435,7 +435,7 @@ export default function RegisterStepThree() {
       </div>
       <div className="hidden lg:block lg:max-w-[31.25rem]">
         <Image
-          src="/assets/img/reg-bg.png"
+          src="/assets/img/register.webp"
           width={602}
           height={751}
           className='h-full object-cover rounded-tl-0 rounded-tr-[1.25rem] rounded-br-[1.125rem] rounded-bl-0"'
