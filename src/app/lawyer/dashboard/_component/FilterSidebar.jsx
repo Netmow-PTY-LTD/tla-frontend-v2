@@ -29,7 +29,7 @@ const creditTiers = [
   { id: 8, range: '50-100 credits' },
 ];
 
-export default function FilterSidebar({ data, setSearchKeyword }) {
+export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
   const { register, handleSubmit, reset, watch, setValue, getValues } = useForm(
     {
       defaultValues: {
@@ -78,6 +78,8 @@ export default function FilterSidebar({ data, setSearchKeyword }) {
 
     console.log('Filter Payload:', payload);
     setSearchKeyword(payload);
+    setLeads([]);
+
     // Now you can call API or update state
     localStorage.setItem('lead-filters', JSON.stringify(payload));
     // Show toast
