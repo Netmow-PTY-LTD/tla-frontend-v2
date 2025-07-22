@@ -21,11 +21,24 @@ const LeadBoardPage = () => {
   const [parsed, setParsed] = useState(null);
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem('lead-filters'));
-    setParsed(stored);
+    const stored = localStorage.getItem('lead-filters');
+    if (stored) {
+      try {
+        const parsedData = JSON.parse(stored);
+        setParsed(parsedData);
+        setSearchKeyword(parsedData); // <-- Set it here
+      } catch (err) {
+        console.error('Invalid JSON in localStorage:', err);
+      }
+    } else {
+      setSearchKeyword({});
+    }
+    setLeads([]);
   }, []);
 
   const [searchKeyword, setSearchKeyword] = useState(parsed || {});
+
+  //console.log('searchKeyword', searchKeyword);
 
   const scrollContainerRef = useRef(null);
 
@@ -36,7 +49,7 @@ const LeadBoardPage = () => {
   } = useGetAllLeadsQuery({
     page,
     limit: 10,
-    searchKeyword: JSON.stringify(searchKeyword),
+    searchKeyword: JSON.stringify(searchKeyword || {}),
   });
 
   // Fetch detailed data for selected lead
@@ -58,6 +71,7 @@ const LeadBoardPage = () => {
     setHasMore(page < totalPage);
   }, [data, page]);
 
+  console.log('leads', leads);
   // Scroll event handler for infinite loading
   useEffect(() => {
     const container = scrollContainerRef.current;
@@ -151,6 +165,7 @@ const LeadBoardPage = () => {
                   isExpanded={!showLeadDetails}
                   total={data?.pagination?.total ?? 0}
                   setSearchKeyword={setSearchKeyword}
+                  setLeads={setLeads}
                 />
               </div>
               <div className="leads-bottom-row max-w-[1400px] mx-auto">

@@ -437,7 +437,7 @@ export default function RegisterStepTwo() {
       </div>
       <div className="hidden lg:block lg:max-w-[31.25rem]">
         <Image
-          src="/assets/img/reg-bg.png"
+          src="/assets/img/register.webp"
           width={600}
           height={627}
           alt="Auth Image"
