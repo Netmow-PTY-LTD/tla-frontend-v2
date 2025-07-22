@@ -291,7 +291,7 @@ export default function RegisterStepOne() {
                     Popular Services:
                   </label>
                   <div className="flex flex-wrap gap-2 mt-4">
-                    {topFiveServices?.map((service) => (
+                    {uniquePopularServices?.map((service) => (
                       <div
                         key={service._id}
                         className="w-full sm:w-1/2 md:w-auto"
