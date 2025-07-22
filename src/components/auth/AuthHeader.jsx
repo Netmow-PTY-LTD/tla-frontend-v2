@@ -8,7 +8,7 @@ export default function AuthHeader() {
   const pathname = usePathname();
   return (
     <header className="auth_header">
-      <div className="container">
+      <div className="container-lg">
         <div className="flex justify-between gap-4">
           <div className="flex items-center gap-6">
             <Link href="/">
