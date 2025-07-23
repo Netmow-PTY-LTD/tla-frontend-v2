@@ -233,6 +233,29 @@ input:focus {
   display: inline-block;
 }
 
+/* Scrollbar */
+
+/* Hide scrollbar by default */
+.scrollbar-hidden::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+/* Show scrollbar on hover */
+.scrollbar-hover:hover::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Scrollbar track and thumb styles */
+.scrollbar-hover:hover::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-hover:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
 .profile-heading:before {
   content: '';
   position: absolute;
@@ -457,7 +480,7 @@ input:focus {
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
-  margin-top: 50px;
+  margin-top: 30px;
 }
 
 .tla-auth-footer a {

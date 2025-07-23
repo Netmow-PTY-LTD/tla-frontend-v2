@@ -6,7 +6,7 @@ export default function Login() {
   return (
     <section
       className="tla-auth-section flex justify-center items-center py-8"
-      style={{ backgroundImage: `url('/assets/img/auth-bg.png')` }}
+      style={{ backgroundImage: `url('/assets/img/hero_bg.png')` }}
     >
       <div className="tla-auth-box max-w-[900px] w-full mx-auto">
         <div className="flex flex-wrap w-full">
@@ -21,7 +21,7 @@ export default function Login() {
           <div
             className="hidden md:block w-full md:w-1/2"
             style={{
-              backgroundImage: `url('/assets/img/law-webp.webp')`,
+              backgroundImage: `url('/assets/img/login.webp')`,
               backgroundRepeat: 'no-repeat',
               backgroundSize: 'cover',
               backgroundPosition: 'center center',

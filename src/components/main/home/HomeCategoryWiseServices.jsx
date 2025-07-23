@@ -1,5 +1,5 @@
 'use client';
-import { useAllCategoriesQuery } from '@/store/features/admin/categoryApiService';
+import { useGetAllCategoriesQuery } from '@/store/features/public/catagorywiseServiceApiService';
 import { Ellipsis, MoveRight } from 'lucide-react';
 import Link from 'next/link';
 import React, { Fragment } from 'react';
@@ -170,9 +170,9 @@ export default function HomeCategoryWiseServices() {
   //   },
   // ];
 
-  const { data: categories } = useAllCategoriesQuery();
+  const { data: allCategories } = useGetAllCategoriesQuery();
 
-  console.log('categories', categories);
+  console.log('categories', allCategories?.data);
   return (
     <section className="section category-wise-services">
       <div className="container">
@@ -180,8 +180,8 @@ export default function HomeCategoryWiseServices() {
           <h2 className="font-medium">Explore</h2>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7 gap-4 mt-20">
-          {categories?.data?.length > 0 &&
-            categories?.data?.map((category, i) => (
+          {allCategories?.data?.length > 0 &&
+            allCategories?.data?.map((category, i) => (
               <Link
                 key={i}
                 href={`/category/${category.slug}`}
@@ -197,7 +197,7 @@ export default function HomeCategoryWiseServices() {
                 <h5>{category.name}</h5>
               </Link>
             ))}
-          {categories?.length > 0 && (
+          {allCategories?.length > 0 && (
             <Link
               href="/services"
               className="category-wise-service-item flex flex-col items-center text-center gap-3"
@@ -210,8 +210,8 @@ export default function HomeCategoryWiseServices() {
           )}
         </div>
         <div className="space-y-10 mt-20">
-          {categories?.data?.length > 0 &&
-            categories?.data?.map((category, index) => (
+          {allCategories?.data?.length > 0 &&
+            allCategories?.data?.map((category, index) => (
               <div key={index}>
                 <div className="flex items-center justify-between mb-2">
                   <h4 className="text-lg font-semibold">{category.name}</h4>
@@ -223,7 +223,7 @@ export default function HomeCategoryWiseServices() {
                   </Link>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {category?.serviceIds?.map((service, i) => (
+                  {category?.services?.map((service, i) => (
                     <Link
                       key={i}
                       href={`/services/${service.id}`}
@@ -232,18 +232,18 @@ export default function HomeCategoryWiseServices() {
                       <div className="icon w-full h-[200px]">
                         <img
                           src={
-                            service.image ||
+                            service?.serviceField?.thumbImage ||
                             (category?.name === 'Family Law' &&
                               '/assets/img/familylaw/divorce.webp') ||
                             (category?.name === 'Business Law' &&
                               '/assets/img/property_law/property_settlement.webp')
                           }
-                          alt={service.name}
+                          alt={service?.name}
                           className="rounded-t-lg w-full h-full object-cover"
                         />
                       </div>
                       <div className="flex justify-between px-3 pb-2">
-                        <h5 className="text-sm">{service.name}</h5>
+                        <h5 className="text-sm">{service?.name}</h5>
                         <MoveRight className="text-[var(--primary-color)]" />
                       </div>
                     </Link>
