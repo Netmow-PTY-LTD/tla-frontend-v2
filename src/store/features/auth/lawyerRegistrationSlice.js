@@ -10,7 +10,7 @@ const initialState = {
   regUserType: 'lawyer',
   profile: {
     name: '',
-    activeProfile: 'basic',
+    profileType: 'basic',
     country: '',
     phone: '',
   },
