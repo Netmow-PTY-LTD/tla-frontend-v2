@@ -57,6 +57,7 @@ export default function LeadDetailsPage({
     .find((option) => option.option === 'Urgent');
 
   const badge = singleLead?.badge;
+  console.log('single lead data ==>',singleLead)
 
   return (
     <div className="bg-white">
