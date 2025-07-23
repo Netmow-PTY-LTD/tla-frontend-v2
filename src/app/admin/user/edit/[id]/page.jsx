@@ -39,7 +39,7 @@ export default function UserBasicInfo() {
     regUserType: z.string(),
     accountStatus: z.string(),
     name: z.string(),
-    activeProfile: z.string(),
+    profileType: z.string(),
   });
 
   const form = useForm({
@@ -52,7 +52,7 @@ export default function UserBasicInfo() {
       regUserType: '',
       accountStatus: '',
       name: '',
-      activeProfile: '',
+      profileType: '',
     },
   });
 
@@ -75,7 +75,7 @@ export default function UserBasicInfo() {
         regUserType: user.regUserType || '',
         accountStatus: user.accountStatus || '',
         name: user.profile?.name || '',
-        activeProfile: user.profile?.activeProfile || '',
+        profileType: user.profile?.profileType || '',
       });
     }
   }, [isSuccess, userData, form]);
@@ -228,7 +228,7 @@ export default function UserBasicInfo() {
               />
               <FormField
                 control={form.control}
-                name="activeProfile"
+                name="profileType"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Active Profile</FormLabel>

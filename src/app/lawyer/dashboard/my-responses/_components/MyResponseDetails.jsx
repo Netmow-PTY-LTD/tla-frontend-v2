@@ -53,8 +53,9 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
       skip: !responseId && !response?._id,
     });
 
-  // console.log('singleResponse', singleResponse?.data);
-  // console.log('response', response);
+    const badge = singleResponse?.data?.leadId?.userProfileId?.profileType;
+  
+
 
   const [updateStatus] = useUpdateResponseStatusMutation();
   const [updateActivity] = useActivityLogMutation();
