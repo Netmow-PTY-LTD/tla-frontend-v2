@@ -9,13 +9,16 @@ import { formatRelativeTime } from '@/helpers/formatTime';
 
 const LeadCard = ({ onViewDetails, user, isExpanded }) => {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
-  //console.log('Single Lead Data:', singleLead);
+
 
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])
     .find((option) => option.option === 'Urgent');
 
-  const badge = singleLead?.data?.badge;
+  // const badge = singleLead?.data?.badge;
+    const profileType = singleLead?.data?.userProfileId?.profileType;
+  const badge = profileType?.replace(/[^a-zA-Z0-9]+/g, ' ')?.split(' ')
+  ?.map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())?.join('');
 
   return (
     <Card className="w-full max-w-full mx-auto flex flex-col">
@@ -90,7 +93,7 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
             )}
             {badge && (
               <TagButton
-                text={badge}
+               text={`${badge} Lawyer`}
                 bgColor="#004DA61A"
                 icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
               />

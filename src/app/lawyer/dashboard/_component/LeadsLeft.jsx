@@ -56,8 +56,13 @@ export default function LeadDetailsPage({
     .flatMap((answer) => answer.options || [])
     .find((option) => option.option === 'Urgent');
 
-  const badge = singleLead?.badge;
-  console.log('single lead data ==>',singleLead)
+  const profileType = singleLead?.userProfileId?.profileType;
+  const badge = profileType
+  .replace(/[^a-zA-Z0-9]+/g, ' ')
+  .split(' ')
+  .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+  .join('');
+ 
 
   return (
     <div className="bg-white">
@@ -189,7 +194,7 @@ export default function LeadDetailsPage({
                   )}
                   {badge && (
                     <TagButton
-                      text={badge}
+                      text={`${badge} Lawyer`}
                       bgColor="#004DA61A"
                       icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
                     />
