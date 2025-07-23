@@ -23,7 +23,7 @@ export function ConfirmationModal({
   open,
   onOpenChange,
   contentClass,
-  handleResponseCreate,
+  // handleResponseCreate,
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -47,7 +47,7 @@ export function ConfirmationModal({
             onClick={() => {
               onConfirm();
               onOpenChange?.(false);
-              setTimeout(() => handleResponseCreate(), 2000);
+              // setTimeout(() => handleResponseCreate(), 2000);
             }}
             className="bg-teal-400 hover:bg-teal-500 text-white"
           >

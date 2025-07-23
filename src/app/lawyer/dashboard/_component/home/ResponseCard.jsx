@@ -10,10 +10,12 @@ import React from 'react';
 export default function ResponseCard({ onViewDetails, user, isExpanded }) {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
-  // console.log('Single Lead Data:',singleLead);
-  // console.log('Single Lead user Data:',user);
+ 
   //  const badges = singleLead?.data?.badges
-  const badge = user?.leadBadge;
+  // const badge = user?.leadBadge;
+  const badge = user?.leadId?.userProfileId?.profileType;
+
+ 
 
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])

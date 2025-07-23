@@ -6,15 +6,22 @@ import TextArea from '@/components/form/TextArea';
 import { Modal } from '@/components/UIComponents/Modal';
 import FormWrapper from '@/components/form/FromWrapper';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import { z } from 'zod';
+
+ const customServiceSchema = z.object({
+  title: z
+    .string({ invalid_type_error: 'Title must be a string' })
+    .min(1, { message: 'Title is required' }),
+  description: z
+    .string({ invalid_type_error: 'Description must be a string' })
+    .min(1, { message: 'Description is required' }),
+});
+
 
 const ServiceAddModal = ({ profile, updateUserData, refetch }) => {
   const [open, setOpen] = useState(false);
   const onCancel = () => setOpen(!open);
 
-  const defaultValues = {
-    title: profile?.customService?.title ?? '',
-    description: profile?.customService?.description ?? '',
-  };
 
   const handleSubmit = async (values) => {
     const { title, description } = values;
@@ -52,7 +59,7 @@ const ServiceAddModal = ({ profile, updateUserData, refetch }) => {
         onOpenChange={setOpen}
         open={open}
       >
-        <FormWrapper onSubmit={handleSubmit} defaultValues={defaultValues}>
+        <FormWrapper onSubmit={handleSubmit} schema={customServiceSchema}>
           <div className="space-y-5">
             <TextInput
               label="Service Title"
