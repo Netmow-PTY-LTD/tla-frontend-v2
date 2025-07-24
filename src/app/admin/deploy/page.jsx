@@ -9,6 +9,7 @@ const backendSteps = [
   'yarn-install-backend',
   'build-backend',
   'restart-backend',
+  'run-backend-all',
 ];
 
 const frontendSteps = [
@@ -18,6 +19,7 @@ const frontendSteps = [
   'npm-install-frontend',
   'build-frontend',
   'restart-frontend',
+  'run-frontend-all',
 ];
 
 const steps = [
