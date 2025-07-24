@@ -37,12 +37,12 @@ export default function LeadsHead({
                 {currentUser?.data?.profile?.serviceIds?.length || 0} Services
               </span>
             </div>
-            <div className="flex items-center gap-1">
+            {/* <div className="flex items-center gap-1">
               <MapPin className="w-4 h-4" />
               <span className={`${isExpanded ? 'text-[14px]' : 'text-[11px]'}`}>
                 4 Locations
               </span>
-            </div>
+            </div> */}
           </div>
         </div>
         <Link

@@ -7,7 +7,8 @@ import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import { useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { Arrow } from '@radix-ui/react-dropdown-menu';
-import { ArrowDown, ChevronDown } from 'lucide-react';
+import { ArrowDown, ChevronDown, Hammer } from 'lucide-react';
+import Gavel from '@/components/icon/Gavel';
 
 export default function Header() {
   const [isHeaderFixed, setIsHeaderFixed] = useState();
@@ -137,6 +138,9 @@ export default function Header() {
                 <span>Log In</span>
               </Link>
               <Link href="/register" className={styles.btn_register}>
+                <div className="icon w-6 h-6 bg-white flex items-center justify-center rounded-full">
+                  <Gavel className="w-4 h-4 text-black" />
+                </div>
                 <span>Join as a Lawyer</span>
               </Link>
             </div>

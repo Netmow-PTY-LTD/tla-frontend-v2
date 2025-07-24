@@ -161,13 +161,16 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
             </AccordionItem>
 
             {/* View */}
-            <AccordionItem value="item-3">
+            {/* <AccordionItem value="item-3">
               <AccordionTrigger className="hover:no-underline">
                 View
               </AccordionTrigger>
               <AccordionContent className="overflow-hidden">
                 <div className="flex flex-col gap-4 text-balance ">
-                  <label htmlFor="read" className="flex items-center gap-2">
+                  <label
+                    htmlFor="read"
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
                     <input
                       type="radio"
                       id="read"
@@ -176,7 +179,10 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
                     />
                     Read
                   </label>
-                  <label htmlFor="unread" className="flex items-center gap-2">
+                  <label
+                    htmlFor="unread"
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
                     <input
                       type="radio"
                       id="unread"
@@ -185,7 +191,10 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
                     />
                     Unread
                   </label>
-                  <label htmlFor="any" className="flex items-center gap-2">
+                  <label
+                    htmlFor="any"
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
                     <input
                       type="radio"
                       id="any"
@@ -196,7 +205,7 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
                   </label>
                 </div>
               </AccordionContent>
-            </AccordionItem>
+            </AccordionItem> */}
 
             {/* Spotlight */}
             <AccordionItem value="item-4">
@@ -205,7 +214,10 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
               </AccordionTrigger>
               <AccordionContent className="overflow-hidden">
                 <div className="flex flex-col gap-4 text-balance">
-                  <label htmlFor="urgent" className="flex items-center gap-2">
+                  <label
+                    htmlFor="urgent"
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
                     <input
                       type="radio"
                       id="urgent"
@@ -214,7 +226,10 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
                     />
                     Urgent
                   </label>
-                  <label htmlFor="lead-any" className="flex items-center gap-2">
+                  <label
+                    htmlFor="lead-any"
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
                     <input
                       type="radio"
                       id="lead-any"
@@ -236,7 +251,7 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
                 <div className="flex flex-col gap-4 text-balance">
                   <label
                     htmlFor="last_1_hour"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 cursor-pointer"
                   >
                     <input
                       type="radio"
@@ -248,7 +263,7 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
                   </label>
                   <label
                     htmlFor="last_24_hours"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 cursor-pointer"
                   >
                     <input
                       type="radio"
@@ -260,7 +275,7 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
                   </label>
                   <label
                     htmlFor="last_48_hours"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 cursor-pointer"
                   >
                     <input
                       type="radio"
@@ -272,7 +287,7 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
                   </label>
                   <label
                     htmlFor="last_3_days"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 cursor-pointer"
                   >
                     <input
                       type="radio"
@@ -284,7 +299,7 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
                   </label>
                   <label
                     htmlFor="last_7_days"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 cursor-pointer"
                   >
                     <input
                       type="radio"
@@ -296,7 +311,7 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
                   </label>
                   <label
                     htmlFor="last_14_days"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 cursor-pointer"
                   >
                     <input
                       type="radio"
@@ -322,7 +337,7 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
                       return (
                         <label
                           htmlFor={service?.name}
-                          className="flex items-center gap-2"
+                          className="flex items-center gap-2 cursor-pointer"
                           key={index}
                         >
                           <input
@@ -340,13 +355,16 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
             </AccordionItem>
 
             {/* Location */}
-            <AccordionItem value="item-7">
+            {/* <AccordionItem value="item-7">
               <AccordionTrigger className="hover:no-underline">
                 Locations
               </AccordionTrigger>
               <AccordionContent className="overflow-hidden">
                 <div className="flex flex-col gap-4 text-balance">
-                  <label htmlFor="all" className="flex items-center gap-2">
+                  <label
+                    htmlFor="all"
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
                     <input
                       type="radio"
                       id="all"
@@ -357,7 +375,7 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
                   </label>
                   <label
                     htmlFor="nationwide"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 cursor-pointer"
                   >
                     <input
                       type="radio"
@@ -369,7 +387,7 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
                   </label>
                   <label
                     htmlFor="location-4217"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 cursor-pointer"
                   >
                     <input
                       type="radio"
@@ -381,7 +399,7 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
                   </label>
                 </div>
               </AccordionContent>
-            </AccordionItem>
+            </AccordionItem> */}
 
             {/* Credits */}
             <AccordionItem value="item-8">
@@ -395,7 +413,7 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
                       return (
                         <label
                           htmlFor={credit?.range}
-                          className="flex items-center gap-2"
+                          className="flex items-center gap-2 cursor-pointer"
                           key={index}
                         >
                           <input

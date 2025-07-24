@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { clientsfaqsData } from '@/data/data';
 import SectionHeading from '@/components/main/home/SectionHeading';
 
-
 export default function Faqs({ data }) {
   const [activeIndex, setActiveIndex] = useState(null);
 
@@ -17,7 +16,6 @@ export default function Faqs({ data }) {
   };
 
   return (
-
     <div className="tla-faq-accordion">
       {data.length > 0 &&
         data?.map((faq, index) => (
@@ -43,15 +41,14 @@ export default function Faqs({ data }) {
               </svg>
             </div>
             <div
-              className={`tla-faq-accordion-body ${index === activeIndex ? 'active' : ''
-                }`}
+              className={`tla-faq-accordion-body ${
+                index === activeIndex ? 'active' : ''
+              }`}
             >
               {faq?.answer}
             </div>
           </div>
         ))}
     </div>
-
-
   );
 }
