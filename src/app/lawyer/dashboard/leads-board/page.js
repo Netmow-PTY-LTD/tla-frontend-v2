@@ -11,6 +11,7 @@ import {
 import { Inbox, Loader } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import ResponseSkeleton from '../my-responses/_components/ResponseSkeleton';
+import { Button } from '@/components/ui/button';
 
 const LeadBoardPage = () => {
   const [showLeadDetails, setShowLeadDetails] = useState(true);
@@ -93,6 +94,8 @@ const LeadBoardPage = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasMore, isFetching, scrollContainerRef?.current]);
+
+  console.log('parsed', parsed);
 
   if (isAllLeadsLoading) {
     return (
@@ -193,7 +196,16 @@ const LeadBoardPage = () => {
           <h4 className="italic text-[18px] text-gray-500">
             Currently there are no leads.
           </h4>
-         
+          <Button
+            className="mt-4"
+            onClick={() => {
+              localStorage.removeItem('lead-filters');
+              alert('filter cleared');
+              window.location.href = '/lawyer/dashboard/leads-board';
+            }}
+          >
+            Clear Search
+          </Button>
         </div>
       )}
     </div>

@@ -74,7 +74,7 @@ const ServicesList = () => {
         </section>
 
         {/* Locations Section */}
-        <section className="p-6 ">
+        {/* <section className="p-6 ">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold text-gray-800">
               Your Locations
@@ -116,10 +116,10 @@ const ServicesList = () => {
               </div>
             )}
           </div>
-        </section>
+        </section> */}
 
         {/* Remote Services Section */}
-        <section className="p-6">
+        {/* <section className="p-6">
           <h2 className="text-xl font-semibold text-gray-800 mb-2">
             Your Locations
           </h2>
@@ -138,7 +138,7 @@ const ServicesList = () => {
               View Leads
             </Button>
           </div>
-        </section>
+        </section> */}
       </div>
     </div>
   );
