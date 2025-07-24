@@ -211,5 +211,19 @@ export const AdminSidebarItems = {
         },
       ],
     },
+    {
+      title: 'Lead Management',
+      url: '/admin/leads-management',
+      icon: Users,
+      isActive: true,
+      // items: [
+      //   {
+      //     title: 'List of Users',
+      //     url: '/admin/leads-management',
+      //     icon: List,
+      //     isActive: true,
+      //   },
+      // ],
+    },
   ],
 };
