@@ -1,10 +1,12 @@
 import MainLayout from '@/components/main/common/layout';
 import React from 'react';
 
-export default function HowItWorksForCustomer() {
+export default function FindClients() {
   return (
     <MainLayout>
-      <h1>How It Works for Customers</h1>
+      <div className="container">
+        <h1>Find Clients</h1>
+      </div>
     </MainLayout>
   );
 }

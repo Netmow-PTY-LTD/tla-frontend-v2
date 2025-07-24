@@ -1,11 +1,11 @@
 import MainLayout from '@/components/main/common/layout';
 import React from 'react';
 
-export default function Blog() {
+export default function PrivacyPolicy() {
   return (
     <MainLayout>
       <div className="container">
-        <h1>Blog</h1>
+        <h1>Privacy Policy</h1>
       </div>
     </MainLayout>
   );

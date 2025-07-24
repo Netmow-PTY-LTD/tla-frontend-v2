@@ -1,178 +1,98 @@
 'use client';
+import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/questionApiService';
+import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
+import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { useGetAllCategoriesQuery } from '@/store/features/public/catagorywiseServiceApiService';
+import {
+  useGetCountryListQuery,
+  useGetZipCodeListQuery,
+} from '@/store/features/public/publicApiService';
 import { Ellipsis, MoveRight } from 'lucide-react';
 import Link from 'next/link';
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import CreateLeadWithAuthModal from './modal/CreateLeadWithAuthModal';
+import ClientLeadRegistrationModal from './modal/ClientLeadRegistrationModal copy';
+import { toast } from 'sonner';
 
 export default function HomeCategoryWiseServices() {
-  // const categories = [
-  //   {
-  //     id: 1,
-  //     name: 'Family Law',
-  //     icon: '/assets/img/familylaw.png',
-  //     services: [
-  //       {
-  //         id: 1,
-  //         name: 'Divorce & Separation',
-  //         image: '/assets/img/familylaw/divorce.webp',
-  //       },
-  //       {
-  //         id: 2,
-  //         name: 'Child Custody & Support',
-  //         image: '/assets/img/familylaw/childsupport.webp',
-  //       },
-  //       {
-  //         id: 3,
-  //         name: 'Spousal maintenance',
-  //         image: '/assets/img/familylaw/maintenance.webp',
-  //       },
-  //       {
-  //         id: 4,
-  //         name: 'Domestic Violence',
-  //         image: '/assets/img/familylaw/childsupport.webp',
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: 2,
-  //     name: 'Property Law',
-  //     icon: '/assets/img/propertylaw.png',
-  //     services: [
-  //       {
-  //         id: 1,
-  //         name: 'Property Disputes',
-  //         image: '/assets/img/property_law/property_settlement.webp',
-  //       },
-  //       {
-  //         id: 2,
-  //         name: 'Landlord & Tenant Relations',
-  //         image: '/assets/img/property_law/leasing.webp',
-  //       },
-  //       {
-  //         id: 3,
-  //         name: 'Real Estate Transactions',
-  //         image: '/assets/img/property_law/commercial-property.webp',
-  //       },
-  //       {
-  //         id: 4,
-  //         name: 'Estate Planning',
-  //         image: '/assets/img/property_law/stratalaw.webp',
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: 3,
-  //     name: 'Traffic Offenses',
-  //     icon: '/assets/img/civillaw.png',
-  //     services: [
-  //       {
-  //         id: 1,
-  //         name: 'Drink & Drug Driving',
-  //         image: '/assets/img/traffic-offence/drugdriving.webp',
-  //       },
-  //       {
-  //         id: 2,
-  //         name: 'Licence Suspension Appeals',
-  //         image: '/assets/img/traffic-offence/license.webp',
-  //       },
-  //       {
-  //         id: 3,
-  //         name: 'Speeding Fines',
-  //         image: '/assets/img/traffic-offence/speeding.webp',
-  //       },
-  //       {
-  //         id: 4,
-  //         name: 'Dangerous Driving',
-  //         image: '/assets/img/traffic-offence/dangerousdriving.webp',
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: 4,
-  //     name: 'Criminal Law',
-  //     icon: '/assets/img/criminallaw.png',
-  //     services: [
-  //       {
-  //         id: 1,
-  //         name: 'Assault & Violence Offences',
-  //         image: '/assets/img/criminal_law/assault.webp',
-  //       },
-  //       {
-  //         id: 2,
-  //         name: 'Drug Offences',
-  //         image: '/assets/img/criminal_law/drugoffence.webp',
-  //       },
-  //       {
-  //         id: 3,
-  //         name: 'Theft & Fraud',
-  //         image: '/assets/img/criminal_law/theft.webp',
-  //       },
-  //       {
-  //         id: 4,
-  //         name: 'Bail Applications',
-  //         image: '/assets/img/criminal_law/bail.webp',
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: 5,
-  //     name: 'Civil Law',
-  //     icon: '/assets/img/civillaw.png',
-  //     services: [
-  //       {
-  //         id: 1,
-  //         name: 'Contract Disputes',
-  //         image: '/assets/img/property_law/property_settlement.webp',
-  //       },
-  //       {
-  //         id: 2,
-  //         name: 'Tort Claims',
-  //         image: '/assets/img/property_law/leasing.webp',
-  //       },
-  //       {
-  //         id: 3,
-  //         name: 'Defamation Cases',
-  //         image: '/assets/img/traffic-offence/license.webp',
-  //       },
-  //       {
-  //         id: 4,
-  //         name: 'Consumer Protection',
-  //         image: '/assets/img/traffic-offence/speeding.webp',
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: 6,
-  //     name: 'Taxation Law',
-  //     icon: '/assets/img/taxlaw.png',
-  //     services: [
-  //       {
-  //         id: 1,
-  //         name: 'Tax Disputes & Litigation',
-  //         image: '/assets/img/criminal_law/assault.webp',
-  //       },
-  //       {
-  //         id: 2,
-  //         name: 'GST & Income Tax Advisory',
-  //         image: '/assets/img/criminal_law/drugoffence.webp',
-  //       },
-  //       {
-  //         id: 3,
-  //         name: 'Business Tax Compliance',
-  //         image: '/assets/img/criminal_law/theft.webp',
-  //       },
-  //       {
-  //         id: 4,
-  //         name: 'Tax Planning & Structuring',
-  //         image: '/assets/img/criminal_law/bail.webp',
-  //       },
-  //     ],
-  //   },
-  // ];
+  const [selectedService, setSelectedService] = useState(null);
+  const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [service, setService] = useState(null);
+  const [location, setLocation] = useState(null);
 
   const { data: allCategories } = useGetAllCategoriesQuery();
 
   console.log('categories', allCategories?.data);
+  const handleModalOpen = () => {
+    setServiceWiseQuestions(null); // Reset serviceWiseQuestions when opening the modal
+    setModalOpen(true);
+  };
+
+  const { data: countryList } = useGetCountryListQuery();
+
+  const defaultCountry = countryList?.data?.find(
+    (country) => country?.slug === 'au'
+  );
+
+  // Default to Australia (AU) if available
+  const { data: countryWiseServices, isLoading: isCountryWiseServicesLoading } =
+    useGetCountryWiseServicesQuery(defaultCountry?._id, {
+      skip: !defaultCountry?._id, // Skip
+    });
+
+  const {
+    data: singleServicewiseQuestionsData,
+    isLoading: isQuestionsLoading,
+    refetch,
+  } = useGetServiceWiseQuestionsQuery(
+    {
+      countryId: defaultCountry?._id,
+      serviceId: selectedService?._id,
+    },
+    {
+      skip: !defaultCountry?._id || !selectedService?._id,
+    }
+  );
+
+  useEffect(() => {
+    setServiceWiseQuestions(singleServicewiseQuestionsData?.data || []);
+  }, [singleServicewiseQuestionsData]);
+
+  const token = useSelector((state) => state.auth.token);
+
+  const { data: currentUser } = useAuthUserInfoQuery(undefined, {
+    skip: !token,
+  });
+
+  const { data: allZipCodes, isLoading: isZipCodeLoading } =
+    useGetZipCodeListQuery();
+
+  const handleSubmit = (e, service) => {
+    e.preventDefault();
+
+    const matchedService =
+      typeof service === 'string'
+        ? countryWiseServices?.data?.find(
+            (s) => s.name.toLowerCase() === service.toLowerCase()
+          )
+        : service;
+
+    const matchedZip = allZipCodes?.data?.find(
+      (z) => z._id === location || z.zipcode === location
+    );
+
+    if (!matchedService || !matchedZip) {
+      toast.error('Please select both service and location.');
+      return;
+    }
+
+    setSelectedService(matchedService);
+    setLocation(matchedZip._id); // ensure location holds the ID
+    setModalOpen(true);
+  };
+
   return (
     <section className="section category-wise-services">
       <div className="container">
@@ -226,7 +146,13 @@ export default function HomeCategoryWiseServices() {
                   {category?.services?.map((service, i) => (
                     <Link
                       key={i}
-                      href={`/services/${service.id}`}
+                      // href={`/services/${service.id}`}
+                      href={`#`}
+                      onClick={(e) => {
+                        e.preventDefault(); // Prevent default anchor behavior
+                        setSelectedService(service);
+                        handleModalOpen();
+                      }}
                       className="category-wise-service-item flex flex-col gap-3 border border-gray-200 rounded-lg"
                     >
                       <div className="icon w-full h-[200px]">
@@ -253,6 +179,27 @@ export default function HomeCategoryWiseServices() {
             ))}
         </div>
       </div>
+      {token && currentUser ? (
+        <CreateLeadWithAuthModal
+          modalOpen={modalOpen}
+          setModalOpen={setModalOpen}
+          handleModalOpen={handleModalOpen}
+          selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
+          countryId={defaultCountry?._id}
+          serviceId={selectedService?._id}
+          locationId={currentUser?.data?.profile?.zipCode}
+        />
+      ) : (
+        <ClientLeadRegistrationModal
+          modalOpen={modalOpen}
+          setModalOpen={setModalOpen}
+          handleModalOpen={handleModalOpen}
+          selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
+          countryId={defaultCountry?._id}
+          serviceId={selectedService?._id}
+          locationId={location}
+        />
+      )}
     </section>
   );
 }
