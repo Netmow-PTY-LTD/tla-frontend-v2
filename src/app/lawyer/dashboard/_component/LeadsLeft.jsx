@@ -58,11 +58,11 @@ export default function LeadDetailsPage({
 
   const profileType = singleLead?.userProfileId?.profileType;
   const badge = profileType
-  .replace(/[^a-zA-Z0-9]+/g, ' ')
-  .split(' ')
-  .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-  .join('');
- 
+    .replace(/[^a-zA-Z0-9]+/g, ' ')
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join('');
+
 
   return (
     <div className="bg-white">
@@ -79,10 +79,9 @@ export default function LeadDetailsPage({
               <div className="flex flex-col items-start gap-4 ">
                 <figure className="w-20 h-20 overflow-hidden">
                   <Image
-                    src={`${
-                      lead?.userProfileId?.profilePicture ??
+                    src={`${lead?.userProfileId?.profilePicture ??
                       '/assets/img/avatar.png'
-                    }`}
+                      }`}
                     alt={lead?.userProfileId?.name ?? 'John Doe'}
                     width={80}
                     height={80}
@@ -113,8 +112,8 @@ export default function LeadDetailsPage({
                     const phone = lead?.userProfileId?.phone;
                     return phone
                       ? `${phone.slice(0, 3)}${'*'.repeat(
-                          Math.max(0, phone.length - 3)
-                        )}`
+                        Math.max(0, phone.length - 3)
+                      )}`
                       : '480*******';
                   })()}
                 </span>{' '}
@@ -145,7 +144,7 @@ export default function LeadDetailsPage({
               {!lead?.isContact ? (
                 <>
                   <LawyerContactButton leadDetail={singleLead} />
-                  {singleLead?.credit && (
+                  {singleLead?.credit != null && (
                     <div className="text-[#34495E] ml-2 flex items-center gap-2">
                       <span>
                         {singleLead?.credit}{' '}
@@ -165,9 +164,9 @@ export default function LeadDetailsPage({
             </div>
             {(singleLead?.additionalDetails &&
               singleLead.additionalDetails !== '') ||
-            urgentOption?.option ||
-            singleLead?.userProfileId?.phone ||
-            badge ? (
+              urgentOption?.option ||
+              singleLead?.userProfileId?.phone ||
+              badge ? (
               <div className="mt-5">
                 <div className="flex flex-wrap gap-2">
                   {singleLead?.additionalDetails &&
