@@ -10,6 +10,14 @@ const leadsApiService = baseApi.injectEndpoints({
       }),
       providesTags: ['lead'],
     }),
+    getAllLeadsForAdmin: builder.query({
+      query: (params) => ({
+        url: '/lead/list/admin',
+        method: 'GET',
+        params
+      }),
+      providesTags: ['lead'],
+    }),
     getSingleLead: builder.query({
       query: (id) => ({
         url: `/lead/${id}`,
@@ -49,7 +57,8 @@ export const {
   useGetSingleLeadQuery,
   useGetAllMyLeadsQuery,
   useContactLawyerMutation,
-  useUpdateLeadMutation
+  useUpdateLeadMutation,
+  useGetAllLeadsForAdminQuery
 } = leadsApiService;
 
 

@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import { useGetAllLeadsQuery, useUpdateLeadMutation } from '@/store/features/lawyer/LeadsApiService';
+import { useGetAllLeadsForAdminQuery, useUpdateLeadMutation } from '@/store/features/lawyer/LeadsApiService';
 import { Archive, Check, MoreHorizontalIcon, Pencil, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
 import { LeadDataTable } from './LeadDataTable';
@@ -22,9 +22,8 @@ export default function LeadManagement() {
   const [page, setPage] = useState(1)
     const [search, setSearch] = useState(''); // Search term
 
-  const { data: leadList, refetch, isFetching } = useGetAllLeadsQuery({ page, limit: 10, searchKeyword: setSearch });
+  const { data: leadList, refetch, isFetching } = useGetAllLeadsForAdminQuery({ page, limit: 10 });
   const [changeStatus] = useUpdateLeadMutation();
-
 
 
   const handChangeStatus = async (id, status) => {
