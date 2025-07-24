@@ -15,19 +15,20 @@ import {
 import { useGetAllLeadsQuery, useUpdateLeadMutation } from '@/store/features/lawyer/LeadsApiService';
 import { Archive, Check, MoreHorizontalIcon, Pencil, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
+import { LeadDataTable } from './LeadDataTable';
 
 
 export default function LeadManagement() {
   const [page, setPage] = useState(1)
+    const [search, setSearch] = useState(''); // Search term
 
-  const { data: leadList, refetch } = useGetAllLeadsQuery({ page, limit: 10, searchKeyword: {} });
+  const { data: leadList, refetch, isFetching } = useGetAllLeadsQuery({ page, limit: 10, searchKeyword: setSearch });
   const [changeStatus] = useUpdateLeadMutation();
 
 
 
   const handChangeStatus = async (id, status) => {
 
-    console.log('payload ==>',{ data: { status }, id })
 
     try {
       const res = await changeStatus({ data: { status }, id }).unwrap();
@@ -176,12 +177,15 @@ export default function LeadManagement() {
   return (
     <>
 
-      <DataTable
+      <LeadDataTable
         data={leadList?.data || []}
         columns={columns}
         searchColumn={'name'}
+        page={page}
+        setPage={setPage}
+        totalPages={leadList?.pagination?.totalPages || 1}
+        isFetching={isFetching}
       />
-
 
     </>
   );
