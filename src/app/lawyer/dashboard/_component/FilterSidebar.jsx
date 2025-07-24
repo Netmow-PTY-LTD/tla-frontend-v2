@@ -138,7 +138,10 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
               </AccordionTrigger>
               <AccordionContent className="overflow-hidden">
                 <div className="flex flex-col gap-4 text-balance">
-                  <label htmlFor="desc" className="flex items-center gap-2">
+                  <label
+                    htmlFor="desc"
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
                     <input
                       type="radio"
                       id="desc"
@@ -147,7 +150,10 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
                     />
                     Newest First
                   </label>
-                  <label htmlFor="asc" className="flex items-center gap-2">
+                  <label
+                    htmlFor="asc"
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
                     <input
                       type="radio"
                       id="asc"

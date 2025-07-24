@@ -17,6 +17,7 @@ import { useRouter } from 'next/navigation';
 import { verifyToken } from '@/utils/verifyToken';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/store/features/auth/authSlice';
+import { StartFrequencyOptions } from '@/data/data';
 
 export default function ClientLeadRegistrationModal({
   modalOpen,
@@ -49,6 +50,8 @@ export default function ClientLeadRegistrationModal({
   const [selectedOptions, setSelectedOptions] = useState([]);
 
   const [clickButtonType, setClickButtonType] = useState('Next');
+
+  const [leadPriority, setLeadPriority] = useState('');
 
   const [additionalDetails, setAdditionalDetails] = useState('');
 
@@ -124,7 +127,7 @@ export default function ClientLeadRegistrationModal({
 
   const totalQuestions = selectedServiceWiseQuestions?.length;
 
-  const totalFormsSteps = 5;
+  const totalFormsSteps = 6;
 
   const totalSteps = totalQuestions + totalFormsSteps;
 
@@ -406,6 +409,7 @@ export default function ClientLeadRegistrationModal({
 
     // Step 3: Prepare payloads on final step
     const leadDetails = {
+      leadPriority,
       additionalDetails,
       budgetAmount,
       zipCode,
@@ -476,24 +480,28 @@ export default function ClientLeadRegistrationModal({
 
     //Step: Additional Details (optional)
     if (step === totalQuestions) {
-      return !additionalDetails.trim();
+      return !leadPriority.trim();
     }
 
     if (step === totalQuestions + 1) {
+      return !additionalDetails.trim();
+    }
+
+    if (step === totalQuestions + 2) {
       return !budgetAmount.trim();
     }
 
     // Step: ZIP Code (required)
-    if (step === totalQuestions + 2) {
+    if (step === totalQuestions + 3) {
       return !zipCode.trim();
     }
 
-    if (step === totalQuestions + 3) {
+    if (step === totalQuestions + 4) {
       return !name.trim();
     }
 
     // Step: Email (required and validated)
-    if (step === totalQuestions + 4) {
+    if (step === totalQuestions + 5) {
       return !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
@@ -585,6 +593,33 @@ export default function ClientLeadRegistrationModal({
       ) : step === totalQuestions ? (
         <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
+            When are you looking to get started?
+          </h4>
+          <div className="border border-1 flex flex-col gap-2 rounded-lg">
+            {StartFrequencyOptions.map((frequency) => {
+              const isLast = frequency.value === 'not_sure';
+              return (
+                <label
+                  className={`flex gap-3 px-4 py-3 ${
+                    !isLast ? 'border-b' : ''
+                  }`}
+                  key={frequency.id}
+                >
+                  <input
+                    type="radio"
+                    name="frequency"
+                    value={frequency.value}
+                    onChange={(e) => setLeadPriority(e.target.value)}
+                  />
+                  <span>{frequency.label}</span>
+                </label>
+              );
+            })}
+          </div>
+        </div>
+      ) : step === totalQuestions + 1 ? (
+        <div className="space-y-6">
+          <h4 className="text-[24px] font-semibold text-center">
             Want to share anything more?
           </h4>
           <label className="flex flex-col gap-2">
@@ -597,7 +632,7 @@ export default function ClientLeadRegistrationModal({
             />
           </label>
         </div>
-      ) : step === totalQuestions + 1 ? (
+      ) : step === totalQuestions + 2 ? (
         <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
             What is your estimated budget?
@@ -624,7 +659,7 @@ export default function ClientLeadRegistrationModal({
             </div>
           </div>
         </div>
-      ) : step === totalQuestions + 2 ? (
+      ) : step === totalQuestions + 3 ? (
         <div className="space-y-4">
           <h4 className="text-[24px] font-semibold text-center">
             Where do you need the service?
@@ -682,7 +717,7 @@ export default function ClientLeadRegistrationModal({
             </div>
           </Combobox>
         </div>
-      ) : step === totalQuestions + 3 ? (
+      ) : step === totalQuestions + 4 ? (
         <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
             Write a few words about yourself?
@@ -698,7 +733,7 @@ export default function ClientLeadRegistrationModal({
             />
           </label>
         </div>
-      ) : step === totalQuestions + 4 ? (
+      ) : step === totalQuestions + 5 ? (
         <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
             What email address would you like quotes sent to?
