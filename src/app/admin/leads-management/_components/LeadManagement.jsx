@@ -13,14 +13,17 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { useGetAllLeadsForAdminQuery, useUpdateLeadMutation } from '@/store/features/lawyer/LeadsApiService';
-import { Archive, Check, MoreHorizontalIcon, Pencil, Trash2, X } from 'lucide-react';
+import { Archive, Check, MoreHorizontalIcon, Pencil, Trash2, View, X } from 'lucide-react';
 import { useState } from 'react';
 import { LeadDataTable } from './LeadDataTable';
+import { LeadDetailsModal } from './LeadDetailsModal';
 
 
 export default function LeadManagement() {
+    const [open, setOpen] = useState(false);
+      const [selectedLead, setSelectedLead] = useState(null); // state for selected lead
   const [page, setPage] = useState(1)
-    const [search, setSearch] = useState(''); // Search term
+  const [search, setSearch] = useState(''); // Search term
 
   const { data: leadList, refetch, isFetching } = useGetAllLeadsForAdminQuery({ page, limit: 10 });
   const [changeStatus] = useUpdateLeadMutation();
@@ -70,13 +73,13 @@ export default function LeadManagement() {
       header: 'Credits',
       cell: ({ row }) => <div>{row.getValue('credit')}</div>,
     },
-    {
-      accessorKey: 'userProfileId.profileType',
-      header: 'Profile Type',
-      cell: ({ row }) => (
-        <div className="capitalize">{row.original?.userProfileId?.profileType || '-'}</div>
-      ),
-    },
+    // {
+    //   accessorKey: 'userProfileId.profileType',
+    //   header: 'Profile Type',
+    //   cell: ({ row }) => (
+    //     <div className="capitalize">{row.original?.userProfileId?.profileType || '-'}</div>
+    //   ),
+    // },
     {
       accessorKey: 'serviceId.name',
       header: 'Service',
@@ -84,27 +87,34 @@ export default function LeadManagement() {
         <div>{row.original?.serviceId?.name || '-'}</div>
       ),
     },
-    {
-      accessorKey: 'additionalDetails',
-      header: 'Details',
-      cell: ({ row }) => (
-        <div className="truncate max-w-[200px]">
-          {row.getValue('additionalDetails')}
-        </div>
-      ),
-    },
-    {
-      accessorKey: 'isContact',
-      header: 'Contacted',
-      cell: ({ row }) => (
-        <div>{row.getValue('isContact') ? 'Yes' : 'No'}</div>
-      ),
-    },
+    // {
+    //   accessorKey: 'additionalDetails',
+    //   header: 'Details',
+    //   cell: ({ row }) => (
+    //     <div className="truncate max-w-[200px]">
+    //       {row.getValue('additionalDetails')}
+    //     </div>
+    //   ),
+    // },
+    // {
+    //   accessorKey: 'isContact',
+    //   header: 'Contacted',
+    //   cell: ({ row }) => (
+    //     <div>{row.getValue('isContact') ? 'Yes' : 'No'}</div>
+    //   ),
+    // },
     {
       accessorKey: 'createdAt',
       header: 'Created At',
       cell: ({ row }) => (
         <div>{new Date(row.getValue('createdAt')).toLocaleDateString()}</div>
+      ),
+    },
+    {
+      accessorKey: 'leadPriority',
+      header: 'Priority',
+      cell: ({ row }) => (
+        <div>  {row.getValue('leadPriority')}</div>
       ),
     },
     {
@@ -165,6 +175,18 @@ export default function LeadManagement() {
                   <Archive className="w-4 h-4" /> Archive
                 </div>
               </DropdownMenuItem>
+              {/* Details Page */}
+              <DropdownMenuItem
+                  onClick={() => {
+                  setSelectedLead(lead); // set current lead
+                  setOpen(true);         // open modal
+                }}
+                className="cursor-pointer"
+              >
+                <div className="flex items-center gap-2">
+                  <View className="w-4 h-4" /> View
+                </div>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -185,7 +207,17 @@ export default function LeadManagement() {
         totalPages={leadList?.pagination?.totalPages || 1}
         isFetching={isFetching}
       />
+      {/* <DataTable
+        data={leadList?.data || []}
+        columns={columns}
+        searchColumn={'name'}
+        page={page}
+        setPage={setPage}
+        totalPages={leadList?.pagination?.totalPages || 1}
+        isFetching={isFetching}
+      /> */}
 
+      <LeadDetailsModal data={selectedLead} open={open} onOpenChange={setOpen} />
     </>
   );
 }
