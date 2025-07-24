@@ -22,6 +22,7 @@ import { Input } from '@/components/ui/input';
 import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/questionApiService';
 import { useCreateLeadMutation } from '@/store/features/client/LeadsApiService';
 import { set } from 'zod';
+import { StartFrequencyOptions } from '@/data/data';
 
 export default function ClientNewLeadRegistrationModal({
   modalOpen,
@@ -53,6 +54,8 @@ export default function ClientNewLeadRegistrationModal({
   const [selectedOptions, setSelectedOptions] = useState([]);
 
   const [clickButtonType, setClickButtonType] = useState('Next');
+
+  const [leadPriority, setLeadPriority] = useState('');
 
   const [additionalDetails, setAdditionalDetails] = useState('');
 
@@ -139,7 +142,7 @@ export default function ClientNewLeadRegistrationModal({
 
   const totalQuestions = selectedServiceWiseQuestions?.data?.length;
 
-  const totalFormsSteps = 2;
+  const totalFormsSteps = 3;
 
   const totalSteps = totalQuestions + totalFormsSteps;
 
@@ -360,6 +363,7 @@ export default function ClientNewLeadRegistrationModal({
       countryId: defaultCountry?._id,
       serviceId: service?._id,
       questions: [...questionsPayload], // ensure fresh snapshot
+      leadPriority,
       additionalDetails,
       budgetAmount,
       locationId: zipCode,
@@ -406,10 +410,14 @@ export default function ClientNewLeadRegistrationModal({
     }
 
     if (step === totalQuestions + 1) {
-      return !additionalDetails.trim();
+      return !leadPriority.trim();
     }
 
     if (step === totalQuestions + 2) {
+      return !additionalDetails.trim();
+    }
+
+    if (step === totalQuestions + 3) {
       return !budgetAmount.trim();
     }
 
@@ -422,8 +430,6 @@ export default function ClientNewLeadRegistrationModal({
       : countryWiseServices?.filter((service) =>
           service?.name?.toLowerCase().includes(searchTerm?.toLowerCase())
         );
-
-  console.log('viewData', viewData);
 
   return (
     <Modal
@@ -626,6 +632,33 @@ export default function ClientNewLeadRegistrationModal({
       ) : step === totalQuestions + 1 ? (
         <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
+            When are you looking to get started?
+          </h4>
+          <div className="border border-1 flex flex-col gap-2 rounded-lg">
+            {StartFrequencyOptions.map((frequency) => {
+              const isLast = frequency.value === 'not_sure';
+              return (
+                <label
+                  className={`flex gap-3 px-4 py-3 ${
+                    !isLast ? 'border-b' : ''
+                  }`}
+                  key={frequency.id}
+                >
+                  <input
+                    type="radio"
+                    name="frequency"
+                    value={frequency.value}
+                    onChange={(e) => setLeadPriority(e.target.value)}
+                  />
+                  <span>{frequency.label}</span>
+                </label>
+              );
+            })}
+          </div>
+        </div>
+      ) : step === totalQuestions + 2 ? (
+        <div className="space-y-6">
+          <h4 className="text-[24px] font-semibold text-center">
             Want to share anything more?
           </h4>
           <label className="flex flex-col gap-2">
@@ -638,7 +671,7 @@ export default function ClientNewLeadRegistrationModal({
             />
           </label>
         </div>
-      ) : step === totalQuestions + 2 ? (
+      ) : step === totalSteps ? (
         <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
             What is your estimated budget?

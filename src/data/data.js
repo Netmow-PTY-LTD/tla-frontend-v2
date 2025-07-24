@@ -241,8 +241,6 @@ export const faqData = [
   },
 ];
 
-
-
 export const clientsfaqsData = [
   {
     id: 1,
@@ -310,12 +308,14 @@ However, some suggested questions could include:
   },
   {
     id: 10,
-    question: 'Once I have chosen the lawyer and agree to their bid, what happens next?',
+    question:
+      'Once I have chosen the lawyer and agree to their bid, what happens next?',
     answer: `To make your decision easier, the lawyers are required to provide you with a free online video or telephone consultation before you make your choice. Once you are satisfied with your choice and accept the bid, you will sign a legal services agreement, you pay the invoice and your funds will be provided to the lawyer (less a 10% administrative fee which is paid to The Law App).`,
   },
   {
     id: 11,
-    question: 'Can I give feedback on the website for lawyers once they have completed my matter?',
+    question:
+      'Can I give feedback on the website for lawyers once they have completed my matter?',
     answer: `Absolutely yes, the rating of the lawyers on the website is important so we value your feedback and so do they. It will help other users decide which lawyer to choose in the future. Google reviews are easy to fake and are often manipulated by clever marketers to improve their online reputation. The Law App is different. All our reviews are certified as real by verifying the work was performed well. We only publish reviews that we have verified as correct. This keeps the playing field level at all times.`,
   },
   {
@@ -332,9 +332,8 @@ However, some suggested questions could include:
     id: 14,
     question: 'How do I know if the lawyer I chose is legitimate?',
     answer: `We have stringent guidelines and verification methods to ensure that all lawyers are currently qualified and able to practice within a Jurisdiction and field of law. We thoroughly confirm all details and certificates with the Law body in a particular Jurisdiction before they are eligible to bid on cases. Inside your profile dashboard, you can review the one that suits you the most. When you pay your invoice, you can feel confident knowing that the lawyer has passed our verification process and is bound by the rules set out in the legal code in their Jurisdiction. We verify with the Federal, State and Territory Law Societies that they can provide the legal services offered.`,
-  }
+  },
 ];
-
 
 export const lawyerfaqsData = [
   {
@@ -401,12 +400,14 @@ However, some suggested questions could include:
   },
   {
     id: 10,
-    question: 'Once I have chosen the lawyer and agree to their bid, what happens next?',
+    question:
+      'Once I have chosen the lawyer and agree to their bid, what happens next?',
     answer: `To make your decision easier, the lawyers are required to provide you with a free online video or telephone consultation before you make your choice. Once you are satisfied with your choice and accept the bid, you will sign a legal services agreement, you pay the invoice and your funds will be provided to the lawyer (less a 10% administrative fee which is paid to The Law App).`,
   },
   {
     id: 11,
-    question: 'Can I give feedback on the website for lawyers once they have completed my matter?',
+    question:
+      'Can I give feedback on the website for lawyers once they have completed my matter?',
     answer: `Absolutely yes, the rating of the lawyers on the website is important so we value your feedback and so do they. It will help other users decide which lawyer to choose in the future. Google reviews are easy to fake and are often manipulated by clever marketers to improve their online reputation. The Law App is different. All our reviews are certified as real by verifying the work was performed well. We only publish reviews that we have verified as correct. This keeps the playing field level at all times.`,
   },
   {
@@ -423,5 +424,28 @@ However, some suggested questions could include:
     id: 14,
     question: 'How do I know if the lawyer I chose is legitimate?',
     answer: `We have stringent guidelines and verification methods to ensure that all lawyers are currently qualified and able to practice within a Jurisdiction and field of law. We thoroughly confirm all details and certificates with the Law body in a particular Jurisdiction before they are eligible to bid on cases. Inside your profile dashboard, you can review the one that suits you the most. When you pay your invoice, you can feel confident knowing that the lawyer has passed our verification process and is bound by the rules set out in the legal code in their Jurisdiction. We verify with the Federal, State and Territory Law Societies that they can provide the legal services offered.`,
-  }
+  },
+];
+
+export const StartFrequencyOptions = [
+  {
+    id: 1,
+    label: 'Urgent',
+    value: 'urgent',
+  },
+  {
+    id: 2,
+    label: 'Within a week',
+    value: 'within_a_week',
+  },
+  {
+    id: 3,
+    label: 'This month',
+    value: 'this_month',
+  },
+  {
+    id: 4,
+    label: 'Not Sure',
+    value: 'not_sure',
+  },
 ];
