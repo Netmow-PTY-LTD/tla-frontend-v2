@@ -4,7 +4,9 @@ import React from 'react';
 export default function HowItWorksForSellers() {
   return (
     <MainLayout>
-      <h1>How It Works for Sellers</h1>
+      <div className="container">
+        <h1>How It Works for Sellers</h1>
+      </div>
     </MainLayout>
   );
 }

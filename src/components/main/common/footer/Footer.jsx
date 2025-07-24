@@ -83,13 +83,13 @@ export default function Footer() {
                     <h5>For Clients</h5>
                     <ul>
                       <li>
-                        <Link href="/about">Find Lawyers</Link>
+                        <Link href="/find-lawyers">Find Lawyers</Link>
                       </li>
                       <li>
-                        <Link href="/contact">How IT Works</Link>
+                        <Link href="/how-it-works/clients">How IT Works</Link>
                       </li>
                       <li>
-                        <Link href="/pricing">Login Client</Link>
+                        <Link href="/login">Login Client</Link>
                       </li>
                     </ul>
                   </div>
@@ -97,13 +97,13 @@ export default function Footer() {
                     <h5>For Lawyers</h5>
                     <ul>
                       <li>
-                        <Link href="/about">Find Clients</Link>
+                        <Link href="/find-clients">Find Clients</Link>
                       </li>
                       <li>
-                        <Link href="/contact">How It Works</Link>
+                        <Link href="/how-it-works/lawyers">How It Works</Link>
                       </li>
                       <li>
-                        <Link href="/pricing">Login Lawyer</Link>
+                        <Link href="/login">Login Lawyer</Link>
                       </li>
                     </ul>
                   </div>
@@ -114,13 +114,13 @@ export default function Footer() {
                         <Link href="/faq">FAQs</Link>
                       </li>
                       <li>
-                        <Link href="/contact">Disclaimer</Link>
+                        <Link href="/disclaimer">Disclaimer</Link>
                       </li>
                       <li>
-                        <Link href="/pricing">Privacy Policy</Link>
+                        <Link href="/privacy-policy">Privacy Policy</Link>
                       </li>
                       <li>
-                        <Link href="/blog">Terms of Use</Link>
+                        <Link href="/terms">Terms of Use</Link>
                       </li>
                     </ul>
                   </div>
