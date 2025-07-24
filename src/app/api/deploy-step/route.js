@@ -25,6 +25,8 @@ export async function POST(req) {
     'npm-install-frontend',
     'build-frontend',
     'restart-frontend',
+    'run-backend-all',
+    'run-frontend-all',
   ];
 
   if (!validSteps.includes(step)) {
