@@ -1,11 +1,8 @@
 
-
-
 'use client';
 import { DataTable } from '@/components/common/DataTable';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,12 +11,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  useDeleteServiceMutation,
-  useAllServicesQuery,
-} from '@/store/features/admin/servicesApiService';
-import { useGetAllLeadsQuery } from '@/store/features/lawyer/LeadsApiService';
-import { Archive, Check, MoreHorizontal, MoreHorizontalIcon, Pencil, Trash2, X } from 'lucide-react';
+
+import { useGetAllLeadsQuery, useUpdateLeadMutation } from '@/store/features/lawyer/LeadsApiService';
+import { Archive, Check, MoreHorizontalIcon, Pencil, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
 
 
@@ -27,17 +21,20 @@ export default function LeadManagement() {
   const [page, setPage] = useState(1)
 
   const { data: leadList, refetch } = useGetAllLeadsQuery({ page, limit: 10, searchKeyword: {} });
-  // const [changeStatus] = useLeadStatusChangeMutation();
+  const [changeStatus] = useUpdateLeadMutation();
 
- 
 
-  const handChangeStatus = async (id) => {
+
+  const handChangeStatus = async (id, status) => {
+
+    console.log('payload ==>',{ data: { status }, id })
+
     try {
-      // const res = await changeStatus(id).unwrap();
-      // if (res) {
-      //   showSuccessToast(res?.message);
-      //   refetch();
-      // }
+      const res = await changeStatus({ data: { status }, id }).unwrap();
+      if (res) {
+        showSuccessToast(res?.message);
+        refetch();
+      }
     } catch (error) {
       console.error(error);
       showErrorToast('Failed to status change.');
@@ -111,6 +108,13 @@ export default function LeadManagement() {
       ),
     },
     {
+      accessorKey: 'status',
+      header: 'Status',
+      cell: ({ row }) => (
+        <div>  {row.getValue('status')}</div>
+      ),
+    },
+    {
       id: 'actions',
       header: 'Actions',
       enableHiding: false,
@@ -130,7 +134,7 @@ export default function LeadManagement() {
 
               {/* Approve */}
               <DropdownMenuItem
-                onClick={() => handChangeStatus(lead?._id)}
+                onClick={() => handChangeStatus(lead?._id, 'approve')}
                 className="cursor-pointer"
               >
                 <div className="flex items-center gap-2">
@@ -142,7 +146,7 @@ export default function LeadManagement() {
 
               {/* Reject */}
               <DropdownMenuItem
-                onClick={() => handChangeStatus(lead?._id)}
+                onClick={() => handChangeStatus(lead?._id, 'reject')}
                 className="cursor-pointer"
               >
                 <div className="flex items-center gap-2">
@@ -154,7 +158,7 @@ export default function LeadManagement() {
 
               {/* Archive */}
               <DropdownMenuItem
-                onClick={() => handChangeStatus(lead?._id)}
+                onClick={() => handChangeStatus(lead?._id, 'archive')}
                 className="cursor-pointer"
               >
                 <div className="flex items-center gap-2">
