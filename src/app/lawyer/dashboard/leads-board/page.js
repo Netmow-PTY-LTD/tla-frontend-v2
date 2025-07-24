@@ -193,6 +193,7 @@ const LeadBoardPage = () => {
           <h4 className="italic text-[18px] text-gray-500">
             Currently there are no leads.
           </h4>
+         
         </div>
       )}
     </div>
@@ -201,19 +202,3 @@ const LeadBoardPage = () => {
 
 export default LeadBoardPage;
 
-/* 
-
------------------------- NOT FOUND UI -------------------------------- 
-
-<div className="flex flex-col justify-center items-center h-full">
-         <Inbox className="w-12 h-12 mb-4 text-gray-400" />
-        <h4 className="italic text-[18px] text-gray-500">
-            Currently there are no leads.
-        </h4>
-</div>
-
-
-
-
-
-*/
