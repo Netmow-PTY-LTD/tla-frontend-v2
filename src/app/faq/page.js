@@ -3,6 +3,7 @@ import React from 'react';
 import Faqs from './_components/Faqs';
 import SectionHeading from '@/components/main/home/SectionHeading';
 import { clientsfaqsData, lawyerfaqsData } from '@/data/data';
+import HomeCTA from '@/components/main/home/HomeCTA';
 
 export default function page() {
   return (
@@ -28,6 +29,7 @@ export default function page() {
           <Faqs data={lawyerfaqsData} />
         </section>
       </div>
+      <HomeCTA />
     </MainLayout>
   );
 }

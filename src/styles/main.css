@@ -1240,3 +1240,27 @@ Home Testimonials
     max-width: 100%;
   }
 }
+
+.page-content p {
+  margin-bottom: 15px;
+}
+
+.page-content ol {
+  margin-bottom: 10px;
+  padding-left: 20px;
+  list-style-type: decimal;
+}
+
+.page-content ul {
+  margin-bottom: 10px;
+  padding-left: 20px;
+  list-style-type: disc;
+}
+
+.page-content ol li {
+  margin-bottom: 10px;
+}
+
+.page-content ul li {
+  margin-bottom: 5px;
+}
