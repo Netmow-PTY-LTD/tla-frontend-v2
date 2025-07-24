@@ -6,6 +6,7 @@ import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { useCreateLeadMutation } from '@/store/features/client/LeadsApiService';
+import { StartFrequencyOptions } from '@/data/data';
 
 export default function CreateLeadWithAuthModal({
   modalOpen,
@@ -39,14 +40,14 @@ export default function CreateLeadWithAuthModal({
 
   const [clickButtonType, setClickButtonType] = useState('Next');
 
+  const [leadPriority, setLeadPriority] = useState('');
+
   const [additionalDetails, setAdditionalDetails] = useState('');
 
   const [questionLoading, setQuestionLoading] = useState(false);
 
   const [budgetAmount, setBudgetAmount] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  console.log('locationId', locationId);
 
   useEffect(() => {
     if (!selectedServiceWiseQuestions?.length) return;
@@ -90,7 +91,7 @@ export default function CreateLeadWithAuthModal({
 
   const totalQuestions = selectedServiceWiseQuestions?.length;
 
-  const totalFormsSteps = 2;
+  const totalFormsSteps = 3;
 
   const totalSteps = totalQuestions + totalFormsSteps;
 
@@ -264,6 +265,7 @@ export default function CreateLeadWithAuthModal({
       serviceId,
       locationId,
       questions: [...questionsPayload],
+      leadPriority,
       additionalDetails,
       budgetAmount,
     };
@@ -302,10 +304,14 @@ export default function CreateLeadWithAuthModal({
 
     //Step: Additional Details (optional)
     if (step === totalQuestions) {
+      return !leadPriority.trim();
+    }
+
+    if (step === totalQuestions + 1) {
       return !additionalDetails.trim();
     }
 
-    if (step === totalSteps - 1) {
+    if (step === totalSteps) {
       return !budgetAmount.trim();
     }
 
@@ -393,6 +399,33 @@ export default function CreateLeadWithAuthModal({
           </div>
         )
       ) : step === totalQuestions ? (
+        <div className="space-y-6">
+          <h4 className="text-[24px] font-semibold text-center">
+            When are you looking to get started?
+          </h4>
+          <div className="border border-1 flex flex-col gap-2 rounded-lg">
+            {StartFrequencyOptions.map((frequency) => {
+              const isLast = frequency.value === 'not_sure';
+              return (
+                <label
+                  className={`flex gap-3 px-4 py-3 ${
+                    !isLast ? 'border-b' : ''
+                  }`}
+                  key={frequency.id}
+                >
+                  <input
+                    type="radio"
+                    name="frequency"
+                    value={frequency.value}
+                    onChange={(e) => setLeadPriority(e.target.value)}
+                  />
+                  <span>{frequency.label}</span>
+                </label>
+              );
+            })}
+          </div>
+        </div>
+      ) : step === totalQuestions + 1 ? (
         <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
             Want to share anything more?

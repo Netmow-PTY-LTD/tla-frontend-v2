@@ -75,7 +75,12 @@ export default function Footer() {
                         <Link href="/pricing">Pricing</Link>
                       </li>
                       <li>
-                        <Link href="/blog">Press</Link>
+                        <Link
+                          href="https://press.thelawapp.com.au/"
+                          target="_blank"
+                        >
+                          Press
+                        </Link>
                       </li>
                     </ul>
                   </div>
@@ -121,6 +126,9 @@ export default function Footer() {
                       </li>
                       <li>
                         <Link href="/terms">Terms of Use</Link>
+                      </li>
+                      <li>
+                        <Link href="/trust-and-quality">Trust and Quality</Link>
                       </li>
                     </ul>
                   </div>

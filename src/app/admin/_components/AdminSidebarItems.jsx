@@ -188,12 +188,6 @@ export const AdminSidebarItems = {
           icon: Plus,
           isActive: true,
         },
-        {
-          title: 'List of Packages',
-          url: '/admin/package/list',
-          icon: List,
-          isActive: true,
-        },
       ],
     },
 

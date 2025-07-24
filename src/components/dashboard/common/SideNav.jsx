@@ -71,7 +71,9 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }) {
                 <button
                   onClick={() => toggleMenu(item.title)}
                   className={`w-full flex items-center gap-2 p-2 rounded hover:bg-gray-100 transition ${
-                    isParentActive ? 'bg-gray-100 font-medium' : ''
+                    isParentActive
+                      ? 'bg-[linear-gradient(121deg,_rgb(27,171,169),_#ffffff)] font-medium'
+                      : ''
                   }`}
                 >
                   {item.icon && <item.icon className="w-5 h-5" />}
@@ -112,7 +114,9 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }) {
               key={item.title}
               href={item.url}
               className={`flex items-center gap-2 p-2 rounded transition font-medium ${
-                pathname === item.url ? 'bg-gray-100' : 'hover:bg-gray-100'
+                pathname === item.url
+                  ? 'bg-[linear-gradient(121deg,_rgb(27,171,169),_#ffffff)]'
+                  : 'hover:bg-gray-100'
               }`}
             >
               {item.icon && <item.icon className="w-5 h-5" />}

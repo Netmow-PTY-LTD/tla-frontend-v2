@@ -1,4 +1,5 @@
 import MainLayout from '@/components/main/common/layout';
+import HomeCTA from '@/components/main/home/HomeCTA';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -115,6 +116,7 @@ const PricingPage = () => {
           </div>
         </div>
       </section>
+      <HomeCTA />
     </MainLayout>
   );
 };
