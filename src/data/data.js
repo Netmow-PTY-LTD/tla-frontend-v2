@@ -173,7 +173,7 @@ export const workingSteps = [
   {
     id: 1,
     image: '/assets/img/step-1.png',
-    title: 'Choose a Lawyer',
+    title: 'Choose a Service',
     description:
       'Select the legal category that fits your needs, whether it’s family law, real estate, business contracts, or any other area of law.',
   },
