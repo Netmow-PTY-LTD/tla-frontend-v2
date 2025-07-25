@@ -14,7 +14,7 @@ export default function Footer() {
       {/* <NewsletterSignup /> */}
       <footer
         className="main-footer"
-        style={{ backgroundImage: `url('/assets/img/footer_bg.png')` }}
+        // style={{ backgroundImage: `url('/assets/img/footer_bg.png')` }}
       >
         <div className="footer-top">
           <div className="container">
@@ -29,7 +29,7 @@ export default function Footer() {
                       height={50}
                     />
                   </Link> */}
-                  <div className="footer-text mt-[30px] flex items-start">
+                  <div className="footer-text flex items-start">
                     <div className="">
                       <img
                         src="/assets/img/favicon.png"
@@ -45,22 +45,6 @@ export default function Footer() {
                 </div>
               </div>
               <div className="max-w-full lg:max-w-[calc(100%-480px)] w-full pr-0 lg:pl-5 mt-4 lg:mt-0">
-                <div className="footer-social flex lg:justify-end">
-                  <div className="flex items-center gap-4 mb-[30px] lg:mb-[52px]">
-                    <b className="inline-block relative pr-[70px] after:absolute after:top-[12px] after:left-[85px] after:w-[64px] after:h-[2px] after:bg-[#0B1C2D]">
-                      Follow Us{' '}
-                    </b>
-                    <Link href="#" className="linkedin">
-                      <LinkedIn />
-                    </Link>
-                    <Link href="#" className="fb">
-                      <Facebook />
-                    </Link>
-                    <Link href="#" className="twitter">
-                      <Twiiter />
-                    </Link>
-                  </div>
-                </div>
                 <div className="flex flex-wrap justify-between gap-[30px] md:gap-10">
                   <div className="footer-widget w-[calc(50%-15px)] md:w-auto">
                     <h5>Navigate</h5>
@@ -140,7 +124,7 @@ export default function Footer() {
         <FooterContact />
         <div className="footer-bottom">
           <div className="container">
-            <div className="flex flex-wrap justify-center gap-4">
+            <div className="flex flex-wrap justify-between gap-4">
               <div className="footer-copyright text-center">
                 <p>
                   Copyright &copy; {new Date().getFullYear()}{' '}
@@ -148,6 +132,22 @@ export default function Footer() {
                     The Law App.
                   </Link>
                 </p>
+              </div>
+              <div className="footer-social flex lg:justify-end">
+                <div className="flex items-center gap-4">
+                  <b className="inline-block relative pr-[70px] after:absolute after:top-[12px] after:left-[85px] after:w-[64px] after:h-[2px] after:bg-[#0B1C2D]">
+                    Follow Us{' '}
+                  </b>
+                  <Link href="#" className="linkedin">
+                    <LinkedIn />
+                  </Link>
+                  <Link href="#" className="fb">
+                    <Facebook />
+                  </Link>
+                  <Link href="#" className="twitter">
+                    <Twiiter />
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

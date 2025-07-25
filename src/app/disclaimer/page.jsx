@@ -9,7 +9,7 @@ export default function Disclaimer() {
       <PageBanner title="Disclaimer" />
       <section className="py-[50px]">
         <div className="container">
-          <div class="page-content">
+          <div className="page-content">
             <p>
               Certain sections of this website may contain lawyer advertising,
               promotional and / or marketing materials. The Law App does not

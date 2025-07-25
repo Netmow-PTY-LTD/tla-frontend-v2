@@ -8,7 +8,7 @@
 :root {
   --font-poppins: 'Poppins', sans-serif;
   --primary-color: #ff8602;
-  --secondary-color: #34495e;
+  --secondary-color: #00c3c0;
   --color-black: #0b1c2d;
   --color-text: #34495e;
   --color-white: #ffffff;
@@ -59,6 +59,7 @@ body {
 
 .btn-primary {
   background-color: var(--primary-color);
+  transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
@@ -69,6 +70,7 @@ body {
 
 .btn-secondary {
   background-color: var(--secondary-color);
+  transition: all 0.3s ease;
 }
 
 .btn-secondary:hover {
@@ -77,9 +79,27 @@ body {
   transition: all 0.3s ease;
 }
 
+.btn-third {
+  background-color: var(--color-special);
+  color: #fff;
+}
+
+.btn-third:hover {
+  background-color: var(--secondary-color);
+  color: var(--color-white);
+  transition: all 0.3s ease;
+}
+
 .btn-outline-primary {
   border: 1px solid var(--primary-color);
   color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-color);
+  color: var(--color-white);
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
 }
 
 .btn-outline-secondary {
