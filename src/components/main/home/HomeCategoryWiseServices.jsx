@@ -12,8 +12,8 @@ import Link from 'next/link';
 import React, { Fragment, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import CreateLeadWithAuthModal from './modal/CreateLeadWithAuthModal';
-import ClientLeadRegistrationModal from './modal/ClientLeadRegistrationModal copy';
 import { toast } from 'sonner';
+import ClientLeadRegistrationModal from './modal/ClientLeadRegistrationModal';
 
 export default function HomeCategoryWiseServices() {
   const [selectedService, setSelectedService] = useState(null);
@@ -65,33 +65,6 @@ export default function HomeCategoryWiseServices() {
   const { data: currentUser } = useAuthUserInfoQuery(undefined, {
     skip: !token,
   });
-
-  const { data: allZipCodes, isLoading: isZipCodeLoading } =
-    useGetZipCodeListQuery();
-
-  const handleSubmit = (e, service) => {
-    e.preventDefault();
-
-    const matchedService =
-      typeof service === 'string'
-        ? countryWiseServices?.data?.find(
-            (s) => s.name.toLowerCase() === service.toLowerCase()
-          )
-        : service;
-
-    const matchedZip = allZipCodes?.data?.find(
-      (z) => z._id === location || z.zipcode === location
-    );
-
-    if (!matchedService || !matchedZip) {
-      toast.error('Please select both service and location.');
-      return;
-    }
-
-    setSelectedService(matchedService);
-    setLocation(matchedZip._id); // ensure location holds the ID
-    setModalOpen(true);
-  };
 
   return (
     <section className="section category-wise-services">
@@ -159,10 +132,7 @@ export default function HomeCategoryWiseServices() {
                         <img
                           src={
                             service?.serviceField?.thumbImage ||
-                            (category?.name === 'Family Law' &&
-                              '/assets/img/familylaw/divorce.webp') ||
-                            (category?.name === 'Business Law' &&
-                              '/assets/img/property_law/property_settlement.webp')
+                            '/assets/img/familylaw/divorce.webp'
                           }
                           alt={service?.name}
                           className="rounded-t-lg w-full h-full object-cover"
@@ -197,7 +167,6 @@ export default function HomeCategoryWiseServices() {
           selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
-          locationId={location}
         />
       )}
     </section>

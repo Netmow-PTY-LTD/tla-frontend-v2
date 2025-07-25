@@ -74,14 +74,14 @@ const ServicesList = () => {
         </section>
 
         {/* Locations Section */}
-        {/* <section className="p-6 ">
+        <section className="p-6 ">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold text-gray-800">
               Your Locations
             </h2>
-            <Button className="bg-[#12C7C4CC] hover:bg-teal-300 px-4 py-3 text-sm rounded-lg text-white mt-5">
+            {/* <Button className="bg-[#12C7C4CC] hover:bg-teal-300 px-4 py-3 text-sm rounded-lg text-white mt-5">
               + Add a location
-            </Button>
+            </Button> */}
           </div>
           <p className="text-gray-500 mb-6">
             Choose where you want to find new customers.
@@ -116,10 +116,10 @@ const ServicesList = () => {
               </div>
             )}
           </div>
-        </section> */}
+        </section>
 
         {/* Remote Services Section */}
-        {/* <section className="p-6">
+        <section className="p-6">
           <h2 className="text-xl font-semibold text-gray-800 mb-2">
             Your Locations
           </h2>
@@ -138,7 +138,7 @@ const ServicesList = () => {
               View Leads
             </Button>
           </div>
-        </section> */}
+        </section>
       </div>
     </div>
   );
