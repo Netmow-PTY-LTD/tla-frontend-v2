@@ -62,15 +62,15 @@ export default function FilterResponseSidebar({ queryParams, setQueryParams }) {
       leadSubmission: data.leadSubmission || '',
     }));
     showSuccessToast('Filters applied and saved.');
-       // Close sidebar after form submit
+    // Close sidebar after form submit
     setIsOpen(false);
-   
+
   };
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen} className="z-[9999]">
       <SheetTrigger asChild>
-        <button  onClick={() => setIsOpen(true)} className="font-medium text-[#0194EF] flex items-center gap-2 text-[14px]">
+        <button onClick={() => setIsOpen(true)} className="font-medium text-[#0194EF] flex items-center gap-2 text-[14px]">
           <SlidersVertical className="w-4 h-4" /> <span>Filter</span>
         </button>
       </SheetTrigger>
@@ -227,7 +227,11 @@ export default function FilterResponseSidebar({ queryParams, setQueryParams }) {
               type="button"
               variant="outline"
               className="cursor-pointer"
-              onClick={() => reset()}
+              onClick={() => {
+                reset()
+                setIsOpen(false)
+              }}
+
             >
               Cancel
             </Button>

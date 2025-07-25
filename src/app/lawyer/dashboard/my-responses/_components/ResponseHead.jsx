@@ -5,7 +5,7 @@ import Link from 'next/link';
 import React from 'react';
 import FilterResponseSidebar from '../../_component/FilterResponseSidebar';
 
-export default function ResponseHead({ isExpanded, data ,setQueryParams,queryParams }) {
+export default function ResponseHead({ isExpanded, data, setQueryParams, queryParams }) {
   const pendingStatusLength = data?.filter(
     (item) => item.status === 'pending'
   )?.length;
@@ -53,7 +53,24 @@ export default function ResponseHead({ isExpanded, data ,setQueryParams,queryPar
         <div className="flex flex-wrap items-center gap-2 text-[#34495E]">
           <div className="lg:flex items-center gap-2">
             {!isExpanded && (
-              <div className="text-[#C72C41] text-[11px] flex items-center gap-2">
+              <div
+                className="text-[#C72C41] text-[11px] flex items-center gap-2"
+                onClick={() => {
+                  localStorage.removeItem('responseFilters');
+                  window.location.href = '/lawyer/dashboard/my-responses';
+                  setQueryParams({
+                    page: 1,
+                    limit: 10,
+                    sortBy: 'createdAt',
+                    sortOrder: 'desc',
+                    keyword: '',
+                    spotlight: '',
+                    clientActions: '',
+                    actionsTaken: '',
+                    leadSubmission: '',
+                  })
+                }}
+              >
                 <span>Clear</span>
                 <div className="bg-[#D9D9D9] rounded-full cursor-pointer p-1">
                   <X className="w-4 h-4" />
