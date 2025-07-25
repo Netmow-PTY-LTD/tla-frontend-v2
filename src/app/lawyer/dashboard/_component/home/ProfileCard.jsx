@@ -2,6 +2,7 @@ import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import { userDummyImage } from '@/data/data';
 export default function ProfileCard() {
   const { data: userInfo, isLoading } = useAuthUserInfoQuery();
 
@@ -13,7 +14,7 @@ export default function ProfileCard() {
           <AvatarImage
             src={
               userInfo?.data?.profile?.profilePicture ??
-              'https://github.com/shadcn.png'
+              userDummyImage
             }
             alt="Profile"
           />
