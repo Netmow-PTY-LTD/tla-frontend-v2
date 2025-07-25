@@ -29,7 +29,8 @@ const creditTiers = [
   { id: 8, range: '50-100 credits' },
 ];
 
-export default function FilterResponseSidebar() {
+export default function FilterResponseSidebar({ queryParams, setQueryParams }) {
+
   const { data: currentUser } = useAuthUserInfoQuery();
 
   const { register, handleSubmit, reset, watch } = useForm({
@@ -44,6 +45,15 @@ export default function FilterResponseSidebar() {
 
   const onSubmit = (data) => {
     console.log('Filters Applied:', data);
+    setQueryParams((prev) => ({
+      ...prev,
+      page: 1, // reset to first page when filters change
+      keyword: data.keyword || '',
+      spotlight: data.spotlight.join(','),
+      clientActions: data.clientActions.join(','),
+      actionsTaken: data.actionsTaken.join(','),
+      leadSubmission: data.leadSubmission || '',
+    }));
     // Perform API call or state update with filter data
   };
 

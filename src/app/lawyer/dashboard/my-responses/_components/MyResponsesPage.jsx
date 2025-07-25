@@ -14,11 +14,21 @@ export default function MyResponsesPage() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const responseId = searchParams.get('responseId');
-
+  const [queryParams, setQueryParams] = useState({
+    page: 1,
+    limit: 10,
+    sortBy: 'createdAt',
+    sortOrder: 'desc',
+    keyword: '',
+    spotlight: '',
+    clientActions: '',
+    actionsTaken: '',
+    leadSubmission: '',
+  });
   const router = useRouter();
 
   const { data: allMyResponses, isLoading: isAllMyResponsesLoading } =
-    useGetAllMyResponsesQuery();
+    useGetAllMyResponsesQuery(queryParams);
 
   // Handle body scroll and layout overflow
   useEffect(() => {
@@ -110,15 +120,17 @@ export default function MyResponsesPage() {
           )}
 
           <div
-            className={`${
-              showResponseDetails ? 'right-column-4 ' : 'right-column-full'
-            }`}
+            className={`${showResponseDetails ? 'right-column-4 ' : 'right-column-full'
+              }`}
           >
             <div className="column-wrap-right">
               <div className="leads-top-row">
                 <ResponseHead
                   isExpanded={!showResponseDetails}
                   data={allMyResponses?.data || []}
+                  queryParams={queryParams}
+                  setQueryParams={setQueryParams}
+
                 />
               </div>
               <div className="leads-bottom-row max-w-[1400px] mx-auto">
@@ -130,6 +142,7 @@ export default function MyResponsesPage() {
                     router.push(`?responseId=${response?._id}`);
                   }}
                   data={allMyResponses?.data || []}
+
                 />
               </div>
             </div>

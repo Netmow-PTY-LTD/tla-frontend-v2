@@ -27,9 +27,10 @@ const responseApiService = baseApi.injectEndpoints({
       providesTags: ['response'],
     }),
     getAllMyResponses: builder.query({
-      query: () => ({
+      query: (queryParams) => ({
         url: '/response/my',
         method: 'GET',
+        params:queryParams
       }),
       providesTags: ['response'],
     }),
