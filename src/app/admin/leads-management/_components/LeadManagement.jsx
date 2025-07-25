@@ -1,4 +1,3 @@
-
 'use client';
 import { DataTable } from '@/components/common/DataTable';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
@@ -12,26 +11,37 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import { useGetAllLeadsForAdminQuery, useUpdateLeadMutation } from '@/store/features/lawyer/LeadsApiService';
-import { Archive, Check, MoreHorizontalIcon, Pencil, Trash2, View, X } from 'lucide-react';
+import {
+  useGetAllLeadsForAdminQuery,
+  useUpdateLeadMutation,
+} from '@/store/features/lawyer/LeadsApiService';
+import {
+  Archive,
+  Check,
+  MoreHorizontalIcon,
+  Pencil,
+  Trash2,
+  View,
+  X,
+} from 'lucide-react';
 import { useState } from 'react';
 import { LeadDataTable } from './LeadDataTable';
 import { LeadDetailsModal } from './LeadDetailsModal';
 
-
 export default function LeadManagement() {
-    const [open, setOpen] = useState(false);
-      const [selectedLead, setSelectedLead] = useState(null); // state for selected lead
-  const [page, setPage] = useState(1)
+  const [open, setOpen] = useState(false);
+  const [selectedLead, setSelectedLead] = useState(null); // state for selected lead
+  const [page, setPage] = useState(1);
   const [search, setSearch] = useState(''); // Search term
 
-  const { data: leadList, refetch, isFetching } = useGetAllLeadsForAdminQuery({ page, limit: 10 });
+  const {
+    data: leadList,
+    refetch,
+    isFetching,
+  } = useGetAllLeadsForAdminQuery({ page, limit: 10 });
   const [changeStatus] = useUpdateLeadMutation();
 
-
   const handChangeStatus = async (id, status) => {
-
-
     try {
       const res = await changeStatus({ data: { status }, id }).unwrap();
       if (res) {
@@ -46,10 +56,13 @@ export default function LeadManagement() {
 
   const columns = [
     {
+      id: 'userProfileId.name',
       accessorKey: 'userProfileId.name',
       header: 'Name',
       cell: ({ row }) => (
-        <div className="capitalize">{row.original?.userProfileId?.name || '-'}</div>
+        <div className="capitalize">
+          {row.original?.userProfileId?.name || '-'}
+        </div>
       ),
     },
     {
@@ -60,7 +73,9 @@ export default function LeadManagement() {
     {
       accessorKey: 'userProfileId.address',
       header: 'Address',
-      cell: ({ row }) => <div>{row.original?.userProfileId?.address || '-'}</div>,
+      cell: ({ row }) => (
+        <div>{row.original?.userProfileId?.address || '-'}</div>
+      ),
     },
 
     {
@@ -83,9 +98,7 @@ export default function LeadManagement() {
     {
       accessorKey: 'serviceId.name',
       header: 'Service',
-      cell: ({ row }) => (
-        <div>{row.original?.serviceId?.name || '-'}</div>
-      ),
+      cell: ({ row }) => <div>{row.original?.serviceId?.name || '-'}</div>,
     },
     // {
     //   accessorKey: 'additionalDetails',
@@ -113,16 +126,12 @@ export default function LeadManagement() {
     {
       accessorKey: 'leadPriority',
       header: 'Priority',
-      cell: ({ row }) => (
-        <div>  {row.getValue('leadPriority')}</div>
-      ),
+      cell: ({ row }) => <div> {row.getValue('leadPriority')}</div>,
     },
     {
       accessorKey: 'status',
       header: 'Status',
-      cell: ({ row }) => (
-        <div>  {row.getValue('status')}</div>
-      ),
+      cell: ({ row }) => <div> {row.getValue('status')}</div>,
     },
     {
       id: 'actions',
@@ -177,9 +186,9 @@ export default function LeadManagement() {
               </DropdownMenuItem>
               {/* Details Page */}
               <DropdownMenuItem
-                  onClick={() => {
+                onClick={() => {
                   setSelectedLead(lead); // set current lead
-                  setOpen(true);         // open modal
+                  setOpen(true); // open modal
                 }}
                 className="cursor-pointer"
               >
@@ -191,17 +200,15 @@ export default function LeadManagement() {
           </DropdownMenu>
         );
       },
-    }
+    },
   ];
-
 
   return (
     <>
-
       <LeadDataTable
         data={leadList?.data || []}
         columns={columns}
-        searchColumn={'name'}
+        searchColumn="userProfileId.name"
         page={page}
         setPage={setPage}
         totalPages={leadList?.pagination?.totalPages || 1}
@@ -217,7 +224,11 @@ export default function LeadManagement() {
         isFetching={isFetching}
       /> */}
 
-      <LeadDetailsModal data={selectedLead} open={open} onOpenChange={setOpen} />
+      <LeadDetailsModal
+        data={selectedLead}
+        open={open}
+        onOpenChange={setOpen}
+      />
     </>
   );
 }

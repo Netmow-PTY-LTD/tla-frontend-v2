@@ -29,10 +29,10 @@ export default function WorkingSteps() {
           </div>
         </div>
         <div className="flex flex-wrap justify-center gap-4">
-          <Link href="/register" className="btn-default btn-primary">
+          <Link href="/register" className="btn-default btn-secondary">
             Join as Lawyer - find client
           </Link>
-          <Link href="/register" className="btn-default btn-outline-black">
+          <Link href="/register" className="btn-default btn-outline-primary">
             Join as Client - post cases
           </Link>
         </div>

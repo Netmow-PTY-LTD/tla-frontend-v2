@@ -8,6 +8,7 @@ import AddLeadServiceModal from './my-services/AddLeadServiceModal';
 import { useGetLeadServiceListQuery } from '@/store/features/leadService/leadServiceApiService';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AlertCircle } from 'lucide-react';
+import Link from 'next/link';
 
 const ServicesList = () => {
   const {
@@ -134,9 +135,12 @@ const ServicesList = () => {
           </div>
 
           <div className="mt-8 flex justify-center">
-            <Button className="bg-[#12C7C4CC] hover:bg-teal-300  py-3 text-sm rounded-lg text-white mt-5 px-4">
+            <Link
+              href={'/lawyer/dashboard/leads-board'}
+              className="bg-[#12C7C4CC] hover:bg-teal-300  py-3 text-sm rounded-lg text-white mt-5 px-4"
+            >
               View Leads
-            </Button>
+            </Link>
           </div>
         </section>
       </div>
