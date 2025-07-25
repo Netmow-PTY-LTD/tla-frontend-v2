@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Sheet,
   SheetTrigger,
@@ -17,6 +17,7 @@ import { SlidersVertical } from 'lucide-react';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
+import { showSuccessToast } from '@/components/common/toasts';
 
 const creditTiers = [
   { id: 1, range: 'Free' },
@@ -31,8 +32,6 @@ const creditTiers = [
 
 export default function FilterResponseSidebar({ queryParams, setQueryParams }) {
 
-  const { data: currentUser } = useAuthUserInfoQuery();
-
   const { register, handleSubmit, reset, watch } = useForm({
     defaultValues: {
       keyword: '',
@@ -42,6 +41,24 @@ export default function FilterResponseSidebar({ queryParams, setQueryParams }) {
       leadSubmission: '',
     },
   });
+
+
+  // Sync form with queryParams on load or when queryParams change
+  useEffect(() => {
+    reset({
+      keyword: queryParams.keyword || '',
+      spotlight: queryParams.spotlight ? queryParams.spotlight.split(',') : [],
+      clientActions: queryParams.clientActions
+        ? queryParams.clientActions.split(',')
+        : [],
+      actionsTaken: queryParams.actionsTaken
+        ? queryParams.actionsTaken.split(',')
+        : [],
+      leadSubmission: queryParams.leadSubmission || '',
+    });
+  }, [queryParams, reset]);
+
+
 
   const onSubmit = (data) => {
     console.log('Filters Applied:', data);
@@ -54,7 +71,8 @@ export default function FilterResponseSidebar({ queryParams, setQueryParams }) {
       actionsTaken: data.actionsTaken.join(','),
       leadSubmission: data.leadSubmission || '',
     }));
-    // Perform API call or state update with filter data
+    showSuccessToast('Filters applied and saved.');
+   
   };
 
   return (
