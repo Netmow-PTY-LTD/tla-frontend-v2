@@ -290,7 +290,7 @@ input:focus {
 
 .section-heading h3 {
   border-radius: 82px;
-  background: var(--secondary-color);
+  background: var(--primary-color);
   display: flex;
   padding: 4px 20px;
   justify-content: center;
@@ -696,7 +696,7 @@ Home Features
 
 .feature-heading h3 {
   border-radius: 82px;
-  background: var(--secondary-color);
+  background: var(--primary-color);
   display: flex;
   padding: 4px 20px;
   justify-content: center;
@@ -775,15 +775,19 @@ Home Testimonials
 }
 
 .home-cta-text {
-  padding: 50px 0 50px 70px;
+  padding: 30px 0 30px 60px;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 15px;
 }
 
 .home-cta-text h2 {
   color: var(--color-black);
-  letter-spacing: -0.5px;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.428px;
 }
 
 .home-cta-text .cta-text {
@@ -803,18 +807,20 @@ Home Testimonials
 
 .home-cta-images {
   position: relative;
-  padding-top: 80px;
+  padding-top: 40px;
   height: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .cta-shape {
-  max-width: 400px;
+  max-width: 340px;
   width: 100%;
-  max-height: 372px;
+  max-height: 319px;
   height: 100%;
-  border-radius: 397.701px;
+  border-radius: 340px;
   background: linear-gradient(270deg, #ff8602 0%, #01c3c0 100%);
-  filter: blur(140px);
+  filter: blur(119px);
 }
 
 .home-cta-images .cta-img-2 {
@@ -822,8 +828,10 @@ Home Testimonials
   bottom: 0;
   right: 0;
   border-radius: 24px 0 24px 0;
-  max-width: 29.625rem;
+  max-width: 32rem;
+  height: 310px;
   width: 100%;
+  object-fit: cover;
 }
 
 .home-cta-images .cta-img-1 {
@@ -878,6 +886,20 @@ Home Testimonials
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.feature-item h4 {
+  color: #000;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 20.548px;
+}
+
+.feature-text {
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 130%;
 }
 
 @media (max-width: 1024px) {
@@ -969,13 +991,13 @@ Home Testimonials
 
 .working-step-number {
   display: flex;
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   justify-content: center;
   align-items: center;
   gap: 10px;
   aspect-ratio: 1/1;
-  background: var(--secondary-color);
+  background: var(--primary-color);
   color: var(--color-white);
   border-radius: 50%;
   margin-bottom: 15px;
@@ -990,12 +1012,14 @@ Home Testimonials
 .working-step-content h3 {
   color: #0b1c2d;
   text-align: justify;
+  font-size: 18px;
   font-weight: 600;
   line-height: 24px;
 }
 .working-steps-paragraph {
   color: #34495e;
   font-family: Inter;
+  font-size: 14px;
   font-weight: 400;
   line-height: 170%;
 }
@@ -1220,7 +1244,7 @@ Home Testimonials
 .footer-contact .icon {
   width: 40px;
   height: 40px;
-  background: var(--secondary-color);
+  background: var(--primary-color);
   display: flex;
   justify-content: center;
   align-items: center;
