@@ -7,6 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import MyResponseDetails from './MyResponseDetails';
 import ResponseHead from './ResponseHead';
 import LeadsRight from './ResponsesList';
+import { Button } from '@/components/ui/button';
 
 export default function MyResponsesPage() {
   const [showResponseDetails, setShowResponseDetails] = useState(true);
@@ -165,8 +166,17 @@ export default function MyResponsesPage() {
         <div className="flex flex-col justify-center items-center h-full">
           <Inbox className="w-12 h-12 mb-4 text-gray-400" />
           <h4 className="italic text-[18px] text-gray-500">
-            There are currently no responses.
+            Currently there are no leads.
           </h4>
+          <Button
+            className="mt-4"
+            onClick={() => {
+              localStorage.removeItem('responseFilters');
+              window.location.href = '/lawyer/dashboard/my-responses';
+            }}
+          >
+            Clear Search
+          </Button>
         </div>
       )}
     </div>

@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Sheet,
   SheetTrigger,
@@ -14,24 +14,14 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { SlidersVertical } from 'lucide-react';
-import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import { showSuccessToast } from '@/components/common/toasts';
 
-const creditTiers = [
-  { id: 1, range: 'Free' },
-  { id: 2, range: '1-5 credits' },
-  { id: 3, range: '5-10 credits' },
-  { id: 4, range: '10-20 credits' },
-  { id: 5, range: '20-30 credits' },
-  { id: 6, range: '30-40 credits' },
-  { id: 7, range: '40-50 credits' },
-  { id: 8, range: '50-100 credits' },
-];
+
 
 export default function FilterResponseSidebar({ queryParams, setQueryParams }) {
-
+  const [isOpen, setIsOpen] = useState(false); // <-- Control sidebar visibility
   const { register, handleSubmit, reset, watch } = useForm({
     defaultValues: {
       keyword: '',
@@ -72,13 +62,15 @@ export default function FilterResponseSidebar({ queryParams, setQueryParams }) {
       leadSubmission: data.leadSubmission || '',
     }));
     showSuccessToast('Filters applied and saved.');
+       // Close sidebar after form submit
+    setIsOpen(false);
    
   };
 
   return (
-    <Sheet className="z-[9999]">
+    <Sheet open={isOpen} onOpenChange={setIsOpen} className="z-[9999]">
       <SheetTrigger asChild>
-        <button className="font-medium text-[#0194EF] flex items-center gap-2 text-[14px]">
+        <button  onClick={() => setIsOpen(true)} className="font-medium text-[#0194EF] flex items-center gap-2 text-[14px]">
           <SlidersVertical className="w-4 h-4" /> <span>Filter</span>
         </button>
       </SheetTrigger>
