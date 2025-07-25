@@ -1,7 +1,7 @@
 // Complete working version of RegisterStepTwoTest
 
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   Form,
@@ -60,45 +60,7 @@ export default function RegisterStepTwo() {
     zipcodeId: zipCode || '',
   });
 
-  // const ranges = rangeData?.data || [];
-  const ranges = [
-    {
-      label: '1 miles',
-      value: 1,
-    },
-    {
-      label: '2 miles',
-      value: 2,
-    },
-    {
-      label: '10 miles',
-      value: 10,
-    },
-    {
-      label: '20 miles',
-      value: 20,
-    },
-    {
-      label: '50 miles',
-      value: 50,
-    },
-    {
-      label: '75 miles',
-      value: 75,
-    },
-    {
-      label: '100 miles',
-      value: 100,
-    },
-    {
-      label: '125 miles',
-      value: 125,
-    },
-    {
-      label: '150 miles',
-      value: 150,
-    },
-  ];
+  const ranges = rangeData?.data || [];
 
   const form = useForm({
     resolver: zodResolver(lawyerRegistrationStepTwoFormValidation),
@@ -114,7 +76,7 @@ export default function RegisterStepTwo() {
   const practiceInternationalWatch = form.watch('practiceInternational');
 
   const onSubmit = (data) => {
-    if (!practiceWithinWatch && !practiceInternationalWatch) {
+    if (!practiceWithinWatch && (!data.AreaZipcode || !data.rangeInKm)) {
       showErrorToast('Please select at least one practice option.');
       return;
     }
@@ -155,8 +117,8 @@ export default function RegisterStepTwo() {
   );
 
   return (
-    <div className="flex flex-wrap lg:flex-nowrap">
-      <div className="w-full lg:max-w-[48.75rem]">
+    <div className="flex flex-wrap lg:flex-nowrap w-full">
+      <div className="w-full">
         <div className="tla-auth-form tla-auth-form-register relative">
           <div className="absolute inset-0 flex items-center justify-center z-[-1]">
             <div className="w-[215px] h-[215px] rounded-full bg-[#00C3C080] blur-[100px]"></div>
@@ -339,12 +301,12 @@ export default function RegisterStepTwo() {
                         <SelectTrigger>
                           <SelectValue
                             placeholder="Select range of area"
-                            render={(selectedValue) => {
-                              const selectedItem = ranges?.find(
-                                (item) => String(item.value) === selectedValue
-                              );
-                              return selectedItem?.label || '';
-                            }}
+                            // render={(selectedValue) => {
+                            //   const selectedItem = ranges?.find(
+                            //     (item) => String(item.value) === selectedValue
+                            //   );
+                            //   return selectedItem?.label || '';
+                            // }}
                           />
                         </SelectTrigger>
                       </FormControl>
@@ -355,7 +317,7 @@ export default function RegisterStepTwo() {
                               key={item.value}
                               value={String(item.value)}
                             >
-                              {item.label}
+                              {item.name}
                             </SelectItem>
                           );
                         })}
@@ -435,7 +397,7 @@ export default function RegisterStepTwo() {
           </div>
         </div>
       </div>
-      <div className="hidden lg:block lg:max-w-[31.25rem]">
+      {/* <div className="hidden lg:block lg:max-w-[31.25rem]">
         <Image
           src="/assets/img/register.webp"
           width={600}
@@ -443,7 +405,7 @@ export default function RegisterStepTwo() {
           alt="Auth Image"
           className='h-full object-cover rounded-tl-0 rounded-tr-[1.25rem] rounded-br-[1.125rem] rounded-bl-0"'
         />
-      </div>
+      </div> */}
     </div>
   );
 }

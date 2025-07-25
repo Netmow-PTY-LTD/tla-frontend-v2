@@ -133,8 +133,8 @@ export default function RegisterStepOne() {
   ];
 
   return (
-    <div className="flex flex-wrap lg:flex-nowrap">
-      <div className="w-full lg:max-w-[48.75rem]">
+    <div className="flex flex-wrap lg:flex-nowrap w-full">
+      <div className="w-full">
         <div className="tla-auth-form tla-auth-form-register relative z-1">
           <div className="absolute inset-0 flex items-center justify-center z-[-1]">
             <div className="w-[215px] h-[215px] rounded-full bg-[#00C3C080] blur-[100px]"></div>
@@ -153,7 +153,7 @@ export default function RegisterStepOne() {
 
           <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="h-[350px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400">
+              <div className="max-h-[400px] overflow-y-auto">
                 <div className="flex flex-wrap space-y-5">
                   <div className="w-full">
                     <FormField
@@ -333,7 +333,7 @@ export default function RegisterStepOne() {
                 </div>
               </div>
 
-              <button type="submit" className="btn-auth-register mt-5">
+              <button type="submit" className="btn-auth-register mt-8">
                 Get Started
               </button>
             </form>
@@ -347,7 +347,7 @@ export default function RegisterStepOne() {
           </div>
         </div>
       </div>
-      <div className="hidden lg:block lg:max-w-[31.25rem] overflow-hidden">
+      {/* <div className="hidden lg:block lg:max-w-[31.25rem] overflow-hidden">
         <Image
           src="/assets/img/register.webp"
           width={500}
@@ -355,7 +355,7 @@ export default function RegisterStepOne() {
           alt="Auth"
           className="h-full object-cover rounded-tl-0 rounded-tr-[1.25rem] rounded-br-[1.125rem] rounded-bl-0"
         />
-      </div>
+      </div> */}
     </div>
   );
 }
