@@ -111,7 +111,7 @@ export default function RegisterStepThree() {
 
   return (
     <div className="flex flex-wrap lg:flex-nowrap">
-      <div className="w-full lg:max-w-[48.75rem]">
+      <div className="w-full">
         <div className="tla-auth-form tla-auth-form-register relative">
           <div className="absolute inset-0 flex items-center justify-center z-[-1]">
             <div className="w-[215px] h-[215px] rounded-full bg-[#00C3C080] blur-[100px]"></div>
@@ -433,7 +433,7 @@ export default function RegisterStepThree() {
           </div>
         </div>
       </div>
-      <div className="hidden lg:block lg:max-w-[31.25rem]">
+      {/* <div className="hidden lg:block lg:max-w-[31.25rem]">
         <Image
           src="/assets/img/register.webp"
           width={602}
@@ -441,7 +441,7 @@ export default function RegisterStepThree() {
           className='h-full object-cover rounded-tl-0 rounded-tr-[1.25rem] rounded-br-[1.125rem] rounded-bl-0"'
           alt="Auth Image"
         />
-      </div>
+      </div> */}
     </div>
   );
 }

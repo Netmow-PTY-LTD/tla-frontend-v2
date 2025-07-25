@@ -2,58 +2,42 @@ import { z } from 'zod';
 
 export const lawyerRegistrationStepTwoFormValidation = z
   .object({
-    practiceWithin: z.boolean(),
+    practiceWithin: z.boolean().refine((val) => val === true, {
+      message: 'This checkbox must be checked before proceeding.',
+    }),
     AreaZipcode: z.string().optional(),
-    rangeInKm: z.any().optional(), // ← Accept any type for now, refine later
-    practiceInternational: z.boolean(),
+    rangeInKm: z.any().optional(),
+    practiceInternational: z.boolean().optional(),
   })
   .superRefine((data, ctx) => {
-    // Must select at least one option
-    if (!data.practiceWithin && !data.practiceInternational) {
+    // Validate AreaZipcode
+    if (!data.AreaZipcode || data.AreaZipcode.trim() === '') {
       ctx.addIssue({
-        path: ['practiceWithin'],
+        path: ['AreaZipcode'],
         code: z.ZodIssueCode.custom,
-        message: 'Please select at least one practice option.',
+        message: 'Area Zipcode is required.',
+      });
+    } else if (!/^[0-9a-fA-F]{24}$/.test(data.AreaZipcode)) {
+      ctx.addIssue({
+        path: ['AreaZipcode'],
+        code: z.ZodIssueCode.custom,
+        message: 'Invalid Zipcode ObjectId.',
       });
     }
 
-    // If practiceWithin is true, validate AreaZipcode and rangeInKm
-    if (data.practiceWithin) {
-      // AreaZipcode required and must match ObjectId format
-      if (!data.AreaZipcode || data.AreaZipcode.trim() === '') {
-        ctx.addIssue({
-          path: ['AreaZipcode'],
-          code: z.ZodIssueCode.custom,
-          message: 'Area Zipcode is required.',
-        });
-      } else if (!/^[0-9a-fA-F]{24}$/.test(data.AreaZipcode)) {
-        ctx.addIssue({
-          path: ['AreaZipcode'],
-          code: z.ZodIssueCode.custom,
-          message: 'Invalid Zipcode ObjectId.',
-        });
-      }
-
-      // rangeInKm required and must be valid number
-      const parsedRange = Number(data.rangeInKm);
-      if (
-        data.rangeInKm === undefined ||
-        data.rangeInKm === null ||
-        data.rangeInKm === '' ||
-        isNaN(parsedRange)
-      ) {
-        ctx.addIssue({
-          path: ['rangeInKm'],
-          code: z.ZodIssueCode.custom,
-          message: 'Range is required.',
-        });
-      } else if (![1, 2, 10, 20, 50, 75, 100, 125, 150].includes(parsedRange)) {
-        ctx.addIssue({
-          path: ['rangeInKm'],
-          code: z.ZodIssueCode.custom,
-          message: 'Invalid range selection.',
-        });
-      }
+    // Validate rangeInKm (ensure it’s a number and allowed)
+    const parsedRange = Number(data.rangeInKm);
+    if (
+      data.rangeInKm === undefined ||
+      data.rangeInKm === null ||
+      data.rangeInKm === '' ||
+      isNaN(parsedRange)
+    ) {
+      ctx.addIssue({
+        path: ['rangeInKm'],
+        code: z.ZodIssueCode.custom,
+        message: 'Range is required.',
+      });
     }
   });
 
