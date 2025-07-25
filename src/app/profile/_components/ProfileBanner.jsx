@@ -1,3 +1,4 @@
+import { userDummyImage } from '@/data/data';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -17,7 +18,7 @@ export default function ProfileBanner({ data }) {
         <div className="flex flex-wrap gap-5 relative md:top-[30px]">
           <div className="flex">
             <Image
-              src={data?.profilePicture || '/assets/img/avatar.png'}
+              src={data?.profilePicture || userDummyImage}
               width={423}
               height={531}
               alt={data?.name || 'Profile Image'}
