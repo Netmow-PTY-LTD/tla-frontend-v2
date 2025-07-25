@@ -112,28 +112,28 @@ export default function FilterResponseSidebar({ queryParams, setQueryParams }) {
                 Lead Spotlight
               </AccordionTrigger>
               <AccordionContent className="overflow-hidden">
+             
                 <div className="flex flex-col gap-4 text-balance">
-                  <label htmlFor="urgent" className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      id="urgent"
-                      value="urgent"
-                      {...register('spotlight')}
-                    />
-                    Urgent
-                  </label>
+                  {[
+                    { value: 'urgent', label: 'Urgent' },
+                    { value: 'within_a_week', label: 'Within a Week' },
+                    { value: 'this_month', label: 'This Month' },
+                    { value: 'not_sure', label: 'Not Sure' },
+                  ].map((option) => (
                   <label
-                    htmlFor="client-requested"
+                    key={option.value}
+                    htmlFor={option.value}
                     className="flex items-center gap-2"
                   >
                     <input
                       type="checkbox"
-                      id="client-requested"
-                      value="client-requested"
+                      id={option.value}
+                      value={option.value}
                       {...register('spotlight')}
                     />
-                    Client Requested
+                    {option.label}
                   </label>
+                  ))}
                 </div>
               </AccordionContent>
             </AccordionItem>

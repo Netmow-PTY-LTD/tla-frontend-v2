@@ -219,31 +219,27 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
                 Lead Spotlight
               </AccordionTrigger>
               <AccordionContent className="overflow-hidden">
-                <div className="flex flex-col gap-4 text-balance">
+               <div className="flex flex-col gap-4 text-balance">
+                  {[
+                    { value: 'urgent', label: 'Urgent' },
+                    { value: 'within_a_week', label: 'Within a Week' },
+                    { value: 'this_month', label: 'This Month' },
+                    { value: 'not_sure', label: 'Not Sure' },
+                  ].map((option) => (
                   <label
-                    htmlFor="urgent"
-                    className="flex items-center gap-2 cursor-pointer"
+                    key={option.value}
+                    htmlFor={option.value}
+                    className="flex items-center gap-2"
                   >
                     <input
-                      type="radio"
-                      id="urgent"
-                      value="urgent"
+                      type="checkbox"
+                      id={option.value}
+                      value={option.value}
                       {...register('spotlight')}
                     />
-                    Urgent
+                    {option.label}
                   </label>
-                  <label
-                    htmlFor="lead-any"
-                    className="flex items-center gap-2 cursor-pointer"
-                  >
-                    <input
-                      type="radio"
-                      id="lead-any"
-                      value="lead-any"
-                      {...register('spotlight')}
-                    />
-                    Any
-                  </label>
+                  ))}
                 </div>
               </AccordionContent>
             </AccordionItem>

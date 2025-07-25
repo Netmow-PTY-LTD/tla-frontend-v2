@@ -65,7 +65,7 @@ export default function MyResponsesPage() {
     if (allMyResponses?.data?.length > 0) {
       setSelectedResponse(allMyResponses?.data[0]);
     }
-  }, [allMyResponses?.data]);
+  }, [allMyResponses?.data,queryParams]);
 
   // if (isAllMyResponsesLoading) {
   //   return (

@@ -4,8 +4,15 @@ import { X } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import FilterResponseSidebar from '../../_component/FilterResponseSidebar';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function ResponseHead({ isExpanded, data, setQueryParams, queryParams }) {
+    const router = useRouter();
+  const pathname = usePathname(); // current route without query params
+
+  const clearFilters = () => {
+    router.push(pathname); // This removes all query params
+  };
   const pendingStatusLength = data?.filter(
     (item) => item.status === 'pending'
   )?.length;
@@ -57,7 +64,6 @@ export default function ResponseHead({ isExpanded, data, setQueryParams, queryPa
                 className="text-[#C72C41] text-[11px] flex items-center gap-2"
                 onClick={() => {
                   localStorage.removeItem('responseFilters');
-                  window.location.href = '/lawyer/dashboard/my-responses';
                   setQueryParams({
                     page: 1,
                     limit: 10,
@@ -69,6 +75,7 @@ export default function ResponseHead({ isExpanded, data, setQueryParams, queryPa
                     actionsTaken: '',
                     leadSubmission: '',
                   })
+                  clearFilters()
                 }}
               >
                 <span>Clear</span>
