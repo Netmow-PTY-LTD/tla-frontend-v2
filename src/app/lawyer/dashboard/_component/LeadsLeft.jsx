@@ -78,9 +78,9 @@ export default function LeadDetailsPage({
           </div>
           <div className="mt-3 max-w-4xl">
             <div className="flex justify-between">
-              <div className="flex flex-col items-start gap-4 ">
+              <div className="flex flex-col items-start gap-4 z-0 ">
                
-                <Avatar className="w-20 h-20">
+                <Avatar className="w-20 h-20 z-10">
                   <AvatarImage
                     src={`${lead?.userProfileId?.profilePicture ??
                       userDummyImage

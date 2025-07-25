@@ -23,11 +23,11 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
     ?.map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())?.join('');
 
   return (
-    <Card className="w-full max-w-full mx-auto flex flex-col">
+    <Card className="w-full max-w-full mx-auto flex flex-col  z-0">
       {/* Header Section */}
       <div className="flex flex-wrap sm:flex-nowrap items-start justify-between gap-3 p-3">
-        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
-          <Avatar className="w-10 h-10">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 ">
+          <Avatar className="w-10 h-10 z-10 ">
             <AvatarImage
               src={`${user?.userProfileId?.profilePicture ?? userDummyImage
                 }`}
