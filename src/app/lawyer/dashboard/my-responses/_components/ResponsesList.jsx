@@ -3,6 +3,7 @@ import React from 'react';
 import ResponseCard from '../../_component/home/ResponseCard';
 
 const LeadsRight = ({ isExpanded, onViewDetails, data }) => {
+ 
   return (
     <>
       {/* lead card section */}
@@ -19,6 +20,7 @@ const LeadsRight = ({ isExpanded, onViewDetails, data }) => {
             onViewDetails={onViewDetails}
             user={user}
             isExpanded={isExpanded}
+           
           />
         ))}
       </section>
