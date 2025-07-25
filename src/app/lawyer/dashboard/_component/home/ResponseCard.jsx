@@ -2,6 +2,7 @@
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { userDummyImage } from '@/data/data';
 import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 import { BadgeCheck, Zap } from 'lucide-react';
 import Image from 'next/image';
@@ -48,11 +49,11 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
     <Card className="w-full max-w-full mx-auto flex flex-col">
       {/* Header Section */}
       <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 p-3">
-        <figure className="w-10 h-10 overflow-hidden flex-shrink-0">
+        <figure className="w-10 h-10 overflow-hidden flex-shrink-0 border rounded-full">
           <Image
             src={`${
               user?.leadId?.userProfileId?.profilePicture ??
-              '/assets/img/avatar.png'
+              userDummyImage
             }`}
             alt={user?.userProfileId?.name ?? 'John Doe'}
             width={40}

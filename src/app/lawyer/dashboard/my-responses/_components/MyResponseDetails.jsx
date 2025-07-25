@@ -41,6 +41,7 @@ import { useRouter } from 'next/navigation';
 import SendMailModal from './modal/SendMailModal';
 import SendSmsModal from './modal/SendSmsModal';
 import { getCompactTimeAgo } from '@/helpers/formatTime';
+import { userDummyImage } from '@/data/data';
 
 export default function MyResponseDetails({ onBack, response, responseId }) {
   const [activeTab, setActiveTab] = useState('activity');
@@ -53,8 +54,8 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
       skip: !responseId && !response?._id,
     });
 
-    const badge = singleResponse?.data?.leadId?.userProfileId?.profileType;
-  
+  const badge = singleResponse?.data?.leadId?.userProfileId?.profileType;
+
 
 
   const [updateStatus] = useUpdateResponseStatusMutation();
@@ -171,7 +172,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
             '_blank'
           );
         }
-      } catch (error) {}
+      } catch (error) { }
     }
     if (type === 'sendemail') {
       setOpenMail(true);
@@ -224,11 +225,11 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
             </div>
             <div className="mt-3">
               <div className="flex flex-col items-start gap-4 ">
-                <figure className="w-20 h-20 overflow-hidden">
+                <figure className="w-20 h-20 overflow-hidden border rounded-full">
                   <Image
                     src={
                       singleResponse?.data?.leadId?.userProfileId
-                        ?.profilePicture || '/assets/img/avatar.png'
+                        ?.profilePicture || userDummyImage
                     }
                     alt={
                       singleResponse?.data?.leadId?.userProfileId?.name || ''
@@ -239,6 +240,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                     className="w-full h-full rounded-full object-cover"
                   />
                 </figure>
+              
                 <div>
                   <h2 className="font-medium heading-md">
                     {singleResponse?.data?.leadId?.userProfileId?.name}
@@ -345,21 +347,19 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                 <div className="flex border-b border-gray-200 gap-6">
                   <button
                     onClick={() => setActiveTab('activity')}
-                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                      activeTab === 'activity'
+                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
                         ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
                         : 'hover:text-black'
-                    }`}
+                      }`}
                   >
                     Activity
                   </button>
                   <button
                     onClick={() => setActiveTab('lead-details')}
-                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                      activeTab === 'lead-details'
+                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'lead-details'
                         ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
                         : 'hover:text-black'
-                    }`}
+                      }`}
                   >
                     Lead Details
                   </button>
@@ -396,20 +396,18 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                         return (
                           <Fragment key={index}>
                             <div
-                              className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${
-                                index === 0 ? '' : 'border-l border-[#e6e7ec]'
-                              }`}
+                              className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${index === 0 ? '' : 'border-l border-[#e6e7ec]'
+                                }`}
                             >
                               {formattedDate}
                             </div>
                             {activity?.logs?.map((item, i) => {
                               return (
                                 <div
-                                  className={`activity-log-item flex gap-2 ${
-                                    index === 0 && i === 0
+                                  className={`activity-log-item flex gap-2 ${index === 0 && i === 0
                                       ? 'first-log-item'
                                       : ''
-                                  }`}
+                                    }`}
                                   key={i}
                                 >
                                   <div className="left-track flex-grow-0 flex flex-col w-[32px] items-center">

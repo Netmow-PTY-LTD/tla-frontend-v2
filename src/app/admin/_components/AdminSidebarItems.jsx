@@ -5,6 +5,7 @@ import {
   CircleEllipsis,
   Earth,
   FileQuestionMark,
+  Kanban,
   LandPlot,
   LayoutDashboard,
   List,
@@ -208,7 +209,7 @@ export const AdminSidebarItems = {
     {
       title: 'Lead Management',
       url: '/admin/leads-management',
-      icon: Users,
+      icon: Kanban,
       isActive: true,
       // items: [
       //   {

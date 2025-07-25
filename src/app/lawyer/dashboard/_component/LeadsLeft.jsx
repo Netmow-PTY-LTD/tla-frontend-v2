@@ -18,6 +18,8 @@ import { useEffect, useState } from 'react';
 import LawyerContactButton from './leadBoard/LawyerContactButton';
 import ResponseSkeleton from '../my-responses/_components/ResponseSkeleton';
 import { formatRelativeTime } from '@/helpers/formatTime';
+import { userDummyImage } from '@/data/data';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function LeadDetailsPage({
   onBack,
@@ -76,19 +78,17 @@ export default function LeadDetailsPage({
           </div>
           <div className="mt-3 max-w-4xl">
             <div className="flex justify-between">
-              <div className="flex flex-col items-start gap-4 ">
-                <figure className="w-20 h-20 overflow-hidden">
-                  <Image
+              <div className="flex flex-col items-start gap-4 z-0 ">
+               
+                <Avatar className="w-20 h-20 z-10">
+                  <AvatarImage
                     src={`${lead?.userProfileId?.profilePicture ??
-                      '/assets/img/avatar.png'
+                      userDummyImage
                       }`}
                     alt={lead?.userProfileId?.name ?? 'John Doe'}
-                    width={80}
-                    height={80}
-                    priority
-                    className="rounded-full object-cover w-full h-full"
                   />
-                </figure>
+                  <AvatarFallback>User</AvatarFallback>
+                </Avatar>
                 <div>
                   <h2 className="font-medium heading-lg">
                     {lead?.userProfileId?.name ?? ''}
