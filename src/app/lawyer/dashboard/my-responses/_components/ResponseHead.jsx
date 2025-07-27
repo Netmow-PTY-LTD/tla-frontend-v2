@@ -11,7 +11,7 @@ export default function ResponseHead({ isExpanded, data, setQueryParams, queryPa
     const router = useRouter();
   const pathname = usePathname(); // current route without query params
 
-  const stored = localStorage.getItem('responseFilters');
+
 
   const pendingStatusLength = data?.filter(
     (item) => item.status === 'pending'
