@@ -1,6 +1,6 @@
 import { baseApi } from '../../baseApi/baseApi';
 
-const responseApiService = baseApi.injectEndpoints({
+export const responseApiService = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     createResponse: builder.mutation({
       query: (data) => ({

@@ -29,6 +29,7 @@ import Image from 'next/image';
 import { Fragment, useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
+  responseApiService,
   useActivityLogMutation,
   useGetSingleResponseQuery,
   useUpdateResponseStatusMutation,
@@ -42,17 +43,46 @@ import SendMailModal from './modal/SendMailModal';
 import SendSmsModal from './modal/SendSmsModal';
 import { getCompactTimeAgo } from '@/helpers/formatTime';
 import { userDummyImage } from '@/data/data';
+import { useDispatch } from 'react-redux';
+import { getSocket } from '@/lib/socket';
+import { useSocketListener } from '@/hooks/useSocketListener';
+
 
 export default function MyResponseDetails({ onBack, response, responseId }) {
+
   const [activeTab, setActiveTab] = useState('activity');
   const [isExpanded, setIsExpanded] = useState(false);
   const [openMail, setOpenMail] = useState(false);
   const [openSms, setOpenSms] = useState(false);
-
+  const dispatch = useDispatch();
   const { data: singleResponse, isLoading: isSingleResponseLoading } =
     useGetSingleResponseQuery(responseId ? responseId : response?._id, {
       skip: !responseId && !response?._id,
     });
+
+
+  // Listen for updates
+  useSocketListener("notification", (updatedData) => {
+    console.log("Real-time response data:", updatedData);
+
+    // Update RTK Query cache
+    dispatch(
+      responseApiService.util.updateQueryData("getSingleResponse", responseId ? responseId : response?._id, (draft) => {
+        Object.assign(draft.data, updatedData);
+      })
+    );
+  });
+
+
+  useEffect(() => {
+    const socket = getSocket();
+    socket.emit("join_room", responseId ? responseId : response?._id);
+
+    return () => {
+      socket.emit("leave_room", responseId ? responseId : response?._id);
+    };
+  }, [responseId ? responseId : response?._id]);
+
 
   const badge = singleResponse?.data?.leadId?.userProfileId?.profileType;
 
@@ -240,7 +270,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                     className="w-full h-full rounded-full object-cover"
                   />
                 </figure>
-              
+
                 <div>
                   <h2 className="font-medium heading-md">
                     {singleResponse?.data?.leadId?.userProfileId?.name}
@@ -348,8 +378,8 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                   <button
                     onClick={() => setActiveTab('activity')}
                     className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
-                        ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                        : 'hover:text-black'
+                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                      : 'hover:text-black'
                       }`}
                   >
                     Activity
@@ -357,8 +387,8 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                   <button
                     onClick={() => setActiveTab('lead-details')}
                     className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'lead-details'
-                        ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                        : 'hover:text-black'
+                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                      : 'hover:text-black'
                       }`}
                   >
                     Lead Details
@@ -405,8 +435,8 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                               return (
                                 <div
                                   className={`activity-log-item flex gap-2 ${index === 0 && i === 0
-                                      ? 'first-log-item'
-                                      : ''
+                                    ? 'first-log-item'
+                                    : ''
                                     }`}
                                   key={i}
                                 >
