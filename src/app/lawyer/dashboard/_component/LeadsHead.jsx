@@ -6,18 +6,32 @@ import React from 'react';
 
 import FilterSidebar from './FilterSidebar';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import { toast } from 'sonner';
 
 export default function LeadsHead({
   isExpanded,
   total,
   setSearchKeyword,
   setLeads,
+  searchKeyword
 }) {
   const { data: currentUser } = useAuthUserInfoQuery();
 
-  //console.log('currentUser ==>', currentUser?.data);
 
-  const stored = localStorage.getItem('lead-filters');
+  // const stored = localStorage.getItem('lead-filters');
+  const clearFilters = () => {
+    localStorage.removeItem('lead-filters');
+    setSearchKeyword({});
+    setLeads([]);
+    toast.success('Clear Filter', {
+      position: 'top-right',
+      style: {
+        background: '#22c55e',
+        color: '#fff',
+      },
+    });
+  };
+
 
   return (
     <section className={`pr-2 ${isExpanded ? '' : 'pl-4'}`}>
@@ -63,14 +77,26 @@ export default function LeadsHead({
           }`}
         >
           <div className={`lg:flex items-center gap-2`}>
-            {stored && !isExpanded && (
+            {/* {stored && !isExpanded && (
               <div
                 className="text-[#C72C41] text-[11px] flex items-center gap-2 cursor-pointer"
-                onClick={() => {
-                  localStorage.removeItem('lead-filters');
-                  alert('filter removed');
-                  window.location.href = '/lawyer/dashboard/leads-board';
-                }}
+                // onClick={() => {
+                //   localStorage.removeItem('lead-filters');
+                  
+                //   window.location.href = '/lawyer/dashboard/leads-board';
+                // }}
+                onClick={() =>clearFilters()}
+              >
+                <span>Clear</span>
+                <div className="bg-[#D9D9D9] rounded-full cursor-pointer p-1">
+                  <X className="w-4 h-4" />
+                </div>
+              </div>
+            )} */}
+             {(Object.keys(searchKeyword).length > 0 || localStorage.getItem('lead-filters')) && !isExpanded && (
+              <div
+                className="text-[#C72C41] text-[11px] flex items-center gap-2 cursor-pointer"
+                onClick={clearFilters}
               >
                 <span>Clear</span>
                 <div className="bg-[#D9D9D9] rounded-full cursor-pointer p-1">
