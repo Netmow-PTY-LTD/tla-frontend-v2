@@ -29,7 +29,10 @@ export default function HomeCTA() {
                     </ul>
                   </div>
                   <div className="home-cta-button flex gap-2">
-                    <Link href="/" className="btn-default btn-secondary">
+                    <Link
+                      href="/?clientRegister=true"
+                      className="btn-default btn-secondary"
+                    >
                       Join as Client
                     </Link>
                     <Link

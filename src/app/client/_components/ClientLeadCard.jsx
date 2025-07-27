@@ -9,7 +9,7 @@ import Link from 'next/link';
 const ClientLeadCard = ({ user, isExpanded }) => {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
-  //console.log('Single Lead Data:', user);
+  console.log('Single Lead Data:', singleLead);
 
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])
@@ -82,44 +82,69 @@ const ClientLeadCard = ({ user, isExpanded }) => {
       <hr className="border-[#F3F3F3] border" />
 
       {/* Matched Criteria */}
-      <div className="px-3 pt-3 pb-2">
-        {(urgentOption?.option ||
-          user?.additionalDetails ||
-          user?.userProfileId?.phone) && (
-          <h4
-            className={`font-medium mb-2 ${
-              isExpanded ? 'heading-md' : 'text-[13px]'
-            }`}
-          >
-            Matched criteria
-          </h4>
-        )}
+      {(urgentOption?.option ||
+        user?.additionalDetails ||
+        user?.userProfileId?.phone) && (
+        <div className="px-3 pt-3">
+          <div className="flex flex-wrap gap-2">
+            {urgentOption?.option && (
+              <TagButton
+                text={urgentOption?.option}
+                bgColor="#FF86021A"
+                icon={<Zap className="text-[#FF8602] w-4 h-4" />}
+              />
+            )}
+            {user?.additionalDetails && user?.additionalDetails !== '' && (
+              <TagButton
+                text="Additional Details"
+                bgColor="#004DA61A"
+                icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+              />
+            )}
 
-        <div className="flex flex-wrap gap-2">
-          {urgentOption?.option && (
-            <TagButton
-              text={urgentOption?.option}
-              bgColor="#FF86021A"
-              icon={<Zap className="text-[#FF8602] w-4 h-4" />}
-            />
-          )}
-          {user?.additionalDetails && user?.additionalDetails !== '' && (
-            <TagButton
-              text="Additional Details"
-              bgColor="#004DA61A"
-              icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
-            />
-          )}
-
-          {user?.userProfileId?.phone && (
-            <TagButton
-              text="Verified Phone"
-              bgColor="#00C3C01A"
-              icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
-            />
-          )}
+            {user?.userProfileId?.phone && (
+              <TagButton
+                text="Verified Phone"
+                bgColor="#00C3C01A"
+                icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+              />
+            )}
+          </div>
         </div>
-      </div>
+      )}
+
+      {singleLead?.data?.status && (
+        <div className="px-3 pt-2">
+          <TagButton
+            text={singleLead?.data?.status}
+            bgColor={
+              singleLead?.data?.status === 'approved'
+                ? '#00C3C01A'
+                : singleLead?.data?.status === 'rejected'
+                ? '#FF00001A'
+                : '#FF86021A'
+            }
+            textColor={
+              singleLead?.data?.status === 'approved'
+                ? 'text-[#00C3C0]'
+                : singleLead?.data?.status === 'rejected'
+                ? 'text-[#FF0000]'
+                : 'text-[#FF8602]'
+            }
+            icon={
+              <CircleAlert
+                className={`${
+                  singleLead?.data?.status === 'approved'
+                    ? 'text-[#00C3C0]'
+                    : singleLead?.data?.status === 'rejected'
+                    ? 'text-[#FF0000]'
+                    : 'text-[#FF8602]'
+                } w-4 h-4`}
+              />
+            }
+          />
+        </div>
+      )}
 
       {/* Job Description */}
       <div className="p-3">
