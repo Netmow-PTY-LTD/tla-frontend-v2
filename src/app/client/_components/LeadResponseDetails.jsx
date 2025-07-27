@@ -4,6 +4,7 @@ import ResponseSkeleton from '@/app/lawyer/dashboard/my-responses/_components/Re
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import WhatsApp from '@/components/icon/WhatsApp';
 import { Button } from '@/components/ui/button';
+import { userDummyImage } from '@/data/data';
 import { getCompactTimeAgo } from '@/helpers/formatTime';
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
 import {
@@ -174,11 +175,11 @@ export default function LeadResponseDetails({ onBack, response }) {
           </div>
           <div className="mt-3">
             <div className="flex flex-col items-start gap-4 ">
-              <figure className="w-20 h-20 overflow-hidden">
+              <figure className="w-20 h-20 overflow-hidden border rounded-full">
                 <Image
                   src={
-                    singleResponse?.data?.responseBy?.profilePicture ||
-                    '/assets/img/avatar.png'
+                    singleResponse?.data?.responseBy?.profilePicture??
+                    userDummyImage
                   }
                   alt={singleResponse?.data?.responseBy?.name || ''}
                   width={80}
