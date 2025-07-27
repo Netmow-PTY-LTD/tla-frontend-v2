@@ -77,22 +77,6 @@ export default function LeadsHead({
           }`}
         >
           <div className={`lg:flex items-center gap-2`}>
-            {/* {stored && !isExpanded && (
-              <div
-                className="text-[#C72C41] text-[11px] flex items-center gap-2 cursor-pointer"
-                // onClick={() => {
-                //   localStorage.removeItem('lead-filters');
-                  
-                //   window.location.href = '/lawyer/dashboard/leads-board';
-                // }}
-                onClick={() =>clearFilters()}
-              >
-                <span>Clear</span>
-                <div className="bg-[#D9D9D9] rounded-full cursor-pointer p-1">
-                  <X className="w-4 h-4" />
-                </div>
-              </div>
-            )} */}
              {(Object.keys(searchKeyword).length > 0 || localStorage.getItem('lead-filters')) && !isExpanded && (
               <div
                 className="text-[#C72C41] text-[11px] flex items-center gap-2 cursor-pointer"
