@@ -5,6 +5,7 @@ import { BadgeCheck, CircleAlert, Zap } from 'lucide-react';
 import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import Link from 'next/link';
+import { userDummyImage } from '@/data/data';
 
 const ClientLeadCard = ({ user, isExpanded }) => {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
@@ -45,30 +46,29 @@ const ClientLeadCard = ({ user, isExpanded }) => {
       <div className="flex flex-wrap bg-[#004DA61A] sm:flex-nowrap items-center gap-3 p-3 rounded-tl-xl rounded-tr-xl">
         <figure className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
           <Image
-            src={`${
-              user?.userProfileId?.profilePicture ?? '/assets/img/avatar.png'
-            }`}
+            src={`${user?.userProfileId?.profilePicture ?? userDummyImage
+              }`}
             alt={user?.userProfileId?.name ?? 'John Doe'}
             width={40}
             height={40}
             priority
-            className="rounded-full object-cover"
+            className="rounded-full object-cover border"
           />
         </figure>
+
+
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
           <div>
             <div
-              className={`font-medium mb-1 ${
-                isExpanded ? 'heading-md' : 'text-[13px]'
-              }`}
+              className={`font-medium mb-1 ${isExpanded ? 'heading-md' : 'text-[13px]'
+                }`}
             >
               {user?.userProfileId?.name}
             </div>
             <div
-              className={`${
-                isExpanded ? 'text-[13px]' : 'text-[10px]'
-              } text-gray-500`}
+              className={`${isExpanded ? 'text-[13px]' : 'text-[10px]'
+                } text-gray-500`}
             >
               {user?.userProfileId?.address ?? ''}
             </div>
@@ -86,14 +86,13 @@ const ClientLeadCard = ({ user, isExpanded }) => {
         {(urgentOption?.option ||
           user?.additionalDetails ||
           user?.userProfileId?.phone) && (
-          <h4
-            className={`font-medium mb-2 ${
-              isExpanded ? 'heading-md' : 'text-[13px]'
-            }`}
-          >
-            Matched criteria
-          </h4>
-        )}
+            <h4
+              className={`font-medium mb-2 ${isExpanded ? 'heading-md' : 'text-[13px]'
+                }`}
+            >
+              Matched criteria
+            </h4>
+          )}
 
         <div className="flex flex-wrap gap-2">
           {urgentOption?.option && (
@@ -125,9 +124,8 @@ const ClientLeadCard = ({ user, isExpanded }) => {
       <div className="p-3">
         {user?.serviceId?.name && (
           <h3
-            className={`font-medium mb-2 ${
-              isExpanded ? 'heading-md' : 'text-[13px]'
-            }`}
+            className={`font-medium mb-2 ${isExpanded ? 'heading-md' : 'text-[13px]'
+              }`}
           >
             Looking for a {user?.serviceId?.name} consultation
           </h3>
@@ -135,9 +133,8 @@ const ClientLeadCard = ({ user, isExpanded }) => {
 
         <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
           <h4
-            className={`font-medium mb-2 ${
-              isExpanded ? 'heading-base' : 'text-[14px]'
-            }`}
+            className={`font-medium mb-2 ${isExpanded ? 'heading-base' : 'text-[14px]'
+              }`}
           >
             {user?.serviceId?.name}
           </h4>
@@ -156,9 +153,8 @@ const ClientLeadCard = ({ user, isExpanded }) => {
               })()}
           </p>
           <div
-            className={`text-[#34495E] ${
-              isExpanded ? 'text-[13px]' : 'text-[12px]'
-            }`}
+            className={`text-[#34495E] ${isExpanded ? 'text-[13px]' : 'text-[12px]'
+              }`}
           >
             {user?.additionalDetails === ''
               ? `If you're facing a divorce, it's crucial to seek professional legal
@@ -174,18 +170,16 @@ const ClientLeadCard = ({ user, isExpanded }) => {
       {/* Footer Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">
         <Link
-          className={`px-4 py-2.5 w-full sm:w-auto rounded-lg ${
-            isExpanded ? 'heading-base' : 'text-[12px] '
-          } font-medium bg-[var(--color-special)] text-white hover:bg-gray-950 transition`}
+          className={`px-4 py-2.5 w-full sm:w-auto rounded-lg ${isExpanded ? 'heading-base' : 'text-[12px] '
+            } font-medium bg-[var(--color-special)] text-white hover:bg-gray-950 transition`}
           href={`/client/dashboard/my-leads/${user?._id}`}
         >
           View Lead Details
         </Link>
         {user?.credit && (
           <p
-            className={`text-[#34495E] ${
-              isExpanded ? 'heading-base' : 'text-[12px]'
-            } flex items-center gap-2`}
+            className={`text-[#34495E] ${isExpanded ? 'heading-base' : 'text-[12px]'
+              } flex items-center gap-2`}
           >
             <span>{user?.credit} Credits required</span>
             <CircleAlert className="w-4 h-4" />
