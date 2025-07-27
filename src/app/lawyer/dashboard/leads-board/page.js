@@ -207,7 +207,6 @@ const LeadBoardPage = () => {
             className="mt-4"
             onClick={() => {
               localStorage.removeItem('lead-filters');
-              alert('filter cleared');
               window.location.href = '/lawyer/dashboard/leads-board';
             }}
           >
