@@ -24,7 +24,7 @@ export default function HomeCategoryWiseServices() {
 
   const { data: allCategories } = useGetAllCategoriesQuery();
 
-  console.log('categories', allCategories?.data);
+  //console.log('categories', allCategories?.data);
   const handleModalOpen = () => {
     setServiceWiseQuestions(null); // Reset serviceWiseQuestions when opening the modal
     setModalOpen(true);
@@ -77,8 +77,9 @@ export default function HomeCategoryWiseServices() {
             allCategories?.data?.map((category, i) => (
               <Link
                 key={i}
-                href={`/category/${category.slug}`}
+                href="#"
                 className="category-wise-service-item flex flex-col items-center text-center gap-3 capitalize"
+                onClick={(e) => e.preventDefault()}
               >
                 <div className="icon w-16 h-16 border border-gray-200 rounded flex items-center justify-center p-2">
                   <img

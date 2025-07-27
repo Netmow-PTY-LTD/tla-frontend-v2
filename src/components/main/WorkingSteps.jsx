@@ -32,7 +32,10 @@ export default function WorkingSteps() {
           <Link href="/register" className="btn-default btn-secondary">
             Join as Lawyer - find client
           </Link>
-          <Link href="/" className="btn-default btn-outline-primary">
+          <Link
+            href="/?clientRegister=true"
+            className="btn-default btn-outline-primary"
+          >
             Join as Client - post cases
           </Link>
         </div>

@@ -1,9 +1,17 @@
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { userDummyImage } from '@/data/data';
+import { Info } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
 export default function ProfileBanner({ data }) {
+  console.log('data', data);
   return (
     <section
       className="pt-[50px] md:pt-[100px] pb-[40px] lg:pb-0"
@@ -31,11 +39,8 @@ export default function ProfileBanner({ data }) {
               {data?.designation || 'Lawyer'}
             </div>
             <div className="w-[142px] h-[0.5px] bg-white mt-4 opacity-[0.5]" />
-            <div className="flex flex-col gap-5 mt-10">
-              <Link
-                href={`mailto:${data?.email}`}
-                className="text-white text-[16px] font-semibold flex items-center gap-4"
-              >
+            <div className="flex flex-col gap-5 mt-8">
+              <div className="text-white text-[16px] font-semibold flex items-center gap-4">
                 <div className="w-[40px] h-[40px] flex items-center justify-center border border-1 border-white  rounded-full">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -50,12 +55,34 @@ export default function ProfileBanner({ data }) {
                     />
                   </svg>
                 </div>
-                <span>{data?.email || ''}</span>
-              </Link>
-              <Link
-                href={`tel:${data?.phone || ''}`}
-                className="text-white text-[16px] font-semibold flex items-center gap-4"
-              >
+                <span>
+                  {(() => {
+                    const email = data?.email;
+                    if (!email) return 't*******@e********.com';
+
+                    const [user, domain] = email.split('@');
+                    const maskedUser =
+                      user[0] + '*'.repeat(Math.max(user.length - 1, 0));
+                    const maskedDomain =
+                      domain[0] +
+                      '*'.repeat(Math.max(domain.indexOf('.'), 0)) +
+                      domain.slice(domain.indexOf('.'));
+
+                    return `${maskedUser}@${maskedDomain}`;
+                  })()}
+                </span>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Info className="w-4 h-4" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Buy credit to send email</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              <div className="text-white text-[16px] font-semibold flex items-center gap-4">
                 <div className="w-[40px] h-[40px] flex items-center justify-center border border-1 border-white  rounded-full">
                   {' '}
                   <svg
@@ -72,8 +99,28 @@ export default function ProfileBanner({ data }) {
                   </svg>
                 </div>
 
-                <span>{data?.phone ?? ''}</span>
-              </Link>
+                <span>
+                  {' '}
+                  {(() => {
+                    const phone = data?.phone;
+                    return phone
+                      ? `${phone.slice(0, 3)}${'*'.repeat(
+                          Math.max(0, phone.length - 3)
+                        )}`
+                      : '';
+                  })()}
+                </span>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Info className="w-4 h-4" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Buy credit to call</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
               <Link
                 href="/lawyer/settings/profile"
                 className="text-white text-[16px] font-semibold flex items-center gap-4"
@@ -96,7 +143,28 @@ export default function ProfileBanner({ data }) {
                 <span>{data?.address}</span>
               </Link>
             </div>
-            <div className="flex flex-wrap items-center gap-4 mt-16">
+            {data?.badge && (
+              <div className="bg-[#F3f3f3] py-2 px-3 rounded-[6px] inline-flex items-center gap-2 mt-8">
+                <div className="icon">
+                  <img
+                    src="/assets/img/badge.svg"
+                    width="40"
+                    height="40"
+                    alt={data?.badge}
+                  />
+                </div>
+                <span className="badge-name">{data?.badge}</span>
+                <span>
+                  {data?.badge?.toLowerCase() === 'premium lawyer'
+                    ? '( 10+ Hired )'
+                    : data?.badge?.toLowerCase() === 'expert lawyer'
+                    ? '( 5+ Hired )'
+                    : ''}
+                </span>
+              </div>
+            )}
+
+            <div className="flex flex-wrap items-center gap-4 mt-8">
               <Link
                 href="/lawyer/settings/profile"
                 className="text-white text-base font-medium flex items-center gap-2 bg-[#FF8602] rounded-[6px] py-[12px] px-[63px] hover:bg-[#e07502] transition-all duration-300"
@@ -149,6 +217,20 @@ export default function ProfileBanner({ data }) {
           </div>
         </div>
       </div>
+      <style>
+        {`
+          .badge-name {
+                color: #040E31;
+                text-align: center;
+                font-feature-settings: 'liga' off, 'clig' off;
+                font-family: "Dancing Script";
+                font-size: 20px;
+                font-weight: 700;
+                line-height: normal;
+                text-transform: capitalize;
+          }
+        `}
+      </style>
     </section>
   );
 }
