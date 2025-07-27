@@ -7,6 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import MyResponseDetails from './MyResponseDetails';
 import ResponseHead from './ResponseHead';
 import LeadsRight from './ResponsesList';
+import { Button } from '@/components/ui/button';
 
 export default function MyResponsesPage() {
   const [showResponseDetails, setShowResponseDetails] = useState(true);
@@ -14,11 +15,34 @@ export default function MyResponsesPage() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const responseId = searchParams.get('responseId');
+  const [queryParams, setQueryParams] = useState(() => {
+    // Load filters from localStorage on initial render
+    const saved = localStorage.getItem('responseFilters');
+    return saved
+      ? JSON.parse(saved)
+      : {
+        page: 1,
+        limit: 10,
+        sortBy: 'createdAt',
+        sortOrder: 'desc',
+        keyword: '',
+        spotlight: '',
+        clientActions: '',
+        actionsTaken: '',
+        leadSubmission: '',
+      };
+  });
+
+  // Save filters to localStorage whenever queryParams change
+  useEffect(() => {
+    localStorage.setItem('responseFilters', JSON.stringify(queryParams));
+  }, [queryParams]);
+
 
   const router = useRouter();
 
   const { data: allMyResponses, isLoading: isAllMyResponsesLoading } =
-    useGetAllMyResponsesQuery();
+    useGetAllMyResponsesQuery(queryParams);
 
   // Handle body scroll and layout overflow
   useEffect(() => {
@@ -41,7 +65,7 @@ export default function MyResponsesPage() {
     if (allMyResponses?.data?.length > 0) {
       setSelectedResponse(allMyResponses?.data[0]);
     }
-  }, [allMyResponses?.data]);
+  }, [allMyResponses?.data,queryParams]);
 
   // if (isAllMyResponsesLoading) {
   //   return (
@@ -110,15 +134,17 @@ export default function MyResponsesPage() {
           )}
 
           <div
-            className={`${
-              showResponseDetails ? 'right-column-4 ' : 'right-column-full'
-            }`}
+            className={`${showResponseDetails ? 'right-column-4 ' : 'right-column-full'
+              }`}
           >
             <div className="column-wrap-right">
               <div className="leads-top-row">
                 <ResponseHead
                   isExpanded={!showResponseDetails}
                   data={allMyResponses?.data || []}
+                  queryParams={queryParams}
+                  setQueryParams={setQueryParams}
+
                 />
               </div>
               <div className="leads-bottom-row max-w-[1400px] mx-auto">
@@ -130,6 +156,7 @@ export default function MyResponsesPage() {
                     router.push(`?responseId=${response?._id}`);
                   }}
                   data={allMyResponses?.data || []}
+
                 />
               </div>
             </div>
@@ -139,8 +166,17 @@ export default function MyResponsesPage() {
         <div className="flex flex-col justify-center items-center h-full">
           <Inbox className="w-12 h-12 mb-4 text-gray-400" />
           <h4 className="italic text-[18px] text-gray-500">
-            There are currently no responses.
+            Currently there are no leads.
           </h4>
+          <Button
+            className="mt-4"
+            onClick={() => {
+              localStorage.removeItem('responseFilters');
+              window.location.href = '/lawyer/dashboard/my-responses';
+            }}
+          >
+            Clear Search
+          </Button>
         </div>
       )}
     </div>

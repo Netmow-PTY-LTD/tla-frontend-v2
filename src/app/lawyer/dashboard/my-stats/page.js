@@ -11,6 +11,7 @@ import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { useGetLeadServiceListQuery } from '@/store/features/leadService/leadServiceApiService';
 import LeadSettings from '@/components/dashboard/lawyer/components/LeadSettings';
 import LeadStatsCard from '@/components/dashboard/lawyer/module/MyStats/LeadStatsCard';
+import CreditsStatsCard from '@/components/dashboard/lawyer/module/MyStats/CreditsStatsCard';
 
 const MyStatsPage = () => {
   const menuLinks = [
@@ -90,7 +91,14 @@ const MyStatsPage = () => {
               />
             </div>
           </div>
+            <div className="flex flex-col h-full">
+          <div className="flex flex-1">
+            <CreditsStatsCard />
+          </div>
         </div>
+        </div>
+
+
 
         <Card className="p-6">
           <div className="mb-4">
