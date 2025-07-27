@@ -5,6 +5,7 @@ import { BadgeCheck, CircleAlert, Zap } from 'lucide-react';
 import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import Link from 'next/link';
+import { userDummyImage } from '@/data/data';
 
 const ClientLeadCard = ({ user, isExpanded }) => {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
@@ -45,14 +46,12 @@ const ClientLeadCard = ({ user, isExpanded }) => {
       <div className="flex flex-wrap bg-[#004DA61A] sm:flex-nowrap items-center gap-3 p-3 rounded-tl-xl rounded-tr-xl">
         <figure className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
           <Image
-            src={`${
-              user?.userProfileId?.profilePicture ?? '/assets/img/avatar.png'
-            }`}
+            src={`${user?.userProfileId?.profilePicture ?? userDummyImage}`}
             alt={user?.userProfileId?.name ?? 'John Doe'}
             width={40}
             height={40}
             priority
-            className="rounded-full object-cover"
+            className="rounded-full object-cover border"
           />
         </figure>
 

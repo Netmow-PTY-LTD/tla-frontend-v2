@@ -5,14 +5,14 @@ import Link from 'next/link';
 import React from 'react';
 import FilterResponseSidebar from '../../_component/FilterResponseSidebar';
 import { usePathname, useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export default function ResponseHead({ isExpanded, data, setQueryParams, queryParams }) {
     const router = useRouter();
   const pathname = usePathname(); // current route without query params
 
-  const clearFilters = () => {
-    router.push(pathname); // This removes all query params
-  };
+
+
   const pendingStatusLength = data?.filter(
     (item) => item.status === 'pending'
   )?.length;
@@ -20,6 +20,38 @@ export default function ResponseHead({ isExpanded, data, setQueryParams, queryPa
   const hiredStatusLength = data?.filter(
     (item) => item.status === 'hired'
   )?.length;
+
+
+  const defaultQueryParams = {
+    page: 1,
+    limit: 10,
+    sortBy: 'createdAt',
+    sortOrder: 'desc',
+    keyword: '',
+    spotlight: '',
+    clientActions: '',
+    actionsTaken: '',
+    leadSubmission: '',
+  };
+
+  const clearFilters = () => {
+    localStorage.removeItem('responseFilters');
+    setQueryParams(defaultQueryParams);
+    router.push(pathname); // remove all query params
+    toast.success('Clear Filter', {
+      position: 'top-right',
+      style: {
+        background: '#22c55e', // green color
+        color: '#fff',
+      },
+    });
+  };
+
+  const hasActiveFilters = Object.keys(defaultQueryParams).some(
+    key => queryParams[key] !== defaultQueryParams[key]
+  );
+
+
   return (
     <section className={`${isExpanded ? '' : 'pl-4 pr-1'}`}>
       <div className="flex justify-between items-center gap-4">
@@ -59,7 +91,7 @@ export default function ResponseHead({ isExpanded, data, setQueryParams, queryPa
       <div className="flex flex-wrap justify-between items-center mt-3 mb-3 gap-2">
         <div className="flex flex-wrap items-center gap-2 text-[#34495E]">
           <div className="lg:flex items-center gap-2">
-            {!isExpanded && (
+            {!isExpanded &&hasActiveFilters && (
               <div
                 className="text-[#C72C41] text-[11px] flex items-center gap-2"
                 onClick={() => {

@@ -6,7 +6,7 @@ import LeadsRight from '@/app/lawyer/dashboard/_component/LeadsRight';
 import ResponseSkeleton from '@/app/lawyer/dashboard/my-responses/_components/ResponseSkeleton';
 import LeadCard from '@/components/dashboard/lawyer/components/LeadCard';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
-import { data } from '@/data/data';
+import { data, userDummyImage } from '@/data/data';
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
 import { useGetAllLeadWiseResponsesQuery } from '@/store/features/client/LeadsApiService';
 import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
@@ -99,17 +99,19 @@ export default function LeadDetailsPage() {
               </div>
               <div className="mt-3">
                 <div className="flex flex-col items-start gap-4 ">
-                  <figure className="w-20 h-20 rounded-full overflow-hidden">
+               
+                  <figure className="w-20 h-20 overflow-hidden border rounded-full">
                     <Image
-                      src={`${
-                        singleLead?.data?.userProfileId?.profilePicture ??
-                        '/assets/img/auth-step1.png'
-                      }`}
-                      alt={singleLead?.data?.userProfileId?.name ?? 'John Doe'}
+                      src={
+                       singleLead?.data?.userProfileId?.profilePicture ??  userDummyImage
+                      }
+                      alt={
+                        singleLead?.data?.userProfileId?.name ?? ''
+                      }
                       width={80}
                       height={80}
                       priority
-                      className="rounded-full object-cover"
+                      className="w-full h-full rounded-full object-cover"
                     />
                   </figure>
                   <div>

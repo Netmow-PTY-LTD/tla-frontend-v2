@@ -6,6 +6,7 @@ import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 import { Button } from '@/components/ui/button';
 import { formatRelativeTime } from '@/helpers/formatTime';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
+import { userDummyImage } from '@/data/data';
 
 const LeadResponseCard = ({
   handleShowLeadResponseDetails,
@@ -29,10 +30,10 @@ const LeadResponseCard = ({
       {/* Header Section */}
       <div className="flex flex-wrap sm:flex-nowrap items-start justify-between gap-3 p-3">
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
-          <figure className="w-10 h-10 overflow-hidden flex-shrink-0">
+          <figure className="w-10 h-10 overflow-hidden flex-shrink-0 border rounded-full">
             <Image
               src={`${
-                response?.responseBy?.profilePicture ?? '/assets/img/avatar.png'
+                response?.responseBy?.profilePicture ??   userDummyImage
               }`}
               alt={response?.responseBy?.name ?? ''}
               width={40}
@@ -41,6 +42,8 @@ const LeadResponseCard = ({
               className="rounded-full object-cover w-full h-full"
             />
           </figure>
+
+         
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
             <div>
               <div

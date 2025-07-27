@@ -20,7 +20,7 @@ const LeadBoardPage = () => {
   const [leads, setLeads] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [parsed, setParsed] = useState(null);
-
+  const [searchKeyword, setSearchKeyword] = useState(parsed || {});
   useEffect(() => {
     const stored = localStorage.getItem('lead-filters');
     if (stored) {
@@ -37,9 +37,8 @@ const LeadBoardPage = () => {
     setLeads([]);
   }, []);
 
-  const [searchKeyword, setSearchKeyword] = useState(parsed || {});
 
-  //console.log('searchKeyword', searchKeyword);
+
 
   const scrollContainerRef = useRef(null);
 
@@ -52,6 +51,13 @@ const LeadBoardPage = () => {
     limit: 10,
     searchKeyword: JSON.stringify(searchKeyword || {}),
   });
+
+
+ useEffect(() => {
+  setLeads([]);
+  setPage(1);
+}, [searchKeyword]);
+
 
   // Fetch detailed data for selected lead
   const { data: selectedLeadData, isLoading: isSingleLeadLoading } =
@@ -168,6 +174,7 @@ const LeadBoardPage = () => {
                   isExpanded={!showLeadDetails}
                   total={data?.pagination?.total ?? 0}
                   setSearchKeyword={setSearchKeyword}
+                  searchKeyword={searchKeyword}
                   setLeads={setLeads}
                 />
               </div>
@@ -200,7 +207,6 @@ const LeadBoardPage = () => {
             className="mt-4"
             onClick={() => {
               localStorage.removeItem('lead-filters');
-              alert('filter cleared');
               window.location.href = '/lawyer/dashboard/leads-board';
             }}
           >
