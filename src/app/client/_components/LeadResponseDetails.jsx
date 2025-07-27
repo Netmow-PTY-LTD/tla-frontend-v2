@@ -220,7 +220,7 @@ export default function LeadResponseDetails({ onBack, response }) {
                         Show Number
                       </Button> */}
               <Button
-                onClick={() => handleActivity('whatsapp')}
+                onClick={() => handleActivity('whatsapp')} 
                 className="bg-[#25D366]"
               >
                 <WhatsApp />
