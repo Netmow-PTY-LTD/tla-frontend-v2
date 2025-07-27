@@ -72,7 +72,7 @@ export default function Footer() {
                     <h5>For Clients</h5>
                     <ul>
                       <li>
-                        <Link href="/find-lawyers">Find Lawyers</Link>
+                        <Link href="/?clientRegister=true">Find Lawyers</Link>
                       </li>
                       <li>
                         <Link href="/how-it-works/clients">How IT Works</Link>
@@ -86,10 +86,10 @@ export default function Footer() {
                     <h5>For Lawyers</h5>
                     <ul>
                       <li>
-                        <Link href="/find-clients">Find Clients</Link>
+                        <Link href="/how-it-works/lawyers">How It Works</Link>
                       </li>
                       <li>
-                        <Link href="/how-it-works/lawyers">How It Works</Link>
+                        <Link href="/register">Join as a Lawyer</Link>
                       </li>
                       <li>
                         <Link href="/login">Login Lawyer</Link>

@@ -18,8 +18,8 @@ export function Modal({
   onOpenChange,
   width = 'max-w-[500px]',
   height = '',
+  overflowY = '',
 }) {
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange} className="z-[999]">
       {buttonName && (
@@ -34,7 +34,7 @@ export function Modal({
       )}
       <DialogContent className={`${width} ${height} w-full z-[9999]`}>
         {/* Dialog Header */}
-        <DialogHeader>
+        <DialogHeader className="hidden">
           <DialogTitle>
             {title ? title : <VisuallyHidden>Dialog</VisuallyHidden>}
           </DialogTitle>
