@@ -51,7 +51,6 @@ export default function FilterResponseSidebar({ queryParams, setQueryParams }) {
 
 
   const onSubmit = (data) => {
-    console.log('Filters Applied:', data);
     setQueryParams((prev) => ({
       ...prev,
       page: 1, // reset to first page when filters change
