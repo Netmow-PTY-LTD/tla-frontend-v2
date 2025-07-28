@@ -1,12 +1,16 @@
 'use client'
 
 
+import { useSocketContext } from "@/contexts/SocketContext";
 import { useNotifications, useResponseRoom } from "@/hooks/useSocketListener";
 import { useAuthUserInfoQuery } from "@/store/features/auth/authApiService";
 import { useState } from "react";
 
 export default function Dashboard() {
     const {data:user}=useAuthUserInfoQuery()
+    const SocketContextMessage=useSocketContext()
+
+    console.log('SocketContextMessage',SocketContextMessage)
     console.log('user data ==>',user)
   const userId = user?.data?._id;
   console.log('user Id',userId)
