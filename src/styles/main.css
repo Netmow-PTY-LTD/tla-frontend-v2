@@ -714,7 +714,7 @@ Home Features
 }
 
 .feature-heading .feature-heading-text {
-  color: #34495e;
+  color: var(--color-black);
   font-weight: 400;
   line-height: 170%;
 }
@@ -976,12 +976,12 @@ Home Testimonials
       Working Steps
 ======================*/
 .working-steps {
-  padding: 50px 0 100px;
+  padding: 100px 0 100px;
   border-radius: 80px 80px 0px 0px;
   /* border: 1px solid #dce2ea;
   border-bottom: none; */
   background: linear-gradient(180deg, #edf0f4 0%, rgba(255, 255, 255, 0) 100%);
-  margin: 0 60px;
+  /* margin: 0 60px; */
 }
 
 .working-step-item {
@@ -1241,6 +1241,13 @@ Home Testimonials
   font-style: normal;
   font-weight: 400;
   line-height: 170%; /* 27.2px */
+  transition: all 0.3s ease;
+}
+
+.footer-widget ul li a:hover,
+.footer-contact ul li a:hover {
+  color: var(--primary-color);
+  transition: all 0.3s ease;
 }
 
 .footer-contact .icon {

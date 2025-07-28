@@ -26,6 +26,7 @@ export default function ClientLeadRegistrationModal({
   countryId,
   serviceId,
   locationId,
+  isQuestionsLoading,
 }) {
   const [step, setStep] = useState(0);
 
@@ -509,7 +510,12 @@ export default function ClientLeadRegistrationModal({
     return false;
   })();
 
-  //console.log('questionLoading:', questionLoading);
+  console.log('isQuestionsLoading:', isQuestionsLoading);
+  console.log('selectedServiceWiseQuestions:', selectedServiceWiseQuestions);
+  console.log(
+    '!selectedServiceWiseQuestions?.length:',
+    !selectedServiceWiseQuestions?.length
+  );
 
   return (
     <Modal
@@ -517,16 +523,17 @@ export default function ClientLeadRegistrationModal({
       onOpenChange={(open) => {
         setModalOpen(open);
         if (!open) {
-          setViewData(null);
-          setQuestionsPayload([]);
           setStep(0); // reset form steps, if needed
+          // setViewData(null);
+          // setQuestionsPayload([]);
+          setQuestionLoading(false);
         }
       }}
       title=""
       width="max-w-[570px]"
       height="max-h-[90vh]"
     >
-      {questionLoading || !selectedServiceWiseQuestions?.length ? (
+      {isQuestionsLoading || !selectedServiceWiseQuestions?.length ? (
         <div className="flex items-center justify-center gap-2">
           <Loader className="w-4 h-4 animate-spin" /> Loading question...
         </div>
@@ -536,7 +543,7 @@ export default function ClientLeadRegistrationModal({
             <h4 className="text-[24px] font-semibold text-center mb-8">
               {viewData.question}
             </h4>
-            <div className="border border-1 flex flex-col gap-2 rounded-lg">
+            <div className="border border-1 flex flex-col gap-2 rounded-lg max-h-[300px] overflow-y-auto">
               {viewData.options?.length > 0 &&
                 viewData.options?.map((option, index) => {
                   const isLast = index === viewData.options.length - 1;
@@ -771,7 +778,7 @@ export default function ClientLeadRegistrationModal({
         </div>
       ) : null}
 
-      {questionLoading ||
+      {isQuestionsLoading ||
         (selectedServiceWiseQuestions?.length > 0 && (
           <div
             className={`flex ${

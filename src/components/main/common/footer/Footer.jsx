@@ -50,13 +50,10 @@ export default function Footer() {
                     <h5>Navigate</h5>
                     <ul>
                       <li>
-                        <Link href="/about">About Us</Link>
+                        <Link href="/about">About TheLawApp</Link>
                       </li>
                       <li>
-                        <Link href="/contact">Contact Us</Link>
-                      </li>
-                      <li>
-                        <Link href="/pricing">Pricing</Link>
+                        <Link href="/contact">Contact</Link>
                       </li>
                       <li>
                         <Link
@@ -92,7 +89,7 @@ export default function Footer() {
                         <Link href="/register">Join as a Lawyer</Link>
                       </li>
                       <li>
-                        <Link href="/login">Login Lawyer</Link>
+                        <Link href="/pricing">Pricing</Link>
                       </li>
                     </ul>
                   </div>
