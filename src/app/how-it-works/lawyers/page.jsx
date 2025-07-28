@@ -16,30 +16,31 @@ export default function HowItWorksForLawyers() {
   };
   return (
     <MainLayout>
-      <section className="about-section section">
+      <section
+        className="banner-section section"
+        style={{
+          backgroundImage:
+            'linear-gradient(90deg, rgb(11, 28, 45) 65.68%, rgba(11, 28, 45, 0) 77.64%), url(/assets/img/page-hero-bg.webp)',
+          backgroundSize: 'contain',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'right center',
+        }}
+      >
         <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-            <div className="feature-heading lg:pr-20">
-              <h3 className="section-subtitle">How It Works?</h3>
-              <h2 className="section-title">
-                Get Legal Help in 3 Simple Steps
-              </h2>
-              <div className="feature-heading-text mb-3">
-                Finding the right lawyer shouldn’t be complicated. With The Law
-                App, you can connect with experienced legal professionals in
-                just three easy steps.
+          <div className="flex flex-wrap gap-10 items-center">
+            <div className="w-full sm:w-1/2">
+              <div className="page-heading lg:pr-20">
+                <h3 className="section-subtitle">How It Works?</h3>
+                <h2 className="section-title">The Law App for Professionals</h2>
+                <div className="page-heading-text mb-3">
+                  Grow your practice, reduce overheads, and connect with more
+                  clients. The Law App gives you the tools to work smarter and
+                  build your brand.
+                </div>
+                <Link href="/register" className="btn-default btn-secondary">
+                  Get Started
+                </Link>
               </div>
-              <Link href="/register" className="btn-default btn-secondary">
-                Start TLA - Register Now
-              </Link>
-            </div>
-            <div className="about-img">
-              <Image
-                src="/assets/img/how-it-works-lawyers.webp"
-                alt="About Image"
-                width={733}
-                height={500}
-              />
             </div>
           </div>
         </div>

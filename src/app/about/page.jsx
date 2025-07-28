@@ -12,9 +12,9 @@ import HomeCTA from '@/components/main/home/HomeCTA';
 const AboutPage = () => {
   const sectionHeading = {
     subtitle: 'Who We Are?',
-    title: 'The Law App – Transforming Legal Connections',
+    title: 'Empowering Legal Access for Everyone',
     paragraph:
-      'The Law App is a cutting-edge legal services marketplace designed to help clients and lawyers connect effortlessly. We provide a smart, user-friendly platform where clients can post their legal needs and receive competitive offers from qualified lawyers.',
+      'The Law App connects people with qualified lawyers at a price they can afford. We help lawyers reduce overheads so they can pass the savings on to clients. Our platform empowers both clients and lawyers with choice, transparency, and trust.',
   };
 
   return (
@@ -25,7 +25,7 @@ const AboutPage = () => {
             <div className="feature-heading lg:pr-20">
               <h3 className="section-subtitle">About TLA</h3>
               <h2 className="section-title">
-                The Law App – Transforming Legal Connections
+                The Law App - Transforming Legal Connections
               </h2>
               <div className="feature-heading-text mb-3">
                 <b>Making Legal Services Simple, Accessible & Efficient</b>{' '}
@@ -269,7 +269,10 @@ const AboutPage = () => {
             <Link href="/" className="btn-default btn-secondary">
               Join as Lawyer - find client
             </Link>
-            <Link href="/register" className="btn-default btn-outline-primary">
+            <Link
+              href="/?clientRegister=true"
+              className="btn-default btn-outline-primary"
+            >
               Join as Client - post cases
             </Link>
           </div>

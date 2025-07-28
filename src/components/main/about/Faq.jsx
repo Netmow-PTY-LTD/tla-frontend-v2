@@ -17,10 +17,7 @@ export default function Faq() {
   return (
     <section className="tla-faq section">
       <div className="container">
-        <SectionHeading
-          title="Frequently Asked Questions"
-          subtitle="We've got answers!"
-        />
+        <SectionHeading title="Frequently Asked Questions" />
         <div className="tla-faq-accordion">
           {faqData.length > 0 &&
             faqData?.map((faq, index) => (
