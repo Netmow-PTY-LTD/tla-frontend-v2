@@ -17,24 +17,25 @@ export default function SendMailModal({ openMail, setOpenMail, info }) {
 
 
 
-    const roomId = info?._id;
-    // --- SOCKET INTEGRATION ---
-    useEffect(() => {
-        const socket = getSocket();
-        if (socket && roomId) {
-            socket.emit("join_room", roomId);
-            console.log(`Joined room: ${roomId}`);
-            // Listen for notifications
-            socket.on("notification", (msg) => {
-                console.log("📩 Notification:", msg);
-                showSuccessToast(msg);
-            });
-        }
+    // const roomId = info?._id;
+    // // --- SOCKET INTEGRATION ---
+    // useEffect(() => {
+    //     const socket = getSocket();
+    //     console.log('socket ===>',socket)
+    //     if (socket && roomId) {
+    //         // socket.emit("join_room", roomId);
+    //         // console.log(`Joined room: ${roomId}`);
+    //         // Listen for notifications
+    //         socket.on("notification", (msg) => {
+    //             console.log("📩 Notification:", msg);
+    //             showSuccessToast(msg);
+    //         });
+    //     }
 
-        return () => {
-            if (socket) socket.off("notification");
-        };
-    }, [roomId]);
+    //     return () => {
+    //         if (socket) socket.off("notification");
+    //     };
+    // }, [roomId]);
 
 
 

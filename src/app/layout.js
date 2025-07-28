@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${poppins.variable} antialiased`}>
         <ReduxProvider>
-          <SocketProvider />
+          {/* <SocketProvider /> */}
           {children}
           <Toaster />
         </ReduxProvider>

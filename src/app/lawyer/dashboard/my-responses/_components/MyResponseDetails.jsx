@@ -62,26 +62,26 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
 
 
   // Listen for updates
-  useSocketListener("notification", (updatedData) => {
-    console.log("Real-time response data:", updatedData);
+  // useSocketListener("notification", (updatedData) => {
+  //   console.log("Real-time response data:", updatedData);
 
-    // Update RTK Query cache
-    dispatch(
-      responseApiService.util.updateQueryData("getSingleResponse", responseId ? responseId : response?._id, (draft) => {
-        Object.assign(draft.data, updatedData);
-      })
-    );
-  });
+  //   // Update RTK Query cache
+  //   dispatch(
+  //     responseApiService.util.updateQueryData("getSingleResponse", responseId ? responseId : response?._id, (draft) => {
+  //       Object.assign(draft.data, updatedData);
+  //     })
+  //   );
+  // });
 
 
-  useEffect(() => {
-    const socket = getSocket();
-    socket.emit("join_room", responseId ? responseId : response?._id);
+  // useEffect(() => {
+  //   const socket = getSocket();
+  //   socket.emit("join_room", responseId ? responseId : response?._id);
 
-    return () => {
-      socket.emit("leave_room", responseId ? responseId : response?._id);
-    };
-  }, [responseId ? responseId : response?._id]);
+  //   return () => {
+  //     socket.emit("leave_room", responseId ? responseId : response?._id);
+  //   };
+  // }, [responseId ? responseId : response?._id]);
 
 
   const badge = singleResponse?.data?.leadId?.userProfileId?.profileType;
