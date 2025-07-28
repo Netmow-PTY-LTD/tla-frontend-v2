@@ -5,6 +5,7 @@ import FormWrapper from '@/components/form/FromWrapper';
 import TextareaInput from '@/components/form/TextArea';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/UIComponents/Modal'
+import { useSocketContext } from '@/contexts/SocketContext';
 import { getSocket } from '@/lib/socket';
 import { useContactLeadMutation } from '@/store/features/lawyer/ResponseApiService';
 import React, { useEffect } from 'react'
@@ -13,7 +14,9 @@ import { toast } from 'sonner';
 export default function SendMailModal({ openMail, setOpenMail, info }) {
     const [sendemail] = useContactLeadMutation()
     const lead = info?.leadId?.userProfileId;
+    const soketConnection=useSocketContext();
 
+   
 
 
 
@@ -65,7 +68,7 @@ export default function SendMailModal({ openMail, setOpenMail, info }) {
                 emailText,
                 leadId,
                 responseId,
-                roomId
+                // roomId
             };
 
             const result = await sendemail(emailPayload).unwrap();

@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
-import { getSocket } from '@/lib/socket';
+import { createContext, useContext, useState } from 'react';
 import { useNotifications, useResponseRoom } from '@/hooks/useSocketListener';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 
@@ -11,26 +10,25 @@ const SocketContext = createContext({});
 export const SocketProvider = ({ children }) => {
   const { data: user } = useAuthUserInfoQuery();
   const userId = user?.data?._id;
-
+  const responseId = 'xyz789'; // fro
   const [messages, setMessages] = useState([]);
 
-  useEffect(() => {
-    if (!userId) return;
+  // ✅ Hooks must be called at top level
+  useNotifications(userId, (data) => {
+    console.log('🔔 Notification:', data);
+    alert(data.text);
+  });
 
-    // Listen for notifications
-    useNotifications(userId, (data) => {
-      console.log('🔔 Notification:', data);
-      alert(data.text); // Replace with toast if needed
-    });
+  useResponseRoom(responseId, (data) => {
+    console.log('💬 Response room message:', data);
+    setMessages((prev) => [...prev, data]);
+  });
 
-    // Listen to a global response room (optional)
-    useResponseRoom('global-room', (data) => {
-      console.log('💬 New response room message:', data);
-      setMessages((prev) => [...prev, data]);
-    });
-  }, [userId]);
-
-  return <SocketContext.Provider value={{}}>{children}</SocketContext.Provider>;
+  return (
+    <SocketContext.Provider value={{ messages }}>
+      {children}
+    </SocketContext.Provider>
+  );
 };
 
 export const useSocketContext = () => useContext(SocketContext);
