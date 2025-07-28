@@ -1,16 +1,45 @@
 "use client"
 
+import { showSuccessToast } from '@/components/common/toasts';
 import FormWrapper from '@/components/form/FromWrapper';
 import TextareaInput from '@/components/form/TextArea';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/UIComponents/Modal'
+import { getSocket } from '@/lib/socket';
 import { useContactLeadMutation } from '@/store/features/lawyer/ResponseApiService';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { toast } from 'sonner';
 
 export default function SendMailModal({ openMail, setOpenMail, info }) {
     const [sendemail] = useContactLeadMutation()
     const lead = info?.leadId?.userProfileId;
+
+
+
+
+    // const roomId = info?._id;
+    // // --- SOCKET INTEGRATION ---
+    // useEffect(() => {
+    //     const socket = getSocket();
+    //     console.log('socket ===>',socket)
+    //     if (socket && roomId) {
+    //         // socket.emit("join_room", roomId);
+    //         // console.log(`Joined room: ${roomId}`);
+    //         // Listen for notifications
+    //         socket.on("notification", (msg) => {
+    //             console.log("📩 Notification:", msg);
+    //             showSuccessToast(msg);
+    //         });
+    //     }
+
+    //     return () => {
+    //         if (socket) socket.off("notification");
+    //     };
+    // }, [roomId]);
+
+
+
+
 
     const onSubmit = async (data) => {
         try {
@@ -36,9 +65,12 @@ export default function SendMailModal({ openMail, setOpenMail, info }) {
                 emailText,
                 leadId,
                 responseId,
+                roomId
             };
 
             const result = await sendemail(emailPayload).unwrap();
+            const socket = getSocket();
+            socket.emit("notify", { roomId, message: "Email sent successfully" });
 
             if (result?.success) {
                 toast.success(result.message || 'Email sent successfully');
