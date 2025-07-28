@@ -1,13 +1,13 @@
 import React from 'react';
 import '../../styles/dashboard.css';
-import AuthHeader from '@/components/auth/AuthHeader';
 import AuthFooter from '@/components/auth/AuthFooter';
 import '@/styles/main.css';
+import Header from '@/components/main/common/header/Header';
 
 export default function AuthLayout({ children }) {
   return (
     <>
-      <AuthHeader />
+      <Header />
       <main>{children}</main>
       <AuthFooter />
     </>

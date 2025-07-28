@@ -1,4 +1,3 @@
-
 'use client';
 
 import React from 'react';
@@ -91,14 +90,12 @@ const MyStatsPage = () => {
               />
             </div>
           </div>
-            <div className="flex flex-col h-full">
-          <div className="flex flex-1">
-            <CreditsStatsCard />
+          <div className="flex flex-col h-full">
+            <div className="flex flex-1">
+              <CreditsStatsCard />
+            </div>
           </div>
         </div>
-        </div>
-
-
 
         <Card className="p-6">
           <div className="mb-4">

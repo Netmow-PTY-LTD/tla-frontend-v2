@@ -39,6 +39,8 @@ export default function LeadManagement() {
     refetch,
     isFetching,
   } = useGetAllLeadsForAdminQuery({ page, limit: 10 });
+
+  console.log('leadList', leadList);
   const [changeStatus] = useUpdateLeadMutation();
 
   const handChangeStatus = async (id, status) => {
@@ -211,7 +213,7 @@ export default function LeadManagement() {
         searchColumn="userProfileId.name"
         page={page}
         setPage={setPage}
-        totalPages={leadList?.pagination?.totalPages || 1}
+        totalPages={leadList?.pagination?.totalPage || 1}
         isFetching={isFetching}
       />
       {/* <DataTable
