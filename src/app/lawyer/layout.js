@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import '@/styles/dashboard.css';
 import DashboardHeader from '@/components/dashboard/common/DashboardHeader';
 import DashboardFooter from '@/components/dashboard/common/DashboardFooter';
@@ -8,8 +8,16 @@ import { LawyerSideNav } from '@/components/dashboard/lawyer/layout/SellerSideNa
 import SidebarTop from './dashboard/_component/common/SidebarTop';
 import { usePathname, useRouter } from 'next/navigation';
 import Sidebar from '@/components/dashboard/lawyer/layout/SellerSideNav';
+import { io, Socket } from 'socket.io-client';
+import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import { useNotifications } from '@/hooks/useSocketListener';
 
 export default function SellerDashboardLayout({ children }) {
+  const [socket, setSocket] = useState(null);
+  const [connected, setConnected] = useState(false);
+
+  const [message, setMessage] = useState('');
+  const [notifications, setNotifications] = useState([]);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggleSidebar = () => setIsCollapsed((prev) => !prev);
 
@@ -37,6 +45,42 @@ export default function SellerDashboardLayout({ children }) {
       document.body.style.overflow = '';
     };
   }, [isNoScrollPage]);
+
+  //socket.io
+
+  useEffect(() => {
+    const newSocket = io('http://localhost:5000');
+    setSocket(newSocket);
+
+    newSocket.on('connect', () => {
+      setConnected(true);
+    });
+
+    newSocket.on('disconnect', () => {
+      setConnected(false);
+    });
+
+    newSocket.on('notification', (data) => {
+      setNotifications((prev) => [data, ...prev]);
+    });
+
+    return () => {
+      newSocket.close();
+    };
+  }, []);
+
+  console.log('connected', connected);
+
+  const { data: userInfo } = useAuthUserInfoQuery();
+
+  console.log('user data ==>', userInfo);
+
+  const userId = userInfo?.data?._id;
+
+  useNotifications(userId, (data) => {
+    console.log('🔔 New notification:', data);
+    console.log(data.text);
+  });
 
   return (
     <>

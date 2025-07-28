@@ -1,4 +1,4 @@
-
+/* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 
 import { createContext, useContext, useState } from 'react';
@@ -10,7 +10,7 @@ const SocketContext = createContext({});
 export const SocketProvider = ({ children }) => {
   const { data: user } = useAuthUserInfoQuery();
   const userId = user?.data?._id;
-  const responseId = "xyz789"; // fro
+  const responseId = 'xyz789'; // fro
   const [messages, setMessages] = useState([]);
 
   // ✅ Hooks must be called at top level

@@ -10,6 +10,7 @@ import SendNewLeadsCard from './_component/home/SendNewLeadsCard';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { useGetLeadServiceListQuery } from '@/store/features/leadService/leadServiceApiService';
 import ResponseStatsCard from './_component/home/ResponseStatsCard';
+import CreditsStatsCard from '@/components/dashboard/lawyer/module/MyStats/CreditsStatsCard';
 
 export default function SellerDashboard() {
   const currentUser = useSelector((state) => state.auth.user);
@@ -54,6 +55,8 @@ export default function SellerDashboard() {
           error={errorUserInfo || errorLeadServices}
           locations={locations}
         />
+        <CreditsStatsCard />
+
         <LeadsCountCard />
 
         <SendNewLeadsCard
