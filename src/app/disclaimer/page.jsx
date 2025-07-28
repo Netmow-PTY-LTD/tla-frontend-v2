@@ -7,7 +7,7 @@ export default function Disclaimer() {
   return (
     <MainLayout>
       <PageBanner title="Disclaimer" />
-      <section className="py-[50px]">
+      <section className="pt-[50px]">
         <div className="container">
           <div className="page-content">
             <p>

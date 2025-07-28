@@ -43,7 +43,7 @@ export default function HeroHome({ searchParam }) {
   }, [searchParam]);
 
   const handleModalOpen = () => {
-    setServiceWiseQuestions(null); // Reset serviceWiseQuestions when opening the modal
+    //setServiceWiseQuestions(null); // Reset serviceWiseQuestions when opening the modal
     setModalOpen(true);
   };
 
@@ -61,6 +61,13 @@ export default function HeroHome({ searchParam }) {
 
   //console.log('countryWiseServices', countryWiseServices);
 
+  useEffect(() => {
+    if (!selectedService?._id) return;
+
+    // Immediately clear previous questions to prevent flash
+    setServiceWiseQuestions([]);
+  }, [selectedService?._id]);
+
   const {
     data: singleServicewiseQuestionsData,
     isLoading: isQuestionsLoading,
@@ -76,8 +83,9 @@ export default function HeroHome({ searchParam }) {
   );
 
   useEffect(() => {
+    if (isQuestionsLoading) return; // ✅ Wait for loading to complete
     setServiceWiseQuestions(singleServicewiseQuestionsData?.data || []);
-  }, [singleServicewiseQuestionsData]);
+  }, [isQuestionsLoading, singleServicewiseQuestionsData]);
 
   const token = useSelector((state) => state.auth.token);
 
@@ -296,6 +304,7 @@ export default function HeroHome({ searchParam }) {
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
           locationId={currentUser?.data?.profile?.zipCode}
+          isQuestionsLoading={isQuestionsLoading}
         />
       ) : (
         <ClientLeadRegistrationModal
@@ -306,6 +315,7 @@ export default function HeroHome({ searchParam }) {
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
           locationId={location}
+          isQuestionsLoading={isQuestionsLoading}
         />
       )}
     </section>

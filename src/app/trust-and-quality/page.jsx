@@ -7,7 +7,7 @@ export default function TrustAndQuality() {
   return (
     <MainLayout>
       <PageBanner title="Trust and Quality" />
-      <section className="py-[50px]">
+      <section className="pt-[50px]">
         <div className="container">
           <div className="page-content">
             <p>At The Law App service and trust are our key principles.</p>

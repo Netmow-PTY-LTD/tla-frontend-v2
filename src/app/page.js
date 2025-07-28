@@ -20,7 +20,6 @@ export default function Home() {
     setSearchParam(value);
   }, []);
 
-  console.log('searchParam', searchParam);
   return (
     <MainLayout>
       <HeroHome searchParam={searchParam} />

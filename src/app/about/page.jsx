@@ -30,7 +30,7 @@ const AboutPage = () => {
               <div className="feature-heading-text mb-3">
                 <b>Making Legal Services Simple, Accessible & Efficient</b>{' '}
                 <br /> <br />
-                we believe that finding the right legal help should be easy,
+                We believe that finding the right legal help should be easy,
                 transparent, and stress-free. Whether you're a client seeking
                 expert legal advice or a lawyer looking to grow your practice,
                 our platform bridges the gap, making legal services more
