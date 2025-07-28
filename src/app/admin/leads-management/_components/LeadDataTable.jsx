@@ -21,7 +21,17 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-export function LeadDataTable({ data, columns, searchColumn, page, setPage, totalPages, isFetching,search, setSearch }) {
+export function LeadDataTable({
+  data,
+  columns,
+  searchColumn,
+  page,
+  setPage,
+  totalPages,
+  isFetching,
+  search,
+  setSearch,
+}) {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
@@ -67,7 +77,10 @@ export function LeadDataTable({ data, columns, searchColumn, page, setPage, tota
                   <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
-                      : flexRender(header.column.columnDef.header, header.getContext())}
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -76,17 +89,26 @@ export function LeadDataTable({ data, columns, searchColumn, page, setPage, tota
           <TableBody>
             {data?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns?.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns?.length}
+                  className="h-24 text-center"
+                >
                   {isFetching ? 'Loading...' : 'No results.'}
                 </TableCell>
               </TableRow>
@@ -101,7 +123,7 @@ export function LeadDataTable({ data, columns, searchColumn, page, setPage, tota
           variant="outline"
           size="sm"
           onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-          disabled={page <= 1 || isFetching}
+          disabled={page <= 1}
         >
           Previous
         </Button>
@@ -112,7 +134,7 @@ export function LeadDataTable({ data, columns, searchColumn, page, setPage, tota
           variant="outline"
           size="sm"
           onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-          disabled={page >= totalPages || isFetching}
+          disabled={page >= totalPages}
         >
           Next
         </Button>

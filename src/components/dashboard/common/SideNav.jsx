@@ -72,7 +72,7 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }) {
                   onClick={() => toggleMenu(item.title)}
                   className={`w-full flex items-center gap-2 p-2 rounded hover:bg-gray-100 transition ${
                     isParentActive
-                      ? 'bg-[linear-gradient(121deg,_rgb(27,171,169),_#ffffff)] font-medium'
+                      ? 'bg-[linear-gradient(121deg,_rgb(27,171,169),_#ffffff)] font-medium text-white'
                       : ''
                   }`}
                 >
@@ -94,7 +94,7 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }) {
                           href={subItem.url}
                           className={`flex items-center gap-2 px-2 py-1 rounded text-sm transition ${
                             isActive
-                              ? 'bg-blue-100 text-blue-700 font-medium'
+                              ? 'bg-[linear-gradient(121deg,_rgb(27,171,169),_#ffffff)] text-white font-medium'
                               : 'hover:bg-gray-100'
                           }`}
                         >
@@ -115,7 +115,7 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }) {
               href={item.url}
               className={`flex items-center gap-2 p-2 rounded transition font-medium ${
                 pathname === item.url
-                  ? 'bg-[linear-gradient(121deg,_rgb(27,171,169),_#ffffff)]'
+                  ? 'bg-[linear-gradient(121deg,_rgb(27,171,169),_#ffffff)] text-white font-medium'
                   : 'hover:bg-gray-100'
               }`}
             >

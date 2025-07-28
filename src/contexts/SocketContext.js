@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
@@ -27,14 +28,9 @@ export const SocketProvider = ({ children }) => {
       console.log('💬 New response room message:', data);
       setMessages((prev) => [...prev, data]);
     });
-
   }, [userId]);
 
-  return (
-    <SocketContext.Provider value={{}}>
-      {children}
-    </SocketContext.Provider>
-  );
+  return <SocketContext.Provider value={{}}>{children}</SocketContext.Provider>;
 };
 
 export const useSocketContext = () => useContext(SocketContext);

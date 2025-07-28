@@ -361,7 +361,7 @@ input:focus {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  min-height: calc(100vh - 65px - 48px);
+  min-height: calc(100vh - 69px - 48px);
 }
 
 .tla-auth-wrapper {
