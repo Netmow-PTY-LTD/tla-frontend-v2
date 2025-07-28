@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Sheet,
   SheetTrigger,
@@ -30,6 +30,7 @@ const creditTiers = [
 ];
 
 export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
+  const [isOpen, setIsOpen] = useState(false); // <-- Control sidebar visibility
   const { register, handleSubmit, reset, watch, setValue, getValues } = useForm(
     {
       defaultValues: {
@@ -63,7 +64,7 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
   }, [reset]);
 
   const onSubmit = (values) => {
-    console.log('Form values:', values);
+
     // payload shape transformation (if needed)
     const payload = {
       keyword: values.keyword,
@@ -76,20 +77,20 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
       credits: values.credit, // array of checked
     };
 
-    console.log('Filter Payload:', payload);
-    setSearchKeyword(payload);
-    setLeads([]);
 
+    setSearchKeyword(payload);
     // Now you can call API or update state
     localStorage.setItem('lead-filters', JSON.stringify(payload));
     // Show toast
     showSuccessToast('Filters applied and saved.');
+     // Close sidebar after form submit
+    setIsOpen(false);
   };
 
   return (
-    <Sheet className="z-[9999]">
+    <Sheet open={isOpen} onOpenChange={setIsOpen} className="z-[9999]">
       <SheetTrigger asChild>
-        <button className="font-medium text-[#0194EF] flex items-center gap-2 text-[14px]">
+        <button onClick={() => setIsOpen(true)} className="font-medium text-[#0194EF] flex items-center gap-2 text-[14px]">
           <SlidersVertical className="w-4 h-4" /> <span>Filter</span>
         </button>
       </SheetTrigger>
@@ -219,26 +220,26 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
                 Lead Spotlight
               </AccordionTrigger>
               <AccordionContent className="overflow-hidden">
-               <div className="flex flex-col gap-4 text-balance">
+                <div className="flex flex-col gap-4 text-balance">
                   {[
                     { value: 'urgent', label: 'Urgent' },
                     { value: 'within_a_week', label: 'Within a Week' },
                     { value: 'this_month', label: 'This Month' },
                     { value: 'not_sure', label: 'Not Sure' },
                   ].map((option) => (
-                  <label
-                    key={option.value}
-                    htmlFor={option.value}
-                    className="flex items-center gap-2"
-                  >
-                    <input
-                      type="checkbox"
-                      id={option.value}
-                      value={option.value}
-                      {...register('spotlight')}
-                    />
-                    {option.label}
-                  </label>
+                    <label
+                      key={option.value}
+                      htmlFor={option.value}
+                      className="flex items-center gap-2"
+                    >
+                      <input
+                        type="checkbox"
+                        id={option.value}
+                        value={option.value}
+                        {...register('spotlight')}
+                      />
+                      {option.label}
+                    </label>
                   ))}
                 </div>
               </AccordionContent>
@@ -438,7 +439,10 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
               type="button"
               variant="outline"
               className="cursor-pointer"
-              onClick={() => reset()}
+              onClick={() => {
+                reset()
+                setIsOpen(false)
+              }}
             >
               Cancel
             </Button>

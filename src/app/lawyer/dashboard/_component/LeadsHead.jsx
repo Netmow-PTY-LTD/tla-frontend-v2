@@ -13,7 +13,8 @@ export default function LeadsHead({
   total,
   setSearchKeyword,
   setLeads,
-  searchKeyword
+  searchKeyword,
+  setSelectedLead
 }) {
   const { data: currentUser } = useAuthUserInfoQuery();
 
@@ -23,6 +24,7 @@ export default function LeadsHead({
     localStorage.removeItem('lead-filters');
     setSearchKeyword({});
     setLeads([]);
+    setSelectedLead(null)
     toast.success('Clear Filter', {
       position: 'top-right',
       style: {
