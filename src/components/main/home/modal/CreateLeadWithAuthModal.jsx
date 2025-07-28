@@ -15,6 +15,7 @@ export default function CreateLeadWithAuthModal({
   countryId,
   serviceId,
   locationId,
+  isQuestionsLoading,
 }) {
   const [step, setStep] = useState(0);
 
@@ -325,8 +326,8 @@ export default function CreateLeadWithAuthModal({
       onOpenChange={(open) => {
         setModalOpen(open);
         if (!open) {
-          setViewData(null);
-          setQuestionsPayload([]);
+          // setViewData(null);
+          // setQuestionsPayload([]);
           setStep(0); // reset form steps, if needed
         }
       }}
@@ -334,7 +335,7 @@ export default function CreateLeadWithAuthModal({
       width="max-w-[570px]"
       height="max-h-[90vh]"
     >
-      {questionLoading || !selectedServiceWiseQuestions?.length ? (
+      {isQuestionsLoading || !selectedServiceWiseQuestions?.length ? (
         <div className="flex items-center justify-center gap-2">
           <Loader className="w-4 h-4 animate-spin" /> Loading question...
         </div>
@@ -344,7 +345,7 @@ export default function CreateLeadWithAuthModal({
             <h4 className="text-[24px] font-semibold text-center mb-8">
               {viewData.question}
             </h4>
-            <div className="border border-1 flex flex-col gap-2 rounded-lg">
+            <div className="border border-1 flex flex-col gap-2 rounded-lg max-h-[350px] overflow-y-auto">
               {viewData.options?.length > 0 &&
                 viewData.options?.map((option, index) => {
                   const isLast = index === viewData.options.length - 1;
@@ -470,7 +471,7 @@ export default function CreateLeadWithAuthModal({
         </div>
       ) : null}
 
-      {questionLoading ||
+      {isQuestionsLoading ||
         (selectedServiceWiseQuestions?.length > 0 && (
           <div
             className={`flex ${

@@ -7,7 +7,7 @@ export default function PrivacyPolicy() {
   return (
     <MainLayout>
       <PageBanner title={'Privacy Policy'} />
-      <section className="py-[50px]">
+      <section className="pt-[50px]">
         <div className="container">
           <div className="page-content">
             <p>
