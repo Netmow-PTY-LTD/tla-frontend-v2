@@ -33,22 +33,10 @@
 
 
 
-// export const useResponseRoom = (responseId, onUpdate) => {
-//   useEffect(() => {
-//     const socket = getSocket();
-//     if (responseId) {
-//       socket.emit("join-response", responseId);
-//       socket.on("response-update", onUpdate);
-//     }
-
-//     return () => {
-//       socket.off("response-update", onUpdate);
-//     };
-//   }, [responseId, onUpdate]);
-// };
 
 
 
+'use client'
 // useSocketListener.js
 import { useEffect } from "react";
 import { getSocket } from "@/lib/socket";

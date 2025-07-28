@@ -61,7 +61,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
     });
 
 
-  // Listen for updates
+  // // Listen for updates
   // useSocketListener("notification", (updatedData) => {
   //   console.log("Real-time response data:", updatedData);
 
