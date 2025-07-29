@@ -123,7 +123,7 @@ export default function LeadDetailsPage() {
                     </p>
                   </div>
                 </div>
-                <hr className="border-[#F3F3F3] my-5  " />
+                <hr className="my-5 w-full" />
                 <div className="mb-4">
                   <div className="flex items-center gap-2 admin-text font-medium">
                     <PhoneOutgoing className="w-4 h-4" />{' '}
@@ -169,7 +169,7 @@ export default function LeadDetailsPage() {
                     )}
                   </div>
                 </div>
-                <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
+                <hr className="w-full mt-5" />
                 <div className="mt-5">
                   <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
                     <h5 className="font-medium mb-2 heading-base">
@@ -198,7 +198,7 @@ export default function LeadDetailsPage() {
                     </div>
                   </div>
                 </div>
-                <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
+                <hr className="w-full mt-5" />
                 {singleLead?.data?.leadAnswers?.length > 0 && (
                   <div className="mt-5 space-y-3">
                     <h4 className="font-medium heading-lg mb-5">

@@ -65,8 +65,6 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
       </div>
 
       <hr className="border-[#F3F3F3] border" />
-
-      {/* Matched Criteria */}
       {(user?.additionalDetails && user.additionalDetails !== '') ||
       urgentOption?.option ||
       user?.userProfileId?.phone ||
@@ -91,13 +89,6 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
               <TagButton
                 text="Verified Phone"
                 bgColor="#00C3C01A"
-                icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
-              />
-            )}
-            {badge && (
-              <TagButton
-                text={`${badge} Lawyer`}
-                bgColor="#004DA61A"
                 icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
               />
             )}
