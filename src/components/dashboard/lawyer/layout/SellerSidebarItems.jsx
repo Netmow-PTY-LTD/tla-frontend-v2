@@ -44,14 +44,18 @@ export const SellerSidebarItems = {
 
     {
       title: 'General FAQ’s',
-      url: '/lawyer/dashboard/general-faqs',
+      // url: '/lawyer/dashboard/general-faqs',
+      url: '/faq',
       icon: CircleHelp,
+      target: true
       // isActive: true,
     },
     {
       title: 'Tutorials',
-      url: '/lawyer/dashboard/tutorials',
+      // url: '/lawyer/dashboard/tutorials',
+      url: 'https://www.youtube.com',
       icon: BookText,
+      target: true
       // isActive: true,
     },
   ],
