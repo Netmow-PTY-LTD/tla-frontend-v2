@@ -51,6 +51,8 @@ export default function ResponseHead({ isExpanded, data, setQueryParams, queryPa
     key => queryParams[key] !== defaultQueryParams[key]
   );
 
+  const urgent=data?.filter((item)=>item.leadId.leadPriority==="urgent").length;
+ 
 
   return (
     <section className={`${isExpanded ? '' : 'pl-4 pr-1'}`}>
@@ -125,7 +127,7 @@ export default function ResponseHead({ isExpanded, data, setQueryParams, queryPa
                 rounded="rounded-[5px]"
               /> */}
               <TagButton
-                text="Urgent(51)"
+                text={`Urgent(${urgent})`}
                 bgColor="#EF8D32"
                 textColor="text-[#fff]"
                 fontSize={isExpanded ? 'text-[12px]' : 'text-[10px]'}
