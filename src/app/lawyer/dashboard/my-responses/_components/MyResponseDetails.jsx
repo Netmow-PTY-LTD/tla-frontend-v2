@@ -84,19 +84,19 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
   //   };
   // }, [responseId ? responseId : response?._id]);
 
-  const { userId, socket } = useSocketContext();
+  // const { userId, socket } = useSocketContext();
 
-  useResponseRoom(
-    response?._id || responseId,
-    (data) => {
-      console.log('💬 Response room update received:', data);
-    },
-    userId
-  );
+  // useResponseRoom(
+  //   response?._id || responseId,
+  //   (data) => {
+  //     console.log('💬 Response room update received:', data);
+  //   },
+  //   userId
+  // );
 
-  useResponseRoomUser(userId, (data) => {
-    console.log('💬 Response room update received:', data);
-  });
+  // useResponseRoomUser(userId, (data) => {
+  //   console.log('💬 Response room update received:', data);
+  // });
 
   const badge = singleResponse?.data?.leadId?.userProfileId?.profileType;
 
@@ -208,8 +208,8 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
         const result = await updateActivity(whatsappActivityPayload).unwrap();
 
         if (result.success) {
-          socket?.emit('join-response', resolvedResponseId);
-          socket?.emit('user-notification', userId);
+          // socket?.emit('join-response', resolvedResponseId);
+          // socket?.emit('user-notification', userId);
 
           const phone = response?.leadId?.userProfileId?.phone;
           window.open(
