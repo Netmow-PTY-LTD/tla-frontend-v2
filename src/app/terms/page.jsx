@@ -8,7 +8,7 @@ export default function TermsOfUse() {
   return (
     <MainLayout>
       <PageBanner title="Terms of Use" />
-      <section className="py-[50px]">
+      <section className="pt-[50px]">
         <div className="container">
           <div className="page-content">
             <p>

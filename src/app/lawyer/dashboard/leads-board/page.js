@@ -53,10 +53,9 @@ const LeadBoardPage = () => {
   });
 
 
- useEffect(() => {
-  setLeads([]);
-  setPage(1);
-}, [searchKeyword]);
+  useEffect(() => {
+    setPage(1);
+  }, [searchKeyword]);
 
 
   // Fetch detailed data for selected lead
@@ -73,12 +72,21 @@ const LeadBoardPage = () => {
   useEffect(() => {
     if (!data) return;
 
-    setLeads((prev) => [...prev, ...data?.data]);
+    // setLeads((prev) => [...prev, ...data?.data]);
+
+    setLeads((prev) => {
+      const updatedLeads = page === 1 ? data.data : [...prev, ...data.data];
+      // Automatically select the first lead when page = 1 (new filter)
+      if (page === 1 && updatedLeads.length > 0) {
+        setSelectedLead(updatedLeads[0]);
+      }
+      return updatedLeads;
+    });
     const totalPage = data?.pagination?.totalPage;
     setHasMore(page < totalPage);
   }, [data, page]);
 
-  console.log('leads', leads);
+
   // Scroll event handler for infinite loading
   useEffect(() => {
     const container = scrollContainerRef.current;
@@ -101,7 +109,6 @@ const LeadBoardPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasMore, isFetching, scrollContainerRef?.current]);
 
-  console.log('parsed', parsed);
 
   if (isAllLeadsLoading) {
     return (
@@ -164,9 +171,8 @@ const LeadBoardPage = () => {
           )}
 
           <div
-            className={`${
-              showLeadDetails ? 'right-column-4 ' : 'right-column-full'
-            }`}
+            className={`${showLeadDetails ? 'right-column-4 ' : 'right-column-full'
+              }`}
           >
             <div className="column-wrap-right" ref={scrollContainerRef}>
               <div className="leads-top-row">
@@ -176,6 +182,7 @@ const LeadBoardPage = () => {
                   setSearchKeyword={setSearchKeyword}
                   searchKeyword={searchKeyword}
                   setLeads={setLeads}
+                  setSelectedLead={setSelectedLead}
                 />
               </div>
               <div className="leads-bottom-row max-w-[1400px] mx-auto">

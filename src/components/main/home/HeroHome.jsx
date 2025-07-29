@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useRef, useState } from 'react';
 import HeroShowcase from './HeroShowcase';
 import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
 import {
@@ -23,7 +23,8 @@ import {
   ComboboxOptions,
 } from '@headlessui/react';
 import { cn } from '@/lib/utils';
-export default function HeroHome() {
+import { useParams } from 'next/navigation';
+export default function HeroHome({ searchParam }) {
   const [selectedService, setSelectedService] = useState(null);
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -31,9 +32,18 @@ export default function HeroHome() {
   const [location, setLocation] = useState(null);
   const [filteredServices, setFilteredServices] = useState([]);
   const [filteredZipCodes, setFilteredZipCodes] = useState([]);
+  const [shouldAutoFocus, setShouldAutoFocus] = useState(false);
+
+  const inputRef = useRef();
+
+  useEffect(() => {
+    if (searchParam === 'true') {
+      inputRef.current.focus();
+    }
+  }, [searchParam]);
 
   const handleModalOpen = () => {
-    setServiceWiseQuestions(null); // Reset serviceWiseQuestions when opening the modal
+    //setServiceWiseQuestions(null); // Reset serviceWiseQuestions when opening the modal
     setModalOpen(true);
   };
 
@@ -51,6 +61,13 @@ export default function HeroHome() {
 
   //console.log('countryWiseServices', countryWiseServices);
 
+  useEffect(() => {
+    if (!selectedService?._id) return;
+
+    // Immediately clear previous questions to prevent flash
+    setServiceWiseQuestions([]);
+  }, [selectedService?._id]);
+
   const {
     data: singleServicewiseQuestionsData,
     isLoading: isQuestionsLoading,
@@ -66,8 +83,9 @@ export default function HeroHome() {
   );
 
   useEffect(() => {
+    if (isQuestionsLoading) return; // ✅ Wait for loading to complete
     setServiceWiseQuestions(singleServicewiseQuestionsData?.data || []);
-  }, [singleServicewiseQuestionsData]);
+  }, [isQuestionsLoading, singleServicewiseQuestionsData]);
 
   const token = useSelector((state) => state.auth.token);
 
@@ -139,6 +157,7 @@ export default function HeroHome() {
                       onFocus={() =>
                         setFilteredServices(countryWiseServices?.data ?? [])
                       }
+                      ref={inputRef}
                     />
                     {filteredServices?.length > 0 && (
                       <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
@@ -285,6 +304,7 @@ export default function HeroHome() {
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
           locationId={currentUser?.data?.profile?.zipCode}
+          isQuestionsLoading={isQuestionsLoading}
         />
       ) : (
         <ClientLeadRegistrationModal
@@ -295,6 +315,7 @@ export default function HeroHome() {
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
           locationId={location}
+          isQuestionsLoading={isQuestionsLoading}
         />
       )}
     </section>
