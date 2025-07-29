@@ -10,9 +10,13 @@ import { Arrow } from '@radix-ui/react-dropdown-menu';
 import { ArrowDown, ChevronDown, Hammer } from 'lucide-react';
 import Gavel from '@/components/icon/Gavel';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function Header() {
   const [isHeaderFixed, setIsHeaderFixed] = useState();
+
+  const pathname = usePathname();
+  const router = useRouter();
 
   const token = useSelector((state) => state.auth.token);
 
@@ -20,8 +24,8 @@ export default function Header() {
     skip: !token,
   });
 
-  console.log('token', token);
-  console.log('currentUser', currentUser);
+  // console.log('token', token);
+  // console.log('currentUser', currentUser);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -45,8 +49,33 @@ export default function Header() {
 
   const dashboardUrl = dashboardPaths[currentUser?.data?.regUserType] || '';
 
-  console.log('currentUser?.data?.regUserType', currentUser?.data?.regUserType);
-  console.log('dashboardUrl', dashboardUrl);
+  // console.log('currentUser?.data?.regUserType', currentUser?.data?.regUserType);
+  // console.log('dashboardUrl', dashboardUrl);
+
+  // useEffect(() => {
+  //   // Only run redirection logic on login or register pages
+  //   const isAuthPage = pathname === '/login' || pathname === '/register';
+
+  //   console.log('isAuthPage', isAuthPage);
+  //   console.log('token', token);
+  //   console.log('currentUser', currentUser);
+
+  //   if (!isAuthPage) return;
+
+  //   // Wait for both token and currentUser to be available
+  //   if (!token || !currentUser?.data?.regUserType) return;
+
+  //   // Redirect based on user role
+  //   const userType = currentUser.data.regUserType;
+
+  //   if (userType === 'lawyer') {
+  //     router.replace('/lawyer/dashboard');
+  //   } else if (userType === 'client') {
+  //     router.replace('/client/dashboard');
+  //   } else if (userType === 'admin') {
+  //     router.replace('/admin');
+  //   }
+  // }, [pathname, token, currentUser, router]);
 
   return (
     <header
