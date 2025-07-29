@@ -155,7 +155,7 @@ export default function LeadManagement() {
 
               {/* Approve */}
               <DropdownMenuItem
-                onClick={() => handChangeStatus(lead?._id, 'approve')}
+                onClick={() => handChangeStatus(lead?._id, 'approved')}
                 className="cursor-pointer"
               >
                 <div className="flex items-center gap-2">
@@ -167,7 +167,7 @@ export default function LeadManagement() {
 
               {/* Reject */}
               <DropdownMenuItem
-                onClick={() => handChangeStatus(lead?._id, 'reject')}
+                onClick={() => handChangeStatus(lead?._id, 'rejected')}
                 className="cursor-pointer"
               >
                 <div className="flex items-center gap-2">

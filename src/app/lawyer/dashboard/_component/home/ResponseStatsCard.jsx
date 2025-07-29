@@ -32,7 +32,7 @@ const ResponseStatsCard = () => {
 
       <hr className="border-t border-[#D9D9D9]" />
 
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center w-full h-[80%] ">
         <div className="flex items-center justify-center gap-6 p-4">
           <div className="flex flex-col items-center gap-1">
             <div className="flex items-center justify-center w-16 h-16 rounded-full bg-slate-900 text-white">
