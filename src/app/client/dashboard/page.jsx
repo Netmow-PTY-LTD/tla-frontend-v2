@@ -63,9 +63,9 @@ export default function BuyerDashboard() {
             />
 
             {/* 🟢 This card should stretch to fill remaining height */}
-            <Card className="mt-5 p-4 flex-1 flex flex-col justify-between">
+            <Card className="mt-5 flex-1 flex flex-col justify-between shadow-sm rounded-2xl">
               <div>
-                <h2 className="font-medium flex items-center text-lg">
+                <h2 className="font-medium flex items-center text-lg p-4">
                   Lead Notifications
                   <Link
                     href={'/lawyer/settings/notifications'}
@@ -75,12 +75,15 @@ export default function BuyerDashboard() {
                     <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
                   </Link>
                 </h2>
-                <p className="my-2 text-sm sm:text-base font-medium">
-                  Sending new leads notifications to
-                </p>
-                <p className="text-sm sm:text-base text-[var(--color-special)]">
-                  {profileData?.email}
-                </p>
+                <hr className="border-t border-[#D9D9D9]" />
+                <div className="px-4">
+                  <p className="my-3 text-sm sm:text-base font-medium">
+                    Sending new leads notifications to
+                  </p>
+                  <p className="text-sm sm:text-base text-[var(--color-special)]">
+                    {profileData?.email}
+                  </p>
+                </div>
               </div>
             </Card>
           </div>

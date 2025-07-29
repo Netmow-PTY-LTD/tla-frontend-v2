@@ -11,8 +11,8 @@ export default function AdminDashboardHeader({ onToggleSidebar }) {
 
   return (
     <header className="db-header">
-      <div className="db-header-container flex">
-        <Link href="/admin">
+      <div className="db-header-container flex gap-4">
+        <Link href="/admin" className="db-logo">
           <Image
             src={'/assets/img/logo.png'}
             alt="TLA Logo"

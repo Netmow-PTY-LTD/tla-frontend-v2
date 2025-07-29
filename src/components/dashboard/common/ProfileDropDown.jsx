@@ -28,11 +28,15 @@ import {
   useAuthUserInfoQuery,
 } from '@/store/features/auth/authApiService';
 import { useRouter } from 'next/navigation';
+import { useGetUserCreditStatsQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 
 export default function ProfileDropDown() {
   const dispatch = useDispatch();
 
   const { data: currentUser } = useAuthUserInfoQuery();
+
+  const { data } = useGetUserCreditStatsQuery();
+  const creditStats = data?.data || {};
 
   const router = useRouter();
 
@@ -76,6 +80,9 @@ export default function ProfileDropDown() {
           align="start"
         >
           <DropdownMenuLabel>User Account</DropdownMenuLabel>
+          <div className="px-2">
+            Available credits: <b>{creditStats?.currentCredits}</b>
+          </div>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>

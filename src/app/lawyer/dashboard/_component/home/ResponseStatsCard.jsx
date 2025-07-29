@@ -22,7 +22,7 @@ const ResponseStatsCard = () => {
   return (
     <Card className="w-full shadow-sm rounded-2xl">
       <div className="flex items-center justify-between p-4">
-        <h2 className="text-lg font-semibold">Responses</h2>
+        <h3 className="heading-md font-semibold text-black">Responses</h3>
         <Link href="/lawyer/dashboard/my-responses">
           <Button variant="outline" size="sm">
             View

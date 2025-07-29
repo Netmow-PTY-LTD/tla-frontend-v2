@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card';
 import React from 'react';
 import Image from 'next/image';
-import { BadgeCheck, CircleAlert, Zap } from 'lucide-react';
+import { BadgeCheck, Ban, CircleAlert, Zap } from 'lucide-react';
 import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import Link from 'next/link';
@@ -77,9 +77,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
           </p>
         </div>
       </div>
-
       <hr className="border-[#F3F3F3] border" />
-
       {/* Matched Criteria */}
       {(urgentOption?.option ||
         user?.additionalDetails ||
@@ -131,20 +129,17 @@ const ClientLeadCard = ({ user, isExpanded }) => {
                 : 'text-[#FF8602]'
             }
             icon={
-              <CircleAlert
-                className={`${
-                  singleLead?.data?.status === 'approved'
-                    ? 'text-[#00C3C0]'
-                    : singleLead?.data?.status === 'rejected'
-                    ? 'text-[#FF0000]'
-                    : 'text-[#FF8602]'
-                } w-4 h-4`}
-              />
+              singleLead?.data?.status === 'approved' ? (
+                <BadgeCheck className="text-[#00C3C0] w-4 h-4" />
+              ) : singleLead?.data?.status === 'rejected' ? (
+                <Ban className="text-[#FF0000] w-4 h-4" />
+              ) : (
+                <CircleAlert className="text-[#FF8602] w-4 h-4" />
+              )
             }
           />
         </div>
       )}
-
       {/* Job Description */}
       <div className="p-3">
         {user?.serviceId?.name && (
@@ -194,7 +189,6 @@ const ClientLeadCard = ({ user, isExpanded }) => {
           </div>
         </div>
       </div>
-
       {/* Footer Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">
         <Link
@@ -203,7 +197,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
           } font-medium bg-[var(--color-special)] text-white hover:bg-gray-950 transition`}
           href={`/client/dashboard/my-leads/${user?._id}`}
         >
-          View Lead Details
+          View Details
         </Link>
         {user?.credit && (
           <p

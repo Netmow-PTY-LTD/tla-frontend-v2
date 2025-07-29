@@ -45,11 +45,14 @@ import { getCompactTimeAgo } from '@/helpers/formatTime';
 import { userDummyImage } from '@/data/data';
 import { useDispatch } from 'react-redux';
 import { getSocket } from '@/lib/socket';
-import { useSocketListener } from '@/hooks/useSocketListener';
-
+import {
+  useResponseRoom,
+  useResponseRoomUser,
+  useSocketListener,
+} from '@/hooks/useSocketListener';
+import { useSocketContext } from '@/contexts/SocketContext';
 
 export default function MyResponseDetails({ onBack, response, responseId }) {
-
   const [activeTab, setActiveTab] = useState('activity');
   const [isExpanded, setIsExpanded] = useState(false);
   const [openMail, setOpenMail] = useState(false);
@@ -59,7 +62,6 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
     useGetSingleResponseQuery(responseId ? responseId : response?._id, {
       skip: !responseId && !response?._id,
     });
-
 
   // // Listen for updates
   // useSocketListener("notification", (updatedData) => {
@@ -73,7 +75,6 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
   //   );
   // });
 
-
   // useEffect(() => {
   //   const socket = getSocket();
   //   socket.emit("join_room", responseId ? responseId : response?._id);
@@ -83,10 +84,21 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
   //   };
   // }, [responseId ? responseId : response?._id]);
 
+  const { userId, socket } = useSocketContext();
+
+  useResponseRoom(
+    response?._id || responseId,
+    (data) => {
+      console.log('💬 Response room update received:', data);
+    },
+    userId
+  );
+
+  useResponseRoomUser(userId, (data) => {
+    console.log('💬 Response room update received:', data);
+  });
 
   const badge = singleResponse?.data?.leadId?.userProfileId?.profileType;
-
-
 
   const [updateStatus] = useUpdateResponseStatusMutation();
   const [updateActivity] = useActivityLogMutation();
@@ -196,13 +208,16 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
         const result = await updateActivity(whatsappActivityPayload).unwrap();
 
         if (result.success) {
+          socket?.emit('join-response', resolvedResponseId);
+          socket?.emit('user-notification', userId);
+
           const phone = response?.leadId?.userProfileId?.phone;
           window.open(
             `https://api.whatsapp.com/send?phone=${phone}&text=`,
             '_blank'
           );
         }
-      } catch (error) { }
+      } catch (error) {}
     }
     if (type === 'sendemail') {
       setOpenMail(true);
@@ -377,19 +392,21 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                 <div className="flex border-b border-gray-200 gap-6">
                   <button
                     onClick={() => setActiveTab('activity')}
-                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
-                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                      : 'hover:text-black'
-                      }`}
+                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                      activeTab === 'activity'
+                        ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                        : 'hover:text-black'
+                    }`}
                   >
                     Activity
                   </button>
                   <button
                     onClick={() => setActiveTab('lead-details')}
-                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'lead-details'
-                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                      : 'hover:text-black'
-                      }`}
+                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                      activeTab === 'lead-details'
+                        ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                        : 'hover:text-black'
+                    }`}
                   >
                     Lead Details
                   </button>
@@ -426,18 +443,20 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                         return (
                           <Fragment key={index}>
                             <div
-                              className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${index === 0 ? '' : 'border-l border-[#e6e7ec]'
-                                }`}
+                              className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${
+                                index === 0 ? '' : 'border-l border-[#e6e7ec]'
+                              }`}
                             >
                               {formattedDate}
                             </div>
                             {activity?.logs?.map((item, i) => {
                               return (
                                 <div
-                                  className={`activity-log-item flex gap-2 ${index === 0 && i === 0
-                                    ? 'first-log-item'
-                                    : ''
-                                    }`}
+                                  className={`activity-log-item flex gap-2 ${
+                                    index === 0 && i === 0
+                                      ? 'first-log-item'
+                                      : ''
+                                  }`}
                                   key={i}
                                 >
                                   <div className="left-track flex-grow-0 flex flex-col w-[32px] items-center">

@@ -62,10 +62,10 @@ export default function LeadDetailsPage({
   const badge = profileType
     .replace(/[^a-zA-Z0-9]+/g, ' ')
     .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join('');
 
-
+  console.log('singleLead', singleLead);
   return (
     <div className="bg-white">
       {lead ? (
@@ -79,12 +79,11 @@ export default function LeadDetailsPage({
           <div className="mt-3 max-w-4xl">
             <div className="flex justify-between">
               <div className="flex flex-col items-start gap-4 z-0 ">
-               
                 <Avatar className="w-20 h-20 z-10">
                   <AvatarImage
-                    src={`${lead?.userProfileId?.profilePicture ??
-                      userDummyImage
-                      }`}
+                    src={`${
+                      lead?.userProfileId?.profilePicture ?? userDummyImage
+                    }`}
                     alt={lead?.userProfileId?.name ?? 'John Doe'}
                   />
                   <AvatarFallback>User</AvatarFallback>
@@ -112,8 +111,8 @@ export default function LeadDetailsPage({
                     const phone = lead?.userProfileId?.phone;
                     return phone
                       ? `${phone.slice(0, 3)}${'*'.repeat(
-                        Math.max(0, phone.length - 3)
-                      )}`
+                          Math.max(0, phone.length - 3)
+                        )}`
                       : '480*******';
                   })()}
                 </span>{' '}
@@ -164,9 +163,8 @@ export default function LeadDetailsPage({
             </div>
             {(singleLead?.additionalDetails &&
               singleLead.additionalDetails !== '') ||
-              urgentOption?.option ||
-              singleLead?.userProfileId?.phone ||
-              badge ? (
+            urgentOption?.option ||
+            singleLead?.userProfileId?.phone ? (
               <div className="mt-5">
                 <div className="flex flex-wrap gap-2">
                   {singleLead?.additionalDetails &&
@@ -191,18 +189,11 @@ export default function LeadDetailsPage({
                       icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
                     />
                   )}
-                  {badge && (
-                    <TagButton
-                      text={`${badge} Lawyer`}
-                      bgColor="#004DA61A"
-                      icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
-                    />
-                  )}
                 </div>
               </div>
             ) : null}
 
-            <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
+            <hr className="w-full mt-5" />
             <div className="mt-5">
               <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
                 <h5 className="font-medium mb-2 heading-base">
