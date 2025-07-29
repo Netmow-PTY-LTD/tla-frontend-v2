@@ -78,6 +78,8 @@ export default function LeadDetailsPage() {
     setShowLeadResponseDetails(true);
   };
 
+  const isMobile = window.innerWidth <= 1280;
+
   if (isSingleLeadLoading) {
     return <ResponseSkeleton />;
   }
@@ -85,7 +87,7 @@ export default function LeadDetailsPage() {
   return (
     <div className="lead-board-wrap">
       <div className="lead-board-container">
-        <div className="left-column-7">
+        <div className={`${isMobile ? 'column-6' : 'left-column-7'}`}>
           <div className="column-wrap-left bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
             <div className="max-w-[600px]">
               <div className="flex items-center justify-between">
@@ -99,15 +101,13 @@ export default function LeadDetailsPage() {
               </div>
               <div className="mt-3">
                 <div className="flex flex-col items-start gap-4 ">
-               
                   <figure className="w-20 h-20 overflow-hidden border rounded-full">
                     <Image
                       src={
-                       singleLead?.data?.userProfileId?.profilePicture ??  userDummyImage
+                        singleLead?.data?.userProfileId?.profilePicture ??
+                        userDummyImage
                       }
-                      alt={
-                        singleLead?.data?.userProfileId?.name ?? ''
-                      }
+                      alt={singleLead?.data?.userProfileId?.name ?? ''}
                       width={80}
                       height={80}
                       priority
@@ -123,7 +123,7 @@ export default function LeadDetailsPage() {
                     </p>
                   </div>
                 </div>
-                <hr className="border-[#F3F3F3] my-5  " />
+                <hr className="my-5 w-full" />
                 <div className="mb-4">
                   <div className="flex items-center gap-2 admin-text font-medium">
                     <PhoneOutgoing className="w-4 h-4" />{' '}
@@ -169,7 +169,7 @@ export default function LeadDetailsPage() {
                     )}
                   </div>
                 </div>
-                <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
+                <hr className="w-full mt-5" />
                 <div className="mt-5">
                   <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
                     <h5 className="font-medium mb-2 heading-base">
@@ -198,7 +198,7 @@ export default function LeadDetailsPage() {
                     </div>
                   </div>
                 </div>
-                <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
+                <hr className="w-full mt-5" />
                 {singleLead?.data?.leadAnswers?.length > 0 && (
                   <div className="mt-5 space-y-3">
                     <h4 className="font-medium heading-lg mb-5">
@@ -225,7 +225,7 @@ export default function LeadDetailsPage() {
             </div>
           </div>
         </div>
-        <div className="right-column-5">
+        <div className={`${isMobile ? 'column-6' : 'right-column-5'}`}>
           <div className="column-wrap-right px-4">
             {isSingleLeadResponseLoading ? (
               <ResponseSkeleton />

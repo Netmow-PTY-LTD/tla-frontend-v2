@@ -12,17 +12,20 @@ export default function LeadSettingsCard({
   locations,
 }) {
   return (
-
-    
     <Card className="w-full rounded-2xl shadow-sm">
       <div className="p-4">
-        <h3 className="heading-md font-medium text-black">Lead Settings</h3>
+        <h3 className="heading-md font-semibold text-black mb-1">
+          Lead Settings
+        </h3>
+        <p className="text-xs text-gray-500">
+          Track your credit usage and balance
+        </p>
       </div>
 
-      <hr className="my-4 border-t border-[#D9D9D9]" />
+      <hr className="border-t border-[#D9D9D9]" />
 
       {/* Services Section */}
-      <div className="flex items-center justify-between px-4">
+      <div className="flex items-center justify-between px-4 pt-4">
         <div>
           <h2 className="heading-base font-medium text-black">Services</h2>
           <p className="mt-1 text-sm text-[#34495E]">
@@ -76,7 +79,10 @@ export default function LeadSettingsCard({
             ) : (
               <div className="mt-4 space-y-3">
                 {locations.map((item, index) => (
-                  <div key={item._id || index} className="flex items-center gap-2">
+                  <div
+                    key={item._id || index}
+                    className="flex items-center gap-2"
+                  >
                     <MapMarkerAlt className="h-4 w-4 text-black" />
                     <span className="text-sm text-black">
                       {item?.locationGroupId?.zipcode}
@@ -95,6 +101,5 @@ export default function LeadSettingsCard({
         </div>
       </div>
     </Card>
-
   );
 }

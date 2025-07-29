@@ -11,6 +11,7 @@ import { useGetLeadServiceListQuery } from '@/store/features/leadService/leadSer
 import LeadSettings from '@/components/dashboard/lawyer/components/LeadSettings';
 import LeadStatsCard from '@/components/dashboard/lawyer/module/MyStats/LeadStatsCard';
 import CreditsStatsCard from '@/components/dashboard/lawyer/module/MyStats/CreditsStatsCard';
+import { MapPin } from 'lucide-react';
 
 const MyStatsPage = () => {
   const menuLinks = [
@@ -46,30 +47,31 @@ const MyStatsPage = () => {
           Overview of Your Stats
         </h2>
 
-        <div className="my-5 grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
-          {/* Left Column */}
-          <div className="flex flex-col h-full">
-            <ProfileCard
-              profile={profileData}
-              isLoading={isLoadingUserInfo}
-              isError={isErrorUserInfo}
-              error={errorUserInfo}
-              className="flex-1"
-            />
+        <div className="my-5 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <ProfileCard
+            profile={profileData}
+            isLoading={isLoadingUserInfo}
+            isError={isErrorUserInfo}
+            error={errorUserInfo}
+            className="flex-1"
+          />
 
-            {/* 🟢 This card should stretch to fill remaining height */}
-            <Card className="mt-5 p-4 flex-1 flex flex-col justify-between">
-              <div>
-                <h2 className="font-medium flex items-center text-lg">
-                  Lead Notifications
-                  <Link
-                    href={'/lawyer/settings/notifications'}
-                    aria-label="Edit Notification Email"
-                    className="ml-3 rounded"
-                  >
-                    <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
-                  </Link>
-                </h2>
+          <CreditsStatsCard />
+          <Card className="flex-1 flex flex-col shadow-sm rounded-2xl">
+            <div>
+              <h2 className="font-medium flex items-center text-lg p-4">
+                Lead Notifications
+                <Link
+                  href={'/lawyer/settings/notifications'}
+                  aria-label="Edit Notification Email"
+                  className="ml-3 rounded"
+                >
+                  <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
+                </Link>
+              </h2>
+              <hr className="border-t border-[#D9D9D9]" />
+
+              <div className="py-2 px-4">
                 <p className="my-2 text-sm sm:text-base font-medium">
                   Sending new leads notifications to
                 </p>
@@ -77,24 +79,42 @@ const MyStatsPage = () => {
                   {profileData?.email}
                 </p>
               </div>
-            </Card>
-          </div>
+            </div>
 
-          {/* Right Column */}
-          <div className="flex flex-col h-full">
-            <div className="flex flex-1">
-              <LeadStatsCard
-                className="flex-1"
-                locations={leadServicesData?.data?.locations || []}
-                profile={profileData}
-              />
+            <div className="mt-4 px-4">
+              <hr className="border-t border-[#D9D9D9]" />
+
+              <div className="font-medium flex items-center gap-2 text-lg mt-4">
+                <h4 className="leading-none"> Locations</h4>
+                <Link href={'/lawyer/settings/lead-settings'}>
+                  <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
+                </Link>
+              </div>
+              <p className="my-2 text-sm sm:text-base">
+                {`You're receiving customers within`}
+              </p>
+
+              <div className="mt-[15px] space-y-3">
+                {leadServicesData?.data?.locations?.map((location, index) => {
+                  return (
+                    <p
+                      key={location._id || index}
+                      className="text-[#0B1C2D] bg-[#F3F3F3] rounded-lg p-4 flex items-center"
+                    >
+                      <MapPin className="mr-2 w-4 h-4 text-gray-600" />
+                      <span>{location?.locationGroupId?.zipcode}</span>
+                    </p>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-          <div className="flex flex-col h-full">
-            <div className="flex flex-1">
-              <CreditsStatsCard />
-            </div>
-          </div>
+          </Card>
+
+          <LeadStatsCard
+            className="flex-1"
+            locations={leadServicesData?.data?.locations || []}
+            profile={profileData}
+          />
         </div>
 
         <Card className="p-6">

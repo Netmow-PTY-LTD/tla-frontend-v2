@@ -20,7 +20,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      const isMobile = window.innerWidth < 1280;
+      const isMobile = window.innerWidth <= 1280;
 
       if (!isMobile) return; // ✅ ignore on desktop
 
@@ -44,8 +44,9 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
   return (
     <aside
       ref={sidebarRef}
-      className={`h-[calc(100vh-64px)] w-[250px] lg:w-[320px] bg-white border-r shadow z-20 overflow-y-auto
-        fixed top-16 left-0 transform transition-transform duration-300 ease-in-out ${isCollapsed ? 'translate-x-0' : '-translate-x-full'
+      className={`h-[calc(100vh-64px)] w-[250px] xl:w-[300px] bg-white border-r shadow z-20 overflow-y-auto
+        fixed top-16 left-0 transform transition-transform duration-300 ease-in-out ${
+          isCollapsed ? 'translate-x-0' : '-translate-x-full'
         } xl:static xl:translate-x-0 xl:transform-none xl:z-auto`}
     >
       <div className="p-4">
@@ -69,16 +70,18 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
               <div key={item.title}>
                 <button
                   onClick={() => toggleMenu(item.title)}
-                  className={`w-full flex items-center gap-2 p-2 rounded hover:bg-gray-100 transition ${isParentActive
+                  className={`w-full flex items-center gap-2 p-2 rounded hover:bg-gray-100 transition ${
+                    isParentActive
                       ? 'bg-[linear-gradient(121deg,_rgb(27,171,169),_#ffffff)] text-white font-medium'
                       : ''
-                    }`}
+                  }`}
                 >
                   {item.icon && <item.icon className="w-5 h-5" />}
                   <span className="flex-1 text-left">{item.title}</span>
                   <ChevronRight
-                    className={`transition-transform duration-200 ${openMenus[item.title] ? 'rotate-90' : ''
-                      }`}
+                    className={`transition-transform duration-200 ${
+                      openMenus[item.title] ? 'rotate-90' : ''
+                    }`}
                   />
                 </button>
                 {openMenus[item.title] && (
@@ -89,10 +92,11 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
                         <Link
                           key={subItem.title}
                           href={subItem.url}
-                          className={`flex items-center gap-2 px-2 py-1 rounded text-sm transition ${isActive
+                          className={`flex items-center gap-2 px-2 py-1 rounded text-sm transition ${
+                            isActive
                               ? 'bg-[linear-gradient(121deg,_rgb(27,171,169),_#ffffff)] text-white font-medium'
                               : 'hover:bg-gray-100'
-                            }`}
+                          }`}
                         >
                           {subItem.icon && <subItem.icon className="w-4 h-4" />}
                           <span>{subItem.title}</span>
@@ -110,10 +114,11 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
               key={item.title}
               href={item.url}
               target={item.target ? '_blank' : undefined}
-              className={`flex items-center gap-2 p-2 rounded transition ${pathname === item.url
+              className={`flex items-center gap-2 p-2 rounded transition ${
+                pathname === item.url
                   ? 'bg-[linear-gradient(121deg,_rgb(27,171,169),_#ffffff)] font-medium text-white'
                   : 'hover:bg-gray-100'
-                }`}
+              }`}
             >
               {item.icon && <item.icon className="w-5 h-5" />}
               <span>{item.title}</span>
