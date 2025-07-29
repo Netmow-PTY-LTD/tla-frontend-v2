@@ -4,6 +4,7 @@ import ReduxProvider from '@/store/Provider';
 import { Toaster } from '@/components/ui/sonner';
 import { SocketProvider } from '@/contexts/SocketContext';
 import { Suspense } from 'react';
+import Preloader from '@/components/Preloader';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -27,7 +28,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${poppins.variable} antialiased`}>
         <ReduxProvider>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<Preloader />}>
             <SocketProvider>
               <Toaster />
               {children}

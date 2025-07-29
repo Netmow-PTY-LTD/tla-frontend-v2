@@ -7,8 +7,27 @@ import FooterContact from './FooterContact';
 import LinkedIn from '@/components/icon/LinkedIn';
 import Facebook from '@/components/icon/Facebook';
 import Twiiter from '@/components/icon/Twiiter';
+import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import { useSelector } from 'react-redux';
 
 export default function Footer() {
+  const token = useSelector((state) => state.auth.token);
+
+  const { data: currentUser } = useAuthUserInfoQuery(undefined, {
+    skip: !token,
+  });
+
+  // console.log('token', token);
+  // console.log('currentUser', currentUser);
+
+  const dashboardPaths = {
+    admin: '/admin',
+    lawyer: '/lawyer/dashboard',
+    client: '/client/dashboard',
+  };
+
+  const dashboardUrl = dashboardPaths[currentUser?.data?.regUserType] || '';
+
   return (
     <>
       {/* <NewsletterSignup /> */}
@@ -64,11 +83,8 @@ export default function Footer() {
                         </Link>
                       </li>
                       <li>
-                        <Link
-                          href="https://www.youtube.com/"
-                          target="_blank"
-                        >
-                         Tutorials
+                        <Link href="https://www.youtube.com/" target="_blank">
+                          Tutorials
                         </Link>
                       </li>
                     </ul>
@@ -77,13 +93,25 @@ export default function Footer() {
                     <h5>For Clients</h5>
                     <ul>
                       <li>
-                        <Link href="/?clientRegister=true">Find Lawyers</Link>
+                        <Link
+                          href={
+                            token || currentUser
+                              ? dashboardUrl
+                              : '/?clientRegister=true'
+                          }
+                        >
+                          Find Lawyers
+                        </Link>
                       </li>
                       <li>
                         <Link href="/how-it-works/clients">How IT Works</Link>
                       </li>
                       <li>
-                        <Link href="/login">Login Client</Link>
+                        <Link
+                          href={token || currentUser ? dashboardUrl : '/login'}
+                        >
+                          Login Client
+                        </Link>
                       </li>
                     </ul>
                   </div>
@@ -94,7 +122,13 @@ export default function Footer() {
                         <Link href="/how-it-works/lawyers">How It Works</Link>
                       </li>
                       <li>
-                        <Link href="/register">Join as a Lawyer</Link>
+                        <Link
+                          href={
+                            token || currentUser ? dashboardUrl : '/register'
+                          }
+                        >
+                          Join as a Lawyer
+                        </Link>
                       </li>
                       <li>
                         <Link href="/pricing">Pricing</Link>
