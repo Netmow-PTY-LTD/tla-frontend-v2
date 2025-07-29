@@ -55,9 +55,12 @@ export default function SellerDashboard() {
           error={errorUserInfo || errorLeadServices}
           locations={locations}
         />
-        <CreditsStatsCard />
+        <div className='space-y-4'>
+          <CreditsStatsCard />
 
-        <LeadsCountCard />
+          <LeadsCountCard />
+        </div>
+
 
         <SendNewLeadsCard
           isLoading={isLoadingUserInfo || isLoadingLeadServices}
