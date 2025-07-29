@@ -63,6 +63,14 @@ export default function Footer() {
                           Press
                         </Link>
                       </li>
+                      <li>
+                        <Link
+                          href="https://www.youtube.com/"
+                          target="_blank"
+                        >
+                         Tutorials
+                        </Link>
+                      </li>
                     </ul>
                   </div>
                   <div className="footer-widget w-[calc(50%-15px)] md:w-auto">
