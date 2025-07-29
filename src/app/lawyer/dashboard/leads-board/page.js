@@ -14,6 +14,8 @@ import ResponseSkeleton from '../my-responses/_components/ResponseSkeleton';
 import { Button } from '@/components/ui/button';
 
 const LeadBoardPage = () => {
+  const scrollContainerRef = useRef(null);
+
   const [showLeadDetails, setShowLeadDetails] = useState(true);
   const [selectedLead, setSelectedLead] = useState(null);
   const [page, setPage] = useState(1);
@@ -21,6 +23,9 @@ const LeadBoardPage = () => {
   const [hasMore, setHasMore] = useState(true);
   const [parsed, setParsed] = useState(null);
   const [searchKeyword, setSearchKeyword] = useState(parsed || {});
+
+  // Load filter from localStorage on first mount
+
   useEffect(() => {
     const stored = localStorage.getItem('lead-filters');
     if (stored) {
@@ -39,8 +44,7 @@ const LeadBoardPage = () => {
 
 
 
-
-  const scrollContainerRef = useRef(null);
+  // Fetch paginated leads
 
   const {
     data,
@@ -52,27 +56,17 @@ const LeadBoardPage = () => {
     searchKeyword: JSON.stringify(searchKeyword || {}),
   });
 
-
+  // Reset to page 1 on search keyword change
   useEffect(() => {
     setPage(1);
   }, [searchKeyword]);
 
 
-  // Fetch detailed data for selected lead
-  const { data: selectedLeadData, isLoading: isSingleLeadLoading } =
-    useGetSingleLeadQuery(selectedLead?._id, { skip: !selectedLead?._id });
 
-  // Set first lead on initial load or leads update
-  useEffect(() => {
-    if (leads?.length > 0 && !selectedLead) {
-      setSelectedLead(leads[0]);
-    }
-  }, [leads, selectedLead]);
 
+  // Set leads and manage pagination state
   useEffect(() => {
     if (!data) return;
-
-    // setLeads((prev) => [...prev, ...data?.data]);
 
     setLeads((prev) => {
       const updatedLeads = page === 1 ? data.data : [...prev, ...data.data];
@@ -83,7 +77,11 @@ const LeadBoardPage = () => {
       return updatedLeads;
     });
     const totalPage = data?.pagination?.totalPage;
-    setHasMore(page < totalPage);
+    if (typeof totalPage !== 'number' || totalPage <= 0 || typeof totalPage == 'undefined' || totalPage == null) {
+      setHasMore(false);
+    } else {
+      setHasMore(page < totalPage);
+    }
   }, [data, page]);
 
 
@@ -109,6 +107,30 @@ const LeadBoardPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasMore, isFetching, scrollContainerRef?.current]);
 
+
+  console.log({
+    page,
+    hasMore: scrollContainerRef.current,
+    isFetching,
+  });
+
+
+  // Set first lead on initial load or leads update
+  useEffect(() => {
+    if (leads?.length > 0 && !selectedLead) {
+      setSelectedLead(leads[0]);
+    }
+  }, [leads, selectedLead]);
+
+
+
+  // Fetch detailed data for selected lead
+  const { data: selectedLeadData, isLoading: isSingleLeadLoading } =
+    useGetSingleLeadQuery(selectedLead?._id, { skip: !selectedLead?._id });
+
+
+
+  // Show loading skeleton
 
   if (isAllLeadsLoading) {
     return (
