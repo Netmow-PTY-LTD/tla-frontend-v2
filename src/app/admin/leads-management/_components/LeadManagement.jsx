@@ -68,6 +68,19 @@ export default function LeadManagement() {
       ),
     },
     {
+      id: 'userProfileId.user?.isVerifiedAccount',
+      accessorKey: 'userProfileId.user?.isVerifiedAccount',
+      header: 'Email Verified',
+      cell: ({ row }) => {
+          const isVerifiedAccount=row.original?.userProfileId.user?.isVerifiedAccount
+        return(
+        <div className="capitalize">
+          {isVerifiedAccount ? "Verified Account" : "Not Verified"}
+        </div>
+      )
+      },
+    },
+    {
       accessorKey: 'userProfileId.phone',
       header: 'Phone',
       cell: ({ row }) => <div>{row.original?.userProfileId?.phone || '-'}</div>,
