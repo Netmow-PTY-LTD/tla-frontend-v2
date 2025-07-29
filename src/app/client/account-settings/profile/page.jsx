@@ -25,7 +25,7 @@ import { useEffect, useState } from 'react';
 
 const page = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const {
     data: currentUser,
     isLoading: isLoadingUserInfo,
@@ -84,7 +84,6 @@ const [open, setOpen] = useState(false);
     }
   };
 
-
   return (
     <div className="max-w-[900px] mx-auto my-8">
       <div className="bg-[#F5F5F5] p-6 rounded-lg shadow-sm mx-auto">
@@ -98,14 +97,14 @@ const [open, setOpen] = useState(false);
         </p>
 
         <FormWrapper onSubmit={handleSubmit} defaultValues={defaultValues}>
-          <div>
+          <div className="flex flex-wrap gap-10 items-start">
             {/* Avatar + Upload */}
             <div className="flex items-center gap-2 mb-6">
               <AvatarUploader name="userProfileLogo" />
             </div>
 
             {/* Inputs */}
-            <div className="grid lg:grid-cols-2 gap-4 flex-1">
+            <div className="grid grid-cols-1 gap-4 flex-1 w-full md:w-1/2">
               <TextInput
                 name="name"
                 label="Name"
@@ -119,40 +118,40 @@ const [open, setOpen] = useState(false);
                 placeholder="Enter Your Phone"
               />
 
-              <div className="flex items-center">
-                {/* <TextInput
+              {/* <div className="flex items-center">
+                <TextInput
                   type="password"
                   name="password"
                   label="Password"
                   placeholder="Enter Your Password"
-                /> */}
+                />
+              </div> */}
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setOpen(true)}
+                  className="text-sm text-[#00C3C0] mt-2 block"
+                >
+                  Change Password
+                </button>
 
-
+                <Button
+                  type="submit"
+                  className="bg-[#00C3C0] hover:bg-[#00b3b0] mt-5 flex items-center gap-2"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader className="w-4 h-4 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    'Save changes'
+                  )}
+                </Button>
               </div>
             </div>
           </div>
-          <button
-          type='button'
-            onClick={() => setOpen(true)}
-            className="text-sm text-[#00C3C0] mt-5 lg:mt-1 block"
-          >
-            Change Password
-          </button>
-
-          <Button
-            type="submit"
-            className="bg-[#00C3C0] hover:bg-[#00b3b0] mt-5 lg:mt-1 flex items-center gap-2"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <>
-                <Loader className="w-4 h-4 animate-spin" />
-                Saving...
-              </>
-            ) : (
-              'Save changes'
-            )}
-          </Button>
         </FormWrapper>
         <ChangePassword setOpen={setOpen} open={open} />
       </div>

@@ -280,6 +280,11 @@
   height: 100%;
 }
 
+.column-6 {
+  width: 50%;
+  height: 100%;
+}
+
 .right-column-5 {
   width: 35%;
   height: 100%;
@@ -312,6 +317,7 @@
   position: sticky;
   top: 0;
   background-color: #f3f3f3;
+  z-index: 9;
 }
 
 .dashboard-content {
@@ -353,6 +359,13 @@
 }
 
 @media (max-width: 991px) {
+  .db-header {
+    padding: 10px 15px;
+  }
+
+  .db-logo {
+    width: 100px;
+  }
   .left-column-8 {
     width: 100%;
   }
@@ -360,4 +373,10 @@
     max-width: 100%;
     display: none;
   }
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background-color: #eee;
 }

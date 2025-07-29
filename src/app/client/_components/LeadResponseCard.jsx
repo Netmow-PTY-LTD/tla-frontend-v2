@@ -32,9 +32,7 @@ const LeadResponseCard = ({
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
           <figure className="w-10 h-10 overflow-hidden flex-shrink-0 border rounded-full">
             <Image
-              src={`${
-                response?.responseBy?.profilePicture ??   userDummyImage
-              }`}
+              src={`${response?.responseBy?.profilePicture ?? userDummyImage}`}
               alt={response?.responseBy?.name ?? ''}
               width={40}
               height={40}
@@ -43,7 +41,6 @@ const LeadResponseCard = ({
             />
           </figure>
 
-         
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
             <div>
               <div
@@ -71,19 +68,8 @@ const LeadResponseCard = ({
       <hr className="border-[#F3F3F3] border" />
 
       {/* Matched Criteria */}
-      <div className="px-3 pt-3 pb-2">
-        <div className="flex flex-wrap gap-2">
-          {badge && (
-            <>
-              <TagButton
-                text={badge}
-                bgColor="#00C3C03A"
-                icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
-              />
-            </>
-          )}
 
-          {/* {response?.additionalDetails &&
+      {/* {response?.additionalDetails &&
             response?.additionalDetails !== '' && (
               <TagButton
                 text="Additional Details"
@@ -91,7 +77,7 @@ const LeadResponseCard = ({
                 icon={<BadgeCheck className="text-[#000] w-4 h-4" />}
               />
             )} */}
-          {/* {urgentOption?.option && (
+      {/* {urgentOption?.option && (
             <TagButton
               text={urgentOption?.option}
               bgColor="#FF86021A"
@@ -99,28 +85,55 @@ const LeadResponseCard = ({
             />
           )} */}
 
-          {response?.userProfileId?.phone && (
+      {response?.userProfileId?.phone && (
+        <div className="px-3 pt-3 pb-2">
+          <div className="flex flex-wrap gap-2">
             <TagButton
               text="Verified Phone"
               bgColor="#00C3C01A"
               icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
             />
-          )}
-        </div>
-      </div>
-
-      {/* Job Description */}
-      {response?.serviceId?.name && (
-        <div className="p-3 flex-1">
-          <div className="p-3 bg-[#F3F3F3] rounded-lg">
-            <h4
-              className={`font-medium mb-2 ${
-                isExpanded ? 'heading-base' : 'text-[14px]'
-              }`}
-            >
-              {response?.serviceId?.name}
-            </h4>
           </div>
+        </div>
+      )}
+
+      {badge && badge?.toLowerCase() !== 'basic lawyer' && (
+        <div className="bg-[#F3f3f3] py-2 px-3 rounded-[6px] inline-flex items-center gap-2 mx-3 w-max mt-3">
+          <div className="icon">
+            <img
+              src={
+                badge.toLowerCase() === 'premium lawyer'
+                  ? '/assets/img/badge.svg'
+                  : badge.toLowerCase() === 'expert lawyer'
+                  ? '/assets/img/expert.png'
+                  : '/assets/img/basic.png'
+              }
+              width="30"
+              height="30"
+              alt={badge}
+            />
+          </div>
+          <span className="badge-name badge-name-alt">{badge}</span>
+          <span>
+            {badge?.toLowerCase() === 'premium lawyer'
+              ? '( 10+ Hired )'
+              : badge?.toLowerCase() === 'expert lawyer'
+              ? '( 5+ Hired )'
+              : ''}
+          </span>
+        </div>
+      )}
+
+      {response?.responseBy?.serviceIds?.length > 0 && (
+        <div className="flex flex-wrap gap-2 px-3 mt-3">
+          {response?.responseBy?.serviceIds?.map((service, i) => (
+            <span
+              key={i}
+              className="inline-flex justify-center items-center gap-2 rounded-[30px] bg-[#F3F3F3] px-2 py-1 text-[13px]"
+            >
+              {service?.name}
+            </span>
+          ))}
         </div>
       )}
 

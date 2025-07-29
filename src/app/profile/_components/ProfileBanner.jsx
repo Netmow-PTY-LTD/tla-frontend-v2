@@ -143,7 +143,7 @@ export default function ProfileBanner({ data }) {
                 <span>{data?.address}</span>
               </Link>
             </div>
-            {data?.badge && (
+            {data?.badge && data?.badge?.toLowerCase() !== 'basic lawyer' && (
               <div className="bg-[#F3f3f3] py-2 px-3 rounded-[6px] inline-flex items-center gap-2 mt-8">
                 <div className="icon">
                   <img
@@ -217,20 +217,6 @@ export default function ProfileBanner({ data }) {
           </div>
         </div>
       </div>
-      <style>
-        {`
-          .badge-name {
-                color: #040E31;
-                text-align: center;
-                font-feature-settings: 'liga' off, 'clig' off;
-                font-family: "Dancing Script";
-                font-size: 20px;
-                font-weight: 700;
-                line-height: normal;
-                text-transform: capitalize;
-          }
-        `}
-      </style>
     </section>
   );
 }

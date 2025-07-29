@@ -15,8 +15,8 @@ export default function DashboardHeader({ onToggleSidebar }) {
 
   return (
     <header className="db-header">
-      <div className="db-header-container flex">
-        <Link href="/lawyer/dashboard">
+      <div className="db-header-container flex gap-4">
+        <Link href="/lawyer/dashboard" className="db-logo">
           <Image
             src={'/assets/img/logo.png'}
             alt="TLA Logo"

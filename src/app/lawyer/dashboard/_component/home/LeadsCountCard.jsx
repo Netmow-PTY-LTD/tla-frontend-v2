@@ -23,7 +23,7 @@ export default function LeadsCountCard() {
     <Card className="w-full shadow-sm rounded-2xl">
       {/* Header */}
       <div className="flex items-center justify-between p-4">
-        <h2 className="text-lg font-semibold">Leads</h2>
+        <h3 className="heading-md font-semibold text-black">Leads</h3>
         <Link href="/lawyer/dashboard/leads-board">
           <Button variant="outline" size="sm">
             View

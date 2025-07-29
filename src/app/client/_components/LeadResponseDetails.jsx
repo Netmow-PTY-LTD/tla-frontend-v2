@@ -152,7 +152,7 @@ export default function LeadResponseDetails({ onBack, response }) {
           <div className="flex items-center justify-between">
             <button className="flex py-2 items-center gap-2" onClick={onBack}>
               {' '}
-              <MoveLeft /> <span>Back to Lead Responses</span>
+              <MoveLeft /> <span>Back to All</span>
             </button>
           </div>
           <div className="mt-3 mb-4 flex items-center justify-between bg-[#F5F6F9] rounded-lg py-2 px-4">
@@ -178,7 +178,7 @@ export default function LeadResponseDetails({ onBack, response }) {
               <figure className="w-20 h-20 overflow-hidden border rounded-full">
                 <Image
                   src={
-                    singleResponse?.data?.responseBy?.profilePicture??
+                    singleResponse?.data?.responseBy?.profilePicture ??
                     userDummyImage
                   }
                   alt={singleResponse?.data?.responseBy?.name || ''}
@@ -199,7 +199,7 @@ export default function LeadResponseDetails({ onBack, response }) {
             </div>
             {/* Current Status */}
 
-            <hr className="border-[#F3F3F3] my-3  " />
+            <hr className="my-3  " />
             <div className="mb-4">
               <div className="flex items-center gap-2 admin-text font-medium">
                 <PhoneOutgoing className="w-5 h-5" />{' '}
@@ -214,13 +214,13 @@ export default function LeadResponseDetails({ onBack, response }) {
                 </span>{' '}
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {/* <Button className="bg-[#00C3C0]">
                         <Phone />
                         Show Number
                       </Button> */}
               <Button
-                onClick={() => handleActivity('whatsapp')} 
+                onClick={() => handleActivity('whatsapp')}
                 className="bg-[#25D366]"
               >
                 <WhatsApp />
@@ -255,15 +255,20 @@ export default function LeadResponseDetails({ onBack, response }) {
                 </Link>
               </span>
             </div>
-            <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
-            <div className="mt-5">
-              <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
-                <h5 className="font-medium mb-2 heading-base">
-                  {singleResponse?.data?.serviceId?.name || ''}
-                </h5>
+            <hr className="w-full mt-5" />
+            {response?.responseBy?.serviceIds?.length > 0 && (
+              <div className="flex flex-wrap gap-2 px-3 mt-3">
+                {response?.responseBy?.serviceIds?.map((service, i) => (
+                  <span
+                    key={i}
+                    className="inline-flex justify-center items-center gap-2 rounded-[30px] bg-[#F3F3F3] px-2 py-1.5 text-[13px]"
+                  >
+                    {service?.name}
+                  </span>
+                ))}
               </div>
-            </div>
-            <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
+            )}
+            <hr className="w-full mt-5" />
             <div className="flex w-full flex-col gap-4 mt-5">
               <div className="flex border-b border-gray-200 gap-6">
                 <button

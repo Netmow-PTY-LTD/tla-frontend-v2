@@ -9,10 +9,19 @@ import Cookies from 'js-cookie';
 import { Arrow } from '@radix-ui/react-dropdown-menu';
 import { ArrowDown, ChevronDown, Hammer } from 'lucide-react';
 import Gavel from '@/components/icon/Gavel';
+import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 
 export default function Header() {
   const [isHeaderFixed, setIsHeaderFixed] = useState();
-  const currentUser = useSelector(selectCurrentUser);
+
+  const token = useSelector((state) => state.auth.token);
+
+  const { data: currentUser } = useAuthUserInfoQuery(undefined, {
+    skip: !token,
+  });
+
+  console.log('token', token);
+  console.log('currentUser', currentUser);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -28,15 +37,16 @@ export default function Header() {
     }
   }, []);
 
-  const token = Cookies.get('token');
-
   const dashboardPaths = {
     admin: '/admin',
     lawyer: '/lawyer/dashboard',
     client: '/client/dashboard',
   };
 
-  const dashboardUrl = dashboardPaths[currentUser?.regUserType] || '';
+  const dashboardUrl = dashboardPaths[currentUser?.data?.regUserType] || '';
+
+  console.log('currentUser?.data?.regUserType', currentUser?.data?.regUserType);
+  console.log('dashboardUrl', dashboardUrl);
 
   return (
     <header

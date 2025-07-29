@@ -1,5 +1,6 @@
 /* @import './_variables.scss';
 @import './_keyframe-animations.scss'; */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -122,6 +123,22 @@ body {
   color: var(--color-white);
   border: 1px solid transparent;
   transition: all 0.3s ease;
+}
+
+.badge-name {
+  color: #040e31;
+  text-align: center;
+  font-feature-settings: 'liga' off, 'clig' off;
+  font-family: 'Dancing Script';
+  font-size: 20px;
+  font-weight: 700;
+  line-height: normal;
+  text-transform: capitalize;
+}
+
+.badge-name-alt {
+  font-size: 16px;
+  text-transform: capitalize;
 }
 
 @layer base {
