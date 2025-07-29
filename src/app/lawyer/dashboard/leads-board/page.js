@@ -77,7 +77,11 @@ const LeadBoardPage = () => {
       return updatedLeads;
     });
     const totalPage = data?.pagination?.totalPage;
-    setHasMore(page < totalPage);
+    if (typeof totalPage !== 'number' || totalPage <= 0 || typeof totalPage == 'undefined' || totalPage == null) {
+      setHasMore(false);
+    } else {
+      setHasMore(page < totalPage);
+    }
   }, [data, page]);
 
 
