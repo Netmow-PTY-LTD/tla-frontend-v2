@@ -72,8 +72,8 @@ export default function SendMailModal({ openMail, setOpenMail, info }) {
             };
 
             const result = await sendemail(emailPayload).unwrap();
-            const socket = getSocket();
-            socket.emit("notify", { roomId, message: "Email sent successfully" });
+            // const socket = getSocket();
+            // socket.emit("notify", { roomId, message: "Email sent successfully" });
 
             if (result?.success) {
                 toast.success(result.message || 'Email sent successfully');
