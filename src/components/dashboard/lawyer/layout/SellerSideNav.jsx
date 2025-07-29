@@ -20,7 +20,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      const isMobile = window.innerWidth < 1280;
+      const isMobile = window.innerWidth <= 1280;
 
       if (!isMobile) return; // ✅ ignore on desktop
 
@@ -44,7 +44,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
   return (
     <aside
       ref={sidebarRef}
-      className={`h-[calc(100vh-64px)] w-[250px] lg:w-[320px] bg-white border-r shadow z-20 overflow-y-auto
+      className={`h-[calc(100vh-64px)] w-[250px] xl:w-[300px] bg-white border-r shadow z-20 overflow-y-auto
         fixed top-16 left-0 transform transition-transform duration-300 ease-in-out ${
           isCollapsed ? 'translate-x-0' : '-translate-x-full'
         } xl:static xl:translate-x-0 xl:transform-none xl:z-auto`}

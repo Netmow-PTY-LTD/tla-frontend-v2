@@ -124,6 +124,9 @@ export default function HeroHome({ searchParam }) {
     setModalOpen(true);
   };
 
+  console.log('token', token);
+  console.log('currentUser', currentUser);
+
   return (
     <section className="hero-home section">
       <div className="container">

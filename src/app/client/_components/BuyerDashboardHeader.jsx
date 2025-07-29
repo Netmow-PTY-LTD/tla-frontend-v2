@@ -11,8 +11,8 @@ export default function BuyerDashboardHeader({ onToggleSidebar }) {
 
   return (
     <header className="db-header">
-      <div className="db-header-container flex items-center gap-2">
-        <Link href="/client/dashboard">
+      <div className="db-header-container flex items-center gap-4">
+        <Link href="/client/dashboard" className="db-logo">
           <Image
             src={'/assets/img/logo.png'}
             alt="TLA Logo"

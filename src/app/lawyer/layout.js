@@ -9,8 +9,6 @@ import SidebarTop from './dashboard/_component/common/SidebarTop';
 import { usePathname, useRouter } from 'next/navigation';
 import Sidebar from '@/components/dashboard/lawyer/layout/SellerSideNav';
 import { io, Socket } from 'socket.io-client';
-import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
-import { useNotifications } from '@/hooks/useSocketListener';
 
 export default function SellerDashboardLayout({ children }) {
   const [socket, setSocket] = useState(null);
@@ -69,18 +67,7 @@ export default function SellerDashboardLayout({ children }) {
     };
   }, []);
 
-  console.log('connected', connected);
-
-  const { data: userInfo } = useAuthUserInfoQuery();
-
-  console.log('user data ==>', userInfo);
-
-  const userId = userInfo?.data?._id;
-
-  useNotifications(userId, (data) => {
-    console.log('🔔 New notification:', data);
-    console.log(data.text);
-  });
+  //console.log('connected', connected);
 
   return (
     <>

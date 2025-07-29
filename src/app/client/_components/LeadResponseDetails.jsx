@@ -152,7 +152,7 @@ export default function LeadResponseDetails({ onBack, response }) {
           <div className="flex items-center justify-between">
             <button className="flex py-2 items-center gap-2" onClick={onBack}>
               {' '}
-              <MoveLeft /> <span>Back to Lead Responses</span>
+              <MoveLeft /> <span>Back to All</span>
             </button>
           </div>
           <div className="mt-3 mb-4 flex items-center justify-between bg-[#F5F6F9] rounded-lg py-2 px-4">
@@ -178,7 +178,7 @@ export default function LeadResponseDetails({ onBack, response }) {
               <figure className="w-20 h-20 overflow-hidden border rounded-full">
                 <Image
                   src={
-                    singleResponse?.data?.responseBy?.profilePicture??
+                    singleResponse?.data?.responseBy?.profilePicture ??
                     userDummyImage
                   }
                   alt={singleResponse?.data?.responseBy?.name || ''}
@@ -214,13 +214,13 @@ export default function LeadResponseDetails({ onBack, response }) {
                 </span>{' '}
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {/* <Button className="bg-[#00C3C0]">
                         <Phone />
                         Show Number
                       </Button> */}
               <Button
-                onClick={() => handleActivity('whatsapp')} 
+                onClick={() => handleActivity('whatsapp')}
                 className="bg-[#25D366]"
               >
                 <WhatsApp />

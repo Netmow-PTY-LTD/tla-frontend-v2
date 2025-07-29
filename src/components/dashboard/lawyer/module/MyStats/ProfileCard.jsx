@@ -1,4 +1,3 @@
-
 'use client';
 import PencilIcon from '@/assets/icon';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -56,46 +55,6 @@ const ProfileCard = ({ profile, isLoading, isError, error }) => {
               </>
             )}
           </p>
-        </div>
-        <hr className="border-[#F3F3F3] border" />
-        <div className="space-y-2">
-          <h4 className="font-medium text-lg flex items-center">
-            Company Details{' '}
-            <Link
-              href={'/lawyer/settings/profile?section=about'}
-              aria-label="Edit Name"
-              className="ml-3 rounded "
-            >
-              <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
-            </Link>
-          </h4>
-          {profile?.profile?.companyProfile?.companyName && (
-            <p>
-              <span className="font-medium">Name:</span>{' '}
-              {profile.profile.companyProfile.companyName}
-            </p>
-          )}
-
-          {profile?.profile?.companyProfile?.location?.address && (
-            <p>
-              <span className="font-medium">Address: </span>
-              {profile.profile.companyProfile.location.address}
-            </p>
-          )}
-
-          {profile?.profile?.companyProfile?.website && (
-            <p>
-              <span className="font-medium"> Website:</span>{' '}
-              <Link
-                href={profile.profile.companyProfile.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 underline"
-              >
-                Link
-              </Link>
-            </p>
-          )}
         </div>
       </div>
     </Card>

@@ -78,6 +78,8 @@ export default function LeadDetailsPage() {
     setShowLeadResponseDetails(true);
   };
 
+  const isMobile = window.innerWidth <= 1280;
+
   if (isSingleLeadLoading) {
     return <ResponseSkeleton />;
   }
@@ -85,7 +87,7 @@ export default function LeadDetailsPage() {
   return (
     <div className="lead-board-wrap">
       <div className="lead-board-container">
-        <div className="left-column-7">
+        <div className={`${isMobile ? 'column-6' : 'left-column-7'}`}>
           <div className="column-wrap-left bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
             <div className="max-w-[600px]">
               <div className="flex items-center justify-between">
@@ -99,15 +101,13 @@ export default function LeadDetailsPage() {
               </div>
               <div className="mt-3">
                 <div className="flex flex-col items-start gap-4 ">
-               
                   <figure className="w-20 h-20 overflow-hidden border rounded-full">
                     <Image
                       src={
-                       singleLead?.data?.userProfileId?.profilePicture ??  userDummyImage
+                        singleLead?.data?.userProfileId?.profilePicture ??
+                        userDummyImage
                       }
-                      alt={
-                        singleLead?.data?.userProfileId?.name ?? ''
-                      }
+                      alt={singleLead?.data?.userProfileId?.name ?? ''}
                       width={80}
                       height={80}
                       priority
@@ -225,7 +225,7 @@ export default function LeadDetailsPage() {
             </div>
           </div>
         </div>
-        <div className="right-column-5">
+        <div className={`${isMobile ? 'column-6' : 'right-column-5'}`}>
           <div className="column-wrap-right px-4">
             {isSingleLeadResponseLoading ? (
               <ResponseSkeleton />
