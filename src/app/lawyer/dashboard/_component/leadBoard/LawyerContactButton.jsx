@@ -10,6 +10,7 @@ import { useContactLawyerMutation } from '@/store/features/lawyer/LeadsApiServic
 import CreditPurchaseLead from './CreditPurchaseLead';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { useGetUserCreditStatsQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
@@ -20,9 +21,11 @@ const LawyerContactButton = ({ leadDetail }) => {
   const [showCreditModal, setShowCreditModal] = useState(false);
   const [needAddCard, setNeedAddCard] = useState(false);
   const [pendingPayload, setPendingPayload] = useState(null);
+  const { refetch } = useGetUserCreditStatsQuery();
   const [contactLawyer, { isLoading }] = useContactLawyerMutation();
 
- 
+
+
   const router = useRouter();
   const handleContact = async () => {
     const payload = {
@@ -32,10 +35,10 @@ const LawyerContactButton = ({ leadDetail }) => {
     };
     try {
       const res = await contactLawyer(payload).unwrap();
-      
+
       if (res.success) {
-       
-        toast.success('Contacted successfully',{position:'top-right'});
+        refetch()
+        toast.success('Contacted successfully', { position: 'top-right' });
         setTimeout(() => {
           router.push(
             `/lawyer/dashboard/my-responses?responseId=${res?.data?.responseId}`
@@ -45,42 +48,42 @@ const LawyerContactButton = ({ leadDetail }) => {
         setPackageData(res?.data?.recommendedPackage);
         setPendingPayload(payload);
         setShowCreditModal(true);
-        setNeedAddCard(res?.data?.needAddCard ? res?.data?.needAddCard : false);
+        setNeedAddCard(res?.data?.needAddCard ? true : false);
       } else {
-        toast.error(res.message || 'Something went wrong',{position:'top-right'});
+        toast.error(res.message || 'Something went wrong', { position: 'top-right' });
       }
     } catch (err) {
       toast.error(
-        err?.data?.message || 'Something went wrong while contacting the lawyer',{position:'top-right'}
+        err?.data?.message || 'Something went wrong while contacting the lawyer', { position: 'top-right' }
       );
     }
   };
 
- 
+
   const handleAfterPayment = async () => {
     setShowCreditModal(false);
     if (pendingPayload) {
       try {
         const retryRes = await contactLawyer(pendingPayload).unwrap();
         if (retryRes.success) {
-          toast.success('Contacted successfully after payment',{position:'top-right'});
+          toast.success('Contacted successfully after payment', { position: 'top-right' });
           setTimeout(() => {
             router.push(
               `/lawyer/dashboard/my-responses?responseId=${retryRes?.data?.responseId}`
             );
-         
+
           }, 500);
         } else {
-          toast.error(retryRes.message || 'Retry failed',{position:'top-right'});
+          toast.error(retryRes.message || 'Retry failed', { position: 'top-right' });
         }
       } catch (err) {
-        toast.error(err?.data?.message || 'Retry failed',{position:'top-right'});
+        toast.error(err?.data?.message || 'Retry failed', { position: 'top-right' });
       }
       setPendingPayload(null);
     }
   };
 
-    
+
   return (
     <div>
       <Button
