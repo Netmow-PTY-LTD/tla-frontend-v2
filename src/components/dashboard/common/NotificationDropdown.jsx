@@ -58,7 +58,7 @@ export default function NotificationDropdown() {
       </div>
 
       {isOpen && (
-        <ul className="absolute right-0 bg-white shadow-[0_6px_16px_#0006] rounded w-72 mt-2 max-h-96 overflow-y-auto z-50">
+        <ul className="absolute right-0 bg-white shadow-[0_6px_16px_#0006] rounded w-72 mt-2 max-h-96 overflow-y-auto z-[99]">
           {isLoading ? (
             <li className="px-3 py-2 text-sm text-gray-500">Loading...</li>
           ) : notifications.length > 0 ? (

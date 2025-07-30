@@ -6,6 +6,7 @@ import { z } from 'zod';
 import TextInput from '@/components/form/TextInput';
 import TextareaInput from '@/components/form/TextArea';
 import FormWrapper from '@/components/form/FromWrapper';
+import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -31,8 +32,40 @@ export default function ContactPage() {
     console.log(data);
   };
 
+  const address =
+    'Suit 8/3, Level 3/54 Jephson ST, Toowong QLD 4066, Australia';
+
+  const mapUrl = getStaticMapUrl(address);
+
   return (
     <MainLayout>
+      <section
+        className="banner-section section relative z-1 flex items-center"
+        style={{
+          backgroundImage: 'url(/assets/img/contact-bg.webp)',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'right center',
+          minHeight: '60vh',
+        }}
+      >
+        <div className="container">
+          <div className="flex flex-wrap gap-10 items-center">
+            <div className="w-full sm:w-1/2">
+              <div className="page-heading lg:pr-20">
+                <h2 className="section-title">Contact Us - The Law App</h2>
+                <div className="page-heading-text mb-3">
+                  Have questions or need legal support? Get in touch with our
+                  team — we're here to help you every step of the way.
+                </div>
+                <Link href="/register" className="btn-default btn-secondary">
+                  Get In Touch
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       <section className="contact-section section">
         <div className="contact-top">
           <div className="container">
@@ -54,7 +87,7 @@ export default function ContactPage() {
                   // defaultValues={defaultValues}
                   schema={formSchema}
                 >
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     <TextInput
                       label="Name"
                       name="name"
@@ -186,7 +219,7 @@ export default function ContactPage() {
                     <div className="home-cta-images">
                       <div className="cta-shape"></div>
                       <img
-                        src="/assets/img/map.png"
+                        src="/assets/img/home-cta.png"
                         alt="home cta"
                         className="cta-img-2"
                       />
@@ -196,6 +229,15 @@ export default function ContactPage() {
               </div>
             </div>
           </section>
+          <div className="map-section">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3539.506014674869!2d152.98834087633077!3d-27.484634317344216!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6b9150ecb3ebd2e9%3A0x5efe28327748682a!2sSuite%208%2F3%2C%20Level%203%2F54%20Jephson%20St%2C%20Toowong%20QLD%204066%2C%20Australia!5e0!3m2!1sen!2sbd!4v1753866750663!5m2!1sen!2sbd"
+              width="600"
+              height="450"
+              style={{ border: 0, width: '100%' }}
+              loading="lazy"
+            ></iframe>
+          </div>
         </div>
       </section>
     </MainLayout>
