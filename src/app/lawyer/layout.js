@@ -11,8 +11,8 @@ import Sidebar from '@/components/dashboard/lawyer/layout/SellerSideNav';
 import { io, Socket } from 'socket.io-client';
 
 export default function SellerDashboardLayout({ children }) {
-  const [socket, setSocket] = useState(null);
-  const [connected, setConnected] = useState(false);
+  // const [socket, setSocket] = useState(null);
+  // const [connected, setConnected] = useState(false);
 
   const [message, setMessage] = useState('');
   const [notifications, setNotifications] = useState([]);
@@ -46,26 +46,26 @@ export default function SellerDashboardLayout({ children }) {
 
   //socket.io
 
-  useEffect(() => {
-    const newSocket = io('http://localhost:5000');
-    setSocket(newSocket);
+  // useEffect(() => {
+  //   const newSocket = io('http://localhost:5000');
+  //   setSocket(newSocket);
 
-    newSocket.on('connect', () => {
-      setConnected(true);
-    });
+  //   newSocket.on('connect', () => {
+  //     setConnected(true);
+  //   });
 
-    newSocket.on('disconnect', () => {
-      setConnected(false);
-    });
+  //   newSocket.on('disconnect', () => {
+  //     setConnected(false);
+  //   });
 
-    newSocket.on('notification', (data) => {
-      setNotifications((prev) => [data, ...prev]);
-    });
+  //   newSocket.on('notification', (data) => {
+  //     setNotifications((prev) => [data, ...prev]);
+  //   });
 
-    return () => {
-      newSocket.close();
-    };
-  }, []);
+  //   return () => {
+  //     newSocket.close();
+  //   };
+  // }, []);
 
   //console.log('connected', connected);
 

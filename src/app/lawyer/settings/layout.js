@@ -44,11 +44,11 @@ const SettingsLayout = ({ children }) => {
       href: '/lawyer/settings/credit-payment',
       icon: <CreditCardIcon className="w-4 h-4" />,
     },
-    {
-      label: 'Notification',
-      href: '/lawyer/settings/notifications',
-      icon: <Bell className="w-4 h-4" />,
-    },
+    // {
+    //   label: 'Notification',
+    //   href: '/lawyer/settings/notifications',
+    //   icon: <Bell className="w-4 h-4" />,
+    // },
   ];
 
   return (
