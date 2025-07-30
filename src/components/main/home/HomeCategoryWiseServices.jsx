@@ -91,7 +91,7 @@ export default function HomeCategoryWiseServices() {
                 <h5>{category.name}</h5>
               </Link>
             ))}
-          {allCategories?.length > 0 && (
+          {allCategories?.data?.length > 0 && (
             <Link
               href="/services"
               className="category-wise-service-item flex flex-col items-center text-center gap-3"
@@ -108,7 +108,7 @@ export default function HomeCategoryWiseServices() {
             allCategories?.data?.map((category, index) => (
               <div key={index}>
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="text-lg font-semibold">{category.name}</h4>
+                  <h4 className="text-lg font-semibold">{category?.name}</h4>
                   <Link
                     href={`/services/${category?.slug}`}
                     className="text-[#444] text-sm hover:underline"

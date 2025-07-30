@@ -189,7 +189,7 @@ input:focus {
 .container-lg {
   max-width: 100%;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 15px;
 }
 
 .section {
@@ -585,6 +585,65 @@ input:focus {
   text-align: center;
   font-weight: 600;
   line-height: 12px;
+}
+
+.submenu {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  background: #fff;
+  padding: 0; /* Remove internal padding from wrapper */
+  border: 1px solid #f3f3f3;
+  width: 330px;
+  max-height: 80vh;
+  box-shadow: 0 6px 20px -15px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  overflow: hidden;
+  z-index: 9;
+}
+
+.submenu-content {
+  display: flex; /* This allows sliding panels side by side */
+  width: 200%; /* two panels, each 100% */
+  transition: transform 0.4s ease-in-out;
+  transform: translateX(0%);
+}
+
+.submenu-content.show-services {
+  transform: translateX(-50%); /* slide to second panel */
+}
+
+.submenu-categories,
+.submenu-services {
+  width: 50%; /* each takes half of the total width (50% of 200%) */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.submenu ul li {
+  padding: 6px 0;
+}
+
+.submenu ul li ul {
+  padding-left: 1rem;
+  margin-top: 0.5rem;
+}
+
+.submenu ul li a {
+  color: #6c7191;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+.submenu ul li a:hover {
+  color: var(--color-black);
+  transition: all 0.3s ease;
+}
+.submenu ul li a:hover span {
+  text-decoration: underline;
+  transition: all 0.3s ease;
 }
 
 /* HeroHome */
@@ -1053,6 +1112,7 @@ Home Testimonials
   color: var(--color-text);
   font-weight: 400;
   line-height: 24px;
+  font-size: 14px;
 }
 
 .contact-form-heading {

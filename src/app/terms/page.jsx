@@ -7,7 +7,12 @@ import React from 'react';
 export default function TermsOfUse() {
   return (
     <MainLayout>
-      <PageBanner title="Terms of Use" />
+      <PageBanner
+        title="Terms of Use"
+        subtitle="Know Your Responsibilities"
+        bgImage={'/assets/img/terms-bg.webp'}
+        paragraph={`By using our platform, you agree to follow our terms. These terms govern how clients and lawyers interact, post legal requests, and access services. Please read them carefully before using our application.`}
+      />
       <section className="pt-[50px]">
         <div className="container">
           <div className="page-content">

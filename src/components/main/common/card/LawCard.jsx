@@ -4,12 +4,16 @@ import React from 'react';
 
 const LawCard = ({ service }) => {
   return (
-    <Link href={`/services/${service?.slug}`}>
+    <Link
+      // href={`/services/${service?.slug}`}
+      href="#"
+      onClick={(e) => e.preventDefault()}
+    >
       <div className="law-card ">
         <figure className="relative h-[277px]">
           <Image
-            alt={service.serviceName || 'Service'}
-            src={service?.image?.url || '/assets/img/services/img1.png'}
+            alt={service?.name || 'Service'}
+            src={service?.serviceField?.thumbImage}
             fill
             sizes="(min-width: 808px) 50vw, 100vw"
             className="rounded-xl"
@@ -19,7 +23,7 @@ const LawCard = ({ service }) => {
           />
         </figure>
         <div className="card-body bg-[#EDF0F4] mt-2 rounded-xl p-3 sm:p-4 ">
-          <div className="flex justify-between items-center gap-2">
+          {/* <div className="flex justify-between items-center gap-2">
             <p className="text-[12px]">
               {' '}
               <span className="text-[#34495E] ">Case Listed:</span>{' '}
@@ -34,8 +38,8 @@ const LawCard = ({ service }) => {
                 {service?.lawyerAvailable ? service?.lawyerAvailable : 0}{' '}
               </span>
             </p>
-          </div>
-          <h4 className="card-title font-medium leading-1 text-[18px] mt-2 ">
+          </div> */}
+          <h4 className="card-title font-medium leading-1 text-[16px]">
             {service?.name}{' '}
           </h4>
         </div>

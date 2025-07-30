@@ -6,7 +6,12 @@ import React from 'react';
 export default function PrivacyPolicy() {
   return (
     <MainLayout>
-      <PageBanner title={'Privacy Policy'} />
+      <PageBanner
+        title={'Privacy Policy'}
+        subtitle={'Your Data, Protected'}
+        bgImage={'/assets/img/privacy-policy-bg.webp'}
+        paragraph={`We value your privacy and protect your personal data with care. This policy explains how we collect, use, and safeguard your information when you use our platform to connect with legal professionals`}
+      />
       <section className="pt-[50px]">
         <div className="container">
           <div className="page-content">

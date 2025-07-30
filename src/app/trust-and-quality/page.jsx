@@ -6,7 +6,12 @@ import React from 'react';
 export default function TrustAndQuality() {
   return (
     <MainLayout>
-      <PageBanner title="Trust and Quality" />
+      <PageBanner
+        title="Trust & Quality"
+        subtitle="Committed to Excellence"
+        bgImage={'/assets/img/trust-bg.webp'}
+        paragraph="We ensure verified lawyers, secure communication, and high service standards. Our platform is built on trust, transparency, and a commitment to delivering reliable legal support to every client."
+      />
       <section className="pt-[50px]">
         <div className="container">
           <div className="page-content">
