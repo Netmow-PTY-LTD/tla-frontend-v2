@@ -126,10 +126,10 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
       providesTags: ['next-offer'],
     }),
     getUserCreditStats: builder.query({
-      query: (body) => ({
+      query: () => ({
         url: `/settings/credit-payment/user-credit-stats`,
         method: 'GET',
-        body,
+        
       }),
       providesTags: ['user-credit-stats'],
     }),
