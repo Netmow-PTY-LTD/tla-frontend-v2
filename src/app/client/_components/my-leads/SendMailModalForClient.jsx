@@ -5,22 +5,22 @@ import FormWrapper from '@/components/form/FromWrapper';
 import TextareaInput from '@/components/form/TextArea';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/UIComponents/Modal'
-import { useSocketContext } from '@/contexts/SocketContext';
-import { getSocket } from '@/lib/socket';
+
 import { useContactLeadMutation } from '@/store/features/lawyer/ResponseApiService';
-import React, { useEffect } from 'react'
+import { Loader2 } from 'lucide-react';
+import React from 'react'
 import { toast } from 'sonner';
 
-export default function SendMailModal({ openMail, setOpenMail, info }) {
-    const [sendemail,{isLoading}] = useContactLeadMutation()
+export default function SendMailModalForClient({ openMail, setOpenMail, info }) {
+    const [sendemail, { isLoading }] = useContactLeadMutation()
     const lead = info?.leadId?.userProfileId;
-
 
 
 
     const onSubmit = async (data) => {
         try {
-            const toEmail = info?.leadId?.userProfileId?.user?.email;
+            // const toEmail = info?.leadId?.userProfileId?.user?.email;
+            const toEmail = info?.responseBy?.user?.email;
             const leadId = info?.leadId?._id;
             const responseId = info?._id;
             const emailText = data?.email?.trim();
@@ -42,11 +42,13 @@ export default function SendMailModal({ openMail, setOpenMail, info }) {
                 emailText,
                 leadId,
                 responseId,
-                
+
             };
 
             const result = await sendemail(emailPayload).unwrap();
             if (result?.success) {
+
+                console.log('result data ==>', result)
                 toast.success(result.message || 'Email sent successfully');
                 setOpenMail(false)
             } else {
@@ -83,7 +85,7 @@ export default function SendMailModal({ openMail, setOpenMail, info }) {
 
                     <div className="flex justify-center items-center">
                         <Button className="bg-[#4285f4] mt-10 text-white">
-                          {isLoading ? (
+                            {isLoading ? (
                                 <span className="flex items-center gap-2">
                                     <Loader2 className="w-4 h-4 animate-spin" />
                                     Sending...
