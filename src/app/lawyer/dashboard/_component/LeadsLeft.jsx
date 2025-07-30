@@ -65,7 +65,6 @@ export default function LeadDetailsPage({
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join('');
 
-  console.log('singleLead', singleLead);
   return (
     <div className="bg-white">
       {lead ? (

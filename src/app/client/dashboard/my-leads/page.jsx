@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useGetAllMyLeadsQuery } from '@/store/features/lawyer/LeadsApiService';
 import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
 import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
@@ -8,19 +8,23 @@ import { Skeleton } from '@/components/ui/skeleton';
 import ClientLeadCard from '../../_components/ClientLeadCard';
 import ClientNewLeadRegistrationModal from '../../_components/ClientNewLeadRegistrationModal';
 import JobRequest from '../../_components/JobRequest';
+import { Loader } from 'lucide-react';
 
 export default function MyLeads() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [leads, setLeads] = useState(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const scrollContainerRef = useRef(null);
 
-  const { data: allMyLeads, isLoading: isAllMyLeadsLoading } =
-    useGetAllMyLeadsQuery(
-      { page: 1, limit: 10 },
-      { keepPreviousData: true, refetchOnMountOrArgChange: true }
-    );
-
-  console.log('All My Leads:', allMyLeads);
-
-  const totalLeads = allMyLeads?.pagination?.total ?? 0;
+  const {
+    data: allMyLeads,
+    isLoading: isAllMyLeadsLoading,
+    isFetching,
+  } = useGetAllMyLeadsQuery(
+    { page, limit: 10 },
+    { keepPreviousData: true, refetchOnMountOrArgChange: true }
+  );
 
   const { data: countryList } = useGetCountryListQuery();
 
@@ -35,6 +39,53 @@ export default function MyLeads() {
       skip: !defaultCountry?._id, // Skip
     }
   );
+
+  useEffect(() => {
+    if (!allMyLeads) return;
+
+    setLeads((prev) => {
+      const updatedLeads =
+        page === 1 ? allMyLeads?.data : [...prev, ...allMyLeads?.data];
+      // Automatically select the first lead when page = 1 (new filter)
+      // if (page === 1 && updatedLeads.length > 0) {
+      //   setSelectedLead(updatedLeads[0]);
+      // }
+      return updatedLeads;
+    });
+    const totalPage = allMyLeads?.pagination?.totalPage;
+    if (
+      typeof totalPage !== 'number' ||
+      totalPage <= 0 ||
+      typeof totalPage == 'undefined' ||
+      totalPage == null
+    ) {
+      setHasMore(false);
+    } else {
+      setHasMore(page < totalPage);
+    }
+  }, [allMyLeads?.data, page]);
+
+  // Scroll event handler for infinite loading
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      const nearBottom = scrollTop + clientHeight >= scrollHeight - 50;
+
+      if (nearBottom && hasMore && !isFetching) {
+        setPage((prev) => prev + 1);
+      }
+    };
+
+    container.addEventListener('scroll', handleScroll);
+
+    return () => {
+      container.removeEventListener('scroll', handleScroll);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasMore, isFetching, scrollContainerRef?.current]);
 
   if (isAllMyLeadsLoading) {
     return (
@@ -87,28 +138,34 @@ export default function MyLeads() {
             Create New Lead
           </Button>
         </div>
-        <div className="mt-5 max-w-[1400px] mx-auto">
-          {allMyLeads?.data?.length === 0 && (
-            <JobRequest modalOpen={modalOpen} setModalOpen={setModalOpen} />
-          )}
+        <div className="max-h-[calc(100vh-170px)] overflow-y-auto">
+          <div className="mt-5 max-w-[1400px] mx-auto" ref={scrollContainerRef}>
+            {leads?.length === 0 && (
+              <JobRequest modalOpen={modalOpen} setModalOpen={setModalOpen} />
+            )}
 
-          {allMyLeads?.data?.length > 0 && (
-            <>
-              {/* <div className="flex justify-between items-center my-5">
+            {leads?.length > 0 && (
+              <>
+                {/* <div className="flex justify-between items-center my-5">
               <FilterDropdown />
               <button className="bg-green-700 p-[10px] flex items-center gap-2 text-white rounded-lg">
                 <CircleX className="w-4 h-4" /> <span>Approve</span>
               </button>
             </div> */}
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-4 mt-5 max-h-[calc(100vh-170px)] overflow-y-auto pr-2">
-                {allMyLeads?.data?.map((lead, index) => (
-                  // <JobPostCard key={index} lead={lead} />
-                  <ClientLeadCard key={index} user={lead} />
-                ))}
-              </div>
-            </>
-          )}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-4 mt-5 pr-2">
+                  {leads?.map((lead, index) => (
+                    // <JobPostCard key={index} lead={lead} />
+                    <ClientLeadCard key={index} user={lead} />
+                  ))}
+                  {hasMore && (
+                    <div className="py-6 text-center">
+                      <Loader className="w-5 h-5 animate-spin text-gray-500 mx-auto" />
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
       <ClientNewLeadRegistrationModal
