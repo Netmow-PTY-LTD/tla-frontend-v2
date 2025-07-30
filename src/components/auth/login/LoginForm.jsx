@@ -166,9 +166,9 @@ const LoginForm = () => {
 
         {/* Footer with Register Link */}
         <div className="tla-auth-footer text-center">
-          <span>Offering a service? </span>
+          <span>Offering a legal service? </span>
           <Link href="/register">
-            <b>Register as a professional</b>
+            <b>Join as a Lawyer</b>
           </Link>
         </div>
       </div>
