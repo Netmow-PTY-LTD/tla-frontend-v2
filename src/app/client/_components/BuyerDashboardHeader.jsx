@@ -5,6 +5,7 @@ import React from 'react';
 import BuyerProfileDropDown from './BuyerProfileDropDown';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { BellRing, PanelLeft } from 'lucide-react';
+import NotificationDropdown from '@/components/dashboard/common/NotificationDropdown';
 
 export default function BuyerDashboardHeader({ onToggleSidebar }) {
   const { data: userInfo, isLoading } = useAuthUserInfoQuery();
@@ -29,12 +30,13 @@ export default function BuyerDashboardHeader({ onToggleSidebar }) {
         </button>
       </div>
       <div className="flex items-center gap-4">
-        <Link
+        {/* <Link
           href="#"
           className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full"
         >
           <BellRing className="w-5 h-5 text-gray-500" />
-        </Link>
+        </Link> */}
+        <NotificationDropdown/>
         <BuyerProfileDropDown data={userInfo?.data ?? []} />
       </div>
     </header>

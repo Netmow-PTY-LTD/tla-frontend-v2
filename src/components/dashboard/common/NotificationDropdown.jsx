@@ -18,29 +18,26 @@ dayjs.extend(relativeTime);
 export default function NotificationDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
-   const currentUser = useSelector(selectCurrentUser);
-   console.log('currentUser',currentUser)
+  const currentUser = useSelector(selectCurrentUser);
+  console.log('currentUser', currentUser)
 
-  const { data, isLoading } = useGetNotificationsQuery({ read: false });
+  const { data, isLoading, refetch } = useGetNotificationsQuery({ read: false });
   const [markAsRead] = useMarkAsRedNotificationMutation();
   const notifications = data?.data || [];
 
 
-
-//  ---------------------- socket area ---------------------
-
-const [socketNotifications, setSocketNotifications] = useState([]);
-  
-
+  //  ---------------------- socket area ---------------------
   useNotifications(currentUser?._id, (data) => {
     console.log("🔔 Notification:", data);
-    setSocketNotifications((prev) => [data, ...prev]);
+    if (data?.userId) {
+      refetch()
+    }
+
   });
 
 
 
-
-  console.log('socketNotifications',socketNotifications)
+  // console.log('socketNotifications',socketNotifications)
 
 
 
