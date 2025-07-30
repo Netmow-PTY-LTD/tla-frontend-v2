@@ -3,7 +3,7 @@ export function getStaticMapUrl(address) {
   const params = new URLSearchParams({
     center: address,
     zoom: '15',
-    size: '1920x538',
+    size: '625x235',
     maptype: 'roadmap',
     key: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY, // exposed env var for frontend
   });
