@@ -46,22 +46,23 @@ export default function LeadResponseDetails({ onBack, response }) {
   const [openSms, setOpenSms] = useState(false);
   const currentUser = useSelector(selectCurrentUser);
 
-  const { data: singleResponse, isLoading: isSingleResponseLoading, refetch } =
-    useGetSingleResponseQuery(response?._id, {
-      skip: !response?._id,
-    });
+  const {
+    data: singleResponse,
+    isLoading: isSingleResponseLoading,
+    refetch,
+  } = useGetSingleResponseQuery(response?._id, {
+    skip: !response?._id,
+  });
 
   // console.log('singleResponse in details', singleResponse);
   const currentStatus = singleResponse?.data?.status || 'Pending';
   const toUser=singleResponse?.data?.responseBy?.user?._id;
   useNotifications(currentUser?._id, (data) => {
-    console.log("🔔 Notification:", data);
+    console.log('🔔 Notification:', data);
     if (data?.userId) {
-      refetch()
+      refetch();
     }
-
   });
-
 
   const [updateStatus] = useUpdateResponseStatusMutation();
   const [updateActivity] = useActivityLogMutation();
@@ -146,7 +147,7 @@ export default function LeadResponseDetails({ onBack, response }) {
             '_blank'
           );
         }
-      } catch (error) { }
+      } catch (error) {}
     }
     if (type === 'sendemail') {
       setOpenMail(true);
@@ -249,13 +250,13 @@ export default function LeadResponseDetails({ onBack, response }) {
                 <Mail />
                 Send Email
               </Button>
-              <Button
+              {/* <Button
                 onClick={() => handleActivity('sendsms')}
                 className="bg-[#34B7F1]"
               >
                 <MessageSquare />
                 Send SMS
-              </Button>
+              </Button> */}
             </div>
             <div className="mt-5 flex items-center gap-2">
               <Tag />
@@ -289,10 +290,11 @@ export default function LeadResponseDetails({ onBack, response }) {
               <div className="flex border-b border-gray-200 gap-6">
                 <button
                   onClick={() => setActiveTab('activity')}
-                  className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
-                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                    : 'hover:text-black'
-                    }`}
+                  className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                    activeTab === 'activity'
+                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                      : 'hover:text-black'
+                  }`}
                 >
                   Activity
                 </button>
@@ -319,16 +321,18 @@ export default function LeadResponseDetails({ onBack, response }) {
                       return (
                         <Fragment key={index}>
                           <div
-                            className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${index === 0 ? '' : 'border-l border-[#e6e7ec]'
-                              }`}
+                            className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${
+                              index === 0 ? '' : 'border-l border-[#e6e7ec]'
+                            }`}
                           >
                             {formattedDate}
                           </div>
                           {activity?.logs?.map((item, i) => {
                             return (
                               <div
-                                className={`activity-log-item flex gap-2 ${index === 0 && i === 0 ? 'first-log-item' : ''
-                                  }`}
+                                className={`activity-log-item flex gap-2 ${
+                                  index === 0 && i === 0 ? 'first-log-item' : ''
+                                }`}
                                 key={i}
                               >
                                 <div className="left-track flex-grow-0 flex flex-col w-[32px] items-center">

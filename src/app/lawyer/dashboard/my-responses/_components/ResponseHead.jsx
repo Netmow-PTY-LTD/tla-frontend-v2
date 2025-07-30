@@ -7,11 +7,14 @@ import FilterResponseSidebar from '../../_component/FilterResponseSidebar';
 import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
-export default function ResponseHead({ isExpanded, data, setQueryParams, queryParams }) {
-    const router = useRouter();
+export default function ResponseHead({
+  isExpanded,
+  data,
+  setQueryParams,
+  queryParams,
+}) {
+  const router = useRouter();
   const pathname = usePathname(); // current route without query params
-
-
 
   const pendingStatusLength = data?.filter(
     (item) => item.status === 'pending'
@@ -20,7 +23,6 @@ export default function ResponseHead({ isExpanded, data, setQueryParams, queryPa
   const hiredStatusLength = data?.filter(
     (item) => item.status === 'hired'
   )?.length;
-
 
   const defaultQueryParams = {
     page: 1,
@@ -48,33 +50,37 @@ export default function ResponseHead({ isExpanded, data, setQueryParams, queryPa
   };
 
   const hasActiveFilters = Object.keys(defaultQueryParams).some(
-    key => queryParams[key] !== defaultQueryParams[key]
+    (key) => queryParams[key] !== defaultQueryParams[key]
   );
 
-  const urgent=data?.filter((item)=>item.leadId.leadPriority==="urgent").length;
- 
+  const urgent = data?.filter(
+    (item) => item.leadId.leadPriority === 'urgent'
+  ).length;
 
   return (
     <section className={`${isExpanded ? '' : 'pl-4 pr-1'}`}>
       <div className="flex justify-between items-center gap-4">
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-1 sm:gap-4">
           <h2
-            className={`font-bold ${isExpanded ? 'text-[24px]' : 'text-[16px]'
-              } text-[#0B1C2D] text-left`}
+            className={`font-bold ${
+              isExpanded ? 'text-[24px]' : 'text-[16px]'
+            } text-[#0B1C2D] text-left`}
           >
             {data?.length} {data?.length > 1 ? 'Responses' : 'Response'}
           </h2>
           <div className="flex items-center gap-3">
             <button
-              className={`flex item-center leading-none ${isExpanded ? 'text-[14px]' : 'text-[12px]'
-                }`}
+              className={`flex item-center leading-none ${
+                isExpanded ? 'text-[14px]' : 'text-[12px]'
+              }`}
             >
               <span className={`w-3 h-3 rounded-full bg-[#FF8602] mr-1`}></span>
               <span>{pendingStatusLength} Pending</span>
             </button>
             <button
-              className={`flex item-center leading-none ${isExpanded ? 'text-[14px]' : 'text-[12px]'
-                }`}
+              className={`flex item-center leading-none ${
+                isExpanded ? 'text-[14px]' : 'text-[12px]'
+              }`}
             >
               <span className={`w-3 h-3 rounded-full bg-[#00C3C0] mr-1`}></span>
               <span>{hiredStatusLength || 0} Hired</span>
@@ -83,17 +89,18 @@ export default function ResponseHead({ isExpanded, data, setQueryParams, queryPa
         </div>
         <Link
           href={'/lawyer/settings/profile'}
-          className={`${isExpanded ? 'admin-text' : 'text-[12px]'
-            } py-1 px-2 bg-[#FF8602] rounded-[5px] text-white hover:bg-[#FF8602] transition-all flex items-center gap-2`}
+          className={`${
+            isExpanded ? 'admin-text' : 'text-[12px]'
+          } py-1 px-2 bg-[#FF8602] rounded-[5px] text-white hover:bg-[#FF8602] transition-all flex items-center gap-2`}
         >
-          <span>View All</span>
+          <span>All</span>
         </Link>
       </div>
 
       <div className="flex flex-wrap justify-between items-center mt-3 mb-3 gap-2">
         <div className="flex flex-wrap items-center gap-2 text-[#34495E]">
           <div className="lg:flex items-center gap-2">
-            {!isExpanded &&hasActiveFilters && (
+            {!isExpanded && hasActiveFilters && (
               <div
                 className="text-[#C72C41] text-[11px] flex items-center gap-2"
                 onClick={() => {
@@ -108,8 +115,8 @@ export default function ResponseHead({ isExpanded, data, setQueryParams, queryPa
                     clientActions: '',
                     actionsTaken: '',
                     leadSubmission: '',
-                  })
-                  clearFilters()
+                  });
+                  clearFilters();
                 }}
               >
                 <span>Clear</span>
@@ -137,7 +144,10 @@ export default function ResponseHead({ isExpanded, data, setQueryParams, queryPa
           </div>
         </div>
 
-        <FilterResponseSidebar queryParams={queryParams} setQueryParams={setQueryParams} />
+        <FilterResponseSidebar
+          queryParams={queryParams}
+          setQueryParams={setQueryParams}
+        />
       </div>
 
       <hr className="w-full bg-[#F3F3F3] h-[1px]" />

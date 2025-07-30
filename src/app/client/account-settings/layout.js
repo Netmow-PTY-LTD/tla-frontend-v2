@@ -10,11 +10,11 @@ const SettingsLayout = ({ children }) => {
       href: '/client/account-settings/profile',
       icon: <UserIcon className="w-4 h-4" />,
     },
-    {
-      label: 'Notification',
-      href: '/client/account-settings/notification',
-      icon: <Bell className="w-4 h-4" />,
-    },
+    // {
+    //   label: 'Notification',
+    //   href: '/client/account-settings/notification',
+    //   icon: <Bell className="w-4 h-4" />,
+    // },
   ];
 
   return (
