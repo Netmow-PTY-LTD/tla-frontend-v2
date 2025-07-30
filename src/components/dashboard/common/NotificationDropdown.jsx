@@ -19,7 +19,6 @@ export default function NotificationDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const currentUser = useSelector(selectCurrentUser);
-  console.log('currentUser', currentUser)
 
   const { data, isLoading, refetch } = useGetNotificationsQuery({ read: false });
   const [markAsRead] = useMarkAsRedNotificationMutation();
@@ -34,24 +33,6 @@ export default function NotificationDropdown() {
     }
 
   });
-
-
-
-  // console.log('socketNotifications',socketNotifications)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

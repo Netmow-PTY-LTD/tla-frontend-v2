@@ -36,6 +36,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React, { Fragment, useState } from 'react';
 import { useSelector } from 'react-redux';
+import SendMailModalForClient from './my-leads/SendMailModalForClient';
+import SendSmsModalClient from './my-leads/SendSmsModalClient';
 
 export default function LeadResponseDetails({ onBack, response }) {
   const [activeTab, setActiveTab] = useState('activity');
@@ -49,7 +51,7 @@ export default function LeadResponseDetails({ onBack, response }) {
       skip: !response?._id,
     });
 
-  console.log('singleResponse in details', singleResponse);
+  // console.log('singleResponse in details', singleResponse);
   const currentStatus = singleResponse?.data?.status || 'Pending';
 
   useNotifications(currentUser?._id, (data) => {
@@ -59,7 +61,6 @@ export default function LeadResponseDetails({ onBack, response }) {
     }
 
   });
-
 
 
   const [updateStatus] = useUpdateResponseStatusMutation();
@@ -376,12 +377,12 @@ export default function LeadResponseDetails({ onBack, response }) {
         </div>
       </div>
 
-      <SendMailModal
+      <SendMailModalForClient
         info={singleResponse?.data}
         openMail={openMail}
         setOpenMail={setOpenMail}
       />
-      <SendSmsModal
+      <SendSmsModalClient
         info={singleResponse?.data}
         openSms={openSms}
         setOpenSms={setOpenSms}

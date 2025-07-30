@@ -13,7 +13,7 @@ const LeadResponseCard = ({
   response,
   isExpanded,
 }) => {
-  console.log('response', response);
+
   const { data: singleLeadResponse, isLoading } = useGetSingleLeadQuery(
     response?._id
   );
