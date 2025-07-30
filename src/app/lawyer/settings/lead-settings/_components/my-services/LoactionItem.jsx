@@ -19,7 +19,7 @@ const LocationItem = ({ location }) => {
           </div>
         </div>
       </div>
-      <div className="flex gap-2">
+      {/* <div className="flex gap-2">
         {location?.locationGroupId?.zipcode !== 'Nationwide' ? (
           <Button variant="ghost" size="icon" className="h-8 w-8">
             <Trash2 className="h-4 w-4 text-gray-500" />
@@ -30,7 +30,7 @@ const LocationItem = ({ location }) => {
         <Button variant="ghost" size="icon" className="h-8 w-8">
           <Edit className="h-4 w-4 text-gray-500" />
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 };
