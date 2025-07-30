@@ -42,8 +42,6 @@ const LeadBoardPage = () => {
     setLeads([]);
   }, []);
 
-
-
   // Fetch paginated leads
 
   const {
@@ -61,9 +59,6 @@ const LeadBoardPage = () => {
     setPage(1);
   }, [searchKeyword]);
 
-
-
-
   // Set leads and manage pagination state
   useEffect(() => {
     if (!data) return;
@@ -77,13 +72,17 @@ const LeadBoardPage = () => {
       return updatedLeads;
     });
     const totalPage = data?.pagination?.totalPage;
-    if (typeof totalPage !== 'number' || totalPage <= 0 || typeof totalPage == 'undefined' || totalPage == null) {
+    if (
+      typeof totalPage !== 'number' ||
+      totalPage <= 0 ||
+      typeof totalPage == 'undefined' ||
+      totalPage == null
+    ) {
       setHasMore(false);
     } else {
       setHasMore(page < totalPage);
     }
   }, [data, page]);
-
 
   // Scroll event handler for infinite loading
   useEffect(() => {
@@ -107,13 +106,11 @@ const LeadBoardPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasMore, isFetching, scrollContainerRef?.current]);
 
-
   console.log({
     page,
     hasMore: scrollContainerRef.current,
     isFetching,
   });
-
 
   // Set first lead on initial load or leads update
   useEffect(() => {
@@ -122,13 +119,9 @@ const LeadBoardPage = () => {
     }
   }, [leads, selectedLead]);
 
-
-
   // Fetch detailed data for selected lead
   const { data: selectedLeadData, isLoading: isSingleLeadLoading } =
     useGetSingleLeadQuery(selectedLead?._id, { skip: !selectedLead?._id });
-
-
 
   // Show loading skeleton
 
@@ -171,6 +164,8 @@ const LeadBoardPage = () => {
     );
   }
 
+  console.log('leads', leads);
+
   return (
     <div className="lead-board-wrap">
       {leads?.length > 0 ? (
@@ -193,8 +188,9 @@ const LeadBoardPage = () => {
           )}
 
           <div
-            className={`${showLeadDetails ? 'right-column-4 ' : 'right-column-full'
-              }`}
+            className={`${
+              showLeadDetails ? 'right-column-4 ' : 'right-column-full'
+            }`}
           >
             <div className="column-wrap-right" ref={scrollContainerRef}>
               <div className="leads-top-row">
@@ -205,6 +201,7 @@ const LeadBoardPage = () => {
                   searchKeyword={searchKeyword}
                   setLeads={setLeads}
                   setSelectedLead={setSelectedLead}
+                  leads={leads}
                 />
               </div>
               <div className="leads-bottom-row max-w-[1400px] mx-auto">
@@ -248,4 +245,3 @@ const LeadBoardPage = () => {
 };
 
 export default LeadBoardPage;
-

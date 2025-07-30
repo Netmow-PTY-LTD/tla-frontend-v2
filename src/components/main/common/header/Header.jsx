@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './Header.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -7,13 +7,23 @@ import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import { useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { Arrow } from '@radix-ui/react-dropdown-menu';
-import { ArrowDown, ChevronDown, Hammer } from 'lucide-react';
+import {
+  ArrowDown,
+  ArrowLeft,
+  ChevronDown,
+  ChevronRight,
+  Hammer,
+} from 'lucide-react';
 import Gavel from '@/components/icon/Gavel';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { usePathname, useRouter } from 'next/navigation';
+import { useGetAllCategoriesQuery } from '@/store/features/public/catagorywiseServiceApiService';
 
 export default function Header() {
   const [isHeaderFixed, setIsHeaderFixed] = useState();
+  const [showSubMenu, setShowSubMenu] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const subMenuRef = useRef();
 
   const pathname = usePathname();
   const router = useRouter();
@@ -77,13 +87,32 @@ export default function Header() {
   //   }
   // }, [pathname, token, currentUser, router]);
 
+  const handleOpenSubMenu = (e) => {
+    e.preventDefault();
+    setShowSubMenu(!showSubMenu);
+  };
+
+  // Handle outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (subMenuRef.current && !subMenuRef.current.contains(event.target)) {
+        setShowSubMenu(false);
+        setSelectedCategory(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const { data: allCategories } = useGetAllCategoriesQuery();
+
   return (
     <header
       className={`${styles.main_header} ${isHeaderFixed ? styles.sticky : ''}`}
     >
       <div className="container-lg">
-        <div className="flex items-center gap-4">
-          <Link href="/">
+        <div className="flex items-center gap-4 md:gap-6">
+          <Link href="/" className={styles.logo}>
             <Image
               src={'/assets/img/logo.png'}
               alt="TLA Logo"
@@ -91,14 +120,91 @@ export default function Header() {
               height={40}
             />
           </Link>
-          <nav className="hidden lg:flex">
+          <nav className="relative">
             <ul className="flex items-center gap-6">
               <li>
-                <Link href="/" className={styles.nav_link}>
+                <Link
+                  href="#"
+                  className={styles.nav_link}
+                  onClick={handleOpenSubMenu}
+                >
                   <span>Explore</span>
-                  <ChevronDown />
+                  <ChevronDown
+                    className={`w-4 h-4 ${
+                      showSubMenu ? 'rotate-180' : ''
+                    } transition-all duration-300 ease-in-out`}
+                  />
                 </Link>
+                {showSubMenu && (
+                  <div className="submenu" ref={subMenuRef}>
+                    <div
+                      className={`submenu-content ${
+                        selectedCategory ? 'show-services' : ''
+                      }`}
+                    >
+                      {/* Category List */}
+                      <div className="submenu-categories">
+                        <div className="flex justify-between items-center mb-2 border-b pb-2">
+                          <div className="font-semibold">Services</div>
+                          <Link
+                            href="/services"
+                            className="text-[13px] font-semibold underline"
+                          >
+                            View All
+                          </Link>
+                        </div>
+                        <ul>
+                          {allCategories?.data?.map((category, index) => (
+                            <li key={index}>
+                              <Link
+                                href={`#`}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  setSelectedCategory(category);
+                                }}
+                                className="cursor-pointer flex justify-between items-center font-medium"
+                              >
+                                <div className="flex items-center gap-3">
+                                  <img
+                                    src={category?.image}
+                                    alt={category?.name}
+                                    className="w-6 h-6"
+                                  />
+                                  <span>{category?.name}</span>
+                                </div>
+                                <ChevronRight className="w-4 h-4" />
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Services List */}
+                      <div className="submenu-services">
+                        <button
+                          onClick={() => setSelectedCategory(null)}
+                          className="mb-2 text-md font-semibold text-black hover:underline inline-flex items-center gap-2"
+                        >
+                          <ArrowLeft className="w-4 h-4" /> Back to categories
+                        </button>
+                        <ul className="border-t pt-2">
+                          {selectedCategory?.services?.map((service, i) => (
+                            <li key={i} className="mb-1">
+                              <Link
+                                href={`/services/${service?.slug}`}
+                                className={styles.nav_link}
+                              >
+                                {service?.name}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </li>
+
               {/* <li>
                 <Link href="/services" className={styles.nav_link}>
                   <span>Find Clients</span>
