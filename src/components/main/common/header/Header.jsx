@@ -13,6 +13,7 @@ import {
   ChevronDown,
   ChevronRight,
   Hammer,
+  X,
 } from 'lucide-react';
 import Gavel from '@/components/icon/Gavel';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
@@ -74,7 +75,7 @@ export default function Header() {
   };
 
   const handleModalOpen = () => {
-    setServiceWiseQuestions(null); // Reset serviceWiseQuestions when opening the modal
+    //setServiceWiseQuestions(null); // Reset serviceWiseQuestions when opening the modal
     setModalOpen(true);
   };
 
@@ -147,8 +148,16 @@ export default function Header() {
                 </Link>
                 {showSubMenu && (
                   <div className="submenu" ref={subMenuRef}>
+                    <div className="flex justify-end md:hidden pt-2 px-4">
+                      <button
+                        className="text-gray-500"
+                        onClick={() => setShowSubMenu(false)}
+                      >
+                        <X />
+                      </button>
+                    </div>
                     <div
-                      className={`submenu-content ${
+                      className={`submenu-content flex-1 ${
                         selectedCategory ? 'show-services' : ''
                       }`}
                     >
@@ -297,7 +306,7 @@ export default function Header() {
               <Link href="/login" className={styles.nav_link}>
                 <span>Log In</span>
               </Link>
-              <Link href="/register" className={styles.btn_register}>
+              <Link href="/register" className={`${styles.btn_register}`}>
                 <div className="icon w-6 h-6 bg-white flex items-center justify-center rounded-full">
                   <Gavel className="w-4 h-4 text-black" />
                 </div>
