@@ -44,14 +44,14 @@ const ClientLeadCard = ({ user, isExpanded }) => {
     <Card className="w-full max-w-full mx-auto">
       {/* Header Section */}
       <div className="flex flex-wrap bg-[#004DA61A] sm:flex-nowrap items-center gap-3 p-3 rounded-tl-xl rounded-tr-xl">
-        <figure className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+        <figure className="w-8 h-8 overflow-hidden flex-shrink-0">
           <Image
             src={`${user?.userProfileId?.profilePicture ?? userDummyImage}`}
             alt={user?.userProfileId?.name ?? 'John Doe'}
             width={40}
             height={40}
             priority
-            className="rounded-full object-cover border"
+            className="w-full h-full rounded-full object-cover"
           />
         </figure>
 
