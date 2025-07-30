@@ -101,7 +101,7 @@ export default function LeadDetailsPage() {
               </div>
               <div className="mt-3">
                 <div className="flex flex-col items-start gap-4 ">
-                  <figure className="w-20 h-20 overflow-hidden border rounded-full">
+                  <figure className="w-20 h-20 overflow-hidden rounded-full">
                     <Image
                       src={
                         singleLead?.data?.userProfileId?.profilePicture ??
