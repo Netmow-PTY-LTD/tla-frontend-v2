@@ -9,6 +9,8 @@ import FormWrapper from "@/components/form/FromWrapper";
 import TextInput from "@/components/form/TextInput";
 import { Button } from "@/components/ui/button";
 import { useForgotPassowrdMutation } from "@/store/features/auth/authApiService";
+import Header from "@/components/main/common/header/Header";
+import Footer from "@/components/main/common/footer/Footer";
 
 
 const ForgotPassword = () => {
@@ -23,7 +25,7 @@ const ForgotPassword = () => {
     }, []);
 
     const [handleforgotPassword, { isLoading, isSuccess, data }] = useForgotPassowrdMutation();
- 
+
     useEffect(() => {
         if (data && !data?.success) {
             toast.error(data?.message);
@@ -40,19 +42,19 @@ const ForgotPassword = () => {
     }, [isLoading, isSuccess, data]);
 
     const onSubmit = (data) => {
-        handleforgotPassword(data);  
+        handleforgotPassword(data);
     };
 
     return (
         <>
-            {isLoading}
+            <Header />
             <div className="flex h-[calc(100vh-200px)] w-full flex-col items-center justify-center">
                 <h3 className="my-4 text-3xl font-bold ">Forgot Password</h3>
                 <p className="mb-6 text-lg">Enter your email to reset your password</p>
 
                 <div className="w-full max-w-md">
                     <FormWrapper
-                            // schema={}
+                        // schema={}
                         onSubmit={onSubmit}
                     >
                         <div className="py-4">
@@ -76,6 +78,7 @@ const ForgotPassword = () => {
                     </div>
                 </div>
             </div>
+            <Footer />
         </>
     );
 };
