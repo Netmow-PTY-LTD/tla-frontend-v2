@@ -31,7 +31,7 @@ export default function NotificationDropdownClient() {
     if (data?.userId) {
       refetch()
     }
-
+    
   });
 
 
