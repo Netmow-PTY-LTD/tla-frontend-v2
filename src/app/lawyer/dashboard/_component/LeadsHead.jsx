@@ -35,6 +35,8 @@ export default function LeadsHead({
     });
   };
 
+  const urgent=leads?.filter((item)=>item.leadPriority==="urgent").length;
+
   return (
     <section className={`pr-2 ${isExpanded ? '' : 'pl-4'}`}>
       <div className="flex justify-between items-start gap-4">
@@ -95,7 +97,7 @@ export default function LeadsHead({
 
             <div className="inline-flex flex-wrap gap-1">
               <TagButton
-                text="Urgent(51)"
+                 text={`Urgent(${urgent})`}
                 bgColor="#EF8D32"
                 textColor="text-[#fff]"
                 fontSize={isExpanded ? 'text-[12px]' : 'text-[9px]'}
