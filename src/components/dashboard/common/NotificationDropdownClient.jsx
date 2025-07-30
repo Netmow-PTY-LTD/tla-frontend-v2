@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux';
 
 dayjs.extend(relativeTime);
 
-export default function NotificationDropdown() {
+export default function NotificationDropdownClient() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const currentUser = useSelector(selectCurrentUser);
@@ -74,7 +74,7 @@ export default function NotificationDropdown() {
       </div>
 
       {isOpen && (
-        <ul className="absolute right-0 bg-white shadow-[0_6px_16px_#0006] rounded w-72 mt-2 max-h-96 overflow-y-auto z-[99]">
+        <ul className="absolute right-0 bg-white shadow-[0_6px_16px_#0006] rounded w-72 mt-2 max-h-96 overflow-y-auto z-50">
           {isLoading ? (
             <li className="px-3 py-2 text-sm text-gray-500">Loading...</li>
           ) : notifications.length > 0 ? (
@@ -94,7 +94,7 @@ export default function NotificationDropdown() {
               ))}
               <li className="text-center py-2">
                 <Link
-                  href="/lawyer/notifications"
+                  href="/client/notifications"
                   className="text-blue-500 text-sm hover:underline"
                 >
                   View all

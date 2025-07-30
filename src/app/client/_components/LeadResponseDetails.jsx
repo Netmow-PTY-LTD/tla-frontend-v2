@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button';
 import { userDummyImage } from '@/data/data';
 import { getCompactTimeAgo } from '@/helpers/formatTime';
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
+import { useNotifications } from '@/hooks/useSocketListener';
+import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import {
   useActivityLogMutation,
   useGetSingleResponseQuery,
@@ -33,20 +35,33 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { Fragment, useState } from 'react';
+import { useSelector } from 'react-redux';
+import SendMailModalForClient from './my-leads/SendMailModalForClient';
+import SendSmsModalClient from './my-leads/SendSmsModalClient';
 
 export default function LeadResponseDetails({ onBack, response }) {
   const [activeTab, setActiveTab] = useState('activity');
   const [isExpanded, setIsExpanded] = useState(false);
   const [openMail, setOpenMail] = useState(false);
   const [openSms, setOpenSms] = useState(false);
+  const currentUser = useSelector(selectCurrentUser);
 
-  const { data: singleResponse, isLoading: isSingleResponseLoading } =
+  const { data: singleResponse, isLoading: isSingleResponseLoading, refetch } =
     useGetSingleResponseQuery(response?._id, {
       skip: !response?._id,
     });
 
-  console.log('singleResponse in details', singleResponse);
+  // console.log('singleResponse in details', singleResponse);
   const currentStatus = singleResponse?.data?.status || 'Pending';
+
+  useNotifications(currentUser?._id, (data) => {
+    console.log("🔔 Notification:", data);
+    if (data?.userId) {
+      refetch()
+    }
+
+  });
+
 
   const [updateStatus] = useUpdateResponseStatusMutation();
   const [updateActivity] = useActivityLogMutation();
@@ -130,7 +145,7 @@ export default function LeadResponseDetails({ onBack, response }) {
             '_blank'
           );
         }
-      } catch (error) {}
+      } catch (error) { }
     }
     if (type === 'sendemail') {
       setOpenMail(true);
@@ -273,11 +288,10 @@ export default function LeadResponseDetails({ onBack, response }) {
               <div className="flex border-b border-gray-200 gap-6">
                 <button
                   onClick={() => setActiveTab('activity')}
-                  className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                    activeTab === 'activity'
-                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                      : 'hover:text-black'
-                  }`}
+                  className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
+                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                    : 'hover:text-black'
+                    }`}
                 >
                   Activity
                 </button>
@@ -304,18 +318,16 @@ export default function LeadResponseDetails({ onBack, response }) {
                       return (
                         <Fragment key={index}>
                           <div
-                            className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${
-                              index === 0 ? '' : 'border-l border-[#e6e7ec]'
-                            }`}
+                            className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${index === 0 ? '' : 'border-l border-[#e6e7ec]'
+                              }`}
                           >
                             {formattedDate}
                           </div>
                           {activity?.logs?.map((item, i) => {
                             return (
                               <div
-                                className={`activity-log-item flex gap-2 ${
-                                  index === 0 && i === 0 ? 'first-log-item' : ''
-                                }`}
+                                className={`activity-log-item flex gap-2 ${index === 0 && i === 0 ? 'first-log-item' : ''
+                                  }`}
                                 key={i}
                               >
                                 <div className="left-track flex-grow-0 flex flex-col w-[32px] items-center">
@@ -365,12 +377,12 @@ export default function LeadResponseDetails({ onBack, response }) {
         </div>
       </div>
 
-      <SendMailModal
+      <SendMailModalForClient
         info={singleResponse?.data}
         openMail={openMail}
         setOpenMail={setOpenMail}
       />
-      <SendSmsModal
+      <SendSmsModalClient
         info={singleResponse?.data}
         openSms={openSms}
         setOpenSms={setOpenSms}

@@ -1,35 +1,24 @@
+'use client';
+
 import FamilyLawCard from '@/components/main/common/card/FamilyLawCard';
 import ServiceDetailsCard from '@/components/main/common/card/ServiceDetailsCard';
 import MainLayout from '@/components/main/common/layout';
+import HomeCTA from '@/components/main/home/HomeCTA';
 import SectionHeading from '@/components/main/home/SectionHeading';
 import WorkingSteps from '@/components/main/WorkingSteps';
-import { useGetServiceBySlugQuery } from '@/store/features/public/publicApiService';
-
+import { useSingleServiceQuery } from '@/store/features/admin/servicesApiService';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import React from 'react';
 
-const SingleServiceDetailsPage = async ({ params }) => {
-  const { slug } = await params;
+const SingleServiceDetailsPage = () => {
+  const params = useParams();
+  const { slug } = params;
 
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL_PROD}/${process.env.NEXT_PUBLIC_API_VERSION_PROD}/public/services/${slug}`,
-      {
-        method: 'GET',
-      }
-    );
-    const singleService = await res.json();
-    console.log('single services', singleService);
-  } catch (error) {
-    console.log('eroror return==>', error);
-  }
-  // Check if the service exists
-  // if (!res.ok) {
-  //   throw new Error('Service not found');
-  // }
+  const { data: singleService } = useSingleServiceQuery(slug);
 
-  // Parse the response
+  console.log('singleService', singleService);
 
   return (
     <MainLayout>
@@ -55,52 +44,7 @@ const SingleServiceDetailsPage = async ({ params }) => {
         </div>
       </section>
       <WorkingSteps />
-      <section className="home-cta">
-        <div className="container">
-          <div className="home-cta-content">
-            <div className="flex flex-wrap">
-              <div className="w-full md:w-1/2 lg:w-5/12">
-                <div className="home-cta-text md:pr-5 lg:pr-20">
-                  <h2>Take the Next Step – Get Legal Help Today!</h2>
-                  <div className="cta-text">
-                    <ul>
-                      <li>
-                        <b>For Clients: </b>Need help with family law? Post your
-                        case and receive free bids from top-rated lawyers!
-                      </li>
-                      <li>
-                        <b>For Lawyers: </b>Looking for clients in family law?
-                        Join now and start receiving cases instantly!
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="home-cta-button flex gap-2">
-                    <Link href="/register" className="btn-default btn-primary">
-                      Join as Client
-                    </Link>
-                    <Link
-                      href="/register"
-                      className="btn-default btn-outline-black"
-                    >
-                      Join as Lawyer
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <div className="w-full md:w-1/2 lg:w-7/12">
-                <div className="home-cta-images">
-                  <div className="cta-shape"></div>
-                  <img
-                    src="/assets/img/cta-img.png"
-                    alt="home cta"
-                    className="cta-img-2"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HomeCTA />
     </MainLayout>
   );
 };

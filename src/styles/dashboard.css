@@ -317,7 +317,7 @@
   position: sticky;
   top: 0;
   background-color: #f3f3f3;
-  z-index: 9;
+  z-index: 1;
 }
 
 .dashboard-content {
