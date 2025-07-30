@@ -43,60 +43,36 @@ import SendMailModal from './modal/SendMailModal';
 import SendSmsModal from './modal/SendSmsModal';
 import { getCompactTimeAgo } from '@/helpers/formatTime';
 import { userDummyImage } from '@/data/data';
-import { useDispatch } from 'react-redux';
-import { getSocket } from '@/lib/socket';
+import { useDispatch, useSelector } from 'react-redux';
 import {
-  useResponseRoom,
-  useResponseRoomUser,
-  useSocketListener,
+  useNotifications,
+
 } from '@/hooks/useSocketListener';
-import { useSocketContext } from '@/contexts/SocketContext';
+import { selectCurrentUser } from '@/store/features/auth/authSlice';
+
 
 export default function MyResponseDetails({ onBack, response, responseId }) {
   const [activeTab, setActiveTab] = useState('activity');
   const [isExpanded, setIsExpanded] = useState(false);
   const [openMail, setOpenMail] = useState(false);
   const [openSms, setOpenSms] = useState(false);
-  const dispatch = useDispatch();
-  const { data: singleResponse, isLoading: isSingleResponseLoading } =
+     const currentUser = useSelector(selectCurrentUser);
+  const { data: singleResponse, isLoading: isSingleResponseLoading,refetch } =
     useGetSingleResponseQuery(responseId ? responseId : response?._id, {
       skip: !responseId && !response?._id,
     });
 
-  // // Listen for updates
-  // useSocketListener("notification", (updatedData) => {
-  //   console.log("Real-time response data:", updatedData);
 
-  //   // Update RTK Query cache
-  //   dispatch(
-  //     responseApiService.util.updateQueryData("getSingleResponse", responseId ? responseId : response?._id, (draft) => {
-  //       Object.assign(draft.data, updatedData);
-  //     })
-  //   );
-  // });
 
-  // useEffect(() => {
-  //   const socket = getSocket();
-  //   socket.emit("join_room", responseId ? responseId : response?._id);
+  useNotifications(currentUser?._id, (data) => {
+    console.log("🔔 Notification:", data);
+    if(data?.userId){
+      refetch()
+    }
+ 
+  });
 
-  //   return () => {
-  //     socket.emit("leave_room", responseId ? responseId : response?._id);
-  //   };
-  // }, [responseId ? responseId : response?._id]);
 
-  // const { userId, socket } = useSocketContext();
-
-  // useResponseRoom(
-  //   response?._id || responseId,
-  //   (data) => {
-  //     console.log('💬 Response room update received:', data);
-  //   },
-  //   userId
-  // );
-
-  // useResponseRoomUser(userId, (data) => {
-  //   console.log('💬 Response room update received:', data);
-  // });
 
   const badge = singleResponse?.data?.leadId?.userProfileId?.profileType;
 

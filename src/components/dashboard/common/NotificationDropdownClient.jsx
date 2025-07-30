@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux';
 
 dayjs.extend(relativeTime);
 
-export default function NotificationDropdown() {
+export default function NotificationDropdownClient() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const currentUser = useSelector(selectCurrentUser);
@@ -94,7 +94,7 @@ export default function NotificationDropdown() {
               ))}
               <li className="text-center py-2">
                 <Link
-                  href="/lawyer/notifications"
+                  href="/client/notifications"
                   className="text-blue-500 text-sm hover:underline"
                 >
                   View all

@@ -9,10 +9,9 @@ import { Loader2 } from 'lucide-react'
 import React from 'react'
 import { toast } from 'sonner'
 
-export default function SendSmsModal({ openSms, setOpenSms, info }) {
+export default function SendSmsModalClient({ openSms, setOpenSms, info }) {
     const [sendSMS,{isLoading}] = useContactLeadMutation()
     const lead = info?.leadId?.userProfileId;
-
     const onSubmit = async (data) => {
         try {
             if (!data?.message?.trim()) {
@@ -20,7 +19,7 @@ export default function SendSmsModal({ openSms, setOpenSms, info }) {
                 return;
             }
 
-            const toPhone = info?.leadId?.userProfileId?.phone;
+            const toPhone = info?.responseBy?.phone;
             const leadId = info?.leadId?._id;
             const responseId = info?._id;
 
@@ -76,6 +75,7 @@ export default function SendSmsModal({ openSms, setOpenSms, info }) {
 
                     <div className="flex justify-center items-center">
                         <Button className="bg-[#34b7f1] mt-10 text-white">
+                           
                             {isLoading ? (
                                 <span className="flex items-center gap-2">
                                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -84,7 +84,7 @@ export default function SendSmsModal({ openSms, setOpenSms, info }) {
                             ) : (
                                 'Send SMS'
                             )}
-                            
+
                         </Button>
                     </div>
                 </FormWrapper>

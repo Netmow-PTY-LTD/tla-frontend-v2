@@ -18,7 +18,7 @@ export const SocketProvider = ({ children }) => {
   // ✅ Hooks must be called at top level
   useNotifications(userId, (data) => {
     console.log('🔔 Notification:', data);
-    alert(data.text);
+    // alert(data.text);
   });
 
   useResponseRoom(responseId, (data) => {
