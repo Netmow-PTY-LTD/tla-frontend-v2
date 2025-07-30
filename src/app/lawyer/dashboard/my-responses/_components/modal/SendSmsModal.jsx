@@ -5,11 +5,12 @@ import TextareaInput from '@/components/form/TextArea'
 import { Button } from '@/components/ui/button'
 import { Modal } from '@/components/UIComponents/Modal'
 import { useContactLeadMutation } from '@/store/features/lawyer/ResponseApiService'
+import { Loader2 } from 'lucide-react'
 import React from 'react'
 import { toast } from 'sonner'
 
 export default function SendSmsModal({ openSms, setOpenSms, info }) {
-    const [sendSMS] = useContactLeadMutation()
+    const [sendSMS,{isLoading}] = useContactLeadMutation()
     const lead = info?.leadId?.userProfileId;
 
     const onSubmit = async (data) => {
@@ -75,7 +76,15 @@ export default function SendSmsModal({ openSms, setOpenSms, info }) {
 
                     <div className="flex justify-center items-center">
                         <Button className="bg-[#34b7f1] mt-10 text-white">
-                            Send SMS
+                            {isLoading ? (
+                                <span className="flex items-center gap-2">
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                    Sending...
+                                </span>
+                            ) : (
+                                'Send SMS'
+                            )}
+                            
                         </Button>
                     </div>
                 </FormWrapper>

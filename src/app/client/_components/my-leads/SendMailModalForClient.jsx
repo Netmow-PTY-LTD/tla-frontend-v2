@@ -7,11 +7,12 @@ import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/UIComponents/Modal'
 
 import { useContactLeadMutation } from '@/store/features/lawyer/ResponseApiService';
-import React  from 'react'
+import { Loader2 } from 'lucide-react';
+import React from 'react'
 import { toast } from 'sonner';
 
 export default function SendMailModalForClient({ openMail, setOpenMail, info }) {
-    const [sendemail] = useContactLeadMutation()
+    const [sendemail, { isLoading }] = useContactLeadMutation()
     const lead = info?.leadId?.userProfileId;
 
 
@@ -47,7 +48,7 @@ export default function SendMailModalForClient({ openMail, setOpenMail, info }) 
             const result = await sendemail(emailPayload).unwrap();
             if (result?.success) {
 
-                console.log('result data ==>',result)
+                console.log('result data ==>', result)
                 toast.success(result.message || 'Email sent successfully');
                 setOpenMail(false)
             } else {
@@ -84,7 +85,14 @@ export default function SendMailModalForClient({ openMail, setOpenMail, info }) 
 
                     <div className="flex justify-center items-center">
                         <Button className="bg-[#4285f4] mt-10 text-white">
-                            Send Mail
+                            {isLoading ? (
+                                <span className="flex items-center gap-2">
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                    Sending...
+                                </span>
+                            ) : (
+                                'Send Mail'
+                            )}
                         </Button>
                     </div>
                 </FormWrapper>
