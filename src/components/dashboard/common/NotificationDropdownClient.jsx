@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Bell } from 'lucide-react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -19,20 +19,20 @@ export default function NotificationDropdownClient() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const currentUser = useSelector(selectCurrentUser);
-
   const { data, isLoading, refetch } = useGetNotificationsQuery({ read: false });
   const [markAsRead] = useMarkAsRedNotificationMutation();
   const notifications = data?.data || [];
 
 
   //  ---------------------- socket area ---------------------
-  useNotifications(currentUser?._id, (data) => {
-    console.log("🔔 Notification:", data);
-    if (data?.userId) {
-      refetch()
-    }
-    
-  });
+
+
+  useNotifications(currentUser?._id, useCallback((data) => {
+  console.log("🔔 Notification Lawyer Dashboard:", data);
+  if (data?.userId) {
+    refetch();
+  }
+}, [refetch]));
 
 
 
