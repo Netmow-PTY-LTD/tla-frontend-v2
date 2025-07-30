@@ -69,7 +69,7 @@
 }
 
 @media (max-width: 576px) {
-  .btn_register {
+  .btn_register_mobile {
     display: none;
   }
 }
