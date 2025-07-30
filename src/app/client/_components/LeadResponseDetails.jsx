@@ -56,7 +56,7 @@ export default function LeadResponseDetails({ onBack, response }) {
 
   // console.log('singleResponse in details', singleResponse);
   const currentStatus = singleResponse?.data?.status || 'Pending';
-
+  const toUser=singleResponse?.data?.responseBy?.user?._id;
   useNotifications(currentUser?._id, (data) => {
     console.log('🔔 Notification:', data);
     if (data?.userId) {
@@ -127,6 +127,7 @@ export default function LeadResponseDetails({ onBack, response }) {
   const handleActivity = async (type) => {
     if (type === 'whatsapp') {
       const whatsappActivityPayload = {
+        toUser:toUser,
         activityNote: 'You tried to contact via WhatsApp',
         activityType: 'whatsapp',
         module: 'response',

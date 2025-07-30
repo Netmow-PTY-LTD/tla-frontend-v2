@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 
 let socket = null;
 
-const url = process.env.NEXT_PUBLIC_SOCKET_URL;
+const url = process.env.NEXT_PUBLIC_BASE_URL;
 export const getSocket = (userId) => {
   // If userId not ready, don't create socket
   if (!userId) return null;

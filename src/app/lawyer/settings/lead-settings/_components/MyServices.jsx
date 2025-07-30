@@ -120,7 +120,7 @@ const ServicesList = () => {
         </section>
 
         {/* Remote Services Section */}
-        <section className="p-6">
+        {/* <section className="p-6">
           <h2 className="text-xl font-semibold text-gray-800 mb-2">
             Your Locations
           </h2>
@@ -142,7 +142,7 @@ const ServicesList = () => {
               View Leads
             </Link>
           </div>
-        </section>
+        </section> */}
       </div>
     </div>
   );

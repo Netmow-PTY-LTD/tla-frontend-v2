@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Bell } from 'lucide-react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -25,15 +25,13 @@ export default function NotificationDropdown() {
   const notifications = data?.data || [];
 
 
-  //  ---------------------- socket area ---------------------
-  useNotifications(currentUser?._id, (data) => {
-    console.log("🔔 Notification:", data);
-    if (data?.userId) {
-      refetch()
-    }
 
-  });
-
+  useNotifications(currentUser?._id, useCallback((data) => {
+  console.log("🔔 Notification Lawyer Dashboard:", data);
+  if (data?.userId) {
+    refetch();
+  }
+}, [refetch]));
 
 
   // Close dropdown on outside click
