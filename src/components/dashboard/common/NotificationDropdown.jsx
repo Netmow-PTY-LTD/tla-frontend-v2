@@ -9,16 +9,54 @@ import {
   useGetNotificationsQuery,
   useMarkAsRedNotificationMutation,
 } from '@/store/features/notification/notificationApiService';
+import { useNotifications } from '@/hooks/useSocketListener';
+import { selectCurrentUser } from '@/store/features/auth/authSlice';
+import { useSelector } from 'react-redux';
 
 dayjs.extend(relativeTime);
 
 export default function NotificationDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+   const currentUser = useSelector(selectCurrentUser);
+   console.log('currentUser',currentUser)
 
   const { data, isLoading } = useGetNotificationsQuery({ read: false });
   const [markAsRead] = useMarkAsRedNotificationMutation();
   const notifications = data?.data || [];
+
+
+
+//  ---------------------- socket area ---------------------
+
+const [socketNotifications, setSocketNotifications] = useState([]);
+  
+
+  useNotifications(currentUser?._id, (data) => {
+    console.log("🔔 Notification:", data);
+    setSocketNotifications((prev) => [data, ...prev]);
+  });
+
+
+
+
+  console.log('socketNotifications',socketNotifications)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   // Close dropdown on outside click
   useEffect(() => {

@@ -84,7 +84,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
   //   };
   // }, [responseId ? responseId : response?._id]);
 
-  // const { userId, socket } = useSocketContext();
+  const { userId, socket } = useSocketContext();
 
   // useResponseRoom(
   //   response?._id || responseId,
@@ -94,9 +94,9 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
   //   userId
   // );
 
-  // useResponseRoomUser(userId, (data) => {
-  //   console.log('💬 Response room update received:', data);
-  // });
+  useResponseRoomUser(userId, (data) => {
+    console.log('💬 Response room update received:', data);
+  });
 
   const badge = singleResponse?.data?.leadId?.userProfileId?.profileType;
 
