@@ -17,8 +17,7 @@ import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { logOut } from '@/store/features/auth/authSlice';
-import { baseApi } from '@/store/baseApi/baseApi';
-
+import Cookies from 'js-cookie';
 
 const ChangePassword = ({ open, setOpen }) => {
   const [showOldPassword, setShowOldPassword] = useState(false);
@@ -28,24 +27,22 @@ const ChangePassword = ({ open, setOpen }) => {
   const [changePassword] = useChangePasswordMutation();
 
   const handleSubmit = async (data) => {
-
     try {
       const res = await changePassword(data).unwrap();
       if (res?.success) {
         showSuccessToast(res?.message || 'Change Password  Successful');
         localStorage.removeItem('accessToken'); // or cookies
         dispatch(logOut());
+        Cookies.remove('token');
         router.push('/login');
-        setOpen(false)
+        setOpen(false);
       }
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);
       console.error('Error submitting form:', error);
     }
-
   };
-
 
   return (
     <>
@@ -63,12 +60,11 @@ const ChangePassword = ({ open, setOpen }) => {
                   Old password
                 </label>
                 <div className="relative">
-                  < TextInput
+                  <TextInput
                     name="oldPassword"
                     type={showOldPassword ? 'text' : 'password'}
                     className="pr-10"
-                    placeholder='***********'
-
+                    placeholder="***********"
                   />
                   <button
                     type="button"
@@ -90,11 +86,10 @@ const ChangePassword = ({ open, setOpen }) => {
                 </label>
                 <div className="relative">
                   <TextInput
-
                     name="newPassword"
                     type={showNewPassword ? 'text' : 'password'}
                     className="pr-10"
-                    placeholder='***********'
+                    placeholder="***********"
                   />
                   <button
                     type="button"
@@ -111,13 +106,12 @@ const ChangePassword = ({ open, setOpen }) => {
               </div>
             </div>
 
-
             <DialogFooter className="flex sm:justify-between">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => {
-                  setOpen(false)
+                  setOpen(false);
                 }}
               >
                 Cancel
@@ -127,10 +121,6 @@ const ChangePassword = ({ open, setOpen }) => {
               </Button>
             </DialogFooter>
           </FormWrapper>
-
-
-
-
         </DialogContent>
       </Dialog>
     </>

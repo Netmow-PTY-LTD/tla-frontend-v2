@@ -3,21 +3,36 @@
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { useGetAllMyLeadsQuery } from '@/store/features/lawyer/LeadsApiService';
+import {
+  useGetAllLeadsQuery,
+  useGetAllMyLeadsQuery,
+} from '@/store/features/lawyer/LeadsApiService';
+import { useState } from 'react';
 
 export default function LeadsCountCard() {
-  const { data: allLeads, isLoading } = useGetAllMyLeadsQuery({
-    page: 1,
+  // const { data: allLeads, isLoading } = useGetAllMyLeadsQuery({
+  //   page: 1,
+  //   limit: 10,
+  // });
+
+  const [page, setPage] = useState(1);
+
+  const {
+    data,
+    isLoading: isAllLeadsLoading,
+    isFetching,
+  } = useGetAllLeadsQuery({
+    page,
     limit: 10,
   });
 
-  const totalLeads = allLeads?.pagination?.total ?? 0;
-  const approvedLeads = allLeads?.data?.filter(
-    (lead) => lead.status === 'approved'
-  )?.length;
-  const pendingLeads = allLeads?.data?.filter(
-    (lead) => lead.status === 'pending'
-  )?.length;
+  const totalLeads = data?.pagination?.total ?? 0;
+  // const approvedLeads = allLeads?.data?.filter(
+  //   (lead) => lead.status === 'approved'
+  // )?.length;
+  // const pendingLeads = allLeads?.data?.filter(
+  //   (lead) => lead.status === 'pending'
+  // )?.length;
 
   return (
     <Card className="w-full shadow-sm rounded-2xl">
@@ -42,7 +57,7 @@ export default function LeadsCountCard() {
             <div className="flex flex-col items-center gap-1">
               <div className="flex items-center justify-center w-16 h-16 rounded-full bg-slate-900 text-white">
                 <p className="text-2xl font-bold">
-                  {isLoading ? '...' : totalLeads}
+                  {isAllLeadsLoading ? '...' : totalLeads}
                 </p>
               </div>
               <span className="text-sm font-medium mt-1">

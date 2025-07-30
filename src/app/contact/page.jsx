@@ -7,6 +7,8 @@ import TextInput from '@/components/form/TextInput';
 import TextareaInput from '@/components/form/TextArea';
 import FormWrapper from '@/components/form/FromWrapper';
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
+import { useSendContactMessageMutation } from '@/store/features/public/contactApiService';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -15,6 +17,7 @@ const formSchema = z.object({
   email: z.string().email({
     message: 'Please enter a valid email address.',
   }),
+  phone: z.string().optional(),
   message: z.string().min(10, {
     message: 'Message must be at least 10 characters long.',
   }),
@@ -22,20 +25,29 @@ const formSchema = z.object({
 
 export default function ContactPage() {
   const defaultValues = {
-    name: 'rabby',
-    phone: '05445454',
-    email: 'rabby@gmail.com',
-    message: 'this is a test message',
+    name: '',
+    phone: '',
+    email: '',
+    message: '',
   };
 
-  const handleSubmit = (data) => {
-    console.log(data);
+  const [sendContactMessage] = useSendContactMessageMutation();
+
+  const handleSubmit = async (data) => {
+    //console.log(data);
+    const { name, email, phone, message } = data;
+    const payload = { name, email, phone, message };
+    try {
+      const res = await sendContactMessage(payload).unwrap();
+      //console.log('response', res);
+      if (res?.success) {
+        showSuccessToast(res?.message || 'Message sent successfully');
+      }
+    } catch (error) {
+      console.log(error);
+      showErrorToast(error?.data?.message || 'Failed to send message');
+    }
   };
-
-  const address =
-    'Suit 8/3, Level 3/54 Jephson ST, Toowong QLD 4066, Australia';
-
-  const mapUrl = getStaticMapUrl(address);
 
   return (
     <MainLayout>
