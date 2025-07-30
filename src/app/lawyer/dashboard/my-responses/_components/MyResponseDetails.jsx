@@ -44,36 +44,38 @@ import SendSmsModal from './modal/SendSmsModal';
 import { getCompactTimeAgo } from '@/helpers/formatTime';
 import { userDummyImage } from '@/data/data';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  useNotifications,
-
-} from '@/hooks/useSocketListener';
+import { useNotifications } from '@/hooks/useSocketListener';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
-
 
 export default function MyResponseDetails({ onBack, response, responseId }) {
   const [activeTab, setActiveTab] = useState('activity');
   const [isExpanded, setIsExpanded] = useState(false);
   const [openMail, setOpenMail] = useState(false);
   const [openSms, setOpenSms] = useState(false);
-     const currentUser = useSelector(selectCurrentUser);
-  const { data: singleResponse, isLoading: isSingleResponseLoading,refetch } =
-    useGetSingleResponseQuery(responseId ? responseId : response?._id, {
-      skip: !responseId && !response?._id,
-    });
-
-    const toUser=singleResponse?.data?.leadId?.userProfileId?.user?._id;
-
-
-  useNotifications(currentUser?._id, (data) => {
-    console.log("🔔 Notification:", data);
-    if(data?.userId){
-      refetch()
-    }
- 
+  const currentUser = useSelector(selectCurrentUser);
+  const {
+    data: singleResponse,
+    isLoading: isSingleResponseLoading,
+    refetch,
+  } = useGetSingleResponseQuery(responseId ? responseId : response?._id, {
+    skip: !responseId && !response?._id,
   });
 
+  const toUser = singleResponse?.data?.leadId?.userProfileId?.user?._id;
 
+  useNotifications(currentUser?._id, (data) => {
+    console.log('🔔 Notification:', data);
+    if (data?.userId) {
+      refetch();
+    }
+  });
+
+  useNotifications(currentUser?._id, (data) => {
+    console.log('🔔 Notification:', data);
+    if (data?.userId) {
+      refetch();
+    }
+  });
 
   const badge = singleResponse?.data?.leadId?.userProfileId?.profileType;
 
@@ -172,7 +174,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
   const handleActivity = async (type) => {
     if (type === 'whatsapp') {
       const whatsappActivityPayload = {
-        toUser:toUser,
+        toUser: toUser,
         activityNote: 'You tried to contact via WhatsApp',
         activityType: 'whatsapp',
         module: 'response',
@@ -312,13 +314,13 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                   <Mail />
                   Send Email
                 </Button>
-                <Button
+                {/* <Button
                   onClick={() => handleActivity('sendsms')}
                   className="bg-[#34B7F1]"
                 >
                   <MessageSquare />
                   Send SMS
-                </Button>
+                </Button> */}
               </div>
               <div className="mt-5 flex items-center gap-2">
                 <Tag />

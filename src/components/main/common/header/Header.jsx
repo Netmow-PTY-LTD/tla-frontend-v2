@@ -18,11 +18,20 @@ import Gavel from '@/components/icon/Gavel';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { usePathname, useRouter } from 'next/navigation';
 import { useGetAllCategoriesQuery } from '@/store/features/public/catagorywiseServiceApiService';
+import CreateLeadWithAuthModal from '../../home/modal/CreateLeadWithAuthModal';
+import ClientLeadRegistrationModal from '../../home/modal/ClientLeadRegistrationModal';
+import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
+import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/questionApiService';
+import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
 
 export default function Header() {
   const [isHeaderFixed, setIsHeaderFixed] = useState();
   const [showSubMenu, setShowSubMenu] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedService, setSelectedService] = useState(null);
+  const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
   const subMenuRef = useRef();
 
   const pathname = usePathname();
@@ -59,37 +68,14 @@ export default function Header() {
 
   const dashboardUrl = dashboardPaths[currentUser?.data?.regUserType] || '';
 
-  // console.log('currentUser?.data?.regUserType', currentUser?.data?.regUserType);
-  // console.log('dashboardUrl', dashboardUrl);
-
-  // useEffect(() => {
-  //   // Only run redirection logic on login or register pages
-  //   const isAuthPage = pathname === '/login' || pathname === '/register';
-
-  //   console.log('isAuthPage', isAuthPage);
-  //   console.log('token', token);
-  //   console.log('currentUser', currentUser);
-
-  //   if (!isAuthPage) return;
-
-  //   // Wait for both token and currentUser to be available
-  //   if (!token || !currentUser?.data?.regUserType) return;
-
-  //   // Redirect based on user role
-  //   const userType = currentUser.data.regUserType;
-
-  //   if (userType === 'lawyer') {
-  //     router.replace('/lawyer/dashboard');
-  //   } else if (userType === 'client') {
-  //     router.replace('/client/dashboard');
-  //   } else if (userType === 'admin') {
-  //     router.replace('/admin');
-  //   }
-  // }, [pathname, token, currentUser, router]);
-
   const handleOpenSubMenu = (e) => {
     e.preventDefault();
     setShowSubMenu(!showSubMenu);
+  };
+
+  const handleModalOpen = () => {
+    setServiceWiseQuestions(null); // Reset serviceWiseQuestions when opening the modal
+    setModalOpen(true);
   };
 
   // Handle outside click
@@ -105,6 +91,30 @@ export default function Header() {
   }, []);
 
   const { data: allCategories } = useGetAllCategoriesQuery();
+
+  const { data: countryList } = useGetCountryListQuery();
+
+  const defaultCountry = countryList?.data?.find(
+    (country) => country?.slug === 'au'
+  );
+
+  const {
+    data: singleServicewiseQuestionsData,
+    isLoading: isQuestionsLoading,
+    refetch,
+  } = useGetServiceWiseQuestionsQuery(
+    {
+      countryId: defaultCountry?._id,
+      serviceId: selectedService?._id,
+    },
+    {
+      skip: !defaultCountry?._id || !selectedService?._id,
+    }
+  );
+
+  useEffect(() => {
+    setServiceWiseQuestions(singleServicewiseQuestionsData?.data || []);
+  }, [singleServicewiseQuestionsData]);
 
   return (
     <header
@@ -191,8 +201,13 @@ export default function Header() {
                           {selectedCategory?.services?.map((service, i) => (
                             <li key={i} className="mb-1">
                               <Link
-                                href={`/services/${service?.slug}`}
+                                href={`#`}
                                 className={styles.nav_link}
+                                onClick={(e) => {
+                                  e.preventDefault(); // Prevent default anchor behavior
+                                  setSelectedService(service);
+                                  handleModalOpen();
+                                }}
                               >
                                 {service?.name}
                               </Link>
@@ -292,6 +307,26 @@ export default function Header() {
           )}
         </div>
       </div>
+      {token && currentUser ? (
+        <CreateLeadWithAuthModal
+          modalOpen={modalOpen}
+          setModalOpen={setModalOpen}
+          handleModalOpen={handleModalOpen}
+          selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
+          countryId={defaultCountry?._id}
+          serviceId={selectedService?._id}
+          locationId={currentUser?.data?.profile?.zipCode}
+        />
+      ) : (
+        <ClientLeadRegistrationModal
+          modalOpen={modalOpen}
+          setModalOpen={setModalOpen}
+          handleModalOpen={handleModalOpen}
+          selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
+          countryId={defaultCountry?._id}
+          serviceId={selectedService?._id}
+        />
+      )}
     </header>
   );
 }
