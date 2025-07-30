@@ -19,15 +19,14 @@ export default function NotificationDropdownClient() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const currentUser = useSelector(selectCurrentUser);
-
   const { data, isLoading, refetch } = useGetNotificationsQuery({ read: false });
   const [markAsRead] = useMarkAsRedNotificationMutation();
   const notifications = data?.data || [];
 
-
   //  ---------------------- socket area ---------------------
   useNotifications(currentUser?._id, (data) => {
-    console.log("🔔 Notification:", data);
+    // console.log("🔔 Notification:", data);
+    console.log("🔔 Notification client dashboard:", data);
     if (data?.userId) {
       refetch()
     }

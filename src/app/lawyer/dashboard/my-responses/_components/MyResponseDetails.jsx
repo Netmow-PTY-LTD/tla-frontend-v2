@@ -62,6 +62,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
       skip: !responseId && !response?._id,
     });
 
+    const toUser=singleResponse?.data?.leadId?.userProfileId?.user?._id;
 
 
   useNotifications(currentUser?._id, (data) => {
@@ -171,6 +172,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
   const handleActivity = async (type) => {
     if (type === 'whatsapp') {
       const whatsappActivityPayload = {
+        toUser:toUser,
         activityNote: 'You tried to contact via WhatsApp',
         activityType: 'whatsapp',
         module: 'response',

@@ -27,13 +27,13 @@ export default function NotificationDropdown() {
 
   //  ---------------------- socket area ---------------------
   useNotifications(currentUser?._id, (data) => {
-    console.log("🔔 Notification:", data);
+    // console.log("🔔 Notification:", data);
+    console.log("🔔 Notification Lawyer Dashbaord:", data);
     if (data?.userId) {
       refetch()
     }
 
   });
-
 
 
   // Close dropdown on outside click
