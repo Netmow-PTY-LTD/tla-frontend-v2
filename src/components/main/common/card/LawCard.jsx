@@ -14,7 +14,7 @@ const LawCard = ({ service }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleModalOpen = () => {
-    setServiceWiseQuestions(null); // Reset serviceWiseQuestions when opening the modal
+    //setServiceWiseQuestions(null); // Reset serviceWiseQuestions when opening the modal
     setModalOpen(true);
   };
 

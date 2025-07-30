@@ -26,7 +26,6 @@ export default function HomeCategoryWiseServices() {
 
   //console.log('categories', allCategories?.data);
   const handleModalOpen = () => {
-    setServiceWiseQuestions(null); // Reset serviceWiseQuestions when opening the modal
     setModalOpen(true);
   };
 

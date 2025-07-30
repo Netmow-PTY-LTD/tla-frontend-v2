@@ -124,9 +124,6 @@ export default function HeroHome({ searchParam }) {
     setModalOpen(true);
   };
 
-  console.log('token', token);
-  console.log('currentUser', currentUser);
-
   return (
     <section className="hero-home section">
       <div className="container">
@@ -201,7 +198,7 @@ export default function HeroHome({ searchParam }) {
                   </div>
                 </Combobox>
               </div>
-              <div className="tla-form-group w-full md:w-5/12">
+              <div className="tla-form-group w-full lg:w-5/12">
                 <Combobox value={location} onChange={setLocation}>
                   <div className="relative">
                     <ComboboxInput
@@ -264,7 +261,7 @@ export default function HeroHome({ searchParam }) {
                   </div>
                 </Combobox>
               </div>
-              <div className="tla-btn-wrapper w-full md:w-2/3 lg:w-1/6">
+              <div className="tla-btn-wrapper w-full lg:w-1/6">
                 <button type="submit" className="tla-btn-search">
                   <span>Get Started</span>
                 </button>
@@ -280,7 +277,7 @@ export default function HeroHome({ searchParam }) {
               countryWiseServices?.data?.slice(0, 5).map((service) => (
                 <Link
                   href="#"
-                  className="flex justify-center items-center gap-[10px] text-center w-[calc(50%-10px)] sm:w-auto border py-1 px-3 rounded-full"
+                  className="flex flex-wrap justify-center items-center gap-[10px] text-center  border py-1 px-3 rounded-full"
                   key={service?._id}
                   onClick={(e) => {
                     e.preventDefault(); // Prevent default anchor behavior

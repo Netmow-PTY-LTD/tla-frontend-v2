@@ -646,6 +646,17 @@ input:focus {
   transition: all 0.3s ease;
 }
 
+@media (max-width: 767px) {
+  .submenu {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    max-height: 100vh;
+    height: 100%;
+  }
+}
+
 /* HeroHome */
 
 .hero-home {
