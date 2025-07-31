@@ -65,7 +65,7 @@ export default function RegisterStepTwo() {
   const form = useForm({
     resolver: zodResolver(lawyerRegistrationStepTwoFormValidation),
     defaultValues: {
-      practiceWithin: practiceWithin || false,
+      practiceWithin: true,
       practiceInternational: practiceInternationally || false,
       AreaZipcode: zipCode || '',
       rangeInKm: rangeInKm || '',

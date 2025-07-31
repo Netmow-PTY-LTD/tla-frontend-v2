@@ -64,6 +64,12 @@
 
 @media (max-width: 767px) {
   .logo {
-    width: 90px;
+    width: 100px;
+  }
+}
+
+@media (max-width: 576px) {
+  .btn_register_mobile {
+    display: none;
   }
 }

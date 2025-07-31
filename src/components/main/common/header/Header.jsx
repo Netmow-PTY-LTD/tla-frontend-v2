@@ -13,6 +13,7 @@ import {
   ChevronDown,
   ChevronRight,
   Hammer,
+  X,
 } from 'lucide-react';
 import Gavel from '@/components/icon/Gavel';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
@@ -74,7 +75,7 @@ export default function Header() {
   };
 
   const handleModalOpen = () => {
-    setServiceWiseQuestions(null); // Reset serviceWiseQuestions when opening the modal
+    //setServiceWiseQuestions(null); // Reset serviceWiseQuestions when opening the modal
     setModalOpen(true);
   };
 
@@ -146,9 +147,17 @@ export default function Header() {
                   />
                 </Link>
                 {showSubMenu && (
-                  <div className="submenu" ref={subMenuRef}>
+                  <div className="submenu flex flex-col" ref={subMenuRef}>
+                    <div className="flex justify-end md:hidden pt-2 px-4">
+                      <button
+                        className="text-gray-500"
+                        onClick={() => setShowSubMenu(false)}
+                      >
+                        <X />
+                      </button>
+                    </div>
                     <div
-                      className={`submenu-content ${
+                      className={`submenu-content flex-1 ${
                         selectedCategory ? 'show-services' : ''
                       }`}
                     >
@@ -216,6 +225,26 @@ export default function Header() {
                         </ul>
                       </div>
                     </div>
+                    {token && currentUser ? (
+                      <div className="flex items-center justify-center gap-4 p-4">
+                        <Link
+                          href={dashboardUrl}
+                          className={styles.btn_register}
+                        >
+                          <span>Dashboard</span>
+                        </Link>
+                      </div>
+                    ) : (
+                      <p className="text-[#34495E] text-[14px] text-center px-4 md:hidden py-4">
+                        Are you a legal professional?{' '}
+                        <Link
+                          href="/register"
+                          className="font-semibold text-sm underline text-[var(--secondary-color)]"
+                        >
+                          Join as a Lawyer
+                        </Link>
+                      </p>
+                    )}
                   </div>
                 )}
               </li>
@@ -297,7 +326,10 @@ export default function Header() {
               <Link href="/login" className={styles.nav_link}>
                 <span>Log In</span>
               </Link>
-              <Link href="/register" className={styles.btn_register}>
+              <Link
+                href="/register"
+                className={`${styles.btn_register} ${styles.btn_register_mobile}`}
+              >
                 <div className="icon w-6 h-6 bg-white flex items-center justify-center rounded-full">
                   <Gavel className="w-4 h-4 text-black" />
                 </div>
