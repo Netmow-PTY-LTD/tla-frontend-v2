@@ -15,6 +15,7 @@ export default function MyResponsesPage() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const responseId = searchParams.get('responseId');
+    const router = useRouter();
   const [queryParams, setQueryParams] = useState(() => {
     // Load filters from localStorage on initial render
     const saved = localStorage.getItem('responseFilters');
@@ -38,8 +39,7 @@ export default function MyResponsesPage() {
     localStorage.setItem('responseFilters', JSON.stringify(queryParams));
   }, [queryParams]);
 
-
-  const router = useRouter();
+    console.log('test console response page =====>')
 
   const { data: allMyResponses, isLoading: isAllMyResponsesLoading } =
     useGetAllMyResponsesQuery(queryParams);
