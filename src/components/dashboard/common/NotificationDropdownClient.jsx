@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Bell } from 'lucide-react';
+import { Bell, BellRing } from 'lucide-react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import Link from 'next/link';
@@ -19,22 +19,26 @@ export default function NotificationDropdownClient() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const currentUser = useSelector(selectCurrentUser);
-  const { data, isLoading, refetch } = useGetNotificationsQuery({ read: false });
+  const { data, isLoading, refetch } = useGetNotificationsQuery({
+    read: false,
+  });
   const [markAsRead] = useMarkAsRedNotificationMutation();
   const notifications = data?.data || [];
 
-
   //  ---------------------- socket area ---------------------
 
-
-  useNotifications(currentUser?._id, useCallback((data) => {
-  console.log("🔔 Notification Lawyer Dashboard:", data);
-  if (data?.userId) {
-    refetch();
-  }
-}, [refetch]));
-
-
+  useNotifications(
+    currentUser?._id,
+    useCallback(
+      (data) => {
+        console.log('🔔 Notification Lawyer Dashboard:', data);
+        if (data?.userId) {
+          refetch();
+        }
+      },
+      [refetch]
+    )
+  );
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -62,10 +66,10 @@ export default function NotificationDropdownClient() {
   return (
     <div className="relative" ref={dropdownRef}>
       <div
-        className="cursor-pointer relative"
+        className="cursor-pointer relative w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full"
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <Bell className="w-5 h-5 text-[#919FAC]" />
+        <BellRing className="w-5 h-5 text-[#919FAC]" />
         {notifications.length > 0 && (
           <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs px-1.5">
             {notifications.length}

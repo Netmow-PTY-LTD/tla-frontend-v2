@@ -1,8 +1,35 @@
-import React from 'react';
+'use client';
+import React, { use, useEffect } from 'react';
 import LoginForm from '@/components/auth/login/LoginForm';
 import Image from 'next/image';
+import { useSelector } from 'react-redux';
+import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
+  const router = useRouter();
+  const token = useSelector((state) => state.auth.token);
+  const {
+    data: currentUser,
+    isLoading: isCurrentUserLoading,
+    isSuccess,
+  } = useAuthUserInfoQuery(undefined, {
+    skip: !token,
+  });
+  console.log('currentUser', currentUser);
+  useEffect(() => {
+    if (!token || isCurrentUserLoading || !isSuccess) return;
+
+    if (token && !isCurrentUserLoading) {
+      if (currentUser?.data?.regUserType === 'client') {
+        router.push('/client/dashboard'); // '/client/dashboard';
+      } else if (currentUser?.data?.regUserType === 'lawyer') {
+        router.push('/lawyer/dashboard'); // '/lawyer/dashboard';
+      } else if (currentUser?.data?.regUserType === 'admin') {
+        router.push('/admin'); // = '/admin';
+      }
+    }
+  }, [token, isCurrentUserLoading, isSuccess, currentUser, router]);
   return (
     <section
       className="tla-auth-section flex justify-center items-center py-8"

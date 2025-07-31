@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './carousel.module.css';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
@@ -47,6 +47,12 @@ export default function HeroSlider() {
     if (index === (current + 1) % total) return styles.next;
     return '';
   };
+
+  // 🔁 Autoplay effect
+  useEffect(() => {
+    const interval = setInterval(nextSlide, 5000); // 5000ms = 5 seconds
+    return () => clearInterval(interval); // Clean up on unmount
+  }, [current]);
 
   return (
     <div className={styles.carouselWrapper}>

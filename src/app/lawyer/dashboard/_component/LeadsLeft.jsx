@@ -5,6 +5,7 @@ import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
 import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 import {
   AtSign,
+  BadgeCent,
   BadgeCheck,
   CircleAlert,
   Inbox,
@@ -137,20 +138,47 @@ export default function LeadDetailsPage({
                 </span>{' '}
               </div>
             </div>
+            <div className="border border-gray-300 rounded-lg p-4 inline-flex gap-2 mt-2 mb-5">
+              <div className="flex gap-1">
+                <div className="w-[10px] h-[20px] bg-gray-300"></div>
+                <div className="w-[10px] h-[20px] bg-gray-300"></div>
+                <div className="w-[10px] h-[20px] bg-gray-300"></div>
+                <div className="w-[10px] h-[20px] bg-gray-300"></div>
+                <div className="w-[10px] h-[20px] bg-gray-300"></div>
+              </div>
+              <div className="text-black text-[14px] font-medium">
+                0/5 professionals have responded.
+              </div>
+            </div>
+            {singleLead?.credit != null && singleLead?.credit > 0 && (
+              <div className="flex flex-wrap items-center gap-4 bg-[#ff86021A] px-4 py-3 mt-4 mb-8 rounded-md w-max">
+                <div className="flex items-center gap-2 pr-5 border-r border-yellow-300">
+                  <BadgeCent className="w-5 h-5" />
+                  <span className="font-semibold">
+                    {' '}
+                    {singleLead?.credit}{' '}
+                    {singleLead?.credit > 1 ? 'credits' : 'credit'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-10">
+                  <p className="text-[14px] font-medium text-gray-600">
+                    Covered by our Get Hired Guarantee
+                  </p>
+                  <Image
+                    src="/assets/img/tlabadge.svg"
+                    width={44}
+                    height={44}
+                    alt="tlabadge"
+                  />
+                </div>
+              </div>
+            )}
+
             <div className="flex flex-wrap items-center gap-4">
               {/*  need to credit purchase modal */}
               {!lead?.isContact ? (
                 <>
                   <LawyerContactButton leadDetail={singleLead} />
-                  {singleLead?.credit != null && (
-                    <div className="text-[#34495E] ml-2 flex items-center gap-2">
-                      <span>
-                        {singleLead?.credit}{' '}
-                        {singleLead?.credit > 1 ? 'credits' : 'credit'} required
-                      </span>
-                      <CircleAlert />
-                    </div>
-                  )}
                 </>
               ) : (
                 <>
