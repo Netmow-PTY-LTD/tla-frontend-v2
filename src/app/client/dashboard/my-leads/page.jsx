@@ -26,6 +26,8 @@ export default function MyLeads() {
     { keepPreviousData: true, refetchOnMountOrArgChange: true }
   );
 
+  console.log('allMyLeads', allMyLeads);
+
   const { data: countryList } = useGetCountryListQuery();
 
   const defaultCountry = countryList?.data?.find(

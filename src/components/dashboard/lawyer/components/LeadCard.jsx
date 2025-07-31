@@ -2,7 +2,7 @@ import { Card } from '@/components/ui/card';
 import React from 'react';
 import Image from 'next/image';
 import TagButton from './TagButton';
-import { BadgeCheck, CircleAlert, Zap } from 'lucide-react';
+import { BadgeCent, BadgeCheck, CircleAlert, Zap } from 'lucide-react';
 import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 import { Button } from '@/components/ui/button';
 import { formatRelativeTime } from '@/helpers/formatTime';
@@ -25,7 +25,10 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
     ?.join('');
 
   return (
-    <Card className="w-full max-w-full mx-auto flex flex-col ">
+    <Card
+      className="w-full max-w-full mx-auto flex flex-col cursor-pointer"
+      onClick={() => onViewDetails(user)}
+    >
       {/* Header Section */}
       <div className="flex flex-wrap sm:flex-nowrap items-start justify-between gap-3 p-3">
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 ">
@@ -142,24 +145,31 @@ const LeadCard = ({ onViewDetails, user, isExpanded }) => {
 
       {/* Footer Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">
-        <Button
-          className={`px-4 py-2 w-full sm:w-auto rounded-lg ${
-            isExpanded ? 'text-[14px]' : 'text-[12px] '
-          } font-medium bg-[var(--color-special)] text-white`}
-          onClick={() => onViewDetails(user)}
-        >
-          View Details
-        </Button>
         {user?.credit != null && (
           <p
             className={`text-[#34495E] ${
               isExpanded ? 'heading-base' : 'text-[12px]'
             } flex items-center gap-2`}
           >
-            <span>{user?.credit} Credits required</span>
-            <CircleAlert className="w-4 h-4" />
+            <BadgeCent className="w-5 h-5" />
+            <span className="font-semibold">
+              {user?.credit} {user?.credit === 1 ? 'Credit' : 'Credits'}{' '}
+            </span>
+            {/* <CircleAlert className="w-4 h-4" /> */}
           </p>
         )}
+        <div className="flex items-center gap-2">
+          <div className="flex gap-0.5">
+            <div className="w-[3px] h-[14px] bg-green-300"></div>
+            <div className="w-[3px] h-[14px] bg-green-300"></div>
+            <div className="w-[3px] h-[14px] bg-gray-300"></div>
+            <div className="w-[3px] h-[14px] bg-gray-300"></div>
+            <div className="w-[3px] h-[14px] bg-gray-300"></div>
+          </div>
+          <div className="text-[11px]">
+            <span>2/5</span>
+          </div>
+        </div>
       </div>
     </Card>
   );

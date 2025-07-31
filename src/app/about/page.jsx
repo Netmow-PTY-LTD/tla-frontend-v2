@@ -28,7 +28,7 @@ const AboutPage = () => {
                 The Law App - Transforming Legal Connections
               </h2>
               <div className="feature-heading-text mb-3">
-                <b>Making Legal Services Simple, Accessible & Efficient</b>{' '}
+                <b>Making legal services simple, accessible & efficient</b>{' '}
                 <br /> <br />
                 We believe that finding the right legal help should be easy,
                 transparent, and stress-free. Whether you're a client seeking
@@ -45,7 +45,7 @@ const AboutPage = () => {
             </div>
             <div className="about-img">
               <Image
-                src="/assets/img/about.png"
+                src="/assets/img/about.webp"
                 alt="About Image"
                 width={733}
                 height={500}
