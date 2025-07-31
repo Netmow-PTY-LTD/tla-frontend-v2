@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Bell } from 'lucide-react';
+import { Bell, BellRing } from 'lucide-react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import Link from 'next/link';
@@ -20,19 +20,24 @@ export default function NotificationDropdown() {
   const dropdownRef = useRef(null);
   const currentUser = useSelector(selectCurrentUser);
 
-  const { data, isLoading, refetch } = useGetNotificationsQuery({ read: false });
+  const { data, isLoading, refetch } = useGetNotificationsQuery({
+    read: false,
+  });
   const [markAsRead] = useMarkAsRedNotificationMutation();
   const notifications = data?.data || [];
 
-
-
-  useNotifications(currentUser?._id, useCallback((data) => {
-  console.log("🔔 Notification Lawyer Dashboard:", data);
-  if (data?.userId) {
-    refetch();
-  }
-}, [refetch]));
-
+  useNotifications(
+    currentUser?._id,
+    useCallback(
+      (data) => {
+        console.log('🔔 Notification Lawyer Dashboard:', data);
+        if (data?.userId) {
+          refetch();
+        }
+      },
+      [refetch]
+    )
+  );
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -63,7 +68,7 @@ export default function NotificationDropdown() {
         className="cursor-pointer relative"
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <Bell className="w-5 h-5 text-[#919FAC]" />
+        <BellRing className="w-5 h-5 text-[#919FAC]" />
         {notifications.length > 0 && (
           <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs px-1.5">
             {notifications.length}
@@ -72,39 +77,41 @@ export default function NotificationDropdown() {
       </div>
 
       {isOpen && (
-        <ul className="absolute right-0 bg-white shadow-[0_6px_16px_#0006] rounded w-72 mt-2 max-h-96 overflow-y-auto z-[99]">
-          {isLoading ? (
-            <li className="px-3 py-2 text-sm text-gray-500">Loading...</li>
-          ) : notifications.length > 0 ? (
-            <>
-              {notifications.slice(0, 5).map((n) => (
-                <li
-                  key={n._id}
-                  onClick={() => handleNotificationClick(n)}
-                  className="border-b px-3 py-2 hover:bg-gray-100 cursor-pointer text-left"
-                >
-                  <div className="text-sm font-medium">{n.title}</div>
-                  <p className="text-xs text-gray-500">{n.message}</p>
-                  <p className="text-[10px] text-gray-400">
-                    {dayjs(n.createdAt).fromNow()}
-                  </p>
-                </li>
-              ))}
-              <li className="text-center py-2">
-                <Link
-                  href="/lawyer/notifications"
-                  className="text-blue-500 text-sm hover:underline"
-                >
-                  View all
-                </Link>
+        <div className="absolute right-0 bg-white shadow-[0_6px_16px_#0006] rounded w-72 mt-2 max-h-96 overflow-y-auto z-[99]">
+          <ul>
+            {isLoading ? (
+              <li className="px-3 py-2 text-sm text-gray-500">Loading...</li>
+            ) : notifications.length > 0 ? (
+              <>
+                {notifications.slice(0, 5).map((n) => (
+                  <li
+                    key={n._id}
+                    onClick={() => handleNotificationClick(n)}
+                    className="border-b px-3 py-2 hover:bg-gray-100 cursor-pointer text-left"
+                  >
+                    <div className="text-sm font-medium">{n.title}</div>
+                    <p className="text-xs text-gray-500">{n.message}</p>
+                    <p className="text-[10px] text-gray-400">
+                      {dayjs(n.createdAt).fromNow()}
+                    </p>
+                  </li>
+                ))}
+              </>
+            ) : (
+              <li className="px-3 py-2 text-sm text-gray-500">
+                No notifications
               </li>
-            </>
-          ) : (
-            <li className="px-3 py-2 text-sm text-gray-500">
-              No notifications
-            </li>
-          )}
-        </ul>
+            )}
+          </ul>
+          <div className="text-center py-2">
+            <Link
+              href="/lawyer/notifications"
+              className="text-blue-500 text-sm hover:underline"
+            >
+              View all
+            </Link>
+          </div>
+        </div>
       )}
     </div>
   );
