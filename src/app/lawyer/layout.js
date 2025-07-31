@@ -1,18 +1,14 @@
 'use client';
 
-import React, { use, useEffect, useState } from 'react';
+import React, {  useEffect, useState } from 'react';
 import '@/styles/dashboard.css';
 import DashboardHeader from '@/components/dashboard/common/DashboardHeader';
 import DashboardFooter from '@/components/dashboard/common/DashboardFooter';
-import { LawyerSideNav } from '@/components/dashboard/lawyer/layout/SellerSideNav';
-import SidebarTop from './dashboard/_component/common/SidebarTop';
 import { usePathname, useRouter } from 'next/navigation';
 import Sidebar from '@/components/dashboard/lawyer/layout/SellerSideNav';
-import { io, Socket } from 'socket.io-client';
+
 
 export default function SellerDashboardLayout({ children }) {
-  // const [socket, setSocket] = useState(null);
-  // const [connected, setConnected] = useState(false);
 
   const [message, setMessage] = useState('');
   const [notifications, setNotifications] = useState([]);
@@ -44,30 +40,7 @@ export default function SellerDashboardLayout({ children }) {
     };
   }, [isNoScrollPage]);
 
-  //socket.io
 
-  // useEffect(() => {
-  //   const newSocket = io('http://localhost:5000');
-  //   setSocket(newSocket);
-
-  //   newSocket.on('connect', () => {
-  //     setConnected(true);
-  //   });
-
-  //   newSocket.on('disconnect', () => {
-  //     setConnected(false);
-  //   });
-
-  //   newSocket.on('notification', (data) => {
-  //     setNotifications((prev) => [data, ...prev]);
-  //   });
-
-  //   return () => {
-  //     newSocket.close();
-  //   };
-  // }, []);
-
-  //console.log('connected', connected);
 
   return (
     <>
