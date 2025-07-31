@@ -11,7 +11,7 @@ import NotificationDropdown from './NotificationDropdown';
 
 export default function DashboardHeader({ onToggleSidebar }) {
   const userInfo = useSelector(selectCurrentUser);
-  const { data } = useGetNotificationsQuery({ read: false });
+  const { data} = useGetNotificationsQuery({ read: false });
 
   return (
     <header className="db-header">

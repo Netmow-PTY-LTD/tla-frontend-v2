@@ -58,9 +58,9 @@ export default function NotificationDropdownClient() {
       await markAsRead(n._id); // call mutation to mark as read
     }
     // Optional: route to the link
-    // if (n.link) {
-    //   window.location.href = n.link;
-    // }
+    if (n.link) {
+      window.location.href = n.link;
+    }
   };
 
   return (
