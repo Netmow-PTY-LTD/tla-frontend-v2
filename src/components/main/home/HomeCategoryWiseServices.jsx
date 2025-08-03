@@ -39,6 +39,13 @@ export default function HomeCategoryWiseServices() {
     (country) => country?.slug === 'au'
   );
 
+  useEffect(() => {
+    if (!selectedService?._id) return;
+
+    // Immediately clear previous questions to prevent flash
+    setServiceWiseQuestions([]);
+  }, [selectedService?._id]);
+
   // Default to Australia (AU) if available
   const { data: countryWiseServices, isLoading: isCountryWiseServicesLoading } =
     useGetCountryWiseServicesQuery(defaultCountry?._id, {
@@ -85,7 +92,7 @@ export default function HomeCategoryWiseServices() {
           <p>The best services for you</p>
         </div> */}
         {allServices?.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mt-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-16">
             {allServices?.map((service, i) => (
               <Link
                 key={service.id || i}
