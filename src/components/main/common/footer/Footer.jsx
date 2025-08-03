@@ -177,13 +177,25 @@ export default function Footer() {
                   <b className="inline-block relative pr-[70px] after:absolute after:top-[12px] after:left-[85px] after:w-[64px] after:h-[2px] after:bg-[#0B1C2D]">
                     Follow Us{' '}
                   </b>
-                  <Link href="#" className="linkedin">
+                  <Link
+                    href="https://www.linkedin.com/in/the-law-app-22b048166/"
+                    className="linkedin"
+                    target="_blank"
+                  >
                     <LinkedIn />
                   </Link>
-                  <Link href="#" className="fb">
+                  <Link
+                    href="https://www.facebook.com/thelawapp"
+                    className="fb"
+                    target="_blank"
+                  >
                     <Facebook />
                   </Link>
-                  <Link href="#" className="twitter">
+                  <Link
+                    href="https://x.com/TheLawAppOnline"
+                    className="twitter"
+                    target="_blank"
+                  >
                     <Twiiter />
                   </Link>
                 </div>
