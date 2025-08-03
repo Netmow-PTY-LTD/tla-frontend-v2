@@ -48,22 +48,22 @@ export default function MyLeads() {
     setLeads((prev) => {
       const updatedLeads =
         page === 1 ? allMyLeads?.data : [...prev, ...allMyLeads?.data];
-      // Automatically select the first lead when page = 1 (new filter)
-      // if (page === 1 && updatedLeads.length > 0) {
-      //   setSelectedLead(updatedLeads[0]);
-      // }
+
       return updatedLeads;
     });
+
     const totalPage = allMyLeads?.pagination?.totalPage;
+
     if (
+      !Array.isArray(allMyLeads?.data) ||
+      allMyLeads?.data.length === 0 ||
       typeof totalPage !== 'number' ||
       totalPage <= 0 ||
-      typeof totalPage == 'undefined' ||
-      totalPage == null
+      page >= totalPage
     ) {
       setHasMore(false);
     } else {
-      setHasMore(page < totalPage);
+      setHasMore(true);
     }
   }, [allMyLeads?.data, page]);
 
@@ -140,8 +140,11 @@ export default function MyLeads() {
             Create New Lead
           </Button>
         </div>
-        <div className="max-h-[calc(100vh-170px)] overflow-y-auto">
-          <div className="mt-5 max-w-[1400px] mx-auto" ref={scrollContainerRef}>
+        <div
+          className="max-h-[calc(100vh-170px)] overflow-y-auto"
+          ref={scrollContainerRef}
+        >
+          <div className="mt-5 max-w-[1400px] mx-auto">
             {leads?.length === 0 && (
               <JobRequest modalOpen={modalOpen} setModalOpen={setModalOpen} />
             )}
