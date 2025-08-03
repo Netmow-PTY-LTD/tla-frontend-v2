@@ -133,7 +133,7 @@ export default function Header() {
           </Link>
           <nav className="relative">
             <ul className="flex items-center gap-6">
-              <li>
+              {/* <li>
                 <Link
                   href="#"
                   className={styles.nav_link}
@@ -161,7 +161,6 @@ export default function Header() {
                         selectedCategory ? 'show-services' : ''
                       }`}
                     >
-                      {/* Category List */}
                       <div className="submenu-categories">
                         <div className="flex justify-between items-center mb-2 border-b pb-2">
                           <div className="font-semibold">Services</div>
@@ -197,8 +196,6 @@ export default function Header() {
                           ))}
                         </ul>
                       </div>
-
-                      {/* Services List */}
                       <div className="submenu-services">
                         <button
                           onClick={() => setSelectedCategory(null)}
@@ -247,7 +244,7 @@ export default function Header() {
                     )}
                   </div>
                 )}
-              </li>
+              </li> */}
 
               {/* <li>
                 <Link href="/services" className={styles.nav_link}>

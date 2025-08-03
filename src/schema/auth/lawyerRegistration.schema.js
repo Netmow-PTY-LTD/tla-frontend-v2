@@ -48,7 +48,7 @@ export const lawyerRegistrationStepOneFormValidation = z.object({
     .max(50, 'Name must be less than 50 characters'),
 });
 
-const bdPhoneRegex = /^(?:\+88|88)?01[3-9]\d{8}$/;
+// const bdPhoneRegex = /^(?:\+88|88)?01[3-9]\d{8}$/;
 const auPhoneRegex = /^(?:\+?61|0)[2-478]\d{8}$/;
 
 export const lawyerRegistrationStepThreeFormValidation = z
@@ -57,9 +57,9 @@ export const lawyerRegistrationStepThreeFormValidation = z
     phone: z
       .string()
       .min(1, 'Phone number is required')
-      .refine((val) => bdPhoneRegex.test(val) || auPhoneRegex.test(val), {
+      .refine((val) => auPhoneRegex.test(val), {
         message:
-          'Phone number must be a valid Bangladeshi or Australian number (e.g., +8801712345678 or +61412345678)',
+          'Phone number must be a valid Australian number (e.g. +61412345678)',
       }),
 
     password: z.string().min(6, 'Password must be at least 6 characters'),
