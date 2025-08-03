@@ -27,7 +27,22 @@ const ProfileCard = ({ profile, isLoading, isError, error }) => {
         </Avatar>
 
         <h3 className="font-medium heading flex items-center">
-          {profile?.profile?.name}{' '}
+          {isLoading ? (
+            <div className="p-4 space-y-4 animate-pulse">
+              {/* Skeleton Badge */}
+              <div className="absolute right-0 top-0 p-2">
+                <div className="h-6 w-32 bg-gray-200 rounded-tr-[10px] rounded-bl-[10px]" />
+              </div>
+
+              {/* Skeleton Content */}
+              <div className="h-4 w-24 bg-gray-200 rounded" />
+              <div className="h-6 w-40 bg-gray-200 rounded" />
+              <div className="h-4 w-full bg-gray-200 rounded mt-4" />
+              <div className="h-4 w-20 bg-gray-200 rounded" />
+            </div>
+          ) : (
+            profile?.profile?.name
+          )}{' '}
           <Link
             href={'/lawyer/settings/profile?section=about'}
             aria-label="Edit Name"

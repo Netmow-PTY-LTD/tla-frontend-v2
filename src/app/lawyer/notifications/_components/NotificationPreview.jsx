@@ -30,6 +30,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { Fragment, useState } from 'react';
+import ResponseSkeleton from '../../dashboard/my-responses/_components/ResponseSkeleton';
 
 const {
   useGetNotificationsQuery,
@@ -42,7 +43,7 @@ export default function NotificationPreview() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const { data } = useGetNotificationsQuery();
+  const { data, isLoading } = useGetNotificationsQuery();
   const [markAsRead] = useMarkAsRedNotificationMutation();
 
   const iconStyles = {
@@ -144,6 +145,8 @@ export default function NotificationPreview() {
   const pageNumbers = getPageNumbers(currentPage, totalPages);
 
   //console.log('data', data?.data);
+
+  if (isLoading) return <ResponseSkeleton />;
 
   return (
     <div className="p-4">
