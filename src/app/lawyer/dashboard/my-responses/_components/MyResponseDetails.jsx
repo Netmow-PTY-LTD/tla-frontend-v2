@@ -61,6 +61,8 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
     skip: !responseId && !response?._id,
   });
 
+
+
   const toUser = singleResponse?.data?.leadId?.userProfileId?.user?._id;
 
   useNotifications(currentUser?._id, (data) => {
@@ -188,8 +190,6 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
         const result = await updateActivity(whatsappActivityPayload).unwrap();
 
         if (result.success) {
-          // socket?.emit('join-response', resolvedResponseId);
-          // socket?.emit('user-notification', userId);
 
           const phone = response?.leadId?.userProfileId?.phone;
           window.open(
