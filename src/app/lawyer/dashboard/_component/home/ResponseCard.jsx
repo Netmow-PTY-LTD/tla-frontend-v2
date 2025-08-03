@@ -11,12 +11,9 @@ import React from 'react';
 export default function ResponseCard({ onViewDetails, user, isExpanded }) {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
- 
   //  const badges = singleLead?.data?.badges
   // const badge = user?.leadBadge;
-  const badge = user?.leadId?.userProfileId?.profileType;
-
- 
+  //const badge = user?.leadId?.userProfileId?.profileType;
 
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])
@@ -45,6 +42,12 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
       }
     }
   };
+
+  const getTruncatedText = (text, maxLength) => {
+    if (!text || typeof text !== 'string') return '';
+    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+  };
+
   return (
     <Card className="w-full max-w-full mx-auto flex flex-col">
       {/* Header Section */}
@@ -52,8 +55,7 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
         <figure className="w-10 h-10 overflow-hidden flex-shrink-0 border rounded-full">
           <Image
             src={`${
-              user?.leadId?.userProfileId?.profilePicture ??
-              userDummyImage
+              user?.leadId?.userProfileId?.profilePicture ?? userDummyImage
             }`}
             alt={user?.userProfileId?.name ?? 'John Doe'}
             width={40}
@@ -80,7 +82,7 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
               {user?.leadId?.userProfileId?.address ?? ''}
             </div>
           </div>
-          <p className="font-medium text-[11px] text-gray-600 sm:ml-4 mt-2 sm:mt-0">
+          <p className="font-medium text-[11px] text-gray-600 mt-2 sm:mt-0 w-16 flex justify-end">
             {user?.createdAt && formatRelativeTime(user?.createdAt)}
           </p>
         </div>
@@ -90,8 +92,7 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
 
       {(urgentOption?.option ||
         (user?.additionalDetails && user.additionalDetails !== '') ||
-        user?.userProfileId?.phone ||
-        badge) && (
+        user?.userProfileId?.phone) && (
         <div className="px-3 pt-3 pb-2">
           <div className="flex flex-wrap gap-2">
             {urgentOption?.option && (
@@ -115,13 +116,13 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
                 icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
               />
             )}
-            {badge && (
+            {/* {badge && (
               <TagButton
                 text={badge}
                 bgColor="#004DA61A"
                 icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
               />
-            )}
+            )} */}
           </div>
         </div>
       )}
@@ -157,7 +158,7 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
             child custody arrangements, ensuring you understand your rights and
             options. Let us help you navigate this challenging time with expert
             guidance.`
-              : user?.leadId?.additionalDetails}
+              : getTruncatedText(user?.leadId?.additionalDetails, 200)}
           </p>
         </div>
       </div>

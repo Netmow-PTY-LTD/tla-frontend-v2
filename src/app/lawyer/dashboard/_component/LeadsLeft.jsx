@@ -9,6 +9,7 @@ import {
   BadgeCheck,
   CircleAlert,
   Inbox,
+  List,
   Loader,
   MoveLeft,
   PhoneOutgoing,
@@ -65,6 +66,28 @@ export default function LeadDetailsPage({
     .split(' ')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join('');
+
+  const ResponseProgressBar = ({ responded = 0, total = 5 }) => {
+    const bars = Array.from({ length: total }, (_, index) => (
+      <div
+        key={index}
+        className={`w-[10px] h-[20px] ${
+          index < responded ? 'bg-green-400' : 'bg-gray-300'
+        }`}
+      ></div>
+    ));
+
+    return (
+      <div className="border border-gray-300 rounded-lg p-4 inline-flex gap-2 mt-2 mb-5">
+        <div className="flex gap-1">{bars}</div>
+        <div className="text-black text-[14px] font-semibold">
+          {responded > total
+            ? `${total}+ professionals have responded.`
+            : `${responded}/${total} professionals have responded.`}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="bg-white">
@@ -138,18 +161,9 @@ export default function LeadDetailsPage({
                 </span>{' '}
               </div>
             </div>
-            <div className="border border-gray-300 rounded-lg p-4 inline-flex gap-2 mt-2 mb-5">
-              <div className="flex gap-1">
-                <div className="w-[10px] h-[20px] bg-gray-300"></div>
-                <div className="w-[10px] h-[20px] bg-gray-300"></div>
-                <div className="w-[10px] h-[20px] bg-gray-300"></div>
-                <div className="w-[10px] h-[20px] bg-gray-300"></div>
-                <div className="w-[10px] h-[20px] bg-gray-300"></div>
-              </div>
-              <div className="text-black text-[14px] font-medium">
-                0/5 professionals have responded.
-              </div>
-            </div>
+            <ResponseProgressBar
+              responded={singleLead?.responders?.length || 0}
+            />
             {singleLead?.credit != null && singleLead?.credit > 0 && (
               <div className="flex flex-wrap items-center gap-4 bg-[#ff86021A] px-4 py-3 mt-4 mb-8 rounded-md w-max">
                 <div className="flex items-center gap-2 pr-5 border-r border-yellow-300">
@@ -199,7 +213,7 @@ export default function LeadDetailsPage({
                       <TagButton
                         text="Additional Details"
                         bgColor="#004DA61A"
-                        icon={<BadgeCheck className="text-[#000] w-4 h-4" />}
+                        icon={<List className="text-[#000] w-4 h-4" />}
                       />
                     )}
                   {urgentOption?.option && (
@@ -226,7 +240,7 @@ export default function LeadDetailsPage({
                 <h5 className="font-medium mb-2 heading-base">
                   {singleLead?.serviceId?.name ?? ''}
                 </h5>
-                <div className="admin-text text-[#34495E] ">
+                <div className="text-sm text-[#34495E] ">
                   {displayText}
                   {shouldTruncate && (
                     <button
@@ -249,7 +263,7 @@ export default function LeadDetailsPage({
                 </div>
               </div>
             </div>
-            <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
+            <hr className="w-full mt-5" />
             {singleLead?.leadAnswers?.length > 0 && (
               <div className="mt-5 space-y-3">
                 <h4 className="font-medium heading-lg mb-5">
