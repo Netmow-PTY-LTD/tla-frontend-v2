@@ -462,8 +462,8 @@ export default function CreateLeadWithAuthModal({
               <input
                 type="text"
                 className="border rounded px-3 py-2 w-20 text-center"
-                value="USD"
-                placeholder='currency i.e."USD"'
+                value="AUD"
+                placeholder='currency i.e."AUD"'
                 readOnly
               />
             </div>
