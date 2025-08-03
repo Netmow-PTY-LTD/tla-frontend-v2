@@ -213,6 +213,7 @@ const LeadBoardPage = () => {
                   }}
                   // data={allLeads?.data ?? []}
                   data={leads ?? []}
+                  selectedLead={selectedLead}
                 />
                 {hasMore && (
                   <div className="py-6 text-center">

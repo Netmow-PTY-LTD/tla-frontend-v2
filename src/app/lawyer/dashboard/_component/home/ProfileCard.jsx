@@ -7,36 +7,48 @@ export default function ProfileCard() {
   const { data: userInfo, isLoading } = useAuthUserInfoQuery();
 
   return (
-    <div className="flex items-center justify-between p-4 bg-white rounded-[10px] relative z-[9]">
-      {/* Left section: Avatar and text */}
-      <div className="flex items-center gap-4">
-        <Avatar className="h-[70px] w-[70px]">
-          <AvatarImage
-            src={
-              userInfo?.data?.profile?.profilePicture ??
-              userDummyImage
-            }
-            alt="Profile"
-          />
-          <AvatarFallback>PI</AvatarFallback>
-        </Avatar>
-        <div>
-          <h2 className="text-lg font-semibold text-gray-800 heading">
-            {userInfo?.data?.profile?.name ?? 'Lawyer'}
-          </h2>
-          <p className="text-gray-500 mt-1 admin-text">
-            Completing your profile is a great way to appeal to clients.
-          </p>
-        </div>
-      </div>
+    <>
+      {isLoading ? (
+        <div className="p-4 space-y-4 animate-pulse bg-white rounded-[10px]">
+          {/* Skeleton Badge */}
+          <div className="absolute right-0 top-0 p-2">
+            <div className="h-6 w-32 bg-gray-200 rounded-tr-[10px] rounded-bl-[10px]" />
+          </div>
 
-      {/* Right section: Edit button */}
-      <Link
-        href="/lawyer/settings/profile"
-        className="text-gray-600 text-sm font-medium px-4 py-2 rounded-md transition"
-      >
-        Edit
-      </Link>
-    </div>
+          {/* Skeleton Content */}
+          <div className="h-4 w-24 bg-gray-200 rounded" />
+          <div className="h-4 w-full bg-gray-200 rounded mt-4" />
+        </div>
+      ) : (
+        <div className="flex items-center justify-between p-4 bg-white rounded-[10px] relative z-[9]">
+          {/* Left section: Avatar and text */}
+          <div className="flex items-center gap-4">
+            <Avatar className="h-[70px] w-[70px]">
+              <AvatarImage
+                src={userInfo?.data?.profile?.profilePicture ?? userDummyImage}
+                alt="Profile"
+              />
+              <AvatarFallback>PI</AvatarFallback>
+            </Avatar>
+            <div>
+              <h2 className="text-lg font-semibold text-gray-800 heading">
+                {userInfo?.data?.profile?.name ?? 'Lawyer'}
+              </h2>
+              <p className="text-gray-500 mt-1 admin-text">
+                Completing your profile is a great way to appeal to clients.
+              </p>
+            </div>
+          </div>
+
+          {/* Right section: Edit button */}
+          <Link
+            href="/lawyer/settings/profile"
+            className="text-gray-600 text-sm font-medium px-4 py-2 rounded-md transition"
+          >
+            Edit
+          </Link>
+        </div>
+      )}
+    </>
   );
 }

@@ -2,7 +2,7 @@
 import LeadCard from '@/components/dashboard/lawyer/components/LeadCard';
 import React from 'react';
 
-const LeadsRight = ({ isExpanded, onViewDetails, data }) => {
+const LeadsRight = ({ isExpanded, onViewDetails, data, selectedLead }) => {
   return (
     <>
       {/* lead card section */}
@@ -19,6 +19,7 @@ const LeadsRight = ({ isExpanded, onViewDetails, data }) => {
             onViewDetails={onViewDetails}
             user={lead}
             isExpanded={isExpanded}
+            selectedLead={selectedLead}
           />
         ))}
       </section>

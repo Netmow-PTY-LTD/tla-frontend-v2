@@ -1,13 +1,60 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect } from 'react';
 import AdminProfileDropDown from './AdminProfileDropDown';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { BellRing, PanelLeft } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
+import ResponseSkeleton from '@/app/lawyer/dashboard/my-responses/_components/ResponseSkeleton';
+import { getUserFromToken } from '@/helpers/auth';
 
 export default function AdminDashboardHeader({ onToggleSidebar }) {
-  const { data: currentUser } = useAuthUserInfoQuery();
+  const [user, setUser] = React.useState(null);
+  const router = useRouter();
+
+  const token = Cookies.get('token');
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    useAuthUserInfoQuery(undefined, {
+      skip: !token,
+    });
+
+  // useEffect(() => {
+  //   if (!currentUser || currentUser?.data?.regUserType !== 'admin') {
+  //     //showErrorToast('Access denied. Please login as admin.');
+  //     const target =
+  //       currentUser?.data?.regUserType === 'client'
+  //         ? '/client/dashboard'
+  //         : '/lawyer/dashboard';
+  //     router.push(target);
+  //   }
+  // }, [currentUser, isCurrentUserLoading, router]);
+
+  // if (isCurrentUserLoading) return <ResponseSkeleton />;
+
+  useEffect(() => {
+    const fetchedUser = async () => {
+      if (!token) {
+        router.push('/login');
+        return;
+      }
+
+      const user = await getUserFromToken(token);
+      console.log('user', user);
+      setUser(user);
+
+      if (!user || user?.regUserType !== 'admin') {
+        const target =
+          user?.regUserType === 'client'
+            ? '/client/dashboard'
+            : '/lawyer/dashboard';
+        router.push(target);
+      }
+    };
+
+    fetchedUser();
+  }, [token]);
 
   return (
     <header className="db-header">

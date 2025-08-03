@@ -277,7 +277,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
               </div>
               {/* Current Status */}
 
-              <hr className="border-[#F3F3F3] my-5  " />
+              <hr className="w-full my-5  " />
               <div className="mb-4">
                 <div className="flex items-center gap-2 admin-text font-medium">
                   <PhoneOutgoing className="w-5 h-5" />{' '}
@@ -344,7 +344,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                   {singleResponse?.data?.credit > 1 ? 'credits' : 'credit'}{' '}
                 </b>
               </div>
-              <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
+              <hr className="w-full mt-5" />
               <div className="mt-5">
                 <h4 className="font-medium mb-1 heading-base">
                   Looking for a {singleResponse?.data?.serviceId?.name || ''}{' '}
@@ -354,7 +354,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                   <h5 className="font-medium mb-2 heading-base">
                     {singleResponse?.data?.serviceId?.name || ''}
                   </h5>
-                  <div className="admin-text text-[#34495E] ">
+                  <div className="text-sm text-[#34495E] ">
                     {displayText}
                     {shouldTruncate && (
                       <button
@@ -367,7 +367,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                   </div>
                 </div>
               </div>
-              <hr className="border-[#F3F3F3] h-1 w-full mt-5" />
+              <hr className="w-full mt-5" />
               <div className="flex w-full flex-col gap-4 mt-5">
                 <div className="flex border-b border-gray-200 gap-6">
                   <button

@@ -102,7 +102,7 @@ export default function HomeCategoryWiseServices() {
             </Link>
           )}
         </div>
-        <div className="space-y-10 mt-20">
+        <div className="space-y-[48px] sm:space-y-[96px] mt-20">
           {allCategories?.data?.length > 0 &&
             allCategories?.data?.map((category, index) => (
               <div key={index}>
@@ -110,7 +110,7 @@ export default function HomeCategoryWiseServices() {
                   <h4 className="text-lg font-semibold">{category?.name}</h4>
                   <Link
                     href={`/services/${category?.slug}`}
-                    className="text-[#444] text-sm hover:underline"
+                    className="text-[#444] text-sm font-semibold hover:underline"
                   >
                     View All
                   </Link>
