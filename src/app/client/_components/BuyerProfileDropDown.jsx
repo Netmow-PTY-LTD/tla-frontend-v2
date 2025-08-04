@@ -17,7 +17,6 @@ import { userDummyImage } from '@/data/data';
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAuthLogOutMutation } from '@/store/features/auth/authApiService';
-import { logOut, selectCurrentUser } from '@/store/features/auth/authSlice';
 import { disconnectSocket } from '@/lib/socket';
 import {
   useAuthLogOutMutation,
