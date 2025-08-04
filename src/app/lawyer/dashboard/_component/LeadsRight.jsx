@@ -1,9 +1,13 @@
 'use client';
 import LeadCard from '@/components/dashboard/lawyer/components/LeadCard';
 import { useRealTimeStatus } from '@/hooks/useSocketListener';
+import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const LeadsRight = ({ isExpanded, onViewDetails, data,selectedLead }) => {
+  const currentUserId=useSelector(selectCurrentUser)._id
+console.log('current user ==>',currentUserId)
   const [onlineMap, setOnlineMap] = useState({});
   // Safely extract user IDs from AllLeadData
   const userIds =data
@@ -11,7 +15,7 @@ const LeadsRight = ({ isExpanded, onViewDetails, data,selectedLead }) => {
 
 
   // ✅ Use hook directly (at top level of component)
-  useRealTimeStatus(userIds, (userId, isOnline) => {
+  useRealTimeStatus(currentUserId,userIds, (userId, isOnline) => {
     setOnlineMap((prev) => ({ ...prev, [userId]: isOnline }));
   });
 

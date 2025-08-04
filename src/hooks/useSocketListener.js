@@ -73,11 +73,12 @@ export const useResponseRoomUser = (userId, onUpdate) => {
 
 //  ----------------------------- new logic -------------------
 
-export const useRealTimeStatus = (userIds, updateStatus ) => {
+export const useRealTimeStatus = (currentUserId,userIds, updateStatus ) => {
   useEffect(() => {
  
    if (!userIds || userIds.length === 0) return;
-    const socket = getSocket(userIds);
+    // const socket = getSocket(userIds);
+    const socket = getSocket(currentUserId);
 
      if (!socket) {
       console.warn("❌ Socket not initialized.");
