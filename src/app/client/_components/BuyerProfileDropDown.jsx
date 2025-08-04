@@ -11,12 +11,14 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import Cookies from 'js-cookie';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { userDummyImage } from '@/data/data';
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
+import { useAuthLogOutMutation } from '@/store/features/auth/authApiService';
+import { logOut, selectCurrentUser } from '@/store/features/auth/authSlice';
+import { disconnectSocket } from '@/lib/socket';
 import {
   useAuthLogOutMutation,
   useAuthUserInfoQuery,
@@ -43,6 +45,7 @@ export default function BuyerProfileDropDown({ data }) {
    */
   const [authLogout] = useAuthLogOutMutation();
   const handleLogout = () => {
+    disconnectSocket();
     authLogout();
     dispatch(logOut());
     router.push('/login');

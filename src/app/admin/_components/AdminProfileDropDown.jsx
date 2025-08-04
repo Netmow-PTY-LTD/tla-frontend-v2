@@ -19,6 +19,7 @@ import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { useAuthLogOutMutation } from '@/store/features/auth/authApiService';
 import { logOut } from '@/store/features/auth/authSlice';
+import { disconnectSocket } from '@/lib/socket';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function AdminProfileDropDown({ data, isCurrentUserLoading }) {
@@ -43,6 +44,7 @@ export default function AdminProfileDropDown({ data, isCurrentUserLoading }) {
    */
   const [authLogout] = useAuthLogOutMutation();
   const handleLogout = () => {
+    disconnectSocket();
     authLogout();
     dispatch(logOut());
     Cookies.remove('token');
