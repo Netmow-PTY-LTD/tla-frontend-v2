@@ -40,3 +40,67 @@ export const useResponseRoomUser = (userId, onUpdate) => {
     return () => socket.off('notif', onUpdate);
   }, [userId, onUpdate]);
 };
+
+
+//  ------------------ user status event listener ------------
+
+// export const useUserStatus = (userId, onStatusChange) => {
+//   useEffect(() => {
+//     const socket = getSocket(userId);
+
+//     socket.on("userOnline", ({ userId }) =>
+//       onStatusChange(userId, "online"),
+//       console.log('test online ')
+//     );
+//     socket.on("userOffline", ({ userId }) =>
+//       onStatusChange(userId, "offline"),
+//     console.log('test offline ')
+//     );
+
+//     return () => {
+//       socket.off("userOnline");
+//       socket.off("userOffline");
+//     };
+//   }, [userId, onStatusChange]);
+// };
+
+
+
+
+
+
+
+
+//  ----------------------------- new logic -------------------
+
+export const useRealTimeStatus = (userIds, updateStatus ) => {
+  useEffect(() => {
+ 
+   if (!userIds || userIds.length === 0) return;
+    const socket = getSocket(userIds);
+
+     if (!socket) {
+      console.warn("❌ Socket not initialized.");
+      return;
+    }
+    const handleOnline = ({ userId }) => {
+      if (userIds.includes(userId)) {
+        updateStatus(userId, true);
+      }
+    };
+
+    const handleOffline = ({ userId }) => {
+      if (userIds.includes(userId)) {
+        updateStatus(userId, false);
+      }
+    };
+
+    socket.on("userOnline", handleOnline);
+    socket.on("userOffline", handleOffline);
+
+    return () => {
+      socket.off("userOnline", handleOnline);
+      socket.off("userOffline", handleOffline);
+    };
+  }, [userIds]);
+};
