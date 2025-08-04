@@ -35,7 +35,7 @@ export default function FooterContact() {
                 </span>
               </div>
               <div className="address-text text-[#34495E] text-[14px] mt-4">
-                +610490 135 339
+                +61 490 135 339
               </div>
             </div>
             <div className="footer-col w-full sm:w-[calc(50%-20px)] md:w-auto">
