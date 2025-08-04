@@ -94,11 +94,11 @@ export default function TestimonialSlider() {
       fadeToSlide(nextIndex);
     };
 
-    intervalRef.current = setInterval(nextSlide, 4000);
+    intervalRef.current = setInterval(nextSlide, 2000);
     const slider = sliderRef.current;
 
     const pause = () => clearInterval(intervalRef.current);
-    const resume = () => (intervalRef.current = setInterval(nextSlide, 4000));
+    const resume = () => (intervalRef.current = setInterval(nextSlide, 2000));
 
     slider.addEventListener('mouseenter', pause);
     slider.addEventListener('mouseleave', resume);

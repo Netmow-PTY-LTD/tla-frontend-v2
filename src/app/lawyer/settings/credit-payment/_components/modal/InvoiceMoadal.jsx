@@ -19,6 +19,8 @@ const InvoiceModal = ({ open, setOpen, transaction }) => {
   const subTotal = total - (total * 10) / 110; // reverse-calculate 10% VAT from total
   const vat = total - subTotal;
 
+  console.log('transaction', transaction);
+
   const formatCurrency = (amount) => `$${(amount || 0).toFixed(2)}`;
 
   return (
@@ -26,26 +28,39 @@ const InvoiceModal = ({ open, setOpen, transaction }) => {
       <div className="p-2 text-gray-800 font-sans">
         {/* Header */}
         <div className="flex justify-between items-start mb-8">
-          <div>
-            <img
-              src="/assets/img/logo.png"
-              alt="The LawApp Logo"
-              className="h-6 mb-2"
-            />
-            <p className="text-sm text-gray-500">
-              {new Date(createdAt).toLocaleDateString()}
+          <div className="text-base w-full md:w-1/2">
+            <p>
+              <b>{userId?.profile?.name}</b>
             </p>
-            <h2 className="font-semibold text-lg mt-1">
-              Tax Invoice {transaction._id?.slice(-6).toUpperCase()}
-            </h2>
-            <p className="mt-2">{userId?.companyName || userId?.email}</p>
+            <p>
+              {userId?.profile?.billingAddress
+                ? `${userId.profile.billingAddress.addressLine1}, ${userId.profile.billingAddress.addressLine2}, ${userId.profile.billingAddress.city}, ${userId.profile.billingAddress.postcode}`
+                : userId?.profile?.address?.replace(/,/g, ', ')}
+            </p>
+
+            <p className="">{userId?.companyName || userId?.email}</p>
+            <div className="mt-10">
+              <p className="font-semibold text-lg">
+                Tax Invoice{' '}
+                <strong>{transaction._id?.slice(-6).toUpperCase()}</strong>
+              </p>
+              <p className="text-sm text-gray-500">
+                {new Date(createdAt).toLocaleDateString()}
+              </p>
+            </div>
           </div>
-          <div className="text-right text-sm text-gray-500">
-            <p>The LawApp Online</p>
-            <p>Level 9, 3 Sheldon Square</p>
-            <p>Sydney NSW 2000, Australia</p>
-            <p>+61 2 8294 6827</p>
-            <p className="mt-2 font-medium text-black">ABN: 83 642 968 947</p>
+          <div className="text-right text-base text-gray-500">
+            <div className="flex justify-end">
+              <img
+                src="/assets/img/logo.png"
+                alt="The LawApp Logo"
+                className="h-6 mb-2"
+              />
+            </div>
+            <p>Suit 8/3, Level 3/54 Jephson ST</p>
+            <p>Toowong, QLD 4066, Australia</p>
+            <p>+61 490 135 339</p>
+            {/* <p className="mt-2 font-medium text-black">ABN: 83 642 968 947</p> */}
             <div className="mt-4 bg-green-100 text-green-700 px-3 py-1 inline-block rounded-md text-sm font-semibold">
               ✓ PAID
             </div>
@@ -53,7 +68,7 @@ const InvoiceModal = ({ open, setOpen, transaction }) => {
               {formatCurrency(total)}
             </div>
             {/* <p className="text-sm text-gray-500">TOTAL INC. GST</p> */}
-            <p className="text-sm text-gray-500">TOTAL </p>
+            {/* <p className="text-sm text-gray-500">TOTAL </p> */}
           </div>
         </div>
 
@@ -66,7 +81,7 @@ const InvoiceModal = ({ open, setOpen, transaction }) => {
           </div>
           <div className="grid grid-cols-3 mb-1">
             <div>Purchase of {creditPackageId?.credit} credits</div>
-            <div>One off charge</div>
+            <div>One-time Charge</div>
             <div className="text-right">
               {formatCurrency(creditPackageId?.price)}
             </div>
@@ -102,7 +117,7 @@ const InvoiceModal = ({ open, setOpen, transaction }) => {
         </div>
 
         {/* Footer */}
-        <div className="mt-10 text-xs text-gray-500 text-center">
+        {/* <div className="mt-10 text-xs text-gray-500 text-center">
           <p>The LawApp Online</p>
           <p>ABN: 83 642 968 947</p>
           <p>
@@ -114,7 +129,7 @@ const InvoiceModal = ({ open, setOpen, transaction }) => {
             Registered with the Australian Securities and Investments Commission
             (ASIC)
           </p>
-        </div>
+        </div> */}
       </div>
     </Modal>
   );
