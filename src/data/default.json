@@ -1,0 +1,79 @@
+[
+  {
+    "name": "United States",
+    "code": "US",
+    "currency": "USD",
+    "currencySymbol": "$",
+    "country_calling_code": "+1"
+  },
+  {
+    "name": "United Kingdom",
+    "code": "GB",
+    "currency": "GBP",
+    "currencySymbol": "£",
+    "country_calling_code": "+44"
+  },
+  {
+    "name": "Canada",
+    "code": "CA",
+    "currency": "CAD",
+    "currencySymbol": "$",
+    "country_calling_code": "+1"
+  },
+  {
+    "name": "Germany",
+    "code": "DE",
+    "currency": "EUR",
+    "currencySymbol": "€",
+    "country_calling_code": "+49"
+  },
+  {
+    "name": "France",
+    "code": "FR",
+    "currency": "EUR",
+    "currencySymbol": "€",
+    "country_calling_code": "+33"
+  },
+  {
+    "name": "India",
+    "code": "IN",
+    "currency": "INR",
+    "currencySymbol": "₹",
+    "country_calling_code": "+91"
+  },
+  {
+    "name": "Bangladesh",
+    "code": "BD",
+    "currency": "BDT",
+    "currencySymbol": "৳",
+    "country_calling_code": "+880"
+  },
+  {
+    "name": "Australia",
+    "code": "AU",
+    "currency": "AUD",
+    "currencySymbol": "$",
+    "country_calling_code": "+61"
+  },
+  {
+    "name": "Japan",
+    "code": "JP",
+    "currency": "JPY",
+    "currencySymbol": "¥",
+    "country_calling_code": "+81"
+  },
+  {
+    "name": "Brazil",
+    "code": "BR",
+    "currency": "BRL",
+    "currencySymbol": "R$",
+    "country_calling_code": "+55"
+  },
+  {
+    "name": "South Africa",
+    "code": "ZA",
+    "currency": "ZAR",
+    "currencySymbol": "R",
+    "country_calling_code": "+27"
+  }
+]

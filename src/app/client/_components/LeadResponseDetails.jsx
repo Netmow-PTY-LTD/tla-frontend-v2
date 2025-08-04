@@ -56,7 +56,7 @@ export default function LeadResponseDetails({ onBack, response }) {
 
   // console.log('singleResponse in details', singleResponse);
   const currentStatus = singleResponse?.data?.status || 'Pending';
-  const toUser=singleResponse?.data?.responseBy?.user?._id;
+  const toUser = singleResponse?.data?.responseBy?.user?._id;
   useNotifications(currentUser?._id, (data) => {
     console.log('🔔 Notification:', data);
     if (data?.userId) {
@@ -127,7 +127,7 @@ export default function LeadResponseDetails({ onBack, response }) {
   const handleActivity = async (type) => {
     if (type === 'whatsapp') {
       const whatsappActivityPayload = {
-        toUser:toUser,
+        toUser: toUser,
         activityNote: 'You tried to contact via WhatsApp',
         activityType: 'whatsapp',
         module: 'response',
@@ -257,20 +257,6 @@ export default function LeadResponseDetails({ onBack, response }) {
                 <MessageSquare />
                 Send SMS
               </Button> */}
-            </div>
-            <div className="mt-5 flex items-center gap-2">
-              <Tag />
-              <span className="admin-text font-medium">
-                Your estimate:{' '}
-                <Link href="#" className="underline">
-                  <button
-                    className="text-[#ff8602]"
-                    onClick={() => handleActivity('Sendestimate')}
-                  >
-                    Send an estimate
-                  </button>
-                </Link>
-              </span>
             </div>
             <hr className="w-full mt-5" />
             {response?.responseBy?.serviceIds?.length > 0 && (
