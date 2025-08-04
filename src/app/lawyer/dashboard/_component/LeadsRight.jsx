@@ -12,6 +12,7 @@ const LeadsRight = ({ isExpanded, onViewDetails, data,selectedLead }) => {
 
   // ✅ Use hook directly (at top level of component)
   useRealTimeStatus(userIds, (userId, isOnline) => {
+    console.log('socket response  ==>',{userIds, socketResponse:{userId,isOnline}})
     setOnlineMap((prev) => ({ ...prev, [userId]: isOnline }));
   });
 
