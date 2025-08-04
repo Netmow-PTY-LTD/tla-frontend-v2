@@ -455,7 +455,7 @@ export default function ClientNewLeadRegistrationModal({
           <h4 className="text-[24px] font-semibold text-center mb-8">
             Place a new request
           </h4>
-          <div className="space-y-4 max-h-[300px] overflow-y-auto]">
+          <div className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="" className="font-semibold">
                 What service do you need?
