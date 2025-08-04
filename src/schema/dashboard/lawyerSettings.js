@@ -4,9 +4,13 @@ const bdPhoneRegex = /^(?:\+88|88)?01[3-9]\d{8}$/;
 const auPhoneRegex = /^(?:\+?61|0)[2-478]\d{8}$/;
 
 export const lawyerSettingAboutSchema = z.object({
-  name: z.string({ invalid_type_error: 'Name must be a string' }).min(1, { message: 'Name is required' }),
+  name: z
+    .string({ invalid_type_error: 'Name must be a string' })
+    .min(1, { message: 'Name is required' }),
   designation: z.string().optional(),
-  phone: z.string({ invalid_type_error: 'phone must be a string' }).min(1, { message: 'Name is required' }),
+  phone: z
+    .string({ invalid_type_error: 'phone must be a string' })
+    .min(1, { message: 'Phone is required' }),
   bio: z.string({ invalid_type_error: 'Bio must be a string' }),
   lawyerContactEmail: z
     .string()
@@ -30,7 +34,7 @@ export const lawyerSettingAboutSchema = z.object({
     .string()
     .trim()
     .refine((val) => bdPhoneRegex.test(val) || auPhoneRegex.test(val), {
-      message: 'Phone number must be a valid BD or AU number',
+      message: 'Phone number must be a valid number',
     })
     .or(z.literal(''))
     .optional(),

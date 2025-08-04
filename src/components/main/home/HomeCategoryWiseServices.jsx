@@ -80,8 +80,8 @@ export default function HomeCategoryWiseServices() {
     <section className="section category-wise-services">
       <div className="container">
         <SectionHeading
-          title="Explore a Comprehensive Range of Specialized Legal Services Tailored
-            to Your Needs"
+          title="Explore a comprehensive range of specialized legal services tailored
+            to your needs"
           subtitle="Our Services"
         />
         {/* <div className="section-heading">

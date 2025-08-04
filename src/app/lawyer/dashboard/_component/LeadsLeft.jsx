@@ -278,7 +278,14 @@ export default function LeadDetailsPage({
                       <div className="text-[#34495E] mt-2">
                         {leadAnswer?.options &&
                           leadAnswer?.options
-                            ?.map((option) => option?.option)
+                            .map(
+                              (option) =>
+                                option?.option
+                                  ?.replace(/_/g, ' ') // replace underscores with spaces
+                                  ?.replace(/\b\w/g, (char) =>
+                                    char.toUpperCase()
+                                  ) // capitalize each word
+                            )
                             .join(', ')}
                       </div>
                     </div>

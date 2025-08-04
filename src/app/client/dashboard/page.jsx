@@ -12,6 +12,7 @@ import LeadSettings from '@/components/dashboard/lawyer/components/LeadSettings'
 import LeadStatsCard from '@/components/dashboard/lawyer/module/MyStats/LeadStatsCard';
 import { useGetAllMyLeadsQuery } from '@/store/features/lawyer/LeadsApiService';
 import ResponseSkeleton from '@/app/lawyer/dashboard/my-responses/_components/ResponseSkeleton';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function BuyerDashboard() {
   const menuLinks = [
@@ -41,7 +42,29 @@ export default function BuyerDashboard() {
     "If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options.";
 
   if (isLoadingUserInfo || isLoadingLeadServices) {
-    return <ResponseSkeleton />;
+    return (
+      <div className="p-6 space-y-8 animate-pulse max-w-[1100px] mx-auto">
+        {/* Header section */}
+        <div className="space-y-3">
+          <Skeleton className="h-8 w-1/2" />
+          <Skeleton className="h-4 w-1/3" />
+        </div>
+
+        {/* Content blocks */}
+        {Array.from({ length: 5 }).map((_, idx) => (
+          <div key={idx} className="flex gap-4">
+            {/* Avatar skeleton */}
+            <Skeleton className="h-14 w-14 rounded-full flex-shrink-0" />
+            {/* Text block */}
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-2/3" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
   }
 
   return (

@@ -137,7 +137,7 @@ const MyStatsPage = () => {
             ></div>
           </div>
         </Card>
-        <LeadSettings className="h-full " />
+        {/* <LeadSettings className="h-full " /> */}
       </div>
     </div>
   );

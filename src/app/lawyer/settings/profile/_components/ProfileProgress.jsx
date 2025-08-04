@@ -8,7 +8,7 @@ export default function ProfileProgress() {
 
   return (
     <div className="space-y-2 mb-5">
-      <p className="text-sm text-gray-700">
+      {/* <p className="text-sm text-gray-700">
         Your profile is{' '}
         <span className="text-cyan-600 font-semibold">
           {completion} % complete
@@ -19,7 +19,7 @@ export default function ProfileProgress() {
 
       <p className="text-sm text-gray-400">
         Take a moment to improve your profile and make it stand out
-      </p>
+      </p> */}
 
       <p className="text-sm text-gray-700">
         Make the best first impression with a strong legal profile — this is the
