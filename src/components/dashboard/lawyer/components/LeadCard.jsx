@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import TagButton from './TagButton';
 import { BadgeCent, BadgeCheck, CircleAlert, List, Zap } from 'lucide-react';
@@ -8,10 +8,14 @@ import { Button } from '@/components/ui/button';
 import { formatRelativeTime } from '@/helpers/formatTime';
 import { userDummyImage } from '@/data/data';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useRealTimeStatus, useUserStatus } from '@/hooks/useSocketListener';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import { get } from 'react-hook-form';
 
-const LeadCard = ({ onViewDetails, user, isExpanded, selectedLead }) => {
+const LeadCard = ({ onViewDetails, user, isExpanded, selectedLead,onlineMap }) => {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
+
 
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])
@@ -86,16 +90,14 @@ const LeadCard = ({ onViewDetails, user, isExpanded, selectedLead }) => {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
             <div>
               <div
-                className={`font-medium mb-1 ${
-                  isExpanded ? 'heading-base' : 'text-[13px]'
-                }`}
+                className={`font-medium mb-1 ${isExpanded ? 'heading-base' : 'text-[13px]'
+                  }`}
               >
                 {user?.userProfileId?.name}
               </div>
               <div
-                className={`${
-                  isExpanded ? 'text-[13px]' : 'text-[10px]'
-                } text-gray-500`}
+                className={`${isExpanded ? 'text-[13px]' : 'text-[10px]'
+                  } text-gray-500`}
               >
                 {user?.userProfileId?.address ?? ''}
               </div>
@@ -105,13 +107,24 @@ const LeadCard = ({ onViewDetails, user, isExpanded, selectedLead }) => {
         <p className="font-medium text-[11px] text-gray-600 mt-2 sm:mt-0 w-16 flex justify-end">
           {user?.createdAt && formatRelativeTime(user?.createdAt)}
         </p>
+        <span className="text-xs">
+          <div className="flex items-center gap-2 text-sm">
+            <span
+              className={`w-2 h-2 rounded-full ${onlineMap[user?.userProfileId?.user?._id] ? "bg-green-500" : "bg-gray-400"
+                }`}
+            ></span>
+            <span className="text-gray-700">
+              {onlineMap[user?.userProfileId?.user?._id] ? "Online" : "Offline"}
+            </span>
+          </div>
+        </span>
       </div>
 
       <hr className="border-[#F3F3F3] border" />
       {(user?.additionalDetails && user.additionalDetails !== '') ||
-      urgentOption?.option ||
-      user?.userProfileId?.phone ||
-      badge ? (
+        urgentOption?.option ||
+        user?.userProfileId?.phone ||
+        badge ? (
         <div className="px-3 pt-3 pb-2">
           <div className="flex flex-wrap gap-2">
             {user?.additionalDetails && user.additionalDetails !== '' && (
@@ -143,9 +156,8 @@ const LeadCard = ({ onViewDetails, user, isExpanded, selectedLead }) => {
       <div className="p-3 flex-1">
         {user?.serviceId?.name && (
           <h3
-            className={`font-medium mb-2 ${
-              isExpanded ? 'heading-base' : 'text-[13px]'
-            }`}
+            className={`font-medium mb-2 ${isExpanded ? 'heading-base' : 'text-[13px]'
+              }`}
           >
             Looking for a {user?.serviceId?.name} consultation
           </h3>
@@ -161,9 +173,8 @@ const LeadCard = ({ onViewDetails, user, isExpanded, selectedLead }) => {
 
         <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
           <h4
-            className={`font-medium mb-2 ${
-              isExpanded ? 'heading-base' : 'text-[14px]'
-            }`}
+            className={`font-medium mb-2 ${isExpanded ? 'heading-base' : 'text-[14px]'
+              }`}
           >
             {user?.serviceId?.name}
           </h4>
@@ -187,9 +198,8 @@ const LeadCard = ({ onViewDetails, user, isExpanded, selectedLead }) => {
       <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">
         {user?.credit != null && (
           <p
-            className={`text-[#34495E] ${
-              isExpanded ? 'heading-base' : 'text-[12px]'
-            } flex items-center gap-2`}
+            className={`text-[#34495E] ${isExpanded ? 'heading-base' : 'text-[12px]'
+              } flex items-center gap-2`}
           >
             <BadgeCent className="w-5 h-5" />
             <span className="font-semibold">
