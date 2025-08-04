@@ -132,7 +132,7 @@ export default function HeroHome({ searchParam }) {
           <div className="mb-[30px]">
             <h1 className="mb-[15px]">Need a Lawyer?</h1>
             <p className="text-[#444] text-2xl font-medium">
-              Get Free Quotes in Minutes.
+              Get free quotes in minutes.
             </p>
           </div>
           <form className="w-full" onSubmit={handleSubmit}>

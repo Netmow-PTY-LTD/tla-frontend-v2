@@ -18,6 +18,7 @@ import { verifyToken } from '@/utils/verifyToken';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/store/features/auth/authSlice';
 import { StartFrequencyOptions } from '@/data/data';
+import { isValidPhoneNumber } from 'libphonenumber-js';
 
 export default function ClientLeadRegistrationModal({
   modalOpen,
@@ -473,6 +474,8 @@ export default function ClientLeadRegistrationModal({
     setClickButtonType('Prev');
   };
 
+  const isValidPhone = (phone) => isValidPhoneNumber(phone);
+
   const isNextDisabled = (() => {
     // Step: Questions (required) — check checkedOptions length instead of answers
     if (step < totalQuestions) {
@@ -506,16 +509,21 @@ export default function ClientLeadRegistrationModal({
       return !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
+    if (step === totalQuestions + 6) {
+      // ✅ Use libphonenumber-js validation
+      return !phone || !isValidPhone(phone);
+    }
+
     // Step: Phone (optional)
     return false;
   })();
 
-  console.log('isQuestionsLoading:', isQuestionsLoading);
-  console.log('selectedServiceWiseQuestions:', selectedServiceWiseQuestions);
-  console.log(
-    '!selectedServiceWiseQuestions?.length:',
-    !selectedServiceWiseQuestions?.length
-  );
+  // console.log('isQuestionsLoading:', isQuestionsLoading);
+  // console.log('selectedServiceWiseQuestions:', selectedServiceWiseQuestions);
+  // console.log(
+  //   '!selectedServiceWiseQuestions?.length:',
+  //   !selectedServiceWiseQuestions?.length
+  // );
 
   return (
     <Modal
@@ -660,8 +668,9 @@ export default function ClientLeadRegistrationModal({
               <input
                 type="text"
                 className="border rounded px-3 py-2 w-20 text-center"
-                value="AUD"
+                defaultValue="AUD"
                 placeholder='currency i.e. "AUD"'
+                readOnly
               />
             </div>
           </div>

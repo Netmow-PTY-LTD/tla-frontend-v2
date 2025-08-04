@@ -61,8 +61,6 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
     skip: !responseId && !response?._id,
   });
 
-
-
   const toUser = singleResponse?.data?.leadId?.userProfileId?.user?._id;
 
   useNotifications(currentUser?._id, (data) => {
@@ -190,7 +188,6 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
         const result = await updateActivity(whatsappActivityPayload).unwrap();
 
         if (result.success) {
-
           const phone = response?.leadId?.userProfileId?.phone;
           window.open(
             `https://api.whatsapp.com/send?phone=${phone}&text=`,
@@ -322,7 +319,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                   Send SMS
                 </Button> */}
               </div>
-              <div className="mt-5 flex items-center gap-2">
+              {/* <div className="mt-5 flex items-center gap-2">
                 <Tag />
                 <span className="admin-text font-medium">
                   Your estimate:{' '}
@@ -335,7 +332,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                     </button>
                   </Link>
                 </span>
-              </div>
+              </div> */}
               <div className="mt-5 flex items-center gap-2">
                 <BadgeCent />
                 <b>

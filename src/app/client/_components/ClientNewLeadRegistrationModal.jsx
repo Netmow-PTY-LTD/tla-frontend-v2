@@ -455,7 +455,7 @@ export default function ClientNewLeadRegistrationModal({
           <h4 className="text-[24px] font-semibold text-center mb-8">
             Place a new request
           </h4>
-          <div className="space-y-4">
+          <div className="space-y-4 max-h-[300px] overflow-y-auto]">
             <div className="space-y-2">
               <label htmlFor="" className="font-semibold">
                 What service do you need?
@@ -574,7 +574,7 @@ export default function ClientNewLeadRegistrationModal({
             <h4 className="text-[24px] font-semibold text-center mb-8">
               {viewData.question}
             </h4>
-            <div className="border border-1 flex flex-col gap-2 rounded-lg">
+            <div className="border border-1 flex flex-col gap-2 rounded-lg max-h-[300px] overflow-y-auto">
               {viewData.options?.length > 0 &&
                 viewData.options?.map((option, index) => {
                   const isLast = index === viewData.options.length - 1;

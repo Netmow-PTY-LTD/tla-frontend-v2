@@ -62,10 +62,12 @@ const LeadCard = ({ onViewDetails, user, isExpanded, selectedLead,onlineMap }) =
     return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
   };
 
+  const isSelected = selectedLead?._id === user?._id;
+
   return (
     <Card
       className={`w-full max-w-full mx-auto flex flex-col cursor-pointer ${
-        selectedLead?._id === user?._id
+        !isExpanded && isSelected
           ? 'border-l-[3px] border-l-[var(--secondary-color)] rounded-tl-none rounded-bl-none'
           : 'border-transparent'
       }`}
