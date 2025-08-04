@@ -2,8 +2,8 @@ import { Card } from '@/components/ui/card';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import TagButton from './TagButton';
-import { BadgeCent, BadgeCheck, CircleAlert, Zap } from 'lucide-react';
-import { useGetAllLeadsQuery, useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
+import { BadgeCent, BadgeCheck, CircleAlert, List, Zap } from 'lucide-react';
+import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 import { Button } from '@/components/ui/button';
 import { formatRelativeTime } from '@/helpers/formatTime';
 import { userDummyImage } from '@/data/data';
@@ -11,8 +11,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useRealTimeStatus, useUserStatus } from '@/hooks/useSocketListener';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
+import { get } from 'react-hook-form';
 
-const LeadCard = ({ onViewDetails, user, isExpanded, onlineMap }) => {
+const LeadCard = ({ onViewDetails, user, isExpanded, selectedLead,onlineMap }) => {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
 
@@ -28,10 +29,46 @@ const LeadCard = ({ onViewDetails, user, isExpanded, onlineMap }) => {
     ?.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     ?.join('');
 
+  const ProgressBar = ({ count = 0, total = 5 }) => {
+    const sticks = Array.from({ length: total }, (_, index) => (
+      <div
+        key={index}
+        className={`w-[3px] h-[14px] ${
+          index < count ? 'bg-green-300' : 'bg-gray-300'
+        }`}
+      ></div>
+    ));
+
+    return (
+      <div className="flex items-center gap-2">
+        <div className="flex gap-0.5">{sticks}</div>
+        <div className="text-[11px]">
+          {count === 0 ? (
+            <span className="font-medium">1st to respond</span>
+          ) : count > total ? (
+            <span>{total}+</span>
+          ) : (
+            <span>
+              {count}/{total}
+            </span>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const getTruncatedText = (text, maxLength) => {
+    if (!text || typeof text !== 'string') return '';
+    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+  };
 
   return (
     <Card
-      className="w-full max-w-full mx-auto flex flex-col cursor-pointer"
+      className={`w-full max-w-full mx-auto flex flex-col cursor-pointer ${
+        selectedLead?._id === user?._id
+          ? 'border-l-[3px] border-l-[var(--secondary-color)] rounded-tl-none rounded-bl-none'
+          : 'border-transparent'
+      }`}
       onClick={() => onViewDetails(user)}
     >
       {/* Header Section */}
@@ -65,7 +102,7 @@ const LeadCard = ({ onViewDetails, user, isExpanded, onlineMap }) => {
             </div>
           </div>
         </div>
-        <p className="font-medium text-[11px] text-gray-600 sm:ml-4 mt-2 sm:mt-0">
+        <p className="font-medium text-[11px] text-gray-600 mt-2 sm:mt-0 w-16 flex justify-end">
           {user?.createdAt && formatRelativeTime(user?.createdAt)}
         </p>
         <span className="text-xs">
@@ -92,7 +129,7 @@ const LeadCard = ({ onViewDetails, user, isExpanded, onlineMap }) => {
               <TagButton
                 text="Additional Details"
                 bgColor="#004DA61A"
-                icon={<BadgeCheck className="text-[#000] w-4 h-4" />}
+                icon={<List className="text-[#000] w-4 h-4" />}
               />
             )}
             {urgentOption?.option && (
@@ -140,8 +177,9 @@ const LeadCard = ({ onViewDetails, user, isExpanded, onlineMap }) => {
             {user?.serviceId?.name}
           </h4>
           <p
-            className={`text-[#878787] ${isExpanded ? 'text-[13px]' : 'text-[12px]'
-              }`}
+            className={`text-[#34495E] ${
+              isExpanded ? 'text-[13px]' : 'text-[11px]'
+            }`}
           >
             {user?.additionalDetails === ''
               ? `If you're facing a divorce, it's crucial to seek professional legal
@@ -149,7 +187,7 @@ const LeadCard = ({ onViewDetails, user, isExpanded, onlineMap }) => {
             child custody arrangements, ensuring you understand your rights and
             options. Let us help you navigate this challenging time with expert
             guidance.`
-              : user?.additionalDetails}
+              : getTruncatedText(user?.additionalDetails, 200)}
           </p>
         </div>
       </div>
@@ -168,18 +206,7 @@ const LeadCard = ({ onViewDetails, user, isExpanded, onlineMap }) => {
             {/* <CircleAlert className="w-4 h-4" /> */}
           </p>
         )}
-        <div className="flex items-center gap-2">
-          <div className="flex gap-0.5">
-            <div className="w-[3px] h-[14px] bg-green-300"></div>
-            <div className="w-[3px] h-[14px] bg-green-300"></div>
-            <div className="w-[3px] h-[14px] bg-gray-300"></div>
-            <div className="w-[3px] h-[14px] bg-gray-300"></div>
-            <div className="w-[3px] h-[14px] bg-gray-300"></div>
-          </div>
-          <div className="text-[11px]">
-            <span>2/5</span>
-          </div>
-        </div>
+        <ProgressBar count={singleLead?.data?.responders?.length || 0} />
       </div>
     </Card>
   );

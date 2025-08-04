@@ -3,7 +3,7 @@ import LeadCard from '@/components/dashboard/lawyer/components/LeadCard';
 import { useRealTimeStatus } from '@/hooks/useSocketListener';
 import React, { useEffect, useState } from 'react';
 
-const LeadsRight = ({ isExpanded, onViewDetails, data }) => {
+const LeadsRight = ({ isExpanded, onViewDetails, data,selectedLead }) => {
   const [onlineMap, setOnlineMap] = useState({});
   // Safely extract user IDs from AllLeadData
   const userIds =data
@@ -19,7 +19,6 @@ const LeadsRight = ({ isExpanded, onViewDetails, data }) => {
     console.log("data", data);
     console.log("onlineMap", onlineMap);
   }, [data, onlineMap]);
-
 
 
   return (
@@ -38,6 +37,7 @@ const LeadsRight = ({ isExpanded, onViewDetails, data }) => {
             user={lead}
             isExpanded={isExpanded}
             onlineMap={onlineMap}
+            selectedLead={selectedLead}
           />
         ))}
       </section>

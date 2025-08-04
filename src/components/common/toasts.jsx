@@ -5,7 +5,7 @@ export const showSuccessToast = (message) => {
   toast.success(message, {
     duration: 2000,
     position: 'top-right',
-    style: { backgroundColor: 'green', color: 'white' },
+    style: { backgroundColor: '#22bb33', color: 'white' },
   });
 };
 
@@ -14,7 +14,7 @@ export const showErrorToast = (message) => {
   toast.error(message, {
     duration: 5000,
     position: 'top-right',
-    style: { backgroundColor: 'red', color: 'white' },
+    style: { backgroundColor: '#bb2124', color: 'white' },
   });
 };
 
@@ -24,7 +24,7 @@ export const showInfoToast = (message) => {
     duration: 3000,
     position: 'top-right',
     style: {
-      backgroundColor: 'blue',
+      backgroundColor: '#5bc0de',
       color: 'white',
     },
   });
@@ -36,7 +36,7 @@ export const showWarningToast = (message) => {
     duration: 5000,
     position: 'top-right',
     style: {
-      backgroundColor: 'yellow',
+      backgroundColor: '#f0ad4e',
       color: 'white',
     },
   });

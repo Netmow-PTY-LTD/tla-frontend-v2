@@ -1,5 +1,6 @@
 'use client';
 
+import ResponseSkeleton from '@/app/lawyer/dashboard/my-responses/_components/ResponseSkeleton';
 import WhatsApp from '@/components/icon/WhatsApp';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -42,7 +43,7 @@ export default function NotificationPreview() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const { data } = useGetNotificationsQuery();
+  const { data, isLoading } = useGetNotificationsQuery();
   const [markAsRead] = useMarkAsRedNotificationMutation();
 
   const iconStyles = {
@@ -145,6 +146,7 @@ export default function NotificationPreview() {
 
   //console.log('data', data?.data);
 
+  if (isLoading) return <ResponseSkeleton />;
   return (
     <div className="p-4">
       <h2 className="text-xl font-semibold mb-4">All Notifications</h2>

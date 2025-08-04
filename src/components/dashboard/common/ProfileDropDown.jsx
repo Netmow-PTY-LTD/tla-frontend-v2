@@ -38,6 +38,8 @@ export default function ProfileDropDown() {
   const { data } = useGetUserCreditStatsQuery();
   const creditStats = data?.data || {};
 
+  console.log('creditStats', creditStats);
+
   const router = useRouter();
 
   /**
@@ -80,9 +82,33 @@ export default function ProfileDropDown() {
           align="start"
         >
           <DropdownMenuLabel>User Account</DropdownMenuLabel>
-          <div className="px-2">
-            Available credits: <b>{creditStats?.currentCredits}</b>
+          <DropdownMenuSeparator />
+          <div className="p-2 w-full">
+            <div className="flex items-center justify-between mb-1">
+              <b>
+                {creditStats?.totalUsedCredits}/
+                {creditStats?.totalPurchasedCredits}
+              </b>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2.5">
+              <div
+                className="bg-green-400 h-2.5 rounded-full transition-all duration-300"
+                style={{
+                  width: `${
+                    creditStats?.totalUsedCredits
+                      ? (creditStats.totalUsedCredits /
+                          creditStats.totalPurchasedCredits) *
+                        100
+                      : 0
+                  }%`,
+                }}
+              ></div>
+            </div>
+            <div className="mt-2 text-sm">
+              Available Credits: <b>{creditStats?.remainingCredits}</b>
+            </div>
           </div>
+
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
@@ -132,6 +158,7 @@ export default function ProfileDropDown() {
               </Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
+          <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
               <Link
