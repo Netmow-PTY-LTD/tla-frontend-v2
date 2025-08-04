@@ -58,7 +58,7 @@ export default function ResponseHead({
   ).length;
 
   return (
-    <section className={`${isExpanded ? '' : 'pl-4 pr-1'}`}>
+    <section className={`shadow-custom ${isExpanded ? '' : 'pl-4 pr-1'}`}>
       <div className="flex justify-between items-center gap-4">
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-1 sm:gap-4">
           <h2

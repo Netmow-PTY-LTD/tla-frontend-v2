@@ -82,7 +82,10 @@ export default function AdminDashboardHeader({ onToggleSidebar }) {
         >
           <BellRing className="w-5 h-5 text-gray-500" />
         </Link>
-        <AdminProfileDropDown data={currentUser?.data ?? []} />
+        <AdminProfileDropDown
+          data={currentUser?.data ?? []}
+          isCurrentUserLoading={isCurrentUserLoading}
+        />
       </div>
     </header>
   );

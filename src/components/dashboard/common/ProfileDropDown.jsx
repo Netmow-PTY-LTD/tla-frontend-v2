@@ -58,12 +58,12 @@ export default function ProfileDropDown() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           {isLoading ? (
-            <div className="flex items-center group gap-[10px]">
+            <div className="flex items-center group gap-[5px]">
               <div className="w-10">
                 <Skeleton className="h-8 w-8 rounded-full" />
               </div>
               <div>
-                <Skeleton className="h-5 w-32" />
+                <Skeleton className="h-5 w-16" />
               </div>
             </div>
           ) : (
