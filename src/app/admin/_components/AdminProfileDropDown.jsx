@@ -19,8 +19,9 @@ import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { useAuthLogOutMutation } from '@/store/features/auth/authApiService';
 import { logOut } from '@/store/features/auth/authSlice';
+import { Skeleton } from '@/components/ui/skeleton';
 
-export default function AdminProfileDropDown({ data }) {
+export default function AdminProfileDropDown({ data, isCurrentUserLoading }) {
   const dispatch = useDispatch();
 
   const router = useRouter();
@@ -56,19 +57,30 @@ export default function AdminProfileDropDown({ data }) {
     <div className="flex items-center">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <div className="flex items-center group gap-[10px]">
-            <Avatar>
-              <AvatarImage
-                src={data?.profile?.profilePicture ?? userDummyImage}
-                alt={data?.profile?.name || 'Admin'}
-              />
-              <AvatarFallback>USER</AvatarFallback>
-            </Avatar>
-            <span className="font-medium text-[14px]">
-              {data?.profile?.name.split(' ')[0] || 'Admin'}
-            </span>
-            <ChevronDown className="w-5 h-5" />
-          </div>
+          {isCurrentUserLoading ? (
+            <div className="flex items-center group gap-[5px]">
+              <div className="w-10">
+                <Skeleton className="h-8 w-8 rounded-full" />
+              </div>
+              <div>
+                <Skeleton className="h-5 w-16" />
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center group gap-[10px]">
+              <Avatar>
+                <AvatarImage
+                  src={data?.profile?.profilePicture ?? userDummyImage}
+                  alt={data?.profile?.name || 'Admin'}
+                />
+                <AvatarFallback>USER</AvatarFallback>
+              </Avatar>
+              <span className="font-medium text-[14px]">
+                {data?.profile?.name.split(' ')[0] || 'Admin'}
+              </span>
+              <ChevronDown className="w-5 h-5" />
+            </div>
+          )}
         </DropdownMenuTrigger>
         <DropdownMenuContent
           className="w-56 z-[999]"

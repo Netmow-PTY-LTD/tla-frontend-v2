@@ -41,17 +41,16 @@ const LeadStatsCard = ({ locations, profile }) => {
   const totalLeads = allMyLeads?.pagination?.total ?? 0;
 
   const rejectLead =
-    allMyResponses?.data?.filter((response) => response.status === 'reject')
-      ?.length ?? 0;
+    allMyLeads?.data?.filter((lead) => lead.status === 'rejected')?.length ?? 0;
   const pendingLead =
-    allMyResponses?.data?.filter((response) => response.status === 'pending')
-      ?.length ?? 0;
+    allMyLeads?.data?.filter((lead) => lead.status === 'pending')?.length ?? 0;
   const archiveLead =
-    allMyResponses?.data?.filter((response) => response.status === 'archive')
-      ?.length ?? 0;
+    allMyLeads?.data?.filter((lead) => lead.status === 'archived')?.length ?? 0;
   const approveLead =
-    allMyResponses?.data?.filter((response) => response.status === 'approve')
-      ?.length ?? 0;
+    allMyLeads?.data?.filter((lead) => lead.status === 'approved')?.length ?? 0;
+
+  console.log(' allMyLeads', allMyLeads?.data);
+  console.log('approved lead', approveLead);
 
   return (
     <Card className="w-full max-w-md md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto bg-white shadow-sm rounded-2xl">
