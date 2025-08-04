@@ -1,4 +1,8 @@
 
+
+//  ------------------  first part -------------------------
+
+
 // // lib/socket.js
 // import { io } from "socket.io-client";
 
@@ -28,55 +32,6 @@
 
 
 
-// import { io } from "socket.io-client";
-
-// let socket = null;
-
-// const SOCKET_URL = process.env.NEXT_PUBLIC_BASE_URL;
-
-// export const getSocket = (userId) => {
-//   if (!userId || typeof window === "undefined") return null;
-
-//   // Reuse existing socket if it's already connected to the same user
-//   if (socket && socket.connected) {
-//     const existingUserId = socket?.io?.opts?.query?.userId;
-//     if (existingUserId === userId) return socket;
-//   }
-
-//   if (socket) {
-//     socket.disconnect();
-//     socket = null;
-//   }
-
-//   console.log("🔌 Connecting new socket for user:", userId);
-
-//   socket = io(SOCKET_URL, {
-//     query: { userId },
-//     transports: ["websocket"], // force WebSocket (faster)
-//     reconnection: true,
-//     reconnectionAttempts: 5,
-//     reconnectionDelay: 1000,
-//     timeout: 5000,
-//   });
-
-//   socket.on("connect", () => {
-//     console.log(`✅ Socket connected: ${socket.id}`);
-//   });
-
-//   socket.on("disconnect", (reason) => {
-//     console.log(`❌ Socket disconnected:`, reason);
-//   });
-
-//   return socket;
-// };
-
-// export const disconnectSocket = () => {
-//   if (socket) {
-//     console.log("🛑 Disconnecting socket");
-//     socket.disconnect();
-//     socket = null;
-//   }
-// };
 
 
 
@@ -86,36 +41,91 @@
 //  --------------------- part 2 ---------------
 
 
-import { io, Socket } from "socket.io-client";
+// import { io, Socket } from "socket.io-client";
 
-let socket = null;
+// let socket = null;
 
- const url = process.env.NEXT_PUBLIC_BASE_URL;
+//  const url = process.env.NEXT_PUBLIC_BASE_URL;
+
+// export const getSocket = (userId) => {
+//   // If userId not ready, don't create socket
+//   if (!userId) return null;
+
+//   if (!socket) {
+//     console.log("🔌 Connecting socket for user:", userId);
+//     socket = io(`${url}`, {
+//       query: { userId },
+//     });
+//   }
+//   socket.on("connect", () => {
+//     console.log("✅ Connected to socket:", socket?.id);
+//   });
+
+//   socket.on("disconnect", () => {
+//     console.log("❌ Disconnected from socket");
+//   });
+
+//   return socket;
+// };
+
+// export const disconnectSocket = () => {
+//   if (socket) {
+//     socket.disconnect();
+//     socket = null;
+//   }
+// };
+
+
+// lib/socket.js
+
+import { io } from 'socket.io-client';
+
+let socket = null; // singleton instance
+
+const url = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const getSocket = (userId) => {
-  // If userId not ready, don't create socket
-  if (!userId) return null;
-
-  if (!socket) {
-    console.log("🔌 Connecting socket for user:", userId);
-    socket = io(`${url}`, {
-      query: { userId },
-    });
+  // Don't initialize if userId is missing
+  if (!userId) {
+    console.warn("⚠️ No userId provided for socket connection.");
+    return null;
   }
-  socket.on("connect", () => {
-    console.log("✅ Connected to socket:", socket?.id);
+
+  // Return existing socket if already connected
+  if (socket?.connected) return socket;
+
+  // Initialize socket connection
+  console.log("🔌 Connecting socket for user:", userId);
+  socket = io(url, {
+    query: { userId },
+    transports: ['websocket'], // better reliability
+    forceNew: true,            // ensure fresh connection
+    reconnection: true,        // allow reconnections
+    reconnectionAttempts: 5,   // limit retry attempts
+    timeout: 10000             // 10 seconds timeout
   });
 
-  socket.on("disconnect", () => {
-    console.log("❌ Disconnected from socket");
+  socket.on('connect', () => {
+    console.log("✅ Socket connected:", socket.id);
+  });
+
+  socket.on('disconnect', (reason) => {
+    console.log("❌ Socket disconnected:", reason);
+  });
+
+  socket.on('connect_error', (err) => {
+    console.error("🚫 Socket connection error:", err.message);
   });
 
   return socket;
 };
 
+
 export const disconnectSocket = () => {
   if (socket) {
+    console.log("🔌 Disconnecting socket:", socket.id);
     socket.disconnect();
     socket = null;
+     
   }
 };
