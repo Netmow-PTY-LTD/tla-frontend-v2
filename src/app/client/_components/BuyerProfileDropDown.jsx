@@ -19,6 +19,7 @@ import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAuthLogOutMutation } from '@/store/features/auth/authApiService';
 import { logOut, selectCurrentUser } from '@/store/features/auth/authSlice';
+import { disconnectSocket } from '@/lib/socket';
 
 export default function BuyerProfileDropDown({ data }) {
   const dispatch = useDispatch();
@@ -36,6 +37,7 @@ export default function BuyerProfileDropDown({ data }) {
    */
   const [authLogout] = useAuthLogOutMutation();
   const handleLogout = () => {
+    disconnectSocket();
     authLogout();
     dispatch(logOut());
     router.push('/login');

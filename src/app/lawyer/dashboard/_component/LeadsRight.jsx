@@ -6,13 +6,11 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 const LeadsRight = ({ isExpanded, onViewDetails, data,selectedLead }) => {
-  const currentUserId=useSelector(selectCurrentUser)._id
-console.log('current user ==>',currentUserId)
+  const currentUserId=useSelector(selectCurrentUser)?._id
   const [onlineMap, setOnlineMap] = useState({});
   // Safely extract user IDs from AllLeadData
   const userIds =data
     ?.map((lead) => lead.userProfileId?.user?._id) || [];
-
 
   // ✅ Use hook directly (at top level of component)
   useRealTimeStatus(currentUserId,userIds, (userId, isOnline) => {

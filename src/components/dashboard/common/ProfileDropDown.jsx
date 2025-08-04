@@ -29,6 +29,7 @@ import {
 } from '@/store/features/auth/authApiService';
 import { useRouter } from 'next/navigation';
 import { useGetUserCreditStatsQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
+import { disconnectSocket } from '@/lib/socket';
 
 export default function ProfileDropDown() {
   const dispatch = useDispatch();
@@ -50,6 +51,7 @@ export default function ProfileDropDown() {
    */
   const [authLogout] = useAuthLogOutMutation();
   const handleLogout = () => {
+     disconnectSocket();
     authLogout();
     dispatch(logOut());
     Cookies.remove('token');

@@ -76,14 +76,18 @@ export const useResponseRoomUser = (userId, onUpdate) => {
 export const useRealTimeStatus = (currentUserId,userIds, updateStatus ) => {
   useEffect(() => {
  
-   if (!userIds || userIds.length === 0) return;
+   if (!userIds  || userIds.length === 0) return;
     // const socket = getSocket(userIds);
+    // const socket = getSocket();
+     if (!currentUserId) return;
     const socket = getSocket(currentUserId);
 
      if (!socket) {
       console.warn("❌ Socket not initialized.");
       return;
     }
+
+    socket.emit("watch-users", userIds);
     const handleOnline = ({ userId }) => {
       if (userIds.includes(userId)) {
         updateStatus(userId, true);
@@ -103,5 +107,6 @@ export const useRealTimeStatus = (currentUserId,userIds, updateStatus ) => {
       socket.off("userOnline", handleOnline);
       socket.off("userOffline", handleOffline);
     };
-  }, [userIds]);
+  // }, [userIds]);
+   }, [userIds.join(",")]);
 };
