@@ -55,7 +55,7 @@ const ProfileCard = ({ profile, isLoading, isError, error }) => {
         <div className="space-y-4 text-[#34495E]">
           <p className="heading-base flex items-center">
             <PhoneCall className="mr-2 w-5 h-5" />
-            <span> {profile?.profile?.phone} (Verified)</span>
+            <span> {profile?.profile?.phone}</span>
           </p>
           <p className="heading-base flex items-center">
             {' '}

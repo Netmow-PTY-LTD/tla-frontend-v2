@@ -77,13 +77,13 @@ export default function NotificationDropdown() {
       </div>
 
       {isOpen && (
-        <div className="absolute right-0 bg-white shadow-[0_6px_16px_#0006] rounded w-72 mt-2 max-h-96 overflow-y-auto z-[99]">
-          <ul>
+        <div className="absolute right-0 bg-white shadow-[0_6px_16px_#0006] rounded w-72 mt-2 z-[99]">
+          <ul className="max-h-96 overflow-y-auto">
             {isLoading ? (
               <li className="px-3 py-2 text-sm text-gray-500">Loading...</li>
             ) : notifications.length > 0 ? (
               <>
-                {notifications.slice(0, 5).map((n) => (
+                {notifications.slice(0, 10).map((n) => (
                   <li
                     key={n._id}
                     onClick={() => handleNotificationClick(n)}

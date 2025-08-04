@@ -30,17 +30,15 @@ import {
 import { useRouter } from 'next/navigation';
 import { useGetUserCreditStatsQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 import { disconnectSocket } from '@/lib/socket';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ProfileDropDown() {
   const dispatch = useDispatch();
 
-  const { data: currentUser } = useAuthUserInfoQuery();
+  const { data: currentUser, isLoading } = useAuthUserInfoQuery();
 
   const { data } = useGetUserCreditStatsQuery();
   const creditStats = data?.data || {};
-
-  console.log('creditStats', creditStats);
-
   const router = useRouter();
 
   /**
@@ -61,21 +59,32 @@ export default function ProfileDropDown() {
     <div className="flex items-center">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <div className="flex items-center group gap-[10px]">
-            <Avatar>
-              <AvatarImage
-                src={
-                  currentUser?.data?.profile?.profilePicture ?? userDummyImage
-                }
-                alt={currentUser?.data?.profile?.name || 'Lawyer'}
-              />
-              <AvatarFallback>USER</AvatarFallback>
-            </Avatar>
-            <span className="font-medium text-[14px]">
-              {currentUser?.data?.profile?.name.split(' ')[0] || 'Lawyer'}
-            </span>
-            <ChevronDown className="w-5 h-5" />
-          </div>
+          {isLoading ? (
+            <div className="flex items-center group gap-[5px]">
+              <div className="w-10">
+                <Skeleton className="h-8 w-8 rounded-full" />
+              </div>
+              <div>
+                <Skeleton className="h-5 w-16" />
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center group gap-[10px]">
+              <Avatar>
+                <AvatarImage
+                  src={
+                    currentUser?.data?.profile?.profilePicture ?? userDummyImage
+                  }
+                  alt={currentUser?.data?.profile?.name || 'Lawyer'}
+                />
+                <AvatarFallback>USER</AvatarFallback>
+              </Avatar>
+              <span className="font-medium text-[14px]">
+                {currentUser?.data?.profile?.name.split(' ')[0] || 'Lawyer'}
+              </span>
+              <ChevronDown className="w-5 h-5" />
+            </div>
+          )}
         </DropdownMenuTrigger>
         <DropdownMenuContent
           className="w-56 z-[999]"

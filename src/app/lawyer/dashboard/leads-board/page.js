@@ -23,6 +23,7 @@ const LeadBoardPage = () => {
   const [hasMore, setHasMore] = useState(true);
   const [parsed, setParsed] = useState(null);
   const [searchKeyword, setSearchKeyword] = useState(parsed || {});
+  const [totalLeadsCount, setTotalLeadsCount] = useState(0);
 
   // Load filter from localStorage on first mount
 
@@ -71,6 +72,11 @@ const LeadBoardPage = () => {
       }
       return updatedLeads;
     });
+
+    if (page === 1 && typeof data?.pagination?.total === 'number') {
+      setTotalLeadsCount(data.pagination.total);
+    }
+
     const totalPage = data?.pagination?.totalPage;
     if (
       typeof totalPage !== 'number' ||
@@ -196,7 +202,7 @@ const LeadBoardPage = () => {
               <div className="leads-top-row">
                 <LeadsHead
                   isExpanded={!showLeadDetails}
-                  total={data?.pagination?.total ?? 0}
+                  total={totalLeadsCount}
                   setSearchKeyword={setSearchKeyword}
                   searchKeyword={searchKeyword}
                   setLeads={setLeads}

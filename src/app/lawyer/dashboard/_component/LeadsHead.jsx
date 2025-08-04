@@ -35,10 +35,10 @@ export default function LeadsHead({
     });
   };
 
-  const urgent=leads?.filter((item)=>item.leadPriority==="urgent").length;
+  const urgent = leads?.filter((item) => item.leadPriority === 'urgent').length;
 
   return (
-    <section className={`pr-2 ${isExpanded ? '' : 'pl-4'}`}>
+    <section className={`pr-2 shadow-custom ${isExpanded ? '' : 'pl-4'}`}>
       <div className="flex justify-between items-start gap-4">
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-3">
           <h2
@@ -97,7 +97,7 @@ export default function LeadsHead({
 
             <div className="inline-flex flex-wrap gap-1">
               <TagButton
-                 text={`Urgent(${urgent})`}
+                text={`Urgent(${urgent})`}
                 bgColor="#EF8D32"
                 textColor="text-[#fff]"
                 fontSize={isExpanded ? 'text-[12px]' : 'text-[9px]'}

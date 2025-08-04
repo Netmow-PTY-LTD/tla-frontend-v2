@@ -11,7 +11,6 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import Cookies from 'js-cookie';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { userDummyImage } from '@/data/data';
@@ -20,11 +19,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useAuthLogOutMutation } from '@/store/features/auth/authApiService';
 import { logOut, selectCurrentUser } from '@/store/features/auth/authSlice';
 import { disconnectSocket } from '@/lib/socket';
+import {
+  useAuthLogOutMutation,
+  useAuthUserInfoQuery,
+} from '@/store/features/auth/authApiService';
+import { logOut } from '@/store/features/auth/authSlice';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function BuyerProfileDropDown({ data }) {
   const dispatch = useDispatch();
 
-  const currentUser = useSelector(selectCurrentUser);
+  //const currentUser = useSelector(selectCurrentUser);
+
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    useAuthUserInfoQuery();
 
   //console.log('currentUser', currentUser);
 
@@ -47,19 +55,30 @@ export default function BuyerProfileDropDown({ data }) {
     <div className="flex items-center">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <div className="flex items-center group gap-[10px]">
-            <Avatar>
-              <AvatarImage
-                src={data?.profile?.profilePicture ?? userDummyImage}
-                alt={data?.profile?.name || 'Client'}
-              />
-              <AvatarFallback>USER</AvatarFallback>
-            </Avatar>
-            <span className="font-medium text-[14px]">
-              {data?.profile?.name.split(' ')[0] || 'Client'}
-            </span>
-            <ChevronDown className="w-5 h-5" />
-          </div>
+          {isCurrentUserLoading ? (
+            <div className="flex items-center group gap-[5px]">
+              <div className="w-10">
+                <Skeleton className="h-8 w-8 rounded-full" />
+              </div>
+              <div>
+                <Skeleton className="h-5 w-16" />
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center group gap-[10px]">
+              <Avatar>
+                <AvatarImage
+                  src={data?.profile?.profilePicture ?? userDummyImage}
+                  alt={data?.profile?.name || 'Admin'}
+                />
+                <AvatarFallback>USER</AvatarFallback>
+              </Avatar>
+              <span className="font-medium text-[14px]">
+                {data?.profile?.name.split(' ')[0] || 'Admin'}
+              </span>
+              <ChevronDown className="w-5 h-5" />
+            </div>
+          )}
         </DropdownMenuTrigger>
         <DropdownMenuContent
           className="w-56 z-[999]"
@@ -83,8 +102,8 @@ export default function BuyerProfileDropDown({ data }) {
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          {currentUser?.role === 'admin' &&
-            currentUser?.regUserType === 'admin' && (
+          {currentUser?.data?.role === 'admin' &&
+            currentUser?.data?.regUserType === 'admin' && (
               <>
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
