@@ -24,8 +24,6 @@ const LawyerContactButton = ({ leadDetail }) => {
   const { refetch } = useGetUserCreditStatsQuery();
   const [contactLawyer, { isLoading }] = useContactLawyerMutation();
 
-
-
   const router = useRouter();
   const handleContact = async () => {
     const payload = {
@@ -37,12 +35,10 @@ const LawyerContactButton = ({ leadDetail }) => {
       const res = await contactLawyer(payload).unwrap();
 
       if (res.success) {
-        refetch()
+        refetch();
         toast.success('Contacted successfully', { position: 'top-right' });
         setTimeout(() => {
-          router.push(
-            `/lawyer/dashboard/my-responses?responseId=${res?.data?.responseId}`
-          );
+          router.push(`/lawyer/dashboard/my-responses`);
         }, 500);
       } else if (res?.data?.autoPurchaseCredit || res?.data?.needAddCard) {
         setPackageData(res?.data?.recommendedPackage);
@@ -50,15 +46,18 @@ const LawyerContactButton = ({ leadDetail }) => {
         setShowCreditModal(true);
         setNeedAddCard(res?.data?.needAddCard ? true : false);
       } else {
-        toast.error(res.message || 'Something went wrong', { position: 'top-right' });
+        toast.error(res.message || 'Something went wrong', {
+          position: 'top-right',
+        });
       }
     } catch (err) {
       toast.error(
-        err?.data?.message || 'Something went wrong while contacting the lawyer', { position: 'top-right' }
+        err?.data?.message ||
+          'Something went wrong while contacting the lawyer',
+        { position: 'top-right' }
       );
     }
   };
-
 
   const handleAfterPayment = async () => {
     setShowCreditModal(false);
@@ -66,23 +65,27 @@ const LawyerContactButton = ({ leadDetail }) => {
       try {
         const retryRes = await contactLawyer(pendingPayload).unwrap();
         if (retryRes.success) {
-          toast.success('Contacted successfully after payment', { position: 'top-right' });
+          toast.success('Contacted successfully after payment', {
+            position: 'top-right',
+          });
           setTimeout(() => {
             router.push(
               `/lawyer/dashboard/my-responses?responseId=${retryRes?.data?.responseId}`
             );
-
           }, 500);
         } else {
-          toast.error(retryRes.message || 'Retry failed', { position: 'top-right' });
+          toast.error(retryRes.message || 'Retry failed', {
+            position: 'top-right',
+          });
         }
       } catch (err) {
-        toast.error(err?.data?.message || 'Retry failed', { position: 'top-right' });
+        toast.error(err?.data?.message || 'Retry failed', {
+          position: 'top-right',
+        });
       }
       setPendingPayload(null);
     }
   };
-
 
   return (
     <div>

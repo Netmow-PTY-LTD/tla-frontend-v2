@@ -12,6 +12,7 @@ export default function ResponseHead({
   data,
   setQueryParams,
   queryParams,
+  total,
 }) {
   const router = useRouter();
   const pathname = usePathname(); // current route without query params
@@ -66,7 +67,7 @@ export default function ResponseHead({
               isExpanded ? 'text-[24px]' : 'text-[16px]'
             } text-[#0B1C2D] text-left`}
           >
-            {data?.length} {data?.length > 1 ? 'Responses' : 'Response'}
+            {total} {total > 1 ? 'Responses' : 'Response'}
           </h2>
           <div className="flex items-center gap-3">
             <button

@@ -1,5 +1,5 @@
 'use client';
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useGetAllMyResponsesQuery } from '@/store/features/lawyer/ResponseApiService';
 import { Inbox, Loader, Loader2 } from 'lucide-react';
@@ -12,38 +12,50 @@ import { Button } from '@/components/ui/button';
 export default function MyResponsesPage() {
   const [showResponseDetails, setShowResponseDetails] = useState(true);
   const [selectedResponse, setSelectedResponse] = useState(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [responses, setResponses] = useState([]);
+  const [totalResponsesCount, setTotalResponsesCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const responseId = searchParams.get('responseId');
-    const router = useRouter();
+  const router = useRouter();
   const [queryParams, setQueryParams] = useState(() => {
     // Load filters from localStorage on initial render
     const saved = localStorage.getItem('responseFilters');
     return saved
       ? JSON.parse(saved)
       : {
-        page: 1,
-        limit: 10,
-        sortBy: 'createdAt',
-        sortOrder: 'desc',
-        keyword: '',
-        spotlight: '',
-        clientActions: '',
-        actionsTaken: '',
-        leadSubmission: '',
-      };
+          page: 1,
+          limit: 10,
+          sortBy: 'createdAt',
+          sortOrder: 'desc',
+          keyword: '',
+          spotlight: '',
+          clientActions: '',
+          actionsTaken: '',
+          leadSubmission: '',
+        };
   });
+
+  //console.log('queryParams', queryParams);
+
+  const scrollContainerRef = useRef(null);
 
   // Save filters to localStorage whenever queryParams change
   useEffect(() => {
     localStorage.setItem('responseFilters', JSON.stringify(queryParams));
   }, [queryParams]);
 
-    console.log('test console response page =====>')
+  const {
+    data: allMyResponses,
+    isLoading: isAllMyResponsesLoading,
+    isFetching,
+  } = useGetAllMyResponsesQuery(queryParams);
 
-  const { data: allMyResponses, isLoading: isAllMyResponsesLoading } =
-    useGetAllMyResponsesQuery(queryParams);
-
+  console.log('allMyResponses', allMyResponses);
   // Handle body scroll and layout overflow
   useEffect(() => {
     const cleanPathname = pathname?.trim().replace(/\/+$/, '');
@@ -61,11 +73,73 @@ export default function MyResponsesPage() {
     };
   }, [pathname]);
 
+  // useEffect(() => {
+  //   if (allMyResponses?.data?.length > 0) {
+  //     setSelectedResponse(allMyResponses?.data[0]);
+  //   }
+  // }, [allMyResponses?.data, queryParams]);
+
   useEffect(() => {
-    if (allMyResponses?.data?.length > 0) {
-      setSelectedResponse(allMyResponses?.data[0]);
+    setPage(1);
+  }, [queryParams]);
+
+  useEffect(() => {
+    if (!allMyResponses) return;
+
+    setResponses((prev) => {
+      const updatedResponses =
+        page === 1 ? allMyResponses?.data : [...prev, ...allMyResponses?.data];
+      // Automatically select the first lead when page = 1 (new filter)
+      if (page === 1 && updatedResponses?.length > 0) {
+        setSelectedResponse(updatedResponses[0]);
+      }
+      return updatedResponses;
+    });
+
+    if (page === 1 && typeof allMyResponses?.pagination?.total === 'number') {
+      setTotalResponsesCount(allMyResponses?.pagination?.total);
     }
-  }, [allMyResponses?.data,queryParams]);
+
+    const totalPage = allMyResponses?.pagination?.totalPage;
+    if (
+      typeof totalPage !== 'number' ||
+      totalPage <= 0 ||
+      typeof totalPage == 'undefined' ||
+      totalPage == null
+    ) {
+      setHasMore(false);
+    } else {
+      setHasMore(page < totalPage);
+    }
+  }, [allMyResponses?.data, page]);
+
+  // Scroll event handler for infinite loading
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      const nearBottom = scrollTop + clientHeight >= scrollHeight - 50;
+
+      if (nearBottom && hasMore && !isFetching) {
+        setPage((prev) => prev + 1);
+      }
+    };
+
+    container.addEventListener('scroll', handleScroll);
+
+    return () => {
+      container.removeEventListener('scroll', handleScroll);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasMore, isFetching, scrollContainerRef?.current]);
+
+  console.log({
+    page,
+    hasMore: scrollContainerRef.current,
+    isFetching,
+  });
 
   // if (isAllMyResponsesLoading) {
   //   return (
@@ -119,7 +193,7 @@ export default function MyResponsesPage() {
 
   return (
     <div className="lead-board-wrap">
-      {allMyResponses?.data && allMyResponses?.data?.length > 0 ? (
+      {responses && responses?.length > 0 ? (
         <div className="lead-board-container">
           {showResponseDetails && selectedResponse && (
             <div className="left-column-8">
@@ -128,23 +202,26 @@ export default function MyResponsesPage() {
                   response={selectedResponse}
                   responseId={responseId}
                   onBack={() => setShowResponseDetails(false)}
+                  setIsLoading={setIsLoading}
+                  isLoading={isLoading}
                 />
               </div>
             </div>
           )}
 
           <div
-            className={`${showResponseDetails ? 'right-column-4 ' : 'right-column-full'
-              }`}
+            className={`${
+              showResponseDetails ? 'right-column-4 ' : 'right-column-full'
+            }`}
           >
-            <div className="column-wrap-right">
+            <div className="column-wrap-right" ref={scrollContainerRef}>
               <div className="leads-top-row">
                 <ResponseHead
                   isExpanded={!showResponseDetails}
                   data={allMyResponses?.data || []}
                   queryParams={queryParams}
                   setQueryParams={setQueryParams}
-
+                  total={allMyResponses?.pagination?.total || 0}
                 />
               </div>
               <div className="leads-bottom-row max-w-[1400px] mx-auto">
@@ -153,11 +230,15 @@ export default function MyResponsesPage() {
                   onViewDetails={(response) => {
                     setSelectedResponse(response);
                     setShowResponseDetails(true);
-                    router.push(`?responseId=${response?._id}`);
                   }}
-                  data={allMyResponses?.data || []}
-
+                  data={responses || []}
+                  setIsLoading={setIsLoading}
                 />
+                {hasMore && (
+                  <div className="py-6 text-center">
+                    <Loader className="w-5 h-5 animate-spin text-gray-500 mx-auto" />
+                  </div>
+                )}
               </div>
             </div>
           </div>
