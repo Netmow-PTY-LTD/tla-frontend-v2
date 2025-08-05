@@ -16,9 +16,9 @@ export default function ResponseHead({
 }) {
   const router = useRouter();
   const pathname = usePathname(); // current route without query params
-const data=allResponse?.data||[];
+  const data = allResponse?.data || [];
 
-  const pendingStatusLength =allResponse?.counts?.pending
+  const pendingStatusLength = allResponse?.counts?.pending
 
   const hiredStatusLength = allResponse?.counts?.hired;
   // const pendingStatusLength = data?.filter(
@@ -54,14 +54,14 @@ const data=allResponse?.data||[];
     });
   };
 
+
+
   const hasActiveFilters = Object.keys(defaultQueryParams).some(
-    (key) => {
-      // if (key === 'page' || key === 'limit') return false;
-     return  queryParams[key] !== defaultQueryParams[key]
-    }
+    (key) => queryParams[key] !== defaultQueryParams[key]
+
   );
 
-  const urgent =allResponse?.counts?.urgent;
+  const urgent = allResponse?.counts?.urgent;
   // const urgent = data?.filter(
   //   (item) => item.leadId.leadPriority === 'urgent'
   // ).length;
