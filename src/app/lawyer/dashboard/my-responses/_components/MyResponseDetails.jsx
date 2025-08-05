@@ -47,7 +47,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNotifications } from '@/hooks/useSocketListener';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
 
-export default function MyResponseDetails({ onBack, response, responseId }) {
+export default function MyResponseDetails({
+  onBack,
+  response,
+  responseId,
+  setIsLoading,
+}) {
   const [activeTab, setActiveTab] = useState('activity');
   const [isExpanded, setIsExpanded] = useState(false);
   const [openMail, setOpenMail] = useState(false);
@@ -55,11 +60,13 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
   const currentUser = useSelector(selectCurrentUser);
   const {
     data: singleResponse,
-    isLoading: isSingleResponseLoading,
+    isLoading,
     refetch,
-  } = useGetSingleResponseQuery(responseId ? responseId : response?._id, {
-    skip: !responseId && !response?._id,
+  } = useGetSingleResponseQuery(response?._id, {
+    skip: !response?._id,
   });
+
+  console.log('singleResponse', singleResponse);
 
   const toUser = singleResponse?.data?.leadId?.userProfileId?.user?._id;
 
@@ -212,9 +219,11 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
   //   return <ResponseSkeleton />;
   // }
 
+  console.log('isLoading', isLoading);
+
   return (
     <>
-      {isSingleResponseLoading ? (
+      {isLoading ? (
         <ResponseSkeleton />
       ) : (
         <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
@@ -247,7 +256,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
             </div>
             <div className="mt-3">
               <div className="flex flex-col items-start gap-4 ">
-                <figure className="w-20 h-20 overflow-hidden border rounded-full">
+                <figure className="w-20 h-20 overflow-hidden ">
                   <Image
                     src={
                       singleResponse?.data?.leadId?.userProfileId
@@ -259,7 +268,7 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                     width={80}
                     height={80}
                     priority
-                    className="w-full h-full rounded-full object-cover"
+                    className="w-full h-full rounded-full object-cover border"
                   />
                 </figure>
 
@@ -520,7 +529,14 @@ export default function MyResponseDetails({ onBack, response, responseId }) {
                             <div className="text-[#34495E] mt-2">
                               {leadAnswer?.options &&
                                 leadAnswer?.options
-                                  ?.map((option) => option?.option)
+                                  .map(
+                                    (option) =>
+                                      option?.option
+                                        ?.replace(/_/g, ' ') // replace underscores with spaces
+                                        ?.replace(/\b\w/g, (char) =>
+                                          char.toUpperCase()
+                                        ) // capitalize each word
+                                  )
                                   .join(', ')}
                             </div>
                           </div>

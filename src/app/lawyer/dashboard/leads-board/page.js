@@ -112,11 +112,11 @@ const LeadBoardPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasMore, isFetching, scrollContainerRef?.current]);
 
-  // console.log({
-  //   page,
-  //   hasMore: scrollContainerRef.current,
-  //   isFetching,
-  // });
+  console.log({
+    page,
+    hasMore: scrollContainerRef.current,
+    isFetching,
+  });
 
   // Set first lead on initial load or leads update
   useEffect(() => {
@@ -170,7 +170,7 @@ const LeadBoardPage = () => {
     );
   }
 
-
+  console.log('leads', leads);
 
   return (
     <div className="lead-board-wrap">

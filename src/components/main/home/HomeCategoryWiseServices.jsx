@@ -77,7 +77,7 @@ export default function HomeCategoryWiseServices() {
   });
 
   return (
-    <section className="section category-wise-services">
+    <section className="pt-[80px] category-wise-services pb-[100px]">
       <div className="container">
         <SectionHeading
           title="Explore a comprehensive range of specialized legal services tailored
@@ -92,7 +92,7 @@ export default function HomeCategoryWiseServices() {
           <p>The best services for you</p>
         </div> */}
         {allServices?.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-10 gap-y-16 mt-16">
             {allServices?.map((service, i) => (
               <Link
                 key={service.id || i}
@@ -115,7 +115,7 @@ export default function HomeCategoryWiseServices() {
                   />
                 </div>
                 <div className="flex justify-between items-center px-3 pb-3">
-                  <h5 className="text-sm font-medium text-gray-800">
+                  <h5 className="text-sm font-medium text-gray-800 whitespace-nowrap overflow-hidden truncate pr-5">
                     {service?.name}
                   </h5>
                   <MoveRight className="text-[var(--primary-color)]" />

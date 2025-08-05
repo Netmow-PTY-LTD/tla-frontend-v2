@@ -2,15 +2,8 @@
 import DashboardFooter from '@/components/dashboard/common/DashboardFooter';
 import React, { useEffect, useState } from 'react';
 import '@/styles/dashboard.css';
-import { SideNav } from '@/components/dashboard/common/SideNav';
+
 import BuyerDashboardHeader from './_components/BuyerDashboardHeader';
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarProvider,
-  SidebarRail,
-} from '@/components/ui/sidebar';
 import { usePathname } from 'next/navigation';
 import ClientSideNav from './_components/ClientSideNav';
 

@@ -8,7 +8,12 @@ import { BadgeCheck, Zap } from 'lucide-react';
 import Image from 'next/image';
 import React from 'react';
 
-export default function ResponseCard({ onViewDetails, user, isExpanded }) {
+export default function ResponseCard({
+  onViewDetails,
+  user,
+  isExpanded,
+  setIsLoading,
+}) {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
   //  const badges = singleLead?.data?.badges
@@ -169,7 +174,10 @@ export default function ResponseCard({ onViewDetails, user, isExpanded }) {
           className={`px-5 py-3 w-full sm:w-auto rounded-lg ${
             isExpanded ? 'heading-base' : 'text-[12px] '
           } font-medium bg-[var(--color-special)] text-white`}
-          onClick={() => onViewDetails(user)}
+          onClick={() => {
+            setIsLoading(true);
+            onViewDetails(user);
+          }}
         >
           View Details
         </Button>

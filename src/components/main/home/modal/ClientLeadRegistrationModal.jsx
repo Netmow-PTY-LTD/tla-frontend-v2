@@ -18,7 +18,9 @@ import { verifyToken } from '@/utils/verifyToken';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/store/features/auth/authSlice';
 import { StartFrequencyOptions } from '@/data/data';
-import { isValidPhoneNumber } from 'libphonenumber-js';
+import parsePhoneNumberFromString, {
+  isValidPhoneNumber,
+} from 'libphonenumber-js';
 
 export default function ClientLeadRegistrationModal({
   modalOpen,
@@ -99,7 +101,9 @@ export default function ClientLeadRegistrationModal({
     useGetZipCodeListQuery();
 
   const filteredZipCodes = allZipCodes?.data?.filter((item) =>
-    item?.zipcode?.toLowerCase().includes(zipCode.toLowerCase())
+    zipCode
+      ? item?.zipcode?.toLowerCase().includes(zipCode.toLowerCase())
+      : true
   );
 
   useEffect(() => {
@@ -497,11 +501,11 @@ export default function ClientLeadRegistrationModal({
 
     // Step: ZIP Code (required)
     if (step === totalQuestions + 3) {
-      return !zipCode.trim();
+      return !zipCode || !zipCode.trim();
     }
 
     if (step === totalQuestions + 4) {
-      return !name.trim();
+      return !name || !name.trim();
     }
 
     // Step: Email (required and validated)
@@ -511,7 +515,11 @@ export default function ClientLeadRegistrationModal({
 
     if (step === totalQuestions + 6) {
       // ✅ Use libphonenumber-js validation
-      return !phone || !isValidPhone(phone);
+      const parsed = parsePhoneNumberFromString(phone);
+
+      return (
+        !parsed || !parsed.isValid() || parsed.country !== 'AU' // ensures it's an Australian number
+      );
     }
 
     // Step: Phone (optional)
@@ -524,6 +532,8 @@ export default function ClientLeadRegistrationModal({
   //   '!selectedServiceWiseQuestions?.length:',
   //   !selectedServiceWiseQuestions?.length
   // );
+
+  console.log('filteredzipCodes:', filteredzipCodes);
 
   return (
     <Modal
@@ -683,7 +693,7 @@ export default function ClientLeadRegistrationModal({
           <div className="text-center">
             The postcode or town for the address where you want the service.
           </div>
-          <Combobox value={zipCode} onChange={setZipCode}>
+          <Combobox value={zipCode ?? ''} onChange={setZipCode}>
             <div className="relative">
               <ComboboxInput
                 className="border border-gray-300 rounded-md w-full h-[44px] px-4"
@@ -692,6 +702,7 @@ export default function ClientLeadRegistrationModal({
                   allZipCodes?.data?.find((z) => z._id === val)?.zipcode || val
                 }
                 placeholder="Select a Zipcode"
+                autoComplete="off"
               />
               <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
                 <ChevronDown className="h-4 w-4 text-gray-500" />
