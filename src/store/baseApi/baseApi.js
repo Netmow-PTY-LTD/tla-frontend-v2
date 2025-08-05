@@ -41,19 +41,31 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
           method: 'POST',
         }
       );
-
       const data = await res.json();
-
       if (data?.data?.accessToken) {
         const user = api.getState().auth.user;
         api.dispatch(setUser({ user, token: data.data.accessToken }));
         // Retry original request with new token
         result = await baseQuery(arg, api, extraOptions);
       } else {
+
         api.dispatch(logOut());
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/logout',`, {
+          credentials: 'include',
+          method: 'POST',
+        })
+        const logout = await res.json();
+         console.log('logOut',logout)
       }
     } catch (err) {
       api.dispatch(logOut());
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/logout',`, {
+        credentials: 'include',
+        method: 'POST',
+      })
+      const logout = await res.json();
+      console.log('logOut',logout)
+
     }
   }
 
