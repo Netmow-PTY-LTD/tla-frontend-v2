@@ -47,7 +47,6 @@ export default function AdminProfileDropDown({ data, isCurrentUserLoading }) {
     disconnectSocket();
     authLogout();
     dispatch(logOut());
-
     router.push('/login');
   };
 

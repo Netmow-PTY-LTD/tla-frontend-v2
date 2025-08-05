@@ -50,21 +50,19 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
       } else {
 
         api.dispatch(logOut());
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/logout',`, {
+        fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/logout',`, {
           credentials: 'include',
           method: 'POST',
-        })
-        const logout = await res.json();
-         console.log('logOut',logout)
+        }).catch(console.error);
+
       }
     } catch (err) {
       api.dispatch(logOut());
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/logout',`, {
+      fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/logout',`, {
         credentials: 'include',
         method: 'POST',
-      })
-      const logout = await res.json();
-      console.log('logOut',logout)
+      }).catch(console.error);
+
 
     }
   }
