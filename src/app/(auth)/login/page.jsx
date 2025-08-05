@@ -9,35 +9,6 @@ import Cookies from 'js-cookie';
 import ResponseSkeleton from '@/app/lawyer/dashboard/my-responses/_components/ResponseSkeleton';
 
 export default function Login() {
-  const router = useRouter();
-  const token = Cookies.get('token');
-  const {
-    data: currentUser,
-    isLoading: isCurrentUserLoading,
-    isSuccess,
-  } = useAuthUserInfoQuery(undefined, {
-    skip: !token,
-  });
-  // console.log('currentUser', currentUser);
-  useEffect(() => {
-    if (!token || isCurrentUserLoading || !isSuccess) return;
-
-    if (token && !isCurrentUserLoading) {
-      if (currentUser?.data?.regUserType === 'client') {
-        router.replace('/client/dashboard'); // '/client/dashboard';
-        router.refresh();
-      } else if (currentUser?.data?.regUserType === 'lawyer') {
-        router.replace('/lawyer/dashboard'); // '/lawyer/dashboard';
-        router.refresh();
-      } else if (currentUser?.data?.regUserType === 'admin') {
-        router.replace('/admin'); // = '/admin';
-        router.refresh();
-      }
-    }
-  }, [token, isCurrentUserLoading, isSuccess, currentUser, router]);
-
-  if (token && isCurrentUserLoading) return <ResponseSkeleton />;
-
   return (
     <section
       className="tla-auth-section flex justify-center items-center py-8"
