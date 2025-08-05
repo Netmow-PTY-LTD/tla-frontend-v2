@@ -62,7 +62,7 @@ h6 {
   transform: translate(-50%, -50%);
   transform-style: preserve-3d;
   perspective: 2000px;
-  transform: rotateX(-30deg) rotateY(-45deg);
+  /* transform: rotateX(-30deg) rotateY(-45deg); */
 }
 
 .holder {
@@ -177,6 +177,45 @@ h6 {
   }
   100% {
     transform: translate3d(-50%, -50%, 0) scaleX(1);
+  }
+}
+
+.loader {
+  width: 38px; /* 60% of 64px */
+  height: 29px; /* 60% of 48px */
+  position: relative;
+  animation: split 1s ease-in infinite alternate;
+}
+
+.loader::before,
+.loader::after {
+  content: '';
+  position: absolute;
+  height: 29px; /* 60% of 48px */
+  width: 29px; /* 60% of 48px */
+  border-radius: 50%;
+  left: 0;
+  top: 0;
+  transform: translateX(-6px); /* 60% of 10px */
+  background: var(--primary-color);
+  opacity: 0.75;
+  backdrop-filter: blur(20px);
+}
+
+.loader::after {
+  left: auto;
+  right: 0;
+  background: var(--secondary-color);
+  transform: translateX(6px); /* 60% of 10px */
+}
+
+@keyframes split {
+  0%,
+  25% {
+    width: 38px; /* Starting width */
+  }
+  100% {
+    width: 89px; /* 60% of 148px, rounded from 88.8 */
   }
 }
 
