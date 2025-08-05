@@ -50,6 +50,7 @@ export default function MyResponsesPage() {
     isFetching,
   } = useGetAllMyResponsesQuery(queryParams);
 
+  console.log('all response data ==>',allMyResponses)
   // Prevent scroll when in this route
   useEffect(() => {
     const cleanPathname = pathname?.trim().replace(/\/+$/, '');
@@ -167,7 +168,7 @@ export default function MyResponsesPage() {
               <div className="leads-top-row">
                 <ResponseHead
                   isExpanded={!showResponseDetails}
-                  data={allMyResponses?.data || []}
+                  allResponse={allMyResponses || {}}
                   queryParams={queryParams}
                   setQueryParams={setQueryParams}
                   total={totalResponsesCount}

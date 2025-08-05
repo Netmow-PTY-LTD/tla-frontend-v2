@@ -9,21 +9,25 @@ import { toast } from 'sonner';
 
 export default function ResponseHead({
   isExpanded,
-  data,
+  allResponse,
   setQueryParams,
   queryParams,
   total,
 }) {
   const router = useRouter();
   const pathname = usePathname(); // current route without query params
+const data=allResponse?.data||[];
 
-  const pendingStatusLength = data?.filter(
-    (item) => item.status === 'pending'
-  )?.length;
+  const pendingStatusLength =allResponse?.counts?.pending
 
-  const hiredStatusLength = data?.filter(
-    (item) => item.status === 'hired'
-  )?.length;
+  const hiredStatusLength = allResponse?.counts?.hired;
+  // const pendingStatusLength = data?.filter(
+  //   (item) => item.status === 'pending'
+  // )?.length;
+
+  // const hiredStatusLength = data?.filter(
+  //   (item) => item.status === 'hired'
+  // )?.length;
 
   const defaultQueryParams = {
     page: 1,
@@ -57,9 +61,10 @@ export default function ResponseHead({
     }
   );
 
-  const urgent = data?.filter(
-    (item) => item.leadId.leadPriority === 'urgent'
-  ).length;
+  const urgent =allResponse?.counts?.urgent;
+  // const urgent = data?.filter(
+  //   (item) => item.leadId.leadPriority === 'urgent'
+  // ).length;
 
   return (
     <section className={`shadow-custom ${isExpanded ? '' : 'pl-4 pr-1'}`}>
