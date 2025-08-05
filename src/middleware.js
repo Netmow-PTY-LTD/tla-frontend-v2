@@ -1,17 +1,21 @@
 // middleware.js
 import { NextResponse } from 'next/server';
-export function middleware(request) {
+import { verifyToken } from './utils/verifyToken';
+export async function middleware(request) {
   const token = request.cookies.get('token')?.value;
   const pathname = request.nextUrl.pathname;
 
   // List of protected base routes
   const protectedRoutes = ['/admin', '/client', '/lawyer'];
 
+  const isValidToken = await verifyToken(token);
+  console.log('isValidToken', isValidToken)
+
   const isProtected = protectedRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
   );
 
-  if (isProtected && !token) {
+  if (isProtected && !isValidToken) {
     // Redirect unauthenticated access to login
     return NextResponse.redirect(new URL('/login', request.url));
   }
@@ -30,3 +34,6 @@ export const config = {
     '/lawyer/:path*',
   ],
 };
+
+
+

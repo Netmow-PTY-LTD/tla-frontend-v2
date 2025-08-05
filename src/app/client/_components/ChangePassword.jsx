@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Eye, EyeOff } from 'lucide-react';
 import TextInput from '@/components/form/TextInput';
 import FormWrapper from '@/components/form/FromWrapper';
-import { useChangePasswordMutation } from '@/store/features/auth/authApiService';
+import { useAuthLogOutMutation, useChangePasswordMutation } from '@/store/features/auth/authApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
@@ -24,6 +24,7 @@ const ChangePassword = ({ open, setOpen }) => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
+  const [authLogout] = useAuthLogOutMutation();
   const [changePassword] = useChangePasswordMutation();
 
   const handleSubmit = async (data) => {
@@ -33,7 +34,7 @@ const ChangePassword = ({ open, setOpen }) => {
         showSuccessToast(res?.message || 'Change Password  Successful');
         localStorage.removeItem('accessToken'); // or cookies
         dispatch(logOut());
-        Cookies.remove('token');
+          authLogout();
         router.push('/login');
         setOpen(false);
       }

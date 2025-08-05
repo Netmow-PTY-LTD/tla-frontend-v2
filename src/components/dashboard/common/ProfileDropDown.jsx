@@ -17,7 +17,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import Cookies from 'js-cookie';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { userDummyImage } from '@/data/data';
@@ -52,7 +52,7 @@ export default function ProfileDropDown() {
      disconnectSocket();
     authLogout();
     dispatch(logOut());
-    Cookies.remove('token');
+   
     router.push('/login');
   };
   return (
