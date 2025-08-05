@@ -1,5 +1,14 @@
+
+
 import { jwtDecode } from 'jwt-decode';
+
 export const verifyToken = async (token) => {
-  const decode = jwtDecode(token);
-  return decode;
+  try {
+    if (!token || typeof token !== 'string') return false;
+    const decoded = jwtDecode(token);
+    return !!decoded;
+  } catch (err) {
+    console.error('Invalid token:', err);
+    return false;
+  }
 };
