@@ -16,9 +16,6 @@ export default function ResponseCard({
 }) {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
-  //  const badges = singleLead?.data?.badges
-  // const badge = user?.leadBadge;
-  //const badge = user?.leadId?.userProfileId?.profileType;
 
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])
