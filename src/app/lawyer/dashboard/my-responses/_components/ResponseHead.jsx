@@ -51,7 +51,10 @@ export default function ResponseHead({
   };
 
   const hasActiveFilters = Object.keys(defaultQueryParams).some(
-    (key) => queryParams[key] !== defaultQueryParams[key]
+    (key) => {
+      // if (key === 'page' || key === 'limit') return false;
+     return  queryParams[key] !== defaultQueryParams[key]
+    }
   );
 
   const urgent = data?.filter(
@@ -63,25 +66,22 @@ export default function ResponseHead({
       <div className="flex justify-between items-center gap-4">
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-1 sm:gap-4">
           <h2
-            className={`font-bold ${
-              isExpanded ? 'text-[24px]' : 'text-[16px]'
-            } text-[#0B1C2D] text-left`}
+            className={`font-bold ${isExpanded ? 'text-[24px]' : 'text-[16px]'
+              } text-[#0B1C2D] text-left`}
           >
             {total} {total > 1 ? 'Responses' : 'Response'}
           </h2>
           <div className="flex items-center gap-3">
             <button
-              className={`flex item-center leading-none ${
-                isExpanded ? 'text-[14px]' : 'text-[12px]'
-              }`}
+              className={`flex item-center leading-none ${isExpanded ? 'text-[14px]' : 'text-[12px]'
+                }`}
             >
               <span className={`w-3 h-3 rounded-full bg-[#FF8602] mr-1`}></span>
               <span>{pendingStatusLength} Pending</span>
             </button>
             <button
-              className={`flex item-center leading-none ${
-                isExpanded ? 'text-[14px]' : 'text-[12px]'
-              }`}
+              className={`flex item-center leading-none ${isExpanded ? 'text-[14px]' : 'text-[12px]'
+                }`}
             >
               <span className={`w-3 h-3 rounded-full bg-[#00C3C0] mr-1`}></span>
               <span>{hiredStatusLength || 0} Hired</span>
@@ -90,9 +90,8 @@ export default function ResponseHead({
         </div>
         <Link
           href={'/lawyer/settings/profile'}
-          className={`${
-            isExpanded ? 'admin-text' : 'text-[12px]'
-          } py-1 px-2 bg-[#FF8602] rounded-[5px] text-white hover:bg-[#FF8602] transition-all flex items-center gap-2`}
+          className={`${isExpanded ? 'admin-text' : 'text-[12px]'
+            } py-1 px-2 bg-[#FF8602] rounded-[5px] text-white hover:bg-[#FF8602] transition-all flex items-center gap-2`}
         >
           <span>All</span>
         </Link>

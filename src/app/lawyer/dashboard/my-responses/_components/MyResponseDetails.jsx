@@ -62,7 +62,7 @@ export default function MyResponseDetails({
     data: singleResponse,
     isLoading,
     refetch,
-  } = useGetSingleResponseQuery(response?._id, {
+  } = useGetSingleResponseQuery(responseId || response?._id, {
     skip: !response?._id,
   });
 
