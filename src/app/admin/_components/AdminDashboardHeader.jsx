@@ -33,28 +33,28 @@ export default function AdminDashboardHeader({ onToggleSidebar }) {
 
   // if (isCurrentUserLoading) return <ResponseSkeleton />;
 
-  useEffect(() => {
-    const fetchedUser = async () => {
-      if (!token) {
-        router.push('/login');
-        return;
-      }
+  // useEffect(() => {
+  //   const fetchedUser = async () => {
+  //     if (!token) {
+  //       router.push('/login');
+  //       return;
+  //     }
 
-      const user = await getUserFromToken(token);
-      console.log('user', user);
-      setUser(user);
+  //     const user = await getUserFromToken(token);
+  //     console.log('user', user);
+  //     setUser(user);
 
-      if (!user || user?.regUserType !== 'admin') {
-        const target =
-          user?.regUserType === 'client'
-            ? '/client/dashboard'
-            : '/lawyer/dashboard';
-        router.push(target);
-      }
-    };
+  //     if (!user || user?.regUserType !== 'admin') {
+  //       const target =
+  //         user?.regUserType === 'client'
+  //           ? '/client/dashboard'
+  //           : '/lawyer/dashboard';
+  //       router.push(target);
+  //     }
+  //   };
 
-    fetchedUser();
-  }, [token]);
+  //   fetchedUser();
+  // }, [token]);
 
   return (
     <header className="db-header">

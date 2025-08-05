@@ -98,7 +98,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
   z-index: 5;
   margin-top: 50px;
 }
@@ -111,8 +111,8 @@
 }
 
 .sliderDot {
-  width: 12px;
-  height: 12px;
+  width: 8px;
+  height: 8px;
   background: #ccc;
   border-radius: 50%;
   cursor: pointer;
