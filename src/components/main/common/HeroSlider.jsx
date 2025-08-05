@@ -74,7 +74,7 @@ export default function HeroSlider() {
           className={`${styles.carouselButton} ${styles.prev}`}
           onClick={prevSlide}
         >
-          <ArrowLeft className="w-6 h-6 text-gray-500" />
+          <ArrowLeft className="w-5 h-5 text-gray-500" />
         </button>
 
         <div className={styles.sliderDots}>
@@ -93,7 +93,7 @@ export default function HeroSlider() {
           className={`${styles.carouselButton} ${styles.next}`}
           onClick={nextSlide}
         >
-          <ArrowRight className="w-6 h-6 text-gray-500" />
+          <ArrowRight className="w-5 h-5 text-gray-500" />
         </button>
       </div>
     </div>
