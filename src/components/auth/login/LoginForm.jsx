@@ -63,7 +63,7 @@ const LoginForm = () => {
             localStorage.removeItem('userEmail');
           }
 
-          //console.log('dispatchUser', dispatchUser);
+          console.log('dispatchUser', res?.data?.regUserType);
           if (dispatchUser?.payload?.token) {
             if (res?.data?.regUserType === 'lawyer') {
               router.push(`/lawyer/dashboard`);

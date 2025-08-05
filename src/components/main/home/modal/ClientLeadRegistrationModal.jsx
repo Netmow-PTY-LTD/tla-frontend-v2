@@ -1,7 +1,6 @@
 import React, { useState, useEffect, use, useMemo } from 'react';
 import { Button } from '@/components/ui/button'; // adjust if your button import path differs
 import { Modal } from '@/components/UIComponents/Modal';
-import { useGetZipCodeListQuery } from '@/store/features/public/publicApiService';
 import {
   Combobox,
   ComboboxButton,
@@ -21,6 +20,7 @@ import { StartFrequencyOptions } from '@/data/data';
 import parsePhoneNumberFromString, {
   isValidPhoneNumber,
 } from 'libphonenumber-js';
+import { useGetZipCodeListQuery } from '@/store/features/public/publicApiService';
 
 export default function ClientLeadRegistrationModal({
   modalOpen,
@@ -99,6 +99,8 @@ export default function ClientLeadRegistrationModal({
 
   const { data: allZipCodes, isLoading: isZipCodeLoading } =
     useGetZipCodeListQuery();
+
+  console.log('allZipCodes', allZipCodes);
 
   const filteredZipCodes = allZipCodes?.data?.filter((item) =>
     zipCode
@@ -534,6 +536,7 @@ export default function ClientLeadRegistrationModal({
   // );
 
  
+  //console.log('filteredzipCodes:', filteredzipCodes);
 
   return (
     <Modal

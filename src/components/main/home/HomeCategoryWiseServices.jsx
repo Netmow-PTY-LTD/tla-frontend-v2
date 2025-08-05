@@ -111,7 +111,7 @@ export default function HomeCategoryWiseServices() {
                       '/assets/img/familylaw/divorce.webp'
                     }
                     alt={service?.name || 'Service'}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover scale-100 hover:scale-110 transition duration-500"
                   />
                 </div>
                 <div className="flex justify-between items-center px-3 pb-3">
