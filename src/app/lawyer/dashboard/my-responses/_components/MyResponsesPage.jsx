@@ -25,6 +25,7 @@ export default function MyResponsesPage() {
 
   const [queryParams, setQueryParams] = useState(() => {
     const saved = localStorage.getItem('responseFilters');
+
     return saved
       ? JSON.parse(saved)
       : {
@@ -50,7 +51,7 @@ export default function MyResponsesPage() {
     isFetching,
   } = useGetAllMyResponsesQuery(queryParams);
 
-  console.log('all response data ==>',allMyResponses)
+
   // Prevent scroll when in this route
   useEffect(() => {
     const cleanPathname = pathname?.trim().replace(/\/+$/, '');

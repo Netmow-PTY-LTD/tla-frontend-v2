@@ -219,7 +219,6 @@ export default function MyResponseDetails({
   //   return <ResponseSkeleton />;
   // }
 
-  console.log('isLoading', isLoading);
 
   return (
     <>

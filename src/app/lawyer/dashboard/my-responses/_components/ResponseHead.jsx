@@ -19,15 +19,8 @@ export default function ResponseHead({
   const data = allResponse?.data || [];
 
   const pendingStatusLength = allResponse?.counts?.pending
-
+  const urgent = allResponse?.counts?.urgent;
   const hiredStatusLength = allResponse?.counts?.hired;
-  // const pendingStatusLength = data?.filter(
-  //   (item) => item.status === 'pending'
-  // )?.length;
-
-  // const hiredStatusLength = data?.filter(
-  //   (item) => item.status === 'hired'
-  // )?.length;
 
   const defaultQueryParams = {
     page: 1,
@@ -61,10 +54,8 @@ export default function ResponseHead({
 
   );
 
-  const urgent = allResponse?.counts?.urgent;
-  // const urgent = data?.filter(
-  //   (item) => item.leadId.leadPriority === 'urgent'
-  // ).length;
+
+
 
   return (
     <section className={`shadow-custom ${isExpanded ? '' : 'pl-4 pr-1'}`}>
