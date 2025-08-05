@@ -16,7 +16,6 @@ export default function MyResponsesPage() {
   const [responses, setResponses] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [totalResponsesCount, setTotalResponsesCount] = useState(0);
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const responseId = searchParams.get('responseId');
@@ -45,12 +44,15 @@ export default function MyResponsesPage() {
     localStorage.setItem('responseFilters', JSON.stringify(queryParams));
   }, [queryParams]);
 
+
+
   const {
     data: allMyResponses,
     isLoading: isAllMyResponsesLoading,
     isFetching,
   } = useGetAllMyResponsesQuery(queryParams);
-
+console.log('my response ==>',allMyResponses)
+console.log('queryParams.page',queryParams.page)
 
   // Prevent scroll when in this route
   useEffect(() => {
@@ -68,7 +70,9 @@ export default function MyResponsesPage() {
     };
   }, [pathname]);
 
-  // Reset responses on filter change (new search)
+
+
+  // ------------------------ Reset responses on filter change (new search) --------------------------
   useEffect(() => {
     if (queryParams.page === 1 && allMyResponses?.data) {
       setResponses(allMyResponses.data);
@@ -87,13 +91,14 @@ export default function MyResponsesPage() {
       setHasMore(true);
     }
 
-    // Total count
-    if (queryParams.page === 1 && allMyResponses?.pagination?.total) {
-      setTotalResponsesCount(allMyResponses.pagination.total);
-    }
+  
   }, [allMyResponses, queryParams]);
 
-  // Infinite scroll
+
+
+
+
+  //  ------------------------- Infinite scroll ----------------------------
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
@@ -113,6 +118,22 @@ export default function MyResponsesPage() {
     container.addEventListener('scroll', handleScroll);
     return () => container.removeEventListener('scroll', handleScroll);
   }, [hasMore, isFetching]);
+
+
+
+// Set selectedResponse whenever responses update
+useEffect(() => {
+  if (responses.length > 0) {
+    setSelectedResponse(responses[0]);
+  } else {
+    setSelectedResponse(null);
+  }
+}, [responses]);
+
+
+
+
+
 
   if (isAllMyResponsesLoading) {
     return (
@@ -172,7 +193,7 @@ export default function MyResponsesPage() {
                   allResponse={allMyResponses || {}}
                   queryParams={queryParams}
                   setQueryParams={setQueryParams}
-                  total={totalResponsesCount}
+
                 />
               </div>
 

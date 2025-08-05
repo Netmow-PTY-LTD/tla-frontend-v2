@@ -12,12 +12,12 @@ export default function ResponseHead({
   allResponse,
   setQueryParams,
   queryParams,
-  total,
+
 }) {
   const router = useRouter();
   const pathname = usePathname(); // current route without query params
   const data = allResponse?.data || [];
-
+  const total = allResponse?.pagination?.total
   const pendingStatusLength = allResponse?.counts?.pending
   const urgent = allResponse?.counts?.urgent;
   const hiredStatusLength = allResponse?.counts?.hired;
@@ -35,8 +35,12 @@ export default function ResponseHead({
   };
 
   const clearFilters = () => {
-    localStorage.removeItem('responseFilters');
     setQueryParams(defaultQueryParams);
+    // setQueryParams({
+    //   ...defaultQueryParams,
+    //   page: 1,
+    // });
+    localStorage.removeItem('responseFilters');
     router.push(pathname); // remove all query params
     toast.success('Clear Filter', {
       position: 'top-right',
@@ -48,10 +52,13 @@ export default function ResponseHead({
   };
 
 
+  //   const hasActiveFilters = Object.entries(queryParams).some(([key, value]) => {
+  //   if (key === 'page' || key === 'limit') return false;
+  //   return value !== defaultQueryParams[key];
+  // });
 
   const hasActiveFilters = Object.keys(defaultQueryParams).some(
     (key) => queryParams[key] !== defaultQueryParams[key]
-
   );
 
 
