@@ -66,19 +66,19 @@ export default function MyResponseDetails({
     skip: !response?._id,
   });
 
-  console.log('singleResponse', singleResponse);
+
 
   const toUser = singleResponse?.data?.leadId?.userProfileId?.user?._id;
 
   useNotifications(currentUser?._id, (data) => {
-    console.log('🔔 Notification:', data);
+    // console.log('🔔 Notification:', data);
     if (data?.userId) {
       refetch();
     }
   });
 
   useNotifications(currentUser?._id, (data) => {
-    console.log('🔔 Notification:', data);
+    // console.log('🔔 Notification:', data);
     if (data?.userId) {
       refetch();
     }

@@ -17,7 +17,6 @@ export default function MyResponsesPage() {
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [totalResponsesCount, setTotalResponsesCount] = useState(0);
-
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const responseId = searchParams.get('responseId');
