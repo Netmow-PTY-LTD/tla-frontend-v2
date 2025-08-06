@@ -20,6 +20,15 @@ import { Loader } from 'lucide-react';
 import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor';
 import { Button } from '@/components/ui/button';
 import ChangePassword from '@/app/client/_components/ChangePassword';
+import { Label } from '@/components/ui/label';
+import { useFormContext, useWatch } from 'react-hook-form';
+import GenderRadioField from '@/components/form/GenderRadioField';
+
+const genderOptions = [
+  { id: 1, label: 'Male', value: 'male' },
+  { id: 2, label: 'Female', value: 'female' },
+  { id: 3, label: 'Other', value: 'other' },
+];
 
 export default function About() {
   const [open, setOpen] = useState(false);
@@ -68,8 +77,11 @@ export default function About() {
     designation: profile?.designation ?? '',
     address: profile?.address ?? '',
     phone: profile?.phone ?? '',
+    gender: profile?.gender ?? '',
+    law_society_member_number: profile?.law_society_member_number ?? '',
+    practising_certificate_number: profile?.practising_certificate_number ?? '',
     bio: profile?.bio ?? '',
-    lawyerContactEmail:profile?.lawyerContactEmail??'',
+    lawyerContactEmail: profile?.lawyerContactEmail ?? '',
     contactEmail: profile?.companyProfile?.contactEmail ?? '',
     phoneNumber: profile?.companyProfile?.phoneNumber ?? '',
     website: profile?.companyProfile?.website ?? '',
@@ -99,6 +111,9 @@ export default function About() {
         designation,
         address,
         phone,
+        gender,
+        law_society_member_number,
+        practising_certificate_number,
         bio,
         lawyerContactEmail,
         companyLogo,
@@ -130,11 +145,16 @@ export default function About() {
           designation,
           address,
           phone,
+          gender,
+          law_society_member_number,
+          practising_certificate_number,
           bio,
-          lawyerContactEmail
+          lawyerContactEmail,
         },
         companyInfo,
       };
+
+      console.log('payload', payload);
 
       // Append serialized JSON data
       formData.append('data', JSON.stringify(payload));
@@ -171,6 +191,31 @@ export default function About() {
         <PersonalProfile />
 
         <div className="border-t border-white" />
+
+        <div className="pt-5 pb-5">
+          <h3 className="text-black font-semibold heading-lg">
+            Professional Details
+          </h3>
+          <p className="mt-[10px] text-[#8E8E8E] mb-7">
+            Showcase your legal experience, qualifications, and areas of
+            expertise. This information appears on your public profile and helps
+            build trust with potential clients.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-7">
+            <TextInput
+              label="Law Society Member Number"
+              name="law_society_member_number"
+              textColor="text-[#8E8E8E]"
+            />
+            <TextInput
+              label="Practising Certificate Number"
+              name="practising_certificate_number"
+              textColor="text-[#8E8E8E]"
+            />
+          </div>
+        </div>
+        <div className="border-t border-white" />
+
         {/* Personal Contact Info */}
         <div className="py-9">
           <h3 className="text-black font-semibold heading-lg">About</h3>
@@ -199,10 +244,11 @@ export default function About() {
               placeholder="contact@gmail.com"
               textColor="text-[#8E8E8E]"
             />
+            <GenderRadioField />
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="inline-flex items-center justify-center px-4 py-1 mt-7 text-sm font-medium text-[#00C3C0] border border-[#00C3C0] rounded-md hover:bg-[#00C3C0] hover:text-white transition-all duration-300"
+              className="inline-flex items-center justify-center px-4 py-2 mt-7 text-sm font-medium text-[#00C3C0] border border-[#00C3C0] rounded-md hover:bg-[#00C3C0] hover:text-white transition-all duration-300"
             >
               Change Password
             </button>

@@ -117,7 +117,7 @@ const LeadStatsCard = ({ locations, profile }) => {
 
         {/* CTA Button */}
         <div className="mt-4">
-          <Link href={'/client/dashboard/my-leads'}>
+          <Link href={'/client/dashboard/my-cases'}>
             <button className="px-[19px] py-2 text-[#0B1C2D]  hover:bg-[#00C3C0] hover:text-white  font-medium bg-[#EDF0F4] rounded-full text-sm sm:text-base">
               View Leads
             </button>
