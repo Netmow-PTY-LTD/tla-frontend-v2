@@ -26,7 +26,7 @@ export default function ServicesList() {
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState(null);
 
-  console.log('editId', editId);
+  
 
   const { data: serviceList, refetch } = useAllServicesQuery();
   const [deleteService] = useDeleteServiceMutation();

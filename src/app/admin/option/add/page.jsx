@@ -72,7 +72,7 @@ export default function AddOptionPage() {
 
   //fetched api data
   const { data: countryList } = useGetCountryListQuery();
-  //console.log('countryList', countryList);
+
   const { data: countrywiseServices, isFetching } =
     useGetCountryWiseServicesQuery(selectedCountry, {
       skip: !selectedCountry, // Skip query if no country is selected
@@ -181,19 +181,18 @@ export default function AddOptionPage() {
 
   //country change handler
   const handleCountryChange = (val) => {
-    console.log('value', val);
+
     setSelectedCountry(val);
   };
 
   //country wise service change handler
 
   const handleCountryWiseServiceChange = (val) => {
-    console.log('value', val);
+
     setSelectedService(val);
   };
 
-  // console.log('selected country', selectedCountry);
-  // console.log('selected service', selectedService);
+ 
 
   //single service wise questions
 
@@ -220,7 +219,7 @@ export default function AddOptionPage() {
   //   }
   // }, [selectedCountry, selectedService]);
 
-  console.log('singleServicewiseQuestionsData', singleServicewiseQuestionsData);
+ 
 
   //Add option modal handling
 
@@ -235,7 +234,7 @@ export default function AddOptionPage() {
   //handling adding service wise question
 
   async function onSubmit(values) {
-    console.log('values', values);
+  
     // try {
     //   const result = await addQuestion(values).unwrap();
     //   // Optionally reset form or show success toast
@@ -261,7 +260,7 @@ export default function AddOptionPage() {
   //       skip: !selectedQuestionId,
   //     });
 
-  //console.log('questionWiseOptions', questionWiseOptions?.data);
+ 
 
   //handle SelectOptionsModal
   const handleSelectOptionsModal = (option, currentOrder) => {
@@ -278,8 +277,7 @@ export default function AddOptionPage() {
 
   //handle SelectOptionsModal
   const handleEditOptionModal = (questionId, OptionId) => {
-    // console.log('questionId', questionId);
-    // console.log('questionId', OptionId);
+   
     const singleQuestion = singleServicewiseQuestionsData?.data?.find(
       (item) => item?._id === questionId
     );
@@ -298,7 +296,7 @@ export default function AddOptionPage() {
   const [deleteOption] = useDeleteOptionMutation();
 
   const handleDeleteOption = async (id) => {
-    //console.log('option id', id);
+
     try {
       const res = await deleteOption(id).unwrap();
       if (res) {

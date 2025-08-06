@@ -20,7 +20,7 @@ const ResetPassword = () => {
   const [handleResetPassword, { isLoading, isSuccess, data }] =
     useResetPassowrdMutation();
 
-  console.log('check reset password data ==>', data);
+ 
 
   useEffect(() => {
     // Manually parse query parameters from URL

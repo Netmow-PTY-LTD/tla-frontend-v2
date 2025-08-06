@@ -1,8 +1,30 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ResponseCard from '../../_component/home/ResponseCard';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '@/store/features/auth/authSlice';
+import { useRealTimeStatus } from '@/hooks/useSocketListener';
 
 const LeadsRight = ({ isExpanded, onViewDetails, data, setIsLoading }) => {
+
+  const currentUserId=useSelector(selectCurrentUser)?._id
+  const [onlineMap, setOnlineMap] = useState({});
+  // Safely extract user IDs from AllLeadData
+  const userIds =data
+    ?.map((response) => response?.leadId?.userProfileId?.user) || [];
+
+  // ✅ Use hook directly (at top level of component)
+  useRealTimeStatus(currentUserId,userIds, (userId, isOnline) => {
+    setOnlineMap((prev) => ({ ...prev, [userId]: isOnline }));
+  });
+
+  useEffect(() => {
+    console.log("data", data);
+    console.log("onlineMap", onlineMap);
+  }, [data, onlineMap]);
+
+
+
   return (
     <>
       {/* lead card section */}
@@ -20,6 +42,7 @@ const LeadsRight = ({ isExpanded, onViewDetails, data, setIsLoading }) => {
             user={user}
             isExpanded={isExpanded}
             setIsLoading={setIsLoading}
+             onlineMap={onlineMap}
           />
         ))}
       </section>
