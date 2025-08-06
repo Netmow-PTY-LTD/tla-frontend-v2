@@ -28,16 +28,16 @@ export default function MyResponsesPage() {
     return saved
       ? JSON.parse(saved)
       : {
-          page: 1,
-          limit: 10,
-          sortBy: 'createdAt',
-          sortOrder: 'desc',
-          keyword: '',
-          spotlight: '',
-          clientActions: '',
-          actionsTaken: '',
-          leadSubmission: '',
-        };
+        page: 1,
+        limit: 10,
+        sortBy: 'createdAt',
+        sortOrder: 'desc',
+        keyword: '',
+        spotlight: '',
+        clientActions: '',
+        actionsTaken: '',
+        leadSubmission: '',
+      };
   });
 
   useEffect(() => {
@@ -91,7 +91,7 @@ export default function MyResponsesPage() {
       setHasMore(true);
     }
 
-  
+
   }, [allMyResponses, queryParams]);
 
 
@@ -108,10 +108,17 @@ export default function MyResponsesPage() {
       const nearBottom = scrollTop + clientHeight >= scrollHeight - 50;
 
       if (nearBottom && hasMore && !isFetching) {
-        setQueryParams((prev) => ({
-          ...prev,
-          page: prev.page + 1,
-        }));
+        // setQueryParams((prev) => ({
+        //   ...prev,
+        //   page: prev.page + 1,
+        // }));
+        setQueryParams((prev) => {
+          const nextPage = prev.page + 1;
+          if (allMyResponses?.pagination?.totalPage && nextPage > allMyResponses.pagination.totalPage) {
+            return prev; // don’t update page
+          }
+          return { ...prev, page: nextPage };
+        });
       }
     };
 
@@ -121,14 +128,14 @@ export default function MyResponsesPage() {
 
 
 
-// Set selectedResponse whenever responses update
-useEffect(() => {
-  if (responses.length > 0) {
-    setSelectedResponse(responses[0]);
-  } else {
-    setSelectedResponse(null);
-  }
-}, [responses]);
+  // Set selectedResponse whenever responses update
+  useEffect(() => {
+    if (responses.length > 0) {
+      setSelectedResponse(responses[0]);
+    } else {
+      setSelectedResponse(null);
+    }
+  }, [responses]);
 
 
 
