@@ -78,7 +78,7 @@ export default function Page() {
   };
 
   const handleModalSuccess = () => {
-    console.log('Refetch or update list');
+   
     // e.g. refetch zip codes
   };
 

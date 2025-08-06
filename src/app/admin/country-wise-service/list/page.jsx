@@ -112,7 +112,7 @@ export default function Page() {
 
   //countrywise service change handler
   const handleCountryWiseServiceChange = (val) => {
-    console.log('value', val);
+  
     setSelectedCountry(val);
   };
 
@@ -149,13 +149,13 @@ export default function Page() {
       countrywiseServices?.data?.map((s) => s._id)
     );
 
-    console.log('preselectedIds', preselectedIds);
+  
 
     // Update selectedServices with matched full service objects
     const preselectedServices = servicesList?.data?.filter((service) =>
       preselectedIds.has(service._id)
     );
-    console.log('preselectedServices', preselectedServices);
+    
     setSelectedServices(preselectedServices);
 
     // Build rowSelection object: { "serviceId1": true, "serviceId2": true }

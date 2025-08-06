@@ -10,7 +10,7 @@ import { SlidersHorizontal } from 'lucide-react';
 
 export const FilterDropdown = () => {
   const handleFilterChange = (status) => {
-    console.log('Selected status:', status);
+
     // Dispatch Redux action or trigger filter logic here
   };
 

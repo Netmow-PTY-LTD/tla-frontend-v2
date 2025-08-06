@@ -93,7 +93,7 @@ export default function Page() {
   const [addCreditPackage, { isLoading }] = useAddCreditPackageMutation();
 
   const handleSubmit = async (data) => {
-    console.log('data', data);
+    
 
     const {
       name,
@@ -117,7 +117,7 @@ export default function Page() {
       isActive: isActive ? true : false,
     };
 
-    console.log('payload', payload);
+  
     try {
       const res = await addCreditPackage(payload).unwrap();
       // Optionally reset form or show success toast

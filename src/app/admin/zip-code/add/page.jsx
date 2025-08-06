@@ -57,12 +57,12 @@ export default function Page() {
 
   //country change handler
   const handleCountryChange = (val) => {
-    console.log('value', val);
+   
     setSelectedCountry(val);
   };
 
   async function onSubmit(values) {
-    console.log('Original values', values);
+    
 
     const payload = {
       countryId: values.countryId, // Capitalized name

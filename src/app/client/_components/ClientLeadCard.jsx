@@ -45,7 +45,7 @@ const responsesLeads = [
 const ClientLeadCard = ({ user, isExpanded }) => {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
-  console.log('Single Lead Data:', singleLead);
+ 
 
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])
@@ -75,7 +75,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
     }
   };
 
-  console.log('user:', user);
+
 
   const maxVisible = 5;
   const visibleAvatars = user?.responders?.slice(0, maxVisible);

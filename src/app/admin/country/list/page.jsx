@@ -27,7 +27,7 @@ export default function Page() {
   const [editId, setEditId] = useState(null);
 
   const { data: countryList, refetch } = useGetCountryListQuery();
-  console.log('countryList', countryList);
+
 
   const [countryDelete] = useDeleteCountryMutation();
 

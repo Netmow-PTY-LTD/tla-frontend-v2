@@ -134,7 +134,7 @@ export default function Page() {
   const handleCategoryWiseServiceChange = (categoryId) => {
     setSelectedCategory(categoryId);
 
-    console.log('categoryId', categoryId);
+  
   };
 
   const [updateCategoryWiseService, { isLoading: isUpdating }] =
@@ -153,7 +153,7 @@ export default function Page() {
         id: selectedCategory,
         data: formData,
       }).unwrap();
-      console.log('res', res);
+      
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Category updated successfully');
       }

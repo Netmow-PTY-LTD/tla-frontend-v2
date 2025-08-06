@@ -13,9 +13,12 @@ export default function ResponseCard({
   user,
   isExpanded,
   setIsLoading,
+  onlineMap
 }) {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
+
+  const leadUser=user?.leadId?.userProfileId?.user;
 
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])
@@ -87,6 +90,17 @@ export default function ResponseCard({
           <p className="font-medium text-[11px] text-gray-600 mt-2 sm:mt-0 w-16 flex justify-end">
             {user?.createdAt && formatRelativeTime(user?.createdAt)}
           </p>
+           <span className="text-xs">
+          <div className="flex items-center gap-2 text-sm">
+            <span
+              className={`ml-2 w-2 h-2 rounded-full ${onlineMap[leadUser] ? "bg-green-500" : "bg-gray-400"
+                }`}
+            ></span>
+            <span className="text-gray-700">
+              {onlineMap[leadUser] ? "Online" : "Offline"}
+            </span>
+          </div>
+        </span>
         </div>
       </div>
 
@@ -162,6 +176,7 @@ export default function ResponseCard({
             guidance.`
               : getTruncatedText(user?.leadId?.additionalDetails, 200)}
           </p>
+          
         </div>
       </div>
 

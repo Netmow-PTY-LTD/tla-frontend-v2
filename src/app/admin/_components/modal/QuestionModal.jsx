@@ -64,14 +64,14 @@ export function QuestionDialog({ open, onOpenChange, item }) {
   const [updateQuestion] = useEditQuestionMutation();
 
   async function onSubmit(values) {
-    //console.log('values', values);
+
     const updatedData = {
       id: item?._id,
       countyId: item?.countryId?._id,
       serviceId: item?.serviceId?._id,
       ...values,
     };
-    console.log(updatedData);
+   
     try {
       const result = await updateQuestion(updatedData).unwrap();
       // Optionally reset form or show success toast

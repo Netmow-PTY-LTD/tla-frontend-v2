@@ -40,7 +40,7 @@ export default function LeadManagement() {
     isFetching,
   } = useGetAllLeadsForAdminQuery({ page, limit: 10 });
 
-  console.log('leadList', leadList);
+
   const [changeStatus] = useUpdateLeadMutation();
 
   const handChangeStatus = async (id, status) => {

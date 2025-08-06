@@ -66,7 +66,7 @@ export default function UserBasicInfo() {
     if (isSuccess && userData?.data) {
       const user = userData.data;
 
-      console.log('user', user?._id);
+    
       form.reset({
         userId: user._id || '',
         username: user.username || '',
@@ -97,7 +97,7 @@ export default function UserBasicInfo() {
 
   const onSubmit = async (values) => {
     try {
-      console.log('values', values);
+    
 
       const formData = new FormData();
 
@@ -108,7 +108,7 @@ export default function UserBasicInfo() {
 
       // ✅ Log actual contents of FormData
       for (let pair of formData.entries()) {
-        console.log(`${pair[0]}: ${pair[1]}`);
+    
       }
 
       const res = await editProfile(formData).unwrap();

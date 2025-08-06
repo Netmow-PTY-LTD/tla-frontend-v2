@@ -23,7 +23,7 @@ export default function Page() {
   const { data: userList } = useAllUsersQuery();
   const [selectedUser, setSelectedUser] = useState(null); // state for selected lead
   const [open, setOpen] = useState(false);
-  console.log('userList', userList);
+ 
 
   const columns = [
     {

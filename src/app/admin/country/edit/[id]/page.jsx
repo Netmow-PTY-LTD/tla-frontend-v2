@@ -69,7 +69,7 @@ export default function Page() {
       slug: values.slug.toLowerCase(),
     };
 
-    console.log('Formatted Values:', formattedValues);
+  
 
     try {
       const res = await editCountry({

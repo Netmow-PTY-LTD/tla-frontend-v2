@@ -59,7 +59,7 @@ export default function AddQuestionPage() {
 
   //fetched api data
   const { data: countryList } = useGetCountryListQuery();
-  //console.log('countryList', countryList);
+
   const { data: countrywiseServices, isFetching } =
     useGetCountryWiseServicesQuery(selectedCountry, {
       skip: !selectedCountry, // Skip query if no country is selected
@@ -188,7 +188,7 @@ export default function AddQuestionPage() {
   //country change handler
 
   const handleCountryChange = (val) => {
-    console.log('value', val);
+  
     setSelectedCountry(val);
     setSelectedService(''); // reset service
   };
@@ -196,12 +196,11 @@ export default function AddQuestionPage() {
   //Countrywise service handler
 
   const handleCountryWiseServiceChange = (val) => {
-    console.log('Service', val);
+
     setSelectedService(val);
   };
 
-  // console.log('selectedCountry', selectedCountry);
-  // console.log('selectedService', selectedService);
+  
 
   //single service wise questions
 
@@ -234,13 +233,13 @@ export default function AddQuestionPage() {
     }
   }, [singleServicewiseQuestionsData]);
 
-  console.log('data', data);
+  
 
   //handling adding service wise question
   const [addQuestion, { isLoading }] = useAddQuestionMutation();
 
   async function onSubmit(values) {
-    console.log('values', values);
+ 
     try {
       const result = await addQuestion(values).unwrap();
       // Optionally reset form or show success toast
