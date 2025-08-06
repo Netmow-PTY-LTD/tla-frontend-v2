@@ -8,6 +8,8 @@ import LeadCard from '@/components/dashboard/lawyer/components/LeadCard';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import { data, userDummyImage } from '@/data/data';
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
+import { useRealTimeStatus } from '@/hooks/useSocketListener';
+import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import { useGetAllLeadWiseResponsesQuery } from '@/store/features/client/LeadsApiService';
 import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 import {
@@ -23,11 +25,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 export default function LeadDetailsPage() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showLeadResponseDetails, setShowLeadResponseDetails] = useState(true);
   const [selectedLeadResponse, setSelectedLeadResponse] = useState(null);
+    const currentUserId=useSelector(selectCurrentUser)?._id
+  const [onlineMap, setOnlineMap] = useState({});
   const params = useParams();
   const id = params.id;
 
@@ -37,6 +42,18 @@ export default function LeadDetailsPage() {
     });
 
   // console.log('singleLead', singleLead);
+
+
+
+
+
+
+
+
+
+
+
+  
 
   const toggleReadMore = () => setIsExpanded(!isExpanded);
   const maxLength = 300;
@@ -73,10 +90,29 @@ export default function LeadDetailsPage() {
 
   console.log('leadWiseResponses', leadWiseResponses);
 
+   //  ----------- user online offline ---------------------
+
+  // Safely extract user IDs from AllLeadData
+  const userIds =leadWiseResponses?.data
+    ?.map((response) =>response?.responseBy?.user?._id) || [];
+
+
+  // ✅ Use hook directly (at top level of component)
+  useRealTimeStatus(currentUserId,userIds, (userId, isOnline) => {
+    setOnlineMap((prev) => ({ ...prev, [userId]: isOnline }));
+  });
+
+  useEffect(() => {
+    console.log("data", data);
+    console.log("onlineMap", onlineMap);
+  }, [data, onlineMap]);
+
+
   const handleShowLeadResponseDetails = (response) => {
     setSelectedLeadResponse(response);
     setShowLeadResponseDetails(true);
   };
+
 
   const isMobile = window.innerWidth <= 1280;
 
@@ -252,6 +288,7 @@ export default function LeadDetailsPage() {
                           key={i}
                           response={response}
                           isExpanded={isExpanded}
+                          onlineMap={onlineMap}
                           handleShowLeadResponseDetails={
                             handleShowLeadResponseDetails
                           }
