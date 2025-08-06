@@ -63,6 +63,16 @@ export const lawyerRegistrationStepThreeFormValidation = z
       }),
 
     password: z.string().min(6, 'Password must be at least 6 characters'),
+    gender: z.enum(['male', 'female', 'other'], {
+      required_error: 'Gender is required',
+    }),
+    law_society_member_number: z
+      .string()
+      .min(1, 'Law Society Member Number is required'),
+    practising_certificate_number: z
+      .string()
+      .min(1, 'Practising Certificate Number is required'),
+
     soloPractitioner: z.boolean(),
     companyTeam: z.boolean(),
     company_name: z.string().optional(),

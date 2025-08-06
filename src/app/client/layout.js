@@ -18,11 +18,11 @@ export default function BuyerDashboardLayout({ children }) {
   const noScrollRoutes = [
     '/lawyer/dashboard/leads-board',
     '/lawyer/dashboard/my-responses',
-    '/client/dashboard/my-leads',
+    '/client/dashboard/my-cases',
   ];
 
   const noScrollRoutePatterns = [
-    /^\/client\/dashboard\/my-leads\/[a-zA-Z0-9]+$/, // Matches /client/dashboard/my-leads/:id
+    /^\/client\/dashboard\/my-cases\/[a-zA-Z0-9]+$/, // Matches /client/dashboard/my-cases/:id
   ];
 
   const isNoScrollPage =
