@@ -6,6 +6,7 @@ import { userDummyImage } from '@/data/data';
 import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 import { BadgeCheck, Zap } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 
 export default function ResponseCard({
@@ -15,6 +16,7 @@ export default function ResponseCard({
   setIsLoading,
 }) {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
+
 
 
   const urgentOption = singleLead?.data?.leadAnswers
@@ -56,9 +58,8 @@ export default function ResponseCard({
       <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 p-3">
         <figure className="w-10 h-10 overflow-hidden flex-shrink-0 border rounded-full">
           <Image
-            src={`${
-              user?.leadId?.userProfileId?.profilePicture ?? userDummyImage
-            }`}
+            src={`${user?.leadId?.userProfileId?.profilePicture ?? userDummyImage
+              }`}
             alt={user?.userProfileId?.name ?? 'John Doe'}
             width={40}
             height={40}
@@ -70,16 +71,14 @@ export default function ResponseCard({
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
           <div>
             <div
-              className={`font-medium mb-1 ${
-                isExpanded ? 'heading-base' : 'text-[13px]'
-              }`}
+              className={`font-medium mb-1 ${isExpanded ? 'heading-base' : 'text-[13px]'
+                }`}
             >
               {user?.leadId?.userProfileId?.name}
             </div>
             <div
-              className={`${
-                isExpanded ? 'text-[13px]' : 'text-[10px]'
-              } text-gray-500`}
+              className={`${isExpanded ? 'text-[13px]' : 'text-[10px]'
+                } text-gray-500`}
             >
               {user?.leadId?.userProfileId?.address ?? ''}
             </div>
@@ -95,47 +94,46 @@ export default function ResponseCard({
       {(urgentOption?.option ||
         (user?.additionalDetails && user.additionalDetails !== '') ||
         user?.userProfileId?.phone) && (
-        <div className="px-3 pt-3 pb-2">
-          <div className="flex flex-wrap gap-2">
-            {urgentOption?.option && (
-              <TagButton
-                text={urgentOption.option}
-                bgColor="#FF86021A"
-                icon={<Zap className="text-[#FF8602] w-4 h-4" />}
-              />
-            )}
-            {user?.additionalDetails && user.additionalDetails !== '' && (
-              <TagButton
-                text="Additional Details"
-                bgColor="#004DA61A"
-                icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
-              />
-            )}
-            {user?.userProfileId?.phone && (
-              <TagButton
-                text="Verified Phone"
-                bgColor="#00C3C01A"
-                icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
-              />
-            )}
-            {/* {badge && (
+          <div className="px-3 pt-3 pb-2">
+            <div className="flex flex-wrap gap-2">
+              {urgentOption?.option && (
+                <TagButton
+                  text={urgentOption.option}
+                  bgColor="#FF86021A"
+                  icon={<Zap className="text-[#FF8602] w-4 h-4" />}
+                />
+              )}
+              {user?.additionalDetails && user.additionalDetails !== '' && (
+                <TagButton
+                  text="Additional Details"
+                  bgColor="#004DA61A"
+                  icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+                />
+              )}
+              {user?.userProfileId?.phone && (
+                <TagButton
+                  text="Verified Phone"
+                  bgColor="#00C3C01A"
+                  icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+                />
+              )}
+              {/* {badge && (
               <TagButton
                 text={badge}
                 bgColor="#004DA61A"
                 icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
               />
             )} */}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
       {/* Job Description */}
       <div className="p-3 flex-1">
         {user?.serviceId?.name && (
           <h3
-            className={`font-medium mb-2 ${
-              isExpanded ? 'heading-base' : 'text-[13px]'
-            }`}
+            className={`font-medium mb-2 ${isExpanded ? 'heading-base' : 'text-[13px]'
+              }`}
           >
             Looking for a {user?.serviceId?.name} consultation
           </h3>
@@ -143,16 +141,14 @@ export default function ResponseCard({
 
         <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg flex-1">
           <h4
-            className={`font-medium mb-2 ${
-              isExpanded ? 'heading-base' : 'text-[14px]'
-            }`}
+            className={`font-medium mb-2 ${isExpanded ? 'heading-base' : 'text-[14px]'
+              }`}
           >
             {user?.serviceId?.name}
           </h4>
           <p
-            className={`text-[#34495E] ${
-              isExpanded ? 'text-[13px]' : 'text-[12px]'
-            }`}
+            className={`text-[#34495E] ${isExpanded ? 'text-[13px]' : 'text-[12px]'
+              }`}
           >
             {user?.leadId?.additionalDetails === ''
               ? `If you're facing a divorce, it's crucial to seek professional legal
@@ -168,9 +164,8 @@ export default function ResponseCard({
       {/* Footer Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">
         <Button
-          className={`px-5 py-3 w-full sm:w-auto rounded-lg ${
-            isExpanded ? 'heading-base' : 'text-[12px] '
-          } font-medium bg-[var(--color-special)] text-white`}
+          className={`px-5 py-3 w-full sm:w-auto rounded-lg ${isExpanded ? 'heading-base' : 'text-[12px] '
+            } font-medium bg-[var(--color-special)] text-white`}
           onClick={() => {
             setIsLoading(true);
             onViewDetails(user);
@@ -178,6 +173,15 @@ export default function ResponseCard({
         >
           View Details
         </Button>
+        <Link href={`/chat/${user?._id}`}>
+          <Button
+            className={`px-5 py-3 w-full sm:w-auto rounded-lg ${isExpanded ? 'heading-base' : 'text-[12px] '
+              } font-medium bg-[var(--color-special)] text-white`}
+
+          >
+            Chat
+          </Button>
+        </Link>
         {/* {user?.credit && (
           <p
             className={`text-[#34495E] ${
