@@ -32,8 +32,6 @@ export default function BuyerProfileDropDown({ data }) {
   const { data: currentUser, isLoading: isCurrentUserLoading } =
     useAuthUserInfoQuery();
 
-
-
   const router = useRouter();
   /**
    * Handles user logout functionality.
@@ -86,23 +84,24 @@ export default function BuyerProfileDropDown({ data }) {
         >
           <DropdownMenuLabel>User Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <Link
-                href={`/lawyer/dashboard`}
-                className="w-full flex items-center justify-between gap-2 cursor-pointer px-2 py-1.5"
-              >
-                <span>Switch to Lawyer</span>
-                <DropdownMenuShortcut>
-                  <SendToBack />
-                </DropdownMenuShortcut>
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
+
           {currentUser?.data?.role === 'admin' &&
             currentUser?.data?.regUserType === 'admin' && (
               <>
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <Link
+                      href={`/lawyer/dashboard`}
+                      className="w-full flex items-center justify-between gap-2 cursor-pointer px-2 py-1.5"
+                    >
+                      <span>Switch to Lawyer</span>
+                      <DropdownMenuShortcut>
+                        <SendToBack />
+                      </DropdownMenuShortcut>
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
                     <Link
