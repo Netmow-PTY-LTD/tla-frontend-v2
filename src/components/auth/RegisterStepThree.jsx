@@ -67,6 +67,7 @@ export default function RegisterStepThree() {
       gender: profile.gender,
       law_society_member_number: profile.law_society_member_number,
       practising_certificate_number: profile.practising_certificate_number,
+      agreement: false,
     },
   });
 
@@ -103,8 +104,6 @@ export default function RegisterStepThree() {
     form.setValue('gender', value, { shouldValidate: true }); // Sync to RHF
   };
 
-  const isAgreementChecked = form.watch('agreement');
-
   const router = useRouter();
   const registrationState = useSelector((state) => state.lawyerRegistration);
   const [authRegister, { isLoading }] = useAuthRegisterMutation();
@@ -113,35 +112,35 @@ export default function RegisterStepThree() {
 
   const handleSubmit = async (data) => {
     console.log('data', data);
-    try {
-      const result = await authRegister(registrationState).unwrap();
+    // try {
+    //   const result = await authRegister(registrationState).unwrap();
 
-      if (result?.success && result?.token) {
-        showSuccessToast(result?.message || 'Registration successful');
-        const token = result.token;
-        const userPayload = verifyToken(token);
+    //   if (result?.success && result?.token) {
+    //     showSuccessToast(result?.message || 'Registration successful');
+    //     const token = result.token;
+    //     const userPayload = verifyToken(token);
 
-        if (userPayload) {
-          dispatch(setUser({ user: result?.data, token }));
+    //     if (userPayload) {
+    //       dispatch(setUser({ user: result?.data, token }));
 
-          const userType = result?.data?.regUserType;
-          if (userType === 'lawyer') router.push('/lawyer/dashboard');
-          else if (userType === 'client') router.push('/client/dashboard');
-          else router.push('/');
-        }
-      } else {
-        const errorMessage =
-          result?.errorSources?.[0]?.message ||
-          result?.message ||
-          'Registration failed.';
-        console.log('Registration error:', result);
-        showErrorToast(errorMessage || 'Something went wrong');
-      }
-    } catch (error) {
-      console.log('Registration error:', error);
-      console.error('❌ Registration API Error:', error);
-      showErrorToast(error?.data?.message || 'Server error');
-    }
+    //       const userType = result?.data?.regUserType;
+    //       if (userType === 'lawyer') router.push('/lawyer/dashboard');
+    //       else if (userType === 'client') router.push('/client/dashboard');
+    //       else router.push('/');
+    //     }
+    //   } else {
+    //     const errorMessage =
+    //       result?.errorSources?.[0]?.message ||
+    //       result?.message ||
+    //       'Registration failed.';
+    //     console.log('Registration error:', result);
+    //     showErrorToast(errorMessage || 'Something went wrong');
+    //   }
+    // } catch (error) {
+    //   console.log('Registration error:', error);
+    //   console.error('❌ Registration API Error:', error);
+    //   showErrorToast(error?.data?.message || 'Server error');
+    // }
   };
 
   return (
@@ -546,24 +545,17 @@ export default function RegisterStepThree() {
                 control={form.control}
                 name="agreement"
                 render={({ field }) => (
-                  <FormItem className="flex items-center cursor-pointer">
+                  <FormItem className="flex items-center cursor-pointer flex-wrap">
                     <FormControl>
                       <Checkbox
                         checked={field.value}
-                        onCheckedChange={(checked) => {
-                          field.onChange(checked);
-                          dispatch(
-                            updateNestedField({
-                              section: 'lawyerServiceMap',
-                              field: 'isSoloPractitioner',
-                              value: checked,
-                            })
-                          );
-                        }}
+                        onCheckedChange={(checked) =>
+                          field.onChange(checked === true)
+                        }
                       />
                     </FormControl>
                     <FormLabel
-                      className="ml-2 font-bold mt-0 cursor-pointer text-[var(--color-special)]"
+                      className="ml-2 mr-3 font-bold mt-0 cursor-pointer text-[var(--color-special)]"
                       style={{ marginTop: '0 !important' }}
                     >
                       I agree to{' '}
@@ -571,6 +563,7 @@ export default function RegisterStepThree() {
                         Terms & Conditions
                       </Link>
                     </FormLabel>
+                    <FormMessage className="block" />
                   </FormItem>
                 )}
               />
@@ -588,7 +581,6 @@ export default function RegisterStepThree() {
                 <button
                   type="submit"
                   className="btn-default bg-[var(--color-special)]"
-                  disabled={!isAgreementChecked || isLoading}
                 >
                   {isLoading ? 'Submitting...' : 'Finish & See Leads'}
                 </button>

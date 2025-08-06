@@ -170,7 +170,7 @@ const LeadBoardPage = () => {
     );
   }
 
-  console.log('leads', leads);
+  console.log('data', data);
 
   return (
     <div className="lead-board-wrap">
