@@ -187,7 +187,7 @@ export default function RegisterStepTwo() {
                         </ComboboxButton>
                         {filteredZipcodes?.length > 0 && (
                           <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            {filteredZipcodes.map((item) => (
+                            {filteredZipcodes?.slice(0, 10).map((item) => (
                               <ComboboxOption
                                 key={item._id}
                                 value={item._id}
@@ -283,7 +283,7 @@ export default function RegisterStepTwo() {
                   <FormItem>
                     <FormLabel>Range of Area</FormLabel>
                     <Select
-                      disabled={!practiceWithinWatch || !zipCode} // disable if no zipcode selected
+                      //disabled={!practiceWithinWatch || !zipCode} // disable if no zipcode selected
                       onValueChange={(val) => {
                         const parsedValue = Number(val); // convert from string to number
                         field.onChange(parsedValue); // update form

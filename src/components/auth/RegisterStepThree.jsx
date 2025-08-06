@@ -17,6 +17,7 @@ import {
   updateField,
   updateNestedField,
   prevStep,
+  bulkUpdate,
 } from '@/store/features/auth/lawyerRegistrationSlice';
 import { useAuthRegisterMutation } from '@/store/features/auth/authApiService';
 import { useRouter } from 'next/navigation';
@@ -26,11 +27,26 @@ import { setUser } from '@/store/features/auth/authSlice';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { lawyerRegistrationStepThreeFormValidation } from '@/schema/auth/lawyerRegistration.schema';
 import Link from 'next/link';
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
+import { Label } from '../ui/label';
+
+const genderOptions = [
+  { id: 1, label: 'Male', value: 'male' },
+  { id: 2, label: 'Female', value: 'female' },
+  { id: 3, label: 'Other', value: 'other' },
+];
 
 export default function RegisterStepThree() {
   const dispatch = useDispatch();
   const registration = useSelector((state) => state.lawyerRegistration);
   const { email, password, profile } = registration;
+  const {
+    phone,
+    gender,
+    law_society_member_number,
+    practising_certificate_number,
+  } = profile;
+
   const { companyTeam, companyName, website, companySize } =
     registration.companyInfo;
 
@@ -48,6 +64,9 @@ export default function RegisterStepThree() {
       company_website: website,
       company_size: companySize,
       password,
+      gender: profile.gender,
+      law_society_member_number: profile.law_society_member_number,
+      practising_certificate_number: profile.practising_certificate_number,
     },
   });
 
@@ -62,6 +81,9 @@ export default function RegisterStepThree() {
       company_name: companyName,
       company_website: website,
       company_size: companySize,
+      gender: profile.gender,
+      law_society_member_number: profile.law_society_member_number,
+      practising_certificate_number: profile.practising_certificate_number,
     });
   }, [
     email,
@@ -71,13 +93,26 @@ export default function RegisterStepThree() {
     companyName,
     website,
     companySize,
+    profile.gender, // ✅ include gender so reset reacts
+    profile.law_society_member_number,
+    profile.practising_certificate_number,
   ]);
+
+  const handleGenderChange = (value) => {
+    dispatch(updateNestedField({ section: 'profile', field: 'gender', value })); // Update Redux
+    form.setValue('gender', value, { shouldValidate: true }); // Sync to RHF
+  };
+
+  const isAgreementChecked = form.watch('agreement');
 
   const router = useRouter();
   const registrationState = useSelector((state) => state.lawyerRegistration);
   const [authRegister, { isLoading }] = useAuthRegisterMutation();
 
+  //console.log('registrationState', registrationState);
+
   const handleSubmit = async (data) => {
+    console.log('data', data);
     try {
       const result = await authRegister(registrationState).unwrap();
 
@@ -202,11 +237,46 @@ export default function RegisterStepThree() {
                             {...field}
                             className="tla-form-control"
                             onChange={(e) => {
-                              field.onChange(e);
+                              const sanitizedPhone = e.target.value.replace(
+                                /\s+/g,
+                                ''
+                              );
+                              field.onChange(sanitizedPhone);
                               dispatch(
                                 updateNestedField({
                                   section: 'profile',
                                   field: 'phone',
+                                  value: sanitizedPhone,
+                                })
+                              );
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-wrap">
+                <div className="w-full md:w-1/2 md:pr-1">
+                  <FormField
+                    control={form.control}
+                    name="law_society_member_number"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Law Society Member Number</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            className="tla-form-control"
+                            onChange={(e) => {
+                              field.onChange(e);
+                              dispatch(
+                                updateNestedField({
+                                  section: 'profile',
+                                  field: 'law_society_member_number',
                                   value: e.target.value,
                                 })
                               );
@@ -217,6 +287,73 @@ export default function RegisterStepThree() {
                       </FormItem>
                     )}
                   />
+                </div>
+                <div className="w-full md:w-1/2 md:pl-1">
+                  <FormField
+                    control={form.control}
+                    name="practising_certificate_number"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Practising Certificate Number</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            className="tla-form-control"
+                            onChange={(e) => {
+                              field.onChange(e);
+                              dispatch(
+                                updateNestedField({
+                                  section: 'profile',
+                                  field: 'practising_certificate_number',
+                                  value: e.target.value,
+                                })
+                              );
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center">
+                <Label className="w-1/6">Gender</Label>
+                <div className="flex gap-6">
+                  {genderOptions.map((option) => (
+                    <label
+                      key={option.value}
+                      htmlFor={`gender-${option.value}`}
+                      className="flex items-center gap-2 cursor-pointer group"
+                    >
+                      <input
+                        type="radio"
+                        id={`gender-${option.value}`}
+                        name="gender"
+                        value={option.value}
+                        checked={gender === option.value}
+                        onChange={() => handleGenderChange(option.value)}
+                        className="sr-only"
+                      />
+                      <div
+                        className={`w-4 h-4 rounded-full border-2 border-[var(--primary-color)] flex items-center justify-center transition-all
+            ${
+              gender === option.value
+                ? 'bg-[var(--primary-color)]'
+                : 'bg-transparent'
+            }`}
+                      >
+                        <div
+                          className={`w-1.5 h-1.5 rounded-full transition
+              ${gender === option.value ? 'bg-white' : 'bg-transparent'}`}
+                        />
+                      </div>
+                      <span className="text-sm text-gray-800">
+                        {option.label}
+                      </span>
+                    </label>
+                  ))}
                 </div>
               </div>
 
@@ -405,6 +542,39 @@ export default function RegisterStepThree() {
                 </>
               )}
 
+              <FormField
+                control={form.control}
+                name="agreement"
+                render={({ field }) => (
+                  <FormItem className="flex items-center cursor-pointer">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={(checked) => {
+                          field.onChange(checked);
+                          dispatch(
+                            updateNestedField({
+                              section: 'lawyerServiceMap',
+                              field: 'isSoloPractitioner',
+                              value: checked,
+                            })
+                          );
+                        }}
+                      />
+                    </FormControl>
+                    <FormLabel
+                      className="ml-2 font-bold mt-0 cursor-pointer text-[var(--color-special)]"
+                      style={{ marginTop: '0 !important' }}
+                    >
+                      I agree to{' '}
+                      <Link href="/terms" className="underline">
+                        Terms & Conditions
+                      </Link>
+                    </FormLabel>
+                  </FormItem>
+                )}
+              />
+
               {/* Navigation Buttons */}
               <div className="flex justify-between gap-3 mt-10">
                 <button
@@ -418,7 +588,7 @@ export default function RegisterStepThree() {
                 <button
                   type="submit"
                   className="btn-default bg-[var(--color-special)]"
-                  // disabled={isLoading}
+                  disabled={!isAgreementChecked || isLoading}
                 >
                   {isLoading ? 'Submitting...' : 'Finish & See Leads'}
                 </button>

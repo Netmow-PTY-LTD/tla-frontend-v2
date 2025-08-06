@@ -459,7 +459,7 @@ export default function ClientLeadRegistrationModal({
 
         if (userType === 'client') {
           setTimeout(() => {
-            router.push('/client/dashboard/my-leads');
+            router.push('/client/dashboard/my-cases');
           }, 2000);
         } else {
           router.push('/');
@@ -535,7 +535,6 @@ export default function ClientLeadRegistrationModal({
   //   !selectedServiceWiseQuestions?.length
   // );
 
- 
   //console.log('filteredzipCodes:', filteredzipCodes);
 
   return (

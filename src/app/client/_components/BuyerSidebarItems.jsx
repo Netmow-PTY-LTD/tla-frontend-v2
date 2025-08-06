@@ -19,8 +19,8 @@ export const BuyerSidebarItems = {
     },
 
     {
-      title: 'My Leads',
-      url: '/client/dashboard/my-leads',
+      title: 'My Cases',
+      url: '/client/dashboard/my-cases',
       icon: Users,
       isActive: true,
     },

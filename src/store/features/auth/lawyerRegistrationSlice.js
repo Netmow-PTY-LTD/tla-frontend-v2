@@ -13,6 +13,9 @@ const initialState = {
     profileType: 'basic',
     country: '',
     phone: '',
+    gender: 'male',
+    law_society_member_number: '',
+    practising_certificate_number: '',
   },
   //  company profile data
   companyInfo: {

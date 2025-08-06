@@ -12,6 +12,15 @@ export const lawyerSettingAboutSchema = z.object({
     .string({ invalid_type_error: 'phone must be a string' })
     .min(1, { message: 'Phone is required' }),
   bio: z.string({ invalid_type_error: 'Bio must be a string' }),
+  gender: z.enum(['male', 'female', 'other'], {
+    required_error: 'Gender is required',
+  }),
+  law_society_member_number: z
+    .string()
+    .min(1, 'Law Society Member Number is required'),
+  practising_certificate_number: z
+    .string()
+    .min(1, 'Practising Certificate Number is required'),
   lawyerContactEmail: z
     .string()
     .trim()
