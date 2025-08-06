@@ -266,16 +266,6 @@ const ClientLeadCard = ({ user, isExpanded }) => {
         >
           View Details
         </Link>
-        {user?.credit && (
-          <p
-            className={`text-[#34495E] ${
-              isExpanded ? 'heading-base' : 'text-[12px]'
-            } flex items-center gap-2`}
-          >
-            <span>{user?.credit} Credits required</span>
-            <CircleAlert className="w-4 h-4" />
-          </p>
-        )}
       </div>
     </Card>
   );
