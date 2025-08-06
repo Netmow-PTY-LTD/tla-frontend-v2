@@ -92,7 +92,7 @@ export default function MyResponsesPage() {
     }
 
 
-  }, [allMyResponses, queryParams]);
+  }, [allMyResponses, queryParams.page]);
 
 
 
