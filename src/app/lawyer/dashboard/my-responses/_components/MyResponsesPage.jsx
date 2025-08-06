@@ -50,9 +50,9 @@ export default function MyResponsesPage() {
     data: allMyResponses,
     isLoading: isAllMyResponsesLoading,
     isFetching,
+    refetch
   } = useGetAllMyResponsesQuery(queryParams);
-console.log('my response ==>',allMyResponses)
-console.log('queryParams.page',queryParams.page)
+
 
   // Prevent scroll when in this route
   useEffect(() => {
@@ -193,6 +193,8 @@ useEffect(() => {
                   allResponse={allMyResponses || {}}
                   queryParams={queryParams}
                   setQueryParams={setQueryParams}
+                  scrollContainerRef={scrollContainerRef}
+                  refetch={refetch}
 
                 />
               </div>
