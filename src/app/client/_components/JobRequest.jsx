@@ -24,7 +24,7 @@ const JobRequest = ({ modalOpen, setModalOpen }) => {
             className="mt-10 sm:mt-12 lg:mt-[72px] rounded-[5px] bg-[#00c3c0] px-6 py-[10px] text-white hover:bg-[#00b5b2] transition-all"
             onClick={() => setModalOpen(true)}
           >
-            Place a new request
+            Request a new case
           </button>
         </div>
       </div>
