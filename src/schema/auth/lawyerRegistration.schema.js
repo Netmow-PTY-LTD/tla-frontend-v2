@@ -78,6 +78,9 @@ export const lawyerRegistrationStepThreeFormValidation = z
     company_name: z.string().optional(),
     company_website: z.string().optional(),
     company_size: z.string().optional(),
+    agreement: z.boolean().refine((val) => val === true, {
+      message: '* Required',
+    }),
   })
   .superRefine((data, ctx) => {
     if (data.companyTeam) {
