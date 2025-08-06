@@ -96,7 +96,7 @@ export default function LeadDetailsPage() {
                   href="/client/dashboard/my-cases"
                 >
                   {' '}
-                  <MoveLeft /> <span>Back to leads</span>
+                  <MoveLeft /> <span>Back to my cases</span>
                 </Link>
               </div>
               <div className="mt-3">
