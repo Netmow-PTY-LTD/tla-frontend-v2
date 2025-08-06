@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card';
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { BadgeCheck, CircleAlert, CircleDotDashed, Zap } from 'lucide-react';
 import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
@@ -8,15 +8,21 @@ import { formatRelativeTime } from '@/helpers/formatTime';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import { userDummyImage } from '@/data/data';
 
+
 const LeadResponseCard = ({
   handleShowLeadResponseDetails,
   response,
   isExpanded,
+  onlineMap
 }) => {
 
   const { data: singleLeadResponse, isLoading } = useGetSingleLeadQuery(
     response?._id
   );
+
+
+
+
   //console.log('Single Lead Data:', singleLead);
 
   //   const urgentOption = response?.leadAnswers
@@ -44,16 +50,14 @@ const LeadResponseCard = ({
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
             <div>
               <div
-                className={`font-medium mb-1 ${
-                  isExpanded ? 'heading-base' : 'text-[13px]'
-                }`}
+                className={`font-medium mb-1 ${isExpanded ? 'heading-base' : 'text-[13px]'
+                  }`}
               >
                 {response?.responseBy?.name}
               </div>
               <div
-                className={`${
-                  isExpanded ? 'text-[13px]' : 'text-[10px]'
-                } text-gray-500`}
+                className={`${isExpanded ? 'text-[13px]' : 'text-[10px]'
+                  } text-gray-500`}
               >
                 {response?.responseBy?.address ?? ''}
               </div>
@@ -63,6 +67,17 @@ const LeadResponseCard = ({
         <p className="font-medium text-[11px] text-gray-600 sm:ml-4 mt-2 sm:mt-0">
           {response?.createdAt && formatRelativeTime(response?.createdAt)}
         </p>
+        <span className="text-xs">
+          <div className="flex items-center gap-2 text-sm">
+            <span
+              className={`w-2 h-2 rounded-full ${onlineMap[response?.responseBy?.user?._id] ? "bg-green-500" : "bg-gray-400"
+                }`}
+            ></span>
+            <span className="text-gray-700">
+              {onlineMap[response?.responseBy?.user?._id] ? "Online" : "Offline"}
+            </span>
+          </div>
+        </span>
       </div>
 
       <hr className="border-[#F3F3F3] border" />
@@ -105,8 +120,8 @@ const LeadResponseCard = ({
                 badge.toLowerCase() === 'premium lawyer'
                   ? '/assets/img/badge.svg'
                   : badge.toLowerCase() === 'expert lawyer'
-                  ? '/assets/img/expert.png'
-                  : '/assets/img/basic.png'
+                    ? '/assets/img/expert.png'
+                    : '/assets/img/basic.png'
               }
               width="30"
               height="30"
@@ -118,8 +133,8 @@ const LeadResponseCard = ({
             {badge?.toLowerCase() === 'premium lawyer'
               ? '( 10+ Hired )'
               : badge?.toLowerCase() === 'expert lawyer'
-              ? '( 5+ Hired )'
-              : ''}
+                ? '( 5+ Hired )'
+                : ''}
           </span>
         </div>
       )}
@@ -140,9 +155,8 @@ const LeadResponseCard = ({
       {/* Footer Section */}
       <div className="flex flex-col sm:flex-row items-center p-3 gap-4">
         <Button
-          className={`px-4 py-2 w-full sm:w-auto rounded-lg ${
-            isExpanded ? 'text-[14px]' : 'text-[12px] '
-          } font-medium bg-[var(--color-special)] text-white`}
+          className={`px-4 py-2 w-full sm:w-auto rounded-lg ${isExpanded ? 'text-[14px]' : 'text-[12px] '
+            } font-medium bg-[var(--color-special)] text-white`}
           onClick={() => handleShowLeadResponseDetails(response)}
         >
           View Details

@@ -53,7 +53,7 @@ export function AddOptionDialog({ open, onOpenChange, item, refetch }) {
   const [AddOption] = useAddOptionMutation();
 
   async function onSubmit(values) {
-    console.log('values', values);
+ 
     const finalValues = {
       countryId: item?.countryId?._id,
       serviceId: item?.serviceId?._id,
@@ -61,7 +61,7 @@ export function AddOptionDialog({ open, onOpenChange, item, refetch }) {
       ...values,
     };
 
-    console.log('finalValues', finalValues);
+
     try {
       const result = await AddOption(finalValues).unwrap();
       // Optionally reset form or show success toast

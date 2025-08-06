@@ -40,7 +40,7 @@ export default function Page() {
   const [addCountry, { isLoading }] = useAddCountryMutation();
 
   async function onSubmit(values) {
-    console.log('Original values', values);
+    
 
     const capitalize = (str) =>
       str
