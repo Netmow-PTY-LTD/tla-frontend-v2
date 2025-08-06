@@ -108,7 +108,7 @@ export default function ResponseHead({
       <div className="flex flex-wrap justify-between items-center mt-3 mb-3 gap-2">
         <div className="flex flex-wrap items-center gap-2 text-[#34495E]">
           <div className="lg:flex items-center gap-2">
-            {!isExpanded && hasActiveFilters && (
+            { hasActiveFilters && (
               <div
                 className="text-[#C72C41] text-[11px] flex items-center gap-2"
                 onClick={() => {
