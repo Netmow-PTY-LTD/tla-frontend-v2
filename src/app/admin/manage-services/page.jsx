@@ -57,7 +57,7 @@ export default function ManageServices() {
 
   //fetched api data
   const { data: countryList } = useGetCountryListQuery();
-  //console.log('countryList', countryList);
+
   const { data: countrywiseServices, isFetching } =
     useGetCountryWiseServicesQuery(selectedCountry, {
       skip: !selectedCountry, // Skip query if no country is selected
@@ -172,12 +172,11 @@ export default function ManageServices() {
   //country wise service change handler
 
   const handleCountryWiseServiceChange = (val) => {
-    console.log('Service value', val);
+  
     setSelectedService(val);
   };
 
-  console.log('selectedCountry', selectedCountry);
-  console.log('selectedService', selectedService);
+ 
 
   //single service wise questions
 
@@ -214,7 +213,7 @@ export default function ManageServices() {
   const [manageService] = useManageServiceMutation();
 
   async function onSubmit(values) {
-    console.log('values', values);
+    
 
     const { baseCredit, thumbImage, bannerImage } = values;
 
@@ -241,7 +240,7 @@ export default function ManageServices() {
       formData.append('bannerImage', bannerImage[0]);
     }
 
-    console.log('data', JSON.parse(formData?.get('data')));
+   
 
     try {
       const res = await manageService(formData).unwrap();

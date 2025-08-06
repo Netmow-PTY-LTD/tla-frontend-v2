@@ -66,10 +66,7 @@ export default function ClientNewLeadRegistrationModal({
   const [budgetAmount, setBudgetAmount] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // console.log(
-  //   'selectedServiceWiseQuestions',
-  //   selectedServiceWiseQuestions?.length
-  // );
+ 
   const { data: allZipCodes, isLoading: isZipCodeLoading } =
     useGetZipCodeListQuery();
 
@@ -98,7 +95,7 @@ export default function ClientNewLeadRegistrationModal({
     }
   );
 
-  console.log('selectedServiceWiseQuestions', selectedServiceWiseQuestions);
+  
 
   useEffect(() => {
     if (!selectedServiceWiseQuestions?.data?.length) return;
@@ -138,7 +135,7 @@ export default function ClientNewLeadRegistrationModal({
     }
   }, [step]);
 
-  //console.log('initialData', initialData);
+  
 
   const totalQuestions = selectedServiceWiseQuestions?.data?.length;
 
@@ -176,7 +173,7 @@ export default function ClientNewLeadRegistrationModal({
     setQuestionLoading(false);
   }, [fullClonedQuestions]);
 
-  //console.log('partialClonedQuestions', partialClonedQuestions);
+  
 
   const options = selectedServiceWiseQuestions?.data?.[step - 1]?.options || [];
 
@@ -191,7 +188,7 @@ export default function ClientNewLeadRegistrationModal({
 
     const questionType = parentQuestion?.questionType;
 
-    console.log('questionType', questionType);
+  
 
     const tempOption = {
       id: optionId,
@@ -224,7 +221,7 @@ export default function ClientNewLeadRegistrationModal({
       ? [...checkedOptions, optionId]
       : checkedOptions.filter((id) => id !== optionId);
 
-    console.log('newCheckedOptions', newCheckedOptions);
+    
 
     setCheckedOptions(newCheckedOptions);
 
@@ -258,8 +255,7 @@ export default function ClientNewLeadRegistrationModal({
     }
   };
 
-  //   console.log('checkedOptions', checkedOptions);
-  //   console.log('checkedOptionsDetails', checkedOptionsDetails);
+ 
 
   //   useEffect(() => {
   //     if (step === 0) {
@@ -369,11 +365,11 @@ export default function ClientNewLeadRegistrationModal({
       locationId: zipCode,
     };
 
-    console.log('🚀 Submitting payload:', payload);
+    
 
     try {
       const res = await addLead(payload).unwrap();
-      console.log('✅ Register response:', res);
+     
 
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Lead registered successfully');

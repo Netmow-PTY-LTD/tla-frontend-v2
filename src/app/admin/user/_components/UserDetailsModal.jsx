@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 export function UserDetailsModal({ data, open, onOpenChange }) {
   if (!data) return null;
 
-  console.log('data',data)
+ 
     const profile = data?.profile || {};
   return (
     <Modal

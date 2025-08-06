@@ -41,7 +41,7 @@ export default function AdminDashboardHeader({ onToggleSidebar }) {
   //     }
 
   //     const user = await getUserFromToken(token);
-  //     console.log('user', user);
+  
   //     setUser(user);
 
   //     if (!user || user?.regUserType !== 'admin') {

@@ -68,10 +68,7 @@ export default function ClientLeadRegistrationModal({
   const [phone, setPhone] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // console.log(
-  //   'selectedServiceWiseQuestions',
-  //   selectedServiceWiseQuestions?.length
-  // );
+  
 
   useEffect(() => {
     if (!selectedServiceWiseQuestions?.length) return;
@@ -100,7 +97,7 @@ export default function ClientLeadRegistrationModal({
   const { data: allZipCodes, isLoading: isZipCodeLoading } =
     useGetZipCodeListQuery();
 
-  console.log('allZipCodes', allZipCodes);
+  
 
   const filteredZipCodes = allZipCodes?.data?.filter((item) =>
     zipCode
@@ -131,7 +128,7 @@ export default function ClientLeadRegistrationModal({
     }
   }, [step]);
 
-  //console.log('initialData', initialData);
+  
 
   const totalQuestions = selectedServiceWiseQuestions?.length;
 
@@ -169,7 +166,7 @@ export default function ClientLeadRegistrationModal({
     setQuestionLoading(false);
   }, [fullClonedQuestions]);
 
-  //console.log('partialClonedQuestions', partialClonedQuestions);
+ 
 
   const options = selectedServiceWiseQuestions?.[step]?.options || [];
 
@@ -180,7 +177,7 @@ export default function ClientLeadRegistrationModal({
   //   //   ?.flatMap((question) => question.options || [])
   //   //   .find((option) => option?._id === optionId);
 
-  //   // console.log('foundOption', foundOption);
+ 
 
   //   // const newCheckedOptions = checked
   //   //   ? [...checkedOptions, optionId]
@@ -202,17 +199,17 @@ export default function ClientLeadRegistrationModal({
   //   //   tempOption.idExtraData = '';
   //   // }
 
-  //   // console.log('tempOption', tempOption);
+  
 
   //   // setCheckedOptionsDetails([...checkedOptionsDetails, tempOption]);
 
-  //   // console.log('checkedOptionsDetails', checkedOptionsDetails);
+ 
 
   //   // const foundOption = fullClonedQuestions
   //   //   ?.flatMap((question) => question.options || [])
   //   //   .find((option) => option?._id === optionId);
 
-  //   // console.log('foundOption', foundOption);
+ 
 
   //   const parentQuestion = fullClonedQuestions?.find((question) =>
   //     question.options?.some((option) => option._id === optionId)
@@ -224,7 +221,7 @@ export default function ClientLeadRegistrationModal({
 
   //   const questionType = parentQuestion?.questionType;
 
-  //   console.log('questionType', questionType);
+  
 
   //   const newCheckedOptions = checked
   //     ? [...checkedOptions, optionId]
@@ -232,7 +229,7 @@ export default function ClientLeadRegistrationModal({
 
   //   setCheckedOptions(newCheckedOptions);
 
-  //   console.log('newCheckedOptions', newCheckedOptions);
+
 
   //   const tempOption = {
   //     id: optionId,

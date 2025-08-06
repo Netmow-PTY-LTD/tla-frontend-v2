@@ -33,7 +33,7 @@ export function EditOptionDialog({
   question,
   refetch,
 }) {
-  console.log('item name', item?.name);
+
   const formSchema = z.object({
     name: z.string().min(2, {
       message: 'Name is required.',
@@ -72,7 +72,7 @@ export function EditOptionDialog({
   const [editOption] = useEditOptionMutation();
 
   async function onSubmit(values) {
-    console.log('values', values);
+
     const updatedValues = {
       ...values,
       id: item?._id,
@@ -82,7 +82,7 @@ export function EditOptionDialog({
       selected_options: [],
     };
 
-    console.log('updatedValues', updatedValues);
+   
     try {
       const result = await editOption(updatedValues).unwrap();
       // Optionally reset form or show success toast

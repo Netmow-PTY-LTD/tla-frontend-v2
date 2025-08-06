@@ -32,7 +32,7 @@ export default function BuyerProfileDropDown({ data }) {
   const { data: currentUser, isLoading: isCurrentUserLoading } =
     useAuthUserInfoQuery();
 
-  //console.log('currentUser', currentUser);
+
 
   const router = useRouter();
   /**

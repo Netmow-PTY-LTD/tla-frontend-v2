@@ -55,7 +55,7 @@ export default function EditService() {
     const [editService] = useEditServiceMutation();
   
     async function onSubmit(values) {
-      console.log('Form Values', values);
+  
       try {
         const res = await editService({ id: params.id, ...values }).unwrap();
         showSuccessToast(res?.message || 'Service updated successfully!');

@@ -67,7 +67,6 @@ export async function middleware(request) {
     Array.isArray(routeAccess[role]) &&
     routeAccess[role].some((route) => pathname.startsWith(route));
 
-  console.log('isAllowed', isAllowed);
 
   if (!isAllowed) {
     // Special redirect if trying to access /admin

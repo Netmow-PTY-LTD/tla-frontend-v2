@@ -155,7 +155,7 @@ export default function AddService() {
 //   const [addService, {isLoading}] = useAddServiceMutation();
 
 //   async function onSubmit(values) {
-//     console.log('values', values);
+
 //     try {
 //       const result = await addService(values).unwrap();
 //       // Optionally reset form or show success toast
