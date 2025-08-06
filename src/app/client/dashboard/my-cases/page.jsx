@@ -132,12 +132,12 @@ export default function MyLeads() {
     <>
       <div className="rounded-xl p-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">My Leads</h2>
+          <h2 className="text-xl font-semibold">My Cases</h2>
           <Button
             className="text-white py-[10px] px-[20px] rounded-[5px] bg-[#00C3C0]"
             onClick={() => setModalOpen(true)}
           >
-            Create New Lead
+            Request a new case
           </Button>
         </div>
         <div
