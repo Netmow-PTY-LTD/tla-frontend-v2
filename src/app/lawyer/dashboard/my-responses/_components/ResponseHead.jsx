@@ -12,6 +12,8 @@ export default function ResponseHead({
   allResponse,
   setQueryParams,
   queryParams,
+  scrollContainerRef,
+  refetch
 
 }) {
   const router = useRouter();
@@ -36,12 +38,20 @@ export default function ResponseHead({
 
   const clearFilters = () => {
     setQueryParams(defaultQueryParams);
-    // setQueryParams({
-    //   ...defaultQueryParams,
-    //   page: 1,
-    // });
     localStorage.removeItem('responseFilters');
     router.push(pathname); // remove all query params
+      // Reset scroll position after small delay to ensure new data renders
+      setTimeout(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    }
+  }, 100);
+
+  // 5. Manually refetch new data (if needed)
+  refetch();
     toast.success('Clear Filter', {
       position: 'top-right',
       style: {
@@ -51,11 +61,6 @@ export default function ResponseHead({
     });
   };
 
-
-  //   const hasActiveFilters = Object.entries(queryParams).some(([key, value]) => {
-  //   if (key === 'page' || key === 'limit') return false;
-  //   return value !== defaultQueryParams[key];
-  // });
 
   const hasActiveFilters = Object.keys(defaultQueryParams).some(
     (key) => queryParams[key] !== defaultQueryParams[key]
@@ -103,7 +108,7 @@ export default function ResponseHead({
       <div className="flex flex-wrap justify-between items-center mt-3 mb-3 gap-2">
         <div className="flex flex-wrap items-center gap-2 text-[#34495E]">
           <div className="lg:flex items-center gap-2">
-            {!isExpanded && hasActiveFilters && (
+            { hasActiveFilters && (
               <div
                 className="text-[#C72C41] text-[11px] flex items-center gap-2"
                 onClick={() => {
