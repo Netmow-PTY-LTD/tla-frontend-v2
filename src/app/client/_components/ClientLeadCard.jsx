@@ -262,7 +262,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
           className={`px-4 py-2.5 w-full sm:w-auto rounded-lg ${
             isExpanded ? 'heading-base' : 'text-[12px] '
           } font-medium bg-[var(--color-special)] text-white hover:bg-gray-950 transition`}
-          href={`/client/dashboard/my-leads/${user?._id}`}
+          href={`/client/dashboard/my-cases/${user?._id}`}
         >
           View Details
         </Link>

@@ -39,7 +39,7 @@ export default function CompanyAbout() {
         strong first impression.
       </p>
 
-      <div>
+      <div className="space-y-7">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-20 gap-y-7">
           <SelectInput
             label={'Choose Company Size'}
@@ -56,13 +56,13 @@ export default function CompanyAbout() {
             placeholder="Number of years"
             textColor="text-[#6e6e6e]"
           />
-          <TextareaInput
-            label="Describe your company "
-            name="description"
-            placeholder="What sets you apart from businesses?"
-            textColor="text-[#6e6e6e]"
-          />
         </div>
+        <TextareaInput
+          label="Describe your company "
+          name="description"
+          placeholder="What sets you apart from businesses?"
+          textColor="text-[#6e6e6e]"
+        />
       </div>
     </div>
   );

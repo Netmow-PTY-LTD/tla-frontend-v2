@@ -281,7 +281,7 @@ export default function CreateLeadWithAuthModal({
         showSuccessToast(res?.message || 'Lead registered successfully');
         setModalOpen(false);
         setTimeout(() => {
-          router.push('/client/dashboard/my-leads');
+          router.push('/client/dashboard/my-cases');
         }, 1000);
       }
     } catch (err) {
