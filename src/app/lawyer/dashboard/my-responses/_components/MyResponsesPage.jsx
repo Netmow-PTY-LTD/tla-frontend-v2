@@ -15,6 +15,8 @@ export default function MyResponsesPage() {
   const [selectedResponse, setSelectedResponse] = useState(null);
   const [responses, setResponses] = useState([]);
   const [hasMore, setHasMore] = useState(true);
+  const [totalPages, setTotalPages] = useState(null);
+  const [totalResponsesCount, setTotalResponsesCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -28,31 +30,30 @@ export default function MyResponsesPage() {
     return saved
       ? JSON.parse(saved)
       : {
-        page: 1,
-        limit: 10,
-        sortBy: 'createdAt',
-        sortOrder: 'desc',
-        keyword: '',
-        spotlight: '',
-        clientActions: '',
-        actionsTaken: '',
-        leadSubmission: '',
-      };
+          page: 1,
+          limit: 10,
+          sortBy: 'createdAt',
+          sortOrder: 'desc',
+          keyword: '',
+          spotlight: '',
+          clientActions: '',
+          actionsTaken: '',
+          leadSubmission: '',
+        };
   });
+
+  console.log('queryParams in MyResponsesPage', queryParams);
 
   useEffect(() => {
     localStorage.setItem('responseFilters', JSON.stringify(queryParams));
   }, [queryParams]);
 
-
-
   const {
     data: allMyResponses,
     isLoading: isAllMyResponsesLoading,
     isFetching,
-    refetch
+    refetch,
   } = useGetAllMyResponsesQuery(queryParams);
-
 
   // Prevent scroll when in this route
   useEffect(() => {
@@ -70,63 +71,87 @@ export default function MyResponsesPage() {
     };
   }, [pathname]);
 
-
-
   // ------------------------ Reset responses on filter change (new search) --------------------------
   useEffect(() => {
-    if (queryParams.page === 1 && allMyResponses?.data) {
-      setResponses(allMyResponses.data);
-      if (allMyResponses.data.length > 0) {
-        setSelectedResponse(allMyResponses.data[0]);
-      }
-    } else if (queryParams.page > 1 && allMyResponses?.data) {
-      setResponses((prev) => [...prev, ...allMyResponses.data]);
+    if (allMyResponses && allMyResponses?.data?.length > 0) {
+      setResponses((prev) => [...prev, ...allMyResponses?.data]);
+      setTotalPages(allMyResponses?.pagination?.totalPage);
+      setTotalResponsesCount(allMyResponses?.pagination?.total);
     }
+    // if (queryParams.page === 1 && allMyResponses?.data) {
+    //   setResponses(allMyResponses.data);
+    //   if (allMyResponses.data.length > 0) {
+    //     setSelectedResponse(allMyResponses.data[0]);
+    //   }
+    // } else if (queryParams.page > 1 && allMyResponses?.data) {
+    //   setResponses((prev) => [...prev, ...allMyResponses.data]);
+    // }
 
     // Update hasMore
-    const totalPage = allMyResponses?.pagination?.totalPage;
-    if (!totalPage || queryParams.page >= totalPage) {
-      setHasMore(false);
-    } else {
-      setHasMore(true);
-    }
+    // const totalPage = allMyResponses?.pagination?.totalPage;
+    // if (!totalPage || queryParams.page >= totalPage) {
+    //   setHasMore(false);
+    // } else {
+    //   setHasMore(true);
+    // }
+  }, [allMyResponses]);
 
+  const loader = useRef(null);
 
-  }, [allMyResponses, queryParams.page]);
+  useEffect(() => {
+    const scrollTarget = document.getElementById('scroll-target-for-data');
+    if (!scrollTarget) return;
 
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting && !isFetching) {
+          if (totalPages && queryParams.page >= totalPages) return;
 
+          setQueryParams((prev) => ({
+            ...prev,
+            page: prev.page + 1,
+          }));
+        }
+      },
+      { root: scrollTarget, threshold: 1 }
+    );
 
+    const currentLoader = loader.current;
+    if (currentLoader) observer.observe(currentLoader);
 
+    return () => {
+      if (currentLoader) observer.unobserve(currentLoader);
+    };
+  }, [isFetching, totalPages, queryParams.page]);
 
   //  ------------------------- Infinite scroll ----------------------------
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
+  // useEffect(() => {
+  //   const container = scrollContainerRef.current;
+  //   if (!container) return;
 
-    const handleScroll = () => {
-      const { scrollTop, scrollHeight, clientHeight } = container;
-      const nearBottom = scrollTop + clientHeight >= scrollHeight - 50;
+  //   const handleScroll = () => {
+  //     const { scrollTop, scrollHeight, clientHeight } = container;
+  //     const nearBottom = scrollTop + clientHeight >= scrollHeight - 50;
 
-      if (nearBottom && hasMore && !isFetching) {
-        // setQueryParams((prev) => ({
-        //   ...prev,
-        //   page: prev.page + 1,
-        // }));
-        setQueryParams((prev) => {
-          const nextPage = prev.page + 1;
-          if (allMyResponses?.pagination?.totalPage && nextPage > allMyResponses.pagination.totalPage) {
-            return prev; // don’t update page
-          }
-          return { ...prev, page: nextPage };
-        });
-      }
-    };
+  //     if (nearBottom && hasMore && !isFetching) {
+  //       // setQueryParams((prev) => ({
+  //       //   ...prev,
+  //       //   page: prev.page + 1,
+  //       // }));
+  //       setQueryParams((prev) => {
+  //         const nextPage = prev.page + 1;
+  //         if (allMyResponses?.pagination?.totalPage && nextPage > allMyResponses.pagination.totalPage) {
+  //           return prev; // don’t update page
+  //         }
+  //         return { ...prev, page: nextPage };
+  //       });
+  //     }
+  //   };
 
-    container.addEventListener('scroll', handleScroll);
-    return () => container.removeEventListener('scroll', handleScroll);
-  }, [hasMore, isFetching]);
-
-
+  //   container.addEventListener('scroll', handleScroll);
+  //   return () => container.removeEventListener('scroll', handleScroll);
+  // }, [hasMore, isFetching]);
 
   // Set selectedResponse whenever responses update
   useEffect(() => {
@@ -136,11 +161,6 @@ export default function MyResponsesPage() {
       setSelectedResponse(null);
     }
   }, [responses]);
-
-
-
-
-
 
   if (isAllMyResponsesLoading) {
     return (
@@ -174,6 +194,7 @@ export default function MyResponsesPage() {
     );
   }
 
+  console.log('allMyResponses', responses);
   return (
     <div className="lead-board-wrap">
       {responses && responses.length > 0 ? (
@@ -192,8 +213,12 @@ export default function MyResponsesPage() {
             </div>
           )}
 
-          <div className={showResponseDetails ? 'right-column-4' : 'right-column-full'}>
-            <div className="column-wrap-right" ref={scrollContainerRef}>
+          <div
+            className={
+              showResponseDetails ? 'right-column-4' : 'right-column-full'
+            }
+          >
+            <div className="column-wrap-right" id="scroll-target-for-data">
               <div className="leads-top-row">
                 <ResponseHead
                   isExpanded={!showResponseDetails}
@@ -202,7 +227,7 @@ export default function MyResponsesPage() {
                   setQueryParams={setQueryParams}
                   scrollContainerRef={scrollContainerRef}
                   refetch={refetch}
-
+                  setResponses={setResponses}
                 />
               </div>
 
@@ -216,11 +241,13 @@ export default function MyResponsesPage() {
                   data={responses}
                   setIsLoading={setIsLoading}
                 />
-                {hasMore && (
-                  <div className="py-6 text-center">
+                <div ref={loader}>
+                  {isFetching ? (
                     <Loader className="w-5 h-5 animate-spin text-gray-500 mx-auto" />
-                  </div>
-                )}
+                  ) : (
+                    ''
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -245,43 +272,6 @@ export default function MyResponsesPage() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // 'use client';
 // import React, { Suspense, useEffect, useRef, useState } from 'react';
@@ -549,8 +539,3 @@ export default function MyResponsesPage() {
 //     </div>
 //   );
 // }
-
-
-
-
-

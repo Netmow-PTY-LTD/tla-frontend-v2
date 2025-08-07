@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import {
   Sheet,
@@ -18,9 +17,12 @@ import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import { showSuccessToast } from '@/components/common/toasts';
 
-
-
-export default function FilterResponseSidebar({ queryParams, setQueryParams }) {
+export default function FilterResponseSidebar({
+  queryParams,
+  setQueryParams,
+  refetch,
+  setResponses,
+}) {
   const [isOpen, setIsOpen] = useState(false); // <-- Control sidebar visibility
   const { register, handleSubmit, reset, watch } = useForm({
     defaultValues: {
@@ -31,7 +33,6 @@ export default function FilterResponseSidebar({ queryParams, setQueryParams }) {
       leadSubmission: '',
     },
   });
-
 
   // Sync form with queryParams on load or when queryParams change
   useEffect(() => {
@@ -48,8 +49,6 @@ export default function FilterResponseSidebar({ queryParams, setQueryParams }) {
     });
   }, [queryParams, reset]);
 
-
-
   const onSubmit = (data) => {
     setQueryParams((prev) => ({
       ...prev,
@@ -61,15 +60,20 @@ export default function FilterResponseSidebar({ queryParams, setQueryParams }) {
       leadSubmission: data.leadSubmission || '',
     }));
     showSuccessToast('Filters applied and saved.');
+
+    localStorage.setItem('responseFilters', JSON.stringify(queryParams));
     // Close sidebar after form submit
     setIsOpen(false);
-
+    setResponses([]);
   };
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen} className="z-[9999]">
       <SheetTrigger asChild>
-        <button onClick={() => setIsOpen(true)} className="font-medium text-[#0194EF] flex items-center gap-2 text-[14px]">
+        <button
+          onClick={() => setIsOpen(true)}
+          className="font-medium text-[#0194EF] flex items-center gap-2 text-[14px]"
+        >
           <SlidersVertical className="w-4 h-4" /> <span>Filter</span>
         </button>
       </SheetTrigger>
@@ -81,7 +85,10 @@ export default function FilterResponseSidebar({ queryParams, setQueryParams }) {
           <SheetTitle className="text-left">Filter Responses</SheetTitle>
         </SheetHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-1">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col flex-1"
+        >
           <Accordion
             type="single"
             collapsible
@@ -111,7 +118,6 @@ export default function FilterResponseSidebar({ queryParams, setQueryParams }) {
                 Lead Spotlight
               </AccordionTrigger>
               <AccordionContent className="overflow-hidden">
-             
                 <div className="flex flex-col gap-4 text-balance">
                   {[
                     { value: 'urgent', label: 'Urgent' },
@@ -119,19 +125,19 @@ export default function FilterResponseSidebar({ queryParams, setQueryParams }) {
                     { value: 'this_month', label: 'This Month' },
                     { value: 'not_sure', label: 'Not Sure' },
                   ].map((option) => (
-                  <label
-                    key={option.value}
-                    htmlFor={option.value}
-                    className="flex items-center gap-2"
-                  >
-                    <input
-                      type="checkbox"
-                      id={option.value}
-                      value={option.value}
-                      {...register('spotlight')}
-                    />
-                    {option.label}
-                  </label>
+                    <label
+                      key={option.value}
+                      htmlFor={option.value}
+                      className="flex items-center gap-2"
+                    >
+                      <input
+                        type="checkbox"
+                        id={option.value}
+                        value={option.value}
+                        {...register('spotlight')}
+                      />
+                      {option.label}
+                    </label>
                   ))}
                 </div>
               </AccordionContent>
@@ -145,12 +151,25 @@ export default function FilterResponseSidebar({ queryParams, setQueryParams }) {
               <AccordionContent className="overflow-hidden">
                 <div className="flex flex-col gap-4 text-balance">
                   {[
-                    { id: 'client-quote', label: 'Client has requested a quote' },
-                    { id: 'client-interest', label: 'Client has expressed an interest' },
+                    {
+                      id: 'client-quote',
+                      label: 'Client has requested a quote',
+                    },
+                    {
+                      id: 'client-interest',
+                      label: 'Client has expressed an interest',
+                    },
                     { id: 'client-message', label: 'Client send a message' },
-                    { id: 'client-callback', label: 'Client has requested a callback' },
+                    {
+                      id: 'client-callback',
+                      label: 'Client has requested a callback',
+                    },
                   ].map((item) => (
-                    <label key={item.id} htmlFor={item.id} className="flex items-center gap-2">
+                    <label
+                      key={item.id}
+                      htmlFor={item.id}
+                      className="flex items-center gap-2"
+                    >
                       <input
                         type="checkbox"
                         id={item.id}
@@ -177,9 +196,16 @@ export default function FilterResponseSidebar({ queryParams, setQueryParams }) {
                     { id: 'send-email', label: 'Send Email' },
                     { id: 'send-sms', label: 'Send SMS' },
                     { id: 'made-note', label: 'Made Note' },
-                    { id: 'one-click-response', label: 'Sent One Click Response' },
+                    {
+                      id: 'one-click-response',
+                      label: 'Sent One Click Response',
+                    },
                   ].map((item) => (
-                    <label key={item.id} htmlFor={item.id} className="flex items-center gap-2">
+                    <label
+                      key={item.id}
+                      htmlFor={item.id}
+                      className="flex items-center gap-2"
+                    >
                       <input
                         type="checkbox"
                         id={item.id}
@@ -201,18 +227,31 @@ export default function FilterResponseSidebar({ queryParams, setQueryParams }) {
               <AccordionContent className="overflow-hidden">
                 <div className="flex flex-col gap-4 text-balance">
                   {[
-                    'last-hour', 'today', 'yesterday', '3days-ago',
-                    '7days-ago', '2weeks-ago', 'last-month',
-                    'six-month', 'last-year', 'one-year-ago'
+                    'last-hour',
+                    'today',
+                    'yesterday',
+                    '3days-ago',
+                    '7days-ago',
+                    '2weeks-ago',
+                    'last-month',
+                    'six-month',
+                    'last-year',
+                    'one-year-ago',
                   ].map((id) => (
-                    <label key={id} htmlFor={id} className="flex items-center gap-2">
+                    <label
+                      key={id}
+                      htmlFor={id}
+                      className="flex items-center gap-2"
+                    >
                       <input
                         type="radio"
                         id={id}
                         value={id}
                         {...register('leadSubmission')}
                       />
-                      {id.replace('-', ' ').replace(/\b\w/g, (c) => c.toUpperCase())}
+                      {id
+                        .replace('-', ' ')
+                        .replace(/\b\w/g, (c) => c.toUpperCase())}
                     </label>
                   ))}
                 </div>
@@ -227,10 +266,9 @@ export default function FilterResponseSidebar({ queryParams, setQueryParams }) {
               variant="outline"
               className="cursor-pointer"
               onClick={() => {
-                reset()
-                setIsOpen(false)
+                reset();
+                setIsOpen(false);
               }}
-
             >
               Cancel
             </Button>
