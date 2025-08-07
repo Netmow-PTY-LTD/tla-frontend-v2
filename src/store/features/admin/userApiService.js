@@ -6,13 +6,16 @@ const userApiService = baseApi.injectEndpoints({
       query: () => ({
         url: '/user/list',
         method: 'GET',
+
       }),
+      providesTags: ['all-users']
     }),
     singleUser: builder.query({
       query: (id) => ({
         url: `/user/${id}`,
         method: 'GET',
       }),
+      providesTags: ['user']
     }),
 
     editProfile: builder.mutation({
@@ -21,14 +24,16 @@ const userApiService = baseApi.injectEndpoints({
         method: 'PATCH',
         body,
       }),
+      invalidatesTags: ['all-users', 'user']
     }),
 
     deleteUser: builder.mutation({
       query: (body) => ({
-        url: `/user/delete/${body.get('service_id')}`,
+        url: `/user/delete/${body.get('userId')}`,
         method: 'PATCH',
         body,
       }),
+      invalidatesTags: ['all-users', 'user']
     }),
 
     deleteCustomService: builder.mutation({
@@ -36,6 +41,7 @@ const userApiService = baseApi.injectEndpoints({
         url: `/user/service/delete/${id}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['userInfo'],
     }),
 
     deleteAccreditation: builder.mutation({
@@ -43,6 +49,7 @@ const userApiService = baseApi.injectEndpoints({
         url: `/user/accreditation/delete/${id}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['userInfo'],
     }),
     deleteProfileVideoUrl: builder.mutation({
       query: (body) => ({

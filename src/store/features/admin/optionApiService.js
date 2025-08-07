@@ -8,14 +8,14 @@ const optionApiService = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['option'],
+      invalidatesTags: ['option','option-list'],
     }),
     getAllOptions: builder.query({
       query: () => ({
         url: '/option/list',
         method: 'GET',
       }),
-      providesTags: ['option'],
+      providesTags: ['option-list'],
     }),
     getSingleOption: builder.query({
       query: (id) => ({
@@ -30,21 +30,21 @@ const optionApiService = baseApi.injectEndpoints({
         method: 'PATCH',
         body,
       }),
-      invalidatesTags: ['option'],
+      invalidatesTags: ['option','option-list'],
     }),
     deleteOption: builder.mutation({
       query: (id) => ({
         url: `/option/delete/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['option'],
+      invalidatesTags: ['option','option-list'],
     }),
     getQuestionWiseOptions: builder.query({
       query: (questionId) => ({
         url: `/question-wise-options?questionId=${questionId}`,
         method: 'GET',
       }),
-      providesTags: ['option'],
+      providesTags: ['question-wise-option'],
     }),
   }),
 });

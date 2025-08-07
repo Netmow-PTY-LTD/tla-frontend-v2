@@ -5,12 +5,13 @@ import { createContext, useContext, useState } from 'react';
 import { useNotifications, useResponseRoom } from '@/hooks/useSocketListener';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { useSearchParams } from 'next/navigation';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '@/store/features/auth/authSlice';
 
 const SocketContext = createContext({});
 
 export const SocketProvider = ({ children }) => {
-  const { data: user } = useAuthUserInfoQuery();
-  const userId = user?.data?._id;
+  const userId=useSelector(selectCurrentUser)?._id
   const searchParams = useSearchParams();
   const responseId = searchParams.get('responseId');
   const [messages, setMessages] = useState([]);
