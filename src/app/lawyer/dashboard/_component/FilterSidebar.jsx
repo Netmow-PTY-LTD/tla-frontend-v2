@@ -64,7 +64,6 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
   }, [reset]);
 
   const onSubmit = (values) => {
-
     // payload shape transformation (if needed)
     const payload = {
       keyword: values.keyword,
@@ -77,20 +76,23 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
       credits: values.credit, // array of checked
     };
 
-
     setSearchKeyword(payload);
     // Now you can call API or update state
     localStorage.setItem('lead-filters', JSON.stringify(payload));
     // Show toast
     showSuccessToast('Filters applied and saved.');
-     // Close sidebar after form submit
+    // Close sidebar after form submit
     setIsOpen(false);
+    setLeads([]);
   };
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen} className="z-[9999]">
       <SheetTrigger asChild>
-        <button onClick={() => setIsOpen(true)} className="font-medium text-[#0194EF] flex items-center gap-2 text-[14px]">
+        <button
+          onClick={() => setIsOpen(true)}
+          className="font-medium text-[#0194EF] flex items-center gap-2 text-[14px]"
+        >
           <SlidersVertical className="w-4 h-4" /> <span>Filter</span>
         </button>
       </SheetTrigger>
@@ -440,8 +442,8 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
               variant="outline"
               className="cursor-pointer"
               onClick={() => {
-                reset()
-                setIsOpen(false)
+                reset();
+                setIsOpen(false);
               }}
             >
               Cancel
