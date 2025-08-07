@@ -15,7 +15,7 @@ const questionApiService = baseApi.injectEndpoints({
         url: '/question/list',
         method: 'GET',
       }),
-      providesTags: ['question'],
+      providesTags: ['question-list'],
     }),
     getSingleQuestion: builder.query({
       query: (id) => ({
@@ -30,14 +30,14 @@ const questionApiService = baseApi.injectEndpoints({
         method: 'PATCH',
         body,
       }),
-      invalidatesTags: ['question'],
+      invalidatesTags: ['question','question-list'],
     }),
     deleteQuestion: builder.mutation({
       query: (id) => ({
         url: `/question/delete/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['question'],
+      invalidatesTags: ['question','question-list'],
     }),
     updateQuestionOrder: builder.mutation({
       query: (body) => ({
@@ -45,7 +45,7 @@ const questionApiService = baseApi.injectEndpoints({
         method: 'PATCH',
         body,
       }),
-      invalidatesTags: ['question'],
+      invalidatesTags: ['question','question-list'],
     }),
     addCountryWiseServiceQuestion: builder.mutation({
       query: (body) => ({
@@ -60,7 +60,7 @@ const questionApiService = baseApi.injectEndpoints({
         url: `/service-wise-questions?serviceId=${serviceId}&countryId=${countryId}`,
         method: 'GET',
       }),
-      providesTags: ['question'],
+      providesTags: ['service-wise-question'],
     }),
   }),
 });

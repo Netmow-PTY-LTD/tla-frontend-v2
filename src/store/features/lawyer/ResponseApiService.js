@@ -8,7 +8,7 @@ export const responseApiService = baseApi.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['response'],
+      invalidatesTags:['response','response-my','response-list'],
     }),
 
     getAllResponses: builder.query({
@@ -16,7 +16,7 @@ export const responseApiService = baseApi.injectEndpoints({
         url: '/response/list',
         method: 'GET',
       }),
-      providesTags: ['response'],
+      providesTags: ['response-list'],
     }),
 
     getSingleResponse: builder.query({
@@ -32,7 +32,7 @@ export const responseApiService = baseApi.injectEndpoints({
         method: 'GET',
         params:queryParams
       }),
-      providesTags: ['response'],
+      providesTags: ['response-my'],
     }),
 
     updateResponseStatus: builder.mutation({
@@ -43,7 +43,7 @@ export const responseApiService = baseApi.injectEndpoints({
           body: body.data,
         }
       },
-      invalidatesTags: ['response','notification'],
+      invalidatesTags: ['response','notification','response-my','response-list'],
     }),
 
     // activity log
@@ -63,7 +63,7 @@ export const responseApiService = baseApi.injectEndpoints({
           body,
         }
       },
-      invalidatesTags: ['response','notification'],
+      invalidatesTags: ['response','notification','response-my','response-list'],
     }),
 
 

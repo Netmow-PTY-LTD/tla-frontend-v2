@@ -15,7 +15,7 @@ const categoryApiService = baseApi.injectEndpoints({
         url: '/category/list',
         method: 'GET',
       }),
-      providesTags: ['category'],
+      providesTags: ['category-list'],
     }),
     getCategoryById: builder.query({
       query: (id) => ({
@@ -30,14 +30,14 @@ const categoryApiService = baseApi.injectEndpoints({
         method: 'PATCH',
         body: payload.data,
       }),
-      invalidatesTags: ['category'],
+      invalidatesTags: ['category','category-list'],
     }),
     deleteCategory: builder.mutation({
       query: (id) => ({
         url: `/category/delete/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['category'],
+      invalidatesTags: ['category','category-list'],
     }),
   }),
 });

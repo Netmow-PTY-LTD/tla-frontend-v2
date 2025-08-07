@@ -80,7 +80,7 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['credit-payment', 'transaction-history', 'next-offer'],
+      invalidatesTags: ['credit-payment', 'transaction-history', 'next-offer','transaction-history-list'],
     }),
 
     // transaction
@@ -97,7 +97,7 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
         url: '/settings/credit-payment/transaction/list',
         method: 'GET',
       }),
-      providesTags: ['transaction-history'],
+      providesTags: ['transaction-history-list'],
     }),
     //  credit transaction
     spendCredit: builder.mutation({
@@ -106,7 +106,7 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['user-credit-stats'],
+      invalidatesTags: ['credit-payment','user-credit-stats','transaction-history','transaction-history-list','next-offer'],
     }),
 
     userCreditTransactionHistory: builder.query({

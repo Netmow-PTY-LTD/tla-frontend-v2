@@ -8,7 +8,7 @@ const leadsApiService = baseApi.injectEndpoints({
         method: 'GET',
         params: { page, limit, searchKeyword },
       }),
-      providesTags: ['lead'],
+      providesTags: ['lead-list'],
     }),
     getAllLeadsForAdmin: builder.query({
       query: (params) => ({
@@ -16,7 +16,7 @@ const leadsApiService = baseApi.injectEndpoints({
         method: 'GET',
         params
       }),
-      providesTags: ['lead'],
+      providesTags: ['lead-list-admin'],
     }),
     getSingleLead: builder.query({
       query: (id) => ({
@@ -39,7 +39,7 @@ const leadsApiService = baseApi.injectEndpoints({
         method: 'PATCH',
         body: data?.data
       }),
-      providesTags: ['lead'],
+      providesTags: ['lead','lead-list-admin','lead-list'],
     }),
     contactLawyer: builder.mutation({
       query: (data) => ({
@@ -47,7 +47,7 @@ const leadsApiService = baseApi.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['lead', 'response', 'notification'],
+      invalidatesTags: ['lead', 'response', 'notification','lead-list-admin','lead-list','response-my','response-list'],
     }),
   }),
 });

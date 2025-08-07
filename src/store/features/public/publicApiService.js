@@ -15,7 +15,7 @@ const publicApiService = baseApi.injectEndpoints({
         url: `/country/list`,
         method: 'GET',
       }),
-      providesTags: ['Country'],
+      providesTags: ['Country-list'],
     }),
     getSingleCountry: builder.query({
       query: (id) => ({
@@ -30,14 +30,14 @@ const publicApiService = baseApi.injectEndpoints({
         method: 'PATCH',
         body,
       }),
-      invalidatesTags: ['Country'],
+      invalidatesTags: ['Country','Country-list'],
     }),
     deleteCountry: builder.mutation({
       query: (id) => ({
         url: `/country/delete/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Country'],
+      invalidatesTags: ['Country','Country-list'],
     }),
     // ----------- Zip code related ----------
     addZipCode: builder.mutation({
@@ -53,14 +53,14 @@ const publicApiService = baseApi.injectEndpoints({
         url: `/country/zipcode/list`,
         method: 'GET',
       }),
-      providesTags: ['Country'],
+      providesTags: ['zipcode-list'],
     }),
     getSingleZipCode: builder.query({
       query: (id) => ({
         url: `/country/zipcode/${id}`,
         method: 'GET',
       }),
-      providesTags: ['Country'],
+      providesTags: ['zipcode'],
     }),
     editZipCode: builder.mutation({
       query: (body) => ({
@@ -68,14 +68,14 @@ const publicApiService = baseApi.injectEndpoints({
         method: 'PATCH',
         body,
       }),
-      invalidatesTags: ['Country'],
+      invalidatesTags: ['zipcode','zipcode-list'],
     }),
     deleteZipCode: builder.mutation({
       query: (id) => ({
         url: `/country/zipcode/delete/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Country'],
+      invalidatesTags: ['zipcode','zipcode-list'],
     }),
     //  ------------------ range related ------------------
     addRange: builder.mutation({
@@ -91,7 +91,7 @@ const publicApiService = baseApi.injectEndpoints({
         url: `/country/zipcode/range/list`,
         method: 'GET',
       }),
-      providesTags: ['range'],
+      providesTags: ['range-list'],
     }),
     getSingleRange: builder.query({
       query: (id) => ({
@@ -106,14 +106,14 @@ const publicApiService = baseApi.injectEndpoints({
         method: 'PATCH',
         body,
       }),
-      invalidatesTags: ['range'],
+      invalidatesTags: ['range','range-list'],
     }),
     deleteRange: builder.mutation({
       query: (id) => ({
         url: `/country/zipcode/range/delete/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['range'],
+      invalidatesTags: ['range','range-list'],
     }),
 
     //  ------------------ Profile related ------------------
@@ -123,14 +123,14 @@ const publicApiService = baseApi.injectEndpoints({
         url: `/public/user/list`,
         method: 'GET',
       }),
-      providesTags: ['user'],
+      providesTags: ['public-user-list'],
     }),
     getUserProfileBySlug: builder.query({
       query: (slug) => ({
         url: `/public/user/by-slug/${slug}`,
         method: 'GET',
       }),
-      providesTags: ['user'],
+      providesTags: ['public-user'],
     }),
   }),
 });
