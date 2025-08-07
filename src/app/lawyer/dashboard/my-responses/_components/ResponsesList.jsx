@@ -19,8 +19,8 @@ const LeadsRight = ({ isExpanded, onViewDetails, data, setIsLoading }) => {
   });
 
   useEffect(() => {
-    console.log("data", data);
-    console.log("onlineMap", onlineMap);
+    // console.log("data", data);
+    // console.log("onlineMap", onlineMap);
   }, [data, onlineMap]);
 
 

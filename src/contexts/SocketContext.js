@@ -12,7 +12,6 @@ const SocketContext = createContext({});
 
 export const SocketProvider = ({ children }) => {
   const userId=useSelector(selectCurrentUser)?._id
-  console.log('current user ==>',userId)
   const searchParams = useSearchParams();
   const responseId = searchParams.get('responseId');
   const [messages, setMessages] = useState([]);

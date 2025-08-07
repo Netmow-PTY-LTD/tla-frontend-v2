@@ -88,7 +88,9 @@ export default function ResponseCard({
             </div>
           </div>
           <p className="font-medium text-[11px] text-gray-600 mt-2 sm:mt-0 w-16 flex justify-end">
-            {user?.createdAt && formatRelativeTime(user?.createdAt)}
+            {/* {user?.leadId?.userProfileId?.user && formatRelativeTime(user?.leadId?.userProfileId?.user.isOnline)}
+             */}
+           
           </p>
            <span className="text-xs">
           <div className="flex items-center gap-2 text-sm">
@@ -193,6 +195,9 @@ export default function ResponseCard({
         >
           View Details
         </Button>
+         <p className="font-medium text-[11px] text-gray-600 mt-2 sm:mt-0  flex justify-end">
+           createdAt: {user?.createdAt && formatRelativeTime(user?.createdAt)}
+          </p>
         {/* {user?.credit && (
           <p
             className={`text-[#34495E] ${

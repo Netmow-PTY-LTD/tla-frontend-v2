@@ -73,26 +73,53 @@ export default function MyResponsesPage() {
 
 
   // ------------------------ Reset responses on filter change (new search) --------------------------
+  // useEffect(() => {
+  //   if (queryParams.page === 1 && allMyResponses?.data) {
+  //     setResponses(allMyResponses.data);
+  //     if (allMyResponses.data.length > 0) {
+  //       setSelectedResponse(allMyResponses.data[0]);
+  //     }
+  //   } else if (queryParams.page > 1 && allMyResponses?.data) {
+  //     setResponses((prev) => [...prev, ...allMyResponses.data]);
+  //   }
+
+  //   // Update hasMore
+  //   const totalPage = allMyResponses?.pagination?.totalPage;
+  //   if (!totalPage || queryParams.page >= totalPage) {
+  //     setHasMore(false);
+  //   } else {
+  //     setHasMore(true);
+  //   }
+
+
+  // }, [allMyResponses, queryParams.page]);
+
+    // ------------------------ Reset responses on filter change (new search) --------------------------
   useEffect(() => {
-    if (queryParams.page === 1 && allMyResponses?.data) {
-      setResponses(allMyResponses.data);
-      if (allMyResponses.data.length > 0) {
-        setSelectedResponse(allMyResponses.data[0]);
+  if (!allMyResponses?.data) return;
+
+  const newData = allMyResponses.data;
+
+  setResponses((prev) => {
+    if (queryParams.page === 1) {
+      // First page, reset responses and selectedResponse
+      if (newData.length > 0) {
+        setSelectedResponse(newData[0]);
       }
-    } else if (queryParams.page > 1 && allMyResponses?.data) {
-      setResponses((prev) => [...prev, ...allMyResponses.data]);
-    }
-
-    // Update hasMore
-    const totalPage = allMyResponses?.pagination?.totalPage;
-    if (!totalPage || queryParams.page >= totalPage) {
-      setHasMore(false);
+      return newData;
     } else {
-      setHasMore(true);
+      // Append new data but avoid duplicates (based on _id)
+      const existingIds = new Set(prev.map((item) => item._id));
+      const filteredNewData = newData.filter((item) => !existingIds.has(item._id));
+      return [...prev, ...filteredNewData];
     }
+  });
 
+  // Update hasMore
+  const totalPage = allMyResponses?.pagination?.totalPage;
+  setHasMore(!!totalPage && queryParams.page < totalPage);
 
-  }, [allMyResponses, queryParams.page]);
+}, [allMyResponses, queryParams.page]);
 
 
 
