@@ -7,7 +7,7 @@ const categoryWiseApiService = baseApi.injectEndpoints({
         url: '/category/public',
         method: 'GET',
       }),
-      providesTags: ['category'],
+      providesTags: ['public-category'],
     }),
   }),
 });

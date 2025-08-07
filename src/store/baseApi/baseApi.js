@@ -50,7 +50,7 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
       } else {
 
         api.dispatch(logOut());
-        fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/logout',`, {
+        fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/logout`, {
           credentials: 'include',
           method: 'POST',
         }).catch(console.error);
@@ -58,7 +58,7 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
       }
     } catch (err) {
       api.dispatch(logOut());
-      fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/logout',`, {
+      fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/logout`, {
         credentials: 'include',
         method: 'POST',
       }).catch(console.error);
@@ -94,6 +94,28 @@ export const baseApi = createApi({
     "notificationPreferences",
     "app-settings",
     "category",
+    'transaction-history-list',
+    'response-my',
+    'response-list',
+    'lead-list-admin',
+    'lead-list',
+    'lead-wise-response',
+    'Country-list',
+    'zipcode',
+    'zipcode-list',
+    'range-list',
+    'public-user',
+    'public-user-list',
+    'public-category',
+    'category-list',
+    'question-wise-option',
+    'option-list',
+    'service-wise-question',
+    'question-list',
+    'service-list',
+    'country-wise-map',
+    'country-wise-map-list',
+    'all-users'
 
   ],
   endpoints: () => ({}),

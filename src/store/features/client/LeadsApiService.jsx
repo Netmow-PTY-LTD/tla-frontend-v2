@@ -8,14 +8,14 @@ const leadsApiService = baseApi.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['lead'],
+      invalidatesTags: ['lead','lead-list','lead-list-admin',],
     }),
     getAllLeadWiseResponses: builder.query({
       query: (id) => ({
         url: `/response/lead-wise/${id}`,
         method: 'GET',
       }),
-      providesTags: ['response', 'lead'],
+      providesTags: ['lead-wise-response'],
     }),
   }),
 });

@@ -44,8 +44,7 @@ export default function Header() {
     skip: !token,
   });
 
-  console.log('token', token);
-  console.log('currentUser', currentUser);
+ 
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
