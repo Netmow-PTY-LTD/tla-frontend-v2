@@ -59,17 +59,16 @@ export async function middleware(request) {
   // Role-based access rules
   const routeAccess = {
     admin: ['/admin', '/client', '/lawyer'],
-    lawyer: ['/lawyer', '/client'],
-    client: ['/client', '/lawyer'],
+    lawyer: ['/lawyer'],
+    client: ['/client'],
   };
 
   const isAllowed =
     Array.isArray(routeAccess[role]) &&
     routeAccess[role].some((route) => pathname.startsWith(route));
 
-
   if (!isAllowed) {
-    // Special redirect if trying to access /admin
+    // Role-specific redirection
     if (pathname.startsWith('/admin')) {
       if (role === 'lawyer') {
         return NextResponse.redirect(new URL('/lawyer/dashboard', request.url));
@@ -77,6 +76,16 @@ export async function middleware(request) {
       if (role === 'client') {
         return NextResponse.redirect(new URL('/client/dashboard', request.url));
       }
+    }
+
+    // Lawyer trying to access client routes
+    if (pathname.startsWith('/client') && role === 'lawyer') {
+      return NextResponse.redirect(new URL('/lawyer/dashboard', request.url));
+    }
+
+    // Client trying to access lawyer routes
+    if (pathname.startsWith('/lawyer') && role === 'client') {
+      return NextResponse.redirect(new URL('/client/dashboard', request.url));
     }
 
     // Default fallback

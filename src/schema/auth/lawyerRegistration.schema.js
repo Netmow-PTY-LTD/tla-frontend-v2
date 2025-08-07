@@ -66,18 +66,17 @@ export const lawyerRegistrationStepThreeFormValidation = z
     gender: z.enum(['male', 'female', 'other'], {
       required_error: 'Gender is required',
     }),
-    law_society_member_number: z
-      .string()
-      .min(1, 'Law Society Member Number is required'),
-    practising_certificate_number: z
-      .string()
-      .min(1, 'Practising Certificate Number is required'),
+    law_society_member_number: z.string().min(1, '* Required'),
+    practising_certificate_number: z.string().min(1, '* Required'),
 
     soloPractitioner: z.boolean(),
     companyTeam: z.boolean(),
     company_name: z.string().optional(),
     company_website: z.string().optional(),
     company_size: z.string().optional(),
+    agreement: z.boolean().refine((val) => val === true, {
+      message: '* Required',
+    }),
   })
   .superRefine((data, ctx) => {
     if (data.companyTeam) {

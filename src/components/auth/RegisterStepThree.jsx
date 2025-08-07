@@ -29,6 +29,7 @@ import { lawyerRegistrationStepThreeFormValidation } from '@/schema/auth/lawyerR
 import Link from 'next/link';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Label } from '../ui/label';
+import { Loader } from 'lucide-react';
 
 const genderOptions = [
   { id: 1, label: 'Male', value: 'male' },
@@ -67,6 +68,7 @@ export default function RegisterStepThree() {
       gender: profile.gender,
       law_society_member_number: profile.law_society_member_number,
       practising_certificate_number: profile.practising_certificate_number,
+      agreement: false,
     },
   });
 
@@ -102,8 +104,6 @@ export default function RegisterStepThree() {
     dispatch(updateNestedField({ section: 'profile', field: 'gender', value })); // Update Redux
     form.setValue('gender', value, { shouldValidate: true }); // Sync to RHF
   };
-
-  const isAgreementChecked = form.watch('agreement');
 
   const router = useRouter();
   const registrationState = useSelector((state) => state.lawyerRegistration);
@@ -546,24 +546,17 @@ export default function RegisterStepThree() {
                 control={form.control}
                 name="agreement"
                 render={({ field }) => (
-                  <FormItem className="flex items-center cursor-pointer">
+                  <FormItem className="flex items-center cursor-pointer flex-wrap">
                     <FormControl>
                       <Checkbox
                         checked={field.value}
-                        onCheckedChange={(checked) => {
-                          field.onChange(checked);
-                          dispatch(
-                            updateNestedField({
-                              section: 'lawyerServiceMap',
-                              field: 'isSoloPractitioner',
-                              value: checked,
-                            })
-                          );
-                        }}
+                        onCheckedChange={(checked) =>
+                          field.onChange(checked === true)
+                        }
                       />
                     </FormControl>
                     <FormLabel
-                      className="ml-2 font-bold mt-0 cursor-pointer text-[var(--color-special)]"
+                      className="ml-2 mr-3 font-bold mt-0 cursor-pointer text-[var(--color-special)]"
                       style={{ marginTop: '0 !important' }}
                     >
                       I agree to{' '}
@@ -571,6 +564,7 @@ export default function RegisterStepThree() {
                         Terms & Conditions
                       </Link>
                     </FormLabel>
+                    <FormMessage className="block" />
                   </FormItem>
                 )}
               />
@@ -587,10 +581,17 @@ export default function RegisterStepThree() {
                 </button>
                 <button
                   type="submit"
-                  className="btn-default bg-[var(--color-special)]"
-                  disabled={!isAgreementChecked || isLoading}
+                  className="btn-default bg-[var(--color-special)] flex items-center justify-center gap-2"
+                  disabled={isLoading} // optional: prevent double submit
                 >
-                  {isLoading ? 'Submitting...' : 'Finish & See Leads'}
+                  {isLoading ? (
+                    <>
+                      <Loader className="w-4 h-4 animate-spin" />
+                      Submitting...
+                    </>
+                  ) : (
+                    'Finish & See Leads'
+                  )}
                 </button>
               </div>
             </form>

@@ -49,10 +49,10 @@ export default function ProfileDropDown() {
    */
   const [authLogout] = useAuthLogOutMutation();
   const handleLogout = () => {
-     disconnectSocket();
+    disconnectSocket();
     authLogout();
     dispatch(logOut());
-   
+
     router.push('/login');
   };
   return (
@@ -121,24 +121,24 @@ export default function ProfileDropDown() {
           </div>
 
           <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <Link
-                href={`/client/dashboard`}
-                className="w-full flex items-center justify-between gap-2 cursor-pointer px-2 py-1.5"
-              >
-                <span>Switch to Client</span>
-                <DropdownMenuShortcut>
-                  <SendToBack />
-                </DropdownMenuShortcut>
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
 
           {currentUser?.data?.role === 'admin' &&
             currentUser?.data?.regUserType === 'admin' && (
               <>
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <Link
+                      href={`/client/dashboard`}
+                      className="w-full flex items-center justify-between gap-2 cursor-pointer px-2 py-1.5"
+                    >
+                      <span>Switch to Client</span>
+                      <DropdownMenuShortcut>
+                        <SendToBack />
+                      </DropdownMenuShortcut>
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
                     <Link
