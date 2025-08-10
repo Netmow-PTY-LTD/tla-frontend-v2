@@ -61,7 +61,7 @@ export default function FilterResponseSidebar({
     }));
     showSuccessToast('Filters applied and saved.');
 
-    localStorage.setItem('responseFilters', JSON.stringify(queryParams));
+    //localStorage.setItem('responseFilters', JSON.stringify(queryParams));
     // Close sidebar after form submit
     setIsOpen(false);
     setResponses([]);

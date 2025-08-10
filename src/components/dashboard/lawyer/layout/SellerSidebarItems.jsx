@@ -36,11 +36,11 @@ export const SellerSidebarItems = {
       icon: Settings,
       isActive: true,
     },
-    {
-      title: 'Helps',
-      url: '#',
-      isActive: true,
-    },
+    // {
+    //   title: 'Helps',
+    //   url: '#',
+    //   isActive: true,
+    // },
 
     {
       title: 'General FAQ’s',
