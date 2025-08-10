@@ -13,14 +13,14 @@ export default function ResponseHead({
   setQueryParams,
   queryParams,
   scrollContainerRef,
-  refetch
-
+  setResponses,
+  refetch,
 }) {
   const router = useRouter();
   const pathname = usePathname(); // current route without query params
   const data = allResponse?.data || [];
-  const total = allResponse?.pagination?.total
-  const pendingStatusLength = allResponse?.counts?.pending
+  const total = allResponse?.pagination?.total;
+  const pendingStatusLength = allResponse?.counts?.pending;
   const urgent = allResponse?.counts?.urgent;
   const hiredStatusLength = allResponse?.counts?.hired;
 
@@ -37,21 +37,22 @@ export default function ResponseHead({
   };
 
   const clearFilters = () => {
+    setResponses([]);
     setQueryParams(defaultQueryParams);
     localStorage.removeItem('responseFilters');
     router.push(pathname); // remove all query params
-      // Reset scroll position after small delay to ensure new data renders
-      setTimeout(() => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
-    }
-  }, 100);
+    // Reset scroll position after small delay to ensure new data renders
+    setTimeout(() => {
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
+      }
+    }, 100);
 
-  // 5. Manually refetch new data (if needed)
-  refetch();
+    // 5. Manually refetch new data (if needed)
+    refetch();
     toast.success('Clear Filter', {
       position: 'top-right',
       style: {
@@ -61,35 +62,50 @@ export default function ResponseHead({
     });
   };
 
+  // const hasActiveFilters = Object.keys(defaultQueryParams).some(
+  //   (key) => queryParams[key] !== defaultQueryParams[key]
+  // );
 
-  const hasActiveFilters = Object.keys(defaultQueryParams).some(
-    (key) => queryParams[key] !== defaultQueryParams[key]
-  );
+  const hasActiveFilters = Object.entries(queryParams).some(([key, value]) => {
+    // Only check these keys for non-empty values
+    const filterKeysToCheck = [
+      'keyword',
+      'spotlight',
+      'clientActions',
+      'actionsTaken',
+      'leadSubmission',
+    ];
 
+    return filterKeysToCheck.includes(key) && value !== '';
+  });
 
-
+  // console.log('queryParams', queryParams);
+  // console.log('hasActiveFilters', hasActiveFilters);
 
   return (
     <section className={`shadow-custom ${isExpanded ? '' : 'pl-4 pr-1'}`}>
       <div className="flex justify-between items-center gap-4">
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-1 sm:gap-4">
           <h2
-            className={`font-bold ${isExpanded ? 'text-[24px]' : 'text-[16px]'
-              } text-[#0B1C2D] text-left`}
+            className={`font-bold ${
+              isExpanded ? 'text-[24px]' : 'text-[16px]'
+            } text-[#0B1C2D] text-left`}
           >
             {total} {total > 1 ? 'Responses' : 'Response'}
           </h2>
           <div className="flex items-center gap-3">
             <button
-              className={`flex item-center leading-none ${isExpanded ? 'text-[14px]' : 'text-[12px]'
-                }`}
+              className={`flex item-center leading-none ${
+                isExpanded ? 'text-[14px]' : 'text-[12px]'
+              }`}
             >
               <span className={`w-3 h-3 rounded-full bg-[#FF8602] mr-1`}></span>
               <span>{pendingStatusLength} Pending</span>
             </button>
             <button
-              className={`flex item-center leading-none ${isExpanded ? 'text-[14px]' : 'text-[12px]'
-                }`}
+              className={`flex item-center leading-none ${
+                isExpanded ? 'text-[14px]' : 'text-[12px]'
+              }`}
             >
               <span className={`w-3 h-3 rounded-full bg-[#00C3C0] mr-1`}></span>
               <span>{hiredStatusLength || 0} Hired</span>
@@ -98,8 +114,9 @@ export default function ResponseHead({
         </div>
         <Link
           href={'/lawyer/settings/profile'}
-          className={`${isExpanded ? 'admin-text' : 'text-[12px]'
-            } py-1 px-2 bg-[#FF8602] rounded-[5px] text-white hover:bg-[#FF8602] transition-all flex items-center gap-2`}
+          className={`${
+            isExpanded ? 'admin-text' : 'text-[12px]'
+          } py-1 px-2 bg-[#FF8602] rounded-[5px] text-white hover:bg-[#FF8602] transition-all flex items-center gap-2`}
         >
           <span>All</span>
         </Link>
@@ -108,10 +125,11 @@ export default function ResponseHead({
       <div className="flex flex-wrap justify-between items-center mt-3 mb-3 gap-2">
         <div className="flex flex-wrap items-center gap-2 text-[#34495E]">
           <div className="lg:flex items-center gap-2">
-            { hasActiveFilters && (
+            {hasActiveFilters && (
               <div
                 className="text-[#C72C41] text-[11px] flex items-center gap-2"
                 onClick={() => {
+                  setResponses([]);
                   localStorage.removeItem('responseFilters');
                   setQueryParams({
                     page: 1,
@@ -155,6 +173,7 @@ export default function ResponseHead({
         <FilterResponseSidebar
           queryParams={queryParams}
           setQueryParams={setQueryParams}
+          setResponses={setResponses}
         />
       </div>
 

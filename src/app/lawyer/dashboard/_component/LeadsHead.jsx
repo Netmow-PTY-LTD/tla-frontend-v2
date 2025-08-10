@@ -16,6 +16,9 @@ export default function LeadsHead({
   searchKeyword,
   setSelectedLead,
   leads,
+  page,
+  setPage,
+  urgent,
 }) {
   const { data: currentUser } = useAuthUserInfoQuery();
 
@@ -34,8 +37,6 @@ export default function LeadsHead({
       },
     });
   };
-
-  const urgent = leads?.filter((item) => item.leadPriority === 'urgent').length;
 
   return (
     <section className={`pr-2 shadow-custom ${isExpanded ? '' : 'pl-4'}`}>
@@ -82,18 +83,17 @@ export default function LeadsHead({
         >
           <div className={`lg:flex items-center gap-2`}>
             {(Object.keys(searchKeyword).length > 0 ||
-              localStorage.getItem('lead-filters')) &&
-              !isExpanded && (
-                <div
-                  className="text-[#C72C41] text-[11px] flex items-center gap-2 cursor-pointer"
-                  onClick={clearFilters}
-                >
-                  <span>Clear</span>
-                  <div className="bg-[#D9D9D9] rounded-full cursor-pointer p-1">
-                    <X className="w-4 h-4" />
-                  </div>
+              localStorage.getItem('lead-filters')) && (
+              <div
+                className="text-[#C72C41] text-[11px] flex items-center gap-2 cursor-pointer"
+                onClick={clearFilters}
+              >
+                <span>Clear</span>
+                <div className="bg-[#D9D9D9] rounded-full cursor-pointer p-1">
+                  <X className="w-4 h-4" />
                 </div>
-              )}
+              </div>
+            )}
 
             <div className="inline-flex flex-wrap gap-1">
               <TagButton
@@ -112,6 +112,8 @@ export default function LeadsHead({
           data={currentUser?.data}
           setSearchKeyword={setSearchKeyword}
           setLeads={setLeads}
+          page={page}
+          setPage={setPage}
         />
       </div>
 

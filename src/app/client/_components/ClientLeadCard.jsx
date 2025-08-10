@@ -45,8 +45,6 @@ const responsesLeads = [
 const ClientLeadCard = ({ user, isExpanded }) => {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
- 
-
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])
     .find((option) => option.option === 'Urgent');
@@ -74,8 +72,6 @@ const ClientLeadCard = ({ user, isExpanded }) => {
       }
     }
   };
-
-
 
   const maxVisible = 5;
   const visibleAvatars = user?.responders?.slice(0, maxVisible);
@@ -236,15 +232,13 @@ const ClientLeadCard = ({ user, isExpanded }) => {
             <div className="text-[var(--color-black)] text-xs font-semibold">
               Responders:
             </div>
-            <div className="flex items-center">
+            <div className="flex items-center gap-2">
               {visibleAvatars.map((lead, index) => (
                 <img
                   key={index}
                   src={lead?.profilePicture || userDummyImage}
                   alt="Avatar"
-                  className={`w-8 h-8 rounded-full border-2 border-white-500 object-cover ${
-                    index !== 0 ? '-ml-5' : ''
-                  }`}
+                  className={`w-8 h-8 rounded-full border-2 border-white-500 object-cover`}
                 />
               ))}
               {extraCount > 0 && (

@@ -17,6 +17,7 @@ import { SlidersVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import { showSuccessToast } from '@/components/common/toasts';
+import { set } from 'zod';
 
 const creditTiers = [
   { id: 1, range: 'Free' },
@@ -29,7 +30,13 @@ const creditTiers = [
   { id: 8, range: '50-100 credits' },
 ];
 
-export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
+export default function FilterSidebar({
+  data,
+  setSearchKeyword,
+  setLeads,
+  page,
+  setPage,
+}) {
   const [isOpen, setIsOpen] = useState(false); // <-- Control sidebar visibility
   const { register, handleSubmit, reset, watch, setValue, getValues } = useForm(
     {
@@ -64,9 +71,10 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
   }, [reset]);
 
   const onSubmit = (values) => {
-
     // payload shape transformation (if needed)
+    setPage(1);
     const payload = {
+      page: page,
       keyword: values.keyword,
       sort: values.sort,
       view: values.view,
@@ -77,20 +85,23 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
       credits: values.credit, // array of checked
     };
 
-
     setSearchKeyword(payload);
     // Now you can call API or update state
     localStorage.setItem('lead-filters', JSON.stringify(payload));
     // Show toast
     showSuccessToast('Filters applied and saved.');
-     // Close sidebar after form submit
+    // Close sidebar after form submit
     setIsOpen(false);
+    setLeads([]);
   };
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen} className="z-[9999]">
       <SheetTrigger asChild>
-        <button onClick={() => setIsOpen(true)} className="font-medium text-[#0194EF] flex items-center gap-2 text-[14px]">
+        <button
+          onClick={() => setIsOpen(true)}
+          className="font-medium text-[#0194EF] flex items-center gap-2 text-[14px]"
+        >
           <SlidersVertical className="w-4 h-4" /> <span>Filter</span>
         </button>
       </SheetTrigger>
@@ -440,8 +451,8 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
               variant="outline"
               className="cursor-pointer"
               onClick={() => {
-                reset()
-                setIsOpen(false)
+                reset();
+                setIsOpen(false);
               }}
             >
               Cancel

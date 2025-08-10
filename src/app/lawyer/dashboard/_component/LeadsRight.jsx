@@ -18,7 +18,7 @@ const LeadsRight = ({ isExpanded, onViewDetails, data, selectedLead }) => {
 
   useEffect(() => {
     //console.log('data', data);
-    console.log('onlineMap', onlineMap);
+    //console.log('onlineMap', onlineMap);
   }, [data, onlineMap]);
 
   return (
@@ -39,6 +39,7 @@ const LeadsRight = ({ isExpanded, onViewDetails, data, selectedLead }) => {
             isExpanded={isExpanded}
             onlineMap={onlineMap}
             selectedLead={selectedLead}
+            index={i}
           />
         ))}
       </section>
