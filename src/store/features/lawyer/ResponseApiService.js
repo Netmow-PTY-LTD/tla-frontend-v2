@@ -65,7 +65,14 @@ export const responseApiService = baseApi.injectEndpoints({
       },
       invalidatesTags: ['response','notification','response-my','response-list'],
     }),
-
+  getChatHistory: builder.query({
+      query: (responseId) => ({
+        url: `/chat/${responseId}`,
+        method: 'GET',
+       
+      }),
+      // providesTags: ['chat'],
+    }),
 
   }),
 });
@@ -77,7 +84,8 @@ export const {
   useGetAllMyResponsesQuery,
   useUpdateResponseStatusMutation,
   useActivityLogMutation,
-  useContactLeadMutation
+  useContactLeadMutation,
+  useGetChatHistoryQuery
   
 
 

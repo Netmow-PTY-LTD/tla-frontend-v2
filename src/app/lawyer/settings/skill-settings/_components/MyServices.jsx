@@ -26,9 +26,7 @@ const ServicesList = () => {
         {/* Services Section */}
         <section className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">
-              Your Services
-            </h2>
+            <h2 className="text-xl font-semibold text-gray-800">Your Skills</h2>
 
             <AddLeadServiceModal />
           </div>

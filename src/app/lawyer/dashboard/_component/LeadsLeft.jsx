@@ -204,7 +204,7 @@ export default function LeadDetailsPage({
             </div>
             {(singleLead?.additionalDetails &&
               singleLead.additionalDetails !== '') ||
-            urgentOption?.option ||
+            singleLead?.leadPriority.toLowerCase() === 'urgent' ||
             singleLead?.userProfileId?.phone ? (
               <div className="mt-5">
                 <div className="flex flex-wrap gap-2">
@@ -216,18 +216,21 @@ export default function LeadDetailsPage({
                         icon={<List className="text-[#000] w-4 h-4" />}
                       />
                     )}
-                  {urgentOption?.option && (
-                    <TagButton
-                      text={urgentOption.option}
-                      bgColor="#FF86021A"
-                      icon={<Zap className="text-[#FF8602] w-4 h-4" />}
-                    />
-                  )}
+
                   {singleLead?.userProfileId?.phone && (
                     <TagButton
                       text="Verified Phone"
                       bgColor="#00C3C01A"
                       icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+                    />
+                  )}
+
+                  {singleLead?.leadPriority.toLowerCase() === 'urgent' && (
+                    <TagButton
+                      text={singleLead?.leadPriority}
+                      bgColor="#FF86021A"
+                      textColor="text-[#FF8602]"
+                      icon={<Zap className="text-[#FF8602] w-4 h-4" />}
                     />
                   )}
                 </div>

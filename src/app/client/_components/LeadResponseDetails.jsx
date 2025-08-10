@@ -38,6 +38,7 @@ import React, { Fragment, useState } from 'react';
 import { useSelector } from 'react-redux';
 import SendMailModalForClient from './my-leads/SendMailModalForClient';
 import SendSmsModalClient from './my-leads/SendSmsModalClient';
+import ChatBoxForLead from './chat/ChatBoxForLead';
 
 export default function LeadResponseDetails({ onBack, response }) {
   const [activeTab, setActiveTab] = useState('activity');
@@ -284,6 +285,16 @@ export default function LeadResponseDetails({ onBack, response }) {
                 >
                   Activity
                 </button>
+                <button
+                  onClick={() => setActiveTab('chat')}
+                  className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                    activeTab === 'chat'
+                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                      : 'hover:text-black'
+                  }`}
+                >
+                  Chat
+                </button>
               </div>
 
               {/* Tab Content */}
@@ -361,6 +372,11 @@ export default function LeadResponseDetails({ onBack, response }) {
                       );
                     })}
                   </div>
+                )}
+                {activeTab === 'chat' && (
+               <div>
+                <ChatBoxForLead response={response} />
+               </div>
                 )}
               </div>
             </div>

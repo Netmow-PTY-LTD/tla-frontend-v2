@@ -16,7 +16,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 const LIMIT = '10';
 
-const PaginatedScroll = () => {
+const LeadsBoardPage = () => {
   const [showLeadDetails, setShowLeadDetails] = useState(true);
   const [selectedLead, setSelectedLead] = useState(null);
   const [leads, setLeads] = useState([]);
@@ -104,7 +104,7 @@ const PaginatedScroll = () => {
   const { data: selectedLeadData, isLoading: isSingleLeadLoading } =
     useGetSingleLeadQuery(selectedLead?._id, { skip: !selectedLead?._id });
 
-  console.log('leads', leads);
+  //console.log('leads', leads);
 
   if (isAllLeadsLoading) {
     return (
@@ -192,19 +192,49 @@ const PaginatedScroll = () => {
                       setSelectedLead(lead);
                       setShowLeadDetails(true);
                     }}
-                    // data={allLeads?.data ?? []}
                     data={leads ?? []}
                     selectedLead={selectedLead}
                   />
                 </div>
                 <div ref={loader}>
-                  {isFetching ? (
+                  {isFetching && (
                     <Loader className="w-5 h-5 animate-spin text-gray-500 mx-auto" />
-                  ) : (
-                    ''
                   )}
                 </div>
               </div>
+            </div>
+          </div>
+        ) : isFetching ? (
+          <div className="p-6 space-y-8 animate-pulse">
+            {/* Header section */}
+            <div className="space-y-3">
+              <Skeleton className="h-8 w-1/2" />
+              <Skeleton className="h-4 w-1/3" />
+            </div>
+
+            {/* Content blocks */}
+            {Array.from({ length: 5 }).map((_, idx) => (
+              <div key={idx} className="flex gap-4">
+                <Skeleton className="h-14 w-14 rounded-full flex-shrink-0" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-2/3" />
+                  <Skeleton className="h-4 w-1/2" />
+                </div>
+              </div>
+            ))}
+
+            {/* Table or card-like block */}
+            <div className="space-y-4 mt-8">
+              <Skeleton className="h-6 w-1/3" />
+              {Array.from({ length: 4 }).map((_, idx) => (
+                <div key={idx} className="flex gap-4 items-center">
+                  <Skeleton className="h-4 w-1/6" />
+                  <Skeleton className="h-4 w-1/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                  <Skeleton className="h-4 w-1/5" />
+                </div>
+              ))}
             </div>
           </div>
         ) : (
@@ -229,4 +259,4 @@ const PaginatedScroll = () => {
   );
 };
 
-export default PaginatedScroll;
+export default LeadsBoardPage;
