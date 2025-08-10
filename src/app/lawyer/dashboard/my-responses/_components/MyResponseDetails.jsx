@@ -194,8 +194,9 @@ export default function MyResponseDetails({
 
         if (result.success) {
           const phone = response?.leadId?.userProfileId?.phone;
+          const cleanedPhone = phone?.slice(1);
           window.open(
-            `https://api.whatsapp.com/send?phone=${phone}&text=`,
+            `https://api.whatsapp.com/send?phone=${cleanedPhone}&text=`,
             '_blank'
           );
         }
