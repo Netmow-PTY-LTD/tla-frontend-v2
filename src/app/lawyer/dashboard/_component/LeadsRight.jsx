@@ -39,6 +39,7 @@ const LeadsRight = ({ isExpanded, onViewDetails, data, selectedLead }) => {
             isExpanded={isExpanded}
             onlineMap={onlineMap}
             selectedLead={selectedLead}
+            index={i}
           />
         ))}
       </section>

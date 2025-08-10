@@ -89,19 +89,12 @@ export default function BuyerDashboard() {
             <Card className="mt-5 flex-1 flex flex-col justify-between shadow-sm rounded-2xl">
               <div>
                 <h2 className="font-medium flex items-center text-lg p-4">
-                  Lead Notifications
-                  <Link
-                    href={'/lawyer/settings/notifications'}
-                    aria-label="Edit Notification Email"
-                    className="ml-3 rounded"
-                  >
-                    <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
-                  </Link>
+                  Notifications
                 </h2>
                 <hr className="border-t border-[#D9D9D9]" />
                 <div className="px-4">
                   <p className="my-3 text-sm sm:text-base font-medium">
-                    Sending new leads notifications to
+                    Sending new notifications to
                   </p>
                   <p className="text-sm sm:text-base text-[var(--color-special)]">
                     {profileData?.email}

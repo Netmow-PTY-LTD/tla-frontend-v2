@@ -37,6 +37,7 @@ export default function ResponseHead({
   };
 
   const clearFilters = () => {
+    setResponses([]);
     setQueryParams(defaultQueryParams);
     localStorage.removeItem('responseFilters');
     router.push(pathname); // remove all query params
@@ -78,8 +79,8 @@ export default function ResponseHead({
     return filterKeysToCheck.includes(key) && value !== '';
   });
 
-  console.log('queryParams', queryParams);
-  console.log('hasActiveFilters', hasActiveFilters);
+  // console.log('queryParams', queryParams);
+  // console.log('hasActiveFilters', hasActiveFilters);
 
   return (
     <section className={`shadow-custom ${isExpanded ? '' : 'pl-4 pr-1'}`}>
@@ -128,6 +129,7 @@ export default function ResponseHead({
               <div
                 className="text-[#C72C41] text-[11px] flex items-center gap-2"
                 onClick={() => {
+                  setResponses([]);
                   localStorage.removeItem('responseFilters');
                   setQueryParams({
                     page: 1,

@@ -44,7 +44,7 @@ const ProfileCard = ({ profile, isLoading, isError, error }) => {
             profile?.profile?.name
           )}{' '}
           <Link
-            href={'/lawyer/settings/profile?section=about'}
+            href={'/client/account-settings/profile'}
             aria-label="Edit Name"
             className="ml-3 rounded "
           >
