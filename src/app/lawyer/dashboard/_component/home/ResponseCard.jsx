@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { userDummyImage } from '@/data/data';
 import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
-import { BadgeCheck, Zap } from 'lucide-react';
+import { BadgeCheck, List, Zap } from 'lucide-react';
 import Image from 'next/image';
 import React from 'react';
 
@@ -13,16 +13,12 @@ export default function ResponseCard({
   user,
   isExpanded,
   setIsLoading,
-  onlineMap
+  onlineMap,
+  selectedResponse,
 }) {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
-
-  const leadUser=user?.leadId?.userProfileId?.user;
-
-  const urgentOption = singleLead?.data?.leadAnswers
-    .flatMap((answer) => answer.options || [])
-    .find((option) => option.option === 'Urgent');
+  const leadUser = user?.leadId?.userProfileId?.user;
 
   const formatRelativeTime = (dateString) => {
     const now = new Date();
@@ -53,8 +49,22 @@ export default function ResponseCard({
     return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
   };
 
+  const isSelected = selectedResponse?._id === user?._id;
+  // console.log('selectedResponse', selectedResponse);
+  console.log('user', user);
+  // console.log('isSelected', isSelected);
   return (
-    <Card className="w-full max-w-full mx-auto flex flex-col">
+    <Card
+      className={`w-full max-w-full mx-auto flex flex-col cursor-pointer ${
+        !isExpanded && isSelected
+          ? 'border-l-[3px] border-l-[var(--secondary-color)] rounded-tl-none rounded-bl-none'
+          : 'border-transparent'
+      }`}
+      onClick={() => {
+        setIsLoading(true);
+        onViewDetails(user);
+      }}
+    >
       {/* Header Section */}
       <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 p-3">
         <figure className="w-10 h-10 overflow-hidden flex-shrink-0 border rounded-full">
@@ -90,57 +100,54 @@ export default function ResponseCard({
           <p className="font-medium text-[11px] text-gray-600 mt-2 sm:mt-0 w-16 flex justify-end">
             {/* {user?.leadId?.userProfileId?.user && formatRelativeTime(user?.leadId?.userProfileId?.user.isOnline)}
              */}
-           
           </p>
-           <span className="text-xs">
-          <div className="flex items-center gap-2 text-sm">
-            <span
-              className={`ml-2 w-2 h-2 rounded-full ${onlineMap[leadUser] ? "bg-green-500" : "bg-gray-400"
+          <span className="text-xs">
+            <div className="flex items-center gap-2 text-sm">
+              <span
+                className={`ml-2 w-2 h-2 rounded-full ${
+                  onlineMap[leadUser] ? 'bg-green-500' : 'bg-gray-400'
                 }`}
-            ></span>
-            <span className="text-gray-700">
-              {onlineMap[leadUser] ? "Online" : "Offline"}
-            </span>
-          </div>
-        </span>
+              ></span>
+              <span className="text-gray-700">
+                {onlineMap[leadUser] ? 'Online' : 'Offline'}
+              </span>
+            </div>
+          </span>
         </div>
       </div>
 
       <hr className="border-[#F3F3F3] border" />
 
-      {(urgentOption?.option ||
-        (user?.additionalDetails && user.additionalDetails !== '') ||
-        user?.userProfileId?.phone) && (
+      {(user?.leadId?.leadPriority?.toLowerCase() === 'urgent' ||
+        (user?.leadId?.additionalDetails &&
+          user?.leadId?.additionalDetails !== '') ||
+        user?.leadId?.userProfileId?.phone) && (
         <div className="px-3 pt-3 pb-2">
           <div className="flex flex-wrap gap-2">
-            {urgentOption?.option && (
-              <TagButton
-                text={urgentOption.option}
-                bgColor="#FF86021A"
-                icon={<Zap className="text-[#FF8602] w-4 h-4" />}
-              />
-            )}
-            {user?.additionalDetails && user.additionalDetails !== '' && (
-              <TagButton
-                text="Additional Details"
-                bgColor="#004DA61A"
-                icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
-              />
-            )}
-            {user?.userProfileId?.phone && (
+            {user?.leadId?.additionalDetails &&
+              user?.leadId?.additionalDetails !== '' && (
+                <TagButton
+                  text="Additional Details"
+                  bgColor="#004DA61A"
+                  icon={<List className="text-[var(--color-black)] w-4 h-4" />}
+                />
+              )}
+            {user?.leadId?.userProfileId?.phone && (
               <TagButton
                 text="Verified Phone"
+                textColor="text-[#00C3C0]"
                 bgColor="#00C3C01A"
                 icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
               />
             )}
-            {/* {badge && (
+            {user?.leadId?.leadPriority?.toLowerCase() === 'urgent' && (
               <TagButton
-                text={badge}
-                bgColor="#004DA61A"
-                icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+                text={user?.leadId?.leadPriority}
+                bgColor="#FF86021A"
+                textColor="text-[#FF8602]"
+                icon={<Zap className="text-[#FF8602] w-4 h-4" />}
               />
-            )} */}
+            )}
           </div>
         </div>
       )}
@@ -178,26 +185,14 @@ export default function ResponseCard({
             guidance.`
               : getTruncatedText(user?.leadId?.additionalDetails, 200)}
           </p>
-          
         </div>
       </div>
 
       {/* Footer Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">
-        <Button
-          className={`px-5 py-3 w-full sm:w-auto rounded-lg ${
-            isExpanded ? 'heading-base' : 'text-[12px] '
-          } font-medium bg-[var(--color-special)] text-white`}
-          onClick={() => {
-            setIsLoading(true);
-            onViewDetails(user);
-          }}
-        >
-          View Details
-        </Button>
-         <p className="font-medium text-[11px] text-gray-600 mt-2 sm:mt-0  flex justify-end">
-           createdAt: {user?.createdAt && formatRelativeTime(user?.createdAt)}
-          </p>
+        <p className="font-medium text-[11px] text-gray-600 mt-2 sm:mt-0  flex justify-end">
+          Responded At: {user?.createdAt && formatRelativeTime(user?.createdAt)}
+        </p>
         {/* {user?.credit && (
           <p
             className={`text-[#34495E] ${

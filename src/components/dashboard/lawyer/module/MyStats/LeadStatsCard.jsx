@@ -57,9 +57,9 @@ const LeadStatsCard = ({ locations, profile }) => {
       <div className="w-full">
         <div className="text-center md:text-left p-4">
           <h2 className="text-lg font-semibold text-gray-800">
-            My Leads Overview
+            My Cases Overview
           </h2>
-          <p className="text-xs text-gray-500">Track your lead</p>
+          <p className="text-xs text-gray-500">Track your cases</p>
         </div>
         <hr className="border-t border-[#D9D9D9]" />
 
@@ -71,7 +71,7 @@ const LeadStatsCard = ({ locations, profile }) => {
               <Users className="w-5 h-5 text-blue-600" />
               <h4 className="text-xl font-bold text-black">{totalLeads}</h4>
             </div>
-            <p className="text-xs text-gray-600 mt-1">Total Leads</p>
+            <p className="text-xs text-gray-600 mt-1">Total Cases</p>
           </div>
 
           {/* Approved Leads */}
@@ -80,7 +80,7 @@ const LeadStatsCard = ({ locations, profile }) => {
               <Flame className="w-5 h-5 text-orange-500" />
               <h4 className="text-xl font-bold text-black">{approveLead}</h4>
             </div>
-            <p className="text-xs text-gray-600 mt-1">Approved Leads</p>
+            <p className="text-xs text-gray-600 mt-1">Approved Cases</p>
           </div>
 
           {/* Pending Leads */}
@@ -89,7 +89,7 @@ const LeadStatsCard = ({ locations, profile }) => {
               <CheckCircle className="w-5 h-5 text-green-500" />
               <h4 className="text-xl font-bold text-black">{pendingLead}</h4>
             </div>
-            <p className="text-xs text-gray-600 mt-1">Pending Leads</p>
+            <p className="text-xs text-gray-600 mt-1">Pending Cases</p>
           </div>
 
           {/* Rejected Leads */}
@@ -98,7 +98,7 @@ const LeadStatsCard = ({ locations, profile }) => {
               <XCircle className="w-5 h-5 text-red-500" />
               <h4 className="text-xl font-bold text-black">{rejectLead}</h4>
             </div>
-            <p className="text-xs text-gray-600 mt-1">Rejected Leads</p>
+            <p className="text-xs text-gray-600 mt-1">Rejected Cases</p>
           </div>
 
           {/* Archived Leads */}
@@ -107,7 +107,7 @@ const LeadStatsCard = ({ locations, profile }) => {
               <Archive className="w-5 h-5 text-gray-500" />
               <h4 className="text-xl font-bold text-black">{archiveLead}</h4>
             </div>
-            <p className="text-xs text-gray-600 mt-1">Archived Leads</p>
+            <p className="text-xs text-gray-600 mt-1">Archived Cases</p>
           </div>
         </div>
       </div>
@@ -119,7 +119,7 @@ const LeadStatsCard = ({ locations, profile }) => {
         <div className="mt-4">
           <Link href={'/client/dashboard/my-cases'}>
             <button className="px-[19px] py-2 text-[#0B1C2D]  hover:bg-[#00C3C0] hover:text-white  font-medium bg-[#EDF0F4] rounded-full text-sm sm:text-base">
-              View Leads
+              View Cases
             </button>
           </Link>
         </div>

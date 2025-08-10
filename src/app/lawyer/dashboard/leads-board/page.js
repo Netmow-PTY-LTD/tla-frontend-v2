@@ -180,6 +180,9 @@ const PaginatedScroll = () => {
                     setLeads={setLeads}
                     setSelectedLead={setSelectedLead}
                     leads={leads}
+                    page={page}
+                    setPage={setPage}
+                    urgent={data?.counts?.urgent || 0}
                   />
                 </div>
                 <div className="leads-bottom-row max-w-[1400px] mx-auto">

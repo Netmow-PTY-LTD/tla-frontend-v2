@@ -48,6 +48,8 @@ export default function MyResponsesPage() {
     localStorage.setItem('responseFilters', JSON.stringify(queryParams));
   }, [queryParams]);
 
+  //console.log('responseFilters', responseFilters);
+
   const {
     data: allMyResponses,
     isLoading: isAllMyResponsesLoading,
@@ -55,7 +57,7 @@ export default function MyResponsesPage() {
     refetch,
   } = useGetAllMyResponsesQuery(queryParams);
 
-  // Prevent scroll when in this route
+  // Prevent body scroll when in this route
   useEffect(() => {
     const cleanPathname = pathname?.trim().replace(/\/+$/, '');
 
@@ -78,23 +80,11 @@ export default function MyResponsesPage() {
       setTotalPages(allMyResponses?.pagination?.totalPage);
       setTotalResponsesCount(allMyResponses?.pagination?.total);
     }
-    // if (queryParams.page === 1 && allMyResponses?.data) {
-    //   setResponses(allMyResponses.data);
-    //   if (allMyResponses.data.length > 0) {
-    //     setSelectedResponse(allMyResponses.data[0]);
-    //   }
-    // } else if (queryParams.page > 1 && allMyResponses?.data) {
-    //   setResponses((prev) => [...prev, ...allMyResponses.data]);
-    // }
-
-    // Update hasMore
-    // const totalPage = allMyResponses?.pagination?.totalPage;
-    // if (!totalPage || queryParams.page >= totalPage) {
-    //   setHasMore(false);
-    // } else {
-    //   setHasMore(true);
-    // }
   }, [allMyResponses]);
+
+  console.log('Responses', responses);
+  console.log('Total responses count', totalPages);
+  console.log('page', queryParams.page);
 
   const loader = useRef(null);
 
@@ -123,7 +113,7 @@ export default function MyResponsesPage() {
     return () => {
       if (currentLoader) observer.unobserve(currentLoader);
     };
-  }, [isFetching, totalPages, queryParams.page]);
+  }, [isFetching, totalPages]);
 
   //  ------------------------- Infinite scroll ----------------------------
   // useEffect(() => {
@@ -194,7 +184,6 @@ export default function MyResponsesPage() {
     );
   }
 
-  console.log('allMyResponses', responses);
   return (
     <div className="lead-board-wrap">
       {responses && responses.length > 0 ? (
@@ -238,7 +227,8 @@ export default function MyResponsesPage() {
                     setSelectedResponse(response);
                     setShowResponseDetails(true);
                   }}
-                  data={responses}
+                  selectedResponse={selectedResponse}
+                  data={responses || []}
                   setIsLoading={setIsLoading}
                 />
                 <div ref={loader}>

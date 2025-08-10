@@ -13,9 +13,15 @@ import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import { get } from 'react-hook-form';
 
-const LeadCard = ({ onViewDetails, user, isExpanded, selectedLead,onlineMap }) => {
+const LeadCard = ({
+  onViewDetails,
+  user,
+  isExpanded,
+  selectedLead,
+  onlineMap,
+  index,
+}) => {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
-
 
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])
@@ -90,16 +96,32 @@ const LeadCard = ({ onViewDetails, user, isExpanded, selectedLead,onlineMap }) =
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
             <div>
               <div
-                className={`font-medium mb-1 ${isExpanded ? 'heading-base' : 'text-[13px]'
-                  }`}
+                className={`font-medium mb-1 ${
+                  isExpanded ? 'heading-base' : 'text-[13px]'
+                }`}
               >
                 {user?.userProfileId?.name}
               </div>
               <div
-                className={`${isExpanded ? 'text-[13px]' : 'text-[10px]'
-                  } text-gray-500`}
+                className={`${
+                  isExpanded ? 'text-[13px]' : 'text-[10px]'
+                } text-gray-500`}
               >
                 {user?.userProfileId?.address ?? ''}
+              </div>
+              <div className="flex items-center gap-1 text-xs mt-1">
+                <span
+                  className={`w-2 h-2 rounded-full ${
+                    onlineMap[user?.userProfileId?.user?._id]
+                      ? 'bg-green-500'
+                      : 'bg-gray-400'
+                  }`}
+                ></span>
+                <span className="text-gray-700">
+                  {onlineMap[user?.userProfileId?.user?._id]
+                    ? 'Online'
+                    : 'Offline'}
+                </span>
               </div>
             </div>
           </div>
@@ -107,24 +129,13 @@ const LeadCard = ({ onViewDetails, user, isExpanded, selectedLead,onlineMap }) =
         <p className="font-medium text-[11px] text-gray-600 mt-2 sm:mt-0 w-16 flex justify-end">
           {user?.createdAt && formatRelativeTime(user?.createdAt)}
         </p>
-        <span className="text-xs">
-          <div className="flex items-center gap-2 text-sm">
-            <span
-              className={`w-2 h-2 rounded-full ${onlineMap[user?.userProfileId?.user?._id] ? "bg-green-500" : "bg-gray-400"
-                }`}
-            ></span>
-            <span className="text-gray-700">
-              {onlineMap[user?.userProfileId?.user?._id] ? "Online" : "Offline"}
-            </span>
-          </div>
-        </span>
       </div>
 
       <hr className="border-[#F3F3F3] border" />
       {(user?.additionalDetails && user.additionalDetails !== '') ||
-        urgentOption?.option ||
-        user?.userProfileId?.phone ||
-        badge ? (
+      user?.leadPriority?.toLowerCase() === 'urgent' ||
+      user?.userProfileId?.phone ||
+      badge ? (
         <div className="px-3 pt-3 pb-2">
           <div className="flex flex-wrap gap-2">
             {user?.additionalDetails && user.additionalDetails !== '' && (
@@ -134,9 +145,10 @@ const LeadCard = ({ onViewDetails, user, isExpanded, selectedLead,onlineMap }) =
                 icon={<List className="text-[#000] w-4 h-4" />}
               />
             )}
-            {urgentOption?.option && (
+            {user?.leadPriority?.toLowerCase() === 'urgent' && (
               <TagButton
-                text={urgentOption.option}
+                text={user?.leadPriority}
+                textColor="text-[#FF8602]"
                 bgColor="#FF86021A"
                 icon={<Zap className="text-[#FF8602] w-4 h-4" />}
               />
@@ -144,6 +156,7 @@ const LeadCard = ({ onViewDetails, user, isExpanded, selectedLead,onlineMap }) =
             {user?.userProfileId?.phone && (
               <TagButton
                 text="Verified Phone"
+                textColor="text-[#00C3C0]"
                 bgColor="#00C3C01A"
                 icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
               />
@@ -156,8 +169,9 @@ const LeadCard = ({ onViewDetails, user, isExpanded, selectedLead,onlineMap }) =
       <div className="p-3 flex-1">
         {user?.serviceId?.name && (
           <h3
-            className={`font-medium mb-2 ${isExpanded ? 'heading-base' : 'text-[13px]'
-              }`}
+            className={`font-medium mb-2 ${
+              isExpanded ? 'heading-base' : 'text-[13px]'
+            }`}
           >
             Looking for a {user?.serviceId?.name} consultation
           </h3>
@@ -173,8 +187,9 @@ const LeadCard = ({ onViewDetails, user, isExpanded, selectedLead,onlineMap }) =
 
         <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
           <h4
-            className={`font-medium mb-2 ${isExpanded ? 'heading-base' : 'text-[14px]'
-              }`}
+            className={`font-medium mb-2 ${
+              isExpanded ? 'heading-base' : 'text-[14px]'
+            }`}
           >
             {user?.serviceId?.name}
           </h4>
@@ -193,13 +208,14 @@ const LeadCard = ({ onViewDetails, user, isExpanded, selectedLead,onlineMap }) =
           </p>
         </div>
       </div>
-
+      {/* {index} */}
       {/* Footer Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">
         {user?.credit != null && (
           <p
-            className={`text-[#34495E] ${isExpanded ? 'heading-base' : 'text-[12px]'
-              } flex items-center gap-2`}
+            className={`text-[#34495E] ${
+              isExpanded ? 'heading-base' : 'text-[12px]'
+            } flex items-center gap-2`}
           >
             <BadgeCent className="w-5 h-5" />
             <span className="font-semibold">

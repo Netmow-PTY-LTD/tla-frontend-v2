@@ -5,7 +5,13 @@ import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import { useRealTimeStatus } from '@/hooks/useSocketListener';
 
-const LeadsRight = ({ isExpanded, onViewDetails, data, setIsLoading }) => {
+const LeadsRight = ({
+  isExpanded,
+  onViewDetails,
+  data,
+  setIsLoading,
+  selectedResponse,
+}) => {
   const currentUserId = useSelector(selectCurrentUser)?._id;
   const [onlineMap, setOnlineMap] = useState({});
   // Safely extract user IDs from AllLeadData
@@ -21,6 +27,8 @@ const LeadsRight = ({ isExpanded, onViewDetails, data, setIsLoading }) => {
   //   console.log("data", data);
   //   console.log("onlineMap", onlineMap);
   // }, [data, onlineMap]);
+
+  console.log('data', data);
 
   return (
     <>
@@ -40,6 +48,7 @@ const LeadsRight = ({ isExpanded, onViewDetails, data, setIsLoading }) => {
             isExpanded={isExpanded}
             setIsLoading={setIsLoading}
             onlineMap={onlineMap}
+            selectedResponse={selectedResponse}
           />
         ))}
       </section>

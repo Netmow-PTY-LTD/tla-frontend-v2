@@ -17,6 +17,7 @@ import { SlidersVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import { showSuccessToast } from '@/components/common/toasts';
+import { set } from 'zod';
 
 const creditTiers = [
   { id: 1, range: 'Free' },
@@ -29,7 +30,13 @@ const creditTiers = [
   { id: 8, range: '50-100 credits' },
 ];
 
-export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
+export default function FilterSidebar({
+  data,
+  setSearchKeyword,
+  setLeads,
+  page,
+  setPage,
+}) {
   const [isOpen, setIsOpen] = useState(false); // <-- Control sidebar visibility
   const { register, handleSubmit, reset, watch, setValue, getValues } = useForm(
     {
@@ -65,7 +72,9 @@ export default function FilterSidebar({ data, setSearchKeyword, setLeads }) {
 
   const onSubmit = (values) => {
     // payload shape transformation (if needed)
+    setPage(1);
     const payload = {
+      page: page,
       keyword: values.keyword,
       sort: values.sort,
       view: values.view,
