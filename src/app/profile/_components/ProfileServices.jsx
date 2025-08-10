@@ -23,7 +23,7 @@ export default function ProfileServices({ data }) {
                   <AccordionTrigger className="text-base font-medium hover:no-underline">
                     {item.title}
                   </AccordionTrigger>
-                  <AccordionContent className="flex flex-col gap-4 text-balance">
+                  <AccordionContent className="flex flex-col gap-4">
                     <p className="text-base">{item.description}</p>
                   </AccordionContent>
                 </AccordionItem>
