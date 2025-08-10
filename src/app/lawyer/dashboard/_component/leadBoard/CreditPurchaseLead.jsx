@@ -140,7 +140,12 @@ const CreditPurchaseLead = ({
       <div className="relative  shadow-sm p-6 pt-10">
         {/* Ribbon Tag */}
         <div className="bg-[#00C3C0] absolute text-white px-3 py-1 text-sm font-semibold rounded-tl-md rounded-br-md top-0 left-[30%]">
-          20% OFF EXCLUSIVE STARTING PACK
+          {recommendedPackage.discountPercentage
+            ? `${recommendedPackage.discountPercentage}% OFF `
+            : ''}
+          {recommendedPackage.name
+            ? `EXCLUSIVE ${recommendedPackage.name.toUpperCase()}`
+            : 'EXCLUSIVE STARTING PACK'}
         </div>
 
         {/* Package Grid */}
