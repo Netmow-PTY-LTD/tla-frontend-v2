@@ -242,6 +242,34 @@ export default function MyResponsesPage() {
             </div>
           </div>
         </div>
+      ) : isFetching ? (
+        <div className="p-6 space-y-8 animate-pulse">
+          <div className="space-y-3">
+            <Skeleton className="h-8 w-1/2" />
+            <Skeleton className="h-4 w-1/3" />
+          </div>
+          {Array.from({ length: 5 }).map((_, idx) => (
+            <div key={idx} className="flex gap-4">
+              <Skeleton className="h-14 w-14 rounded-full flex-shrink-0" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-2/3" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            </div>
+          ))}
+          <div className="space-y-4 mt-8">
+            <Skeleton className="h-6 w-1/3" />
+            {Array.from({ length: 4 }).map((_, idx) => (
+              <div key={idx} className="flex gap-4 items-center">
+                <Skeleton className="h-4 w-1/6" />
+                <Skeleton className="h-4 w-1/4" />
+                <Skeleton className="h-4 w-1/2" />
+                <Skeleton className="h-4 w-1/5" />
+              </div>
+            ))}
+          </div>
+        </div>
       ) : (
         <div className="flex flex-col justify-center items-center h-full">
           <Inbox className="w-12 h-12 mb-4 text-gray-400" />

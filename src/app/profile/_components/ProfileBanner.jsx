@@ -16,7 +16,7 @@ export default function ProfileBanner({ data }) {
     <section
       className="pt-[50px] md:pt-[100px] pb-[40px] lg:pb-0"
       style={{
-        backgroundImage: 'url("/assets/img/Bg-hero1.png")',
+        backgroundImage: 'url("/assets/img/Bg-hero1.webp")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
