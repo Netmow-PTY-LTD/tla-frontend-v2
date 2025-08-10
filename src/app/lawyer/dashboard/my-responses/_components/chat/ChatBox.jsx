@@ -83,7 +83,7 @@ export default function ChatBox({ response }) {
                     {isCurrentUser
                       ? 'You'
                       : typeof m.from === 'object'
-                      ? m.from.name || m.from._id
+                      ? m.from.profile.name || m.from._id
                       : m.from}
                   </div>
                   <div>{m.message}</div>

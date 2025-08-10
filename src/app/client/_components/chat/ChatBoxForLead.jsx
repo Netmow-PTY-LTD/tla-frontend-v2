@@ -72,6 +72,9 @@ export default function ChatBoxForLead({ response }) {
                         const isCurrentUser =
                             typeof m.from === 'object' ? m.from._id === userId : m.from === userId;
 
+                            console.log(' m.from.profile.name', m.from?.profile?.name)
+
+
                         return (
                             <div
                                 key={i}
@@ -85,7 +88,7 @@ export default function ChatBoxForLead({ response }) {
                                         {isCurrentUser
                                             ? 'You'
                                             : typeof m.from === 'object'
-                                                ? m.from.name || m.from._id
+                                                ? m.from.profile.name || m.from._id
                                                 : m.from}
                                     </div>
                                     <div>{m.message}</div>
