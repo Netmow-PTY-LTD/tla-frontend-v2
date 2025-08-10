@@ -19,7 +19,7 @@ export default async function LeadDetailsPage({ params }) {
         <div className="flex items-center justify-between">
           <button className="flex py-2 items-center gap-2">
             {' '}
-            <MoveLeft /> <span>Back to leads</span>
+            <MoveLeft /> <span>Back to cases</span>
           </button>
         </div>
         <div className="mt-3 max-w-4xl">

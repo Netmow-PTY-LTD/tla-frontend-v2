@@ -16,7 +16,7 @@ export default function SendNewLeadsCard({
       {/* Title */}
       <div className="p-4">
         <h3 className="text-black font-medium heading-md">
-          Estimated 10 leads per day
+          Estimated 10 cases per day
         </h3>
       </div>
 
@@ -27,7 +27,7 @@ export default function SendNewLeadsCard({
       <div className="p-4">
         <div>
           <h4 className="text-black font-medium heading-base">
-            Sending new leads to{' '}
+            Sending new cases to{' '}
           </h4>
           <p className="text-[#34495E] mt-[5px] admin-text">{profile?.email}</p>
         </div>
@@ -81,7 +81,7 @@ export default function SendNewLeadsCard({
           )}
         </div>
         <Link
-          href={'/lawyer/settings/lead-settings'}
+          href={'/lawyer/settings/skill-settings'}
           className="text-[#8E8E8E] text-[14px] hover:underline"
         >
           Edit

@@ -66,8 +66,6 @@ export default function MyResponseDetails({
     skip: !response?._id,
   });
 
-
-
   const toUser = singleResponse?.data?.leadId?.userProfileId?.user?._id;
 
   useNotifications(currentUser?._id, (data) => {
@@ -219,7 +217,6 @@ export default function MyResponseDetails({
   // if (isSingleResponseLoading) {
   //   return <ResponseSkeleton />;
   // }
-
 
   return (
     <>
@@ -394,7 +391,7 @@ export default function MyResponseDetails({
                         : 'hover:text-black'
                     }`}
                   >
-                    Lead Details
+                    Case Details
                   </button>
                   {/* <button
                   onClick={() => setActiveTab('note')}

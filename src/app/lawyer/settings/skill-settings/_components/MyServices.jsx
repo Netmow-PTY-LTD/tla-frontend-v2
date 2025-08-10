@@ -34,7 +34,7 @@ const ServicesList = () => {
           </div>
           <p className="text-gray-500 mb-6">
             Tell us what services you provide so we can send you the most
-            relevant leads
+            relevant cases
           </p>
 
           <Accordion type="single" collapsible="true">
@@ -136,10 +136,10 @@ const ServicesList = () => {
 
           <div className="mt-8 flex justify-center">
             <Link
-              href={'/lawyer/dashboard/leads-board'}
+              href={'/lawyer/dashboard/cases'}
               className="bg-[#12C7C4CC] hover:bg-teal-300  py-3 text-sm rounded-lg text-white mt-5 px-4"
             >
-              View Leads
+              View Cases
             </Link>
           </div>
         </section> */}

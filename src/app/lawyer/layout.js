@@ -1,15 +1,13 @@
 'use client';
 
-import React, {  useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '@/styles/dashboard.css';
 import DashboardHeader from '@/components/dashboard/common/DashboardHeader';
 import DashboardFooter from '@/components/dashboard/common/DashboardFooter';
 import { usePathname, useRouter } from 'next/navigation';
 import Sidebar from '@/components/dashboard/lawyer/layout/SellerSideNav';
 
-
 export default function SellerDashboardLayout({ children }) {
-
   const [message, setMessage] = useState('');
   const [notifications, setNotifications] = useState([]);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -21,7 +19,7 @@ export default function SellerDashboardLayout({ children }) {
 
   // Add all routes where scroll should be disabled
   const noScrollRoutes = [
-    '/lawyer/dashboard/leads-board',
+    '/lawyer/dashboard/cases',
     '/lawyer/dashboard/my-responses',
   ];
 
@@ -39,8 +37,6 @@ export default function SellerDashboardLayout({ children }) {
       document.body.style.overflow = '';
     };
   }, [isNoScrollPage]);
-
-
 
   return (
     <>

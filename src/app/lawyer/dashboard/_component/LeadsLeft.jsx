@@ -96,7 +96,7 @@ export default function LeadDetailsPage({
           <div className="flex items-center justify-between">
             <button className="flex py-2 items-center gap-2" onClick={onBack}>
               {' '}
-              <MoveLeft /> <span>Back to leads</span>
+              <MoveLeft /> <span>Back to cases</span>
             </button>
           </div>
           <div className="mt-3 max-w-4xl">
@@ -300,7 +300,7 @@ export default function LeadDetailsPage({
           <div className="flex flex-col justify-center items-center h-full">
             <Inbox className="w-12 h-12 mb-4 text-gray-400" />
             <h4 className="italic text-[18px] text-gray-500">
-              Currently there are no leads.
+              Currently there are no cases.
             </h4>
           </div>
         </>

@@ -66,7 +66,6 @@ export default function ClientNewLeadRegistrationModal({
   const [budgetAmount, setBudgetAmount] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
- 
   const { data: allZipCodes, isLoading: isZipCodeLoading } =
     useGetZipCodeListQuery();
 
@@ -94,8 +93,6 @@ export default function ClientNewLeadRegistrationModal({
       skip: !defaultCountry?._id || !service?._id,
     }
   );
-
-  
 
   useEffect(() => {
     if (!selectedServiceWiseQuestions?.data?.length) return;
@@ -135,8 +132,6 @@ export default function ClientNewLeadRegistrationModal({
     }
   }, [step]);
 
-  
-
   const totalQuestions = selectedServiceWiseQuestions?.data?.length;
 
   const totalFormsSteps = 3;
@@ -173,8 +168,6 @@ export default function ClientNewLeadRegistrationModal({
     setQuestionLoading(false);
   }, [fullClonedQuestions]);
 
-  
-
   const options = selectedServiceWiseQuestions?.data?.[step - 1]?.options || [];
 
   const handleOptionChange = (optionId, checked) => {
@@ -187,8 +180,6 @@ export default function ClientNewLeadRegistrationModal({
     );
 
     const questionType = parentQuestion?.questionType;
-
-  
 
     const tempOption = {
       id: optionId,
@@ -221,8 +212,6 @@ export default function ClientNewLeadRegistrationModal({
       ? [...checkedOptions, optionId]
       : checkedOptions.filter((id) => id !== optionId);
 
-    
-
     setCheckedOptions(newCheckedOptions);
 
     setCheckedOptionsDetails((prev) => {
@@ -254,8 +243,6 @@ export default function ClientNewLeadRegistrationModal({
       );
     }
   };
-
- 
 
   //   useEffect(() => {
   //     if (step === 0) {
@@ -365,14 +352,11 @@ export default function ClientNewLeadRegistrationModal({
       locationId: zipCode,
     };
 
-    
-
     try {
       const res = await addLead(payload).unwrap();
-     
 
       if (res?.success === true) {
-        showSuccessToast(res?.message || 'Lead registered successfully');
+        showSuccessToast(res?.message || 'Case registered successfully');
         setModalOpen(false);
         // Reset form
         setStep(0);
@@ -385,7 +369,7 @@ export default function ClientNewLeadRegistrationModal({
       }
     } catch (err) {
       console.error('❌ Register error:', err);
-      showErrorToast(err?.data?.message || 'Failed to register lead.');
+      showErrorToast(err?.data?.message || 'Failed to register case.');
     } finally {
       setIsSubmitting(false);
     }

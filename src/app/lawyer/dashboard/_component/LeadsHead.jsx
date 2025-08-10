@@ -65,7 +65,7 @@ export default function LeadsHead({
           </div>
         </div>
         <Link
-          href={'/lawyer/settings/lead-settings'}
+          href={'/lawyer/settings/skill-settings'}
           className={`${
             isExpanded ? 'admin-text' : 'text-[12px]'
           } py-1 px-2 bg-[#FF8602] rounded-[5px] text-white hover:bg-[#FF8602] transition-all flex items-center gap-2`}

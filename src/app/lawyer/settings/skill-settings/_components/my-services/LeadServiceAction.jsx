@@ -127,7 +127,7 @@ const LeadServiceAction = ({
           onConfirm={handleDeleteService}
           open={isOpen}
           onOpenChange={setIsOpen}
-          description="You want to delete your lead service?"
+          description="You want to delete your case service?"
           trigger={
             <button
               type="button"

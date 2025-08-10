@@ -15,7 +15,7 @@ export default function LeadSettingsCard({
     <Card className="w-full rounded-2xl shadow-sm">
       <div className="p-4">
         <h3 className="heading-md font-semibold text-black mb-1">
-          Lead Settings
+          Skill Settings
         </h3>
         <p className="text-xs text-gray-500">
           Track your credit usage and balance
@@ -29,11 +29,11 @@ export default function LeadSettingsCard({
         <div>
           <h2 className="heading-base font-medium text-black">Services</h2>
           <p className="mt-1 text-sm text-[#34495E]">
-            You'll receive leads in these categories
+            You'll receive cases in these categories
           </p>
         </div>
         <Link
-          href="/lawyer/settings/lead-settings"
+          href="/lawyer/settings/skill-settings"
           className="text-sm text-[#8E8E8E] hover:underline"
         >
           Edit
@@ -93,7 +93,7 @@ export default function LeadSettingsCard({
             )}
           </div>
           <Link
-            href="/lawyer/settings/lead-settings"
+            href="/lawyer/settings/skill-settings"
             className="text-sm text-[#8E8E8E] hover:underline"
           >
             Edit

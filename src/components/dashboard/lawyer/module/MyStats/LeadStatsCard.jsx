@@ -65,7 +65,7 @@ const LeadStatsCard = ({ locations, profile }) => {
 
         {/* ---------------------------------- Lead Related Ui ------------------------------------------ */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-5 px-4">
-          {/* Total Leads */}
+          {/* Total Cases */}
           <div className="bg-[#F5F6F9] flex flex-col items-center justify-center p-4 rounded-lg shadow-sm">
             <div className="flex items-center gap-1">
               <Users className="w-5 h-5 text-blue-600" />
@@ -74,7 +74,7 @@ const LeadStatsCard = ({ locations, profile }) => {
             <p className="text-xs text-gray-600 mt-1">Total Cases</p>
           </div>
 
-          {/* Approved Leads */}
+          {/* Approved Cases */}
           <div className="bg-[#F5F6F9] flex flex-col items-center justify-center p-4 rounded-lg shadow-sm">
             <div className="flex items-center gap-1">
               <Flame className="w-5 h-5 text-orange-500" />
@@ -83,7 +83,7 @@ const LeadStatsCard = ({ locations, profile }) => {
             <p className="text-xs text-gray-600 mt-1">Approved Cases</p>
           </div>
 
-          {/* Pending Leads */}
+          {/* Pending Cases */}
           <div className="bg-[#F5F6F9] flex flex-col items-center justify-center p-4 rounded-lg shadow-sm">
             <div className="flex items-center gap-1">
               <CheckCircle className="w-5 h-5 text-green-500" />
@@ -92,7 +92,7 @@ const LeadStatsCard = ({ locations, profile }) => {
             <p className="text-xs text-gray-600 mt-1">Pending Cases</p>
           </div>
 
-          {/* Rejected Leads */}
+          {/* Rejected Cases */}
           <div className="bg-[#F5F6F9] flex flex-col items-center justify-center p-4 rounded-lg shadow-sm">
             <div className="flex items-center gap-1">
               <XCircle className="w-5 h-5 text-red-500" />
@@ -101,7 +101,7 @@ const LeadStatsCard = ({ locations, profile }) => {
             <p className="text-xs text-gray-600 mt-1">Rejected Cases</p>
           </div>
 
-          {/* Archived Leads */}
+          {/* Archived Cases */}
           <div className="bg-[#F5F6F9] flex flex-col items-center justify-center p-4 rounded-lg shadow-sm">
             <div className="flex items-center gap-1">
               <Archive className="w-5 h-5 text-gray-500" />

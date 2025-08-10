@@ -18,8 +18,8 @@ const SettingsLayout = ({ children }) => {
       icon: <UserIcon className="w-4 h-4" />,
     },
     {
-      label: 'Lead Settings',
-      href: '/lawyer/settings/lead-settings',
+      label: 'Skill Settings',
+      href: '/lawyer/settings/skill-settings',
       icon: <BarChart3Icon className="w-4 h-4" />,
     },
     // {

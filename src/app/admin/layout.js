@@ -13,7 +13,7 @@ export default function AdminDashboardLayout({ children }) {
   const cleanPathname = pathname?.trim().replace(/\/+$/, '');
 
   const noScrollRoutes = [
-    '/lawyer/dashboard/leads-board',
+    '/lawyer/dashboard/cases',
     '/lawyer/dashboard/my-responses',
   ];
 

@@ -38,8 +38,8 @@ export default function LeadsCountCard() {
     <Card className="w-full shadow-sm rounded-2xl">
       {/* Header */}
       <div className="flex items-center justify-between p-4">
-        <h3 className="heading-md font-semibold text-black">Leads</h3>
-        <Link href="/lawyer/dashboard/leads-board">
+        <h3 className="heading-md font-semibold text-black">Cases</h3>
+        <Link href="/lawyer/dashboard/cases">
           <Button variant="outline" size="sm">
             View
           </Button>
@@ -61,7 +61,7 @@ export default function LeadsCountCard() {
                 </p>
               </div>
               <span className="text-sm font-medium mt-1">
-                Total Matched Leads
+                Total Matched Cases
               </span>
             </div>
           )}

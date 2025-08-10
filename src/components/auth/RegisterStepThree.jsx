@@ -155,7 +155,7 @@ export default function RegisterStepThree() {
             Some details about you
           </h3>
           <p className="tla-auth-subtitle mb-5 text-center">
-            You’re just a few steps away from viewing our Family Law leads
+            You’re just a few steps away from viewing our Family Law cases
           </p>
 
           <Form {...form}>
@@ -590,7 +590,7 @@ export default function RegisterStepThree() {
                       Submitting...
                     </>
                   ) : (
-                    'Finish & See Leads'
+                    'Finish & See cases'
                   )}
                 </button>
               </div>
