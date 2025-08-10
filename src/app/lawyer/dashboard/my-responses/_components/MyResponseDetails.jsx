@@ -53,19 +53,25 @@ export default function MyResponseDetails({
   response,
   responseId,
   setIsLoading,
+  singleResponse,
+  isSingleResponseLoading,
 }) {
   const [activeTab, setActiveTab] = useState('activity');
   const [isExpanded, setIsExpanded] = useState(false);
   const [openMail, setOpenMail] = useState(false);
   const [openSms, setOpenSms] = useState(false);
   const currentUser = useSelector(selectCurrentUser);
-  const {
-    data: singleResponse,
-    isLoading,
-    refetch,
-  } = useGetSingleResponseQuery(responseId || response?._id, {
-    skip: !response?._id,
-  });
+  // const {
+  //   data: singleResponse,
+  //   isLoading,
+  //   refetch,
+  // } = useGetSingleResponseQuery(responseId || response?._id, {
+  //   skip: !response?._id,
+  // });
+
+  // console.log('responseId', responseId);
+
+  // console.log('singleResponse', singleResponse);
 
   const toUser = singleResponse?.data?.leadId?.userProfileId?.user?._id;
 
@@ -201,7 +207,7 @@ export default function MyResponseDetails({
             '_blank'
           );
         }
-      } catch (error) { }
+      } catch (error) {}
     }
     if (type === 'sendemail') {
       setOpenMail(true);
@@ -221,7 +227,7 @@ export default function MyResponseDetails({
 
   return (
     <>
-      {isLoading ? (
+      {isSingleResponseLoading ? (
         <ResponseSkeleton />
       ) : (
         <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
@@ -376,19 +382,21 @@ export default function MyResponseDetails({
                 <div className="flex border-b border-gray-200 gap-6">
                   <button
                     onClick={() => setActiveTab('activity')}
-                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
+                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                      activeTab === 'activity'
                         ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
                         : 'hover:text-black'
-                      }`}
+                    }`}
                   >
                     Activity
                   </button>
                   <button
                     onClick={() => setActiveTab('lead-details')}
-                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'lead-details'
+                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                      activeTab === 'lead-details'
                         ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
                         : 'hover:text-black'
-                      }`}
+                    }`}
                   >
                     Case Details
                   </button>
@@ -404,10 +412,11 @@ export default function MyResponseDetails({
                 </button> */}
                   <button
                     onClick={() => setActiveTab('chat')}
-                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'lead-details'
+                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                      activeTab === 'lead-details'
                         ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
                         : 'hover:text-black'
-                      }`}
+                    }`}
                   >
                     chat
                   </button>
@@ -434,18 +443,20 @@ export default function MyResponseDetails({
                         return (
                           <Fragment key={index}>
                             <div
-                              className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${index === 0 ? '' : 'border-l border-[#e6e7ec]'
-                                }`}
+                              className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${
+                                index === 0 ? '' : 'border-l border-[#e6e7ec]'
+                              }`}
                             >
                               {formattedDate}
                             </div>
                             {activity?.logs?.map((item, i) => {
                               return (
                                 <div
-                                  className={`activity-log-item flex gap-2 ${index === 0 && i === 0
+                                  className={`activity-log-item flex gap-2 ${
+                                    index === 0 && i === 0
                                       ? 'first-log-item'
                                       : ''
-                                    }`}
+                                  }`}
                                   key={i}
                                 >
                                   <div className="left-track flex-grow-0 flex flex-col w-[32px] items-center">
@@ -555,12 +566,10 @@ export default function MyResponseDetails({
                   )}
                   {activeTab === 'chat' && (
                     <div>
-                      {
-                        singleResponse?.data && <ChatBox response={singleResponse?.data} />
-                      }
-
+                      {singleResponse?.data && (
+                        <ChatBox response={singleResponse?.data} />
+                      )}
                     </div>
-
                   )}
                 </div>
               </div>

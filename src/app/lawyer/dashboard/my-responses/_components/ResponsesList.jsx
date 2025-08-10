@@ -11,6 +11,7 @@ const LeadsRight = ({
   data,
   setIsLoading,
   selectedResponse,
+  selectedResponseId,
 }) => {
   const currentUserId = useSelector(selectCurrentUser)?._id;
   const [onlineMap, setOnlineMap] = useState({});
@@ -49,6 +50,7 @@ const LeadsRight = ({
             setIsLoading={setIsLoading}
             onlineMap={onlineMap}
             selectedResponse={selectedResponse}
+            selectedResponseId={selectedResponseId}
           />
         ))}
       </section>

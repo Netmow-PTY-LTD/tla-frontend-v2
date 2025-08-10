@@ -15,6 +15,8 @@ export default function ResponseHead({
   scrollContainerRef,
   setResponses,
   refetch,
+  setSelectedResponseId,
+  searchParams,
 }) {
   const router = useRouter();
   const pathname = usePathname(); // current route without query params
@@ -174,6 +176,8 @@ export default function ResponseHead({
           queryParams={queryParams}
           setQueryParams={setQueryParams}
           setResponses={setResponses}
+          setSelectedResponseId={setSelectedResponseId}
+          searchParams={searchParams}
         />
       </div>
 
