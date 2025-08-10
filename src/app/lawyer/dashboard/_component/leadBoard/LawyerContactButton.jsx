@@ -69,9 +69,7 @@ const LawyerContactButton = ({ leadDetail }) => {
             position: 'top-right',
           });
           setTimeout(() => {
-            router.push(
-              `/lawyer/dashboard/my-responses?responseId=${retryRes?.data?.responseId}`
-            );
+            router.push(`/lawyer/dashboard/my-responses`);
           }, 500);
         } else {
           toast.error(retryRes.message || 'Retry failed', {

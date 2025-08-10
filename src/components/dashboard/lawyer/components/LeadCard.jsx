@@ -208,7 +208,7 @@ const LeadCard = ({
           </p>
         </div>
       </div>
-      {/* {index} */}
+      {index}
       {/* Footer Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">
         {user?.credit != null && (

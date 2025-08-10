@@ -16,12 +16,15 @@ import { SlidersVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import { showSuccessToast } from '@/components/common/toasts';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function FilterResponseSidebar({
   queryParams,
   setQueryParams,
   refetch,
   setResponses,
+  searchParams,
+  setSelectedResponseId,
 }) {
   const [isOpen, setIsOpen] = useState(false); // <-- Control sidebar visibility
   const { register, handleSubmit, reset, watch } = useForm({
@@ -33,6 +36,9 @@ export default function FilterResponseSidebar({
       leadSubmission: '',
     },
   });
+
+  const router = useRouter();
+  const pathname = usePathname();
 
   // Sync form with queryParams on load or when queryParams change
   useEffect(() => {
@@ -61,10 +67,20 @@ export default function FilterResponseSidebar({
     }));
     showSuccessToast('Filters applied and saved.');
 
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('responseId');
+
+    const newUrl =
+      params.toString().length > 0
+        ? `${pathname}?${params.toString()}`
+        : pathname;
+
+    router.replace(newUrl);
     //localStorage.setItem('responseFilters', JSON.stringify(queryParams));
     // Close sidebar after form submit
     setIsOpen(false);
     setResponses([]);
+    setSelectedResponseId(null);
   };
 
   return (

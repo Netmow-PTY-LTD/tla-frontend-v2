@@ -46,7 +46,7 @@ const LeadsBoardPage = () => {
     setLeads([]);
   }, []);
 
-  console.log('searchKeyword', searchKeyword);
+  //console.log('searchKeyword', searchKeyword);
 
   const {
     data,

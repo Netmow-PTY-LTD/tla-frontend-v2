@@ -34,6 +34,8 @@ export default function LeadDetailsPage() {
   const [selectedLeadResponse, setSelectedLeadResponse] = useState(null);
   const currentUserId = useSelector(selectCurrentUser)?._id;
   const [onlineMap, setOnlineMap] = useState({});
+  const [tabValue, setTabValue] = useState('find-lawyers');
+
   const params = useParams();
   const id = params.id;
 
@@ -77,7 +79,13 @@ export default function LeadDetailsPage() {
   const { data: leadWiseResponses, isLoading: isSingleLeadResponseLoading } =
     useGetAllLeadWiseResponsesQuery(id);
 
-  console.log('leadWiseResponses', leadWiseResponses);
+  //console.log('leadWiseResponses', leadWiseResponses);
+
+  useEffect(() => {
+    if (leadWiseResponses?.data?.length > 0) {
+      setTabValue('responded-lawyers');
+    }
+  }, [leadWiseResponses?.data?.length]);
 
   //  ----------- user online offline ---------------------
 
@@ -107,6 +115,8 @@ export default function LeadDetailsPage() {
   if (isSingleLeadLoading) {
     return <ResponseSkeleton />;
   }
+
+  //console.log('leadWiseResponses?.data', leadWiseResponses?.data);
 
   return (
     <div className="lead-board-wrap">
@@ -252,18 +262,20 @@ export default function LeadDetailsPage() {
         <div className={`${isMobile ? 'column-6' : 'right-column-5'}`}>
           <div className="column-wrap-right px-4">
             <div className="flex w-full flex-col gap-6">
-              <Tabs
-                defaultValue={`${
-                  leadWiseResponses?.data?.length > 0
-                    ? 'responded-lawyers'
-                    : 'find-lawyers'
-                }`}
-              >
-                <TabsList className="w-full justify-start pb-4 border-b border-gray-200">
-                  <TabsTrigger value="responded-lawyers">
+              <Tabs value={tabValue} onValueChange={setTabValue}>
+                <TabsList className="w-full justify-start gap-2 pb-4 border-b border-gray-200">
+                  <TabsTrigger
+                    value="responded-lawyers"
+                    className="border border-gray-300 shadow-none"
+                  >
                     Lawyers who responded
                   </TabsTrigger>
-                  <TabsTrigger value="find-lawyers">Find Lawyers</TabsTrigger>
+                  <TabsTrigger
+                    value="find-lawyers"
+                    className="border border-gray-200"
+                  >
+                    Find Lawyers
+                  </TabsTrigger>
                 </TabsList>
                 <TabsContent value="responded-lawyers">
                   {isSingleLeadResponseLoading ? (
