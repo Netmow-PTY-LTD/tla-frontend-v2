@@ -7,6 +7,7 @@ import {
   BookText,
   Settings,
   Users,
+  BookOpenText,
 } from 'lucide-react';
 
 export const BuyerSidebarItems = {
@@ -21,7 +22,7 @@ export const BuyerSidebarItems = {
     {
       title: 'My Cases',
       url: '/client/dashboard/my-cases',
-      icon: Users,
+      icon: BookOpenText,
       isActive: true,
     },
     {

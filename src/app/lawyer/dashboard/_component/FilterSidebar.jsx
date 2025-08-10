@@ -111,7 +111,7 @@ export default function FilterSidebar({
         className="top-0 w-full max-w-sm z-[9999] flex flex-col h-full"
       >
         <SheetHeader>
-          <SheetTitle className="text-left">Filter Leads</SheetTitle>
+          <SheetTitle className="text-left">Filter Cases</SheetTitle>
         </SheetHeader>
 
         <form
@@ -228,7 +228,7 @@ export default function FilterSidebar({
             {/* Spotlight */}
             <AccordionItem value="item-4">
               <AccordionTrigger className="hover:no-underline">
-                Lead Spotlight
+                Case Spotlight
               </AccordionTrigger>
               <AccordionContent className="overflow-hidden">
                 <div className="flex flex-col gap-4 text-balance">
@@ -256,10 +256,10 @@ export default function FilterSidebar({
               </AccordionContent>
             </AccordionItem>
 
-            {/* Lead Submission */}
+            {/* Case Submission */}
             <AccordionItem value="item-5">
               <AccordionTrigger className="hover:no-underline">
-                When the lead was submitted
+                When the case was submitted
               </AccordionTrigger>
               <AccordionContent className="overflow-hidden">
                 <div className="flex flex-col gap-4 text-balance">

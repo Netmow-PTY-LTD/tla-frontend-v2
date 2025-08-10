@@ -6,6 +6,7 @@ import LeadsRight from '@/app/lawyer/dashboard/_component/LeadsRight';
 import ResponseSkeleton from '@/app/lawyer/dashboard/my-responses/_components/ResponseSkeleton';
 import LeadCard from '@/components/dashboard/lawyer/components/LeadCard';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { data, userDummyImage } from '@/data/data';
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
 import { useRealTimeStatus } from '@/hooks/useSocketListener';
@@ -31,7 +32,7 @@ export default function LeadDetailsPage() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showLeadResponseDetails, setShowLeadResponseDetails] = useState(true);
   const [selectedLeadResponse, setSelectedLeadResponse] = useState(null);
-    const currentUserId=useSelector(selectCurrentUser)?._id
+  const currentUserId = useSelector(selectCurrentUser)?._id;
   const [onlineMap, setOnlineMap] = useState({});
   const params = useParams();
   const id = params.id;
@@ -42,18 +43,6 @@ export default function LeadDetailsPage() {
     });
 
   // console.log('singleLead', singleLead);
-
-
-
-
-
-
-
-
-
-
-
-  
 
   const toggleReadMore = () => setIsExpanded(!isExpanded);
   const maxLength = 300;
@@ -90,29 +79,28 @@ export default function LeadDetailsPage() {
 
   console.log('leadWiseResponses', leadWiseResponses);
 
-   //  ----------- user online offline ---------------------
+  //  ----------- user online offline ---------------------
 
   // Safely extract user IDs from AllLeadData
-  const userIds =leadWiseResponses?.data
-    ?.map((response) =>response?.responseBy?.user?._id) || [];
-
+  const userIds =
+    leadWiseResponses?.data?.map(
+      (response) => response?.responseBy?.user?._id
+    ) || [];
 
   // ✅ Use hook directly (at top level of component)
-  useRealTimeStatus(currentUserId,userIds, (userId, isOnline) => {
+  useRealTimeStatus(currentUserId, userIds, (userId, isOnline) => {
     setOnlineMap((prev) => ({ ...prev, [userId]: isOnline }));
   });
 
   useEffect(() => {
-    console.log("data", data);
-    console.log("onlineMap", onlineMap);
+    console.log('data', data);
+    console.log('onlineMap', onlineMap);
   }, [data, onlineMap]);
-
 
   const handleShowLeadResponseDetails = (response) => {
     setSelectedLeadResponse(response);
     setShowLeadResponseDetails(true);
   };
-
 
   const isMobile = window.innerWidth <= 1280;
 
@@ -263,42 +251,65 @@ export default function LeadDetailsPage() {
         </div>
         <div className={`${isMobile ? 'column-6' : 'right-column-5'}`}>
           <div className="column-wrap-right px-4">
-            {isSingleLeadResponseLoading ? (
-              <ResponseSkeleton />
-            ) : (
-              <>
-                <div className="leads-top-row">
-                  <h2
-                    className={`font-bold heading-base text-[#0B1C2D] text-left`}
-                  >
+            <div className="flex w-full flex-col gap-6">
+              <Tabs
+                defaultValue={`${
+                  leadWiseResponses?.data?.length > 0
+                    ? 'responded-lawyers'
+                    : 'find-lawyers'
+                }`}
+              >
+                <TabsList className="w-full justify-start pb-4 border-b border-gray-200">
+                  <TabsTrigger value="responded-lawyers">
                     Lawyers who responded
-                  </h2>
-                </div>
-                <hr className="bg-[#F3F3F3] h-1 w-full my-2" />
-                {showLeadResponseDetails && selectedLeadResponse ? (
-                  <LeadResponseDetails
-                    onBack={() => setShowLeadResponseDetails(false)}
-                    response={selectedLeadResponse}
-                  />
-                ) : (
-                  <div className="leads-bottom-row">
-                    <div className={`grid grid-cols-1 gap-y-4`}>
-                      {leadWiseResponses?.data?.map((response, i) => (
-                        <LeadResponseCard
-                          key={i}
-                          response={response}
-                          isExpanded={isExpanded}
-                          onlineMap={onlineMap}
-                          handleShowLeadResponseDetails={
-                            handleShowLeadResponseDetails
-                          }
+                  </TabsTrigger>
+                  <TabsTrigger value="find-lawyers">Find Lawyers</TabsTrigger>
+                </TabsList>
+                <TabsContent value="responded-lawyers">
+                  {isSingleLeadResponseLoading ? (
+                    <ResponseSkeleton />
+                  ) : (
+                    <>
+                      <div className="leads-top-row">
+                        {/* <h2
+                          className={`font-bold heading-base text-[#0B1C2D] text-left`}
+                        >
+                          Lawyers who responded
+                        </h2> */}
+                      </div>
+                      <hr className="bg-[#F3F3F3] h-1 w-full my-2" />
+                      {showLeadResponseDetails && selectedLeadResponse ? (
+                        <LeadResponseDetails
+                          onBack={() => setShowLeadResponseDetails(false)}
+                          response={selectedLeadResponse}
                         />
-                      ))}
-                    </div>
+                      ) : (
+                        <div className="leads-bottom-row">
+                          <div className={`grid grid-cols-1 gap-y-4`}>
+                            {leadWiseResponses?.data?.map((response, i) => (
+                              <LeadResponseCard
+                                key={i}
+                                response={response}
+                                isExpanded={isExpanded}
+                                onlineMap={onlineMap}
+                                handleShowLeadResponseDetails={
+                                  handleShowLeadResponseDetails
+                                }
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </TabsContent>
+                <TabsContent value="find-lawyers">
+                  <div className="my-3">
+                    <h4 className="font-medium heading-lg">Responses</h4>
                   </div>
-                )}
-              </>
-            )}
+                </TabsContent>
+              </Tabs>
+            </div>
           </div>
         </div>
       </div>

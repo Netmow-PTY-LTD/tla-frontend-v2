@@ -278,7 +278,7 @@ export default function CreateLeadWithAuthModal({
       console.log('✅ Register response:', res);
 
       if (res?.success === true) {
-        showSuccessToast(res?.message || 'Lead registered successfully');
+        showSuccessToast(res?.message || 'Case registered successfully');
         setModalOpen(false);
         setTimeout(() => {
           router.push('/client/dashboard/my-cases');
@@ -286,7 +286,7 @@ export default function CreateLeadWithAuthModal({
       }
     } catch (err) {
       console.error('❌ Register error:', err);
-      showErrorToast(err?.data?.message || 'Failed to register lead.');
+      showErrorToast(err?.data?.message || 'Failed to register case.');
     } finally {
       setIsSubmitting(false);
     }

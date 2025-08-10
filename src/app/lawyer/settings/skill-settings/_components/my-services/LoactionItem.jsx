@@ -8,15 +8,15 @@ const LocationItem = ({ location }) => {
         <MapPin className="h-5 w-5 text-gray-500 mt-0.5" />
         <div>
           <p className="text-gray-800">{location?.locationGroupId?.zipcode}</p>
-          <div className="flex gap-2 mt-1">
+          {/* <div className="flex gap-2 mt-1">
             <button className="text-teal-500 text-sm">View on map</button>
             <span className="text-gray-400">·</span>
-            {/* {location?.locationGroupId?.zipcode !== 'Nationwide' ? (
+            {location?.locationGroupId?.zipcode !== 'Nationwide' ? (
               <button className="text-teal-500 text-sm">Remove</button>
             ) : (
               <></>
-            )} */}
-          </div>
+            )}
+          </div> */}
         </div>
       </div>
       {/* <div className="flex gap-2">
