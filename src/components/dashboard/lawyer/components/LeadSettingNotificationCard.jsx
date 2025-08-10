@@ -15,9 +15,9 @@ const LeadSettingNotificationCard = ({
   return (
     <Card>
       <div className="m-3 flex justify-between items-center flex-wrap">
-        <h2 className="font-medium text-lg">Lead Settings</h2>
+        <h2 className="font-medium text-lg">Skill Settings</h2>
         <h2 className="text-sm sm:text-base">
-          <span>456</span> New Leads
+          <span>456</span> New Cases
         </h2>
       </div>
       <hr className="border-[#F3F3F3] border" />
@@ -30,7 +30,7 @@ const LeadSettingNotificationCard = ({
           </button>
         </h1>
         <p className="my-2 text-sm sm:text-base">
-          You'll receive leads in these categories
+          You'll receive cases in these categories
         </p>
 
         <div className="inline-flex gap-2">
@@ -99,20 +99,20 @@ const LeadSettingNotificationCard = ({
 
       <div className="m-3">
         <h1 className="font-medium flex items-center text-lg">
-          Lead Notifications
+          Notifications
           <button aria-label="Edit Name" className="ml-3 rounded">
             <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
           </button>
         </h1>
         <p className="my-2 text-sm sm:text-base">
-          Sending new leads notifications to
+          Sending new notifications to
         </p>
         <p className="text-sm sm:text-base">yourmail@example.com</p>
       </div>
 
       <div className="m-3">
         <button className="px-[19px] py-2 text-[#0B1C2D] font-medium bg-[#EDF0F4] rounded-full text-sm sm:text-base">
-          View Leads
+          View Cases
         </button>
       </div>
     </Card>

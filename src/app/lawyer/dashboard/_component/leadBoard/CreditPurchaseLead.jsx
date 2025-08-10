@@ -22,7 +22,7 @@ const CreditPurchaseLead = ({
   onSuccess,
   onClose,
   needAddCard,
-  lead
+  lead,
 }) => {
   const [showCardForm, setShowCardForm] = useState(false);
   const [autoTopUP, setAutoTopUp] = useState(false);
@@ -31,7 +31,6 @@ const CreditPurchaseLead = ({
   const [openAccordion, setOpenAccordion] = useState(null);
   const [addPaymentMethod] = useAddPaymentMethodMutation();
   const [purchaseCredits, { isLoading }] = usePurchaseCreditPackageMutation();
-
 
   const handleBuyClick = async () => {
     if (needAddCard) {
@@ -98,18 +97,25 @@ const CreditPurchaseLead = ({
   }
 
   return (
-
-
     <div className="space-y-6  bg-white rounded-2xl shadow-sm">
       {/* Header */}
-      <div className='text-center'>
+      <div className="text-center">
         <h1 className="text-xl font-semibold text-gray-800">
-          You need <span className="text-primary-600 font-bold"> {lead?.credit} credits</span> to contact <span className="font-bold">{lead?.userProfileId?.name} </span>
+          You need{' '}
+          <span className="text-primary-600 font-bold">
+            {' '}
+            {lead?.credit} credits
+          </span>{' '}
+          to contact{' '}
+          <span className="font-bold">{lead?.userProfileId?.name} </span>
         </h1>
         <p className="text-gray-600 mt-2">
-          To get some credits, you need to buy a <span className="font-medium text-primary-600">starter pack of credits</span>
+          To get some credits, you need to buy a{' '}
+          <span className="font-medium text-primary-600">
+            starter pack of credits
+          </span>
           <br />
-          (enough for this lead plus roughly another 9 leads).
+          (enough for this case plus roughly another 9 cases).
         </p>
       </div>
 
@@ -133,7 +139,6 @@ const CreditPurchaseLead = ({
           openValue={openAccordion}
           onChange={setOpenAccordion}
         />
-
       </div>
 
       {/* Offer Card */}
@@ -146,20 +151,29 @@ const CreditPurchaseLead = ({
         {/* Package Grid */}
         <div className="grid md:grid-cols-4 gap-6 mt-2 items-start">
           <div>
-            <p className="text-lg font-medium text-gray-900">{recommendedPackage?.name}</p>
+            <p className="text-lg font-medium text-gray-900">
+              {recommendedPackage?.name}
+            </p>
           </div>
 
           <div className="flex items-center space-x-2">
             <BrandIcon />
-            <p className="text-gray-900 font-medium">{recommendedPackage?.credit} Credits</p>
+            <p className="text-gray-900 font-medium">
+              {recommendedPackage?.credit} Credits
+            </p>
           </div>
 
           <div>
             <p className="text-gray-900 font-medium">
               ${recommendedPackage?.priceDisplay}
-              <span className="text-sm text-gray-500 font-normal"> (ex GST)</span>
+              <span className="text-sm text-gray-500 font-normal">
+                {' '}
+                (ex GST)
+              </span>
             </p>
-            <p className="text-sm text-gray-500">${recommendedPackage?.pricePerCredit}/credit</p>
+            <p className="text-sm text-gray-500">
+              ${recommendedPackage?.pricePerCredit}/credit
+            </p>
           </div>
 
           <div>
@@ -187,7 +201,10 @@ const CreditPurchaseLead = ({
                 onCheckedChange={(checked) => setAutoTopUp(!!checked)}
                 className="mt-1"
               />
-              <label htmlFor="auto-topup" className="text-sm text-gray-700 cursor-pointer">
+              <label
+                htmlFor="auto-topup"
+                className="text-sm text-gray-700 cursor-pointer"
+              >
                 Auto top-up next time
               </label>
             </div>
@@ -204,7 +221,8 @@ const CreditPurchaseLead = ({
             className="flex-shrink-0"
           />
           <p className="text-sm text-gray-700">
-            We'll give you your credits back if you don't secure at least one job on The LawApp using these credits.
+            We'll give you your credits back if you don't secure at least one
+            job on The LawApp using these credits.
           </p>
         </div>
       </div>

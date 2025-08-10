@@ -108,9 +108,9 @@ const StatusCard = ({ status = 'pending', count, menuItems }) => {
       <div>
         {/* Header */}
         <div className="m-3 flex justify-between items-center flex-wrap">
-          <h2 className="font-medium text-lg">Lead Settings</h2>
+          <h2 className="font-medium text-lg">Skill Settings</h2>
           <h2 className="text-sm sm:text-base">
-            <span>456</span> New Leads
+            <span>456</span> New cases
           </h2>
         </div>
         <hr className="border-[#F3F3F3] border" />
@@ -124,7 +124,7 @@ const StatusCard = ({ status = 'pending', count, menuItems }) => {
             </button>
           </h1>
           <p className="my-2 text-sm sm:text-base">
-            You'll receive leads in these categories
+            You'll receive cases in these categories
           </p>
 
           <div className="inline-flex flex-wrap gap-2 mt-2">
@@ -169,7 +169,7 @@ const StatusCard = ({ status = 'pending', count, menuItems }) => {
         {/* CTA Button */}
         <div className="m-3">
           <button className="px-[19px] py-2 text-[#0B1C2D] font-medium bg-[#EDF0F4] rounded-full text-sm sm:text-base">
-            View Leads
+            View Cases
           </button>
         </div>
       </div>

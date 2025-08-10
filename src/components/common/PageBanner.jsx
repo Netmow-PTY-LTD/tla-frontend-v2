@@ -42,7 +42,7 @@ export default function PageBanner({ title, subtitle, bgImage, paragraph }) {
           <div className="p-[20px] md:p-[50px] w-full md:w-[calc(100%-356px)] flex flex-col justify-center items-start gap-[30px]">
             <h1 className="text-white">{title}</h1>
             <p className="text-white">
-              From the moment you sign up, we’ll start sending you leads —
+              From the moment you sign up, we’ll start sending you cases —
               completely free. You only pay when you choose to contact the
               customers that are right for your business.
             </p>

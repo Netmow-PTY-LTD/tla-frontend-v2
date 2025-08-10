@@ -6,7 +6,7 @@ const LeadSettings = () => {
   return (
     <Card className="mt-5">
       <div className="m-3 flex flex-wrap justify-between items-center">
-        <h2 className="font-medium text-lg">Lead Settings</h2>
+        <h2 className="font-medium text-lg">Skill Settings</h2>
         <button className="text-sm px-3 py-1 rounded bg-[#F3F3F3] text-[#34495E]">
           Current plan: Free
         </button>

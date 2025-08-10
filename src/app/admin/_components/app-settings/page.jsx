@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -36,7 +35,7 @@ export default function SettingsForm() {
 
   const onSubmit = async (data) => {
     try {
-   const res=   await changeAppSettings(data).unwrap();
+      const res = await changeAppSettings(data).unwrap();
       alert('✅ Settings updated successfully');
     } catch (err) {
       console.error(err);
@@ -72,7 +71,10 @@ export default function SettingsForm() {
         { label: 'Allow Credit Purchase', key: 'allowCreditPurchase' },
         { label: 'Require Credits to Respond', key: 'requireCreditsToRespond' },
         { label: 'Stripe Live Mode', key: 'stripeLiveMode' },
-        { label: 'Auto Refund If Lead Inactive', key: 'autoRefundIfLeadInactive' },
+        {
+          label: 'Auto Refund If Case Inactive',
+          key: 'autoRefundIfLeadInactive',
+        },
       ].map(({ label, key }) => (
         <div key={key} className="flex items-center justify-between">
           <label className="font-medium">{label}</label>
@@ -82,7 +84,7 @@ export default function SettingsForm() {
 
       {/* Numeric field */}
       <div>
-        <label className="block font-medium">Response Limit Per Lead</label>
+        <label className="block font-medium">Response Limit Per Case</label>
         <input
           type="number"
           {...register('responseLimitPerLead', { valueAsNumber: true })}

@@ -115,7 +115,7 @@ export default function FilterResponseSidebar({
             {/* Lead Spotlight */}
             <AccordionItem value="item-2">
               <AccordionTrigger className="hover:no-underline">
-                Lead Spotlight
+                Case Spotlight
               </AccordionTrigger>
               <AccordionContent className="overflow-hidden">
                 <div className="flex flex-col gap-4 text-balance">
