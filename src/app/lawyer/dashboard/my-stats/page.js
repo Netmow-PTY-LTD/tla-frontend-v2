@@ -86,7 +86,7 @@ const MyStatsPage = () => {
 
               <div className="font-medium flex items-center gap-2 text-lg mt-4">
                 <h4 className="leading-none"> Locations</h4>
-                <Link href={'/lawyer/settings/lead-settings'}>
+                <Link href={'/lawyer/settings/skill-settings'}>
                   <PencilIcon className="text-[#919FAC] hover:text-black transition w-5 h-5 rounded-full" />
                 </Link>
               </div>

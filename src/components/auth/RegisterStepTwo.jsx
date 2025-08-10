@@ -124,10 +124,10 @@ export default function RegisterStepTwo() {
             <div className="w-[215px] h-[215px] rounded-full bg-[#00C3C080] blur-[100px]"></div>
           </div>
           <h3 className="tla-auth-title mb-2 text-center">
-            Where would you like to see leads from?
+            Where would you like to see cases from?
           </h3>
           <p className="tla-auth-subtitle mb-10 text-center">
-            Tell us the area you cover so we can show you leads for your
+            Tell us the area you cover so we can show you cases for your
             location.
           </p>
           <Form {...form}>

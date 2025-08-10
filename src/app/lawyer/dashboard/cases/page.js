@@ -211,13 +211,13 @@ const PaginatedScroll = () => {
           <div className="flex flex-col justify-center items-center h-full">
             <Inbox className="w-12 h-12 mb-4 text-gray-400" />
             <h4 className="italic text-[18px] text-gray-500">
-              Currently there are no leads.
+              Currently there are no cases.
             </h4>
             <Button
               className="mt-4"
               onClick={() => {
                 localStorage.removeItem('lead-filters');
-                window.location.href = '/lawyer/dashboard/leads-board';
+                window.location.href = '/lawyer/dashboard/cases';
               }}
             >
               Clear Search

@@ -68,8 +68,6 @@ export default function ClientLeadRegistrationModal({
   const [phone, setPhone] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  
-
   useEffect(() => {
     if (!selectedServiceWiseQuestions?.length) return;
 
@@ -96,8 +94,6 @@ export default function ClientLeadRegistrationModal({
 
   const { data: allZipCodes, isLoading: isZipCodeLoading } =
     useGetZipCodeListQuery();
-
-  
 
   const filteredZipCodes = allZipCodes?.data?.filter((item) =>
     zipCode
@@ -127,8 +123,6 @@ export default function ClientLeadRegistrationModal({
       setCheckedOptionsDetails([]);
     }
   }, [step]);
-
-  
 
   const totalQuestions = selectedServiceWiseQuestions?.length;
 
@@ -166,8 +160,6 @@ export default function ClientLeadRegistrationModal({
     setQuestionLoading(false);
   }, [fullClonedQuestions]);
 
- 
-
   const options = selectedServiceWiseQuestions?.[step]?.options || [];
 
   // const handleOptionChange = (optionId, checked) => {
@@ -176,8 +168,6 @@ export default function ClientLeadRegistrationModal({
   //   // const foundOption = fullClonedQuestions
   //   //   ?.flatMap((question) => question.options || [])
   //   //   .find((option) => option?._id === optionId);
-
- 
 
   //   // const newCheckedOptions = checked
   //   //   ? [...checkedOptions, optionId]
@@ -199,17 +189,11 @@ export default function ClientLeadRegistrationModal({
   //   //   tempOption.idExtraData = '';
   //   // }
 
-  
-
   //   // setCheckedOptionsDetails([...checkedOptionsDetails, tempOption]);
-
- 
 
   //   // const foundOption = fullClonedQuestions
   //   //   ?.flatMap((question) => question.options || [])
   //   //   .find((option) => option?._id === optionId);
-
- 
 
   //   const parentQuestion = fullClonedQuestions?.find((question) =>
   //     question.options?.some((option) => option._id === optionId)
@@ -221,15 +205,11 @@ export default function ClientLeadRegistrationModal({
 
   //   const questionType = parentQuestion?.questionType;
 
-  
-
   //   const newCheckedOptions = checked
   //     ? [...checkedOptions, optionId]
   //     : checkedOptions.filter((id) => id !== optionId);
 
   //   setCheckedOptions(newCheckedOptions);
-
-
 
   //   const tempOption = {
   //     id: optionId,
@@ -437,11 +417,11 @@ export default function ClientLeadRegistrationModal({
       console.log('✅ Register response:', res);
 
       if (!res?.success || !res?.token) {
-        showErrorToast(res?.message || 'Lead registration failed.');
+        showErrorToast(res?.message || 'Case registration failed.');
         return;
       }
 
-      showSuccessToast(res?.message || 'Lead registered successfully');
+      showSuccessToast(res?.message || 'Case registered successfully');
 
       const token = res.token;
       const userPayload = verifyToken(token);
@@ -466,7 +446,7 @@ export default function ClientLeadRegistrationModal({
       }
     } catch (err) {
       console.error('❌ Register error:', err);
-      showErrorToast(err?.data?.message || 'Failed to register lead.');
+      showErrorToast(err?.data?.message || 'Failed to register case.');
     } finally {
       setIsSubmitting(false);
     }

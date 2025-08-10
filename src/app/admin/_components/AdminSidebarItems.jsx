@@ -207,14 +207,14 @@ export const AdminSidebarItems = {
       ],
     },
     {
-      title: 'Lead Management',
-      url: '/admin/leads-management',
+      title: 'Case Management',
+      url: '/admin/cases-management',
       icon: Kanban,
       isActive: true,
       // items: [
       //   {
       //     title: 'List of Users',
-      //     url: '/admin/leads-management',
+      //     url: '/admin/cases-management',
       //     icon: List,
       //     isActive: true,
       //   },

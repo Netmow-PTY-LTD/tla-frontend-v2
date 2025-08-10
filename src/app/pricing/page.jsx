@@ -12,7 +12,7 @@ const PricingPage = () => {
             <div className="p-[20px] md:p-[50px] w-full md:w-[calc(100%-356px)] flex flex-col justify-center items-start gap-[30px]">
               <h1 className="text-white">Pricing</h1>
               <p className="text-white">
-                From the moment you sign up, we’ll start sending you leads —
+                From the moment you sign up, we’ll start sending you cases —
                 completely free. You only pay when you choose to contact the
                 customers that are right for your business.
               </p>
@@ -70,7 +70,7 @@ const PricingPage = () => {
                 <span className="line-lg" />
               </h2>
               <div className="text-[var(--color-black)] mt-4">
-                Decide which leads to pursue with clear, upfront pricing — so
+                Decide which cases to pursue with clear, upfront pricing — so
                 you always know what you're spending.
               </div>
             </div>

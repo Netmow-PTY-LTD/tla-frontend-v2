@@ -14,14 +14,14 @@ export default function LeadsHead({ isExpanded }) {
   return (
     <section className={`${isExpanded ? 'pr-4' : 'px-4'}`}>
       <h2 className="font-bold text-[25px] text-[#0B1C2D] text-left">
-        112 Matching Leads
+        112 Matching Cases
       </h2>
 
       <div className="flex flex-wrap lg:justify-between items-center my-3 gap-4">
         <div className="flex flex-wrap items-center gap-2 text-[#34495E]">
           <Link href="#" className="flex items-center gap-2 text-[14px]">
             <Database className="w-5 h-5" />
-            <span>Showing all 40 leads -</span>
+            <span>Showing all 40 Cases -</span>
           </Link>
 
           <span className="hidden lg:inline">|</span>
@@ -52,7 +52,7 @@ export default function LeadsHead({ isExpanded }) {
           </SheetTrigger>
           <SheetContent side="right" className="top-0 w-full max-w-sm">
             <SheetHeader>
-              <SheetTitle className="text-left">Filter Leads</SheetTitle>
+              <SheetTitle className="text-left">Filter Cases</SheetTitle>
             </SheetHeader>
 
             {/* Filter Form Example */}

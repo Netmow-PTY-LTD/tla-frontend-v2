@@ -16,7 +16,7 @@ export default function BuyerDashboardLayout({ children }) {
 
   // Add all routes where scroll should be disabled
   const noScrollRoutes = [
-    '/lawyer/dashboard/leads-board',
+    '/lawyer/dashboard/cases',
     '/lawyer/dashboard/my-responses',
     '/client/dashboard/my-cases',
   ];
