@@ -1,8 +1,11 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { use, useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useGetAllMyResponsesQuery } from '@/store/features/lawyer/ResponseApiService';
+import {
+  useGetAllMyResponsesQuery,
+  useGetSingleResponseQuery,
+} from '@/store/features/lawyer/ResponseApiService';
 import { Inbox, Loader, Loader2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import MyResponseDetails from './MyResponseDetails';
@@ -13,6 +16,7 @@ import { Button } from '@/components/ui/button';
 export default function MyResponsesPage() {
   const [showResponseDetails, setShowResponseDetails] = useState(true);
   const [selectedResponse, setSelectedResponse] = useState(null);
+  const [selectedResponseId, setSelectedResponseId] = useState(null);
   const [responses, setResponses] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [totalPages, setTotalPages] = useState(null);
@@ -45,6 +49,24 @@ export default function MyResponsesPage() {
   console.log('queryParams in MyResponsesPage', queryParams);
 
   useEffect(() => {
+    if (responseId) {
+      setSelectedResponseId(responseId);
+      setShowResponseDetails(true);
+      localStorage.setItem('responseFilters', {
+        page: 1,
+        limit: 10,
+        sortBy: 'createdAt',
+        sortOrder: 'desc',
+        keyword: '',
+        spotlight: '',
+        clientActions: '',
+        actionsTaken: '',
+        leadSubmission: '',
+      });
+    }
+  }, [queryParams, responseId]);
+
+  useEffect(() => {
     localStorage.setItem('responseFilters', JSON.stringify(queryParams));
   }, [queryParams]);
 
@@ -57,6 +79,17 @@ export default function MyResponsesPage() {
     refetch,
   } = useGetAllMyResponsesQuery(queryParams);
 
+  const {
+    data: singleResponse,
+    isLoading: isSingleResponseLoading,
+    refetch: singleResponseRefetch,
+  } = useGetSingleResponseQuery(selectedResponseId, {
+    skip: !selectedResponseId,
+  });
+
+  console.log('singleResponse in MyResponsesPage', singleResponse);
+
+  //console.log('selectedResponseId', selectedResponseId);
   // Prevent body scroll when in this route
   useEffect(() => {
     const cleanPathname = pathname?.trim().replace(/\/+$/, '');
@@ -82,9 +115,18 @@ export default function MyResponsesPage() {
     }
   }, [allMyResponses]);
 
-  console.log('Responses', responses);
-  console.log('Total responses count', totalPages);
-  console.log('page', queryParams.page);
+  useEffect(() => {
+    if (!responseId) {
+      if (responses.length > 0) {
+        setSelectedResponseId(responses[0]._id);
+      }
+    }
+  }, [responseId, responses]);
+
+  //console.log('Responses', responses);
+  // console.log('Total responses count', totalPages);
+  // console.log('page', queryParams.page);
+  //console.log('selectedResponseId', selectedResponseId);
 
   const loader = useRef(null);
 
@@ -143,14 +185,7 @@ export default function MyResponsesPage() {
   //   return () => container.removeEventListener('scroll', handleScroll);
   // }, [hasMore, isFetching]);
 
-  // Set selectedResponse whenever responses update
-  useEffect(() => {
-    if (responses.length > 0) {
-      setSelectedResponse(responses[0]);
-    } else {
-      setSelectedResponse(null);
-    }
-  }, [responses]);
+  //console.log('selectedResponse in MyResponsesPage', selectedResponse);
 
   if (isAllMyResponsesLoading) {
     return (
@@ -188,15 +223,18 @@ export default function MyResponsesPage() {
     <div className="lead-board-wrap">
       {responses && responses.length > 0 ? (
         <div className="lead-board-container">
-          {showResponseDetails && selectedResponse && (
+          {showResponseDetails && (
             <div className="left-column-8">
               <div className="column-wrap-left">
                 <MyResponseDetails
-                  response={selectedResponse}
+                  //response={selectedResponse}
                   responseId={responseId}
                   onBack={() => setShowResponseDetails(false)}
                   setIsLoading={setIsLoading}
                   isLoading={isLoading}
+                  singleResponse={singleResponse}
+                  isSingleResponseLoading={isSingleResponseLoading}
+                  singleResponseRefetch={singleResponseRefetch}
                 />
               </div>
             </div>
@@ -217,19 +255,23 @@ export default function MyResponsesPage() {
                   scrollContainerRef={scrollContainerRef}
                   refetch={refetch}
                   setResponses={setResponses}
+                  setSelectedResponseId={setSelectedResponseId}
+                  searchParams={searchParams}
                 />
               </div>
 
               <div className="leads-bottom-row max-w-[1400px] mx-auto">
                 <LeadsRight
                   isExpanded={!showResponseDetails}
-                  onViewDetails={(response) => {
+                  onViewDetails={(response, responseId) => {
                     setSelectedResponse(response);
                     setShowResponseDetails(true);
+                    setSelectedResponseId(responseId);
                   }}
                   selectedResponse={selectedResponse}
                   data={responses || []}
                   setIsLoading={setIsLoading}
+                  selectedResponseId={selectedResponseId}
                 />
                 <div ref={loader}>
                   {isFetching ? (

@@ -15,6 +15,7 @@ export default function ResponseCard({
   setIsLoading,
   onlineMap,
   selectedResponse,
+  selectedResponseId,
 }) {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
@@ -49,10 +50,11 @@ export default function ResponseCard({
     return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
   };
 
-  const isSelected = selectedResponse?._id === user?._id;
-  // console.log('selectedResponse', selectedResponse);
-  console.log('user', user);
+  const isSelected = selectedResponseId === user?._id;
+  //console.log('selectedResponse', selectedResponse);
+  // console.log('user', user);
   // console.log('isSelected', isSelected);
+
   return (
     <Card
       className={`w-full max-w-full mx-auto flex flex-col cursor-pointer ${
@@ -62,7 +64,7 @@ export default function ResponseCard({
       }`}
       onClick={() => {
         setIsLoading(true);
-        onViewDetails(user);
+        onViewDetails(user, user?._id);
       }}
     >
       {/* Header Section */}
