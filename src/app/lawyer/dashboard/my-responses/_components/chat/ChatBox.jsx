@@ -8,6 +8,10 @@ import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useGetChatHistoryQuery } from '@/store/features/lawyer/ResponseApiService';
 
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
 export default function ChatBox({ response }) {
   const responseId = response?._id;
   const currentUser = useSelector(selectCurrentUser);
@@ -21,6 +25,7 @@ export default function ChatBox({ response }) {
     skip: !responseId,
   });
 
+  console.log('messsage ==>',liveMessages)
   // ✅ Load initial history
   useEffect(() => {
     setLiveMessages(history?.data || []);
@@ -106,19 +111,23 @@ export default function ChatBox({ response }) {
                 className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`rounded p-2 max-w-[70%] ${
+                  className={`rounded p-2 max-w-[90%] ${
                     isCurrentUser
                       ? 'bg-blue-100 text-right'
                       : 'bg-gray-100 text-left'
                   }`}
                 >
-                  <div className="text-sm font-semibold">
+                 <div className='flex items-center justify-between gap-4'>
+                    <p>{dayjs(m.createdAt).fromNow()}</p>
+                   <p className="text-sm font-semibold">
                     {isCurrentUser
                       ? 'You'
                       : typeof m.from === 'object'
                       ? m.from.profile?.name || m.from._id
                       : m.from}
-                  </div>
+                  </p>
+                 
+                 </div>
                   <div>{m.message}</div>
                   {isCurrentUser && seenByOthers && (
                     <div className="text-xs text-blue-500 mt-1">Seen</div>
