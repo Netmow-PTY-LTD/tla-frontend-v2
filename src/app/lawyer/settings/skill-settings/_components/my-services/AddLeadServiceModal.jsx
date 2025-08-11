@@ -68,7 +68,7 @@ const AddLeadServiceModal = () => {
         onOpenChange={setOpen}
         title="Add service"
         description="Type the name of your service to start searching our thousands of available services."
-        buttonName="+ Add a service"
+        buttonName="+ Add a skill"
         className="w-full " // ensure modal is full width (adjust max-width as needed)
         width="max-w-[600px]"
       >

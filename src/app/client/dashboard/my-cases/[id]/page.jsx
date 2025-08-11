@@ -1,4 +1,5 @@
 'use client';
+import LawyerCard from '@/app/client/_components/LawyerCard';
 import LeadResponseCard from '@/app/client/_components/LeadResponseCard';
 import LeadResponseDetails from '@/app/client/_components/LeadResponseDetails';
 import LeadsHead from '@/app/lawyer/dashboard/_component/LeadsHead';
@@ -9,10 +10,14 @@ import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { data, userDummyImage } from '@/data/data';
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
+import { checkValidity } from '@/helpers/validityCheck';
 import { useRealTimeStatus } from '@/hooks/useSocketListener';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
+import { useGetAllServiceWiseLawyersSuggestionsQuery } from '@/store/features/client/ClientApiServices';
 import { useGetAllLeadWiseResponsesQuery } from '@/store/features/client/LeadsApiService';
 import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
+import { verifyToken } from '@/utils/verifyToken';
+import Cookies from 'js-cookie';
 import {
   AtSign,
   BadgeCheck,
@@ -25,16 +30,23 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 export default function LeadDetailsPage() {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [page, setPage] = useState(1);
   const [showLeadResponseDetails, setShowLeadResponseDetails] = useState(true);
   const [selectedLeadResponse, setSelectedLeadResponse] = useState(null);
   const currentUserId = useSelector(selectCurrentUser)?._id;
   const [onlineMap, setOnlineMap] = useState({});
   const [tabValue, setTabValue] = useState('find-lawyers');
+  const [isMobile, setIsMobile] = useState(false);
+  const [lawyers, setLawyers] = useState([]);
+  const [totalPages, setTotalPages] = useState(null);
+  const [totalLawyersCount, setTotalLawyersCount] = useState(0);
+
+  const LIMIT = '10';
 
   const params = useParams();
   const id = params.id;
@@ -44,7 +56,7 @@ export default function LeadDetailsPage() {
       skip: !id,
     });
 
-  // console.log('singleLead', singleLead);
+  //console.log('singleLead', singleLead);
 
   const toggleReadMore = () => setIsExpanded(!isExpanded);
   const maxLength = 300;
@@ -102,12 +114,69 @@ export default function LeadDetailsPage() {
 
 
 
+  //  ----------- Lawyers suggestion api call ---------------------
+
+  const serviceId = singleLead?.data?.serviceId?._id;
+
+  const {
+    data: lawyersData,
+    isLoading: isLawyersLoading,
+    isFetching,
+    isSuccess,
+  } = useGetAllServiceWiseLawyersSuggestionsQuery(
+    { page, LIMIT, serviceId },
+    {
+      skip: !serviceId,
+    }
+  );
+
+  //console.log('lawyersData', lawyersData);
+  useEffect(() => {
+    if (lawyersData && lawyersData?.data?.length > 0) {
+      setLawyers(lawyersData?.data);
+      setTotalPages(lawyersData?.pagination?.totalPage);
+      setTotalLawyersCount(lawyersData?.pagination?.total);
+    }
+  }, [lawyersData, lawyersData?.data]);
+
+  // console.log('totalLawyersCount', totalLawyersCount);
+  // console.log('lawyers', lawyers);
+
+  // Infinite scroll intersection observer
+  const loader = useRef(null);
+  useEffect(() => {
+    const scrollTarget = document.getElementById('scroll-target-for-data');
+    if (!scrollTarget) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting && !isFetching) {
+          if (totalPages && page >= totalPages) return;
+          setPage((prevPage) => prevPage + 1);
+        }
+      },
+      { root: scrollTarget, threshold: 1 }
+    );
+
+    const currentLoader = loader.current;
+    if (currentLoader) observer.observe(currentLoader);
+
+    return () => {
+      if (currentLoader) observer.unobserve(currentLoader);
+    };
+  }, [page, isFetching, totalPages]);
+
+  console.log({ page, isFetching, totalPages });
+
   const handleShowLeadResponseDetails = (response) => {
     setSelectedLeadResponse(response);
     setShowLeadResponseDetails(true);
   };
 
-  const isMobile = window.innerWidth <= 1280;
+  useEffect(() => {
+    setIsMobile(window.innerWidth <= 1280);
+  }, []);
 
   if (isSingleLeadLoading) {
     return <ResponseSkeleton />;
@@ -257,7 +326,7 @@ export default function LeadDetailsPage() {
           </div>
         </div>
         <div className={`${isMobile ? 'column-6' : 'right-column-5'}`}>
-          <div className="column-wrap-right px-4">
+          <div className="column-wrap-right px-4" id="scroll-target-for-data">
             <div className="flex w-full flex-col gap-6">
               <Tabs value={tabValue} onValueChange={setTabValue}>
                 <TabsList className="w-full justify-start gap-2 pb-4 border-b border-gray-200">
@@ -315,7 +384,20 @@ export default function LeadDetailsPage() {
                 </TabsContent>
                 <TabsContent value="find-lawyers">
                   <div className="my-3">
-                    <h4 className="font-medium heading-lg">Responses</h4>
+                    <h4 className="font-medium heading-lg mb-5 text-center">
+                      Total matched {totalLawyersCount}{' '}
+                      {totalLawyersCount === 1 ? 'lawyer' : 'lawyers'}
+                    </h4>
+                    <div className="flex flex-col gap-5">
+                      {lawyers?.map((lawyer, i) => (
+                        <LawyerCard key={i} lawyer={lawyer} id={id} />
+                      ))}
+                      <div ref={loader}>
+                        {isFetching && (
+                          <Loader className="w-5 h-5 animate-spin text-gray-500 mx-auto" />
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </TabsContent>
               </Tabs>

@@ -45,16 +45,20 @@ export default function PublicProfile() {
   const profile = userInfo?.data?.profile;
 
   const defaultValues = {
+    years: profile?.experience?.years ?? '',
+    months: profile?.experience?.months ?? '',
     experience: profile?.experience?.experience ?? '',
     experienceHighlight: profile?.experience?.experienceHighlight ?? '',
   };
 
   const handleSubmit = async (values) => {
     console.log('Submitting values:', values);
-    const { experience, experienceHighlight } = values;
+    const { years, months, experience, experienceHighlight } = values;
 
     const payload = {
       experience: {
+        years,
+        months,
         experience,
         experienceHighlight,
       },
@@ -93,13 +97,13 @@ export default function PublicProfile() {
           <TextInput
             type="number"
             label="Years"
-            name="law_society_member_number"
+            name="years"
             textColor="text-[#8E8E8E]"
           />
           <TextInput
             type="number"
             label="Months"
-            name="practising_certificate_number"
+            name="months"
             textColor="text-[#8E8E8E]"
           />
         </div>

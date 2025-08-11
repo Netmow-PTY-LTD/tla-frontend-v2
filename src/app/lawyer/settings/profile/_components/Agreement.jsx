@@ -1,5 +1,10 @@
 'use client';
 
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import {
+  useAuthUserInfoQuery,
+  useUpdateUserDataMutation,
+} from '@/store/features/auth/authApiService';
 import { ArrowDownToLine, Eye, File, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import React, { useState } from 'react';
@@ -9,7 +14,24 @@ export default function Agreement() {
   const [fileUrl, setFileUrl] = useState(null);
   const [fileType, setFileType] = useState(null);
 
-  const handleUpload = (e) => {
+  const {
+    data: userInfo,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useAuthUserInfoQuery(undefined, {
+    refetchOnMountOrArgChange: true, // keep data fresh
+  });
+
+  const savedAgreement = userInfo?.data?.profile?.agreement;
+
+  //console.log('savedAgreement', savedAgreement);
+
+  const [updateUserData, { isLoading: experienceIsLoading }] =
+    useUpdateUserDataMutation();
+
+  const handleUpload = async (e) => {
     const file = e.target.files?.[0];
 
     const allowedTypes = [
@@ -19,7 +41,7 @@ export default function Agreement() {
     ];
 
     if (!allowedTypes.includes(file.type)) {
-      alert('Only PDF or Word documents are allowed.');
+      showErrorToast('Only PDF or Word documents are allowed.');
       return;
     }
 
@@ -27,15 +49,48 @@ export default function Agreement() {
     setFileUrl(URL.createObjectURL(file));
     setFileType(file.type);
     e.target.value = ''; // Reset input
+
+    const formData = new FormData();
+    formData.append('agreementfiles', file);
+
+    try {
+      const res = await updateUserData(formData).unwrap();
+      if (res?.success === true) {
+        showSuccessToast(res?.message || 'Agreement updated successfully');
+        refetch();
+      }
+      console.log('Update response:', res);
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+      console.error('Error submitting form:', error);
+    }
   };
 
-  const handleRemove = () => {
-    // Revoke the object URL to avoid memory leaks
-    if (fileUrl) URL.revokeObjectURL(fileUrl);
-    setFileName(null);
-    setFileUrl(null);
-    setFileType(null);
+  const handleRemove = async () => {
+    try {
+      // Clear local state
+      if (fileUrl) URL.revokeObjectURL(fileUrl);
+      setFileName(null);
+      setFileUrl(null);
+      setFileType(null);
+
+      const formData = new FormData();
+      formData.append('agreementfiles', ''); // Send empty string to clear
+
+      const res = await updateUserData(formData).unwrap();
+      if (res?.success === true) {
+        showSuccessToast(res?.message || 'File removed successfully');
+        refetch();
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'Error removing file';
+      showErrorToast(errorMessage);
+      console.error('Error removing file:', error);
+    }
   };
+
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="max-w-[900px] mx-auto">
@@ -61,7 +116,7 @@ export default function Agreement() {
 
       <div className="mt-8 space-y-4">
         {/* Upload Box - hidden if file is uploaded */}
-        {!fileUrl && (
+        {!savedAgreement?.agreement && (
           <div>
             <label
               htmlFor="pdf-upload"
@@ -81,15 +136,15 @@ export default function Agreement() {
         )}
 
         {/* Uploaded file info */}
-        {fileName && fileUrl && (
+        {savedAgreement?.agreement && (
           <div className="flex flex-col gap-2 border border-gray-200 rounded px-4 py-3">
             <div className="flex items-center justify-between">
               <span className="text-gray-800 font-medium truncate">
-                {fileName}
+                {savedAgreement?.agreement}
               </span>
               <div className="flex gap-3 items-center">
                 <a
-                  href={fileUrl}
+                  href={savedAgreement?.agreement}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1 text-blue-600 hover:underline text-sm"
