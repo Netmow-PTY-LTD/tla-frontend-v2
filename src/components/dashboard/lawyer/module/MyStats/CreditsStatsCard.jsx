@@ -65,7 +65,7 @@ export default function CreditsStatsCard() {
               {creditStats?.currentCredits}
             </h4>
           </div>
-          <p className="text-xs text-gray-600 mt-1">Current Credits</p>
+          <p className="text-xs text-gray-600 mt-1">Available Credits</p>
         </div>
       </div>
     </Card>
