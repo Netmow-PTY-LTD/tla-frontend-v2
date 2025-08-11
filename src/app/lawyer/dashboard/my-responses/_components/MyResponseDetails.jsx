@@ -89,11 +89,7 @@ export default function MyResponseDetails({
     setOnlineMap((prev) => ({ ...prev, [userId]: isOnline }));
   });
 
-  useEffect(() => {
-    console.log("data", data);
-    console.log("onlineMap", onlineMap);
-  }, [data, onlineMap]);
-
+ 
   useNotifications(currentUserId, (data) => {
     // console.log('🔔 Notification:', data);
     if (data?.userId) {
