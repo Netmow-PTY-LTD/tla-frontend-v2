@@ -15,7 +15,7 @@ export const lawyerRegistrationStepTwoFormValidation = z
       ctx.addIssue({
         path: ['AreaZipcode'],
         code: z.ZodIssueCode.custom,
-        message: 'Area Zipcode is required.',
+        message: 'is required.',
       });
     } else if (!/^[0-9a-fA-F]{24}$/.test(data.AreaZipcode)) {
       ctx.addIssue({
@@ -36,7 +36,7 @@ export const lawyerRegistrationStepTwoFormValidation = z
       ctx.addIssue({
         path: ['rangeInKm'],
         code: z.ZodIssueCode.custom,
-        message: 'Range is required.',
+        message: 'is required.',
       });
     }
   });
@@ -56,7 +56,7 @@ export const lawyerRegistrationStepThreeFormValidation = z
     email: z.string().email('Invalid email address'),
     phone: z
       .string()
-      .min(1, 'Phone number is required')
+      .min(1, 'is required')
       .refine((val) => auPhoneRegex.test(val), {
         message:
           'Phone number must be a valid Australian number (e.g. +61412345678)',
@@ -64,7 +64,7 @@ export const lawyerRegistrationStepThreeFormValidation = z
 
     password: z.string().min(6, 'Password must be at least 6 characters'),
     gender: z.enum(['male', 'female', 'other'], {
-      required_error: 'Gender is required',
+      required_error: 'is required',
     }),
     law_society_member_number: z.string().min(1, '* Required'),
     practising_certificate_number: z.string().min(1, '* Required'),
@@ -84,7 +84,7 @@ export const lawyerRegistrationStepThreeFormValidation = z
         ctx.addIssue({
           path: ['company_name'],
           code: z.ZodIssueCode.custom,
-          message: 'Company name is required',
+          message: 'is required',
         });
       }
 
@@ -92,7 +92,7 @@ export const lawyerRegistrationStepThreeFormValidation = z
         ctx.addIssue({
           path: ['company_website'],
           code: z.ZodIssueCode.custom,
-          message: 'Company website is required',
+          message: 'is required',
         });
       } else {
         // ✅ Validate the URL format
@@ -110,7 +110,7 @@ export const lawyerRegistrationStepThreeFormValidation = z
         ctx.addIssue({
           path: ['company_size'],
           code: z.ZodIssueCode.custom,
-          message: 'Company size is required',
+          message: 'is required',
         });
       }
     }
