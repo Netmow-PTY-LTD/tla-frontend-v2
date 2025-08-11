@@ -144,7 +144,7 @@ export default function Accreditations() {
         <div className="flex items-center justify-between gap-5">
           <div>
             <h3 className="heading-lg font-semibold text-black">
-              Accreditations
+              Accreditations or Legal Practising Certificates
             </h3>
             <p className="text-sm text-[#8E8E8E] mt-2">
               Demonstrate your qualifications and professionalism by showcasing
