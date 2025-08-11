@@ -6,6 +6,7 @@ import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import Link from 'next/link';
 import { userDummyImage } from '@/data/data';
+import RespondersOnline from './RespondersOnline';
 
 const responsesLeads = [
   {
@@ -73,9 +74,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
     }
   };
 
-  const maxVisible = 5;
-  const visibleAvatars = user?.responders?.slice(0, maxVisible);
-  const extraCount = user?.responders?.length - maxVisible;
+
 
   return (
     <Card className="w-full max-w-full mx-auto">
@@ -226,30 +225,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
           </div>
         </div>
       </div>
-      <div className="px-3 py-2">
-        {user?.responders?.length > 0 && (
-          <div className="flex items-center gap-2">
-            <div className="text-[var(--color-black)] text-xs font-semibold">
-              Responders:
-            </div>
-            <div className="flex items-center gap-2">
-              {visibleAvatars.map((lead, index) => (
-                <img
-                  key={index}
-                  src={lead?.profilePicture || userDummyImage}
-                  alt="Avatar"
-                  className={`w-8 h-8 rounded-full border-2 border-white-500 object-cover`}
-                />
-              ))}
-              {extraCount > 0 && (
-                <div className="-ml-5 w-8 h-8 rounded-full bg-gray-300 text-gray-700 border-2 border-white flex items-center justify-center text-xs font-semibold">
-                  +{extraCount}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
+     <RespondersOnline user={user}/>
       {/* Footer Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">
         <Link
