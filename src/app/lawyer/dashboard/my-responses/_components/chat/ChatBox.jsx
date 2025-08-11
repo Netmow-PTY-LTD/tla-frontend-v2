@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { getSocket } from '@/lib/socket';
@@ -7,86 +8,130 @@ import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useGetChatHistoryQuery } from '@/store/features/lawyer/ResponseApiService';
 
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
 export default function ChatBox({ response }) {
   const responseId = response?._id;
-  const userId = useSelector(selectCurrentUser)?._id;
+  const currentUser = useSelector(selectCurrentUser);
+  const userId = currentUser?._id;
   const [message, setMessage] = useState('');
-  const [liveMessages, setLiveMessages] = useState([]); // only for socket messages
+  const [liveMessages, setLiveMessages] = useState([]);
   const socket = getSocket(userId);
 
-  // ✅ Fetch old messages from RTK Query
+  // ✅ Fetch old messages
   const { data: history = [], isLoading } = useGetChatHistoryQuery(responseId, {
-    skip: !responseId, // don't run if no responseId
+    skip: !responseId,
   });
 
+  console.log('messsage ==>',liveMessages)
+  // ✅ Load initial history
   useEffect(() => {
-   
-    setLiveMessages(history?.data)
- 
-  }, [history,responseId]);
+    setLiveMessages(history?.data || []);
+  }, [history, responseId]);
 
-
-  // ✅ Join room + listen for new messages
+  // ✅ Join room and listen for events (including unread messages)
   useEffect(() => {
     if (!responseId || !userId) return;
 
     socket.emit('joinRoom', { responseId, userId });
 
     socket.on('message', (data) => {
-      if (data.responseId === responseId) {
-        setLiveMessages((prev) => [...prev, data]);
-      }
+      // Append new incoming messages
+      setLiveMessages((prev) => [...prev, data]);
+    });
+
+    socket.on('unread-messages', (msgs) => {
+      // Merge unread messages without duplicates
+      setLiveMessages((prev) => {
+        const existingIds = new Set(prev.map((m) => m._id));
+        const newOnes = msgs.filter((m) => !existingIds.has(m._id));
+        return [...prev, ...newOnes];
+      });
+    });
+
+    socket.on('message-read', ({ messageId, userId: readerId }) => {
+      setLiveMessages((prev) =>
+        prev.map((msg) =>
+          msg._id === messageId
+            ? { ...msg, readBy: [...new Set([...(msg.readBy || []), readerId])] }
+            : msg
+        )
+      );
     });
 
     return () => {
       socket.off('message');
+      socket.off('unread-messages');
+      socket.off('message-read');
     };
   }, [responseId, userId, socket]);
 
   // ✅ Send message
   const sendMessage = () => {
     if (message.trim()) {
-      socket.emit('message', {
-        responseId,
-        from: userId,
-        message,
-      });
+      socket.emit('message', { responseId, from: userId, message });
       setMessage('');
     }
   };
 
+  // ✅ Emit read receipts for unseen messages
+  useEffect(() => {
+    if (!responseId || !userId) return;
 
+    liveMessages.forEach((m) => {
+      const senderId = typeof m.from === 'object' ? m.from._id : m.from;
+      if (!m.readBy?.includes(userId) && senderId !== userId) {
+        socket.emit('message-read', {
+          responseId,
+          messageId: m._id,
+          userId,
+        });
+      }
+    });
+  }, [liveMessages, responseId, userId, socket]);
 
   return (
     <div>
-      {/* Messages container */}
+      {/* Messages */}
       <div className="h-64 overflow-y-auto border rounded p-4 space-y-2">
         {isLoading ? (
           <div>Loading messages...</div>
         ) : (
-          Array.isArray(liveMessages) &&
           liveMessages.map((m, i) => {
-            const isCurrentUser =
-              typeof m.from === 'object' ? m.from._id === userId : m.from === userId;
+            const senderId = typeof m.from === 'object' ? m.from._id : m.from;
+            const isCurrentUser = senderId === userId;
+            const seenByOthers =
+              isCurrentUser && m.readBy?.some((id) => id !== userId);
 
             return (
               <div
-                key={i}
+                key={m._id || i}
                 className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`rounded p-2 max-w-[70%] ${
-                    isCurrentUser ? 'bg-blue-100 text-right' : 'bg-gray-100 text-left'
+                  className={`rounded p-2 max-w-[90%] ${
+                    isCurrentUser
+                      ? 'bg-blue-100 text-right'
+                      : 'bg-gray-100 text-left'
                   }`}
                 >
-                  <div className="text-sm font-semibold">
+                 <div className='flex items-center justify-between gap-4'>
+                    <p>{dayjs(m.createdAt).fromNow()}</p>
+                   <p className="text-sm font-semibold">
                     {isCurrentUser
                       ? 'You'
                       : typeof m.from === 'object'
-                      ? m.from.profile.name || m.from._id
+                      ? m.from.profile?.name || m.from._id
                       : m.from}
-                  </div>
+                  </p>
+                 
+                 </div>
                   <div>{m.message}</div>
+                  {isCurrentUser && seenByOthers && (
+                    <div className="text-xs text-blue-500 mt-1">Seen</div>
+                  )}
                 </div>
               </div>
             );
