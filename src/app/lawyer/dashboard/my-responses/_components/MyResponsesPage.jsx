@@ -27,23 +27,37 @@ export default function MyResponsesPage() {
   const responseId = searchParams.get('responseId');
   const router = useRouter();
   const scrollContainerRef = useRef(null);
+  let page_number = 1;
+
+  const saved = localStorage.getItem('responseFilters');
+
+  const defaultQueryParams = {
+    page: 1,
+    limit: 10,
+    sortBy: 'createdAt',
+    sortOrder: 'desc',
+    keyword: '',
+    spotlight: '',
+    clientActions: '',
+    actionsTaken: '',
+    leadSubmission: '',
+  };
 
   const [queryParams, setQueryParams] = useState(() => {
-    const saved = localStorage.getItem('responseFilters');
+    if (saved) {
+      const savedObj = JSON.parse(saved);
 
-    return saved
-      ? JSON.parse(saved)
-      : {
-          page: 1,
-          limit: 10,
-          sortBy: 'createdAt',
-          sortOrder: 'desc',
-          keyword: '',
-          spotlight: '',
-          clientActions: '',
-          actionsTaken: '',
-          leadSubmission: '',
-        };
+      // Remove page & limit before comparison
+      const { page: _, limit: __, ...restSaved } = savedObj;
+      const { page: ___, limit: ____, ...restDefault } = defaultQueryParams;
+
+      const isSameIgnoringPageLimit =
+        JSON.stringify(restSaved) === JSON.stringify(restDefault);
+
+      return isSameIgnoringPageLimit ? defaultQueryParams : savedObj;
+    }
+
+    return defaultQueryParams;
   });
 
   console.log('queryParams in MyResponsesPage', queryParams);
