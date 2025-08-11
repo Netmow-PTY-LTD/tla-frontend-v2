@@ -8,113 +8,143 @@ import { useEffect, useState } from 'react';
 import { useGetChatHistoryQuery } from '@/store/features/lawyer/ResponseApiService';
 
 export default function ChatBoxForLead({ response }) {
-    const responseId = response?._id;
-    const userId = useSelector(selectCurrentUser)?._id;
-    const [message, setMessage] = useState('');
-    const [liveMessages, setLiveMessages] = useState([]); // only for socket messages
-    const socket = getSocket(userId);
+  const responseId = response?._id;
+  const currentUser = useSelector(selectCurrentUser);
+  const userId = currentUser?._id;
+  const [message, setMessage] = useState('');
+  const [liveMessages, setLiveMessages] = useState([]);
+  const socket = getSocket(userId);
 
-    // ✅ Fetch old messages from RTK Query
-    const { data: history = [], isLoading } = useGetChatHistoryQuery(responseId, {
-        skip: !responseId, // don't run if no responseId
+  // ✅ Fetch old messages
+  const { data: history = [], isLoading } = useGetChatHistoryQuery(responseId, {
+    skip: !responseId,
+  });
+
+  // ✅ Load initial history
+  useEffect(() => {
+    setLiveMessages(history?.data || []);
+  }, [history, responseId]);
+
+  // ✅ Join room and listen for events (including unread messages)
+  useEffect(() => {
+    if (!responseId || !userId) return;
+
+    socket.emit('joinRoom', { responseId, userId });
+
+    socket.on('message', (data) => {
+      // Append new incoming messages
+      setLiveMessages((prev) => [...prev, data]);
     });
 
+    socket.on('unread-messages', (msgs) => {
+      // Merge unread messages without duplicates
+      setLiveMessages((prev) => {
+        const existingIds = new Set(prev.map((m) => m._id));
+        const newOnes = msgs.filter((m) => !existingIds.has(m._id));
+        return [...prev, ...newOnes];
+      });
+    });
 
-    useEffect(() => {
+    socket.on('message-read', ({ messageId, userId: readerId }) => {
+      setLiveMessages((prev) =>
+        prev.map((msg) =>
+          msg._id === messageId
+            ? { ...msg, readBy: [...new Set([...(msg.readBy || []), readerId])] }
+            : msg
+        )
+      );
+    });
 
-        setLiveMessages(history?.data)
-
-    }, [history, responseId]);
-
-
-
-
-    // ✅ Join room + listen for new messages
-    useEffect(() => {
-        if (!responseId || !userId) return;
-
-        socket.emit('joinRoom', { responseId, userId });
-
-        socket.on('message', (data) => {
-            if (data.responseId === responseId) {
-                setLiveMessages((prev) => [...prev, data]);
-            }
-        });
-
-        return () => {
-            socket.off('message');
-        };
-    }, [responseId, userId, socket]);
-
-    // ✅ Send message
-    const sendMessage = () => {
-        if (message.trim()) {
-            socket.emit('message', {
-                responseId,
-                from: userId,
-                message,
-            });
-            setMessage('');
-        }
+    return () => {
+      socket.off('message');
+      socket.off('unread-messages');
+      socket.off('message-read');
     };
+  }, [responseId, userId, socket]);
 
+  // ✅ Send message
+  const sendMessage = () => {
+    if (message.trim()) {
+      socket.emit('message', { responseId, from: userId, message });
+      setMessage('');
+    }
+  };
 
+  // ✅ Emit read receipts for unseen messages
+  useEffect(() => {
+    if (!responseId || !userId) return;
 
-    return (
-        <div>
-            {/* Messages container */}
-            <div className="h-64 overflow-y-auto border rounded p-4 space-y-2">
-                {isLoading ? (
-                    <div>Loading messages...</div>
-                ) : (
-                    Array.isArray(liveMessages) &&
-                    liveMessages?.map((m, i) => {
-                        const isCurrentUser =
-                            typeof m.from === 'object' ? m.from._id === userId : m.from === userId;
+    liveMessages.forEach((m) => {
+      const senderId = typeof m.from === 'object' ? m.from._id : m.from;
+      if (!m.readBy?.includes(userId) && senderId !== userId) {
+        socket.emit('message-read', {
+          responseId,
+          messageId: m._id,
+          userId,
+        });
+      }
+    });
+  }, [liveMessages, responseId, userId, socket]);
 
-                            console.log(' m.from.profile.name', m.from?.profile?.name)
+  return (
+    <div>
+      {/* Messages */}
+      <div className="h-64 overflow-y-auto border rounded p-4 space-y-2">
+        {isLoading ? (
+          <div>Loading messages...</div>
+        ) : (
+          liveMessages.map((m, i) => {
+            const senderId = typeof m.from === 'object' ? m.from._id : m.from;
+            const isCurrentUser = senderId === userId;
+            const seenByOthers =
+              isCurrentUser && m.readBy?.some((id) => id !== userId);
 
-
-                        return (
-                            <div
-                                key={i}
-                                className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}
-                            >
-                                <div
-                                    className={`rounded p-2 max-w-[70%] ${isCurrentUser ? 'bg-blue-100 text-right' : 'bg-gray-100 text-left'
-                                        }`}
-                                >
-                                    <div className="text-sm font-semibold">
-                                        {isCurrentUser
-                                            ? 'You'
-                                            : typeof m.from === 'object'
-                                                ? m.from.profile.name || m.from._id
-                                                : m.from}
-                                    </div>
-                                    <div>{m.message}</div>
-                                </div>
-                            </div>
-                        );
-                    })
-                )}
-            </div>
-
-            {/* Input */}
-            <div className="flex gap-2 mt-4">
-                <input
-                    className="flex-1 border p-2 rounded"
-                    placeholder="Type a message..."
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                />
-                <button
-                    onClick={sendMessage}
-                    className="bg-blue-600 text-white px-4 py-2 rounded"
+            return (
+              <div
+                key={m._id || i}
+                className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}
+              >
+                <div
+                  className={`rounded p-2 max-w-[70%] ${
+                    isCurrentUser
+                      ? 'bg-blue-100 text-right'
+                      : 'bg-gray-100 text-left'
+                  }`}
                 >
-                    Send
-                </button>
-            </div>
-        </div>
-    );
+                  <div className="text-sm font-semibold">
+                    {isCurrentUser
+                      ? 'You'
+                      : typeof m.from === 'object'
+                      ? m.from.profile?.name || m.from._id
+                      : m.from}
+                  </div>
+                  <div>{m.message}</div>
+                  {isCurrentUser && seenByOthers && (
+                    <div className="text-xs text-blue-500 mt-1">Seen</div>
+                  )}
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* Input */}
+      <div className="flex gap-2 mt-4">
+        <input
+          className="flex-1 border p-2 rounded"
+          placeholder="Type a message..."
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+        />
+        <button
+          onClick={sendMessage}
+          className="bg-blue-600 text-white px-4 py-2 rounded"
+        >
+          Send
+        </button>
+      </div>
+    </div>
+  );
 }
