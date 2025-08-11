@@ -8,6 +8,7 @@ export const lawyerSettingAboutSchema = z.object({
     .string({ invalid_type_error: 'Name must be a string' })
     .min(1, { message: 'Name is required' }),
   designation: z.string().optional(),
+  languages: z.array(z.string()).min(1, 'Please select at least one language'),
   phone: z
     .string({ invalid_type_error: 'phone must be a string' })
     .min(1, { message: 'Phone is required' }),

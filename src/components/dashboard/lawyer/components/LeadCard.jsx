@@ -70,6 +70,8 @@ const LeadCard = ({
 
   const isSelected = selectedLead?._id === user?._id;
 
+  console.log('user', user);
+
   return (
     <Card
       className={`w-full max-w-full mx-auto flex flex-col cursor-pointer ${

@@ -23,6 +23,7 @@ import ChangePassword from '@/app/client/_components/ChangePassword';
 import { Label } from '@/components/ui/label';
 import { useFormContext, useWatch } from 'react-hook-form';
 import GenderRadioField from '@/components/form/GenderRadioField';
+import MultiTagSelector from './MultiTagSelector';
 
 const genderOptions = [
   { id: 1, label: 'Male', value: 'male' },
@@ -225,6 +226,8 @@ export default function About() {
             your legal experience, areas of expertise, and what sets you apart.
             Building trust starts with a clear, professional introduction.
           </p>
+
+          <MultiTagSelector name="languages" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-7 mb-7">
             <TextInput
               label="Phone Number"

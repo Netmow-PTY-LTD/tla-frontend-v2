@@ -13,6 +13,7 @@ import { DynamicAccordion } from '@/components/UIComponents/AcordionComponent';
 import PublicProfile from './_components/PublicProfile';
 import { Loader } from 'lucide-react';
 import MediaTest from './_components/MediaTest';
+import Agreement from './_components/Agreement';
 
 export default function MyProfilePage() {
   const accordionItems = [
@@ -33,8 +34,13 @@ export default function MyProfilePage() {
     },
     {
       id: 'accreditations',
-      title: 'Accreditations',
+      title: 'Accreditations or Legal Practising Certificates',
       content: <Accreditations />,
+    },
+    {
+      id: 'agreement',
+      title: 'Agreement',
+      content: <Agreement />,
     },
     {
       id: 'qa',

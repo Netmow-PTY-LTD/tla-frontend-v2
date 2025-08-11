@@ -10,6 +10,7 @@ import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor
 import FormWrapper from '@/components/form/FromWrapper';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import AboutFormActions from './about/AboutFormAction';
+import TextInput from '@/components/form/TextInput';
 
 export default function PublicProfile() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -80,6 +81,28 @@ export default function PublicProfile() {
   return (
     <div className="max-w-[900px] mx-auto">
       <FormWrapper onSubmit={handleSubmit} defaultValues={defaultValues}>
+        <h3 className="text-black font-semibold heading-lg">
+          Year of Experience
+        </h3>
+        <p className="mt-[10px] mb-8 text-[#6e6e6e]">
+          Clearly describe your areas of legal practice and past experience —
+          providing specific details helps clients feel assured they’re choosing
+          a knowledgeable and capable lawyer.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-7">
+          <TextInput
+            type="number"
+            label="Years"
+            name="law_society_member_number"
+            textColor="text-[#8E8E8E]"
+          />
+          <TextInput
+            type="number"
+            label="Months"
+            name="practising_certificate_number"
+            textColor="text-[#8E8E8E]"
+          />
+        </div>
         <div>
           <h3 className="text-black font-semibold heading-lg">Experiences</h3>
           <p className="mt-[10px] mb-8 text-[#6e6e6e]">
