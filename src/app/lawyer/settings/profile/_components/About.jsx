@@ -76,6 +76,7 @@ export default function About() {
     companyName: profile?.companyProfile?.companyName ?? '',
     name: profile?.name ?? '',
     designation: profile?.designation ?? '',
+    languages: profile?.languages ?? [],
     address: profile?.address ?? '',
     phone: profile?.phone ?? '',
     gender: profile?.gender ?? '',
@@ -110,6 +111,7 @@ export default function About() {
       const {
         name,
         designation,
+        languages,
         address,
         phone,
         gender,
@@ -144,6 +146,7 @@ export default function About() {
         userProfile: {
           name,
           designation,
+          languages,
           address,
           phone,
           gender,
