@@ -40,7 +40,7 @@ import SendMailModalForClient from './my-leads/SendMailModalForClient';
 import SendSmsModalClient from './my-leads/SendSmsModalClient';
 import ChatBoxForLead from './chat/ChatBoxForLead';
 
-export default function LeadResponseDetails({ onBack, response }) {
+export default function LeadResponseDetails({ onBack, response, onlineMap }) {
   const [activeTab, setActiveTab] = useState('activity');
   const [isExpanded, setIsExpanded] = useState(false);
   const [openMail, setOpenMail] = useState(false);
@@ -148,7 +148,7 @@ export default function LeadResponseDetails({ onBack, response }) {
             '_blank'
           );
         }
-      } catch (error) {}
+      } catch (error) { }
     }
     if (type === 'sendemail') {
       setOpenMail(true);
@@ -207,12 +207,26 @@ export default function LeadResponseDetails({ onBack, response }) {
                 />
               </figure>
               <div>
-                <h2 className="font-medium heading-md">
+               <div className='flex items-center gap-3'>
+                 <h2 className="font-medium heading-md">
                   {singleResponse?.data?.responseBy?.name}
                 </h2>
+                 <span className="text-xs">
+                  <div className="flex items-center gap-2 text-sm">
+                    <span
+                      className={`w-2 h-2 rounded-full ${onlineMap[response?.responseBy?.user?._id] ? "bg-green-500" : "bg-gray-400"
+                        }`}
+                    ></span>
+                    <span className="text-gray-700">
+                      {onlineMap[response?.responseBy?.user?._id] ? "Online" : "Offline"}
+                    </span>
+                  </div>
+                </span>
+               </div>
                 <p className="text-gray-500 mt-2">
                   {singleResponse?.data?.responseBy?.address}
                 </p>
+               
               </div>
             </div>
             {/* Current Status */}
@@ -277,21 +291,19 @@ export default function LeadResponseDetails({ onBack, response }) {
               <div className="flex border-b border-gray-200 gap-6">
                 <button
                   onClick={() => setActiveTab('activity')}
-                  className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                    activeTab === 'activity'
+                  className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
                       ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
                       : 'hover:text-black'
-                  }`}
+                    }`}
                 >
                   Activity
                 </button>
                 <button
                   onClick={() => setActiveTab('chat')}
-                  className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                    activeTab === 'chat'
+                  className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'chat'
                       ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
                       : 'hover:text-black'
-                  }`}
+                    }`}
                 >
                   Chat
                 </button>
@@ -318,18 +330,16 @@ export default function LeadResponseDetails({ onBack, response }) {
                       return (
                         <Fragment key={index}>
                           <div
-                            className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${
-                              index === 0 ? '' : 'border-l border-[#e6e7ec]'
-                            }`}
+                            className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${index === 0 ? '' : 'border-l border-[#e6e7ec]'
+                              }`}
                           >
                             {formattedDate}
                           </div>
                           {activity?.logs?.map((item, i) => {
                             return (
                               <div
-                                className={`activity-log-item flex gap-2 ${
-                                  index === 0 && i === 0 ? 'first-log-item' : ''
-                                }`}
+                                className={`activity-log-item flex gap-2 ${index === 0 && i === 0 ? 'first-log-item' : ''
+                                  }`}
                                 key={i}
                               >
                                 <div className="left-track flex-grow-0 flex flex-col w-[32px] items-center">
@@ -374,9 +384,9 @@ export default function LeadResponseDetails({ onBack, response }) {
                   </div>
                 )}
                 {activeTab === 'chat' && (
-               <div>
-                <ChatBoxForLead response={response} />
-               </div>
+                  <div>
+                    <ChatBoxForLead response={response} />
+                  </div>
                 )}
               </div>
             </div>

@@ -100,10 +100,7 @@ export default function LeadDetailsPage() {
     setOnlineMap((prev) => ({ ...prev, [userId]: isOnline }));
   });
 
-  useEffect(() => {
-    console.log('data', data);
-    console.log('onlineMap', onlineMap);
-  }, [data, onlineMap]);
+
 
   const handleShowLeadResponseDetails = (response) => {
     setSelectedLeadResponse(response);
@@ -294,6 +291,7 @@ export default function LeadDetailsPage() {
                         <LeadResponseDetails
                           onBack={() => setShowLeadResponseDetails(false)}
                           response={selectedLeadResponse}
+                          onlineMap={onlineMap}
                         />
                       ) : (
                         <div className="leads-bottom-row">
