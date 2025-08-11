@@ -37,6 +37,14 @@ export const SellerSidebarItems = {
       icon: Settings,
       isActive: true,
     },
+
+    {
+      title: 'Requests',
+      // url: '/lawyer/dashboard/general-faqs',
+      url: '/lawyer/dashboard/requests',
+      icon: CircleHelp,
+      // isActive: true,
+    },
     // {
     //   title: 'Helps',
     //   url: '#',
@@ -51,6 +59,7 @@ export const SellerSidebarItems = {
       target: true,
       // isActive: true,
     },
+
     // {
     //   title: 'Tutorials',
     //   // url: '/lawyer/dashboard/tutorials',

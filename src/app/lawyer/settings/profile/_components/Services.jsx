@@ -44,7 +44,7 @@ export default function Services() {
     <div className="max-w-[900px] mx-auto">
       <div className="flex justify-between items-center gap-5">
         <div>
-          <h3 className="text-black font-semibold heading-lg">Your Skills</h3>
+          <h3 className="text-black font-semibold heading-lg">Your Services</h3>
 
           <p className="mt-[10px] text-[#6e6e6e]">
             List the legal services you offer so we can connect you with the

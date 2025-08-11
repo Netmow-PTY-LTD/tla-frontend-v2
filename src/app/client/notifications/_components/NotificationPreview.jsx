@@ -151,36 +151,6 @@ export default function NotificationPreview() {
     <div className="p-4">
       <h2 className="text-xl font-semibold mb-4">All Notifications</h2>
       <div className="max-w-[1100px] mx-auto">
-        {/* <ul>
-          {paginatedData?.map((n) => (
-            <li key={n._id} className="mb-2 border p-3 rounded bg-white">
-              <div className="flex justify-between items-start">
-                <div className="flex gap-2">
-                  {generateActivityIcon(n.type)}
-                  <div>
-                    <p className="font-medium leading-none">{n.title}</p>
-                    <p className="text-sm text-gray-600 mt-1">{n.message}</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <span className="text-xs text-red-500">
-                    {' '}
-                    {dayjs(n.createdAt).fromNow()}
-                  </span>
-                  {!n.isRead && (
-                    <button
-                      className="text-sm text-blue-600 hover:underline"
-                      onClick={() => handleMarkAsRead(n._id)}
-                    >
-                      Mark as Read
-                    </button>
-                  )}
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul> */}
-
         {groupedData.length > 0 && (
           <div className="bg-white rounded-lg relative p-4">
             {groupedData.map((group, groupIndex) => (
