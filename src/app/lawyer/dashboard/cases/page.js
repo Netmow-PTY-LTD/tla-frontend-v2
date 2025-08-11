@@ -160,6 +160,7 @@ const LeadsBoardPage = () => {
                       onBack={() => setShowLeadDetails(false)}
                       singleLead={selectedLeadData?.data}
                       isSingleLeadLoading={isSingleLeadLoading}
+                      data={leads}
                     />
                   </div>
                 )}
