@@ -19,6 +19,43 @@ export default function CompanyLocation() {
   const mapSrc = `https://www.google.com/maps?q=${mapQuery}&output=embed`;
 
   useEffect(() => {
+    let autocomplete;
+
+    const initAutocomplete = () => {
+      const input = document.getElementById('address-input');
+      if (!input) return;
+
+      autocomplete = new google.maps.places.Autocomplete(input, {
+        fields: ['geometry', 'formatted_address'],
+      });
+
+      // ✅ Restrict search to Australia
+      autocomplete.setComponentRestrictions({
+        country: ['aus'],
+      });
+
+      autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace();
+        if (place.geometry) {
+          setValue('location.address', place.formatted_address);
+          setValue('location.coordinates.lat', place.geometry.location.lat());
+          setValue('location.coordinates.lng', place.geometry.location.lng());
+        }
+      });
+    };
+
+    // ✅ Wait until Google script is loaded
+    if (typeof window !== 'undefined') {
+      if (window.google && window.google.maps && window.google.maps.places) {
+        initAutocomplete();
+      } else {
+        window.initMap = initAutocomplete; // fallback if loading script dynamically
+      }
+    }
+  }, [setValue]);
+
+  // Still keep geocode fetch in case address changes without using autocomplete
+  useEffect(() => {
     const fetchCoordinates = async () => {
       if (!address) return;
 
@@ -26,7 +63,7 @@ export default function CompanyLocation() {
         const res = await fetch(
           `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
             address
-          )}&key=YOUR_GOOGLE_MAPS_API_KEY` // Replace with your actual API key
+          )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
         );
         const data = await res.json();
 
@@ -74,6 +111,7 @@ export default function CompanyLocation() {
             name="location.address"
             placeholder="Enter the company address"
             textColor="text-[#6e6e6e]"
+            id="address-input"
           />
 
           <div className="flex items-center justify-start space-x-3 pt-4">

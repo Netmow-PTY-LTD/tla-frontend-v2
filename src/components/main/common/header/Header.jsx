@@ -44,8 +44,6 @@ export default function Header() {
     skip: !token,
   });
 
- 
-
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const handleScroll = () => {

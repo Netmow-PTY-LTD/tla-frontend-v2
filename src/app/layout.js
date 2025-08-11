@@ -5,6 +5,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { SocketProvider } from '@/contexts/SocketContext';
 import { Suspense } from 'react';
 import Preloader from '@/components/Preloader';
+import Script from 'next/script';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -29,6 +30,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
+          strategy="afterInteractive"
+        />
+      </head>
       <body className={`${poppins.variable} antialiased`}>
         <ReduxProvider>
           <Suspense fallback={<Preloader />}>
