@@ -6,15 +6,15 @@ const auPhoneRegex = /^(?:\+?61|0)[2-478]\d{8}$/;
 export const lawyerSettingAboutSchema = z.object({
   name: z
     .string({ invalid_type_error: 'Name must be a string' })
-    .min(1, { message: 'Name is required' }),
+    .min(1, { message: 'is required' }),
   designation: z.string().optional(),
   languages: z.array(z.string()).min(1, 'Please select at least one language'),
   phone: z
     .string({ invalid_type_error: 'phone must be a string' })
-    .min(1, { message: 'Phone is required' }),
+    .min(1, { message: 'is required' }),
   bio: z.string({ invalid_type_error: 'Bio must be a string' }),
   gender: z.enum(['male', 'female', 'other'], {
-    required_error: 'Gender is required',
+    required_error: 'is required',
   }),
   law_society_member_number: z
     .string()
