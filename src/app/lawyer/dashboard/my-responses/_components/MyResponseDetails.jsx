@@ -44,7 +44,7 @@ import SendSmsModal from './modal/SendSmsModal';
 import { getCompactTimeAgo } from '@/helpers/formatTime';
 import { userDummyImage } from '@/data/data';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNotifications } from '@/hooks/useSocketListener';
+import { useNotifications, useRealTimeStatus } from '@/hooks/useSocketListener';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import ChatBox from './chat/ChatBox';
 
@@ -55,12 +55,14 @@ export default function MyResponseDetails({
   setIsLoading,
   singleResponse,
   isSingleResponseLoading,
+  data
 }) {
   const [activeTab, setActiveTab] = useState('activity');
   const [isExpanded, setIsExpanded] = useState(false);
   const [openMail, setOpenMail] = useState(false);
   const [openSms, setOpenSms] = useState(false);
-  const currentUser = useSelector(selectCurrentUser);
+  const [onlineMap, setOnlineMap] = useState({});
+  const currentUserId = useSelector(selectCurrentUser)?._id;
   // const {
   //   data: singleResponse,
   //   isLoading,
@@ -75,14 +77,31 @@ export default function MyResponseDetails({
 
   const toUser = singleResponse?.data?.leadId?.userProfileId?.user?._id;
 
-  useNotifications(currentUser?._id, (data) => {
+  const leadUser = singleResponse?.data?.leadId?.userProfileId?.user?._id;
+
+
+  // Safely extract user IDs from AllLeadData
+  const userIds =
+    data?.map((response) => response?.leadId?.userProfileId?.user) || [];
+
+  // ✅ Use hook directly (at top level of component)
+  useRealTimeStatus(currentUserId, userIds, (userId, isOnline) => {
+    setOnlineMap((prev) => ({ ...prev, [userId]: isOnline }));
+  });
+
+  useEffect(() => {
+    console.log("data", data);
+    console.log("onlineMap", onlineMap);
+  }, [data, onlineMap]);
+
+  useNotifications(currentUserId, (data) => {
     // console.log('🔔 Notification:', data);
     if (data?.userId) {
       refetch();
     }
   });
 
-  useNotifications(currentUser?._id, (data) => {
+  useNotifications(currentUserId, (data) => {
     // console.log('🔔 Notification:', data);
     if (data?.userId) {
       refetch();
@@ -207,7 +226,7 @@ export default function MyResponseDetails({
             '_blank'
           );
         }
-      } catch (error) {}
+      } catch (error) { }
     }
     if (type === 'sendemail') {
       setOpenMail(true);
@@ -277,12 +296,27 @@ export default function MyResponseDetails({
                 </figure>
 
                 <div>
-                  <h2 className="font-medium heading-md">
-                    {singleResponse?.data?.leadId?.userProfileId?.name}
-                  </h2>
+                  <div className='flex items-center  gap-3'>
+                    <h2 className="font-medium heading-md">
+                      {singleResponse?.data?.leadId?.userProfileId?.name}
+                    </h2>
+                     <span className="text-xs">
+                    <div className="flex items-center gap-2 text-sm">
+                      <span
+                        className={`ml-2 w-2 h-2 rounded-full ${onlineMap[leadUser] ? 'bg-green-500' : 'bg-gray-400'
+                          }`}
+                      ></span>
+                      <span className="text-gray-700">
+                        {onlineMap[leadUser] ? 'Online' : 'Offline'}
+                      </span>
+                    </div>
+                  </span>
+                  </div>
+
                   <p className="text-gray-500 mt-2">
                     {singleResponse?.data?.leadId?.userProfileId?.address}
                   </p>
+                 
                 </div>
               </div>
               {/* Current Status */}
@@ -382,21 +416,19 @@ export default function MyResponseDetails({
                 <div className="flex border-b border-gray-200 gap-6">
                   <button
                     onClick={() => setActiveTab('activity')}
-                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                      activeTab === 'activity'
-                        ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                        : 'hover:text-black'
-                    }`}
+                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
+                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                      : 'hover:text-black'
+                      }`}
                   >
                     Activity
                   </button>
                   <button
                     onClick={() => setActiveTab('lead-details')}
-                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                      activeTab === 'lead-details'
-                        ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                        : 'hover:text-black'
-                    }`}
+                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'lead-details'
+                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                      : 'hover:text-black'
+                      }`}
                   >
                     Case Details
                   </button>
@@ -412,11 +444,10 @@ export default function MyResponseDetails({
                 </button> */}
                   <button
                     onClick={() => setActiveTab('chat')}
-                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                      activeTab === 'lead-details'
-                        ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                        : 'hover:text-black'
-                    }`}
+                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'lead-details'
+                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                      : 'hover:text-black'
+                      }`}
                   >
                     chat
                   </button>
@@ -443,20 +474,18 @@ export default function MyResponseDetails({
                         return (
                           <Fragment key={index}>
                             <div
-                              className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${
-                                index === 0 ? '' : 'border-l border-[#e6e7ec]'
-                              }`}
+                              className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${index === 0 ? '' : 'border-l border-[#e6e7ec]'
+                                }`}
                             >
                               {formattedDate}
                             </div>
                             {activity?.logs?.map((item, i) => {
                               return (
                                 <div
-                                  className={`activity-log-item flex gap-2 ${
-                                    index === 0 && i === 0
-                                      ? 'first-log-item'
-                                      : ''
-                                  }`}
+                                  className={`activity-log-item flex gap-2 ${index === 0 && i === 0
+                                    ? 'first-log-item'
+                                    : ''
+                                    }`}
                                   key={i}
                                 >
                                   <div className="left-track flex-grow-0 flex flex-col w-[32px] items-center">

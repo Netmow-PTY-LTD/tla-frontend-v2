@@ -235,6 +235,7 @@ export default function MyResponsesPage() {
                   singleResponse={singleResponse}
                   isSingleResponseLoading={isSingleResponseLoading}
                   singleResponseRefetch={singleResponseRefetch}
+                  data={responses || []}
                 />
               </div>
             </div>
