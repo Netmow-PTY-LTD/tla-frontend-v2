@@ -1,18 +1,104 @@
+'use client';
+
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { userDummyImage } from '@/data/data';
+import { useGetAllRequestsFromClientQuery } from '@/store/features/public/publicApiService';
+import Link from 'next/link';
 import React from 'react';
 
 export default function ClientRequests() {
-  return (
-    <div className="p-4">
-      <h2 className="text-xl font-semibold mb-4">All Requests</h2>
-      <div className="max-w-[1100px] mx-auto">
-        <div className="bg-white p-4 rounded-lg">
-          <div className="flex-1 flex items-start justify-between mb-4 py-3 px-4 rounded-lg border border-gray-200">
-            <div className="flex flex-col">
-              <div className="text-gray-500 mb-1">Title</div>
-              <div className="text-sm text-black font-medium">Message</div>
+  const { data: requestsFromClients, isLoading: isClientRequestsLoading } =
+    useGetAllRequestsFromClientQuery();
+
+  const requests = requestsFromClients?.data;
+  //console.log('requests', requests);
+
+  if (isClientRequestsLoading) {
+    return (
+      <div className="p-6 space-y-8 animate-pulse">
+        {/* Header section */}
+        <div className="space-y-3">
+          <Skeleton className="h-8 w-1/2" />
+          <Skeleton className="h-4 w-1/3" />
+        </div>
+
+        {/* Content blocks */}
+        {Array.from({ length: 5 }).map((_, idx) => (
+          <div key={idx} className="flex gap-4">
+            {/* Avatar skeleton */}
+            <Skeleton className="h-14 w-14 rounded-full flex-shrink-0" />
+            {/* Text block */}
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-2/3" />
+              <Skeleton className="h-4 w-1/2" />
             </div>
           </div>
+        ))}
+
+        {/* Table or card-like block */}
+        <div className="space-y-4 mt-8">
+          <Skeleton className="h-6 w-1/3" />
+          {Array.from({ length: 4 }).map((_, idx) => (
+            <div key={idx} className="flex gap-4 items-center">
+              <Skeleton className="h-4 w-1/6" />
+              <Skeleton className="h-4 w-1/4" />
+              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="h-4 w-1/5" />
+            </div>
+          ))}
         </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-4 max-w-[1100px] mx-auto">
+      <h2 className="text-xl font-semibold mb-4">All Requests</h2>
+      <div className="">
+        {requests?.length === 0 && <p>Currently there are no requests.</p>}
+        {requests?.length > 0 && (
+          <div className="bg-white p-4 rounded-lg">
+            {requests?.map((request, index) => (
+              <div
+                className={`flex items-center justify-between gap-4 py-3 px-4 rounded-lg border border-gray-200 ${
+                  index === 0 && index === requests?.length - 1 ? '' : 'mb-4'
+                }`}
+                key={index}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="flex-shrink-0">
+                    <img
+                      src={
+                        request?.leadId?.userProfileId?.profilePicture ||
+                        userDummyImage
+                      }
+                      alt={request?.leadId?.userProfileId?.name || ''}
+                      className="w-10 h-10 rounded-full"
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="text-gray-500 mb-1">
+                      {request?.leadId?.userProfileId?.name}
+                    </div>
+                    <div className="text-sm text-black font-medium">
+                      {request?.message}
+                    </div>
+                  </div>
+                </div>
+                <Link
+                  href={`/lawyer/dashboard/requests/${request?.leadId?._id}`}
+                >
+                  <Button variant="outline" size="sm">
+                    View Details
+                  </Button>
+                </Link>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* {paginatedData?.length === 0 && <p>No notifications found.</p>}
         {paginatedData?.length > 0 && (
           <div className="flex justify-center gap-1 mt-10 flex-wrap">

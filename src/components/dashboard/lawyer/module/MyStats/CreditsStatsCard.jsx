@@ -1,21 +1,34 @@
 'use client';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useGetUserCreditStatsQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 import { CheckCircle, CreditCard, Flame, Wallet } from 'lucide-react';
+import Link from 'next/link';
 import React from 'react';
 
 export default function CreditsStatsCard() {
   const { data } = useGetUserCreditStatsQuery();
   const creditStats = data?.data || {};
   return (
-    <Card className="w-full  bg-white shadow-sm rounded-2xl">
-      <div className="w-full p-4 text-center md:text-left">
-        <h3 className="heading-md font-semibold text-black mb-1">
-          My Credits Overview
-        </h3>
-        <p className="text-xs text-gray-500">
-          Track your credit usage and balance
-        </p>
+    <Card className="w-full bg-white shadow-sm rounded-2xl">
+      <div className="flex justify-between items-center gap-4 p-4">
+        <div className="w-full text-center md:text-left">
+          <h3 className="heading-md font-semibold text-black mb-1">
+            My Credits Overview
+          </h3>
+          <p className="text-xs text-gray-500">
+            Track your credit usage and balance
+          </p>
+        </div>
+        <Link href="/lawyer/settings/credit-payment">
+          <Button
+            variant="primary"
+            size="sm"
+            className="bg-[var(--secondary-color)] text-white"
+          >
+            Buy Credit
+          </Button>
+        </Link>
       </div>
 
       <hr className="border-t  border-[#D9D9D9]" />

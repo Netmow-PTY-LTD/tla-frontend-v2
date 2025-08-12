@@ -30,14 +30,14 @@ const publicApiService = baseApi.injectEndpoints({
         method: 'PATCH',
         body,
       }),
-      invalidatesTags: ['Country','Country-list'],
+      invalidatesTags: ['Country', 'Country-list'],
     }),
     deleteCountry: builder.mutation({
       query: (id) => ({
         url: `/country/delete/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Country','Country-list'],
+      invalidatesTags: ['Country', 'Country-list'],
     }),
     // ----------- Zip code related ----------
     addZipCode: builder.mutation({
@@ -68,14 +68,14 @@ const publicApiService = baseApi.injectEndpoints({
         method: 'PATCH',
         body,
       }),
-      invalidatesTags: ['zipcode','zipcode-list'],
+      invalidatesTags: ['zipcode', 'zipcode-list'],
     }),
     deleteZipCode: builder.mutation({
       query: (id) => ({
         url: `/country/zipcode/delete/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['zipcode','zipcode-list'],
+      invalidatesTags: ['zipcode', 'zipcode-list'],
     }),
     //  ------------------ range related ------------------
     addRange: builder.mutation({
@@ -106,14 +106,14 @@ const publicApiService = baseApi.injectEndpoints({
         method: 'PATCH',
         body,
       }),
-      invalidatesTags: ['range','range-list'],
+      invalidatesTags: ['range', 'range-list'],
     }),
     deleteRange: builder.mutation({
       query: (id) => ({
         url: `/country/zipcode/range/delete/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['range','range-list'],
+      invalidatesTags: ['range', 'range-list'],
     }),
 
     //  ------------------ Profile related ------------------
@@ -131,6 +131,20 @@ const publicApiService = baseApi.injectEndpoints({
         method: 'GET',
       }),
       providesTags: ['public-user'],
+    }),
+    getAllRequestsFromClient: builder.query({
+      query: () => ({
+        url: `/lead-requests`,
+        method: 'GET',
+      }),
+      providesTags: ['request'],
+    }),
+    getRequestFromClientById: builder.query({
+      query: (id) => ({
+        url: `/lead-request/${id}`,
+        method: 'GET',
+      }),
+      providesTags: ['request'],
     }),
   }),
 });
@@ -153,4 +167,6 @@ export const {
   useDeleteRangeMutation,
   useGetUserProfileListQuery,
   useGetUserProfileBySlugQuery,
+  useGetAllRequestsFromClientQuery,
+  useGetRequestFromClientByIdQuery,
 } = publicApiService;
