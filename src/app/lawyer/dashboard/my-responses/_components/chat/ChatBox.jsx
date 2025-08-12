@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { getSocket } from '@/lib/socket';
@@ -7,11 +5,32 @@ import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useGetChatHistoryQuery } from '@/store/features/lawyer/ResponseApiService';
-
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { Loader, Send, SendHorizontal } from 'lucide-react';
+import Image from 'next/image';
+import { userDummyImage } from '@/data/data';
 
 dayjs.extend(relativeTime);
+dayjs.locale('en-short', {
+  ...dayjs.Ls.en,
+  relativeTime: {
+    future: 'in %s',
+    past: '%s ago',
+    s: '1s', // seconds default to "1m ago"
+    m: '1m',
+    mm: '%dm',
+    h: '1h',
+    hh: '%dh',
+    d: '1d',
+    dd: '%dd',
+    M: '1mo',
+    MM: '%dmo',
+    y: '1y',
+    yy: '%dy',
+  },
+});
+
 export default function ChatBox({ response }) {
   const responseId = response?._id;
   const currentUser = useSelector(selectCurrentUser);
@@ -25,11 +44,12 @@ export default function ChatBox({ response }) {
     skip: !responseId,
   });
 
-  console.log('messsage ==>',liveMessages)
   // ✅ Load initial history
   useEffect(() => {
     setLiveMessages(history?.data || []);
-  }, [history, responseId]);
+  }, [history]);
+
+  console.log('messsage ==>', liveMessages);
 
   // ✅ Join room and listen for events (including unread messages)
   useEffect(() => {
@@ -55,7 +75,10 @@ export default function ChatBox({ response }) {
       setLiveMessages((prev) =>
         prev.map((msg) =>
           msg._id === messageId
-            ? { ...msg, readBy: [...new Set([...(msg.readBy || []), readerId])] }
+            ? {
+                ...msg,
+                readBy: [...new Set([...(msg.readBy || []), readerId])],
+              }
             : msg
         )
       );
@@ -95,9 +118,15 @@ export default function ChatBox({ response }) {
   return (
     <div>
       {/* Messages */}
-      <div className="h-64 overflow-y-auto border rounded p-4 space-y-2">
+      <div className="h-64 overflow-y-auto border rounded py-3 px-2 space-y-2">
         {isLoading ? (
-          <div>Loading messages...</div>
+          <div className="flex items-center justify-center h-full">
+            <Loader className="animate-spin w-5 h-5" />
+          </div>
+        ) : liveMessages.length === 0 ? (
+          <div className="text-center text-sm text-gray-500">
+            Currently there is no messages
+          </div>
         ) : (
           liveMessages.map((m, i) => {
             const senderId = typeof m.from === 'object' ? m.from._id : m.from;
@@ -108,29 +137,54 @@ export default function ChatBox({ response }) {
             return (
               <div
                 key={m._id || i}
-                className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}
+                className={`flex items-center gap-2 ${
+                  isCurrentUser ? 'flex-row-reverse' : 'justify-start'
+                }`}
               >
-                <div
-                  className={`rounded p-2 max-w-[90%] ${
-                    isCurrentUser
-                      ? 'bg-blue-100 text-right'
-                      : 'bg-gray-100 text-left'
-                  }`}
-                >
-                 <div className='flex items-center justify-between gap-4'>
-                    <p>{dayjs(m.createdAt).fromNow()}</p>
-                   <p className="text-sm font-semibold">
-                    {isCurrentUser
-                      ? 'You'
-                      : typeof m.from === 'object'
-                      ? m.from.profile?.name || m.from._id
-                      : m.from}
+                <Image
+                  src={m?.from?.profile?.profilePicture || userDummyImage}
+                  alt={m?.from?.profile?.name}
+                  width={40}
+                  height={40}
+                  className="rounded-full object-cover w-10 h-10 border border-gray-300"
+                />
+                <div className="flex flex-col items-end gap-0.5">
+                  <p
+                    className={`text-[11px] ${
+                      isCurrentUser ? 'text-right' : ''
+                    }`}
+                  >
+                    {dayjs(m.createdAt).locale('en-short').fromNow()}
                   </p>
-                 
-                 </div>
-                  <div>{m.message}</div>
+                  <div
+                    className={`rounded p-2 ${
+                      isCurrentUser
+                        ? 'bg-[var(--secondary-color)] text-right'
+                        : 'bg-gray-300 text-left'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-4">
+                      <p
+                        className={`text-xs font-semibold ${
+                          isCurrentUser ? 'text-white' : ''
+                        }`}
+                      >
+                        {isCurrentUser
+                          ? 'You'
+                          : typeof m.from === 'object'
+                          ? m.from.profile?.name || m.from._id
+                          : m.from}
+                      </p>
+                    </div>
+                    <div
+                      className={`text-sm ${isCurrentUser ? 'text-white' : ''}`}
+                    >
+                      {m.message}
+                    </div>
+                  </div>
+
                   {isCurrentUser && seenByOthers && (
-                    <div className="text-xs text-blue-500 mt-1">Seen</div>
+                    <div className="text-xs text-black mt-1">Seen</div>
                   )}
                 </div>
               </div>
@@ -142,7 +196,7 @@ export default function ChatBox({ response }) {
       {/* Input */}
       <div className="flex gap-2 mt-4">
         <input
-          className="flex-1 border p-2 rounded"
+          className="flex-1 border p-2 rounded placeholder:text-xs"
           placeholder="Type a message..."
           value={message}
           onChange={(e) => setMessage(e.target.value)}
@@ -150,9 +204,9 @@ export default function ChatBox({ response }) {
         />
         <button
           onClick={sendMessage}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
+          className="bg-[var(--secondary-color)] text-white px-4 py-2 rounded"
         >
-          Send
+          <SendHorizontal className="w-4 h-4" />
         </button>
       </div>
     </div>

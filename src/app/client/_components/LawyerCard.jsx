@@ -16,8 +16,8 @@ import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import { useRequestLawyerMutation } from '@/store/features/client/ClientApiServices';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
-const LawyerCard = ({ lawyer, user, isExpanded, id }) => {
-  const profileType = lawyer?.profileType;
+const LawyerCard = ({ lawyer, isExpanded, id, lawyerOnlineStatus }) => {
+  const profileType = lawyer?.profile?.profileType;
   const badge =
     profileType
       ?.replace(/[^a-zA-Z0-9]+/g, ' ')
@@ -100,9 +100,16 @@ const LawyerCard = ({ lawyer, user, isExpanded, id }) => {
             </div>
           </div>
         </div>
-        <p className="font-medium text-[11px] text-gray-600 mt-2 sm:mt-0 w-16 flex justify-end">
-          {user?.createdAt && formatRelativeTime(user?.createdAt)}
-        </p>
+        <div className="flex items-center gap-1 text-xs ">
+          <span
+            className={`w-2 h-2 rounded-full ${
+              lawyerOnlineStatus[lawyer?._id] ? 'bg-green-500' : 'bg-gray-400'
+            }`}
+          ></span>
+          <span className="text-gray-700">
+            {lawyerOnlineStatus[lawyer?._id] ? 'Online' : 'Offline'}
+          </span>
+        </div>
       </div>
 
       <hr className="border-[#F3F3F3] border" />
@@ -181,16 +188,20 @@ const LawyerCard = ({ lawyer, user, isExpanded, id }) => {
       <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">
         <Button
           className={`px-4 py-2 w-full sm:w-auto rounded-lg ${
-            isExpanded ? 'text-[14px]' : 'text-[12px] '
-          } font-medium bg-[var(--color-special)] text-white`}
+            isExpanded ? 'text-[14px]' : 'text-[12px]'
+          } font-medium bg-[var(--color-special)] text-white ${
+            lawyer?.isRequested ? 'bg-[var(--primary-color)]' : ''
+          }`}
           onClick={handleRequest}
-          disabled={isLoading}
+          disabled={isLoading || lawyer?.isRequested} // Disable if loading or already requested
         >
           {isLoading ? (
             <div className="flex items-center gap-1">
               <Loader />
               <span>Requesting...</span>
             </div>
+          ) : lawyer?.isRequested ? (
+            'Requested'
           ) : (
             'Request Me'
           )}
