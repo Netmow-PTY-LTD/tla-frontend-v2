@@ -24,6 +24,7 @@ import { Label } from '@/components/ui/label';
 import { useFormContext, useWatch } from 'react-hook-form';
 import GenderRadioField from '@/components/form/GenderRadioField';
 import MultiTagSelector from './MultiTagSelector';
+import country from '@/data/au.json';
 
 const genderOptions = [
   { id: 1, label: 'Male', value: 'male' },
@@ -32,6 +33,11 @@ const genderOptions = [
 ];
 
 export default function About() {
+  const [zipCode, setZipCode] = useState(null);
+  const [countryCode, setCountryCode] = useState(null);
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+
   const [open, setOpen] = useState(false);
   const {
     data: userInfo,
@@ -104,7 +110,18 @@ export default function About() {
     },
   };
 
+  console.log('zipCode', zipCode);
+  //console.log('countryCode', countryCode);
+  console.log('latitude', latitude);
+  console.log('longitude', longitude);
+  console.log('Country', country);
+
   const onSubmit = async (data) => {
+    console.log('zipCode', zipCode);
+    //console.log('countryCode', countryCode);
+    console.log('latitude', latitude);
+    console.log('longitude', longitude);
+    console.log('Country', country);
     console.log('data', data);
     try {
       const formData = new FormData();
@@ -139,6 +156,13 @@ export default function About() {
             lat: rest.location?.coordinates?.lat,
             lng: rest.location?.coordinates?.lng,
           },
+        },
+        addressInfo: {
+          countryId: country.countryId,
+          zipCode,
+          countryCode: country.code.toLowerCase(),
+          latitude: latitude.toString(),
+          longitude: longitude.toString(),
         },
       };
 
@@ -273,7 +297,11 @@ export default function About() {
         <CompanyProfile />
 
         <div className="border-t border-white" />
-        <CompanyLocation />
+        <CompanyLocation
+          setZipCode={setZipCode}
+          setLatitude={setLatitude}
+          setLongitude={setLongitude}
+        />
         <div className="border-t border-white" />
         <CompanyAbout />
         <div className="border-t border-white" />
