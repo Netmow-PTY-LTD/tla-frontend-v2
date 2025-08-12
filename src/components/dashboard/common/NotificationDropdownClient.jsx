@@ -78,39 +78,41 @@ export default function NotificationDropdownClient() {
       </div>
 
       {isOpen && (
-        <ul className="absolute right-0 bg-white shadow-[0_6px_16px_#0006] rounded w-72 mt-2 max-h-96 overflow-y-auto z-50">
-          {isLoading ? (
-            <li className="px-3 py-2 text-sm text-gray-500">Loading...</li>
-          ) : notifications.length > 0 ? (
-            <>
-              {notifications.slice(0, 5).map((n) => (
-                <li
-                  key={n._id}
-                  onClick={() => handleNotificationClick(n)}
-                  className="border-b px-3 py-2 hover:bg-gray-100 cursor-pointer text-left"
-                >
-                  <div className="text-sm font-medium">{n.title}</div>
-                  <p className="text-xs text-gray-500">{n.message}</p>
-                  <p className="text-[10px] text-gray-400">
-                    {dayjs(n.createdAt).fromNow()}
-                  </p>
-                </li>
-              ))}
-              <li className="text-center py-2">
-                <Link
-                  href="/client/notifications"
-                  className="text-blue-500 text-sm hover:underline"
-                >
-                  View all
-                </Link>
+        <div className="absolute right-0 bg-white shadow-[0_6px_16px_#0006] rounded w-72 mt-2 z-[99]">
+          <ul className="max-h-96 overflow-y-auto">
+            {isLoading ? (
+              <li className="px-3 py-2 text-sm text-gray-500">Loading...</li>
+            ) : notifications.length > 0 ? (
+              <>
+                {notifications.slice(0, 5).map((n) => (
+                  <li
+                    key={n._id}
+                    onClick={() => handleNotificationClick(n)}
+                    className="border-b px-3 py-2 hover:bg-gray-100 cursor-pointer text-left"
+                  >
+                    <div className="text-sm font-medium">{n.title}</div>
+                    <p className="text-xs text-gray-500">{n.message}</p>
+                    <p className="text-[10px] text-gray-400">
+                      {dayjs(n.createdAt).fromNow()}
+                    </p>
+                  </li>
+                ))}
+              </>
+            ) : (
+              <li className="px-3 py-2 text-sm text-gray-500">
+                No notifications
               </li>
-            </>
-          ) : (
-            <li className="px-3 py-2 text-sm text-gray-500">
-              No notifications
-            </li>
-          )}
-        </ul>
+            )}
+          </ul>
+          <div className="text-center py-2">
+            <Link
+              href="/client/notifications"
+              className="text-blue-500 text-sm hover:underline"
+            >
+              View all
+            </Link>
+          </div>
+        </div>
       )}
     </div>
   );
