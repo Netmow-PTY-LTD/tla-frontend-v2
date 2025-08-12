@@ -305,13 +305,13 @@ export default function RegisterStepOne() {
                               : ''
                           }`}
                         >
-                          <Image
+                          {/* <Image
                             src={service.image || '/assets/img/no-image.jpg'}
                             width={30}
                             height={30}
                             className="object-cover rounded-full w-6 h-6"
                             alt={service.name}
-                          />
+                          /> */}
                           <span className="service-title text-[var(--color-black)] text-[13px]">
                             {service.name}
                           </span>

@@ -1,39 +1,11 @@
 'use client';
-import TagButton from '@/components/dashboard/lawyer/components/TagButton';
+
 import { Button } from '@/components/ui/button';
-import {
-  AtSign,
-  BadgeCent,
-  BadgeCheck,
-  BadgeX,
-  Bell,
-  CalendarCheck,
-  Delete,
-  Edit,
-  Loader2,
-  LogIn,
-  Mail,
-  MailCheck,
-  MessageSquare,
-  MoveLeft,
-  Phone,
-  PhoneCall,
-  PhoneOutgoing,
-  PlusCircle,
-  Rss,
-  Send,
-  Tag,
-  Trash2,
-} from 'lucide-react';
+import { AtSign, BadgeCent, BadgeCheck, Bell, CalendarCheck, Edit, LogIn, Mail, MoveLeft, PhoneCall, PhoneOutgoing, PlusCircle, Send, Trash2, } from 'lucide-react';
 import Image from 'next/image';
 import { Fragment, useEffect, useState } from 'react';
-import Link from 'next/link';
-import {
-  responseApiService,
-  useActivityLogMutation,
-  useGetSingleResponseQuery,
-  useUpdateResponseStatusMutation,
-} from '@/store/features/lawyer/ResponseApiService';
+
+import { useActivityLogMutation, useUpdateResponseStatusMutation, } from '@/store/features/lawyer/ResponseApiService';
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
 import WhatsApp from '@/components/icon/WhatsApp';
 import ResponseSkeleton from './ResponseSkeleton';
@@ -43,15 +15,13 @@ import SendMailModal from './modal/SendMailModal';
 import SendSmsModal from './modal/SendSmsModal';
 import { getCompactTimeAgo } from '@/helpers/formatTime';
 import { userDummyImage } from '@/data/data';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNotifications, useRealTimeStatus } from '@/hooks/useSocketListener';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import ChatBox from './chat/ChatBox';
 
 export default function MyResponseDetails({
   onBack,
-  response,
-  responseId,
   setIsLoading,
   singleResponse,
   isSingleResponseLoading,
@@ -63,23 +33,13 @@ export default function MyResponseDetails({
   const [openSms, setOpenSms] = useState(false);
   const [onlineMap, setOnlineMap] = useState({});
   const currentUserId = useSelector(selectCurrentUser)?._id;
-  // const {
-  //   data: singleResponse,
-  //   isLoading,
-  //   refetch,
-  // } = useGetSingleResponseQuery(responseId || response?._id, {
-  //   skip: !response?._id,
-  // });
-
-  // console.log('responseId', responseId);
-
-  // console.log('singleResponse', singleResponse);
 
   const toUser = singleResponse?.data?.leadId?.userProfileId?.user?._id;
 
   const leadUser = singleResponse?.data?.leadId?.userProfileId?.user?._id;
 
 
+  //  ---------------------------     This  For socket start area -----------------------
   // Safely extract user IDs from AllLeadData
   const userIds =
     data?.map((response) => response?.leadId?.userProfileId?.user) || [];
@@ -89,13 +49,6 @@ export default function MyResponseDetails({
     setOnlineMap((prev) => ({ ...prev, [userId]: isOnline }));
   });
 
- 
-  useNotifications(currentUserId, (data) => {
-    // console.log('🔔 Notification:', data);
-    if (data?.userId) {
-      refetch();
-    }
-  });
 
   useNotifications(currentUserId, (data) => {
     // console.log('🔔 Notification:', data);
@@ -104,6 +57,14 @@ export default function MyResponseDetails({
     }
   });
 
+  useNotifications(currentUserId, (data) => {
+    // console.log('🔔 Notification:', data);
+    if (data?.userId) {
+      refetch();
+    }
+  });
+
+  //  -----------------------------------  socent end area --------------------------------------------
   const badge = singleResponse?.data?.leadId?.userProfileId?.profileType;
 
   const [updateStatus] = useUpdateResponseStatusMutation();
@@ -143,7 +104,7 @@ export default function MyResponseDetails({
   const handleUpdateStatus = async (status) => {
     try {
       const statusData = {
-        responseId: responseId || response?._id,
+        responseId: singleResponse?.data?._id,
         data: { status },
       };
 
@@ -205,7 +166,7 @@ export default function MyResponseDetails({
         activityNote: 'You tried to contact via WhatsApp',
         activityType: 'whatsapp',
         module: 'response',
-        objectId: response?._id,
+        objectId: singleResponse?.data?._id,
         extraField: {
           fieldChanged: 'avatar',
         },
@@ -215,7 +176,7 @@ export default function MyResponseDetails({
         const result = await updateActivity(whatsappActivityPayload).unwrap();
 
         if (result.success) {
-          const phone = response?.leadId?.userProfileId?.phone;
+          const phone = singleResponse?.data?.leadId?.userProfileId?.phone;
           const cleanedPhone = phone?.slice(1);
           window.open(
             `https://api.whatsapp.com/send?phone=${cleanedPhone}&text=`,
@@ -296,23 +257,23 @@ export default function MyResponseDetails({
                     <h2 className="font-medium heading-md">
                       {singleResponse?.data?.leadId?.userProfileId?.name}
                     </h2>
-                     <span className="text-xs">
-                    <div className="flex items-center gap-2 text-sm">
-                      <span
-                        className={`ml-2 w-2 h-2 rounded-full ${onlineMap[leadUser] ? 'bg-green-500' : 'bg-gray-400'
-                          }`}
-                      ></span>
-                      <span className="text-gray-700">
-                        {onlineMap[leadUser] ? 'Online' : 'Offline'}
-                      </span>
-                    </div>
-                  </span>
+                    <span className="text-xs">
+                      <div className="flex items-center gap-2 text-sm">
+                        <span
+                          className={`ml-2 w-2 h-2 rounded-full ${onlineMap[leadUser] ? 'bg-green-500' : 'bg-gray-400'
+                            }`}
+                        ></span>
+                        <span className="text-gray-700">
+                          {onlineMap[leadUser] ? 'Online' : 'Offline'}
+                        </span>
+                      </div>
+                    </span>
                   </div>
 
                   <p className="text-gray-500 mt-2">
                     {singleResponse?.data?.leadId?.userProfileId?.address}
                   </p>
-                 
+
                 </div>
               </div>
               {/* Current Status */}
