@@ -219,6 +219,10 @@
   margin-bottom: 6px;
   font-weight: 500;
   opacity: 0.9;
+
+  @media (max-width: 1366px) {
+    font-size: 10px;
+  }
 }
 
 .sidebar-top h2 {
@@ -226,6 +230,9 @@
   font-weight: 700;
   line-height: 1.4;
   margin: 0;
+  @media (max-width: 1366px) {
+    font-size: 15px;
+  }
 }
 
 .sidebar-top .highlight {

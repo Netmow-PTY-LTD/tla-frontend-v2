@@ -35,6 +35,7 @@ const LawyerCard = ({ lawyer, user, isExpanded, id }) => {
       toRequestId: lawyer?._id,
       message: 'Hello, I am interested in your services.',
     };
+
     try {
       const response = await requestLawyer(payload).unwrap();
       console.log('Response:', response);
@@ -57,8 +58,8 @@ const LawyerCard = ({ lawyer, user, isExpanded, id }) => {
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 ">
           <figure className="w-10 h-10 overflow-hidden flex-shrink-0 border rounded-full">
             <Image
-              src={`${lawyer?.profilePicture ?? userDummyImage}`}
-              alt={lawyer?.name ?? ''}
+              src={`${lawyer?.profile?.profilePicture ?? userDummyImage}`}
+              alt={lawyer?.profile?.name ?? ''}
               width={40}
               height={40}
               priority
@@ -73,14 +74,14 @@ const LawyerCard = ({ lawyer, user, isExpanded, id }) => {
                   isExpanded ? 'heading-base' : 'text-[13px]'
                 }`}
               >
-                {lawyer?.name}
+                {lawyer?.profile?.name}
               </div>
               <div
                 className={`${
                   isExpanded ? 'text-[13px]' : 'text-[10px]'
                 } text-gray-500`}
               >
-                {lawyer?.address ?? ''}
+                {lawyer?.profile?.address ?? ''}
               </div>
               {/* <div className="flex items-center gap-1 text-xs mt-1">
                 <span
@@ -163,9 +164,9 @@ const LawyerCard = ({ lawyer, user, isExpanded, id }) => {
           </span>
         </div>
       )}
-      {lawyer?.serviceIds?.length > 0 && (
+      {lawyer?.profile?.serviceIds?.length > 0 && (
         <div className="flex flex-wrap gap-2 px-3 mt-5 mb-3">
-          {lawyer?.serviceIds?.map((service, i) => (
+          {lawyer?.profile?.serviceIds?.map((service, i) => (
             <span
               key={i}
               className="inline-flex justify-center items-center gap-2 rounded-[30px] bg-[#F3F3F3] px-2 py-1 text-[13px]"
