@@ -31,7 +31,7 @@ export default function LeadDetailsPage({
   lead,
   singleLead,
   isSingleLeadLoading,
-  data
+  data,
 }) {
   const fullText =
     singleLead?.additionalDetails === ''
@@ -61,17 +61,12 @@ export default function LeadDetailsPage({
 
   const mapUrl = getStaticMapUrl(lead?.userProfileId?.address);
 
-
-
-  const userIds =
-    data?.map((lead) => lead?.userProfileId?.user) || [];
+  const userIds = data?.map((lead) => lead?.userProfileId?.user) || [];
 
   // ✅ Use hook directly (at top level of component)
   useRealTimeStatus(currentUserId, userIds, (userId, isOnline) => {
     setOnlineMap((prev) => ({ ...prev, [userId]: isOnline }));
   });
-
-
 
   const urgentOption = singleLead?.leadAnswers
     .flatMap((answer) => answer.options || [])
@@ -88,8 +83,9 @@ export default function LeadDetailsPage({
     const bars = Array.from({ length: total }, (_, index) => (
       <div
         key={index}
-        className={`w-[10px] h-[20px] ${index < responded ? 'bg-green-400' : 'bg-gray-300'
-          }`}
+        className={`w-[10px] h-[20px] ${
+          index < responded ? 'bg-green-400' : 'bg-gray-300'
+        }`}
       ></div>
     ));
 
@@ -120,25 +116,31 @@ export default function LeadDetailsPage({
               <div className="flex flex-col items-start gap-4 z-0 ">
                 <Avatar className="w-20 h-20 z-10">
                   <AvatarImage
-                    src={`${lead?.userProfileId?.profilePicture ?? userDummyImage
-                      }`}
+                    src={`${
+                      lead?.userProfileId?.profilePicture ?? userDummyImage
+                    }`}
                     alt={lead?.userProfileId?.name ?? 'John Doe'}
                   />
                   <AvatarFallback>User</AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className='flex items-center gap-3'>
+                  <div className="flex items-center gap-3">
                     <h2 className="font-medium heading-lg">
                       {lead?.userProfileId?.name ?? ''}
                     </h2>
                     <span className="text-xs">
                       <div className="flex items-center gap-2 text-sm">
                         <span
-                          className={`ml-2 w-2 h-2 rounded-full ${onlineMap[lead?.userProfileId?.user] ? 'bg-green-500' : 'bg-gray-400'
-                            }`}
+                          className={`ml-2 w-2 h-2 rounded-full ${
+                            onlineMap[lead?.userProfileId?.user]
+                              ? 'bg-green-500'
+                              : 'bg-gray-400'
+                          }`}
                         ></span>
                         <span className="text-gray-700">
-                          {onlineMap[lead?.userProfileId?.user] ? 'Online' : 'Offline'}
+                          {onlineMap[lead?.userProfileId?.user]
+                            ? 'Online'
+                            : 'Offline'}
                         </span>
                       </div>
                     </span>
@@ -162,8 +164,8 @@ export default function LeadDetailsPage({
                     const phone = lead?.userProfileId?.phone;
                     return phone
                       ? `${phone.slice(0, 3)}${'*'.repeat(
-                        Math.max(0, phone.length - 3)
-                      )}`
+                          Math.max(0, phone.length - 3)
+                        )}`
                       : '480*******';
                   })()}
                 </span>{' '}
@@ -232,8 +234,8 @@ export default function LeadDetailsPage({
             </div>
             {(singleLead?.additionalDetails &&
               singleLead.additionalDetails !== '') ||
-              singleLead?.leadPriority.toLowerCase() === 'urgent' ||
-              singleLead?.userProfileId?.phone ? (
+            singleLead?.leadPriority?.toLowerCase() === 'urgent' ||
+            singleLead?.userProfileId?.phone ? (
               <div className="mt-5">
                 <div className="flex flex-wrap gap-2">
                   {singleLead?.additionalDetails &&
@@ -253,7 +255,7 @@ export default function LeadDetailsPage({
                     />
                   )}
 
-                  {singleLead?.leadPriority.toLowerCase() === 'urgent' && (
+                  {singleLead?.leadPriority?.toLowerCase() === 'urgent' && (
                     <TagButton
                       text={singleLead?.leadPriority}
                       bgColor="#FF86021A"

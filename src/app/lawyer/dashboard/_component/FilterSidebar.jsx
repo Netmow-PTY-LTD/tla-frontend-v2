@@ -342,7 +342,7 @@ export default function FilterSidebar({
             {/* Services */}
             <AccordionItem value="item-6">
               <AccordionTrigger className="hover:no-underline">
-                Services
+                Skills
               </AccordionTrigger>
               <AccordionContent className="overflow-hidden">
                 <div className="flex flex-col gap-4 text-balance">
@@ -350,7 +350,7 @@ export default function FilterSidebar({
                     data?.profile?.serviceIds?.map((service, index) => {
                       return (
                         <label
-                          htmlFor={service?.name}
+                          htmlFor={service?._id}
                           className="flex items-center gap-2 cursor-pointer"
                           key={index}
                         >
