@@ -4,7 +4,7 @@ import styles from './Header.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { Arrow } from '@radix-ui/react-dropdown-menu';
 import {
@@ -13,6 +13,7 @@ import {
   ChevronDown,
   ChevronRight,
   Hammer,
+  LogOut,
   X,
 } from 'lucide-react';
 import Gavel from '@/components/icon/Gavel';
@@ -24,6 +25,7 @@ import ClientLeadRegistrationModal from '../../home/modal/ClientLeadRegistration
 import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
 import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/questionApiService';
 import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
+import { checkValidity } from '@/helpers/validityCheck';
 
 export default function Header() {
   const [isHeaderFixed, setIsHeaderFixed] = useState();
@@ -35,10 +37,14 @@ export default function Header() {
 
   const subMenuRef = useRef();
 
+  const dispatch = useDispatch();
+
   const pathname = usePathname();
   const router = useRouter();
 
   const token = useSelector((state) => state.auth.token);
+
+  const validToken = checkValidity(token);
 
   const { data: currentUser } = useAuthUserInfoQuery(undefined, {
     skip: !token,
@@ -113,6 +119,11 @@ export default function Header() {
   useEffect(() => {
     setServiceWiseQuestions(singleServicewiseQuestionsData?.data || []);
   }, [singleServicewiseQuestionsData]);
+
+  // if (!validToken) {
+  //   dispatch(LogOut());
+  //   Cookies.remove('token');
+  // }
 
   return (
     <header

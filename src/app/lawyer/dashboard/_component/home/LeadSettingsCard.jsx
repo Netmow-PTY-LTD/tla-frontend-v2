@@ -27,7 +27,7 @@ export default function LeadSettingsCard({
       {/* Services Section */}
       <div className="flex items-center justify-between px-4 pt-4">
         <div>
-          <h2 className="heading-base font-medium text-black">Services</h2>
+          <h2 className="heading-base font-medium text-black">Skills</h2>
           <p className="mt-1 text-sm text-[#34495E]">
             You'll receive cases in these categories
           </p>

@@ -149,9 +149,9 @@ export default function NotificationPreview() {
   if (isLoading) return <ResponseSkeleton />;
 
   return (
-    <div className="p-4">
+    <div className="p-4 max-w-[1100px] mx-auto">
       <h2 className="text-xl font-semibold mb-4">All Notifications</h2>
-      <div className="max-w-[1100px] mx-auto">
+      <div className="">
         {/* <ul>
           {paginatedData?.map((n) => (
             <li key={n._id} className="mb-2 border p-3 rounded bg-white">

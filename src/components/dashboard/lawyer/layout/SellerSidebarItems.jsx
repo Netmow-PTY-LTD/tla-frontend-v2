@@ -32,18 +32,17 @@ export const SellerSidebarItems = {
       isActive: true,
     },
     {
-      title: 'Settings',
-      url: '/lawyer/settings/profile',
-      icon: Settings,
-      isActive: true,
-    },
-
-    {
       title: 'Requests',
       // url: '/lawyer/dashboard/general-faqs',
       url: '/lawyer/dashboard/requests',
       icon: CircleHelp,
       // isActive: true,
+    },
+    {
+      title: 'Settings',
+      url: '/lawyer/settings/profile',
+      icon: Settings,
+      isActive: true,
     },
     // {
     //   title: 'Helps',
