@@ -45,6 +45,7 @@ export default function LeadDetailsPage() {
   const [lawyers, setLawyers] = useState([]);
   const [totalPages, setTotalPages] = useState(null);
   const [totalLawyersCount, setTotalLawyersCount] = useState(0);
+  const [lawyerOnlineStatus, setLawyerOnlineStatus] = useState({});
 
   const LIMIT = '10';
 
@@ -112,8 +113,6 @@ export default function LeadDetailsPage() {
     setOnlineMap((prev) => ({ ...prev, [userId]: isOnline }));
   });
 
-
-
   //  ----------- Lawyers suggestion api call ---------------------
 
   const serviceId = singleLead?.data?.serviceId?._id;
@@ -141,6 +140,13 @@ export default function LeadDetailsPage() {
 
   // console.log('totalLawyersCount', totalLawyersCount);
   // console.log('lawyers', lawyers);
+
+  const lawyerIds = lawyersData?.data?.map((lawyer) => lawyer?._id) || [];
+
+  // ✅ Use hook directly (at top level of component)
+  useRealTimeStatus(currentUserId, lawyerIds, (userId, isOnline) => {
+    setLawyerOnlineStatus((prev) => ({ ...prev, [userId]: isOnline }));
+  });
 
   // Infinite scroll intersection observer
   const loader = useRef(null);
@@ -390,7 +396,12 @@ export default function LeadDetailsPage() {
                     </h4>
                     <div className="flex flex-col gap-5">
                       {lawyers?.map((lawyer, i) => (
-                        <LawyerCard key={i} lawyer={lawyer} id={id} />
+                        <LawyerCard
+                          key={i}
+                          lawyer={lawyer}
+                          id={id}
+                          lawyerOnlineStatus={lawyerOnlineStatus}
+                        />
                       ))}
                       <div ref={loader}>
                         {isFetching && (
