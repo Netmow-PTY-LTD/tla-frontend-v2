@@ -3,7 +3,12 @@ import { useRealTimeStatus } from '@/hooks/useSocketListener';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 export default function RespondersOnline({ user }) {
     const currentUserId = useSelector(selectCurrentUser)?._id;
     const [onlineMap, setOnlineMap] = useState({});
@@ -30,22 +35,40 @@ export default function RespondersOnline({ user }) {
                     <div className="text-[var(--color-black)] text-xs font-semibold">
                         Responders:
                     </div>
+               
                     <div className="flex items-center gap-2">
-                        {visibleAvatars.map((lead, index) => (
-                            <img
-                                key={index}
-                                src={lead?.profilePicture || userDummyImage}
-                                alt="Avatar"
-                                className={`w-8 h-8 rounded-full border-2 object-cover ${onlineMap[lead?.user] ? 'border-green-500' : 'border-white-500'
-                                    }`}
-                            />
-                        ))}
-                        {extraCount > 0 && (
-                            <div className="-ml-5 w-8 h-8 rounded-full bg-gray-300 text-gray-700 border-2 border-white flex items-center justify-center text-xs font-semibold">
-                                +{extraCount}
-                            </div>
-                        )}
+                        <TooltipProvider>
+                            {visibleAvatars.map((lead, index) => (
+                                <Tooltip key={index}>
+                                    <TooltipTrigger asChild>
+                                        <img
+                                            src={lead?.profilePicture || userDummyImage}
+                                            alt={lead?.name || "Avatar"}
+                                            className={`w-8 h-8 rounded-full border-2 object-cover ${onlineMap[lead?.user] ? "border-green-500" : "border-gray-200"
+                                                }`}
+                                        />
+                                    </TooltipTrigger>
+                                    <TooltipContent side="top">
+                                        {lead?.name || "Unknown responder"}
+                                    </TooltipContent>
+                                </Tooltip>
+                            ))}
+
+                            {extraCount > 0 && (
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <div className="-ml-5 w-8 h-8 rounded-full bg-gray-300 text-gray-700 border-2 border-white flex items-center justify-center text-xs font-semibold">
+                                            +{extraCount}
+                                        </div>
+                                    </TooltipTrigger>
+                                    <TooltipContent side="top">
+                                        {extraCount} more responders
+                                    </TooltipContent>
+                                </Tooltip>
+                            )}
+                        </TooltipProvider>
                     </div>
+
                 </div>
             )}
         </div>
