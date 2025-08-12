@@ -7,7 +7,11 @@ import { AlertCircle } from 'lucide-react';
 import React, { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-export default function CompanyLocation() {
+export default function CompanyLocation({
+  setZipCode,
+  setLatitude,
+  setLongitude,
+}) {
   const { watch, setValue } = useFormContext();
 
   const address = watch('location.address');
@@ -26,21 +30,36 @@ export default function CompanyLocation() {
       if (!input) return;
 
       autocomplete = new google.maps.places.Autocomplete(input, {
-        fields: ['geometry', 'formatted_address'],
+        fields: ['geometry', 'formatted_address', 'address_components'],
       });
 
       // ✅ Restrict search to Australia
       autocomplete.setComponentRestrictions({
-        country: ['aus'],
+        country: ['au'],
       });
 
       autocomplete.addListener('place_changed', () => {
         const place = autocomplete.getPlace();
+        if (!place.geometry) return;
+
+        // Extract ZIP code
+        const postalCodeObj = place.address_components.find((c) =>
+          c.types.includes('postal_code')
+        );
+        const zipCode = postalCodeObj ? postalCodeObj.long_name : '';
+
+        if (!zipCode) {
+          // alert('Please select an address with a postal code.');
+          return;
+        }
+
         if (place.geometry) {
           setValue('location.address', place.formatted_address);
           setValue('location.coordinates.lat', place.geometry.location.lat());
           setValue('location.coordinates.lng', place.geometry.location.lng());
+          setValue('location.zipCode', zipCode);
         }
+        console.log('Zip code:', zipCode);
       });
     };
 
@@ -67,10 +86,26 @@ export default function CompanyLocation() {
         );
         const data = await res.json();
 
+        console.log('data from geocode', data);
+
         if (data.status === 'OK') {
           const coords = data.results[0].geometry.location;
           setValue('location.coordinates.lat', coords.lat);
           setValue('location.coordinates.lng', coords.lng);
+
+          setLatitude(coords.lat);
+          setLongitude(coords.lng);
+
+          // Extract ZIP code
+          const postalCodeObj = data.results[0].address_components.find(
+            (component) => component.types.includes('postal_code')
+          );
+          const zipCode = postalCodeObj ? postalCodeObj.long_name : '';
+
+          // ✅ Prevent null in autocomplete
+          setValue('location.zipCode', zipCode);
+          setZipCode(zipCode);
+          console.log('Zip code:', zipCode);
         }
       } catch (err) {
         console.error('Failed to fetch coordinates', err);
@@ -79,6 +114,8 @@ export default function CompanyLocation() {
 
     fetchCoordinates();
   }, [address, setValue]);
+
+  //  console.log('coordinates', coordinates);
 
   const options = [
     {

@@ -65,7 +65,16 @@ export const lawyerSettingAboutSchema = z.object({
     })
     .optional(),
   location: z.object({
-    address: z.string(),
+    address: z
+      .string()
+      .min(1, 'Address is required')
+      .refine(
+        (val) => /\b\d{4}\b/.test(val), // Australian postcodes are 4 digits
+        {
+          message:
+            'Please provide a valid Australian address which includes a zipcode',
+        }
+      ),
     hideFromProfile: z.boolean(),
     locationReason: z.string().optional(),
     // coordinates: z
