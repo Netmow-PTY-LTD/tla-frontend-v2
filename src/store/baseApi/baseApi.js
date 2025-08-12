@@ -27,9 +27,11 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
 
     // Check if the URL matches your change-password endpoint
     if (!url.includes('/auth/change-password')) {
-      toast.error(errorData?.message || 'Request failed', { position: 'top-right', style: { backgroundColor: 'red', color: 'white' } });
+      toast.error(errorData?.message || 'Request failed', {
+        position: 'top-right',
+        style: { backgroundColor: 'red', color: 'white' },
+      });
     }
-
   }
 
   if (result.error?.status === 401) {
@@ -48,13 +50,11 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
         // Retry original request with new token
         result = await baseQuery(arg, api, extraOptions);
       } else {
-
         api.dispatch(logOut());
         fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/logout`, {
           credentials: 'include',
           method: 'POST',
         }).catch(console.error);
-
       }
     } catch (err) {
       api.dispatch(logOut());
@@ -62,8 +62,6 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
         credentials: 'include',
         method: 'POST',
       }).catch(console.error);
-
-
     }
   }
 
@@ -91,9 +89,9 @@ export const baseApi = createApi({
     'user-credit-stats',
     'next-offer',
     'transaction-history',
-    "notificationPreferences",
-    "app-settings",
-    "category",
+    'notificationPreferences',
+    'app-settings',
+    'category',
     'transaction-history-list',
     'response-my',
     'response-list',
@@ -115,8 +113,8 @@ export const baseApi = createApi({
     'service-list',
     'country-wise-map',
     'country-wise-map-list',
-    'all-users'
-
+    'all-users',
+    'request',
   ],
   endpoints: () => ({}),
 });
