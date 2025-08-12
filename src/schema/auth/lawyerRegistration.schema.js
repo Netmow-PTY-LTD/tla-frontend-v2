@@ -44,8 +44,8 @@ export const lawyerRegistrationStepTwoFormValidation = z
 export const lawyerRegistrationStepOneFormValidation = z.object({
   name: z
     .string()
-    .min(2, 'Name must be at least 2 characters long')
-    .max(50, 'Name must be less than 50 characters'),
+    .min(2, 'is requird and  at least 2 characters long')
+    .max(50, 'must be less than 50 characters'),
 });
 
 // const bdPhoneRegex = /^(?:\+88|88)?01[3-9]\d{8}$/;

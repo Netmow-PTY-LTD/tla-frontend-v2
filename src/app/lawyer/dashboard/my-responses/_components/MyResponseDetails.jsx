@@ -1,37 +1,27 @@
 'use client';
-import TagButton from '@/components/dashboard/lawyer/components/TagButton';
+
 import { Button } from '@/components/ui/button';
 import {
   AtSign,
   BadgeCent,
   BadgeCheck,
-  BadgeX,
   Bell,
   CalendarCheck,
-  Delete,
   Edit,
-  Loader2,
   LogIn,
   Mail,
-  MailCheck,
-  MessageSquare,
   MoveLeft,
-  Phone,
   PhoneCall,
   PhoneOutgoing,
   PlusCircle,
-  Rss,
   Send,
-  Tag,
   Trash2,
 } from 'lucide-react';
 import Image from 'next/image';
 import { Fragment, useEffect, useState } from 'react';
-import Link from 'next/link';
+
 import {
-  responseApiService,
   useActivityLogMutation,
-  useGetSingleResponseQuery,
   useUpdateResponseStatusMutation,
 } from '@/store/features/lawyer/ResponseApiService';
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
@@ -43,15 +33,13 @@ import SendMailModal from './modal/SendMailModal';
 import SendSmsModal from './modal/SendSmsModal';
 import { getCompactTimeAgo } from '@/helpers/formatTime';
 import { userDummyImage } from '@/data/data';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNotifications, useRealTimeStatus } from '@/hooks/useSocketListener';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import ChatBox from './chat/ChatBox';
 
 export default function MyResponseDetails({
   onBack,
-  response,
-  responseId,
   setIsLoading,
   singleResponse,
   isSingleResponseLoading,
@@ -63,22 +51,12 @@ export default function MyResponseDetails({
   const [openSms, setOpenSms] = useState(false);
   const [onlineMap, setOnlineMap] = useState({});
   const currentUserId = useSelector(selectCurrentUser)?._id;
-  // const {
-  //   data: singleResponse,
-  //   isLoading,
-  //   refetch,
-  // } = useGetSingleResponseQuery(responseId || response?._id, {
-  //   skip: !response?._id,
-  // });
-
-  // console.log('responseId', responseId);
-
-  // console.log('singleResponse', singleResponse);
 
   const toUser = singleResponse?.data?.leadId?.userProfileId?.user?._id;
 
   const leadUser = singleResponse?.data?.leadId?.userProfileId?.user?._id;
 
+  //  ---------------------------     This  For socket start area -----------------------
   // Safely extract user IDs from AllLeadData
   const userIds =
     data?.map((response) => response?.leadId?.userProfileId?.user) || [];
@@ -102,6 +80,7 @@ export default function MyResponseDetails({
     }
   });
 
+  //  -----------------------------------  socent end area --------------------------------------------
   const badge = singleResponse?.data?.leadId?.userProfileId?.profileType;
 
   const [updateStatus] = useUpdateResponseStatusMutation();
@@ -141,7 +120,7 @@ export default function MyResponseDetails({
   const handleUpdateStatus = async (status) => {
     try {
       const statusData = {
-        responseId: responseId || response?._id,
+        responseId: singleResponse?.data?._id,
         data: { status },
       };
 
@@ -203,7 +182,7 @@ export default function MyResponseDetails({
         activityNote: 'You tried to contact via WhatsApp',
         activityType: 'whatsapp',
         module: 'response',
-        objectId: response?._id,
+        objectId: singleResponse?.data?._id,
         extraField: {
           fieldChanged: 'avatar',
         },
@@ -213,7 +192,7 @@ export default function MyResponseDetails({
         const result = await updateActivity(whatsappActivityPayload).unwrap();
 
         if (result.success) {
-          const phone = response?.leadId?.userProfileId?.phone;
+          const phone = singleResponse?.data?.leadId?.userProfileId?.phone;
           const cleanedPhone = phone?.slice(1);
           window.open(
             `https://api.whatsapp.com/send?phone=${cleanedPhone}&text=`,

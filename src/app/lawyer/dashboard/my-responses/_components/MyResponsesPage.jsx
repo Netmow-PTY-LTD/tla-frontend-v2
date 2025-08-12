@@ -241,8 +241,6 @@ export default function MyResponsesPage() {
             <div className="left-column-8">
               <div className="column-wrap-left">
                 <MyResponseDetails
-                  //response={selectedResponse}
-                  responseId={responseId}
                   onBack={() => setShowResponseDetails(false)}
                   setIsLoading={setIsLoading}
                   isLoading={isLoading}
