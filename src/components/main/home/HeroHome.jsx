@@ -24,12 +24,14 @@ import {
 } from '@headlessui/react';
 import { cn } from '@/lib/utils';
 import { useParams } from 'next/navigation';
+import { toast } from 'sonner';
+import { showErrorToast } from '@/components/common/toasts';
 export default function HeroHome({ searchParam }) {
   const [selectedService, setSelectedService] = useState(null);
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [service, setService] = useState(null);
-  const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState('');
   const [filteredServices, setFilteredServices] = useState([]);
   const [filteredZipCodes, setFilteredZipCodes] = useState([]);
   const [shouldAutoFocus, setShouldAutoFocus] = useState(false);
@@ -100,29 +102,107 @@ export default function HeroHome({ searchParam }) {
   //   item?.zipcode?.toLowerCase().includes(location?.toLowerCase())
   // );
 
+  const locationRef = useRef(null);
+
+  useEffect(() => {
+    let autocomplete;
+
+    const initAutocomplete = () => {
+      // const input = document.getElementById('AreaZipcode');
+      // if (!input) return;
+
+      autocomplete = new google.maps.places.Autocomplete(locationRef.current, {
+        fields: ['geometry', 'formatted_address', 'address_components'],
+      });
+
+      // Restrict search to Australia
+      autocomplete.setComponentRestrictions({
+        country: ['au'],
+      });
+
+      autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace();
+        if (!place.geometry) return;
+
+        // ✅ Extract ZIP code
+        const postalCodeObj = place.address_components.find((c) =>
+          c.types.includes('postal_code')
+        );
+        const zipCode = postalCodeObj ? postalCodeObj.long_name : '';
+
+        if (!zipCode) return;
+
+        // ✅ Update the form field "AreaZipcode"
+        //setValue('zipcode', zipCode);
+
+        // (Optional) Update other location fields too
+        //setValue('AreaZipcode', place.formatted_address);
+        setLocation(place.formatted_address);
+      });
+    };
+
+    if (typeof window !== 'undefined') {
+      if (window.google && window.google.maps && window.google.maps.places) {
+        initAutocomplete();
+      } else {
+        window.initMap = initAutocomplete;
+      }
+    }
+  }, []);
+
+  // Still keep geocode fetch in case address changes without using autocomplete
+  useEffect(() => {
+    const fetchCoordinates = async () => {
+      if (!location) return;
+
+      try {
+        const res = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+            location
+          )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
+        );
+        const data = await res.json();
+
+        //console.log('data from geocode', data);
+
+        if (data.status === 'OK') {
+          const coords = data.results[0].geometry.location;
+
+          // setLatitude(coords.lat);
+          // setLongitude(coords.lng);
+
+          const formattedAddress = data.results[0].formatted_address;
+
+          // Extract ZIP code
+          const postalCodeObj = data.results[0].address_components.find(
+            (component) => component.types.includes('postal_code')
+          );
+          const zipCode = postalCodeObj ? postalCodeObj.long_name : '';
+
+          //setPostalCode(zipCode);
+          // ✅ Prevent null in autocomplete
+          setLocation(formattedAddress);
+          //console.log('Zip code:', zipCode);
+        }
+      } catch (err) {
+        console.error('Failed to fetch coordinates', err);
+      }
+    };
+
+    fetchCoordinates();
+  }, [location]);
+
+  console.log('selectedService', selectedService);
+  console.log('location', location);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const matchedService =
-      typeof service === 'string'
-        ? countryWiseServices?.data?.find(
-            (s) => s.name.toLowerCase() === service.toLowerCase()
-          )
-        : service;
-
-    const matchedZip = allZipCodes?.data?.find(
-      (z) => z._id === location || z.zipcode === location
-    );
-
-    if (!matchedService || !matchedZip) {
-      toast.error('Please select both service and location.');
-      return;
-    }
-
-    setSelectedService(matchedService);
-    setLocation(matchedZip._id); // ensure location holds the ID
+    setSelectedService(service);
     setModalOpen(true);
   };
+
+  console.log('service', service);
 
   return (
     <section className="hero-home section">
@@ -151,6 +231,7 @@ export default function HeroHome({ searchParam }) {
                           query ? matched : countryWiseServices?.data
                         );
                         setService(e.target.value);
+                        console.log('service', e.target.value);
                       }}
                       displayValue={(val) => val?.name || ''}
                       placeholder="What area of law are you interested in?"
@@ -199,7 +280,16 @@ export default function HeroHome({ searchParam }) {
                 </Combobox>
               </div>
               <div className="tla-form-group w-full lg:w-5/12">
-                <Combobox value={location} onChange={setLocation}>
+                <input
+                  ref={locationRef}
+                  type="text"
+                  className="tla-form-control"
+                  placeholder="Location"
+                  autoComplete="off"
+                  value={location} // ✅ controlled input for full address
+                  onChange={(e) => setLocation(e.target.value)} // updates address while typing
+                />
+                {/* <Combobox value={location} onChange={setLocation}>
                   <div className="relative">
                     <ComboboxInput
                       className="border border-gray-300 rounded-md w-full h-[44px] px-4 tla-form-control"
@@ -259,7 +349,7 @@ export default function HeroHome({ searchParam }) {
                       </ComboboxOptions>
                     )}
                   </div>
-                </Combobox>
+                </Combobox> */}
               </div>
               <div className="tla-btn-wrapper w-full lg:w-1/6">
                 <button type="submit" className="tla-btn-search">
