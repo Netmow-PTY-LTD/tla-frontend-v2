@@ -105,14 +105,13 @@ export default function ClientLeadRegistrationModal({
   //     : true
   // );
 
-  // useEffect(() => {
-  //   if (locationId && allZipCodes?.data?.length > 0) {
-  //     const matched = allZipCodes.data.find((item) => item._id === locationId);
-  //     if (matched) {
-  //       setZipCode(matched._id); // Set ID, not zipcode text
-  //     }
-  //   }
-  // }, [locationId, allZipCodes?.data]);
+  console.log('locationId', locationId);
+
+  useEffect(() => {
+    if (locationId) {
+      setAddress(locationId); // Set ID, not zipcode text
+    }
+  }, [locationId]);
 
   //google map data
   // const { watch, setValue } = form;
@@ -729,57 +728,6 @@ export default function ClientLeadRegistrationModal({
             />
             <div className="google-places-autocomplete"></div>
           </div>
-
-          {/* <Combobox value={zipCode ?? ''} onChange={setZipCode}>
-            <div className="relative">
-              <ComboboxInput
-                className="border border-gray-300 rounded-md w-full h-[44px] px-4"
-                onChange={(event) => setZipCode(event.target.value)}
-                displayValue={(val) =>
-                  allZipCodes?.data?.find((z) => z._id === val)?.zipcode || val
-                }
-                placeholder="Select a Zipcode"
-                autoComplete="off"
-              />
-              <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
-                <ChevronDown className="h-4 w-4 text-gray-500" />
-              </ComboboxButton>
-              {filteredZipCodes?.length > 0 && (
-                <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  {filteredZipCodes.map((item) => (
-                    <ComboboxOption
-                      key={item._id}
-                      value={item._id}
-                      className={({ active }) =>
-                        cn(
-                          'cursor-pointer select-none relative py-2 px-6',
-                          active ? 'bg-blue-100 text-black' : 'text-gray-900'
-                        )
-                      }
-                    >
-                      {({ selected }) => (
-                        <>
-                          <span
-                            className={cn('block truncate', {
-                              'font-medium': selected,
-                              'font-normal': !selected,
-                            })}
-                          >
-                            {item.zipcode}
-                          </span>
-                          {selected && (
-                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
-                              <Check className="h-4 w-4" />
-                            </span>
-                          )}
-                        </>
-                      )}
-                    </ComboboxOption>
-                  ))}
-                </ComboboxOptions>
-              )}
-            </div>
-          </Combobox> */}
         </div>
       ) : step === totalQuestions + 4 ? (
         <div className="space-y-6">
