@@ -8,7 +8,7 @@ const publicApiService = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['Country'],
+      invalidatesTags: ['Country','Country-list'],
     }),
     getCountryList: builder.query({
       query: () => ({
