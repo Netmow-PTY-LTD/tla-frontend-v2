@@ -120,7 +120,7 @@ export default function QuestionsAndAnswers() {
                   label={qa.question}
                   name={`profileQA[${index}].answer`}
                   placeholder="Write your answer..."
-                  textColor="text-[#6e6e6e]"
+                  textColor="text-[#4b4949]"
                 />
                 <p className="mt-2">Minimum 50 characters</p>
               </div>

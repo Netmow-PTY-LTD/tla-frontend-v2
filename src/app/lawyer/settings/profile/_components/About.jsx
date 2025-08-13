@@ -226,12 +226,12 @@ export default function About() {
             <TextInput
               label="Law Society Member Number"
               name="law_society_member_number"
-              textColor="text-[#8E8E8E]"
+              textColor="text-[#4b4949]"
             />
             <TextInput
               label="Practising Certificate Number"
               name="practising_certificate_number"
-              textColor="text-[#8E8E8E]"
+              textColor="text-[#4b4949]"
             />
           </div>
         </div>
@@ -253,19 +253,19 @@ export default function About() {
               label="Phone Number"
               name="phone"
               placeholder="+8801XXXXXXX"
-              textColor="text-[#8E8E8E]"
+              textColor="text-[#4b4949]"
             />
             <TextInput
               label="Address"
               name="address"
               placeholder="Enter your personal address"
-              textColor="text-[#8E8E8E]"
+              textColor="text-[#4b4949]"
             />
             <TextInput
               label="Contact Email"
               name="lawyerContactEmail"
               placeholder="contact@gmail.com"
-              textColor="text-[#8E8E8E]"
+              textColor="text-[#4b4949]"
             />
             <GenderRadioField />
             <button

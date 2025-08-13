@@ -26,13 +26,13 @@ export default function PersonalProfile() {
             name="name"
             label="Name"
             placeholder="Enter Your Name"
-            textColor="text-[#6e6e6e]"
+            textColor="text-[#4b4949]"
           />
           <TextInput
             name="designation"
             label="Designation"
             placeholder="Enter Your Designation"
-            textColor="text-[#6e6e6e]"
+            textColor="text-[#4b4949]"
           />
         </div>
       </div>

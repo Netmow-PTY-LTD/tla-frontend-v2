@@ -27,13 +27,13 @@ export default function CompanyProfile() {
             name="companyName"
             label="Name"
             placeholder="Enter Your Company Name"
-            textColor="text-[#6e6e6e]"
+            textColor="text-[#4b4949]"
           />
           <TextInput
             name="contactEmail"
             label="Email Address"
             placeholder="example@example.com"
-            textColor="text-[#6e6e6e]"
+            textColor="text-[#4b4949]"
           />
         </div>
       </div>
@@ -43,13 +43,13 @@ export default function CompanyProfile() {
           name="phoneNumber"
           label="Phone Number"
           placeholder="+8801XXXXXXX"
-          textColor="text-[#6e6e6e]"
+          textColor="text-[#4b4949]"
         />
         <TextInput
           name="website"
           label="Website"
           placeholder="Company Website"
-          textColor="text-[#6e6e6e]"
+          textColor="text-[#4b4949]"
         />
       </div>
     </div>

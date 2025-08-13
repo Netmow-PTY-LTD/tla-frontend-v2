@@ -152,7 +152,7 @@ export default function CompanyLocation({
             label="What's the business location?"
             name="location.address"
             placeholder="Enter the company address"
-            textColor="text-[#6e6e6e]"
+            textColor="text-[#4b4949]"
             id="address-input"
           />
 
@@ -172,7 +172,7 @@ export default function CompanyLocation({
               name={'location.locationReason'}
               options={options}
               placeholder="Select a reason"
-              textColor="text-[#6e6e6e]"
+              textColor="text-[#4b4949]"
             />
           </div>
         </div>
