@@ -231,7 +231,7 @@ export default function ClientLeadRegistrationModal({
   }, [address]);
 
   // console.log('zipCode', zipCode);
-  // console.log('address', address);
+  //console.log('address', address);
   // console.log('latitude', latitude);
   // console.log('longitude', longitude);
 
@@ -722,7 +722,12 @@ export default function ClientLeadRegistrationModal({
               placeholder="Enter Zipcode"
               autoComplete="off"
               value={address} // ✅ controlled input for full address
-              onChange={(e) => setAddress(e.target.value)} // updates address while typing
+              onChange={(e) => {
+                setAddress('');
+                setZipCode('');
+                setLatitude('');
+                setLongitude('');
+              }} // updates address while typing
             />
             <div className="google-places-autocomplete"></div>
           </div>

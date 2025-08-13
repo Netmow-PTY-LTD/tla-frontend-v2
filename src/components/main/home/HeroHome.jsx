@@ -102,95 +102,87 @@ export default function HeroHome({ searchParam }) {
   //   item?.zipcode?.toLowerCase().includes(location?.toLowerCase())
   // );
 
-  const locationRef = useRef(null);
+  //const zipInputRef = useRef(null);
 
-  useEffect(() => {
-    let autocomplete;
+  // useEffect(() => {
+  //   let autoCompleteInstance;
 
-    const initAutocomplete = () => {
-      // const input = document.getElementById('AreaZipcode');
-      // if (!input) return;
+  //   const initializeAutoComplete = () => {
+  //     autoCompleteInstance = new google.maps.places.Autocomplete(
+  //       zipInputRef.current,
+  //       {
+  //         fields: ['geometry', 'formatted_address', 'address_components'],
+  //       }
+  //     );
 
-      autocomplete = new google.maps.places.Autocomplete(locationRef.current, {
-        fields: ['geometry', 'formatted_address', 'address_components'],
-      });
+  //     // Limit results to Australia
+  //     autoCompleteInstance.setComponentRestrictions({ country: ['au'] });
 
-      // Restrict search to Australia
-      autocomplete.setComponentRestrictions({
-        country: ['au'],
-      });
+  //     autoCompleteInstance.addListener('place_changed', () => {
+  //       const selectedPlace = autoCompleteInstance.getPlace();
+  //       if (!selectedPlace.geometry) return;
 
-      autocomplete.addListener('place_changed', () => {
-        const place = autocomplete.getPlace();
-        if (!place.geometry) return;
+  //       const zipComponent = selectedPlace.address_components.find((item) =>
+  //         item.types.includes('postal_code')
+  //       );
+  //       const postalCode = zipComponent ? zipComponent.long_name : '';
 
-        // ✅ Extract ZIP code
-        const postalCodeObj = place.address_components.find((c) =>
-          c.types.includes('postal_code')
-        );
-        const zipCode = postalCodeObj ? postalCodeObj.long_name : '';
+  //       if (!postalCode) return;
 
-        if (!zipCode) return;
+  //       // Example: You can update your form here
+  //       // updateField('zip', postalCode);
+  //       // updateField('fullAddress', selectedPlace.formatted_address);
+  //       setLocation(selectedPlace.formatted_address);
+  //     });
+  //   };
 
-        // ✅ Update the form field "AreaZipcode"
-        //setValue('zipcode', zipCode);
+  //   if (typeof window !== 'undefined') {
+  //     if (window.google && window.google.maps?.places) {
+  //       initializeAutoComplete();
+  //     } else {
+  //       window.initMap = initializeAutoComplete;
+  //     }
+  //   }
+  // }, []);
 
-        // (Optional) Update other location fields too
-        //setValue('AreaZipcode', place.formatted_address);
-        setLocation(place.formatted_address);
-      });
-    };
+  // Handle direct changes to the address
+  // useEffect(() => {
+  //   const retrieveGeoData = async () => {
+  //     if (!location) return;
 
-    if (typeof window !== 'undefined') {
-      if (window.google && window.google.maps && window.google.maps.places) {
-        initAutocomplete();
-      } else {
-        window.initMap = initAutocomplete;
-      }
-    }
-  }, []);
+  //     try {
+  //       const response = await fetch(
+  //         `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+  //           location
+  //         )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
+  //       );
+  //       const geoData = await response.json();
 
-  // Still keep geocode fetch in case address changes without using autocomplete
-  useEffect(() => {
-    const fetchCoordinates = async () => {
-      if (!location) return;
+  //       if (geoData.status === 'OK') {
+  //         const locationData = geoData.results[0];
+  //         const geoLocation = locationData.geometry.location;
 
-      try {
-        const res = await fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-            location
-          )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
-        );
-        const data = await res.json();
+  //         const readableAddress = locationData.formatted_address;
 
-        //console.log('data from geocode', data);
+  //         const zipComponent = locationData.address_components.find((comp) =>
+  //           comp.types.includes('postal_code')
+  //         );
+  //         const postalCode = zipComponent ? zipComponent.long_name : '';
 
-        if (data.status === 'OK') {
-          const coords = data.results[0].geometry.location;
+  //         // You can store lat/lng, zip etc. if needed
+  //         // updateLatLng(geoLocation.lat, geoLocation.lng);
+  //         // updateZip(postalCode);
 
-          // setLatitude(coords.lat);
-          // setLongitude(coords.lng);
+  //         // Ensure address remains consistent
+  //         setLocation(readableAddress);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching location info', error);
+  //     }
+  //   };
 
-          const formattedAddress = data.results[0].formatted_address;
-
-          // Extract ZIP code
-          const postalCodeObj = data.results[0].address_components.find(
-            (component) => component.types.includes('postal_code')
-          );
-          const zipCode = postalCodeObj ? postalCodeObj.long_name : '';
-
-          //setPostalCode(zipCode);
-          // ✅ Prevent null in autocomplete
-          setLocation(formattedAddress);
-          //console.log('Zip code:', zipCode);
-        }
-      } catch (err) {
-        console.error('Failed to fetch coordinates', err);
-      }
-    };
-
-    fetchCoordinates();
-  }, [location]);
+  //   retrieveGeoData();
+  // }, [location]);
 
   // console.log('selectedService', selectedService);
   // console.log('location', location);
@@ -199,6 +191,10 @@ export default function HeroHome({ searchParam }) {
     e.preventDefault();
 
     setSelectedService(service);
+    if (!service || !service?._id) {
+      showErrorToast('Please select a service.');
+      return;
+    }
     setModalOpen(true);
   };
 
@@ -215,7 +211,7 @@ export default function HeroHome({ searchParam }) {
           </div>
           <form className="w-full" onSubmit={handleSubmit}>
             <div className="hero-search-area flex flex-wrap md:flex-nowrap gap-2 items-center w-full">
-              <div className="tla-form-group w-full lg:w-5/12">
+              <div className="tla-form-group w-full lg:w-10/12">
                 <Combobox value={service} onChange={(val) => setService(val)}>
                   <div className="relative">
                     <ComboboxInput
@@ -277,78 +273,17 @@ export default function HeroHome({ searchParam }) {
                   </div>
                 </Combobox>
               </div>
-              <div className="tla-form-group w-full lg:w-5/12">
+              {/* <div className="tla-form-group w-full lg:w-5/12">
                 <input
-                  ref={locationRef}
+                  ref={zipInputRef}
                   type="text"
                   className="tla-form-control"
                   placeholder="Location"
                   autoComplete="off"
                   value={location} // ✅ controlled input for full address
-                  onChange={(e) => setLocation(e.target.value)} // updates address while typing
+                  onChange={(e) => console.log(e.target.value)} // updates address while typing
                 />
-                {/* <Combobox value={location} onChange={setLocation}>
-                  <div className="relative">
-                    <ComboboxInput
-                      className="border border-gray-300 rounded-md w-full h-[44px] px-4 tla-form-control"
-                      onChange={(e) => {
-                        const query = e.target.value.toLowerCase();
-                        const filtered = allZipCodes?.data?.filter((z) =>
-                          z.zipcode.toLowerCase().includes(query)
-                        );
-                        setFilteredZipCodes(
-                          query ? filtered : allZipCodes?.data
-                        );
-                        setLocation(e.target.value);
-                      }}
-                      displayValue={(val) =>
-                        allZipCodes?.data?.find((z) => z._id === val)
-                          ?.zipcode || val
-                      }
-                      placeholder="Your location"
-                      onFocus={() =>
-                        setFilteredZipCodes(allZipCodes?.data ?? [])
-                      }
-                    />
-                    {filteredZipCodes?.length > 0 && (
-                      <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {filteredZipCodes.map((item) => (
-                          <ComboboxOption
-                            key={item._id}
-                            value={item._id}
-                            className={({ active }) =>
-                              cn(
-                                'cursor-pointer select-none relative py-2 px-6',
-                                active
-                                  ? 'bg-blue-100 text-black'
-                                  : 'text-gray-900'
-                              )
-                            }
-                          >
-                            {({ selected }) => (
-                              <>
-                                <span
-                                  className={cn('block truncate', {
-                                    'font-medium': selected,
-                                    'font-normal': !selected,
-                                  })}
-                                >
-                                  {item.zipcode}
-                                </span>
-                                {selected && (
-                                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
-                                    <Check className="h-4 w-4" />
-                                  </span>
-                                )}
-                              </>
-                            )}
-                          </ComboboxOption>
-                        ))}
-                      </ComboboxOptions>
-                    )}
-                  </div>
-                </Combobox> */}
-              </div>
+              </div> */}
               <div className="tla-btn-wrapper w-full lg:w-1/6">
                 <button type="submit" className="tla-btn-search">
                   <span>Get Started</span>

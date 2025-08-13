@@ -500,6 +500,7 @@ export default function ClientNewLeadRegistrationModal({
         setCheckedOptions([]);
         setCheckedOptionsDetails([]);
         setQuestionsPayload([]);
+        setAddress('');
       }
     } catch (err) {
       console.error('❌ Register error:', err);
