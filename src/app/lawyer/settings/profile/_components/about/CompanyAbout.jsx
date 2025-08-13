@@ -47,21 +47,21 @@ export default function CompanyAbout() {
             options={options}
             placeholder="Select company size"
             defaultValue="Self-employed / Sole Trader"
-            textColor="text-[#6e6e6e]"
+            textColor="text-[#4b4949]"
           />
 
           <TextInput
             label="Years in business"
             name="yearsInBusiness"
             placeholder="Number of years"
-            textColor="text-[#6e6e6e]"
+            textColor="text-[#4b4949]"
           />
         </div>
         <TextareaInput
           label="Describe your company "
           name="description"
           placeholder="What sets you apart from businesses?"
-          textColor="text-[#6e6e6e]"
+          textColor="text-[#4b4949]"
         />
       </div>
     </div>
