@@ -1,3 +1,6 @@
+
+
+
 'use client';
 import { DataTable } from '@/components/common/DataTable';
 import { Button } from '@/components/ui/button';
@@ -11,19 +14,48 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import { MoreHorizontal, Pencil, Trash2, View } from 'lucide-react';
+import { Archive, CheckCircle, Clock, MoreHorizontal, Pencil, Slash, Trash2, View } from 'lucide-react';
 import { useAllUsersQuery } from '@/store/features/admin/userApiService';
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { UserDetailsModal } from '../_components/UserDetailsModal';
+import { useChangeUserAccountStatsMutation } from '@/store/features/auth/authApiService';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
 
 
 export default function Page() {
-  const { data: userList } = useAllUsersQuery();
-  const [selectedUser, setSelectedUser] = useState(null); // state for selected lead
   const [open, setOpen] = useState(false);
-   const clinetlist=userList?.data?.filter((client)=>client.regUserType==="client")
+  const [selectedUser, setSelectedUser] = useState(null); // state for selected lead
+  const { data: userList } = useAllUsersQuery();
+  const [changeAccoutStatus] = useChangeUserAccountStatsMutation();
+  const clinetlist = userList?.data?.filter((client) => client.regUserType === "client")
+
+
+
+  const handleChangeStatus = async (userId, status) => {
+    try {
+      const payload = {
+        userId,
+        data: { accountStatus: status }
+      }
+
+      const res = await changeAccoutStatus(payload).unwrap()
+
+
+      if (res.success) {
+        showSuccessToast(res?.message || 'Status Update Successful');
+      }
+
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+    }
+
+  }
+
+
+
 
   const columns = [
     {
@@ -67,6 +99,13 @@ export default function Page() {
       header: 'Type',
       cell: ({ row }) => (
         <div className="capitalize">{row.getValue('regUserType')}</div>
+      ),
+    },
+    {
+      accessorKey: 'accountStatus',
+      header: 'Account Status',
+      cell: ({ row }) => (
+        <div className="capitalize text-center">{row.getValue('accountStatus')}</div>
       ),
     },
     {
@@ -144,6 +183,30 @@ export default function Page() {
                   <View className="w-4 h-4" /> View
                 </div>
               </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuLabel>Change Status</DropdownMenuLabel>
+
+              {[
+                { status: 'approved', icon: <CheckCircle className="w-4 h-4" /> },
+                { status: 'pending', icon: <Clock className="w-4 h-4" /> },
+                { status: 'suspended', icon: <Slash className="w-4 h-4" /> },
+                { status: 'archived', icon: <Archive className="w-4 h-4" /> },
+              ].map(({ status, icon }) => (
+                <DropdownMenuItem
+                  key={status}
+                  onClick={() => handleChangeStatus(userId, status)}
+                  className="cursor-pointer capitalize"
+                >
+                  <div className="flex items-center gap-2">
+                    {icon}
+                    <span>{status}</span>
+                  </div>
+                </DropdownMenuItem>
+              ))}
+
+
             </DropdownMenuContent>
           </DropdownMenu>
         );

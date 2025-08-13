@@ -90,6 +90,14 @@ const authApi = baseApi.injectEndpoints({
       }),
      
     }),
+    changeUserAccountStats: builder.mutation({
+      query: (payload) => ({
+        url: `/auth/users/${payload.userId}/status`,
+        method: 'PATCH',
+        body: payload.data,
+      }),
+     invalidatesTags:['all-users']
+    }),
   }),
 });
 
@@ -104,5 +112,6 @@ export const {
   useResetPassowrdMutation,
   useForgotPassowrdMutation,
   useVerifyEmailMutation,
-  useResendVerificationEmailMutation
+  useResendVerificationEmailMutation,
+  useChangeUserAccountStatsMutation
 } = authApi;
