@@ -53,12 +53,10 @@ export default function CompanyLocation({
           return;
         }
 
-        if (place.geometry) {
-          setValue('location.address', place.formatted_address);
-          setValue('location.coordinates.lat', place.geometry.location.lat());
-          setValue('location.coordinates.lng', place.geometry.location.lng());
-          setValue('location.zipCode', zipCode);
-        }
+        setValue('location.address', place.formatted_address);
+        setValue('location.coordinates.lat', place.geometry.location.lat());
+        setValue('location.coordinates.lng', place.geometry.location.lng());
+        //setValue('location.zipCode', zipCode);
         console.log('Zip code:', zipCode);
       });
     };

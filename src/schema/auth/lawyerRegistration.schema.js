@@ -5,38 +5,34 @@ export const lawyerRegistrationStepTwoFormValidation = z
     practiceWithin: z.boolean().refine((val) => val === true, {
       message: 'This checkbox must be checked before proceeding.',
     }),
-    AreaZipcode: z.string().optional(),
+    AreaZipcode: z
+      .string()
+      .min(1, 'Address is required')
+      .refine(
+        (val) => /\b\d{4}\b/.test(val), // Check for Australian ZIP (e.g., 3000)
+        {
+          message:
+            'Please provide a valid Australian address that includes a 4-digit postcode.',
+        }
+      ),
     rangeInKm: z.any().optional(),
     practiceInternational: z.boolean().optional(),
   })
   .superRefine((data, ctx) => {
-    // Validate AreaZipcode
-    if (!data.AreaZipcode || data.AreaZipcode.trim() === '') {
-      ctx.addIssue({
-        path: ['AreaZipcode'],
-        code: z.ZodIssueCode.custom,
-        message: 'is required.',
-      });
-    } else if (!/^[0-9a-fA-F]{24}$/.test(data.AreaZipcode)) {
-      ctx.addIssue({
-        path: ['AreaZipcode'],
-        code: z.ZodIssueCode.custom,
-        message: 'Invalid Zipcode ObjectId.',
-      });
-    }
-
-    // Validate rangeInKm (ensure it’s a number and allowed)
     const parsedRange = Number(data.rangeInKm);
+
+    // Only validate rangeInKm if practiceWithin is selected
     if (
-      data.rangeInKm === undefined ||
-      data.rangeInKm === null ||
-      data.rangeInKm === '' ||
-      isNaN(parsedRange)
+      data.practiceWithin &&
+      (data.rangeInKm === undefined ||
+        data.rangeInKm === null ||
+        data.rangeInKm === '' ||
+        isNaN(parsedRange))
     ) {
       ctx.addIssue({
         path: ['rangeInKm'],
         code: z.ZodIssueCode.custom,
-        message: 'is required.',
+        message: 'Distance range (in km) is required.',
       });
     }
   });

@@ -34,6 +34,13 @@ const initialState = {
     practiceWithin: false,
     practiceInternationally: false,
     isSoloPractitioner: false,
+    addressInfo: {
+      countryId: '',
+      countryCode: '',
+      zipcode: '',
+      latitude: 0,
+      longitude: 0,
+    },
   },
 };
 

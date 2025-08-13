@@ -107,6 +107,101 @@ export default function ClientLeadRegistrationModal({
 
   const options = selectedServiceWiseQuestions?.[step]?.options || [];
 
+  // const handleOptionChange = (optionId, checked) => {
+  //   // find optionid from fullcloned
+
+  //   // const foundOption = fullClonedQuestions
+  //   //   ?.flatMap((question) => question.options || [])
+  //   //   .find((option) => option?._id === optionId);
+
+  //   // const newCheckedOptions = checked
+  //   //   ? [...checkedOptions, optionId]
+  //   //   : checkedOptions.filter((id) => id !== optionId);
+
+  //   // setCheckedOptions(newCheckedOptions);
+
+  //   // const tempOption = {};
+
+  //   // if (foundOption?.name === 'Other') {
+  //   //   tempOption.id = optionId;
+  //   //   tempOption.is_checked = true;
+  //   //   tempOption.idExtraData = document.getElementById(
+  //   //     `${optionId}-other`
+  //   //   )?.value;
+  //   // } else {
+  //   //   tempOption.id = optionId;
+  //   //   tempOption.is_checked = true;
+  //   //   tempOption.idExtraData = '';
+  //   // }
+
+  //   // setCheckedOptionsDetails([...checkedOptionsDetails, tempOption]);
+
+  //   // const foundOption = fullClonedQuestions
+  //   //   ?.flatMap((question) => question.options || [])
+  //   //   .find((option) => option?._id === optionId);
+
+  //   const parentQuestion = fullClonedQuestions?.find((question) =>
+  //     question.options?.some((option) => option._id === optionId)
+  //   );
+
+  //   const foundOption = parentQuestion?.options?.find(
+  //     (option) => option._id === optionId
+  //   );
+
+  //   const questionType = parentQuestion?.questionType;
+
+  //   const newCheckedOptions = checked
+  //     ? [...checkedOptions, optionId]
+  //     : checkedOptions.filter((id) => id !== optionId);
+
+  //   setCheckedOptions(newCheckedOptions);
+
+  //   const tempOption = {
+  //     id: optionId,
+  //     name: foundOption?.name,
+  //     is_checked: checked,
+  //     idExtraData:
+  //       foundOption?.name === 'Other'
+  //         ? document.getElementById(`${optionId}-other`)?.value ?? ''
+  //         : '',
+  //   };
+
+  //   setCheckedOptionsDetails((prev) => {
+  //     if (checked) {
+  //       const filtered = prev.filter((item) => item.id !== optionId);
+  //       return [...filtered, tempOption];
+  //     } else {
+  //       return prev.filter((item) => item.id !== optionId);
+  //     }
+  //   });
+
+  //   // Find selected options metadata (if needed for something else)
+  //   const findSelectedOptions = options?.find((item) => item?._id === optionId);
+
+  //   if (checked) {
+  //     setSelectedOptions((prev) => {
+  //       const newOptions = findSelectedOptions?.selected_options || [];
+
+  //       // Merge and filter out duplicates by _id
+  //       const combined = [...prev, ...newOptions];
+  //       const unique = Array.from(
+  //         new Map(combined.map((item) => [item._id, item])).values()
+  //       );
+
+  //       return unique;
+  //     });
+  //   }
+
+  //   if (questionType === 'radio') {
+  //     setCheckedOptions([optionId]);
+  //     setCheckedOptionsDetails([tempOption]);
+  //     setSelectedOptions(findSelectedOptions?.selected_options || []);
+  //   }
+  // };
+
+  // console.log('selectedOptions', selectedOptions);
+  // console.log('checkedOptions', checkedOptions);
+
   const handleOptionChange = (optionId, checked) => {
     // Compute the new checkedOptions immediately
     const newCheckedOptions = checked
