@@ -1439,3 +1439,23 @@ Home Testimonials
 .page-heading-text {
   color: #fff;
 }
+
+/* Google map api css */
+/* global.css */
+/* global.css */
+.pac-container {
+  z-index: 2147483647 !important; /* ensure above modal */
+}
+
+.pac-item {
+  cursor: pointer !important; /* force pointer */
+}
+
+.modal-wrapper {
+  overflow: visible !important; /* allow dropdown to escape modal clipping */
+  transform: none !important; /* avoid stacking context issues */
+}
+
+body[style*='pointer-events: none'] {
+  pointer-events: auto !important;
+}

@@ -109,39 +109,39 @@ export default function RegisterStepThree() {
   const registrationState = useSelector((state) => state.lawyerRegistration);
   const [authRegister, { isLoading }] = useAuthRegisterMutation();
 
-  //console.log('registrationState', registrationState);
+  console.log('registrationState', registrationState);
 
   const handleSubmit = async (data) => {
     console.log('data', data);
-    try {
-      const result = await authRegister(registrationState).unwrap();
+    // try {
+    //   const result = await authRegister(registrationState).unwrap();
 
-      if (result?.success && result?.token) {
-        showSuccessToast(result?.message || 'Registration successful');
-        const token = result.token;
-        const userPayload = verifyToken(token);
+    //   if (result?.success && result?.token) {
+    //     showSuccessToast(result?.message || 'Registration successful');
+    //     const token = result.token;
+    //     const userPayload = verifyToken(token);
 
-        if (userPayload) {
-          dispatch(setUser({ user: result?.data, token }));
+    //     if (userPayload) {
+    //       dispatch(setUser({ user: result?.data, token }));
 
-          const userType = result?.data?.regUserType;
-          if (userType === 'lawyer') router.push('/lawyer/dashboard');
-          else if (userType === 'client') router.push('/client/dashboard');
-          else router.push('/');
-        }
-      } else {
-        const errorMessage =
-          result?.errorSources?.[0]?.message ||
-          result?.message ||
-          'Registration failed.';
-        console.log('Registration error:', result);
-        showErrorToast(errorMessage || 'Something went wrong');
-      }
-    } catch (error) {
-      console.log('Registration error:', error);
-      console.error('❌ Registration API Error:', error);
-      showErrorToast(error?.data?.message || 'Server error');
-    }
+    //       const userType = result?.data?.regUserType;
+    //       if (userType === 'lawyer') router.push('/lawyer/dashboard');
+    //       else if (userType === 'client') router.push('/client/dashboard');
+    //       else router.push('/');
+    //     }
+    //   } else {
+    //     const errorMessage =
+    //       result?.errorSources?.[0]?.message ||
+    //       result?.message ||
+    //       'Registration failed.';
+    //     console.log('Registration error:', result);
+    //     showErrorToast(errorMessage || 'Something went wrong');
+    //   }
+    // } catch (error) {
+    //   console.log('Registration error:', error);
+    //   console.error('❌ Registration API Error:', error);
+    //   showErrorToast(error?.data?.message || 'Server error');
+    // }
   };
 
   return (

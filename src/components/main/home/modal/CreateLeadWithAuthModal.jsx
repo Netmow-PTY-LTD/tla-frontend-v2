@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { useCreateLeadMutation } from '@/store/features/client/LeadsApiService';
 import { StartFrequencyOptions } from '@/data/data';
+import country from '@/data/au.json';
 
 export default function CreateLeadWithAuthModal({
   modalOpen,
@@ -462,7 +463,7 @@ export default function CreateLeadWithAuthModal({
               <input
                 type="text"
                 className="border rounded px-3 py-2 w-20 text-center"
-                value="AUD"
+                value={country.currency}
                 placeholder='currency i.e."AUD"'
                 readOnly
               />

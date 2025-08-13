@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import CompanyProfile from './about/CompanyProfile';
 import PersonalProfile from './about/PersonalProfile';
 import CompanyContactDetails from './about/CompanyContactDetails';
@@ -52,63 +52,42 @@ export default function About() {
   const [updateUserData, { isLoading: userIsLoading }] =
     useUpdateUserDataMutation();
   const profile = userInfo?.data?.profile;
-  if (isLoading)
-    return (
-      <div>
-        <span className="flex items-center justify-center gap-2">
-          <Loader className="w-4 h-4 animate-spin" />
-          loading...
-        </span>
-      </div>
-    );
 
-  if (isError) {
-    return (
-      <div className="flex items-center justify-center ">
-        <div className="text-red-500 ">
-          <p>Error loading profile: {error.message}</p>
-          <button
-            onClick={refetch}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  const defaultValues = {
-    companyName: profile?.companyProfile?.companyName ?? '',
-    name: profile?.name ?? '',
-    designation: profile?.designation ?? '',
-    languages: profile?.languages ?? [],
-    address: profile?.address ?? '',
-    phone: profile?.phone ?? '',
-    gender: profile?.gender ?? '',
-    law_society_member_number: profile?.law_society_member_number ?? '',
-    practising_certificate_number: profile?.practising_certificate_number ?? '',
-    bio: profile?.bio ?? '',
-    lawyerContactEmail: profile?.lawyerContactEmail ?? '',
-    contactEmail: profile?.companyProfile?.contactEmail ?? '',
-    phoneNumber: profile?.companyProfile?.phoneNumber ?? '',
-    website: profile?.companyProfile?.website ?? '',
-    companySize: profile?.companyProfile?.companySize ?? '',
-    description: profile?.companyProfile?.description ?? '',
-    yearsInBusiness: profile?.companyProfile?.yearsInBusiness ?? '',
-    companyLogo: profile?.companyProfile?.logoUrl ?? '', // URL string
-    userProfileLogo: profile?.profilePicture ?? '', // URL string
-    location: {
-      address: profile?.companyProfile?.location?.address ?? '',
-      hideFromProfile:
-        profile?.companyProfile?.location?.hideFromProfile ?? false,
-      locationReason: profile?.companyProfile?.location?.locationReason ?? '',
-      coordinates: {
-        lat: profile?.companyProfile?.location?.coordinates?.lat ?? 0,
-        lng: profile?.companyProfile?.location?.coordinates?.lng ?? 0,
+  const defaultValues = useMemo(
+    () => ({
+      companyName: profile?.companyProfile?.companyName ?? '',
+      name: profile?.name ?? '',
+      designation: profile?.designation ?? '',
+      languages: profile?.languages ?? [],
+      address: profile?.address ?? '',
+      phone: profile?.phone ?? '',
+      gender: profile?.gender ?? '',
+      law_society_member_number: profile?.law_society_member_number ?? '',
+      practising_certificate_number:
+        profile?.practising_certificate_number ?? '',
+      bio: profile?.bio ?? '',
+      lawyerContactEmail: profile?.lawyerContactEmail ?? '',
+      contactEmail: profile?.companyProfile?.contactEmail ?? '',
+      phoneNumber: profile?.companyProfile?.phoneNumber ?? '',
+      website: profile?.companyProfile?.website ?? '',
+      companySize: profile?.companyProfile?.companySize ?? '',
+      description: profile?.companyProfile?.description ?? '',
+      yearsInBusiness: profile?.companyProfile?.yearsInBusiness ?? '',
+      companyLogo: profile?.companyProfile?.logoUrl ?? '', // URL string
+      userProfileLogo: profile?.profilePicture ?? '', // URL string
+      location: {
+        address: profile?.companyProfile?.location?.address ?? '',
+        hideFromProfile:
+          profile?.companyProfile?.location?.hideFromProfile ?? false,
+        locationReason: profile?.companyProfile?.location?.locationReason ?? '',
+        coordinates: {
+          lat: profile?.companyProfile?.location?.coordinates?.lat ?? 0,
+          lng: profile?.companyProfile?.location?.coordinates?.lng ?? 0,
+        },
       },
-    },
-  };
+    }),
+    [profile]
+  );
 
   console.log('zipCode', zipCode);
   //console.log('countryCode', countryCode);
@@ -159,7 +138,7 @@ export default function About() {
         },
         addressInfo: {
           countryId: country.countryId,
-          zipCode,
+          zipcode: zipCode,
           countryCode: country.code.toLowerCase(),
           latitude: latitude.toString(),
           longitude: longitude.toString(),
@@ -208,7 +187,31 @@ export default function About() {
       console.error('Error submitting form:', error);
     }
   };
+  if (isLoading)
+    return (
+      <div>
+        <span className="flex items-center justify-center gap-2">
+          <Loader className="w-4 h-4 animate-spin" />
+          loading...
+        </span>
+      </div>
+    );
 
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center ">
+        <div className="text-red-500 ">
+          <p>Error loading profile: {error.message}</p>
+          <button
+            onClick={refetch}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="max-w-[900px] mx-auto">
       <FormWrapper
