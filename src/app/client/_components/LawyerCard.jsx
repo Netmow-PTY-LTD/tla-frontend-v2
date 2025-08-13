@@ -10,7 +10,6 @@ import {
   Zap,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { formatRelativeTime } from '@/helpers/formatTime';
 import { userDummyImage } from '@/data/data';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import { useRequestLawyerMutation } from '@/store/features/client/ClientApiServices';

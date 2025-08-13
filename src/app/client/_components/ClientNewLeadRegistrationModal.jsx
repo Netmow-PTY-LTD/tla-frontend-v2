@@ -23,6 +23,7 @@ import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/question
 import { useCreateLeadMutation } from '@/store/features/client/LeadsApiService';
 import { set } from 'zod';
 import { StartFrequencyOptions } from '@/data/data';
+import country from '@/data/au.json';
 
 export default function ClientNewLeadRegistrationModal({
   modalOpen,
@@ -672,7 +673,7 @@ export default function ClientNewLeadRegistrationModal({
               <input
                 type="text"
                 className="border rounded px-3 py-2 w-20 text-center"
-                value="AUD"
+                value={country.currency}
                 placeholder='currency i.e."AUD"'
                 readOnly
               />
