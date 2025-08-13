@@ -42,11 +42,6 @@ export default function MyLeads() {
     }
   );
 
-
- 
-
-
-
   useEffect(() => {
     if (!allMyLeads) return;
 
@@ -165,7 +160,7 @@ export default function MyLeads() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-4 mt-5 pr-2">
                   {leads?.map((lead, index) => (
                     // <JobPostCard key={index} lead={lead} />
-                    <ClientLeadCard key={index}  user={lead} />
+                    <ClientLeadCard key={index} user={lead} />
                   ))}
                   {hasMore && (
                     <div className="py-6 text-center">
