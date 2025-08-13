@@ -192,8 +192,8 @@ export default function HeroHome({ searchParam }) {
     fetchCoordinates();
   }, [location]);
 
-  console.log('selectedService', selectedService);
-  console.log('location', location);
+  // console.log('selectedService', selectedService);
+  // console.log('location', location);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -201,8 +201,6 @@ export default function HeroHome({ searchParam }) {
     setSelectedService(service);
     setModalOpen(true);
   };
-
-  console.log('service', service);
 
   return (
     <section className="hero-home section">

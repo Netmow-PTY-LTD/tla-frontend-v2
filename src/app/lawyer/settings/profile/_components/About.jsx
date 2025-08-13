@@ -34,9 +34,9 @@ const genderOptions = [
 
 export default function About() {
   const [zipCode, setZipCode] = useState(null);
-  const [countryCode, setCountryCode] = useState(null);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
+  const [postalCode, setPostalCode] = useState('');
 
   const [open, setOpen] = useState(false);
   const {
@@ -89,18 +89,7 @@ export default function About() {
     [profile]
   );
 
-  console.log('zipCode', zipCode);
-  //console.log('countryCode', countryCode);
-  console.log('latitude', latitude);
-  console.log('longitude', longitude);
-  console.log('Country', country);
-
   const onSubmit = async (data) => {
-    console.log('zipCode', zipCode);
-    //console.log('countryCode', countryCode);
-    console.log('latitude', latitude);
-    console.log('longitude', longitude);
-    console.log('Country', country);
     console.log('data', data);
     try {
       const formData = new FormData();
@@ -140,8 +129,9 @@ export default function About() {
           countryId: country.countryId,
           zipcode: zipCode,
           countryCode: country.code.toLowerCase(),
-          latitude: latitude.toString(),
-          longitude: longitude.toString(),
+          latitude: latitude?.toString() || '',
+          longitude: longitude?.toString() || '',
+          postalCode,
         },
       };
 
@@ -304,6 +294,7 @@ export default function About() {
           setZipCode={setZipCode}
           setLatitude={setLatitude}
           setLongitude={setLongitude}
+          setPostalCode={setPostalCode}
         />
         <div className="border-t border-white" />
         <CompanyAbout />

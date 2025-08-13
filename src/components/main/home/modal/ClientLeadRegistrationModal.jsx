@@ -105,8 +105,6 @@ export default function ClientLeadRegistrationModal({
   //     : true
   // );
 
-  console.log('locationId', locationId);
-
   useEffect(() => {
     if (locationId) {
       setAddress(locationId); // Set ID, not zipcode text
