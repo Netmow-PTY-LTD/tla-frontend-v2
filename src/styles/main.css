@@ -1456,6 +1456,15 @@ Home Testimonials
   transform: none !important; /* avoid stacking context issues */
 }
 
-body[style*='pointer-events: none'] {
-  pointer-events: auto !important;
+.google-places-autocomplete .pac-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 518px;
+  z-index: 9999;
+  /* display: none; */
 }
+
+/* body[style*='pointer-events: none'] {
+  pointer-events: auto !important;
+} */

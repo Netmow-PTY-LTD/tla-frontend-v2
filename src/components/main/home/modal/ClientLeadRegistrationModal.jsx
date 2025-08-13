@@ -121,7 +121,22 @@ export default function ClientLeadRegistrationModal({
   const inputRef = useRef(null);
 
   useEffect(() => {
+    // Inject high-priority styles once
+    const styleTag = document.createElement('style');
+    styleTag.innerHTML = `
+    .google-places-autocomplete .pac-container {
+      position: absolute !important;
+      top: 100% !important;
+      left: 0 !important;
+      width: 518px !important;
+      z-index: 9999 !important;
+    }
+  `;
+    document.head.appendChild(styleTag);
+
     let autocomplete;
+    let observer;
+
     const initialize = () => {
       if (!inputRef.current || !window.google?.maps?.places) return;
 
@@ -147,15 +162,26 @@ export default function ClientLeadRegistrationModal({
         setAddress(place.formatted_address);
         setLatitude(place.geometry.location.lat);
         setLongitude(place.geometry.location.lng);
-
-        console.log('Selected Address:', place.formatted_address);
-        console.log('Postal Code:', postal);
-        console.log('Lat:', place.geometry.location.lat);
-        console.log('Lng:', place.geometry.location.lng);
       });
+
+      observer = new MutationObserver(() => {
+        const pacContainer = document.querySelector('.pac-container');
+        const targetWrapper = document.querySelector(
+          '.google-places-autocomplete'
+        );
+
+        if (
+          pacContainer &&
+          targetWrapper &&
+          !targetWrapper.contains(pacContainer)
+        ) {
+          targetWrapper.appendChild(pacContainer);
+        }
+      });
+
+      observer.observe(document.body, { childList: true, subtree: true });
     };
 
-    // Wait until input is mounted
     const interval = setInterval(() => {
       if (inputRef.current && window.google?.maps?.places) {
         initialize();
@@ -163,8 +189,11 @@ export default function ClientLeadRegistrationModal({
       }
     }, 100);
 
-    return () => clearInterval(interval);
-  }, []); //
+    return () => {
+      clearInterval(interval);
+      if (observer) observer.disconnect();
+    };
+  }, []);
 
   // Geocode fallback for manual typing
   useEffect(() => {
@@ -204,19 +233,21 @@ export default function ClientLeadRegistrationModal({
     fetchCoordinates();
   }, [address]);
 
-  console.log('zipCode', zipCode);
-  console.log('latitude', latitude);
-  console.log('longitude', longitude);
+  // console.log('zipCode', zipCode);
+  // console.log('address', address);
+  // console.log('latitude', latitude);
+  // console.log('longitude', longitude);
 
   const addressInfo = {
     countryId: country.countryId,
     countryCode: country.code.toLowerCase(),
-    zipCode,
+    zipcode: address,
     latitude: latitude.toString(),
     longitude: longitude.toString(),
+    postalCode: zipCode,
   };
 
-  //console.log('addressInfo', addressInfo);
+  console.log('addressInfo', addressInfo);
 
   //setting initial data
 
@@ -410,7 +441,7 @@ export default function ClientLeadRegistrationModal({
       leadPriority,
       additionalDetails,
       budgetAmount,
-      zipCode,
+      zipCode: addressInfo?.zipcode,
       name,
       email,
       phone,
@@ -421,6 +452,7 @@ export default function ClientLeadRegistrationModal({
       serviceId,
       questions: [...questionsPayload], // ensure fresh snapshot
       leadDetails,
+      addressInfo,
     };
 
     console.log('🚀 Submitting payload:', payload);
@@ -685,15 +717,18 @@ export default function ClientLeadRegistrationModal({
           <div className="text-center">
             The postcode or town for the address where you want the service.
           </div>
-          <input
-            ref={inputRef}
-            type="text"
-            className="border border-gray-300 rounded-md w-full h-[44px] px-4"
-            placeholder="Enter Zipcode"
-            autoComplete="off"
-            value={address} // ✅ controlled input for full address
-            onChange={(e) => setAddress(e.target.value)} // updates address while typing
-          />
+          <div className="relative">
+            <input
+              ref={inputRef}
+              type="text"
+              className="border border-gray-300 rounded-md w-full h-[44px] px-4"
+              placeholder="Enter Zipcode"
+              autoComplete="off"
+              value={address} // ✅ controlled input for full address
+              onChange={(e) => setAddress(e.target.value)} // updates address while typing
+            />
+            <div className="google-places-autocomplete"></div>
+          </div>
 
           {/* <Combobox value={zipCode ?? ''} onChange={setZipCode}>
             <div className="relative">

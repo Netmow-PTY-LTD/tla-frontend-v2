@@ -49,6 +49,7 @@ export default function RegisterStepTwo() {
   const [zipcode, setZipcode] = useState('');
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
+  const [postalCode, setPostalCode] = useState('');
   const [query, setQuery] = useState('');
 
   const dispatch = useDispatch();
@@ -159,6 +160,7 @@ export default function RegisterStepTwo() {
           );
           const zipCode = postalCodeObj ? postalCodeObj.long_name : '';
 
+          setPostalCode(zipCode);
           // ✅ Prevent null in autocomplete
           setValue('AreaZipcode', formattedAddress);
           setZipcode(formattedAddress);
@@ -182,6 +184,7 @@ export default function RegisterStepTwo() {
     zipcode,
     latitude: latitude.toString(),
     longitude: longitude.toString(),
+    postalCode,
   };
 
   const onSubmit = (data) => {
