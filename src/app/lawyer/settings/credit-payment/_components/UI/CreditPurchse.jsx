@@ -49,6 +49,8 @@ const CreditsPurchase = ({ creditPackage }) => {
       console.log('Purchase result:', result);
       if (result.success) {
         showSuccessToast(result?.message);
+      }else{
+        showErrorToast(result?.message);
       }
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';

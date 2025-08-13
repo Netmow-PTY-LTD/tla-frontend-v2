@@ -9,6 +9,7 @@ import {
   LandPlot,
   LayoutDashboard,
   List,
+  Logs,
   MapPinHouse,
   Package,
   Plus,
@@ -198,12 +199,25 @@ export const AdminSidebarItems = {
       icon: Users,
       isActive: true,
       items: [
+        // {
+        //   title: 'List of Users',
+        //   url: '/admin/user/list',
+        //   icon: List,
+        //   isActive: true,
+        // },
         {
-          title: 'List of Users',
-          url: '/admin/user/list',
+          title: 'List of Lawyers',
+          url: '/admin/user/lawyer-list',
           icon: List,
           isActive: true,
         },
+        {
+          title: 'List of Clients',
+          url: '/admin/user/client-list',
+          icon: Logs,
+          isActive: true,
+        },
+
       ],
     },
     {
