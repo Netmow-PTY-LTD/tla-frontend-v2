@@ -1,4 +1,3 @@
-
 'use client';
 
 import { getSocket } from '@/lib/socket';
@@ -8,149 +7,208 @@ import { useEffect, useState } from 'react';
 import { useGetChatHistoryQuery } from '@/store/features/lawyer/ResponseApiService';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { Loader, Send, SendHorizontal } from 'lucide-react';
+import Image from 'next/image';
+import { userDummyImage } from '@/data/data';
 
 dayjs.extend(relativeTime);
-export default function ChatBoxForLead({ response }) {
-    const responseId = response?._id;
-    const currentUser = useSelector(selectCurrentUser);
-    const userId = currentUser?._id;
-    const [message, setMessage] = useState('');
-    const [liveMessages, setLiveMessages] = useState([]);
-    const socket = getSocket(userId);
+dayjs.locale('en-short', {
+  ...dayjs.Ls.en,
+  relativeTime: {
+    future: 'in %s',
+    past: '%s ago',
+    s: '1s', // seconds default to "1m ago"
+    m: '1m',
+    mm: '%dm',
+    h: '1h',
+    hh: '%dh',
+    d: '1d',
+    dd: '%dd',
+    M: '1mo',
+    MM: '%dmo',
+    y: '1y',
+    yy: '%dy',
+  },
+});
 
-    // ✅ Fetch old messages
-    const { data: history = [], isLoading } = useGetChatHistoryQuery(responseId, {
-        skip: !responseId,
+export default function ChatBoxForLead({ response }) {
+  const responseId = response?._id;
+  const currentUser = useSelector(selectCurrentUser);
+  const userId = currentUser?._id;
+  const [message, setMessage] = useState('');
+  const [liveMessages, setLiveMessages] = useState([]);
+  const socket = getSocket(userId);
+
+  // ✅ Fetch old messages
+  const { data: history = [], isLoading } = useGetChatHistoryQuery(responseId, {
+    skip: !responseId,
+  });
+
+  // ✅ Load initial history
+  useEffect(() => {
+    setLiveMessages(history?.data || []);
+  }, [history]);
+
+  console.log('messsage ==>', liveMessages);
+
+  // ✅ Join room and listen for events (including unread messages)
+  useEffect(() => {
+    if (!responseId || !userId) return;
+
+    socket.emit('joinRoom', { responseId, userId });
+
+    socket.on('message', (data) => {
+      // Append new incoming messages
+      setLiveMessages((prev) => [...prev, data]);
     });
 
-    // ✅ Load initial history
-    useEffect(() => {
-        setLiveMessages(history?.data || []);
-    }, [history, responseId]);
+    socket.on('unread-messages', (msgs) => {
+      // Merge unread messages without duplicates
+      setLiveMessages((prev) => {
+        const existingIds = new Set(prev.map((m) => m._id));
+        const newOnes = msgs.filter((m) => !existingIds.has(m._id));
+        return [...prev, ...newOnes];
+      });
+    });
 
-    // ✅ Join room and listen for events (including unread messages)
-    useEffect(() => {
-        if (!responseId || !userId) return;
+    socket.on('message-read', ({ messageId, userId: readerId }) => {
+      setLiveMessages((prev) =>
+        prev.map((msg) =>
+          msg._id === messageId
+            ? {
+                ...msg,
+                readBy: [...new Set([...(msg.readBy || []), readerId])],
+              }
+            : msg
+        )
+      );
+    });
 
-        socket.emit('joinRoom', { responseId, userId });
-
-        socket.on('message', (data) => {
-            // Append new incoming messages
-            setLiveMessages((prev) => [...prev, data]);
-        });
-
-        socket.on('unread-messages', (msgs) => {
-            // Merge unread messages without duplicates
-            setLiveMessages((prev) => {
-                const existingIds = new Set(prev.map((m) => m._id));
-                const newOnes = msgs.filter((m) => !existingIds.has(m._id));
-                return [...prev, ...newOnes];
-            });
-        });
-
-        socket.on('message-read', ({ messageId, userId: readerId }) => {
-            setLiveMessages((prev) =>
-                prev.map((msg) =>
-                    msg._id === messageId
-                        ? { ...msg, readBy: [...new Set([...(msg.readBy || []), readerId])] }
-                        : msg
-                )
-            );
-        });
-
-        return () => {
-            socket.off('message');
-            socket.off('unread-messages');
-            socket.off('message-read');
-        };
-    }, [responseId, userId, socket]);
-
-    // ✅ Send message
-    const sendMessage = () => {
-        if (message.trim()) {
-            socket.emit('message', { responseId, from: userId, message });
-            setMessage('');
-        }
+    return () => {
+      socket.off('message');
+      socket.off('unread-messages');
+      socket.off('message-read');
     };
+  }, [responseId, userId, socket]);
 
-    // ✅ Emit read receipts for unseen messages
-    useEffect(() => {
-        if (!responseId || !userId) return;
+  // ✅ Send message
+  const sendMessage = () => {
+    if (message.trim()) {
+      socket.emit('message', { responseId, from: userId, message });
+      setMessage('');
+    }
+  };
 
-        liveMessages.forEach((m) => {
-            const senderId = typeof m.from === 'object' ? m.from._id : m.from;
-            if (!m.readBy?.includes(userId) && senderId !== userId) {
-                socket.emit('message-read', {
-                    responseId,
-                    messageId: m._id,
-                    userId,
-                });
-            }
+  // ✅ Emit read receipts for unseen messages
+  useEffect(() => {
+    if (!responseId || !userId) return;
+
+    liveMessages.forEach((m) => {
+      const senderId = typeof m.from === 'object' ? m.from._id : m.from;
+      if (!m.readBy?.includes(userId) && senderId !== userId) {
+        socket.emit('message-read', {
+          responseId,
+          messageId: m._id,
+          userId,
         });
-    }, [liveMessages, responseId, userId, socket]);
+      }
+    });
+  }, [liveMessages, responseId, userId, socket]);
 
-    return (
-        <div>
-            {/* Messages */}
-            <div className="h-64 overflow-y-auto border rounded p-4 space-y-2">
-                {isLoading ? (
-                    <div>Loading messages...</div>
-                ) : (
-                    liveMessages.map((m, i) => {
-                        const senderId = typeof m.from === 'object' ? m.from._id : m.from;
-                        const isCurrentUser = senderId === userId;
-                        const seenByOthers =
-                            isCurrentUser && m.readBy?.some((id) => id !== userId);
+  return (
+    <div>
+      {/* Messages */}
+      <div className="h-64 overflow-y-auto border rounded py-3 px-2 space-y-2">
+        {isLoading ? (
+          <div className="flex items-center justify-center h-full">
+            <Loader className="animate-spin w-5 h-5" />
+          </div>
+        ) : liveMessages.length === 0 ? (
+          <div className="text-center text-sm text-gray-500">
+            Currently there is no messages
+          </div>
+        ) : (
+          liveMessages.map((m, i) => {
+            const senderId = typeof m.from === 'object' ? m.from._id : m.from;
+            const isCurrentUser = senderId === userId;
+            const seenByOthers =
+              isCurrentUser && m.readBy?.some((id) => id !== userId);
 
-                        return (
-                            <div
-                                key={m._id || i}
-                                className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}
-                            >
-                                <div
-                                    className={`rounded p-2 max-w-[70%] ${isCurrentUser
-                                            ? 'bg-blue-100 text-right'
-                                            : 'bg-gray-100 text-left'
-                                        }`}
-                                >
-                                    <div className='flex items-center justify-between gap-4'>
-                                        <p>{dayjs(m.createdAt).fromNow()}</p>
-                                        <p className="text-sm font-semibold">
-                                            {isCurrentUser
-                                                ? 'You'
-                                                : typeof m.from === 'object'
-                                                    ? m.from.profile?.name || m.from._id
-                                                    : m.from}
-                                        </p>
-
-                                    </div>
-                                    <div>{m.message}</div>
-                                    {isCurrentUser && seenByOthers && (
-                                        <div className="text-xs text-blue-500 mt-1">Seen</div>
-                                    )}
-                                </div>
-                            </div>
-                        );
-                    })
-                )}
-            </div>
-
-            {/* Input */}
-            <div className="flex gap-2 mt-4">
-                <input
-                    className="flex-1 border p-2 rounded"
-                    placeholder="Type a message..."
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+            return (
+              <div
+                key={m._id || i}
+                className={`flex items-center gap-2 ${
+                  isCurrentUser ? 'flex-row-reverse' : 'justify-start'
+                }`}
+              >
+                <Image
+                  src={m?.from?.profile?.profilePicture || userDummyImage}
+                  alt={m?.from?.profile?.name}
+                  width={40}
+                  height={40}
+                  className="rounded-full object-cover w-10 h-10 border border-gray-300"
                 />
-                <button
-                    onClick={sendMessage}
-                    className="bg-blue-600 text-white px-4 py-2 rounded"
-                >
-                    Send
-                </button>
-            </div>
-        </div>
-    );
+                <div className="flex flex-col items-end gap-0.5">
+                  <p
+                    className={`text-[11px] ${
+                      isCurrentUser ? 'text-right' : ''
+                    }`}
+                  >
+                    {dayjs(m.createdAt).locale('en-short').fromNow()}
+                  </p>
+                  <div
+                    className={`rounded p-2 ${
+                      isCurrentUser
+                        ? 'bg-[var(--secondary-color)] text-right'
+                        : 'bg-gray-300 text-left'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-4">
+                      <p
+                        className={`text-xs font-semibold ${
+                          isCurrentUser ? 'text-white' : ''
+                        }`}
+                      >
+                        {isCurrentUser
+                          ? 'You'
+                          : typeof m.from === 'object'
+                          ? m.from.profile?.name || m.from._id
+                          : m.from}
+                      </p>
+                    </div>
+                    <div
+                      className={`text-sm ${isCurrentUser ? 'text-white' : ''}`}
+                    >
+                      {m.message}
+                    </div>
+                  </div>
+
+                  {isCurrentUser && seenByOthers && (
+                    <div className="text-xs text-black mt-1">Seen</div>
+                  )}
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* Input */}
+      <div className="flex gap-2 mt-4">
+        <input
+          className="flex-1 border p-2 rounded placeholder:text-xs"
+          placeholder="Type a message..."
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+        />
+        <button
+          onClick={sendMessage}
+          className="bg-[var(--secondary-color)] text-white px-4 py-2 rounded"
+        >
+          <SendHorizontal className="w-4 h-4" />
+        </button>
+      </div>
+    </div>
+  );
 }

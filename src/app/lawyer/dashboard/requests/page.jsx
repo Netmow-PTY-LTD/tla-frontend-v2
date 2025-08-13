@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { userDummyImage } from '@/data/data';
+import { formatRelativeTime } from '@/helpers/formatTime';
 import { useGetAllRequestsFromClientQuery } from '@/store/features/public/publicApiService';
 import Link from 'next/link';
 import React from 'react';
@@ -62,7 +63,7 @@ export default function ClientRequests() {
           <div className="bg-white p-4 rounded-lg">
             {requests?.map((request, index) => (
               <div
-                className={`flex items-center justify-between gap-4 py-3 px-4 rounded-lg border border-gray-200 ${
+                className={`flex items-start justify-between gap-4 py-3 px-4 rounded-lg border border-gray-200 ${
                   index === 0 && index === requests?.length - 1 ? '' : 'mb-4'
                 }`}
                 key={index}
@@ -82,18 +83,27 @@ export default function ClientRequests() {
                     <div className="text-gray-500 mb-1">
                       {request?.leadId?.userProfileId?.name}
                     </div>
-                    <div className="text-sm text-black font-medium">
+                    <div className="text-sm text-black font-medium mb-1">
                       {request?.message}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      Status: <b>{request?.status}</b>
                     </div>
                   </div>
                 </div>
-                <Link
-                  href={`/lawyer/dashboard/requests/${request?.leadId?._id}`}
-                >
-                  <Button variant="outline" size="sm">
-                    View Details
-                  </Button>
-                </Link>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-gray-500">
+                    {request?.createdAt &&
+                      formatRelativeTime(request?.createdAt)}
+                  </span>
+                  <Link
+                    href={`/lawyer/dashboard/requests/${request?.leadId?._id}`}
+                  >
+                    <Button variant="outline" size="sm">
+                      View Details
+                    </Button>
+                  </Link>
+                </div>
               </div>
             ))}
           </div>
