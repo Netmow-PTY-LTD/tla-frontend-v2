@@ -207,7 +207,7 @@ export default function LeadDetailsPage() {
               </div>
               <div className="mt-3">
                 <div className="flex flex-col items-start gap-4 ">
-                  <figure className="w-20 h-20 overflow-hidden rounded-full">
+                  <figure className="w-20 h-20 overflow-hidden rounded-full border border-[#DCE2EA]">
                     <Image
                       src={
                         singleLead?.data?.userProfileId?.profilePicture ??
@@ -319,7 +319,14 @@ export default function LeadDetailsPage() {
                           <div className="text-[#34495E] mt-2">
                             {leadAnswer?.options &&
                               leadAnswer?.options
-                                ?.map((option) => option?.option)
+                                .map(
+                                  (option) =>
+                                    option?.option
+                                      ?.replace(/_/g, ' ') // replace underscores with spaces
+                                      ?.replace(/\b\w/g, (char) =>
+                                        char.toUpperCase()
+                                      ) // capitalize each word
+                                )
                                 .join(', ')}
                           </div>
                         </div>

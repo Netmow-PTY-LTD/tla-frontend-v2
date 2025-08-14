@@ -33,7 +33,7 @@ export default function HeroHome({ searchParam }) {
   const [service, setService] = useState(null);
   const [location, setLocation] = useState('');
   const [filteredServices, setFilteredServices] = useState([]);
-  const [filteredZipCodes, setFilteredZipCodes] = useState([]);
+  //const [filteredZipCodes, setFilteredZipCodes] = useState([]);
   const [shouldAutoFocus, setShouldAutoFocus] = useState(false);
 
   const inputRef = useRef();
@@ -98,94 +98,11 @@ export default function HeroHome({ searchParam }) {
   const { data: allZipCodes, isLoading: isZipCodeLoading } =
     useGetZipCodeListQuery();
 
-  // const filteredZipCodes = allZipCodes?.data?.filter((item) =>
-  //   item?.zipcode?.toLowerCase().includes(location?.toLowerCase())
-  // );
+  const filteredZipCodes = allZipCodes?.data?.filter((item) =>
+    item?.zipcode?.toLowerCase().includes(location?.toLowerCase())
+  );
 
-  //const zipInputRef = useRef(null);
-
-  // useEffect(() => {
-  //   let autoCompleteInstance;
-
-  //   const initializeAutoComplete = () => {
-  //     autoCompleteInstance = new google.maps.places.Autocomplete(
-  //       zipInputRef.current,
-  //       {
-  //         fields: ['geometry', 'formatted_address', 'address_components'],
-  //       }
-  //     );
-
-  //     // Limit results to Australia
-  //     autoCompleteInstance.setComponentRestrictions({ country: ['au'] });
-
-  //     autoCompleteInstance.addListener('place_changed', () => {
-  //       const selectedPlace = autoCompleteInstance.getPlace();
-  //       if (!selectedPlace.geometry) return;
-
-  //       const zipComponent = selectedPlace.address_components.find((item) =>
-  //         item.types.includes('postal_code')
-  //       );
-  //       const postalCode = zipComponent ? zipComponent.long_name : '';
-
-  //       if (!postalCode) return;
-
-  //       // Example: You can update your form here
-  //       // updateField('zip', postalCode);
-  //       // updateField('fullAddress', selectedPlace.formatted_address);
-  //       setLocation(selectedPlace.formatted_address);
-  //     });
-  //   };
-
-  //   if (typeof window !== 'undefined') {
-  //     if (window.google && window.google.maps?.places) {
-  //       initializeAutoComplete();
-  //     } else {
-  //       window.initMap = initializeAutoComplete;
-  //     }
-  //   }
-  // }, []);
-
-  // Handle direct changes to the address
-  // useEffect(() => {
-  //   const retrieveGeoData = async () => {
-  //     if (!location) return;
-
-  //     try {
-  //       const response = await fetch(
-  //         `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-  //           location
-  //         )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
-  //       );
-  //       const geoData = await response.json();
-
-  //       if (geoData.status === 'OK') {
-  //         const locationData = geoData.results[0];
-  //         const geoLocation = locationData.geometry.location;
-
-  //         const readableAddress = locationData.formatted_address;
-
-  //         const zipComponent = locationData.address_components.find((comp) =>
-  //           comp.types.includes('postal_code')
-  //         );
-  //         const postalCode = zipComponent ? zipComponent.long_name : '';
-
-  //         // You can store lat/lng, zip etc. if needed
-  //         // updateLatLng(geoLocation.lat, geoLocation.lng);
-  //         // updateZip(postalCode);
-
-  //         // Ensure address remains consistent
-  //         setLocation(readableAddress);
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching location info', error);
-  //     }
-  //   };
-
-  //   retrieveGeoData();
-  // }, [location]);
-
-  // console.log('selectedService', selectedService);
-  // console.log('location', location);
+  //console.log('filteredZipCodes', filteredZipCodes);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -211,7 +128,7 @@ export default function HeroHome({ searchParam }) {
           </div>
           <form className="w-full" onSubmit={handleSubmit}>
             <div className="hero-search-area flex flex-wrap md:flex-nowrap gap-2 items-center w-full">
-              <div className="tla-form-group w-full lg:w-10/12">
+              <div className="tla-form-group w-full lg:w-5/12">
                 <Combobox value={service} onChange={(val) => setService(val)}>
                   <div className="relative">
                     <ComboboxInput
@@ -225,7 +142,6 @@ export default function HeroHome({ searchParam }) {
                           query ? matched : countryWiseServices?.data
                         );
                         setService(e.target.value);
-                        console.log('service', e.target.value);
                       }}
                       displayValue={(val) => val?.name || ''}
                       placeholder="What area of law are you interested in?"
@@ -233,6 +149,7 @@ export default function HeroHome({ searchParam }) {
                         setFilteredServices(countryWiseServices?.data ?? [])
                       }
                       ref={inputRef}
+                      autoComplete="off"
                     />
                     {filteredServices?.length > 0 && (
                       <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
@@ -273,17 +190,69 @@ export default function HeroHome({ searchParam }) {
                   </div>
                 </Combobox>
               </div>
-              {/* <div className="tla-form-group w-full lg:w-5/12">
-                <input
-                  ref={zipInputRef}
-                  type="text"
-                  className="tla-form-control"
-                  placeholder="Location"
-                  autoComplete="off"
-                  value={location} // ✅ controlled input for full address
-                  onChange={(e) => console.log(e.target.value)} // updates address while typing
-                />
-              </div> */}
+              <div className="tla-form-group w-full lg:w-5/12">
+                <Combobox value={location} onChange={setLocation}>
+                  <div className="relative">
+                    <ComboboxInput
+                      className="border border-gray-300 rounded-md w-full h-[44px] px-4 tla-form-control"
+                      onChange={(e) => {
+                        // const query = e.target.value.toLowerCase();
+                        // const filtered = allZipCodes?.data?.filter((z) =>
+                        //   z.zipcode.toLowerCase().includes(query)
+                        // );
+                        // setFilteredZipCodes(
+                        //   query ? filtered : allZipCodes?.data
+                        // );
+                        setLocation(e.target.value);
+                      }}
+                      displayValue={(val) =>
+                        allZipCodes?.data?.find((z) => z._id === val)
+                          ?.zipcode || val
+                      }
+                      placeholder="Your location"
+                      // onFocus={() =>
+                      //   setFilteredZipCodes(allZipCodes?.data ?? [])
+                      // }
+                    />
+                    {filteredZipCodes?.length > 0 && (
+                      <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        {filteredZipCodes.slice(0, 10).map((item) => (
+                          <ComboboxOption
+                            key={item._id}
+                            value={item._id}
+                            className={({ active }) =>
+                              cn(
+                                'cursor-pointer select-none relative py-2 px-6',
+                                active
+                                  ? 'bg-blue-100 text-black'
+                                  : 'text-gray-900'
+                              )
+                            }
+                          >
+                            {({ selected }) => (
+                              <>
+                                <span
+                                  className={cn('block truncate', {
+                                    'font-medium': selected,
+                                    'font-normal': !selected,
+                                  })}
+                                >
+                                  {item.zipcode}
+                                </span>
+                                {selected && (
+                                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
+                                    <Check className="h-4 w-4" />
+                                  </span>
+                                )}
+                              </>
+                            )}
+                          </ComboboxOption>
+                        ))}
+                      </ComboboxOptions>
+                    )}
+                  </div>
+                </Combobox>
+              </div>
               <div className="tla-btn-wrapper w-full lg:w-1/6">
                 <button type="submit" className="tla-btn-search">
                   <span>Get Started</span>
