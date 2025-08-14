@@ -559,6 +559,7 @@ export default function ClientNewLeadRegistrationModal({
           setService(null);
           setZipCode(null);
           setStep(0); // reset form steps, if needed
+          setAddress('');
         }
       }}
       title=""

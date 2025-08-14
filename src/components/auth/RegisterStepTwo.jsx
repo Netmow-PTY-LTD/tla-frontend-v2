@@ -63,6 +63,8 @@ export default function RegisterStepTwo() {
 
   const { data: zipcodeData } = useGetZipCodeListQuery();
 
+  console.log('zipcodeData', zipcodeData);
+
   const { data: rangeData } = useGetRangeListQuery({
     zipcodeId: zipCode || '',
   });
@@ -239,6 +241,8 @@ export default function RegisterStepTwo() {
   const filteredZipcodes = zipcodeData?.data?.filter((item) =>
     item?.zipcode?.toLowerCase().includes(query.toLowerCase())
   );
+
+  //console.log('zipcodeData', zipcodeData);
 
   return (
     <div className="flex flex-wrap lg:flex-nowrap w-full">

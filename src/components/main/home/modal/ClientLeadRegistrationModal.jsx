@@ -31,6 +31,14 @@ export default function ClientLeadRegistrationModal({
   serviceId,
   locationId,
   isQuestionsLoading,
+  zipCode,
+  setZipCode,
+  latitude,
+  setLatitude,
+  longitude,
+  setLongitude,
+  address,
+  setAddress,
 }) {
   const [step, setStep] = useState(0);
 
@@ -67,10 +75,6 @@ export default function ClientLeadRegistrationModal({
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [zipCode, setZipCode] = useState('');
-  const [latitude, setLatitude] = useState('');
-  const [longitude, setLongitude] = useState('');
-  const [address, setAddress] = useState('');
 
   useEffect(() => {
     if (!selectedServiceWiseQuestions?.length) return;
@@ -105,11 +109,11 @@ export default function ClientLeadRegistrationModal({
   //     : true
   // );
 
-  useEffect(() => {
-    if (locationId) {
-      setAddress(locationId); // Set ID, not zipcode text
-    }
-  }, [locationId]);
+  // useEffect(() => {
+  //   if (locationId) {
+  //     setAddress(locationId); // Set ID, not zipcode text
+  //   }
+  // }, [locationId]);
 
   //google map data
   // const { watch, setValue } = form;
@@ -126,7 +130,7 @@ export default function ClientLeadRegistrationModal({
       top: 100% !important;
       left: 0 !important;
       width: 518px !important;
-      z-index: 9999 !important;
+      z-index: 99999 !important;
     }
   `;
     document.head.appendChild(styleTag);
@@ -217,10 +221,10 @@ export default function ClientLeadRegistrationModal({
           );
           const postal = postalCodeObj ? postalCodeObj.long_name : '';
 
-          setZipCode(postal);
-          setAddress(formattedAddress);
-          setLatitude(coords.lat);
-          setLongitude(coords.lng);
+          // setZipCode(postal);
+          // setAddress(formattedAddress);
+          // setLatitude(coords.lat);
+          // setLongitude(coords.lng);
         }
       } catch (err) {
         console.error('Failed to fetch coordinates', err);
@@ -238,13 +242,13 @@ export default function ClientLeadRegistrationModal({
   const addressInfo = {
     countryId: country.countryId,
     countryCode: country.code.toLowerCase(),
-    zipcode: address,
-    latitude: latitude.toString(),
-    longitude: longitude.toString(),
-    postalCode: zipCode,
+    zipcode: address || '',
+    latitude: latitude?.toString() || '',
+    longitude: longitude?.toString() || '',
+    postalCode: zipCode || '',
   };
 
-  console.log('addressInfo', addressInfo);
+  //console.log('addressInfo', addressInfo);
 
   //setting initial data
 
@@ -723,10 +727,10 @@ export default function ClientLeadRegistrationModal({
               autoComplete="off"
               value={address} // ✅ controlled input for full address
               onChange={(e) => {
-                setAddress('');
                 setZipCode('');
                 setLatitude('');
                 setLongitude('');
+                setAddress(e.target.value);
               }} // updates address while typing
             />
             <div className="google-places-autocomplete"></div>

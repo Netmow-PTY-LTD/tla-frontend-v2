@@ -35,6 +35,10 @@ export default function HeroHome({ searchParam }) {
   const [filteredServices, setFilteredServices] = useState([]);
   const [filteredZipCodes, setFilteredZipCodes] = useState([]);
   const [shouldAutoFocus, setShouldAutoFocus] = useState(false);
+  const [zipCode, setZipCode] = useState('');
+  const [latitude, setLatitude] = useState('');
+  const [longitude, setLongitude] = useState('');
+  const [address, setAddress] = useState('');
 
   const inputRef = useRef();
 
@@ -102,10 +106,24 @@ export default function HeroHome({ searchParam }) {
   //   item?.zipcode?.toLowerCase().includes(location?.toLowerCase())
   // );
 
-  //const zipInputRef = useRef(null);
+  const zipInputRef = useRef(null);
 
   // useEffect(() => {
+  //   // Inject high-priority styles once
+  //   const customStyleTag = document.createElement('style');
+  //   customStyleTag.innerHTML = `
+  //   .google-places-autocomplete-suggestions .pac-container {
+  //     position: absolute !important;
+  //     top: 100% !important;
+  //     left: 0 !important;
+  //     width: 518px !important;
+  //     z-index: 99999 !important;
+  //   }
+  // `;
+  //   document.head.appendChild(customStyleTag);
+
   //   let autoCompleteInstance;
+  //   let observerInstance;
 
   //   const initializeAutoComplete = () => {
   //     autoCompleteInstance = new google.maps.places.Autocomplete(
@@ -132,7 +150,31 @@ export default function HeroHome({ searchParam }) {
   //       // Example: You can update your form here
   //       // updateField('zip', postalCode);
   //       // updateField('fullAddress', selectedPlace.formatted_address);
-  //       setLocation(selectedPlace.formatted_address);
+  //       // setLocation(selectedPlace.formatted_address);
+  //       setZipCode(postalCode);
+  //       setAddress(selectedPlace.formatted_address);
+  //       setLatitude(selectedPlace.geometry.location.lat);
+  //       setLongitude(selectedPlace.geometry.location.lng);
+  //     });
+
+  //     observerInstance = new MutationObserver(() => {
+  //       const pacContainer = document.querySelector('.pac-container');
+  //       const targetContainer = document.querySelector(
+  //         '.google-places-autocomplete-suggestions'
+  //       );
+
+  //       if (
+  //         pacContainer &&
+  //         targetContainer &&
+  //         !targetContainer.contains(pacContainer)
+  //       ) {
+  //         targetContainer.appendChild(pacContainer);
+  //       }
+  //     });
+
+  //     observerInstance.observe(document.body, {
+  //       childList: true,
+  //       subtree: true,
   //     });
   //   };
 
@@ -145,7 +187,7 @@ export default function HeroHome({ searchParam }) {
   //   }
   // }, []);
 
-  // Handle direct changes to the address
+  // // Handle direct changes to the address
   // useEffect(() => {
   //   const retrieveGeoData = async () => {
   //     if (!location) return;
@@ -174,7 +216,7 @@ export default function HeroHome({ searchParam }) {
   //         // updateZip(postalCode);
 
   //         // Ensure address remains consistent
-  //         setLocation(readableAddress);
+  //         //  setLocation(readableAddress);
   //       }
   //     } catch (error) {
   //       console.error('Error fetching location info', error);
@@ -211,7 +253,7 @@ export default function HeroHome({ searchParam }) {
           </div>
           <form className="w-full" onSubmit={handleSubmit}>
             <div className="hero-search-area flex flex-wrap md:flex-nowrap gap-2 items-center w-full">
-              <div className="tla-form-group w-full lg:w-10/12">
+              <div className="tla-form-group w-full lg:w-5/12">
                 <Combobox value={service} onChange={(val) => setService(val)}>
                   <div className="relative">
                     <ComboboxInput
@@ -273,17 +315,25 @@ export default function HeroHome({ searchParam }) {
                   </div>
                 </Combobox>
               </div>
-              {/* <div className="tla-form-group w-full lg:w-5/12">
-                <input
-                  ref={zipInputRef}
-                  type="text"
-                  className="tla-form-control"
-                  placeholder="Location"
-                  autoComplete="off"
-                  value={location} // ✅ controlled input for full address
-                  onChange={(e) => console.log(e.target.value)} // updates address while typing
-                />
-              </div> */}
+              <div className="tla-form-group w-full lg:w-5/12">
+                <div className="relative">
+                  <input
+                    ref={zipInputRef}
+                    type="text"
+                    className="tla-form-control"
+                    placeholder="Location"
+                    autoComplete="off"
+                    value={address} // ✅ controlled input for full address
+                    onChange={(e) => {
+                      setZipCode('');
+                      setLatitude('');
+                      setLongitude('');
+                      setAddress(e.target.value);
+                    }} // updates address while typing
+                  />
+                  <div className="google-place-autocomplete-suggestions"></div>
+                </div>
+              </div>
               <div className="tla-btn-wrapper w-full lg:w-1/6">
                 <button type="submit" className="tla-btn-search">
                   <span>Get Started</span>
@@ -337,8 +387,16 @@ export default function HeroHome({ searchParam }) {
           selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
-          locationId={location}
+          // locationId={location}
           isQuestionsLoading={isQuestionsLoading}
+          zipCode={zipCode}
+          setZipCode={setZipCode}
+          address={address}
+          setAddress={setAddress}
+          latitude={latitude}
+          setLatitude={setLatitude}
+          longitude={longitude}
+          setLongitude={setLongitude}
         />
       )}
     </section>
