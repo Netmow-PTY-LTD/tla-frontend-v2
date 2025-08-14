@@ -5,16 +5,7 @@ export const lawyerRegistrationStepTwoFormValidation = z
     practiceWithin: z.boolean().refine((val) => val === true, {
       message: 'This checkbox must be checked before proceeding.',
     }),
-    AreaZipcode: z
-      .string()
-      .min(1, 'Address is required')
-      .refine(
-        (val) => /\b\d{4}\b/.test(val), // Check for Australian ZIP (e.g., 3000)
-        {
-          message:
-            'Please provide a valid Australian address that includes a 4-digit postcode.',
-        }
-      ),
+    AreaZipcode: z.string().min(1, 'Address is required'),
     rangeInKm: z.any().optional(),
     practiceInternational: z.boolean().optional(),
   })

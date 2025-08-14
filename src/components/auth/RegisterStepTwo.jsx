@@ -50,6 +50,7 @@ export default function RegisterStepTwo() {
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
   const [postalCode, setPostalCode] = useState('');
+  const [address, setAddress] = useState('');
   const [query, setQuery] = useState('');
 
   const dispatch = useDispatch();
@@ -63,7 +64,7 @@ export default function RegisterStepTwo() {
 
   const { data: zipcodeData } = useGetZipCodeListQuery();
 
-  console.log('zipcodeData', zipcodeData);
+  //console.log('zipcodeData', zipcodeData);
 
   const { data: rangeData } = useGetRangeListQuery({
     zipcodeId: zipCode || '',
@@ -84,110 +85,16 @@ export default function RegisterStepTwo() {
   const practiceWithinWatch = form.watch('practiceWithin');
   //const practiceInternationalWatch = form.watch('practiceInternational');
 
-  //google map data
-  const { watch, setValue } = form;
-  const address = watch('AreaZipcode');
-
-  useEffect(() => {
-    let autocomplete;
-
-    const initAutocomplete = () => {
-      const input = document.getElementById('AreaZipcode');
-      if (!input) return;
-
-      autocomplete = new google.maps.places.Autocomplete(input, {
-        fields: ['geometry', 'formatted_address', 'address_components'],
-      });
-
-      // Restrict search to Australia
-      autocomplete.setComponentRestrictions({
-        country: ['au'],
-      });
-
-      autocomplete.addListener('place_changed', () => {
-        const place = autocomplete.getPlace();
-        if (!place.geometry) return;
-
-        // ✅ Extract ZIP code
-        const postalCodeObj = place.address_components.find((c) =>
-          c.types.includes('postal_code')
-        );
-        const zipCode = postalCodeObj ? postalCodeObj.long_name : '';
-
-        if (!zipCode) return;
-
-        // ✅ Update the form field "AreaZipcode"
-        //setValue('zipcode', zipCode);
-
-        // (Optional) Update other location fields too
-        setValue('AreaZipcode', place.formatted_address);
-      });
-    };
-
-    if (typeof window !== 'undefined') {
-      if (window.google && window.google.maps && window.google.maps.places) {
-        initAutocomplete();
-      } else {
-        window.initMap = initAutocomplete;
-      }
-    }
-  }, [setValue]);
-
-  // Still keep geocode fetch in case address changes without using autocomplete
-  useEffect(() => {
-    const fetchCoordinates = async () => {
-      if (!address) return;
-
-      try {
-        const res = await fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-            address
-          )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
-        );
-        const data = await res.json();
-
-        //console.log('data from geocode', data);
-
-        if (data.status === 'OK') {
-          const coords = data.results[0].geometry.location;
-
-          setLatitude(coords.lat);
-          setLongitude(coords.lng);
-
-          const formattedAddress = data.results[0].formatted_address;
-
-          // Extract ZIP code
-          const postalCodeObj = data.results[0].address_components.find(
-            (component) => component.types.includes('postal_code')
-          );
-          const zipCode = postalCodeObj ? postalCodeObj.long_name : '';
-
-          setPostalCode(zipCode);
-          // ✅ Prevent null in autocomplete
-          setValue('AreaZipcode', formattedAddress);
-          setZipcode(formattedAddress);
-          //console.log('Zip code:', zipCode);
-        }
-      } catch (err) {
-        console.error('Failed to fetch coordinates', err);
-      }
-    };
-
-    fetchCoordinates();
-  }, [address, setValue]);
-
-  // console.log('zipCode', zipcode);
-  // console.log('latitude', latitude);
-  // console.log('longitude', longitude);
-
   const addressInfo = {
     countryId: country.countryId,
     countryCode: country.code.toLowerCase(),
-    zipcode,
-    latitude: latitude.toString(),
-    longitude: longitude.toString(),
+    zipcode: address,
+    latitude: latitude?.toString(),
+    longitude: longitude?.toString(),
     postalCode,
   };
+
+  console.log('addressInfo', addressInfo);
 
   const onSubmit = (data) => {
     if (!practiceWithinWatch && (!data.AreaZipcode || !data.rangeInKm)) {
@@ -242,7 +149,7 @@ export default function RegisterStepTwo() {
     item?.zipcode?.toLowerCase().includes(query.toLowerCase())
   );
 
-  //console.log('zipcodeData', zipcodeData);
+  console.log('filteredZipcodes', filteredZipcodes);
 
   return (
     <div className="flex flex-wrap lg:flex-nowrap w-full">
@@ -286,15 +193,82 @@ export default function RegisterStepTwo() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Area Zipcode</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="text"
-                        placeholder="Enter area zipcode"
-                        id="AreaZipcode"
-                        className="tla-form-control"
-                      />
-                    </FormControl>
+                    <Combobox
+                      value={field.value}
+                      onChange={(val) => {
+                        //console.log('val', val);
+                        field.onChange(val);
+                        setZipcode(val);
+                        const selectedZipcode = zipcodeData?.data?.find(
+                          (z) => z._id === val
+                        );
+                        if (selectedZipcode) {
+                          setLatitude(selectedZipcode.latitude);
+                          setLongitude(selectedZipcode.longitude);
+                          setPostalCode(selectedZipcode.postalCode);
+                          setAddress(selectedZipcode.zipcode);
+                        }
+                        dispatch(
+                          updateNestedField({
+                            section: 'lawyerServiceMap',
+                            field: 'zipCode',
+                            value: val,
+                          })
+                        );
+                      }}
+                      disabled={!practiceWithinWatch}
+                    >
+                      <div className="relative">
+                        <ComboboxInput
+                          className="tla-form-control w-full"
+                          onChange={(event) => setQuery(event.target.value)}
+                          displayValue={(val) =>
+                            zipcodeData?.data?.find((z) => z._id === val)
+                              ?.zipcode || ''
+                          }
+                          placeholder="Select a Zipcode"
+                        />
+                        <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
+                          <ChevronDown className="h-4 w-4 text-gray-500" />
+                        </ComboboxButton>
+                        {filteredZipcodes?.length > 0 && (
+                          <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            {filteredZipcodes?.slice(0, 10).map((item) => (
+                              <ComboboxOption
+                                key={item._id}
+                                value={item._id}
+                                className={({ active }) =>
+                                  cn(
+                                    'cursor-pointer select-none relative py-2 pl-10 pr-4',
+                                    active
+                                      ? 'bg-blue-100 text-blue-900'
+                                      : 'text-gray-900'
+                                  )
+                                }
+                              >
+                                {({ selected }) => (
+                                  <>
+                                    <span
+                                      className={cn('block truncate', {
+                                        'font-medium': selected,
+                                        'font-normal': !selected,
+                                      })}
+                                    >
+                                      {item.zipcode}
+                                    </span>
+                                    {selected && (
+                                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
+                                        <Check className="h-4 w-4" />
+                                      </span>
+                                    )}
+                                  </>
+                                )}
+                              </ComboboxOption>
+                            ))}
+                          </ComboboxOptions>
+                        )}
+                      </div>
+                    </Combobox>
                     <FormMessage className="text-red-600" />
                   </FormItem>
                 )}

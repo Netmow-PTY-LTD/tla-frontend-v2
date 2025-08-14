@@ -38,6 +38,8 @@ export default function Page() {
     useGetCountryListQuery();
   const { data: ZipCodeList } = useGetZipCodeListQuery();
 
+  console.log('ZipCodeList', ZipCodeList);
+
   const [selectedCountry, setSelectedCountry] = useState(null);
 
   const handleCountryWiseServiceChange = (val) => {
