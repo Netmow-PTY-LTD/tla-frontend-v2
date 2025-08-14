@@ -14,6 +14,7 @@ import {
   ChevronRight,
   Hammer,
   LogOut,
+  SearchIcon,
   X,
 } from 'lucide-react';
 import Gavel from '@/components/icon/Gavel';
@@ -320,28 +321,43 @@ export default function Header() {
               </li> */}
             </ul>
           </nav>
-          {token && currentUser ? (
-            <div className="flex items-center gap-4 ml-auto">
-              <Link href={dashboardUrl} className={styles.btn_register}>
-                <span>Dashboard</span>
-              </Link>
+          <div className="flex items-center gap-6 ml-auto">
+            <div
+              className={`relative w-full max-w-xs transition-opacity duration-500 ${
+                isHeaderFixed ? 'opacity-100 visible' : 'opacity-0 invisible'
+              }`}
+            >
+              <input
+                type="search"
+                placeholder="Search a service"
+                className="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none text-[14px]"
+              />
+              <SearchIcon className="w-5 h-5 text-gray-500 absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer" />
             </div>
-          ) : (
-            <div className="flex items-center gap-4 ml-auto">
-              <Link href="/login" className={styles.nav_link}>
-                <span>Log In</span>
-              </Link>
-              <Link
-                href="/register"
-                className={`${styles.btn_register} ${styles.btn_register_mobile}`}
-              >
-                <div className="icon w-6 h-6 bg-white flex items-center justify-center rounded-full">
-                  <Gavel className="w-4 h-4 text-black" />
-                </div>
-                <span>Join as a Lawyer</span>
-              </Link>
-            </div>
-          )}
+
+            {token && currentUser ? (
+              <div className="flex items-center gap-4 flex-shrink-0">
+                <Link href={dashboardUrl} className={styles.btn_register}>
+                  <span>Dashboard</span>
+                </Link>
+              </div>
+            ) : (
+              <div className="flex items-center gap-4 flex-shrink-0">
+                <Link href="/login" className={styles.nav_link}>
+                  <span>Log In</span>
+                </Link>
+                <Link
+                  href="/register"
+                  className={`${styles.btn_register} ${styles.btn_register_mobile}`}
+                >
+                  <div className="icon w-6 h-6 bg-white flex items-center justify-center rounded-full">
+                    <Gavel className="w-4 h-4 text-black" />
+                  </div>
+                  <span>Join as a Lawyer</span>
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       {token && currentUser ? (

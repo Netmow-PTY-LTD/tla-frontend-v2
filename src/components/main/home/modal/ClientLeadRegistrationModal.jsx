@@ -71,6 +71,7 @@ export default function ClientLeadRegistrationModal({
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
   const [address, setAddress] = useState('');
+  const [postalCode, setPostalCode] = useState('');
 
   useEffect(() => {
     if (!selectedServiceWiseQuestions?.length) return;
@@ -96,155 +97,31 @@ export default function ClientLeadRegistrationModal({
   const dispatch = useDispatch();
   const router = useRouter();
 
-  // const { data: allZipCodes, isLoading: isZipCodeLoading } =
-  //   useGetZipCodeListQuery();
+  const { data: allZipCodes, isLoading: isZipCodeLoading } =
+    useGetZipCodeListQuery();
 
-  // const filteredZipCodes = allZipCodes?.data?.filter((item) =>
-  //   zipCode
-  //     ? item?.zipcode?.toLowerCase().includes(zipCode.toLowerCase())
-  //     : true
-  // );
+  const filteredZipCodes = allZipCodes?.data?.filter((item) =>
+    zipCode
+      ? item?.zipcode?.toLowerCase().includes(zipCode.toLowerCase())
+      : true
+  );
 
-  useEffect(() => {
-    if (locationId) {
-      setAddress(locationId); // Set ID, not zipcode text
-    }
-  }, [locationId]);
-
-  //google map data
-  // const { watch, setValue } = form;
-  // const address = watch('AreaZipcode');
-
-  const inputRef = useRef(null);
-
-  useEffect(() => {
-    // Inject high-priority styles once
-    const styleTag = document.createElement('style');
-    styleTag.innerHTML = `
-    .google-places-autocomplete .pac-container {
-      position: absolute !important;
-      top: 100% !important;
-      left: 0 !important;
-      width: 518px !important;
-      z-index: 9999 !important;
-    }
-  `;
-    document.head.appendChild(styleTag);
-
-    let autocomplete;
-    let observer;
-
-    const initialize = () => {
-      if (!inputRef.current || !window.google?.maps?.places) return;
-
-      autocomplete = new window.google.maps.places.Autocomplete(
-        inputRef.current,
-        {
-          fields: ['geometry', 'formatted_address', 'address_components'],
-        }
-      );
-
-      autocomplete.setComponentRestrictions({ country: ['au'] });
-
-      autocomplete.addListener('place_changed', () => {
-        const place = autocomplete.getPlace();
-        if (!place.geometry) return;
-
-        const postalCodeObj = place.address_components.find((c) =>
-          c.types.includes('postal_code')
-        );
-        const postal = postalCodeObj ? postalCodeObj.long_name : '';
-
-        setZipCode(postal);
-        setAddress(place.formatted_address);
-        setLatitude(place.geometry.location.lat);
-        setLongitude(place.geometry.location.lng);
-      });
-
-      observer = new MutationObserver(() => {
-        const pacContainer = document.querySelector('.pac-container');
-        const targetWrapper = document.querySelector(
-          '.google-places-autocomplete'
-        );
-
-        if (
-          pacContainer &&
-          targetWrapper &&
-          !targetWrapper.contains(pacContainer)
-        ) {
-          targetWrapper.appendChild(pacContainer);
-        }
-      });
-
-      observer.observe(document.body, { childList: true, subtree: true });
-    };
-
-    const interval = setInterval(() => {
-      if (inputRef.current && window.google?.maps?.places) {
-        initialize();
-        clearInterval(interval);
-      }
-    }, 100);
-
-    return () => {
-      clearInterval(interval);
-      if (observer) observer.disconnect();
-    };
-  }, []);
-
-  // Geocode fallback for manual typing
-  useEffect(() => {
-    if (!address) return;
-
-    // Only fetch if the user typed manually (zipCode not set yet)
-    if (zipCode) return; // skip fetch after Autocomplete selection
-
-    const fetchCoordinates = async () => {
-      try {
-        const res = await fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-            address
-          )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
-        );
-        const data = await res.json();
-
-        if (data.status === 'OK') {
-          const coords = data.results[0].geometry.location;
-          const formattedAddress = data.results[0].formatted_address;
-
-          const postalCodeObj = data.results[0].address_components.find((c) =>
-            c.types.includes('postal_code')
-          );
-          const postal = postalCodeObj ? postalCodeObj.long_name : '';
-
-          setZipCode(postal);
-          setAddress(formattedAddress);
-          setLatitude(coords.lat);
-          setLongitude(coords.lng);
-        }
-      } catch (err) {
-        console.error('Failed to fetch coordinates', err);
-      }
-    };
-
-    fetchCoordinates();
-  }, [address]);
-
-  // console.log('zipCode', zipCode);
-  //console.log('address', address);
-  // console.log('latitude', latitude);
-  // console.log('longitude', longitude);
+  // useEffect(() => {
+  //   if (locationId) {
+  //     setAddress(locationId); // Set ID, not zipcode text
+  //   }
+  // }, [locationId]);
 
   const addressInfo = {
     countryId: country.countryId,
     countryCode: country.code.toLowerCase(),
-    zipcode: address,
-    latitude: latitude.toString(),
-    longitude: longitude.toString(),
-    postalCode: zipCode,
+    zipcode: address || '',
+    latitude: latitude?.toString() || '',
+    longitude: longitude?.toString() || '',
+    postalCode: zipCode || '',
   };
 
-  console.log('addressInfo', addressInfo);
+  //console.log('addressInfo', addressInfo);
 
   //setting initial data
 
@@ -309,7 +186,7 @@ export default function ClientLeadRegistrationModal({
 
     const questionType = parentQuestion?.questionType;
 
-    console.log('questionType', questionType);
+    //console.log('questionType', questionType);
 
     const tempOption = {
       id: optionId,
@@ -471,15 +348,14 @@ export default function ClientLeadRegistrationModal({
       if (userPayload) {
         dispatch(setUser({ user: res?.data, token }));
 
-        const userType = res?.data?.regUserType;
+        const userType = res?.data?.userData?.regUserType;
 
         setQuestionsPayload([]); // Clear form state
         setModalOpen(false); // Close modal
 
         if (userType === 'client') {
-          setTimeout(() => {
-            router.push('/client/dashboard/my-cases');
-          }, 2000);
+          router.push(`/client/dashboard/my-cases/${res?.data?.leadUser?._id}`);
+          //router.push(`/client/dashboard/my-cases`);
         } else {
           router.push('/');
         }
@@ -554,7 +430,9 @@ export default function ClientLeadRegistrationModal({
   //   !selectedServiceWiseQuestions?.length
   // );
 
-  //console.log('filteredzipCodes:', filteredzipCodes);
+  //console.log('allZipCodes:', allZipCodes);
+
+  //console.log('zipcode:', zipCode);
 
   return (
     <Modal
@@ -714,23 +592,75 @@ export default function ClientLeadRegistrationModal({
           <div className="text-center">
             The postcode or town for the address where you want the service.
           </div>
-          <div className="relative">
-            <input
-              ref={inputRef}
-              type="text"
-              className="border border-gray-300 rounded-md w-full h-[44px] px-4"
-              placeholder="Enter Zipcode"
-              autoComplete="off"
-              value={address} // ✅ controlled input for full address
-              onChange={(e) => {
-                setAddress('');
-                setZipCode('');
-                setLatitude('');
-                setLongitude('');
-              }} // updates address while typing
-            />
-            <div className="google-places-autocomplete"></div>
-          </div>
+          <Combobox
+            value={zipCode ?? ''}
+            onChange={(selectedId) => {
+              setZipCode(selectedId);
+
+              const selectedZip = allZipCodes?.data?.find(
+                (z) => z._id === selectedId
+              );
+              if (selectedZip) {
+                setPostalCode(selectedZip.postalCode);
+                setLatitude(selectedZip.latitude);
+                setLongitude(selectedZip.longitude);
+                setAddress(selectedZip.zipcode); // full formatted address
+              }
+            }}
+          >
+            <div className="relative">
+              <ComboboxInput
+                className="border border-gray-300 rounded-md w-full h-[44px] px-4"
+                onChange={(event) => {
+                  // This is only for filtering typed text
+                  const value = event.target.value;
+                  // You can trigger filtering logic here if needed
+                }}
+                displayValue={(val) =>
+                  allZipCodes?.data?.find((z) => z._id === val)?.zipcode || val
+                }
+                placeholder="Select a postcode"
+                autoComplete="off"
+              />
+              <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
+                <ChevronDown className="h-4 w-4 text-gray-500" />
+              </ComboboxButton>
+              {filteredZipCodes?.length > 0 && (
+                <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  {filteredZipCodes?.slice(0, 10).map((item) => (
+                    <ComboboxOption
+                      key={item._id}
+                      value={item._id}
+                      className={({ active }) =>
+                        cn(
+                          'cursor-pointer select-none relative py-2 px-6',
+                          active ? 'bg-blue-100 text-black' : 'text-gray-900'
+                        )
+                      }
+                    >
+                      {({ selected }) => (
+                        <>
+                          <span
+                            className={cn('block truncate', {
+                              'font-medium': selected,
+                              'font-normal': !selected,
+                            })}
+                          >
+                            {item.zipcode}
+                          </span>
+                          {selected && (
+                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
+                              <Check className="h-4 w-4" />
+                            </span>
+                          )}
+                        </>
+                      )}
+                    </ComboboxOption>
+                  ))}
+                </ComboboxOptions>
+              )}
+            </div>
+          </Combobox>
         </div>
       ) : step === totalQuestions + 4 ? (
         <div className="space-y-6">
