@@ -445,8 +445,8 @@ export default function ClientLeadRegistrationModal({
 
   //console.log('allZipCodes:', allZipCodes);
 
-  console.log('step:', step);
-  console.log('questionsPayload:', questionsPayload);
+  // console.log('step:', step);
+  // console.log('questionsPayload:', questionsPayload);
 
   // Update stepwiseCheckedOptions whenever step or questionsPayload changes
   useEffect(() => {
@@ -454,8 +454,8 @@ export default function ClientLeadRegistrationModal({
     setStepwiseCheckedOptions(existing?.checkedOptionsDetails || []);
   }, [step, questionsPayload]); // only run when step or questionsPayload change
 
-  console.log('stepwise checked items:', stepwiseCheckedOptions);
-  console.log('viewData:', viewData);
+  // console.log('stepwise checked items:', stepwiseCheckedOptions);
+  // console.log('viewData:', viewData);
 
   // Update viewData options with checked state
   useEffect(() => {
@@ -478,7 +478,7 @@ export default function ClientLeadRegistrationModal({
     setViewData(updatedQuestion);
   }, [fullClonedQuestions, step, stepwiseCheckedOptions]);
 
-  console.log('fullClonedQuestions:', fullClonedQuestions);
+  //console.log('fullClonedQuestions:', fullClonedQuestions);
 
   return (
     <Modal
