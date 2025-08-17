@@ -117,19 +117,22 @@ export default function LeadDetailsPage() {
 
   const serviceId = singleLead?.data?.serviceId?._id;
 
+  //console.log('singleLead?.data', singleLead?.data);
+  const leadId = singleLead?.data?._id;
+
   const {
     data: lawyersData,
     isLoading: isLawyersLoading,
     isFetching,
     isSuccess,
   } = useGetAllServiceWiseLawyersSuggestionsQuery(
-    { page, LIMIT, serviceId },
+    { page, LIMIT, serviceId, leadId },
     {
-      skip: !serviceId,
+      skip: !serviceId || !leadId,
     }
   );
 
-  //console.log('lawyersData', lawyersData);
+  console.log('lawyersData', lawyersData);
   useEffect(() => {
     if (lawyersData && lawyersData?.data?.length > 0) {
       setLawyers(lawyersData?.data);

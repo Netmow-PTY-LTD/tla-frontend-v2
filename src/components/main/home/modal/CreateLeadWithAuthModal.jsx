@@ -89,7 +89,7 @@ export default function CreateLeadWithAuthModal({
     }
   }, [step]);
 
-  //console.log('initialData', initialData);
+  //console.log('locationId', locationId);
 
   const totalQuestions = selectedServiceWiseQuestions?.length;
 
@@ -282,7 +282,7 @@ export default function CreateLeadWithAuthModal({
         showSuccessToast(res?.message || 'Case registered successfully');
         setModalOpen(false);
         setTimeout(() => {
-          router.push('/client/dashboard/my-cases');
+          router.push(`/client/dashboard/my-cases/${res?.data?.leadUser?._id}`);
         }, 1000);
       }
     } catch (err) {
