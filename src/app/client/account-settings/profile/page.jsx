@@ -179,7 +179,7 @@ const page = () => {
           </div>
         </FormWrapper>
         <ChangePassword setOpen={setOpen} open={open} />
-        {/* <ChangeEmail setOpen={setOpenEmail} open={openEmail} /> */}
+        <ChangeEmail setOpen={setOpenEmail} open={openEmail} />
       </div>
     </div>
   );
