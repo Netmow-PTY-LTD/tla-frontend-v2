@@ -18,10 +18,10 @@ export const lawyerSettingAboutSchema = z.object({
   }),
   law_society_member_number: z
     .string()
-    .min(1, 'Law Society Member Number is required'),
+    .min(1, ' * required'),
   practising_certificate_number: z
     .string()
-    .min(1, 'Practising Certificate Number is required'),
+    .min(1, '* required'),
   lawyerContactEmail: z
     .string()
     .trim()
@@ -66,15 +66,7 @@ export const lawyerSettingAboutSchema = z.object({
     .optional(),
   location: z.object({
     address: z
-      .string()
-      .min(1, 'Address is required')
-      .refine(
-        (val) => /\b\d{4}\b/.test(val), // Australian postcodes are 4 digits
-        {
-          message:
-            'Please provide a valid Australian address which includes a zipcode',
-        }
-      ),
+      .string().optional(),
     hideFromProfile: z.boolean(),
     locationReason: z.string().optional(),
     // coordinates: z

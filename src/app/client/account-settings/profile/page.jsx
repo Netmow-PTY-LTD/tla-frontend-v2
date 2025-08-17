@@ -22,10 +22,13 @@ import TextInput from '@/components/form/TextInput';
 import AvatarUploader from '@/components/UIComponents/AvaterUploader';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { useEffect, useState } from 'react';
+import AddressCombobox from '../../_components/profile/AddressCombobox';
+import ChangeEmail from '../../_components/ChangeEmail';
 
 const page = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openEmail, setOpenEmail] = useState(false);
   const {
     data: currentUser,
     isLoading: isLoadingUserInfo,
@@ -40,21 +43,24 @@ const page = () => {
         name: currentUser?.data?.profile?.name || '',
         phone: currentUser?.data?.profile?.phone || '',
         userProfileLogo: currentUser?.data?.profile?.profilePicture || '',
+        address: currentUser?.data?.profile?.address || '',
+        email: currentUser?.data?.email || '',
       });
     }
   }, [currentUser?.data?.profile]);
 
   const [updateUserData] = useUpdateUserDataMutation();
   const handleSubmit = async (data) => {
-    //console.log('data', data);
     setIsSubmitting(true);
 
-    const { name, phone, userProfileLogo } = data;
+    const { name, phone, userProfileLogo ,address,email} = data;
 
     const payload = {
       userProfile: {
         name,
         phone,
+        address,
+        email
       },
     };
 
@@ -86,7 +92,7 @@ const page = () => {
 
   return (
     <div className="max-w-[900px] mx-auto my-8">
-      <div className="bg-[#F5F5F5] p-6 rounded-lg shadow-sm mx-auto">
+      <div className=" ">
         <h2 className="text-lg font-semibold mb-1 flex items-center gap-2">
           <BookOpenText className="text-[#00C3C0] w-6 h-6" />{' '}
           <span>My Details</span>
@@ -117,23 +123,45 @@ const page = () => {
                 label="Phone"
                 placeholder="Enter Your Phone"
               />
+              {/* <TextInput
+                type="text"
+                name="address"
+                label="Address"
+                placeholder="Enter Your Address"
+              /> */}
 
-              {/* <div className="flex items-center">
+              <AddressCombobox/>
+              <div className='flex  items-center gap-5 w-full  '>
+
                 <TextInput
-                  type="password"
-                  name="password"
-                  label="Password"
-                  placeholder="Enter Your Password"
+                  type="text"
+                  name="email"
+                  label="Email Adress"
+                  placeholder="Email Address"
+                  itemClassName='w-1/2'
+                  disabled
+
                 />
-              </div> */}
-              <div>
                 <button
                   type="button"
-                  onClick={() => setOpen(true)}
-                  className="text-sm text-[#00C3C0] mt-2 block"
+                  className="text-sm text-[#00C3C0] mt-6 block "
+                   onClick={() => setOpenEmail(true)}
                 >
-                  Change Password
+                  Change Email
                 </button>
+              </div>
+
+              <div>
+                <div className='flex items-center justify-between'>
+                  <button
+                    type="button"
+                    onClick={() => setOpen(true)}
+                    className="text-sm text-[#00C3C0] mt-2 block"
+                  >
+                    Change Password
+                  </button>
+
+                </div>
 
                 <Button
                   type="submit"
@@ -154,6 +182,7 @@ const page = () => {
           </div>
         </FormWrapper>
         <ChangePassword setOpen={setOpen} open={open} />
+        {/* <ChangeEmail setOpen={setOpenEmail} open={openEmail} /> */}
       </div>
     </div>
   );
