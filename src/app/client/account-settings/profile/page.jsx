@@ -53,14 +53,14 @@ const page = () => {
   const handleSubmit = async (data) => {
     setIsSubmitting(true);
 
-    const { name, phone, userProfileLogo ,address,email} = data;
+    const { name, phone, userProfileLogo, address, email } = data;
 
     const payload = {
       userProfile: {
         name,
         phone,
         address,
-        email
+        email,
       },
     };
 
@@ -91,7 +91,7 @@ const page = () => {
   };
 
   return (
-    <div className="max-w-[900px] mx-auto my-8">
+    <div className="max-w-[900px] mx-auto my-8 bg-white border border-gray-300 rounded-lg px-10 py-12">
       <div className=" ">
         <h2 className="text-lg font-semibold mb-1 flex items-center gap-2">
           <BookOpenText className="text-[#00C3C0] w-6 h-6" />{' '}
@@ -130,29 +130,27 @@ const page = () => {
                 placeholder="Enter Your Address"
               /> */}
 
-              <AddressCombobox/>
-              <div className='flex  items-center gap-5 w-full  '>
-
+              <AddressCombobox />
+              <div className="flex  items-center gap-5 w-full  ">
                 <TextInput
                   type="text"
                   name="email"
                   label="Email Adress"
                   placeholder="Email Address"
-                  itemClassName='w-1/2'
+                  itemClassName="w-1/2"
                   disabled
-
                 />
                 <button
                   type="button"
                   className="text-sm text-[#00C3C0] mt-6 block "
-                   onClick={() => setOpenEmail(true)}
+                  onClick={() => setOpenEmail(true)}
                 >
                   Change Email
                 </button>
               </div>
 
               <div>
-                <div className='flex items-center justify-between'>
+                <div className="flex items-center justify-between">
                   <button
                     type="button"
                     onClick={() => setOpen(true)}
@@ -160,7 +158,6 @@ const page = () => {
                   >
                     Change Password
                   </button>
-
                 </div>
 
                 <Button

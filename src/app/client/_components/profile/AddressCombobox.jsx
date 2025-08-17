@@ -1,10 +1,20 @@
-
-import { FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { cn } from '@/lib/utils';
 import { useGetZipCodeListQuery } from '@/store/features/public/publicApiService';
-import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions } from '@headlessui/react';
+import {
+  Combobox,
+  ComboboxButton,
+  ComboboxInput,
+  ComboboxOption,
+  ComboboxOptions,
+} from '@headlessui/react';
 import { Check, ChevronDown } from 'lucide-react';
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 export default function AddressCombobox() {
@@ -30,22 +40,21 @@ export default function AddressCombobox() {
             onChange={(val) => {
               setSelectedZipcode(val);
               field.onChange(val);
-
             }}
           >
             <div className="relative">
               <ComboboxInput
-                className="tla-form-control w-full"
+                className="border border-gray-300 rounded-md w-full h-[44px] px-4"
                 onChange={(e) => setQuery(e.target.value)}
                 displayValue={(val) =>
-                  zipcodeData?.data?.find((z) => z.zipcode === val)?.zipcode || ''
+                  zipcodeData?.data?.find((z) => z.zipcode === val)?.zipcode ||
+                  ''
                 }
                 placeholder="Select an Address"
               />
-          
 
               {filteredZipcodes?.length > 0 && (
-                <ComboboxOptions  className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   {filteredZipcodes.slice(0, 10).map((item) => (
                     <ComboboxOption
                       key={item._id}
@@ -86,4 +95,3 @@ export default function AddressCombobox() {
     />
   );
 }
-
