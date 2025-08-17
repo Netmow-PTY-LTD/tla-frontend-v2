@@ -59,7 +59,7 @@ export default function MyResponseDetails({
   //  ---------------------------     This  For socket start area -----------------------
   // Safely extract user IDs from AllLeadData
   const userIds =
-    data?.map((response) => response?.leadId?.userProfileId?.user) || [];
+    data?.map((response) => response?.leadId?.userProfileId?.user?._id) || [];
 
   // ✅ Use hook directly (at top level of component)
   useRealTimeStatus(currentUserId, userIds, (userId, isOnline) => {
