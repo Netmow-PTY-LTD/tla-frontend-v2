@@ -285,7 +285,7 @@ export default function HeroHome({ searchParam }) {
             )}
           </div>
         </div>
-        <HeroSlider />
+        {/* <HeroSlider /> */}
         {/* <HeroShowcase /> */}
       </div>
 

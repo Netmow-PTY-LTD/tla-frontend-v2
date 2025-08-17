@@ -132,7 +132,6 @@ export default function LeadDetailsPage() {
     }
   );
 
-  console.log('lawyersData', lawyersData);
   useEffect(() => {
     if (lawyersData && lawyersData?.data?.length > 0) {
       setLawyers(lawyersData?.data);
@@ -142,7 +141,7 @@ export default function LeadDetailsPage() {
   }, [lawyersData, lawyersData?.data]);
 
   // console.log('totalLawyersCount', totalLawyersCount);
-  // console.log('lawyers', lawyers);
+  console.log('lawyers', lawyers);
 
   const lawyerIds = lawyersData?.data?.map((lawyer) => lawyer?._id) || [];
 

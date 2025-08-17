@@ -72,6 +72,7 @@ export default function ClientLeadRegistrationModal({
   const [longitude, setLongitude] = useState('');
   const [address, setAddress] = useState('');
   const [postalCode, setPostalCode] = useState('');
+  const [stepwiseCheckedOptions, setStepwiseCheckedOptions] = useState(null);
 
   useEffect(() => {
     if (!selectedServiceWiseQuestions?.length) return;
@@ -176,17 +177,15 @@ export default function ClientLeadRegistrationModal({
   const options = selectedServiceWiseQuestions?.[step]?.options || [];
 
   const handleOptionChange = (optionId, checked) => {
-    const parentQuestion = fullClonedQuestions?.find((question) =>
-      question.options?.some((option) => option._id === optionId)
+    const parentQuestion = fullClonedQuestions?.find((q) =>
+      q.options?.some((opt) => opt._id === optionId)
     );
 
-    const foundOption = parentQuestion?.options?.find(
-      (option) => option._id === optionId
+    if (!parentQuestion) return;
+
+    const foundOption = parentQuestion.options.find(
+      (opt) => opt._id === optionId
     );
-
-    const questionType = parentQuestion?.questionType;
-
-    //console.log('questionType', questionType);
 
     const tempOption = {
       id: optionId,
@@ -198,60 +197,68 @@ export default function ClientLeadRegistrationModal({
           : '',
     };
 
-    const findSelectedOptions = options?.find((item) => item?._id === optionId);
+    let newCheckedOptionsDetails;
 
-    // Handle "radio" type first and return early
-    if (questionType === 'radio') {
-      if (checked) {
-        setCheckedOptions([optionId]);
-        setCheckedOptionsDetails([tempOption]);
-        setSelectedOptions(findSelectedOptions?.selected_options || []);
-      } else {
-        setCheckedOptions([]);
-        setCheckedOptionsDetails([]);
-        setSelectedOptions([]);
-      }
-      return; // skip rest of the logic
+    if (parentQuestion.questionType === 'radio') {
+      newCheckedOptionsDetails = checked ? [tempOption] : [];
+      setCheckedOptions(checked ? [optionId] : []);
+      setSelectedOptions(checked ? foundOption.selected_options : []);
+    } else {
+      // checkbox
+      newCheckedOptionsDetails = checked
+        ? [
+            ...checkedOptionsDetails.filter((o) => o.id !== optionId),
+            tempOption,
+          ]
+        : checkedOptionsDetails.filter((o) => o.id !== optionId);
+
+      setCheckedOptions(
+        checked
+          ? [...checkedOptions, optionId]
+          : checkedOptions.filter((id) => id !== optionId)
+      );
+
+      setSelectedOptions((prev) => {
+        if (checked) {
+          const combined = [...prev, ...(foundOption.selected_options || [])];
+          return Array.from(
+            new Map(combined.map((item) => [item._id, item])).values()
+          );
+        } else {
+          return prev.filter(
+            (item) =>
+              !(foundOption.selected_options || []).some(
+                (opt) => opt._id === item._id
+              )
+          );
+        }
+      });
     }
 
-    // Handle multi-select (checkbox) types
-    const newCheckedOptions = checked
-      ? [...checkedOptions, optionId]
-      : checkedOptions.filter((id) => id !== optionId);
+    // update state
+    setCheckedOptionsDetails(newCheckedOptionsDetails);
+    setStepwiseCheckedOptions(newCheckedOptionsDetails);
 
-    setCheckedOptions(newCheckedOptions);
-
-    setCheckedOptionsDetails((prev) => {
-      if (checked) {
-        const filtered = prev.filter((item) => item.id !== optionId);
-        return [...filtered, tempOption];
-      } else {
-        return prev.filter((item) => item.id !== optionId);
-      }
-    });
-
-    if (checked) {
-      setSelectedOptions((prev) => {
-        const newOptions = findSelectedOptions?.selected_options || [];
-        const combined = [...prev, ...newOptions];
-        const unique = Array.from(
-          new Map(combined.map((item) => [item._id, item])).values()
-        );
-        return unique;
-      });
-    } else {
-      setSelectedOptions((prev) =>
-        prev.filter(
-          (item) =>
-            !findSelectedOptions?.selected_options?.some(
-              (opt) => opt._id === item._id
-            )
-        )
-      );
+    // update viewData immediately
+    if (fullClonedQuestions[step]) {
+      const updatedQuestion = {
+        ...fullClonedQuestions[step],
+        options: fullClonedQuestions[step].options.map((opt) => {
+          const matched = newCheckedOptionsDetails.find(
+            (o) => o.id === opt._id
+          );
+          return {
+            ...opt,
+            is_checked: matched?.is_checked || false,
+            idExtraData: matched?.idExtraData || '',
+          };
+        }),
+      };
+      setViewData(updatedQuestion);
     }
   };
 
-  //console.log('checkedOptions', checkedOptionsDetails);
+  console.log('checkedOptions', checkedOptionsDetails);
 
   useEffect(() => {
     if (step === 0) {
@@ -371,8 +378,14 @@ export default function ClientLeadRegistrationModal({
   };
 
   const handleBack = () => {
-    setStep((prev) => Math.max(prev - 1, 0));
+    const newStep = Math.max(step - 1, 0);
+    setStep(newStep);
     setClickButtonType('Prev');
+
+    const existingStepData = questionsPayload.find(
+      (item) => item.step === newStep
+    );
+    setCheckedOptionsDetails(existingStepData?.checkedOptionsDetails || []);
   };
 
   const isValidPhone = (phone) => isValidPhoneNumber(phone);
@@ -380,7 +393,7 @@ export default function ClientLeadRegistrationModal({
   const isNextDisabled = (() => {
     // Step: Questions (required) — check checkedOptions length instead of answers
     if (step < totalQuestions) {
-      return checkedOptions.length === 0;
+      return stepwiseCheckedOptions.length === 0;
     }
 
     //Step: Additional Details (optional)
@@ -432,7 +445,40 @@ export default function ClientLeadRegistrationModal({
 
   //console.log('allZipCodes:', allZipCodes);
 
-  //console.log('zipcode:', zipCode);
+  console.log('step:', step);
+  console.log('questionsPayload:', questionsPayload);
+
+  // Update stepwiseCheckedOptions whenever step or questionsPayload changes
+  useEffect(() => {
+    const existing = questionsPayload.find((item) => item.step === step);
+    setStepwiseCheckedOptions(existing?.checkedOptionsDetails || []);
+  }, [step, questionsPayload]); // only run when step or questionsPayload change
+
+  console.log('stepwise checked items:', stepwiseCheckedOptions);
+  console.log('viewData:', viewData);
+
+  // Update viewData options with checked state
+  useEffect(() => {
+    if (!fullClonedQuestions[step]) return;
+
+    const updatedQuestion = {
+      ...fullClonedQuestions[step],
+      options: fullClonedQuestions[step].options.map((opt) => {
+        const matched = stepwiseCheckedOptions?.find(
+          (item) => item.id === opt._id
+        );
+        return {
+          ...opt,
+          is_checked: matched?.is_checked || false,
+          idExtraData: matched?.idExtraData || '',
+        };
+      }),
+    };
+
+    setViewData(updatedQuestion);
+  }, [fullClonedQuestions, step, stepwiseCheckedOptions]);
+
+  console.log('fullClonedQuestions:', fullClonedQuestions);
 
   return (
     <Modal
@@ -466,6 +512,8 @@ export default function ClientLeadRegistrationModal({
                   const isLast = index === viewData.options.length - 1;
                   const isOther = option?.name?.toLowerCase() === 'other';
 
+                  const isChecked = option?.is_checked;
+
                   return (
                     <label
                       key={option._id || index}
@@ -484,6 +532,7 @@ export default function ClientLeadRegistrationModal({
                           onChange={(e) =>
                             handleOptionChange(option._id, e.target.checked)
                           }
+                          checked={isChecked}
                         />
 
                         {/* Render name only if not 'Other' */}

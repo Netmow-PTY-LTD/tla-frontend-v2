@@ -1,7 +1,6 @@
-import React, { useState, useEffect, use, useMemo } from 'react';
+import React, { useState, useEffect, use, useMemo, useRef } from 'react';
 import { Button } from '@/components/ui/button'; // adjust if your button import path differs
 import { Modal } from '@/components/UIComponents/Modal';
-import { useGetZipCodeListQuery } from '@/store/features/public/publicApiService';
 import {
   Combobox,
   ComboboxButton,
@@ -9,16 +8,29 @@ import {
   ComboboxOption,
   ComboboxOptions,
 } from '@headlessui/react';
-import { Check, ChevronDown } from 'lucide-react';
+import { Check, ChevronDown, Loader } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuthClientRegisterMutation } from '@/store/features/auth/authApiService';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import { useRouter } from 'next/navigation';
+import { verifyToken } from '@/utils/verifyToken';
+import { useDispatch } from 'react-redux';
+import { setUser } from '@/store/features/auth/authSlice';
+import { StartFrequencyOptions } from '@/data/data';
+import parsePhoneNumberFromString, {
+  isValidPhoneNumber,
+} from 'libphonenumber-js';
+import { useGetZipCodeListQuery } from '@/store/features/public/publicApiService';
+import country from '@/data/au.json';
 
 export default function ClientLeadRegistrationModal({
-  open,
-  onClose,
+  modalOpen,
+  setModalOpen,
   selectedServiceWiseQuestions,
   countryId,
   serviceId,
-  isLoading,
+  locationId,
+  isQuestionsLoading,
 }) {
   const [step, setStep] = useState(0);
 
@@ -37,21 +49,79 @@ export default function ClientLeadRegistrationModal({
   //selected options
   const [checkedOptions, setCheckedOptions] = useState([]);
 
+  const [checkedOptionsDetails, setCheckedOptionsDetails] = useState([]);
+
   //selected options
   const [selectedOptions, setSelectedOptions] = useState([]);
 
   const [clickButtonType, setClickButtonType] = useState('Next');
 
+  const [leadPriority, setLeadPriority] = useState('');
+
   const [additionalDetails, setAdditionalDetails] = useState('');
-  const [zipCode, setZipCode] = useState('');
+
+  const [questionLoading, setQuestionLoading] = useState(false);
+
+  const [budgetAmount, setBudgetAmount] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [zipCode, setZipCode] = useState('');
+  const [latitude, setLatitude] = useState('');
+  const [longitude, setLongitude] = useState('');
+  const [address, setAddress] = useState('');
+  const [postalCode, setPostalCode] = useState('');
 
-  // console.log(
-  //   'selectedServiceWiseQuestions',
-  //   selectedServiceWiseQuestions?.length
-  // );
+  useEffect(() => {
+    if (!selectedServiceWiseQuestions?.length) return;
+
+    setQuestionLoading(true); // 👈 Start loading
+
+    setStep(0);
+    setClickButtonType(null);
+    setQuestionsPayload([]);
+    setSelectedOptions([]);
+    setCheckedOptions([]);
+    setCheckedOptionsDetails([]);
+    setInitialData([]);
+    setFullClonedQuestions([]);
+    setPartialClonedQuestions([]);
+    setViewData(null);
+  }, [selectedServiceWiseQuestions]);
+
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
+
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const { data: allZipCodes, isLoading: isZipCodeLoading } =
+    useGetZipCodeListQuery();
+
+  const filteredZipCodes = allZipCodes?.data?.filter((item) =>
+    zipCode
+      ? item?.zipcode?.toLowerCase().includes(zipCode.toLowerCase())
+      : true
+  );
+
+  // useEffect(() => {
+  //   if (locationId) {
+  //     setAddress(locationId); // Set ID, not zipcode text
+  //   }
+  // }, [locationId]);
+
+  const addressInfo = {
+    countryId: country.countryId,
+    countryCode: country.code.toLowerCase(),
+    zipcode: address || '',
+    latitude: latitude?.toString() || '',
+    longitude: longitude?.toString() || '',
+    postalCode: zipCode || '',
+  };
+
+  //console.log('addressInfo', addressInfo);
 
   //setting initial data
 
@@ -63,14 +133,13 @@ export default function ClientLeadRegistrationModal({
     if (clickButtonType === 'Next') {
       setSelectedOptions([]);
       setCheckedOptions([]);
+      setCheckedOptionsDetails([]);
     }
   }, [step]);
 
-  //console.log('initialData', initialData);
-
   const totalQuestions = selectedServiceWiseQuestions?.length;
 
-  const totalFormsSteps = 4;
+  const totalFormsSteps = 6;
 
   const totalSteps = totalQuestions + totalFormsSteps;
 
@@ -101,135 +170,88 @@ export default function ClientLeadRegistrationModal({
     }));
 
     setPartialClonedQuestions(cloned);
+    setQuestionLoading(false);
   }, [fullClonedQuestions]);
-
-  //console.log('partialClonedQuestions', partialClonedQuestions);
 
   const options = selectedServiceWiseQuestions?.[step]?.options || [];
 
-  // const handleOptionChange = (optionId, checked) => {
-  //   // find optionid from fullcloned
-
-  //   // const foundOption = fullClonedQuestions
-  //   //   ?.flatMap((question) => question.options || [])
-  //   //   .find((option) => option?._id === optionId);
-
-  //   // const newCheckedOptions = checked
-  //   //   ? [...checkedOptions, optionId]
-  //   //   : checkedOptions.filter((id) => id !== optionId);
-
-  //   // setCheckedOptions(newCheckedOptions);
-
-  //   // const tempOption = {};
-
-  //   // if (foundOption?.name === 'Other') {
-  //   //   tempOption.id = optionId;
-  //   //   tempOption.is_checked = true;
-  //   //   tempOption.idExtraData = document.getElementById(
-  //   //     `${optionId}-other`
-  //   //   )?.value;
-  //   // } else {
-  //   //   tempOption.id = optionId;
-  //   //   tempOption.is_checked = true;
-  //   //   tempOption.idExtraData = '';
-  //   // }
-
-  //   // setCheckedOptionsDetails([...checkedOptionsDetails, tempOption]);
-
-  //   // const foundOption = fullClonedQuestions
-  //   //   ?.flatMap((question) => question.options || [])
-  //   //   .find((option) => option?._id === optionId);
-
-  //   const parentQuestion = fullClonedQuestions?.find((question) =>
-  //     question.options?.some((option) => option._id === optionId)
-  //   );
-
-  //   const foundOption = parentQuestion?.options?.find(
-  //     (option) => option._id === optionId
-  //   );
-
-  //   const questionType = parentQuestion?.questionType;
-
-  //   const newCheckedOptions = checked
-  //     ? [...checkedOptions, optionId]
-  //     : checkedOptions.filter((id) => id !== optionId);
-
-  //   setCheckedOptions(newCheckedOptions);
-
-  //   const tempOption = {
-  //     id: optionId,
-  //     name: foundOption?.name,
-  //     is_checked: checked,
-  //     idExtraData:
-  //       foundOption?.name === 'Other'
-  //         ? document.getElementById(`${optionId}-other`)?.value ?? ''
-  //         : '',
-  //   };
-
-  //   setCheckedOptionsDetails((prev) => {
-  //     if (checked) {
-  //       const filtered = prev.filter((item) => item.id !== optionId);
-  //       return [...filtered, tempOption];
-  //     } else {
-  //       return prev.filter((item) => item.id !== optionId);
-  //     }
-  //   });
-
-  //   // Find selected options metadata (if needed for something else)
-  //   const findSelectedOptions = options?.find((item) => item?._id === optionId);
-
-  //   if (checked) {
-  //     setSelectedOptions((prev) => {
-  //       const newOptions = findSelectedOptions?.selected_options || [];
-
-  //       // Merge and filter out duplicates by _id
-  //       const combined = [...prev, ...newOptions];
-  //       const unique = Array.from(
-  //         new Map(combined.map((item) => [item._id, item])).values()
-  //       );
-
-  //       return unique;
-  //     });
-  //   }
-
-  //   if (questionType === 'radio') {
-  //     setCheckedOptions([optionId]);
-  //     setCheckedOptionsDetails([tempOption]);
-  //     setSelectedOptions(findSelectedOptions?.selected_options || []);
-  //   }
-  // };
-
-  // console.log('selectedOptions', selectedOptions);
-  // console.log('checkedOptions', checkedOptions);
-
   const handleOptionChange = (optionId, checked) => {
-    // Compute the new checkedOptions immediately
+    const parentQuestion = fullClonedQuestions?.find((question) =>
+      question.options?.some((option) => option._id === optionId)
+    );
+
+    const foundOption = parentQuestion?.options?.find(
+      (option) => option._id === optionId
+    );
+
+    const questionType = parentQuestion?.questionType;
+
+    //console.log('questionType', questionType);
+
+    const tempOption = {
+      id: optionId,
+      name: foundOption?.name,
+      is_checked: checked,
+      idExtraData:
+        foundOption?.name === 'Other'
+          ? document.getElementById(`${optionId}-other`)?.value ?? ''
+          : '',
+    };
+
+    const findSelectedOptions = options?.find((item) => item?._id === optionId);
+
+    // Handle "radio" type first and return early
+    if (questionType === 'radio') {
+      if (checked) {
+        setCheckedOptions([optionId]);
+        setCheckedOptionsDetails([tempOption]);
+        setSelectedOptions(findSelectedOptions?.selected_options || []);
+      } else {
+        setCheckedOptions([]);
+        setCheckedOptionsDetails([]);
+        setSelectedOptions([]);
+      }
+      return; // skip rest of the logic
+    }
+
+    // Handle multi-select (checkbox) types
     const newCheckedOptions = checked
       ? [...checkedOptions, optionId]
       : checkedOptions.filter((id) => id !== optionId);
 
     setCheckedOptions(newCheckedOptions);
 
-    // Find selected options metadata (if needed for something else)
-    const findSelectedOptions = options?.find((item) => item?._id === optionId);
+    setCheckedOptionsDetails((prev) => {
+      if (checked) {
+        const filtered = prev.filter((item) => item.id !== optionId);
+        return [...filtered, tempOption];
+      } else {
+        return prev.filter((item) => item.id !== optionId);
+      }
+    });
 
     if (checked) {
       setSelectedOptions((prev) => {
         const newOptions = findSelectedOptions?.selected_options || [];
-
-        // Merge and filter out duplicates by _id
         const combined = [...prev, ...newOptions];
         const unique = Array.from(
           new Map(combined.map((item) => [item._id, item])).values()
         );
-
         return unique;
       });
+    } else {
+      setSelectedOptions((prev) =>
+        prev.filter(
+          (item) =>
+            !findSelectedOptions?.selected_options?.some(
+              (opt) => opt._id === item._id
+            )
+        )
+      );
     }
   };
 
-  // console.log('selectedOptions', selectedOptions);
-  // console.log('checkedOptions', checkedOptions);
+  // console.log('checkedOptions', checkedOptionsDetails);
 
   useEffect(() => {
     if (step === 0) {
@@ -250,23 +272,15 @@ export default function ClientLeadRegistrationModal({
 
   const [questionsPayload, setQuestionsPayload] = useState([]);
 
-  let formsPayload = {};
+  const [clientRegister] = useAuthClientRegisterMutation();
 
-  const handleNext = () => {
-    if (step < totalSteps) {
-      setStep((prev) => prev + 1);
-      setClickButtonType('Next');
-    } else if (step === totalSteps) {
-      formsPayload = {
-        additionalDetails,
-        zipCode,
-        name,
-        email,
-        phone,
-      };
-    }
+  //handleNext button click and form submission with api call
+  const handleNext = async () => {
+    const isFinalStep = step === totalSteps;
+    const isQuestionStep = step < totalQuestions;
 
-    if (step < totalQuestions) {
+    // Step 1: Handle question payload update
+    if (isQuestionStep) {
       setQuestionsPayload((prev) => {
         const filtered = prev.filter((item) => item.step !== step);
 
@@ -281,26 +295,91 @@ export default function ClientLeadRegistrationModal({
             questionId,
             question,
             order,
-            checkedOptions,
+            checkedOptionsDetails,
           },
         ];
       });
     }
 
+    console.log('questionsPayload', questionsPayload);
+
+    // Step 2: Go to next step if not final
+    if (!isFinalStep) {
+      setStep((prev) => prev + 1);
+      setClickButtonType('Next');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    // Step 3: Prepare payloads on final step
+    const leadDetails = {
+      leadPriority,
+      additionalDetails,
+      budgetAmount,
+      zipCode: addressInfo?.zipcode,
+      name,
+      email,
+      phone,
+    };
+
     const payload = {
       countryId,
       serviceId,
-      questions: questionsPayload,
-      formdata: formsPayload,
+      questions: [...questionsPayload], // ensure fresh snapshot
+      leadDetails,
+      addressInfo,
     };
 
-    console.log('payload', payload);
+    console.log('🚀 Submitting payload:', payload);
+
+    try {
+      const res = await clientRegister(payload).unwrap();
+      console.log('✅ Register response:', res);
+
+      if (!res?.success || !res?.token) {
+        showErrorToast(res?.message || 'Case registration failed.');
+        return;
+      }
+
+      showSuccessToast(res?.message || 'Case registered successfully');
+
+      const token = res.token;
+      const userPayload = verifyToken(token);
+
+      if (userPayload) {
+        dispatch(setUser({ user: res?.data, token }));
+
+        const userType = res?.data?.userData?.regUserType;
+
+        setQuestionsPayload([]); // Clear form state
+        setModalOpen(false); // Close modal
+
+        if (userType === 'client') {
+          router.push(`/client/dashboard/my-cases/${res?.data?.leadUser?._id}`);
+          //router.push(`/client/dashboard/my-cases`);
+        } else {
+          router.push('/');
+        }
+      } else {
+        showErrorToast('Invalid token. Registration failed.');
+      }
+    } catch (err) {
+      console.error('❌ Register error:', err);
+      showErrorToast(err?.data?.message || 'Failed to register case.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  console.log('questionsPayload', questionsPayload);
 
   const handleBack = () => {
     setStep((prev) => Math.max(prev - 1, 0));
     setClickButtonType('Prev');
   };
+
+  const isValidPhone = (phone) => isValidPhoneNumber(phone);
 
   const isNextDisabled = (() => {
     // Step: Questions (required) — check checkedOptions length instead of answers
@@ -310,66 +389,128 @@ export default function ClientLeadRegistrationModal({
 
     //Step: Additional Details (optional)
     if (step === totalQuestions) {
-      return false;
+      return !leadPriority.trim();
+    }
+
+    if (step === totalQuestions + 1) {
+      return !additionalDetails.trim();
+    }
+
+    if (step === totalQuestions + 2) {
+      return !budgetAmount.trim();
     }
 
     // Step: ZIP Code (required)
-    if (step === totalQuestions + 1) {
-      return !zipCode.trim();
+    if (step === totalQuestions + 3) {
+      return !zipCode || !zipCode.trim();
+    }
+
+    if (step === totalQuestions + 4) {
+      return !name || !name.trim();
     }
 
     // Step: Email (required and validated)
-    if (step === totalQuestions + 2) {
+    if (step === totalQuestions + 5) {
       return !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    if (step === totalQuestions + 6) {
+      // ✅ Use libphonenumber-js validation
+      const parsed = parsePhoneNumberFromString(phone);
+
+      return (
+        !parsed || !parsed.isValid() || parsed.country !== 'AU' // ensures it's an Australian number
+      );
     }
 
     // Step: Phone (optional)
     return false;
   })();
 
-  const { data: allZipCodes, isLoading: isZipCodeLoading } =
-    useGetZipCodeListQuery();
+  // console.log('isQuestionsLoading:', isQuestionsLoading);
+  // console.log('selectedServiceWiseQuestions:', selectedServiceWiseQuestions);
+  // console.log(
+  //   '!selectedServiceWiseQuestions?.length:',
+  //   !selectedServiceWiseQuestions?.length
+  // );
 
-  const filteredZipCodes = allZipCodes?.data?.filter((item) =>
-    item?.zipcode?.toLowerCase().includes(zipCode.toLowerCase())
-  );
+  //console.log('allZipCodes:', allZipCodes);
+
+  //console.log('zipcode:', zipCode);
 
   return (
-    <Modal open={open} onOpenChange={onClose} title="" width="max-w-[570px]">
-      {isLoading ? (
-        <div className="text-center">Loading...</div>
+    <Modal
+      open={modalOpen}
+      onOpenChange={(open) => {
+        setModalOpen(open);
+        if (!open) {
+          setStep(0); // reset form steps, if needed
+          // setViewData(null);
+          // setQuestionsPayload([]);
+          setQuestionLoading(false);
+        }
+      }}
+      title=""
+      width="max-w-[570px]"
+      height="max-h-[90vh]"
+    >
+      {isQuestionsLoading || !selectedServiceWiseQuestions?.length ? (
+        <div className="flex items-center justify-center gap-2">
+          <Loader className="w-4 h-4 animate-spin" /> Loading question...
+        </div>
       ) : step < totalQuestions ? (
         viewData?.question ? (
           <div className="space-y-4 mt-4">
             <h4 className="text-[24px] font-semibold text-center mb-8">
               {viewData.question}
             </h4>
-            <div className="border border-1 flex flex-col gap-2 rounded-lg">
-              {viewData.options?.map((option, index) => {
-                const isLast = index === viewData.options.length - 1;
+            <div className="border border-1 flex flex-col gap-2 rounded-lg max-h-[300px] overflow-y-auto">
+              {viewData.options?.length > 0 &&
+                viewData.options?.map((option, index) => {
+                  const isLast = index === viewData.options.length - 1;
+                  const isOther = option?.name?.toLowerCase() === 'other';
 
-                return (
-                  <label
-                    key={option._id || index}
-                    className={`flex gap-3 items-center px-4 py-3 ${
-                      !isLast ? 'border-b' : ''
-                    }`}
-                  >
-                    <input
-                      type={
-                        viewData.questionType === 'checkbox'
-                          ? 'checkbox'
-                          : 'radio'
-                      }
-                      name={`question-${viewData._id}`}
-                      onChange={(e) =>
-                        handleOptionChange(option._id, e.target.checked)
-                      }
-                    />
-                    {option?.name}
-                  </label>
-                );
-              })}
+                  return (
+                    <label
+                      key={option._id || index}
+                      className={`flex gap-3 px-4 py-3 ${
+                        !isLast ? 'border-b' : ''
+                      }`}
+                    >
+                      <span className="flex items-center gap-3">
+                        <input
+                          type={
+                            viewData.questionType === 'checkbox'
+                              ? 'checkbox'
+                              : 'radio'
+                          }
+                          name={`question-${viewData._id}`}
+                          onChange={(e) =>
+                            handleOptionChange(option._id, e.target.checked)
+                          }
+                        />
+
+                        {/* Render name only if not 'Other' */}
+                        {option?.name !== 'Other' && (
+                          <span>{option?.name}</span>
+                        )}
+                      </span>
+
+                      {/* Render input only if option is 'Other' */}
+                      {isOther && (
+                        <input
+                          type="text"
+                          id={`${option._id}-other`}
+                          placeholder="Other"
+                          className="border rounded px-2 py-1 w-full"
+                          // onChange={(e) =>
+                          //   handleOptionChange(option._id, e.target.value)
+                          // }
+                        />
+                      )}
+                    </label>
+                  );
+                })}
             </div>
           </div>
         ) : (
@@ -380,12 +521,37 @@ export default function ClientLeadRegistrationModal({
       ) : step === totalQuestions ? (
         <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
+            When are you looking to get started?
+          </h4>
+          <div className="border border-1 flex flex-col gap-2 rounded-lg">
+            {StartFrequencyOptions.map((frequency) => {
+              const isLast = frequency.value === 'not_sure';
+              return (
+                <label
+                  className={`flex gap-3 px-4 py-3 ${
+                    !isLast ? 'border-b' : ''
+                  }`}
+                  key={frequency.id}
+                >
+                  <input
+                    type="radio"
+                    name="frequency"
+                    value={frequency.value}
+                    onChange={(e) => setLeadPriority(e.target.value)}
+                  />
+                  <span>{frequency.label}</span>
+                </label>
+              );
+            })}
+          </div>
+        </div>
+      ) : step === totalQuestions + 1 ? (
+        <div className="space-y-6">
+          <h4 className="text-[24px] font-semibold text-center">
             Want to share anything more?
           </h4>
           <label className="flex flex-col gap-2">
-            <span className="text-sm font-medium">
-              Additional Details (Optional)
-            </span>
+            <span className="text-sm font-medium">Additional Details</span>
             <textarea
               className="border rounded px-3 py-2 min-h-[100px]"
               value={additionalDetails}
@@ -394,7 +560,35 @@ export default function ClientLeadRegistrationModal({
             />
           </label>
         </div>
-      ) : step === totalQuestions + 1 ? (
+      ) : step === totalQuestions + 2 ? (
+        <div className="space-y-6">
+          <h4 className="text-[24px] font-semibold text-center">
+            What is your estimated budget?
+          </h4>
+
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium">Estimated Budget</label>
+            <div className="flex gap-3 items-center">
+              <input
+                type="number"
+                min={0}
+                step={1}
+                className="border rounded px-3 py-2 w-full"
+                value={budgetAmount}
+                onChange={(e) => setBudgetAmount(e.target.value)}
+                placeholder="Enter amount"
+              />
+              <input
+                type="text"
+                className="border rounded px-3 py-2 w-20 text-center"
+                defaultValue={country.currency}
+                placeholder='currency i.e. "AUD"'
+                readOnly
+              />
+            </div>
+          </div>
+        </div>
+      ) : step === totalQuestions + 3 ? (
         <div className="space-y-4">
           <h4 className="text-[24px] font-semibold text-center">
             Where do you need the service?
@@ -402,22 +596,42 @@ export default function ClientLeadRegistrationModal({
           <div className="text-center">
             The postcode or town for the address where you want the service.
           </div>
-          <Combobox value={zipCode} onChange={setZipCode}>
+          <Combobox
+            value={zipCode ?? ''}
+            onChange={(selectedId) => {
+              setZipCode(selectedId);
+
+              const selectedZip = allZipCodes?.data?.find(
+                (z) => z._id === selectedId
+              );
+              if (selectedZip) {
+                setPostalCode(selectedZip.postalCode);
+                setLatitude(selectedZip.latitude);
+                setLongitude(selectedZip.longitude);
+                setAddress(selectedZip.zipcode); // full formatted address
+              }
+            }}
+          >
             <div className="relative">
               <ComboboxInput
                 className="border border-gray-300 rounded-md w-full h-[44px] px-4"
-                onChange={(event) => setZipCode(event.target.value)}
+                onChange={(event) => {
+                  // This is only for filtering typed text
+                  const value = event.target.value;
+                  // You can trigger filtering logic here if needed
+                }}
                 displayValue={(val) =>
                   allZipCodes?.data?.find((z) => z._id === val)?.zipcode || val
                 }
-                placeholder="Select a Zipcode"
+                placeholder="Select a postcode"
+                autoComplete="off"
               />
               <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
                 <ChevronDown className="h-4 w-4 text-gray-500" />
               </ComboboxButton>
               {filteredZipCodes?.length > 0 && (
                 <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  {filteredZipCodes.map((item) => (
+                  {filteredZipCodes?.slice(0, 10).map((item) => (
                     <ComboboxOption
                       key={item._id}
                       value={item._id}
@@ -452,7 +666,7 @@ export default function ClientLeadRegistrationModal({
             </div>
           </Combobox>
         </div>
-      ) : step === totalQuestions + 2 ? (
+      ) : step === totalQuestions + 4 ? (
         <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
             Write a few words about yourself?
@@ -464,11 +678,11 @@ export default function ClientLeadRegistrationModal({
               className="border rounded px-3 py-2"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g., example@email.com"
+              placeholder="e.g., Mark Smith"
             />
           </label>
         </div>
-      ) : step === totalQuestions + 3 ? (
+      ) : step === totalQuestions + 5 ? (
         <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
             What email address would you like quotes sent to?
@@ -506,30 +720,40 @@ export default function ClientLeadRegistrationModal({
         </div>
       ) : null}
 
-      {!isLoading && (
-        <div
-          className={`flex ${
-            step === 0 ? 'justify-end' : 'justify-between'
-          } mt-8`}
-        >
-          {step !== 0 && (
-            <Button
-              variant="outline"
-              onClick={handleBack}
-              disabled={step === 0}
-            >
-              Back
-            </Button>
-          )}
-
-          <Button
-            onClick={handleNext}
-            disabled={step === totalSteps ? false : isNextDisabled}
+      {isQuestionsLoading ||
+        (selectedServiceWiseQuestions?.length > 0 && (
+          <div
+            className={`flex ${
+              step === 0 ? 'justify-end' : 'justify-between'
+            } mt-8`}
           >
-            {step === totalSteps ? 'Finish' : 'Next'}
-          </Button>
-        </div>
-      )}
+            {step !== 0 && (
+              <Button
+                variant="outline"
+                onClick={handleBack}
+                disabled={step === 0}
+              >
+                Back
+              </Button>
+            )}
+
+            <Button
+              onClick={handleNext}
+              disabled={isNextDisabled || isSubmitting}
+            >
+              {isSubmitting ? (
+                <span className="flex items-center gap-2">
+                  <Loader className="w-4 h-4 animate-spin" />
+                  Submitting...
+                </span>
+              ) : step === totalSteps ? (
+                'Finish'
+              ) : (
+                'Next'
+              )}
+            </Button>
+          </div>
+        ))}
     </Modal>
   );
 }
