@@ -38,6 +38,8 @@ export default function Page() {
     useGetCountryListQuery();
   const { data: ZipCodeList } = useGetZipCodeListQuery();
 
+  console.log('ZipCodeList', ZipCodeList);
+
   const [selectedCountry, setSelectedCountry] = useState(null);
 
   const handleCountryWiseServiceChange = (val) => {
@@ -78,7 +80,6 @@ export default function Page() {
   };
 
   const handleModalSuccess = () => {
-   
     // e.g. refetch zip codes
   };
 
@@ -120,6 +121,21 @@ export default function Page() {
       accessorKey: 'zipcode',
       header: 'Zip Code',
       cell: ({ row }) => <div>{row.getValue('zipcode')}</div>,
+    },
+    {
+      accessorKey: 'postalCode',
+      header: 'Post Code',
+      cell: ({ row }) => <div>{row.getValue('postalCode')}</div>,
+    },
+    {
+      accessorKey: 'latitude',
+      header: 'Latitude',
+      cell: ({ row }) => <div>{row.getValue('latitude')}</div>,
+    },
+    {
+      accessorKey: 'longitude',
+      header: 'Longitude',
+      cell: ({ row }) => <div>{row.getValue('longitude')}</div>,
     },
     {
       id: 'actions',

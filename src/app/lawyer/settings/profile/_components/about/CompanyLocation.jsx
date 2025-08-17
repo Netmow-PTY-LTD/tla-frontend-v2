@@ -6,11 +6,13 @@ import TextInput from '@/components/form/TextInput';
 import { AlertCircle } from 'lucide-react';
 import React, { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { set } from 'zod';
 
 export default function CompanyLocation({
   setZipCode,
   setLatitude,
   setLongitude,
+  setPostalCode,
 }) {
   const { watch, setValue } = useFormContext();
 
@@ -47,11 +49,14 @@ export default function CompanyLocation({
           c.types.includes('postal_code')
         );
         const zipCode = postalCodeObj ? postalCodeObj.long_name : '';
+        setPostalCode(zipCode);
 
         if (!zipCode) {
           // alert('Please select an address with a postal code.');
           return;
         }
+
+        setZipCode(place.formatted_address);
 
         setValue('location.address', place.formatted_address);
         setValue('location.coordinates.lat', place.geometry.location.lat());
@@ -100,9 +105,11 @@ export default function CompanyLocation({
           );
           const zipCode = postalCodeObj ? postalCodeObj.long_name : '';
 
+          setPostalCode(zipCode);
+
           // ✅ Prevent null in autocomplete
           setValue('location.zipCode', zipCode);
-          setZipCode(zipCode);
+          setZipCode(data.results[0].formatted_address);
           console.log('Zip code:', zipCode);
         }
       } catch (err) {
@@ -145,7 +152,7 @@ export default function CompanyLocation({
             label="What's the business location?"
             name="location.address"
             placeholder="Enter the company address"
-            textColor="text-[#6e6e6e]"
+            textColor="text-[#4b4949]"
             id="address-input"
           />
 
@@ -165,7 +172,7 @@ export default function CompanyLocation({
               name={'location.locationReason'}
               options={options}
               placeholder="Select a reason"
-              textColor="text-[#6e6e6e]"
+              textColor="text-[#4b4949]"
             />
           </div>
         </div>

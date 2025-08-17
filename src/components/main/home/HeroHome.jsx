@@ -24,14 +24,16 @@ import {
 } from '@headlessui/react';
 import { cn } from '@/lib/utils';
 import { useParams } from 'next/navigation';
+import { toast } from 'sonner';
+import { showErrorToast } from '@/components/common/toasts';
 export default function HeroHome({ searchParam }) {
   const [selectedService, setSelectedService] = useState(null);
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [service, setService] = useState(null);
-  const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState('');
   const [filteredServices, setFilteredServices] = useState([]);
-  const [filteredZipCodes, setFilteredZipCodes] = useState([]);
+  //const [filteredZipCodes, setFilteredZipCodes] = useState([]);
   const [shouldAutoFocus, setShouldAutoFocus] = useState(false);
 
   const inputRef = useRef();
@@ -96,31 +98,20 @@ export default function HeroHome({ searchParam }) {
   const { data: allZipCodes, isLoading: isZipCodeLoading } =
     useGetZipCodeListQuery();
 
-  // const filteredZipCodes = allZipCodes?.data?.filter((item) =>
-  //   item?.zipcode?.toLowerCase().includes(location?.toLowerCase())
-  // );
+  const filteredZipCodes = allZipCodes?.data?.filter((item) =>
+    item?.zipcode?.toLowerCase().includes(location?.toLowerCase())
+  );
+
+  //console.log('filteredZipCodes', filteredZipCodes);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const matchedService =
-      typeof service === 'string'
-        ? countryWiseServices?.data?.find(
-            (s) => s.name.toLowerCase() === service.toLowerCase()
-          )
-        : service;
-
-    const matchedZip = allZipCodes?.data?.find(
-      (z) => z._id === location || z.zipcode === location
-    );
-
-    if (!matchedService || !matchedZip) {
-      toast.error('Please select both service and location.');
+    setSelectedService(service);
+    if (!service || !service?._id) {
+      showErrorToast('Please select a service.');
       return;
     }
-
-    setSelectedService(matchedService);
-    setLocation(matchedZip._id); // ensure location holds the ID
     setModalOpen(true);
   };
 
@@ -158,6 +149,7 @@ export default function HeroHome({ searchParam }) {
                         setFilteredServices(countryWiseServices?.data ?? [])
                       }
                       ref={inputRef}
+                      autoComplete="off"
                     />
                     {filteredServices?.length > 0 && (
                       <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
@@ -204,13 +196,13 @@ export default function HeroHome({ searchParam }) {
                     <ComboboxInput
                       className="border border-gray-300 rounded-md w-full h-[44px] px-4 tla-form-control"
                       onChange={(e) => {
-                        const query = e.target.value.toLowerCase();
-                        const filtered = allZipCodes?.data?.filter((z) =>
-                          z.zipcode.toLowerCase().includes(query)
-                        );
-                        setFilteredZipCodes(
-                          query ? filtered : allZipCodes?.data
-                        );
+                        // const query = e.target.value.toLowerCase();
+                        // const filtered = allZipCodes?.data?.filter((z) =>
+                        //   z.zipcode.toLowerCase().includes(query)
+                        // );
+                        // setFilteredZipCodes(
+                        //   query ? filtered : allZipCodes?.data
+                        // );
                         setLocation(e.target.value);
                       }}
                       displayValue={(val) =>
@@ -218,13 +210,13 @@ export default function HeroHome({ searchParam }) {
                           ?.zipcode || val
                       }
                       placeholder="Your location"
-                      onFocus={() =>
-                        setFilteredZipCodes(allZipCodes?.data ?? [])
-                      }
+                      // onFocus={() =>
+                      //   setFilteredZipCodes(allZipCodes?.data ?? [])
+                      // }
                     />
                     {filteredZipCodes?.length > 0 && (
                       <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {filteredZipCodes.map((item) => (
+                        {filteredZipCodes.slice(0, 10).map((item) => (
                           <ComboboxOption
                             key={item._id}
                             value={item._id}

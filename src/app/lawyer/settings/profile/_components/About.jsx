@@ -34,9 +34,9 @@ const genderOptions = [
 
 export default function About() {
   const [zipCode, setZipCode] = useState(null);
-  const [countryCode, setCountryCode] = useState(null);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
+  const [postalCode, setPostalCode] = useState('');
 
   const [open, setOpen] = useState(false);
   const {
@@ -89,18 +89,7 @@ export default function About() {
     [profile]
   );
 
-  console.log('zipCode', zipCode);
-  //console.log('countryCode', countryCode);
-  console.log('latitude', latitude);
-  console.log('longitude', longitude);
-  console.log('Country', country);
-
   const onSubmit = async (data) => {
-    console.log('zipCode', zipCode);
-    //console.log('countryCode', countryCode);
-    console.log('latitude', latitude);
-    console.log('longitude', longitude);
-    console.log('Country', country);
     console.log('data', data);
     try {
       const formData = new FormData();
@@ -140,8 +129,9 @@ export default function About() {
           countryId: country.countryId,
           zipcode: zipCode,
           countryCode: country.code.toLowerCase(),
-          latitude: latitude.toString(),
-          longitude: longitude.toString(),
+          latitude: latitude?.toString() || '',
+          longitude: longitude?.toString() || '',
+          postalCode,
         },
       };
 
@@ -236,12 +226,12 @@ export default function About() {
             <TextInput
               label="Law Society Member Number"
               name="law_society_member_number"
-              textColor="text-[#8E8E8E]"
+              textColor="text-[#4b4949]"
             />
             <TextInput
               label="Practising Certificate Number"
               name="practising_certificate_number"
-              textColor="text-[#8E8E8E]"
+              textColor="text-[#4b4949]"
             />
           </div>
         </div>
@@ -263,19 +253,19 @@ export default function About() {
               label="Phone Number"
               name="phone"
               placeholder="+8801XXXXXXX"
-              textColor="text-[#8E8E8E]"
+              textColor="text-[#4b4949]"
             />
             <TextInput
               label="Address"
               name="address"
               placeholder="Enter your personal address"
-              textColor="text-[#8E8E8E]"
+              textColor="text-[#4b4949]"
             />
             <TextInput
               label="Contact Email"
               name="lawyerContactEmail"
               placeholder="contact@gmail.com"
-              textColor="text-[#8E8E8E]"
+              textColor="text-[#4b4949]"
             />
             <GenderRadioField />
             <button
@@ -304,6 +294,7 @@ export default function About() {
           setZipCode={setZipCode}
           setLatitude={setLatitude}
           setLongitude={setLongitude}
+          setPostalCode={setPostalCode}
         />
         <div className="border-t border-white" />
         <CompanyAbout />

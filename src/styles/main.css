@@ -365,6 +365,7 @@ input:focus {
   color: var(--color-black);
   font-weight: 500;
   line-height: 27px;
+  font-size: 13px;
 }
 
 .tla-form-control::placeholder {
@@ -1441,8 +1442,7 @@ Home Testimonials
 }
 
 /* Google map api css */
-/* global.css */
-/* global.css */
+
 .pac-container {
   z-index: 2147483647 !important; /* ensure above modal */
 }
@@ -1464,7 +1464,3 @@ Home Testimonials
   z-index: 9999;
   /* display: none; */
 }
-
-/* body[style*='pointer-events: none'] {
-  pointer-events: auto !important;
-} */

@@ -98,13 +98,13 @@ export default function PublicProfile() {
             type="number"
             label="Years"
             name="years"
-            textColor="text-[#8E8E8E]"
+            textColor="text-[#4b4949]"
           />
           <TextInput
             type="number"
             label="Months"
             name="months"
-            textColor="text-[#8E8E8E]"
+            textColor="text-[#4b4949]"
           />
         </div>
         <div>

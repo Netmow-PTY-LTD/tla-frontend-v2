@@ -132,19 +132,63 @@ export default function TestimonialSlider() {
 
   const fadeToSlide = (index) => {
     if (index === currentIndex) return;
-    const card = activeCardRef.current;
-    const imgBox = sliderRef.current.querySelector(
-      `#${fixedSlots[(step - 1) % 6]}`
-    );
+    const slider = sliderRef.current;
+    const currentCard = activeCardRef.current;
+    if (!slider || !currentCard) return;
 
-    card.style.opacity = 0;
-    imgBox.style.opacity = 0;
+    // Clone current card for outgoing animation
+    const outgoingCard = currentCard.cloneNode(true);
+    outgoingCard.style.position = 'absolute';
+    outgoingCard.style.top = currentCard.offsetTop + 'px';
+    outgoingCard.style.left = currentCard.offsetLeft + 'px';
+    outgoingCard.style.width = currentCard.offsetWidth + 'px';
+    outgoingCard.style.height = currentCard.offsetHeight + 'px';
+    outgoingCard.style.transition = 'opacity 0.4s ease-in-out';
+    outgoingCard.style.opacity = 1;
+    outgoingCard.style.zIndex = 2;
+    slider.appendChild(outgoingCard);
 
+    // Update state immediately for new content
+    setCurrentIndex(index);
+
+    // Ensure the new card starts invisible and fades in
+    requestAnimationFrame(() => {
+      if (activeCardRef.current) {
+        activeCardRef.current.style.opacity = 0;
+        activeCardRef.current.style.transition = 'opacity 0.4s ease-in-out';
+        activeCardRef.current.style.zIndex = 1;
+
+        requestAnimationFrame(() => {
+          activeCardRef.current.style.opacity = 1; // fade in new
+          outgoingCard.style.opacity = 0; // fade out old
+        });
+      }
+    });
+
+    // Remove outgoing card after transition
     setTimeout(() => {
-      updateSlide(index);
-      card.style.opacity = 1;
-      imgBox.style.opacity = 1;
-    }, 300);
+      if (slider.contains(outgoingCard)) {
+        slider.removeChild(outgoingCard);
+      }
+    }, 2000);
+  };
+
+  // If your objects have a stable `id`, prefer matching by `id`.
+  const findGlobalIndex = (thumb) => {
+    // image-based fallback; use `t.id === thumb.id` if you have ids
+    return testimonials.findIndex((t) => t.image === thumb.image);
+  };
+
+  const handleThumbClick = (slotIndex) => {
+    const thumb = images[slotIndex];
+    if (!thumb) return;
+
+    const targetIdx = findGlobalIndex(thumb);
+    if (targetIdx === -1 || targetIdx === currentIndex) return;
+
+    // Prevent the interval from firing mid-fade
+    clearInterval(intervalRef.current);
+    fadeToSlide(targetIdx);
   };
 
   const cardHTML = (t) => (
@@ -190,7 +234,9 @@ export default function TestimonialSlider() {
             style={{
               opacity: 1,
               transition: 'opacity 0.3s ease-in-out',
+              cursor: 'pointer', // indicate it's clickable
             }}
+            onClick={() => handleThumbClick(i)}
           >
             {images[i] && imageHTML(images[i])}
           </div>
@@ -216,7 +262,7 @@ export default function TestimonialSlider() {
               style={
                 i >= testimonials.length
                   ? { opacity: 0.3, pointerEvents: 'none' }
-                  : {}
+                  : { cursor: 'pointer' }
               }
               onClick={() => fadeToSlide(i)}
             />
