@@ -98,6 +98,32 @@ const authApi = baseApi.injectEndpoints({
       }),
      invalidatesTags:['all-users']
     }),
+ sendOtp: builder.mutation({
+      query: (data) => ({
+        url: '/auth/send-otp',
+        method: 'POST',
+        body: data,
+      }),
+     
+    }),
+
+ verifyOtp: builder.mutation({
+      query: (data) => ({
+        url: '/auth/verify-otp',
+        method: 'POST',
+        body: data,
+      }),
+     
+    }),
+ changeEmail: builder.mutation({
+      query: (data) => ({
+        url: '/auth/change-email',
+        method: 'POST',
+        body: data,
+      }),
+     
+    }),
+    
   }),
 });
 
@@ -113,5 +139,8 @@ export const {
   useForgotPassowrdMutation,
   useVerifyEmailMutation,
   useResendVerificationEmailMutation,
-  useChangeUserAccountStatsMutation
+  useChangeUserAccountStatsMutation,
+  useChangeEmailMutation,
+  useVerifyOtpMutation,
+  useSendOtpMutation
 } = authApi;
