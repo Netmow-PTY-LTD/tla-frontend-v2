@@ -19,7 +19,7 @@ export default function ResponseCard({
 }) {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
-  const leadUser = user?.leadId?.userProfileId?.user;
+  const leadUser = user?.leadId?.userProfileId?.user?._id;
 
   const formatRelativeTime = (dateString) => {
     const now = new Date();
@@ -134,7 +134,8 @@ export default function ResponseCard({
                   icon={<List className="text-[var(--color-black)] w-4 h-4" />}
                 />
               )}
-            {user?.leadId?.userProfileId?.phone && (
+          
+            {user?.leadId?.userProfileId?.user?.isPhoneVerified && (
               <TagButton
                 text="Verified Phone"
                 textColor="text-[#00C3C0]"

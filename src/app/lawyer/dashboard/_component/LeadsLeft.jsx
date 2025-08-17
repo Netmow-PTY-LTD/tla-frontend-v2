@@ -42,6 +42,9 @@ export default function LeadDetailsPage({
     if (!text || typeof text !== 'string') return '';
     return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
   };
+
+
+  console.log('single lead data ===>',singleLead)
   const currentUserId = useSelector(selectCurrentUser)?._id;
   const [onlineMap, setOnlineMap] = useState({});
   const [isExpanded, setIsExpanded] = useState(false);
@@ -247,7 +250,7 @@ export default function LeadDetailsPage({
                       />
                     )}
 
-                  {singleLead?.userProfileId?.phone && (
+                  {Boolean(singleLead?.userProfileId?.user?.isPhoneVerified)  && (
                     <TagButton
                       text="Verified Phone"
                       bgColor="#00C3C01A"
