@@ -22,6 +22,7 @@ import TextInput from '@/components/form/TextInput';
 import AvatarUploader from '@/components/UIComponents/AvaterUploader';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { useEffect, useState } from 'react';
+import AddressCombobox from '../../_components/profile/AddressCombobox';
 
 const page = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -48,10 +49,9 @@ const page = () => {
 
   const [updateUserData] = useUpdateUserDataMutation();
   const handleSubmit = async (data) => {
-    //console.log('data', data);
     setIsSubmitting(true);
 
-    const { name, phone, userProfileLogo } = data;
+    const { name, phone, userProfileLogo ,address,email} = data;
 
     const payload = {
       userProfile: {
@@ -121,12 +121,14 @@ const page = () => {
                 label="Phone"
                 placeholder="Enter Your Phone"
               />
-              <TextInput
+              {/* <TextInput
                 type="text"
                 name="address"
                 label="Address"
                 placeholder="Enter Your Address"
-              />
+              /> */}
+
+              <AddressCombobox/>
               <div className='flex  items-center gap-5 w-full  '>
 
                 <TextInput
