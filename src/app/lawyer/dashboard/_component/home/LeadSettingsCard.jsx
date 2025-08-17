@@ -11,6 +11,7 @@ export default function LeadSettingsCard({
   error,
   locations,
 }) {
+  console.log('locations', locations);
   return (
     <Card className="w-full rounded-2xl shadow-sm">
       <div className="p-4">

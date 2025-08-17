@@ -95,7 +95,7 @@ export default function HeroHome({ searchParam }) {
     skip: !token,
   });
 
-  console.log('currentUser', currentUser);
+  //console.log('currentUser', currentUser);
 
   const { data: allZipCodes, isLoading: isZipCodeLoading } =
     useGetZipCodeListQuery();
