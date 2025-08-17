@@ -56,16 +56,39 @@ export default function ClientRequests() {
 
   return (
     <div className="p-4 max-w-[1100px] mx-auto">
-      <h2 className="text-xl font-semibold mb-4">All Requests</h2>
-      <div className="">
-        {requests?.length === 0 && <p>Currently there are no requests.</p>}
+
+      <div className="mb-6">
+        <h2 className="text-xl font-semibold text-gray-800">All Requests</h2>
+        <div className="h-1 w-[20%] bg-[#00C3C0] mt-2 rounded"></div>
+      </div>
+      <div>
+        {requests?.length === 0 && (
+          <div className="flex flex-col items-center justify-center text-center bg-gray-50 rounded-lg p-8 border border-dashed border-gray-300">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-12 h-12 text-gray-400 mb-3"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h3 className="text-lg font-semibold text-gray-700 mb-1">No Requests Yet</h3>
+            <p className="text-sm text-gray-500 mb-4">
+              You haven’t received any requests at the moment.
+              Stay tuned — new requests will appear here.
+            </p>
+            <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
+              Refresh
+            </Button>
+          </div>
+        )}
         {requests?.length > 0 && (
           <div className="bg-white p-4 rounded-lg">
             {requests?.map((request, index) => (
               <div
-                className={`flex items-start justify-between gap-4 py-3 px-4 rounded-lg border border-gray-200 ${
-                  index === 0 && index === requests?.length - 1 ? '' : 'mb-4'
-                }`}
+                className={`flex items-start justify-between gap-4 py-3 px-4 rounded-lg border border-gray-200 ${index === 0 && index === requests?.length - 1 ? '' : 'mb-4'
+                  }`}
                 key={index}
               >
                 <div className="flex items-center gap-4">

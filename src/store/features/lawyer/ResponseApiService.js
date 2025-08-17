@@ -63,7 +63,7 @@ export const responseApiService = baseApi.injectEndpoints({
           body,
         }
       },
-      invalidatesTags: ['response','notification','response-my','response-list'],
+      invalidatesTags: ['response','notification','response-my','response-list','credit-payment','user-credit-stats','transaction-history','transaction-history-list','next-offer'],
     }),
   getChatHistory: builder.query({
       query: (responseId) => ({
