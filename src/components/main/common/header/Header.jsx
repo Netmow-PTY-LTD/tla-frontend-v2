@@ -13,6 +13,7 @@ import {
   ChevronDown,
   ChevronRight,
   Hammer,
+  Loader,
   LogOut,
   SearchIcon,
   X,
@@ -35,6 +36,8 @@ export default function Header() {
   const [selectedService, setSelectedService] = useState(null);
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   const subMenuRef = useRef();
 
@@ -103,6 +106,21 @@ export default function Header() {
     (country) => country?.slug === 'au'
   );
 
+  // Default to Australia (AU) if available
+  const { data: countryWiseServices, isLoading: isCountryWiseServicesLoading } =
+    useGetCountryWiseServicesQuery(defaultCountry?._id, {
+      skip: !defaultCountry?._id, // Skip
+    });
+
+  //console.log('countryWiseServices', countryWiseServices);
+
+  useEffect(() => {
+    if (!selectedService?._id) return;
+
+    // Immediately clear previous questions to prevent flash
+    setServiceWiseQuestions([]);
+  }, [selectedService?._id]);
+
   const {
     data: singleServicewiseQuestionsData,
     isLoading: isQuestionsLoading,
@@ -125,6 +143,10 @@ export default function Header() {
   //   dispatch(LogOut());
   //   Cookies.remove('token');
   // }
+
+  const filteredServices = countryWiseServices?.data?.filter((service) =>
+    service.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <header
@@ -330,9 +352,42 @@ export default function Header() {
               <input
                 type="search"
                 placeholder="Search a service"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setShowSuggestions(true); // Show dropdown when typing
+                }}
+                onBlur={() => {
+                  // Hide dropdown slightly delayed to allow click
+                  setTimeout(() => setShowSuggestions(false), 100);
+                }}
+                onFocus={() => {
+                  if (searchTerm) setShowSuggestions(true);
+                }}
                 className="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none text-[14px]"
               />
               <SearchIcon className="w-5 h-5 text-gray-500 absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer" />
+
+              {/* Suggestions Dropdown */}
+              {showSuggestions && filteredServices?.length > 0 && (
+                <div className="absolute top-full left-0 w-full bg-white border border-gray-200 rounded-md shadow-md mt-1 z-50 max-h-60 overflow-auto">
+                  {filteredServices.slice(0, 5).map((service) => (
+                    <div
+                      key={service?._id}
+                      onMouseDown={() => {
+                        // onMouseDown prevents input blur from firing first
+                        setSelectedService(service);
+                        handleModalOpen();
+                        setSearchTerm(service.name);
+                        setShowSuggestions(false);
+                      }}
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                    >
+                      {service?.name}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {token && currentUser ? (

@@ -402,6 +402,11 @@ input:focus {
   background-size: cover;
   background-position: center;
   min-height: calc(100vh - 69px - 48px);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 134, 2, 0.1) 0%,
+    rgba(255, 255, 255, 0) 50%
+  );
 }
 
 .tla-auth-wrapper {
@@ -410,13 +415,19 @@ input:focus {
 }
 
 .tla-auth-box {
-  border-radius: 1.25rem;
-  border: 1px solid #dce2ea;
-  opacity: 0.93;
-  background-color: #fff;
+  /* border-radius: 1.25rem; */
+  /* border: 1px solid #dce2ea; */
+  /* opacity: 0.93; */
+  /* background-color: #fff; */
   /* box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.06); */
   /* width: 100%; */
+  background-color: #f6f8fb;
   height: 100%;
+}
+
+.tla-auth-form-login {
+  background-color: #fff;
+  border-radius: 10px;
 }
 
 .tla-auth-image {
