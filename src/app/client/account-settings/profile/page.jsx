@@ -40,6 +40,8 @@ const page = () => {
         name: currentUser?.data?.profile?.name || '',
         phone: currentUser?.data?.profile?.phone || '',
         userProfileLogo: currentUser?.data?.profile?.profilePicture || '',
+        address: currentUser?.data?.profile?.address || '',
+        email: currentUser?.data?.email || '',
       });
     }
   }, [currentUser?.data?.profile]);
@@ -55,6 +57,8 @@ const page = () => {
       userProfile: {
         name,
         phone,
+        address,
+        email
       },
     };
 
@@ -86,7 +90,7 @@ const page = () => {
 
   return (
     <div className="max-w-[900px] mx-auto my-8">
-      <div className="bg-[#F5F5F5] p-6 rounded-lg shadow-sm mx-auto">
+      <div className=" ">
         <h2 className="text-lg font-semibold mb-1 flex items-center gap-2">
           <BookOpenText className="text-[#00C3C0] w-6 h-6" />{' '}
           <span>My Details</span>
@@ -117,23 +121,42 @@ const page = () => {
                 label="Phone"
                 placeholder="Enter Your Phone"
               />
+              <TextInput
+                type="text"
+                name="address"
+                label="Address"
+                placeholder="Enter Your Address"
+              />
+              <div className='flex  items-center gap-5 w-full  '>
 
-              {/* <div className="flex items-center">
                 <TextInput
-                  type="password"
-                  name="password"
-                  label="Password"
-                  placeholder="Enter Your Password"
+                  type="text"
+                  name="email"
+                  label="Email Adress"
+                  placeholder="Email Address"
+                  itemClassName='w-1/2'
+                  disabled
+
                 />
-              </div> */}
-              <div>
                 <button
                   type="button"
-                  onClick={() => setOpen(true)}
-                  className="text-sm text-[#00C3C0] mt-2 block"
+                  className="text-sm text-[#00C3C0] mt-6 block "
                 >
-                  Change Password
+                  Change Email
                 </button>
+              </div>
+
+              <div>
+                <div className='flex items-center justify-between'>
+                  <button
+                    type="button"
+                    onClick={() => setOpen(true)}
+                    className="text-sm text-[#00C3C0] mt-2 block"
+                  >
+                    Change Password
+                  </button>
+
+                </div>
 
                 <Button
                   type="submit"
