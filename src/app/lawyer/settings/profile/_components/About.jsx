@@ -25,6 +25,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import GenderRadioField from '@/components/form/GenderRadioField';
 import MultiTagSelector from './MultiTagSelector';
 import country from '@/data/au.json';
+import AddressCombobox from '@/app/client/_components/profile/AddressCombobox';
 
 const genderOptions = [
   { id: 1, label: 'Male', value: 'male' },
@@ -255,12 +256,13 @@ export default function About() {
               placeholder="+8801XXXXXXX"
               textColor="text-[#4b4949]"
             />
-            <TextInput
+            {/* <TextInput
               label="Address"
               name="address"
               placeholder="Enter your personal address"
               textColor="text-[#4b4949]"
-            />
+            /> */}
+            <AddressCombobox/>
             <TextInput
               label="Contact Email"
               name="lawyerContactEmail"
