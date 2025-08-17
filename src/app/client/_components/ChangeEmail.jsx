@@ -29,6 +29,7 @@ export default function ChangeEmail({ open, setOpen }) {
     const [newEmail, setNewEmail] = useState("");
     const [email, setEmail] = useState(currentUserEmail); // current email
 
+
     const [sendOtp, { isLoading: sendingOtp }] = useSendOtpMutation();
     const [verifyOtp, { isLoading: verifyingOtp }] = useVerifyOtpMutation();
     const [changeEmail, { isLoading: changingEmail }] = useChangeEmailMutation();
@@ -102,7 +103,7 @@ export default function ChangeEmail({ open, setOpen }) {
                             <p>
                                 We will send an OTP to your current email: <b>{email}</b>
                             </p>
-                            <Button onClick={handleSendOtp} disabled={sendingOtp}>
+                            <Button className="bg-[#12c7c4] text-white hover:bg-[#0fa9a7] transition-colors duration-300"  onClick={handleSendOtp} disabled={sendingOtp}>
                                 {sendingOtp ? "Sending..." : "Send OTP"}
                             </Button>
                         </div>
@@ -117,7 +118,7 @@ export default function ChangeEmail({ open, setOpen }) {
                                 value={otp}
                                 onChange={(e) => setOtp(e.target.value)}
                             />
-                            <Button onClick={handleVerifyOtp} disabled={verifyingOtp}>
+                            <Button className="bg-[#12c7c4] text-white hover:bg-[#0fa9a7] transition-colors duration-300" onClick={handleVerifyOtp} disabled={verifyingOtp}>
                                 {verifyingOtp ? "Verifying..." : "Verify OTP"}
                             </Button>
                         </div>
@@ -131,7 +132,7 @@ export default function ChangeEmail({ open, setOpen }) {
                                 value={newEmail}
                                 onChange={(e) => setNewEmail(e.target.value)}
                             />
-                            <Button onClick={handleConfirmEmail} disabled={changingEmail}>
+                            <Button className="bg-[#12c7c4] text-white hover:bg-[#0fa9a7] transition-colors duration-300" onClick={handleConfirmEmail} disabled={changingEmail}>
                                 {changingEmail ? "Changing..." : "Confirm Email Change"}
                             </Button>
                         </div>
