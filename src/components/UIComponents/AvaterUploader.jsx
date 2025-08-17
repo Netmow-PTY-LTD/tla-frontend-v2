@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { CloudUpload, X } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { userDummyImage } from '@/data/data';
 
 export default function AvatarUploader({
   name = 'avatar',
@@ -11,7 +12,7 @@ export default function AvatarUploader({
   multiple = false,
   icon = <CloudUpload className="w-6 h-6 text-[#00C3C0] mb-2" />,
 }) {
-  const { register, setValue, watch, getValues, } = useFormContext();
+  const { register, setValue, watch, getValues } = useFormContext();
   const file = watch(name);
   const [preview, setPreview] = useState(null);
 
@@ -63,7 +64,11 @@ export default function AvatarUploader({
           )}
         </div>
       ) : (
-        <div className="max-w-sm">
+        <div className="max-w-sm relative w-28 h-28 md:h-32 md:w-32 lg:h-36 lg:w-36 z-[1]">
+          <Avatar className="h-full w-full rounded-lg absolute top-0 left-0 z-[-1] opacity-50">
+            <AvatarImage src={userDummyImage} />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
           <label
             htmlFor={`file-upload-${name}`}
             className="flex flex-col items-center justify-center h-28 w-28 md:h-32 md:w-32 lg:h-36 lg:w-36 px-2 py-2 border border-dashed border-gray-300 rounded-lg cursor-pointer text-center hover:bg-gray-50 transition"
