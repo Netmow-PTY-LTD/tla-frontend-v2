@@ -75,6 +75,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
   };
 
 
+  console.log('check lead user data ===>',user)
 
   return (
     <Card className="w-full max-w-full mx-auto">
@@ -135,7 +136,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
               />
             )}
 
-            {user?.userProfileId?.phone && (
+            {user?.userProfileId?.user?.isPhoneVerified=== true  && (
               <TagButton
                 text="Verified Phone"
                 bgColor="#00C3C01A"

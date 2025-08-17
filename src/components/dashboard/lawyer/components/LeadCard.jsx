@@ -21,6 +21,8 @@ const LeadCard = ({
   onlineMap,
   index,
 }) => {
+
+ 
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
   const urgentOption = singleLead?.data?.leadAnswers
@@ -115,13 +117,13 @@ const LeadCard = ({
         </p>
         <div className="flex items-center gap-1 text-xs ">
           <span
-            className={`w-2 h-2 rounded-full ${onlineMap[user?.userProfileId?.user]
+            className={`w-2 h-2 rounded-full ${onlineMap[user?.userProfileId?.user?._id]
                 ? 'bg-green-500'
                 : 'bg-gray-400'
               }`}
           ></span>
           <span className="text-gray-700">
-            {onlineMap[user?.userProfileId?.user]
+            {onlineMap[user?.userProfileId?.user?._id]
               ? 'Online'
               : 'Offline'}
           </span>
@@ -150,7 +152,7 @@ const LeadCard = ({
                 icon={<Zap className="text-[#FF8602] w-4 h-4" />}
               />
             )}
-            {user?.userProfileId?.phone && (
+            {user?.userProfileId?.user?.isPhoneVerified === true && (
               <TagButton
                 text="Verified Phone"
                 textColor="text-[#00C3C0]"
@@ -158,6 +160,7 @@ const LeadCard = ({
                 icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
               />
             )}
+           
           </div>
         </div>
       ) : null}

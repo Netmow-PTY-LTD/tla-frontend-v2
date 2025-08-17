@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  useGetAllLeadsQuery,
   useGetSingleLeadQuery,
 } from '@/store/features/lawyer/LeadsApiService';
 import { Skeleton } from '@/components/ui/skeleton';

@@ -57,8 +57,6 @@ export default function LeadDetailsPage() {
       skip: !id,
     });
 
-  //console.log('singleLead', singleLead);
-
   const toggleReadMore = () => setIsExpanded(!isExpanded);
   const maxLength = 300;
 
@@ -92,8 +90,6 @@ export default function LeadDetailsPage() {
   const { data: leadWiseResponses, isLoading: isSingleLeadResponseLoading } =
     useGetAllLeadWiseResponsesQuery(id);
 
-  //console.log('leadWiseResponses', leadWiseResponses);
-
   useEffect(() => {
     if (leadWiseResponses?.data?.length > 0) {
       setTabValue('responded-lawyers');
@@ -117,7 +113,6 @@ export default function LeadDetailsPage() {
 
   const serviceId = singleLead?.data?.serviceId?._id;
 
-  //console.log('singleLead?.data', singleLead?.data);
   const leadId = singleLead?.data?._id;
 
   const {
@@ -139,9 +134,6 @@ export default function LeadDetailsPage() {
       setTotalLawyersCount(lawyersData?.pagination?.total);
     }
   }, [lawyersData, lawyersData?.data]);
-
-  // console.log('totalLawyersCount', totalLawyersCount);
-  console.log('lawyers', lawyers);
 
   const lawyerIds = lawyersData?.data?.map((lawyer) => lawyer?._id) || [];
 
@@ -175,8 +167,6 @@ export default function LeadDetailsPage() {
     };
   }, [page, isFetching, totalPages]);
 
-  console.log({ page, isFetching, totalPages });
-
   const handleShowLeadResponseDetails = (response) => {
     setSelectedLeadResponse(response);
     setShowLeadResponseDetails(true);
@@ -189,8 +179,6 @@ export default function LeadDetailsPage() {
   if (isSingleLeadLoading) {
     return <ResponseSkeleton />;
   }
-
-  //console.log('leadWiseResponses?.data', leadWiseResponses?.data);
 
   return (
     <div className="lead-board-wrap">
@@ -268,7 +256,8 @@ export default function LeadDetailsPage() {
                         />
                       )}
 
-                    {singleLead?.data?.userProfileId?.phone && (
+                    {singleLead?.data?.userProfileId?.user?.isPhoneVerified ===
+                      true && (
                       <TagButton
                         text="Verified Phone"
                         bgColor="#00C3C01A"

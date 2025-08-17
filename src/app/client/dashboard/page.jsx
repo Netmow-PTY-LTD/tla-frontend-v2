@@ -10,7 +10,6 @@ import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { useGetLeadServiceListQuery } from '@/store/features/leadService/leadServiceApiService';
 import LeadSettings from '@/components/dashboard/lawyer/components/LeadSettings';
 import LeadStatsCard from '@/components/dashboard/lawyer/module/MyStats/LeadStatsCard';
-import { useGetAllMyLeadsQuery } from '@/store/features/lawyer/LeadsApiService';
 import ResponseSkeleton from '@/app/lawyer/dashboard/my-responses/_components/ResponseSkeleton';
 import { Skeleton } from '@/components/ui/skeleton';
 
