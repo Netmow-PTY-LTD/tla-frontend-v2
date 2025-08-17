@@ -95,7 +95,7 @@ const LoginForm = () => {
 
   return (
     <>
-      <div className="tla-auth-form tla-auth-form-login relative">
+      <div className="tla-auth-form tla-auth-form-login relative 2 p-[20px]">
         <h3 className="tla-auth-title mb-4 text-center">
           Explore the opportunities
         </h3>
