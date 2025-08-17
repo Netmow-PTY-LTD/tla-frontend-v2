@@ -42,12 +42,10 @@ export default function AddressCombobox() {
                 }
                 placeholder="Select an Address"
               />
-              <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
-                <ChevronDown className="h-4 w-4 text-gray-500" />
-              </ComboboxButton>
+          
 
               {filteredZipcodes?.length > 0 && (
-                <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <ComboboxOptions  className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   {filteredZipcodes.slice(0, 10).map((item) => (
                     <ComboboxOption
                       key={item._id}
