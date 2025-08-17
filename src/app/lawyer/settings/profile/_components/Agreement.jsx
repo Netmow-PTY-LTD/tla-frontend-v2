@@ -105,13 +105,14 @@ export default function Agreement() {
           <File className="w-4 h-4" />
           <span>Legal Services Agreement Template</span>
         </div>
-        <Link
-          href="https://thelawapp.com.au/download-lsa"
+        <a
+          href="/lawyer/settings/profile/_components/agreement/Legal_Services_Agreement_Template_TLA.docx"
           className="flex items-center gap-2 py-2 px-6 bg-[var(--secondary-color)] rounded text-white"
+          download={true}
         >
           <ArrowDownToLine className="w-4 h-4" />
           <span>Download</span>
-        </Link>
+        </a>
       </div>
 
       <div className="mt-8 space-y-4">

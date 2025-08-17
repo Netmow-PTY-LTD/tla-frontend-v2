@@ -110,8 +110,8 @@ export default function HeroHome({ searchParam }) {
     e.preventDefault();
 
     setSelectedService(service);
-    if (!service || !service?._id) {
-      showErrorToast('Please select a service.');
+    if (!service || !service?._id || !location) {
+      showErrorToast('Please select a service and location.');
       return;
     }
     setModalOpen(true);
@@ -218,7 +218,7 @@ export default function HeroHome({ searchParam }) {
                     />
                     {filteredZipCodes?.length > 0 && (
                       <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {filteredZipCodes.slice(0, 10).map((item) => (
+                        {filteredZipCodes?.slice(0, 10)?.map((item) => (
                           <ComboboxOption
                             key={item._id}
                             value={item._id}
