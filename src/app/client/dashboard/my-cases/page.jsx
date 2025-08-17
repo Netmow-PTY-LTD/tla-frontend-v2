@@ -9,6 +9,7 @@ import ClientLeadCard from '../../_components/ClientLeadCard';
 import ClientNewLeadRegistrationModal from '../../_components/ClientNewLeadRegistrationModal';
 import JobRequest from '../../_components/JobRequest';
 import { Loader } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function MyLeads() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -27,6 +28,12 @@ export default function MyLeads() {
   );
 
   console.log('allMyLeads', allMyLeads);
+
+  const router = useRouter();
+
+  if (allMyLeads?.data?.length === 1) {
+    router.push(`/client/dashboard/my-cases/${allMyLeads?.data?.[0]?._id}`);
+  }
 
   const { data: countryList } = useGetCountryListQuery();
 

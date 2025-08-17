@@ -57,8 +57,6 @@ export default function LeadDetailsPage() {
       skip: !id,
     });
 
-
-
   const toggleReadMore = () => setIsExpanded(!isExpanded);
   const maxLength = 300;
 
@@ -92,8 +90,6 @@ export default function LeadDetailsPage() {
   const { data: leadWiseResponses, isLoading: isSingleLeadResponseLoading } =
     useGetAllLeadWiseResponsesQuery(id);
 
- 
-
   useEffect(() => {
     if (leadWiseResponses?.data?.length > 0) {
       setTabValue('responded-lawyers');
@@ -117,7 +113,6 @@ export default function LeadDetailsPage() {
 
   const serviceId = singleLead?.data?.serviceId?._id;
 
-
   const leadId = singleLead?.data?._id;
 
   const {
@@ -132,7 +127,6 @@ export default function LeadDetailsPage() {
     }
   );
 
- 
   useEffect(() => {
     if (lawyersData && lawyersData?.data?.length > 0) {
       setLawyers(lawyersData?.data);
@@ -141,7 +135,6 @@ export default function LeadDetailsPage() {
     }
   }, [lawyersData, lawyersData?.data]);
 
-  
   const lawyerIds = lawyersData?.data?.map((lawyer) => lawyer?._id) || [];
 
   // ✅ Use hook directly (at top level of component)
@@ -174,8 +167,6 @@ export default function LeadDetailsPage() {
     };
   }, [page, isFetching, totalPages]);
 
-  
-
   const handleShowLeadResponseDetails = (response) => {
     setSelectedLeadResponse(response);
     setShowLeadResponseDetails(true);
@@ -189,7 +180,6 @@ export default function LeadDetailsPage() {
     return <ResponseSkeleton />;
   }
 
-  
   return (
     <div className="lead-board-wrap">
       <div className="lead-board-container">
@@ -265,8 +255,9 @@ export default function LeadDetailsPage() {
                           }
                         />
                       )}
-                      
-                    {singleLead?.data?.userProfileId?.user?.isPhoneVerified === true  && (
+
+                    {singleLead?.data?.userProfileId?.user?.isPhoneVerified ===
+                      true && (
                       <TagButton
                         text="Verified Phone"
                         bgColor="#00C3C01A"
