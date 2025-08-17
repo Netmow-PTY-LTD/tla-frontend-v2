@@ -18,10 +18,10 @@ export const lawyerSettingAboutSchema = z.object({
   }),
   law_society_member_number: z
     .string()
-    .min(1, 'Law Society Member Number is required'),
+    .min(1, 'is required'),
   practising_certificate_number: z
     .string()
-    .min(1, 'Practising Certificate Number is required'),
+    .min(1, 'is required'),
   lawyerContactEmail: z
     .string()
     .trim()

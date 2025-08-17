@@ -18,8 +18,8 @@ const SettingsLayout = ({ children }) => {
   ];
 
   return (
-    <div className="bg-white border rounded-xl">
-      <SettingsTabs tabs={tabs} />
+    <div className="">
+      {/* <SettingsTabs tabs={tabs} /> */}
       <div className="px-4 ">{children}</div>
     </div>
   );
