@@ -26,6 +26,7 @@ import GenderRadioField from '@/components/form/GenderRadioField';
 import MultiTagSelector from './MultiTagSelector';
 import country from '@/data/au.json';
 import AddressCombobox from '@/app/client/_components/profile/AddressCombobox';
+import ChangeEmail from '@/app/client/_components/ChangeEmail';
 
 const genderOptions = [
   { id: 1, label: 'Male', value: 'male' },
@@ -40,6 +41,7 @@ export default function About() {
   const [postalCode, setPostalCode] = useState('');
 
   const [open, setOpen] = useState(false);
+    const [openEmail, setOpenEmail] = useState(false);
   const {
     data: userInfo,
     isLoading,
@@ -277,6 +279,13 @@ export default function About() {
             >
               Change Password
             </button>
+            <button
+              type="button"
+              onClick={() => setOpenEmail(true)}
+              className="inline-flex items-center justify-center px-4 py-2 mt-7 text-sm font-medium text-[#00C3C0] border border-[#00C3C0] rounded-md hover:bg-[#00C3C0] hover:text-white transition-all duration-300"
+            >
+              Change Email
+            </button>
           </div>
           <label className="text-black label-text mb-3 inline-block">
             About You
@@ -309,6 +318,7 @@ export default function About() {
       </FormWrapper>
       <>
         <ChangePassword setOpen={setOpen} open={open} />
+         <ChangeEmail setOpen={setOpenEmail} open={openEmail} />
       </>
     </div>
   );
