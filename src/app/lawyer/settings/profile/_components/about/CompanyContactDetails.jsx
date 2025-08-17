@@ -17,7 +17,7 @@ export default function CompanyContactDetails() {
           <TextInput
             label="Phone Number"
             name="phoneNumber"
-            placeholder="+8801XXXXXXX"
+            placeholder="XXXXXXXXX"
           />
           <TextInput
             label="Website"

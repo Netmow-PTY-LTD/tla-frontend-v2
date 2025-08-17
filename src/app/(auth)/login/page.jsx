@@ -41,7 +41,7 @@ export default function Login() {
                   height={373}
                   alt="Auth Image"
                 /> */}
-              {/* <div className="tla-auth-login-text">{`Log in to access freelance legal opportunities, manage cases, and grow your independent practice.`}</div> */}
+              <div className="tla-auth-login-text">{`Log in to access freelance legal opportunities, manage cases, and grow your independent practice.`}</div>
             </div>
           </div>
         </div>
