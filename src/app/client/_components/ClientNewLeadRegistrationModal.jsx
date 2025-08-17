@@ -71,143 +71,39 @@ export default function ClientNewLeadRegistrationModal({
   const [longitude, setLongitude] = useState('');
   const [address, setAddress] = useState('');
   const [postalCode, setPostalCode] = useState('');
+  const [zipCodeQuery, setZipCodeQuery] = useState('');
+  const [stepwiseCheckedOptions, setStepwiseCheckedOptions] = useState(null);
 
-  // const { data: allZipCodes, isLoading: isZipCodeLoading } =
-  //   useGetZipCodeListQuery();
+  const { data: allZipCodes, isLoading: isZipCodeLoading } =
+    useGetZipCodeListQuery();
 
-  // const zipCodeFromLead = allMyLeads[0]?.userProfileId?.address;
-  // const matchedZip = allZipCodes?.data?.find(
-  //   (z) => z.zipcode === zipCodeFromLead
-  // );
+  const zipCodeFromLead = allMyLeads[0]?.locationId;
+
   // // This is an _id
-  // const [zipCode, setZipCode] = useState(matchedZip?._id || '');
-
-  // const filteredZipCodes = allZipCodes?.data?.filter((item) =>
-  //   item?.zipcode?.toLowerCase().includes(zipCode?.toLowerCase())
-  // );
-
-  const inputRef = useRef(null);
-
   useEffect(() => {
-    // Inject high-priority styles once
-    const styleTag = document.createElement('style');
-    styleTag.innerHTML = `
-     .google-places-autocomplete .pac-container {
-       position: absolute !important;
-       top: 100% !important;
-       left: 0 !important;
-       width: 518px !important;
-       z-index: 9999 !important;
-     }
-   `;
-    document.head.appendChild(styleTag);
+    const matchedZip = allZipCodes?.data?.find(
+      (z) => z._id === zipCodeFromLead
+    );
+    if (matchedZip) {
+      setZipCode(matchedZip?.zipcode);
+    }
+  }, [zipCodeFromLead]);
 
-    let autocomplete;
-    let observer;
+  const filteredZipCodes = allZipCodes?.data?.filter((item) =>
+    item?.zipcode?.toLowerCase().includes(zipCodeQuery?.toLowerCase())
+  );
 
-    const initialize = () => {
-      if (!inputRef.current || !window.google?.maps?.places) return;
+  console.log('filteredZipCodes', filteredZipCodes);
 
-      autocomplete = new window.google.maps.places.Autocomplete(
-        inputRef.current,
-        {
-          fields: ['geometry', 'formatted_address', 'address_components'],
-        }
-      );
-
-      autocomplete.setComponentRestrictions({ country: ['au'] });
-
-      autocomplete.addListener('place_changed', () => {
-        const place = autocomplete.getPlace();
-        if (!place.geometry) return;
-
-        const postalCodeObj = place.address_components.find((c) =>
-          c.types.includes('postal_code')
-        );
-        const postal = postalCodeObj ? postalCodeObj.long_name : '';
-
-        setPostalCode(postal);
-        setZipCode(place.formatted_address);
-        setLatitude(place.geometry.location.lat);
-        setLongitude(place.geometry.location.lng);
-      });
-
-      observer = new MutationObserver(() => {
-        const pacContainer = document.querySelector('.pac-container');
-        const targetWrapper = document.querySelector(
-          '.google-places-autocomplete'
-        );
-
-        if (
-          pacContainer &&
-          targetWrapper &&
-          !targetWrapper.contains(pacContainer)
-        ) {
-          targetWrapper.appendChild(pacContainer);
-        }
-      });
-
-      observer.observe(document.body, { childList: true, subtree: true });
-    };
-
-    const interval = setInterval(() => {
-      if (inputRef.current && window.google?.maps?.places) {
-        initialize();
-        clearInterval(interval);
-      }
-    }, 100);
-
-    return () => {
-      clearInterval(interval);
-      if (observer) observer.disconnect();
-    };
-  }, []);
-
-  // Still keep geocode fetch in case address changes without using autocomplete
-  useEffect(() => {
-    if (!address) return;
-
-    // Only fetch if the user typed manually (zipCode not set yet)
-    if (zipCode) return; // skip fetch after Autocomplete selection
-
-    const fetchCoordinates = async () => {
-      try {
-        const res = await fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-            address
-          )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
-        );
-        const data = await res.json();
-
-        if (data.status === 'OK') {
-          const coords = data.results[0].geometry.location;
-          const formattedAddress = data.results[0].formatted_address;
-
-          const postalCodeObj = data.results[0].address_components.find((c) =>
-            c.types.includes('postal_code')
-          );
-          const postal = postalCodeObj ? postalCodeObj.long_name : '';
-
-          setPostalCode(postal);
-          setZipCode(formattedAddress);
-          setLatitude(coords.lat);
-          setLongitude(coords.lng);
-        }
-      } catch (err) {
-        console.error('Failed to fetch coordinates', err);
-      }
-    };
-
-    fetchCoordinates();
-  }, [address]);
+  console.log('zipCode', zipCode);
 
   const addressInfo = {
     countryId: country.countryId,
     countryCode: country.code.toLowerCase(),
-    zipcode: zipCode,
-    latitude: latitude?.toString(),
-    longitude: longitude?.toString(),
-    postalCode,
+    zipcode: address || '',
+    latitude: latitude?.toString() || '',
+    longitude: longitude?.toString() || '',
+    postalCode: postalCode || '',
   };
 
   console.log('addressInfo', addressInfo);
@@ -303,15 +199,15 @@ export default function ClientNewLeadRegistrationModal({
   const options = selectedServiceWiseQuestions?.data?.[step - 1]?.options || [];
 
   const handleOptionChange = (optionId, checked) => {
-    const parentQuestion = fullClonedQuestions?.find((question) =>
-      question.options?.some((option) => option._id === optionId)
+    const parentQuestion = fullClonedQuestions?.find((q) =>
+      q.options?.some((opt) => opt._id === optionId)
     );
 
-    const foundOption = parentQuestion?.options?.find(
-      (option) => option._id === optionId
-    );
+    if (!parentQuestion) return;
 
-    const questionType = parentQuestion?.questionType;
+    const foundOption = parentQuestion.options.find(
+      (opt) => opt._id === optionId
+    );
 
     const tempOption = {
       id: optionId,
@@ -323,112 +219,120 @@ export default function ClientNewLeadRegistrationModal({
           : '',
     };
 
-    const findSelectedOptions = options?.find((item) => item?._id === optionId);
+    let newCheckedOptionsDetails;
 
-    // Handle "radio" type first and return early
-    if (questionType === 'radio') {
-      if (checked) {
-        setCheckedOptions([optionId]);
-        setCheckedOptionsDetails([tempOption]);
-        setSelectedOptions(findSelectedOptions?.selected_options || []);
-      } else {
-        setCheckedOptions([]);
-        setCheckedOptionsDetails([]);
-        setSelectedOptions([]);
-      }
-      return; // skip rest of the logic
+    if (parentQuestion.questionType === 'radio') {
+      newCheckedOptionsDetails = checked ? [tempOption] : [];
+      setCheckedOptions(checked ? [optionId] : []);
+      setSelectedOptions(checked ? foundOption.selected_options : []);
+    } else {
+      // checkbox
+      newCheckedOptionsDetails = checked
+        ? [
+            ...checkedOptionsDetails.filter((o) => o.id !== optionId),
+            tempOption,
+          ]
+        : checkedOptionsDetails.filter((o) => o.id !== optionId);
+
+      setCheckedOptions(
+        checked
+          ? [...checkedOptions, optionId]
+          : checkedOptions.filter((id) => id !== optionId)
+      );
+
+      setSelectedOptions((prev) => {
+        if (checked) {
+          const combined = [...prev, ...(foundOption.selected_options || [])];
+          return Array.from(
+            new Map(combined.map((item) => [item._id, item])).values()
+          );
+        } else {
+          return prev.filter(
+            (item) =>
+              !(foundOption.selected_options || []).some(
+                (opt) => opt._id === item._id
+              )
+          );
+        }
+      });
     }
 
-    // Handle multi-select (checkbox) types
-    const newCheckedOptions = checked
-      ? [...checkedOptions, optionId]
-      : checkedOptions.filter((id) => id !== optionId);
+    // update state
+    setCheckedOptionsDetails(newCheckedOptionsDetails);
+    setStepwiseCheckedOptions(newCheckedOptionsDetails);
 
-    setCheckedOptions(newCheckedOptions);
-
-    setCheckedOptionsDetails((prev) => {
-      if (checked) {
-        const filtered = prev.filter((item) => item.id !== optionId);
-        return [...filtered, tempOption];
-      } else {
-        return prev.filter((item) => item.id !== optionId);
-      }
-    });
-
-    if (checked) {
-      setSelectedOptions((prev) => {
-        const newOptions = findSelectedOptions?.selected_options || [];
-        const combined = [...prev, ...newOptions];
-        const unique = Array.from(
-          new Map(combined.map((item) => [item._id, item])).values()
-        );
-        return unique;
-      });
-    } else {
-      setSelectedOptions((prev) =>
-        prev.filter(
-          (item) =>
-            !findSelectedOptions?.selected_options?.some(
-              (opt) => opt._id === item._id
-            )
-        )
-      );
+    // update viewData immediately
+    if (fullClonedQuestions[step]) {
+      const updatedQuestion = {
+        ...fullClonedQuestions[step],
+        options: fullClonedQuestions[step].options.map((opt) => {
+          const matched = newCheckedOptionsDetails.find(
+            (o) => o.id === opt._id
+          );
+          return {
+            ...opt,
+            is_checked: matched?.is_checked || false,
+            idExtraData: matched?.idExtraData || '',
+          };
+        }),
+      };
+      setViewData(updatedQuestion);
     }
   };
 
-  //   useEffect(() => {
-  //     if (step === 0) {
-  //       partialClonedQuestions[step] = fullClonedQuestions?.[step];
-  //       // setViewData(fullClonedQuestions?.[step]);
-  //     } else {
-  //       if (clickButtonType === 'Next') {
-  //         partialClonedQuestions[step] = {
-  //           ...partialClonedQuestions[step],
-  //           options: selectedOptions,
-  //         };
-  //       }
-  //       // setViewData(partialClonedQuestions?.[step]);
-  //     }
-
-  //     setViewData(partialClonedQuestions?.[step]);
-  //   }, [step, partialClonedQuestions]);
-
   useEffect(() => {
-    const updatedPartial = [...partialClonedQuestions];
-
     if (step === 0) {
-      updatedPartial[step] = fullClonedQuestions?.[step - 1];
-    } else if (clickButtonType === 'Next') {
-      const fullStepData = fullClonedQuestions?.[step - 1];
-
-      const mappedOptions = fullStepData?.options?.map((option) => {
-        const isChecked = checkedOptions.includes(option._id);
-        const extra = checkedOptionsDetails.find((o) => o.id === option._id);
-
-        return {
-          ...option,
-          is_checked: isChecked,
-          idExtraData: extra?.idExtraData || '',
+      partialClonedQuestions[step] = fullClonedQuestions?.[step];
+      // setViewData(fullClonedQuestions?.[step]);
+    } else {
+      if (clickButtonType === 'Next') {
+        partialClonedQuestions[step] = {
+          ...partialClonedQuestions[step],
+          options: selectedOptions,
         };
-      });
-
-      updatedPartial[step] = {
-        ...fullStepData,
-        options: mappedOptions,
-      };
-    } else if (clickButtonType === 'Prev') {
-      updatedPartial[step] = fullClonedQuestions?.[step - 1];
+      }
+      // setViewData(partialClonedQuestions?.[step]);
     }
 
-    setPartialClonedQuestions(updatedPartial);
-    setViewData(updatedPartial?.[step]);
-  }, [
-    step,
-    fullClonedQuestions,
-    checkedOptions,
-    checkedOptionsDetails,
-    clickButtonType,
-  ]);
+    setViewData(partialClonedQuestions?.[step]);
+  }, [step, partialClonedQuestions]);
+
+  // useEffect(() => {
+  //   const updatedPartial = [...partialClonedQuestions];
+
+  //   if (step === 0) {
+  //     updatedPartial[step] = fullClonedQuestions?.[step - 1];
+  //   } else if (clickButtonType === 'Next') {
+  //     const fullStepData = fullClonedQuestions?.[step - 1];
+
+  //     const mappedOptions = fullStepData?.options?.map((option) => {
+  //       const isChecked = checkedOptions.includes(option._id);
+  //       const extra = checkedOptionsDetails.find((o) => o.id === option._id);
+
+  //       return {
+  //         ...option,
+  //         is_checked: isChecked,
+  //         idExtraData: extra?.idExtraData || '',
+  //       };
+  //     });
+
+  //     updatedPartial[step] = {
+  //       ...fullStepData,
+  //       options: mappedOptions,
+  //     };
+  //   } else if (clickButtonType === 'Prev') {
+  //     updatedPartial[step] = fullClonedQuestions?.[step - 1];
+  //   }
+
+  //   setPartialClonedQuestions(updatedPartial);
+  //   setViewData(updatedPartial?.[step]);
+  // }, [
+  //   step,
+  //   fullClonedQuestions,
+  //   checkedOptions,
+  //   checkedOptionsDetails,
+  //   clickButtonType,
+  // ]);
 
   const [questionsPayload, setQuestionsPayload] = useState([]);
 
@@ -511,8 +415,14 @@ export default function ClientNewLeadRegistrationModal({
   };
 
   const handleBack = () => {
-    setStep((prev) => Math.max(prev - 1, 0));
+    const newStep = Math.max(step - 1, 0);
+    setStep(newStep);
     setClickButtonType('Prev');
+
+    const existingStepData = questionsPayload.find(
+      (item) => item.step === newStep
+    );
+    setCheckedOptionsDetails(existingStepData?.checkedOptionsDetails || []);
   };
 
   const isNextDisabled = (() => {
@@ -545,6 +455,40 @@ export default function ClientNewLeadRegistrationModal({
       : countryWiseServices?.filter((service) =>
           service?.name?.toLowerCase().includes(searchTerm?.toLowerCase())
         );
+
+  // Update stepwiseCheckedOptions whenever step or questionsPayload changes
+  useEffect(() => {
+    const existing = questionsPayload.find((item) => item.step === step);
+    setStepwiseCheckedOptions(existing?.checkedOptionsDetails || []);
+  }, [step, questionsPayload]); // only run when step or questionsPayload change
+
+  // console.log('stepwise checked items:', stepwiseCheckedOptions);
+  // console.log('viewData:', viewData);
+
+  // Update viewData options with checked state
+  useEffect(() => {
+    if (!fullClonedQuestions[step]) return;
+
+    const updatedQuestion = {
+      ...fullClonedQuestions[step],
+      options: fullClonedQuestions[step].options.map((opt) => {
+        const matched = stepwiseCheckedOptions?.find(
+          (item) => item.id === opt._id
+        );
+        return {
+          ...opt,
+          is_checked: matched?.is_checked || false,
+          idExtraData: matched?.idExtraData || '',
+        };
+      }),
+    };
+
+    setViewData(updatedQuestion);
+  }, [fullClonedQuestions, step, stepwiseCheckedOptions]);
+
+  console.log('questionsPayload', questionsPayload);
+  console.log('stepwiseCheckedOptions', stepwiseCheckedOptions);
+  console.log('viewData', viewData);
 
   return (
     <Modal
@@ -627,18 +571,61 @@ export default function ClientNewLeadRegistrationModal({
               <label htmlFor="" className="font-semibold">
                 Where do you need it?
               </label>
-              <div className="relative">
-                <input
-                  ref={inputRef}
-                  type="text"
-                  className="border border-gray-300 rounded-md w-full h-[44px] px-4"
-                  placeholder="Enter Zipcode"
-                  autoComplete="off"
-                  value={address} // ✅ controlled input for full address
-                  onChange={(e) => setAddress(e.target.value)} // updates address while typing
-                />
-                <div className="google-places-autocomplete"></div>
-              </div>
+              <Combobox value={zipCode ?? ''} onChange={setZipCode}>
+                <div className="relative">
+                  <ComboboxInput
+                    className="border border-gray-300 rounded-md w-full h-[44px] px-4"
+                    onChange={(event) => {
+                      setZipCodeQuery(event.target.value);
+                    }}
+                    displayValue={(val) =>
+                      allZipCodes?.data?.find((z) => z._id === val)?.zipcode ||
+                      val
+                    }
+                    placeholder="Select a postcode"
+                    autoComplete="off"
+                  />
+                  <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
+                    <ChevronDown className="h-4 w-4 text-gray-500" />
+                  </ComboboxButton>
+                  {filteredZipCodes?.length > 0 && (
+                    <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      {filteredZipCodes?.slice(0, 10).map((item) => (
+                        <ComboboxOption
+                          key={item._id}
+                          value={item._id}
+                          className={({ active }) =>
+                            cn(
+                              'cursor-pointer select-none relative py-2 px-6',
+                              active
+                                ? 'bg-blue-100 text-black'
+                                : 'text-gray-900'
+                            )
+                          }
+                        >
+                          {({ selected }) => (
+                            <>
+                              <span
+                                className={cn('block truncate', {
+                                  'font-medium': selected,
+                                  'font-normal': !selected,
+                                })}
+                              >
+                                {item.zipcode}
+                              </span>
+                              {selected && (
+                                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
+                                  <Check className="h-4 w-4" />
+                                </span>
+                              )}
+                            </>
+                          )}
+                        </ComboboxOption>
+                      ))}
+                    </ComboboxOptions>
+                  )}
+                </div>
+              </Combobox>
             </div>
           </div>
         </>
@@ -653,7 +640,7 @@ export default function ClientNewLeadRegistrationModal({
                 viewData.options?.map((option, index) => {
                   const isLast = index === viewData.options.length - 1;
                   const isOther = option?.name?.toLowerCase() === 'other';
-
+                  const isChecked = option?.is_checked;
                   return (
                     <label
                       key={option._id || index}
@@ -669,7 +656,7 @@ export default function ClientNewLeadRegistrationModal({
                               : 'radio'
                           }
                           name={`question-${viewData._id}`}
-                          checked={option?.is_checked || false}
+                          checked={isChecked}
                           onChange={(e) =>
                             handleOptionChange(option._id, e.target.checked)
                           }

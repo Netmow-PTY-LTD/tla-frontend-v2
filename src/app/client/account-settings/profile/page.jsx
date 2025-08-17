@@ -23,10 +23,12 @@ import AvatarUploader from '@/components/UIComponents/AvaterUploader';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { useEffect, useState } from 'react';
 import AddressCombobox from '../../_components/profile/AddressCombobox';
+import ChangeEmail from '../../_components/ChangeEmail';
 
 const page = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openEmail, setOpenEmail] = useState(false);
   const {
     data: currentUser,
     isLoading: isLoadingUserInfo,
@@ -143,6 +145,7 @@ const page = () => {
                 <button
                   type="button"
                   className="text-sm text-[#00C3C0] mt-6 block "
+                   onClick={() => setOpenEmail(true)}
                 >
                   Change Email
                 </button>
@@ -179,6 +182,7 @@ const page = () => {
           </div>
         </FormWrapper>
         <ChangePassword setOpen={setOpen} open={open} />
+        {/* <ChangeEmail setOpen={setOpenEmail} open={openEmail} /> */}
       </div>
     </div>
   );

@@ -121,7 +121,9 @@ export default function HeroSlider() {
       <div className={styles.carouselWrapper}>
         <div className={styles.carouselContainer}>
           {isCountryWiseServicesLoading ? (
-            <Loader className="w-6 h-6 animate-spin" />
+            <div className="flex justify-center items-center">
+              <Loader className="w-6 h-6 animate-spin" />
+            </div>
           ) : (
             countryWiseServices?.data?.length > 0 &&
             countryWiseServices?.data?.slice(0, 5).map((service, index) => {

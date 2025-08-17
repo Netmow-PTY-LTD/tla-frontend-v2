@@ -50,6 +50,7 @@ export default function CreateLeadWithAuthModal({
 
   const [budgetAmount, setBudgetAmount] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [stepwiseCheckedOptions, setStepwiseCheckedOptions] = useState(null);
 
   useEffect(() => {
     if (!selectedServiceWiseQuestions?.length) return;
@@ -132,15 +133,15 @@ export default function CreateLeadWithAuthModal({
   const options = selectedServiceWiseQuestions?.[step]?.options || [];
 
   const handleOptionChange = (optionId, checked) => {
-    const parentQuestion = fullClonedQuestions?.find((question) =>
-      question.options?.some((option) => option._id === optionId)
+    const parentQuestion = fullClonedQuestions?.find((q) =>
+      q.options?.some((opt) => opt._id === optionId)
     );
 
-    const foundOption = parentQuestion?.options?.find(
-      (option) => option._id === optionId
-    );
+    if (!parentQuestion) return;
 
-    const questionType = parentQuestion?.questionType;
+    const foundOption = parentQuestion.options.find(
+      (opt) => opt._id === optionId
+    );
 
     const tempOption = {
       id: optionId,
@@ -152,56 +153,64 @@ export default function CreateLeadWithAuthModal({
           : '',
     };
 
-    const findSelectedOptions = options?.find((item) => item?._id === optionId);
+    let newCheckedOptionsDetails;
 
-    // Handle "radio" type first and return early
-    if (questionType === 'radio') {
-      if (checked) {
-        setCheckedOptions([optionId]);
-        setCheckedOptionsDetails([tempOption]);
-        setSelectedOptions(findSelectedOptions?.selected_options || []);
-      } else {
-        setCheckedOptions([]);
-        setCheckedOptionsDetails([]);
-        setSelectedOptions([]);
-      }
-      return; // skip rest of the logic
+    if (parentQuestion.questionType === 'radio') {
+      newCheckedOptionsDetails = checked ? [tempOption] : [];
+      setCheckedOptions(checked ? [optionId] : []);
+      setSelectedOptions(checked ? foundOption.selected_options : []);
+    } else {
+      // checkbox
+      newCheckedOptionsDetails = checked
+        ? [
+            ...checkedOptionsDetails.filter((o) => o.id !== optionId),
+            tempOption,
+          ]
+        : checkedOptionsDetails.filter((o) => o.id !== optionId);
+
+      setCheckedOptions(
+        checked
+          ? [...checkedOptions, optionId]
+          : checkedOptions.filter((id) => id !== optionId)
+      );
+
+      setSelectedOptions((prev) => {
+        if (checked) {
+          const combined = [...prev, ...(foundOption.selected_options || [])];
+          return Array.from(
+            new Map(combined.map((item) => [item._id, item])).values()
+          );
+        } else {
+          return prev.filter(
+            (item) =>
+              !(foundOption.selected_options || []).some(
+                (opt) => opt._id === item._id
+              )
+          );
+        }
+      });
     }
 
-    // Handle multi-select (checkbox) types
-    const newCheckedOptions = checked
-      ? [...checkedOptions, optionId]
-      : checkedOptions.filter((id) => id !== optionId);
+    // update state
+    setCheckedOptionsDetails(newCheckedOptionsDetails);
+    setStepwiseCheckedOptions(newCheckedOptionsDetails);
 
-    setCheckedOptions(newCheckedOptions);
-
-    setCheckedOptionsDetails((prev) => {
-      if (checked) {
-        const filtered = prev.filter((item) => item.id !== optionId);
-        return [...filtered, tempOption];
-      } else {
-        return prev.filter((item) => item.id !== optionId);
-      }
-    });
-
-    if (checked) {
-      setSelectedOptions((prev) => {
-        const newOptions = findSelectedOptions?.selected_options || [];
-        const combined = [...prev, ...newOptions];
-        const unique = Array.from(
-          new Map(combined.map((item) => [item._id, item])).values()
-        );
-        return unique;
-      });
-    } else {
-      setSelectedOptions((prev) =>
-        prev.filter(
-          (item) =>
-            !findSelectedOptions?.selected_options?.some(
-              (opt) => opt._id === item._id
-            )
-        )
-      );
+    // update viewData immediately
+    if (fullClonedQuestions[step]) {
+      const updatedQuestion = {
+        ...fullClonedQuestions[step],
+        options: fullClonedQuestions[step].options.map((opt) => {
+          const matched = newCheckedOptionsDetails.find(
+            (o) => o.id === opt._id
+          );
+          return {
+            ...opt,
+            is_checked: matched?.is_checked || false,
+            idExtraData: matched?.idExtraData || '',
+          };
+        }),
+      };
+      setViewData(updatedQuestion);
     }
   };
 
@@ -294,14 +303,20 @@ export default function CreateLeadWithAuthModal({
   };
 
   const handleBack = () => {
-    setStep((prev) => Math.max(prev - 1, 0));
+    const newStep = Math.max(step - 1, 0);
+    setStep(newStep);
     setClickButtonType('Prev');
+
+    const existingStepData = questionsPayload.find(
+      (item) => item.step === newStep
+    );
+    setCheckedOptionsDetails(existingStepData?.checkedOptionsDetails || []);
   };
 
   const isNextDisabled = (() => {
     // Step: Questions (required) — check checkedOptions length instead of answers
     if (step < totalQuestions) {
-      return checkedOptions.length === 0;
+      return stepwiseCheckedOptions.length === 0;
     }
 
     //Step: Additional Details (optional)
@@ -313,13 +328,43 @@ export default function CreateLeadWithAuthModal({
       return !additionalDetails.trim();
     }
 
-    if (step === totalSteps) {
+    if (step === totalSteps - 1) {
       return !budgetAmount.trim();
     }
 
     // Step: Phone (optional)
     return false;
   })();
+
+  // Update stepwiseCheckedOptions whenever step or questionsPayload changes
+  useEffect(() => {
+    const existing = questionsPayload.find((item) => item.step === step);
+    setStepwiseCheckedOptions(existing?.checkedOptionsDetails || []);
+  }, [step, questionsPayload]); // only run when step or questionsPayload change
+
+  // console.log('stepwise checked items:', stepwiseCheckedOptions);
+  // console.log('viewData:', viewData);
+
+  // Update viewData options with checked state
+  useEffect(() => {
+    if (!fullClonedQuestions[step]) return;
+
+    const updatedQuestion = {
+      ...fullClonedQuestions[step],
+      options: fullClonedQuestions[step].options.map((opt) => {
+        const matched = stepwiseCheckedOptions?.find(
+          (item) => item.id === opt._id
+        );
+        return {
+          ...opt,
+          is_checked: matched?.is_checked || false,
+          idExtraData: matched?.idExtraData || '',
+        };
+      }),
+    };
+
+    setViewData(updatedQuestion);
+  }, [fullClonedQuestions, step, stepwiseCheckedOptions]);
 
   return (
     <Modal
@@ -351,6 +396,7 @@ export default function CreateLeadWithAuthModal({
                 viewData.options?.map((option, index) => {
                   const isLast = index === viewData.options.length - 1;
                   const isOther = option?.name?.toLowerCase() === 'other';
+                  const isChecked = option?.is_checked;
 
                   return (
                     <label
@@ -370,6 +416,7 @@ export default function CreateLeadWithAuthModal({
                           onChange={(e) =>
                             handleOptionChange(option._id, e.target.checked)
                           }
+                          checked={isChecked}
                         />
 
                         {/* Render name only if not 'Other' */}
@@ -419,6 +466,7 @@ export default function CreateLeadWithAuthModal({
                     type="radio"
                     name="frequency"
                     value={frequency.value}
+                    checked={leadPriority === frequency.value}
                     onChange={(e) => setLeadPriority(e.target.value)}
                   />
                   <span>{frequency.label}</span>

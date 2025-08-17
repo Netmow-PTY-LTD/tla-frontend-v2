@@ -189,7 +189,7 @@ export default function LeadDetailsPage() {
               <div className="flex items-center justify-between">
                 <Link
                   className="flex py-2 items-center gap-2"
-                  href="/client/dashboard/my-cases"
+                  href="/client/dashboard/my-cases?redirect=false"
                 >
                   {' '}
                   <MoveLeft /> <span>Back to my cases</span>
