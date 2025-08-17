@@ -57,7 +57,7 @@ export default function LeadDetailsPage() {
       skip: !id,
     });
 
-  //console.log('singleLead', singleLead);
+
 
   const toggleReadMore = () => setIsExpanded(!isExpanded);
   const maxLength = 300;
@@ -92,7 +92,7 @@ export default function LeadDetailsPage() {
   const { data: leadWiseResponses, isLoading: isSingleLeadResponseLoading } =
     useGetAllLeadWiseResponsesQuery(id);
 
-  //console.log('leadWiseResponses', leadWiseResponses);
+ 
 
   useEffect(() => {
     if (leadWiseResponses?.data?.length > 0) {
@@ -117,7 +117,7 @@ export default function LeadDetailsPage() {
 
   const serviceId = singleLead?.data?.serviceId?._id;
 
-  //console.log('singleLead?.data', singleLead?.data);
+
   const leadId = singleLead?.data?._id;
 
   const {
@@ -132,7 +132,7 @@ export default function LeadDetailsPage() {
     }
   );
 
-  console.log('lawyersData', lawyersData);
+ 
   useEffect(() => {
     if (lawyersData && lawyersData?.data?.length > 0) {
       setLawyers(lawyersData?.data);
@@ -141,9 +141,7 @@ export default function LeadDetailsPage() {
     }
   }, [lawyersData, lawyersData?.data]);
 
-  // console.log('totalLawyersCount', totalLawyersCount);
-  // console.log('lawyers', lawyers);
-
+  
   const lawyerIds = lawyersData?.data?.map((lawyer) => lawyer?._id) || [];
 
   // ✅ Use hook directly (at top level of component)
@@ -176,7 +174,7 @@ export default function LeadDetailsPage() {
     };
   }, [page, isFetching, totalPages]);
 
-  console.log({ page, isFetching, totalPages });
+  
 
   const handleShowLeadResponseDetails = (response) => {
     setSelectedLeadResponse(response);
@@ -191,8 +189,7 @@ export default function LeadDetailsPage() {
     return <ResponseSkeleton />;
   }
 
-  //console.log('leadWiseResponses?.data', leadWiseResponses?.data);
-
+  
   return (
     <div className="lead-board-wrap">
       <div className="lead-board-container">
@@ -268,8 +265,8 @@ export default function LeadDetailsPage() {
                           }
                         />
                       )}
-
-                    {singleLead?.data?.userProfileId?.phone && (
+                      
+                    {Boolean(singleLead?.data?.userProfileId?.user?.isPhoneVerified) && (
                       <TagButton
                         text="Verified Phone"
                         bgColor="#00C3C01A"
