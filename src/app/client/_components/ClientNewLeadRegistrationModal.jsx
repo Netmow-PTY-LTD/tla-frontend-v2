@@ -199,10 +199,8 @@ export default function ClientNewLeadRegistrationModal({
   const options = selectedServiceWiseQuestions?.data?.[step - 1]?.options || [];
 
   const handleOptionChange = (optionId, checked) => {
-    const parentQuestion = fullClonedQuestions?.find((q) =>
-      q.options?.some((opt) => opt._id === optionId)
-    );
-
+    const questionIndex = step - 1;
+    const parentQuestion = fullClonedQuestions?.[questionIndex];
     if (!parentQuestion) return;
 
     const foundOption = parentQuestion.options.find(
@@ -262,10 +260,10 @@ export default function ClientNewLeadRegistrationModal({
     setStepwiseCheckedOptions(newCheckedOptionsDetails);
 
     // update viewData immediately
-    if (fullClonedQuestions[step]) {
+    if (fullClonedQuestions[questionIndex]) {
       const updatedQuestion = {
-        ...fullClonedQuestions[step],
-        options: fullClonedQuestions[step].options.map((opt) => {
+        ...fullClonedQuestions[questionIndex],
+        options: fullClonedQuestions[questionIndex].options.map((opt) => {
           const matched = newCheckedOptionsDetails.find(
             (o) => o.id === opt._id
           );
@@ -280,59 +278,55 @@ export default function ClientNewLeadRegistrationModal({
     }
   };
 
+  // useEffect(() => {
+  //   if (step === 0) {
+  //     setViewData(null); // service/zip screen
+  //   } else {
+  //     const questionIndex = step - 1;
+  //     if (partialClonedQuestions[questionIndex]) {
+  //       setViewData(partialClonedQuestions[questionIndex]);
+  //     }
+  //   }
+  // }, [step, partialClonedQuestions]);
+
   useEffect(() => {
     if (step === 0) {
-      partialClonedQuestions[step] = fullClonedQuestions?.[step];
-      // setViewData(fullClonedQuestions?.[step]);
-    } else {
-      if (clickButtonType === 'Next') {
-        partialClonedQuestions[step] = {
-          ...partialClonedQuestions[step],
-          options: selectedOptions,
-        };
-      }
-      // setViewData(partialClonedQuestions?.[step]);
+      setViewData(null); // service/zip page
+      return;
     }
 
-    setViewData(partialClonedQuestions?.[step]);
-  }, [step, partialClonedQuestions]);
+    const questionIndex = step - 1; // map step 1→0, step 2→1 etc.
+    const updatedPartial = [...partialClonedQuestions];
+    const fullStepData = fullClonedQuestions?.[questionIndex];
+    if (!fullStepData) return;
 
-  // useEffect(() => {
-  //   const updatedPartial = [...partialClonedQuestions];
+    if (clickButtonType === 'Next' || clickButtonType === 'Prev') {
+      const mappedOptions = fullStepData.options.map((option) => {
+        const isChecked = checkedOptions.includes(option._id);
+        const extra = checkedOptionsDetails.find((o) => o.id === option._id);
 
-  //   if (step === 0) {
-  //     updatedPartial[step] = fullClonedQuestions?.[step - 1];
-  //   } else if (clickButtonType === 'Next') {
-  //     const fullStepData = fullClonedQuestions?.[step - 1];
+        return {
+          ...option,
+          is_checked: isChecked,
+          idExtraData: extra?.idExtraData || '',
+        };
+      });
 
-  //     const mappedOptions = fullStepData?.options?.map((option) => {
-  //       const isChecked = checkedOptions.includes(option._id);
-  //       const extra = checkedOptionsDetails.find((o) => o.id === option._id);
+      updatedPartial[questionIndex] = {
+        ...fullStepData,
+        options: mappedOptions,
+      };
+    }
 
-  //       return {
-  //         ...option,
-  //         is_checked: isChecked,
-  //         idExtraData: extra?.idExtraData || '',
-  //       };
-  //     });
-
-  //     updatedPartial[step] = {
-  //       ...fullStepData,
-  //       options: mappedOptions,
-  //     };
-  //   } else if (clickButtonType === 'Prev') {
-  //     updatedPartial[step] = fullClonedQuestions?.[step - 1];
-  //   }
-
-  //   setPartialClonedQuestions(updatedPartial);
-  //   setViewData(updatedPartial?.[step]);
-  // }, [
-  //   step,
-  //   fullClonedQuestions,
-  //   checkedOptions,
-  //   checkedOptionsDetails,
-  //   clickButtonType,
-  // ]);
+    setPartialClonedQuestions(updatedPartial);
+    setViewData(updatedPartial[questionIndex]);
+  }, [
+    step,
+    fullClonedQuestions,
+    checkedOptions,
+    checkedOptionsDetails,
+    clickButtonType,
+  ]);
 
   const [questionsPayload, setQuestionsPayload] = useState([]);
 
@@ -431,7 +425,7 @@ export default function ClientNewLeadRegistrationModal({
     }
 
     if (step > 0 && step <= totalQuestions) {
-      return checkedOptions.length === 0;
+      return stepwiseCheckedOptions?.length === 0;
     }
 
     if (step === totalQuestions + 1) {
@@ -466,12 +460,16 @@ export default function ClientNewLeadRegistrationModal({
   // console.log('viewData:', viewData);
 
   // Update viewData options with checked state
+  // When setting viewData based on step
   useEffect(() => {
-    if (!fullClonedQuestions[step]) return;
+    if (step === 0) return; // skip service + zip step
+
+    const questionIndex = step - 1; // map step 1 → question 0, step 2 → question 1, etc.
+    if (!fullClonedQuestions[questionIndex]) return;
 
     const updatedQuestion = {
-      ...fullClonedQuestions[step],
-      options: fullClonedQuestions[step].options.map((opt) => {
+      ...fullClonedQuestions[questionIndex],
+      options: fullClonedQuestions[questionIndex].options.map((opt) => {
         const matched = stepwiseCheckedOptions?.find(
           (item) => item.id === opt._id
         );
@@ -486,6 +484,7 @@ export default function ClientNewLeadRegistrationModal({
     setViewData(updatedQuestion);
   }, [fullClonedQuestions, step, stepwiseCheckedOptions]);
 
+  console.log('step', step);
   console.log('questionsPayload', questionsPayload);
   console.log('stepwiseCheckedOptions', stepwiseCheckedOptions);
   console.log('viewData', viewData);
@@ -551,7 +550,7 @@ export default function ClientNewLeadRegistrationModal({
                                   'font-normal': !selected,
                                 })}
                               >
-                                {service.name}
+                                {service?.name}
                               </span>
                               {selected && (
                                 <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
@@ -629,7 +628,7 @@ export default function ClientNewLeadRegistrationModal({
             </div>
           </div>
         </>
-      ) : step > 0 && step <= totalQuestions ? (
+      ) : step === 1 && step <= totalQuestions ? (
         viewData?.question ? (
           <div className="space-y-4 mt-4">
             <h4 className="text-[24px] font-semibold text-center mb-8">
@@ -709,6 +708,7 @@ export default function ClientNewLeadRegistrationModal({
                     type="radio"
                     name="frequency"
                     value={frequency.value}
+                    checked={leadPriority === frequency.value}
                     onChange={(e) => setLeadPriority(e.target.value)}
                   />
                   <span>{frequency.label}</span>
