@@ -64,7 +64,7 @@ export default function LeadDetailsPage({
 
   const mapUrl = getStaticMapUrl(lead?.userProfileId?.address);
 
-  const userIds = data?.map((lead) => lead?.userProfileId?.user) || [];
+  const userIds = data?.map((lead) => lead?.userProfileId?.user?._id) || [];
 
   // ✅ Use hook directly (at top level of component)
   useRealTimeStatus(currentUserId, userIds, (userId, isOnline) => {
@@ -135,13 +135,13 @@ export default function LeadDetailsPage({
                       <div className="flex items-center gap-2 text-sm">
                         <span
                           className={`ml-2 w-2 h-2 rounded-full ${
-                            onlineMap[lead?.userProfileId?.user]
+                            onlineMap[lead?.userProfileId?.user?._id]
                               ? 'bg-green-500'
                               : 'bg-gray-400'
                           }`}
                         ></span>
                         <span className="text-gray-700">
-                          {onlineMap[lead?.userProfileId?.user]
+                          {onlineMap[lead?.userProfileId?.user?._id]
                             ? 'Online'
                             : 'Offline'}
                         </span>
