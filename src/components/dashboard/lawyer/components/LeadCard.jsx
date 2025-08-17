@@ -152,7 +152,7 @@ const LeadCard = ({
                 icon={<Zap className="text-[#FF8602] w-4 h-4" />}
               />
             )}
-            {Boolean(user?.userProfileId?.user?.isPhoneVerified) && (
+            {user?.userProfileId?.user?.isPhoneVerified === true && (
               <TagButton
                 text="Verified Phone"
                 textColor="text-[#00C3C0]"

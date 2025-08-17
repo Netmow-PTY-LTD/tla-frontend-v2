@@ -136,7 +136,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
               />
             )}
 
-            {Boolean(user?.userProfileId?.user?.isPhoneVerified) && (
+            {user?.userProfileId?.user?.isPhoneVerified=== true  && (
               <TagButton
                 text="Verified Phone"
                 bgColor="#00C3C01A"

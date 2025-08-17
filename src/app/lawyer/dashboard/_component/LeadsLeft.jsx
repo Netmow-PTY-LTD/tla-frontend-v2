@@ -250,7 +250,7 @@ export default function LeadDetailsPage({
                       />
                     )}
 
-                  {Boolean(singleLead?.userProfileId?.user?.isPhoneVerified)  && (
+                  {singleLead?.userProfileId?.user?.isPhoneVerified === true  && (
                     <TagButton
                       text="Verified Phone"
                       bgColor="#00C3C01A"

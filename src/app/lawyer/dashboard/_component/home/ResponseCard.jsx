@@ -135,7 +135,7 @@ export default function ResponseCard({
                 />
               )}
           
-            {Boolean(user?.leadId?.userProfileId?.user?.isPhoneVerified) && (
+            {user?.leadId?.userProfileId?.user?.isPhoneVerified === true  && (
               <TagButton
                 text="Verified Phone"
                 textColor="text-[#00C3C0]"
