@@ -107,11 +107,14 @@ export default function ClientLeadRegistrationModal({
       : true
   );
 
-  // useEffect(() => {
-  //   if (locationId) {
-  //     setAddress(locationId); // Set ID, not zipcode text
-  //   }
-  // }, [locationId]);
+  useEffect(() => {
+    if (locationId && allZipCodes?.data?.length > 0) {
+      const matchedZip = allZipCodes.data.find((z) => z._id === locationId);
+      if (matchedZip) {
+        setZipCode(matchedZip?.zipcode); // ✅ Store ID for value
+      }
+    }
+  }, [locationId, allZipCodes]);
 
   const addressInfo = {
     countryId: country.countryId,
@@ -119,10 +122,10 @@ export default function ClientLeadRegistrationModal({
     zipcode: address || '',
     latitude: latitude?.toString() || '',
     longitude: longitude?.toString() || '',
-    postalCode: zipCode || '',
+    postalCode: postalCode || '',
   };
 
-  //console.log('addressInfo', addressInfo);
+  console.log('addressInfo', addressInfo);
 
   //setting initial data
 
@@ -424,12 +427,9 @@ export default function ClientLeadRegistrationModal({
     }
 
     if (step === totalQuestions + 6) {
-      // ✅ Use libphonenumber-js validation
-      const parsed = parsePhoneNumberFromString(phone);
+      const parsed = parsePhoneNumberFromString(phone, 'AU');
 
-      return (
-        !parsed || !parsed.isValid() || parsed.country !== 'AU' // ensures it's an Australian number
-      );
+      return !parsed || !parsed.isValid() || parsed.country !== 'AU';
     }
 
     // Step: Phone (optional)
@@ -582,6 +582,7 @@ export default function ClientLeadRegistrationModal({
                     type="radio"
                     name="frequency"
                     value={frequency.value}
+                    checked={leadPriority === frequency?.value}
                     onChange={(e) => setLeadPriority(e.target.value)}
                   />
                   <span>{frequency.label}</span>
@@ -758,7 +759,17 @@ export default function ClientLeadRegistrationModal({
               type="tel"
               className="border rounded px-3 py-2"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={(e) => {
+                const input = e.target.value;
+
+                // Remove all spaces
+                const noSpaces = input.replace(/\s+/g, '');
+
+                // Allow only numbers, or numbers starting with + (for +61)
+                const sanitized = noSpaces.replace(/(?!^\+)[^\d]/g, '');
+
+                setPhone(sanitized);
+              }}
               placeholder="e.g., 0123456789"
             />
           </label>

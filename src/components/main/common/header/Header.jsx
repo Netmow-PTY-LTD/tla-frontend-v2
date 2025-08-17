@@ -371,7 +371,7 @@ export default function Header() {
               {/* Suggestions Dropdown */}
               {showSuggestions && filteredServices?.length > 0 && (
                 <div className="absolute top-full left-0 w-full bg-white border border-gray-200 rounded-md shadow-md mt-1 z-50 max-h-60 overflow-auto">
-                  {filteredServices.slice(0, 5).map((service) => (
+                  {filteredServices?.slice(0, 10)?.map((service) => (
                     <div
                       key={service?._id}
                       onMouseDown={() => {

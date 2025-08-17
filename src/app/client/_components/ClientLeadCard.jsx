@@ -74,8 +74,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
     }
   };
 
-
-  console.log('check lead user data ===>',user)
+  //console.log('check lead user data ===>',user)
 
   return (
     <Card className="w-full max-w-full mx-auto">
@@ -136,7 +135,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
               />
             )}
 
-            {user?.userProfileId?.user?.isPhoneVerified=== true  && (
+            {user?.userProfileId?.user?.isPhoneVerified === true && (
               <TagButton
                 text="Verified Phone"
                 bgColor="#00C3C01A"
@@ -226,7 +225,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
           </div>
         </div>
       </div>
-     <RespondersOnline user={user}/>
+      <RespondersOnline user={user} />
       {/* Footer Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">
         <Link
