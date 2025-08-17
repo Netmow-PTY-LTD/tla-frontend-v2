@@ -106,7 +106,7 @@ const LoginForm = () => {
         <h4 className="my-6 text-center">Login</h4>
 
         {/* Form Wrapper */}
-        <FormWrapper onSubmit={onSubmit}>
+        <FormWrapper onSubmit={onSubmit} schema={loginValidationSchema}>
           <div className="space-y-5">
             <TextInput
               label="Email"
