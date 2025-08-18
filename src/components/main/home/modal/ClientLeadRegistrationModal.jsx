@@ -143,7 +143,7 @@ export default function ClientLeadRegistrationModal({
 
   const totalQuestions = selectedServiceWiseQuestions?.length;
 
-  const totalFormsSteps = 6;
+  const totalFormsSteps = 7;
 
   const totalSteps = totalQuestions + totalFormsSteps;
 
@@ -262,6 +262,7 @@ export default function ClientLeadRegistrationModal({
   };
 
   console.log('checkedOptions', checkedOptionsDetails);
+  console.log('step', step);
 
   useEffect(() => {
     if (step === 0) {
@@ -405,28 +406,32 @@ export default function ClientLeadRegistrationModal({
     }
 
     if (step === totalQuestions + 1) {
-      return !additionalDetails?.trim();
+      // return !additionalDetails?.trim();
     }
 
     if (step === totalQuestions + 2) {
+      return !additionalDetails?.trim();
+    }
+
+    if (step === totalQuestions + 3) {
       return !budgetAmount?.trim();
     }
 
     // Step: ZIP Code (required)
-    if (step === totalQuestions + 3) {
+    if (step === totalQuestions + 4) {
       return !zipCode || !zipCode?.trim();
     }
 
-    if (step === totalQuestions + 4) {
+    if (step === totalQuestions + 5) {
       return !name || !name?.trim();
     }
 
     // Step: Email (required and validated)
-    if (step === totalQuestions + 5) {
+    if (step === totalQuestions + 6) {
       return !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
-    if (step === totalQuestions + 6) {
+    if (step === totalQuestions + 7) {
       const parsed = parsePhoneNumberFromString(phone, 'AU');
 
       return !parsed || !parsed.isValid() || parsed.country !== 'AU';
@@ -495,6 +500,9 @@ export default function ClientLeadRegistrationModal({
       title=""
       width="max-w-[570px]"
       height="max-h-[90vh]"
+      overlayBg={
+        step >= totalQuestions + 1 ? '/assets/img/blur-profile.webp' : ''
+      }
     >
       {isQuestionsLoading || !selectedServiceWiseQuestions?.length ? (
         <div className="flex items-center justify-center gap-2">
@@ -593,6 +601,39 @@ export default function ClientLeadRegistrationModal({
         </div>
       ) : step === totalQuestions + 1 ? (
         <div className="space-y-6">
+          <div className="text-center flex flex-col items-center gap-4 border-b border-gray-200 pb-6">
+            <svg
+              width="50"
+              height="50"
+              viewBox="0 0 64 64"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g clipPath="url(#clip0_144_2662)">
+                <rect width="64" height="64" fill="none"></rect>
+                <rect width="64" height="64" rx="32" fill="#47BF9C"></rect>
+                <path
+                  d="M28.0002 37.5598L23.3735 32.9331C22.8535 32.4131 22.0135 32.4131 21.4935 32.9331C20.9735 33.4531 20.9735 34.2931 21.4935 34.8131L27.0668 40.3864C27.5868 40.9064 28.4268 40.9064 28.9468 40.3864L43.0535 26.2798C43.5735 25.7598 43.5735 24.9198 43.0535 24.3998C42.5335 23.8798 41.6935 23.8798 41.1735 24.3998L28.0002 37.5598Z"
+                  fill="white"
+                ></path>
+              </g>
+              <defs>
+                <clipPath id="clip0_144_2662">
+                  <rect width="64" height="64" fill="none"></rect>
+                </clipPath>
+              </defs>
+            </svg>
+            <h2 className="text-2xl font-semibold">
+              Great! We've found you the perfect matches.
+            </h2>
+            <h2 className="text-lg font-medium">
+              Lastly, we need your details to <br className="sm:tw-hidden" />
+              attach to your request.
+            </h2>
+          </div>
+        </div>
+      ) : step === totalQuestions + 2 ? (
+        <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
             Want to share anything more?
           </h4>
@@ -606,7 +647,7 @@ export default function ClientLeadRegistrationModal({
             />
           </label>
         </div>
-      ) : step === totalQuestions + 2 ? (
+      ) : step === totalQuestions + 3 ? (
         <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
             What is your estimated budget?
@@ -634,7 +675,7 @@ export default function ClientLeadRegistrationModal({
             </div>
           </div>
         </div>
-      ) : step === totalQuestions + 3 ? (
+      ) : step === totalQuestions + 4 ? (
         <div className="space-y-4">
           <h4 className="text-[24px] font-semibold text-center">
             Where do you need the service?
@@ -712,7 +753,7 @@ export default function ClientLeadRegistrationModal({
             </div>
           </Combobox>
         </div>
-      ) : step === totalQuestions + 4 ? (
+      ) : step === totalQuestions + 5 ? (
         <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
             Write a few words about yourself?
@@ -728,7 +769,7 @@ export default function ClientLeadRegistrationModal({
             />
           </label>
         </div>
-      ) : step === totalQuestions + 5 ? (
+      ) : step === totalQuestions + 6 ? (
         <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
             What email address would you like quotes sent to?
