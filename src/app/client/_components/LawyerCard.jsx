@@ -15,7 +15,7 @@ import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import { useRequestLawyerMutation } from '@/store/features/client/ClientApiServices';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
-const LawyerCard = ({ lawyer, isExpanded, id, lawyerOnlineStatus }) => {
+const LawyerCard = ({ lawyer, isExpanded, id, lawyerOnlineStatus,refetch }) => {
   const profileType = lawyer?.profile?.profileType;
   const badge =
     profileType
@@ -39,6 +39,7 @@ const LawyerCard = ({ lawyer, isExpanded, id, lawyerOnlineStatus }) => {
       const response = await requestLawyer(payload).unwrap();
       console.log('Response:', response);
       if (response?.success) {
+        refetch()
         showSuccessToast(response?.message || 'Request sent successfully');
       }
     } catch (error) {

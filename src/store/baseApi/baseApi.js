@@ -119,6 +119,8 @@ export const baseApi = createApi({
     'country-wise-map-list',
     'all-users',
     'request',
+    'requests',
+    'lawyer-suggestion',
   ],
   endpoints: () => ({}),
 });

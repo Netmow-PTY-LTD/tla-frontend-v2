@@ -8,7 +8,7 @@ const clientApiService = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['request'],
+      invalidatesTags: ['lawyer-suggestion','requests','request'],
     }),
     getAllServiceWiseLawyersSuggestions: builder.query({
       query: ({ leadId, serviceId, page, limit }) => ({
@@ -20,7 +20,7 @@ const clientApiService = baseApi.injectEndpoints({
         },
       }),
 
-      providesTags: ['request'],
+      providesTags: ['lawyer-suggestion'],
     }),
   }),
 });
