@@ -4,6 +4,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
+  DialogOverlay,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
@@ -19,9 +20,12 @@ export function Modal({
   width = 'max-w-[500px]',
   height = '',
   overflowY = '',
+  overlayBg = '',
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange} className="z-[999]">
+      <DialogOverlay overlayBg={overlayBg} className="bg-transparent" />
+
       {buttonName && (
         <DialogTrigger asChild>
           <Button
