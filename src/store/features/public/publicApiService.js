@@ -137,7 +137,7 @@ const publicApiService = baseApi.injectEndpoints({
         url: `/lead-requests`,
         method: 'GET',
       }),
-      providesTags: ['request'],
+      providesTags: ['requests'],
     }),
     getRequestFromClientById: builder.query({
       query: (id) => ({
