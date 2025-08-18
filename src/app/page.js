@@ -8,6 +8,7 @@ import HomeAboutPreview from '@/components/main/home/HomeAboutPreview';
 import TestimonialSlider from '@/components/main/home/HomeTestimonials';
 import HomeCategoryWiseServices from '@/components/main/home/HomeCategoryWiseServices';
 import { useEffect, useState } from 'react';
+import TestimonialSliderTest from '@/components/main/home/HomeTestimonialsTest copy';
 
 export default function Home() {
   const [searchParam, setSearchParam] = useState('');
@@ -29,6 +30,7 @@ export default function Home() {
       {/* <HomeFeatures /> */}
       {/* <HomeTestimonials /> */}
       <TestimonialSlider />
+      {/* <TestimonialSliderTest /> */}
       {/* <HomeCTA /> */}
     </MainLayout>
   );

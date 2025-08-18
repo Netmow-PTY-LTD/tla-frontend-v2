@@ -1,65 +1,263 @@
-import Image from 'next/image';
-import Link from 'next/link';
+'use client';
 
-export default function HomeTestimonials() {
+import { useEffect, useRef, useState } from 'react';
+import '@/styles/slider.css';
+
+const testimonials = [
+  {
+    image: '/assets/img/testimonials/testimonial-1.webp',
+    name: 'Alicia Green',
+    rating: 5,
+    text: 'Amazing legal service. Fast and professional.',
+  },
+  {
+    image: '/assets/img/testimonials/testimonial-2.webp',
+    name: 'Mark Benson',
+    rating: 4,
+    text: 'Best legal experience I’ve had. Highly recommend.',
+  },
+  {
+    image: '/assets/img/testimonials/testimonial-3.webp',
+    name: 'Sara Lee',
+    rating: 5,
+    text: 'Very supportive and timely updates.',
+  },
+  {
+    image: '/assets/img/testimonials/testimonial-4.webp',
+    name: 'John Smith',
+    rating: 4,
+    text: 'Confident, clear, and trustworthy advice.',
+  },
+  {
+    image: '/assets/img/testimonials/testimonial-5.webp',
+    name: 'Emily Reed',
+    rating: 5,
+    text: 'Truly helpful legal team. Great results.',
+  },
+  {
+    image: '/assets/img/testimonials/testimonial-6.webp',
+    name: 'Paul Stone',
+    rating: 3,
+    text: 'Listened, understood, and delivered perfectly.',
+  },
+  {
+    image: '/assets/img/testimonials/testimonial-7.webp',
+    name: 'Jasmine Wu',
+    rating: 5,
+    text: 'Professional, friendly, and results-driven.',
+  },
+];
+
+const MAX_VISIBLE_DOTS = 7;
+const fixedSlots = ['img1', 'img2', 'img3', 'img4', 'img5', 'img6'];
+
+export default function TestimonialSlider() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [step, setStep] = useState(1);
+  const [images, setImages] = useState([]);
+  const [allLoaded, setAllLoaded] = useState(false);
+  const intervalRef = useRef(null);
+  const sliderRef = useRef(null);
+  const activeCardRef = useRef(null);
+
+  // ✅ Load all images
+  useEffect(() => {
+    const loadImages = async () => {
+      const imagePromises = testimonials.map((t) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.src = t.image;
+          img.onload = resolve;
+          img.onerror = resolve;
+        });
+      });
+
+      await Promise.all(imagePromises);
+      setImages(fixedSlots.map((_, i) => testimonials[i + 1]));
+      setAllLoaded(true);
+    };
+
+    loadImages();
+  }, []);
+
+  // ✅ Helper: Advance to next slide
+  const nextSlide = () => {
+    const nextIndex =
+      currentIndex + 1 >= MAX_VISIBLE_DOTS ||
+      currentIndex + 1 >= testimonials.length
+        ? 0
+        : currentIndex + 1;
+    fadeToSlide(nextIndex);
+  };
+
+  // ✅ Helper: Reset interval after interaction
+  const resetInterval = () => {
+    clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(nextSlide, 4000);
+  };
+
+  // ✅ Autoplay setup
+  useEffect(() => {
+    if (!allLoaded) return;
+
+    resetInterval(); // start autoplay
+
+    const slider = sliderRef.current;
+
+    // Pause on hover
+    const pause = () => clearInterval(intervalRef.current);
+    const resume = () => resetInterval();
+
+    // Swipe detection
+    let startX = 0;
+    const onTouchStart = (e) => (startX = e.touches[0].clientX);
+    const onTouchEnd = (e) => {
+      const endX = e.changedTouches[0].clientX;
+      if (endX < startX - 50 || endX > startX + 50) nextSlide();
+    };
+
+    slider.addEventListener('mouseenter', pause);
+    slider.addEventListener('mouseleave', resume);
+    slider.addEventListener('touchstart', onTouchStart);
+    slider.addEventListener('touchend', onTouchEnd);
+
+    return () => {
+      clearInterval(intervalRef.current);
+      slider.removeEventListener('mouseenter', pause);
+      slider.removeEventListener('mouseleave', resume);
+      slider.removeEventListener('touchstart', onTouchStart);
+      slider.removeEventListener('touchend', onTouchEnd);
+    };
+  }, [allLoaded, currentIndex]);
+
+  const fadeToSlide = (index) => {
+    if (index === currentIndex) return;
+    const slider = sliderRef.current;
+    const currentCard = activeCardRef.current;
+    if (!slider || !currentCard) return;
+
+    const outgoingCard = currentCard.cloneNode(true);
+    outgoingCard.style.position = 'absolute';
+    outgoingCard.style.top = currentCard.offsetTop + 'px';
+    outgoingCard.style.left = currentCard.offsetLeft + 'px';
+    outgoingCard.style.width = currentCard.offsetWidth + 'px';
+    outgoingCard.style.height = currentCard.offsetHeight + 'px';
+    outgoingCard.style.transition = 'opacity 0.4s ease-in-out';
+    outgoingCard.style.opacity = 1;
+    outgoingCard.style.zIndex = 2;
+    slider.appendChild(outgoingCard);
+
+    setCurrentIndex(index);
+
+    requestAnimationFrame(() => {
+      if (activeCardRef.current) {
+        activeCardRef.current.style.opacity = 0;
+        activeCardRef.current.style.transition = 'opacity 0.4s ease-in-out';
+        activeCardRef.current.style.zIndex = 1;
+
+        requestAnimationFrame(() => {
+          activeCardRef.current.style.opacity = 1;
+          outgoingCard.style.opacity = 0;
+        });
+      }
+    });
+
+    setTimeout(() => {
+      if (slider.contains(outgoingCard)) {
+        slider.removeChild(outgoingCard);
+      }
+    }, 1000);
+  };
+
+  const handleThumbClick = (slotIndex) => {
+    const thumb = images[slotIndex];
+    if (!thumb) return;
+
+    const targetIdx = testimonials.findIndex((t) => t.image === thumb.image);
+    if (targetIdx === -1 || targetIdx === currentIndex) return;
+
+    resetInterval(); // ✅ Reset autoplay
+    fadeToSlide(targetIdx);
+  };
+
+  const cardHTML = (t) => (
+    <>
+      <div className="testimonial-icon text-4xl w-10 h-10 bg-[var(--primary-color)] text-white flex items-center justify-center rounded-full mb-10">
+        {/* Replace with your SVG or icon */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="14"
+          viewBox="0 0 24 14"
+          fill="none"
+        >
+          <path
+            d="M13.2782 8.64693C13.3215 7.21891 13.5595 5.89908 13.9922 4.68743C14.4249 3.43251 14.8576 2.43723 15.2904 1.70158C15.7664 0.922662 16.0044 0.533203 16.0044 0.533203L20.1586 0.598112C20.1586 0.598112 20.0072 0.901024 19.7042 1.50685C19.4013 2.11267 19.0984 2.9565 18.7955 4.03833C19.9639 4.21143 20.9592 4.75234 21.7814 5.66108C22.6036 6.56981 23.0146 7.63001 23.0146 8.84166C23.0146 10.1831 22.5386 11.3299 21.5866 12.2819C20.6346 13.2339 19.4879 13.7099 18.1464 13.7099C16.8049 13.7099 15.6582 13.2339 14.7062 12.2819C13.7542 11.2866 13.2782 10.0749 13.2782 8.64693ZM0.945312 8.64693C0.988586 7.21891 1.22659 5.89908 1.65932 4.68743C2.09205 3.43251 2.52478 2.43723 2.95752 1.70158C3.43352 0.922662 3.67153 0.533203 3.67153 0.533203L7.82575 0.598112C7.82575 0.598112 7.6743 0.901024 7.37138 1.50685C7.06847 2.11267 6.76556 2.9565 6.46265 4.03833C7.63102 4.21143 8.62631 4.75234 9.4485 5.66108C10.2707 6.56981 10.6818 7.63001 10.6818 8.84166C10.6818 10.1831 10.2058 11.3299 9.25377 12.2819C8.30176 13.2339 7.15502 13.7099 5.81355 13.7099C4.47208 13.7099 3.32534 13.2339 2.37333 12.2819C1.42132 11.2866 0.945312 10.0749 0.945312 8.64693Z"
+            fill="white"
+          />
+        </svg>
+      </div>
+      <img src={t.image} alt={t.name} />
+      <div className="text mt-10">{t.text}</div>
+      <div className="name">{t.name}</div>
+      <div className="stars">
+        {'★'.repeat(t.rating)}
+        {'☆'.repeat(5 - t.rating)}
+      </div>
+    </>
+  );
+
+  const imageHTML = (t) => <img src={t.image} alt={t.name} />;
+
+  if (!allLoaded) return null;
+
   return (
-    <section
-      className="home-testimonials"
-      style={{ backgroundImage: `url('/assets/img/home-testimonials-bg.png')` }}
-    >
-      <div className="container">
-        <div className="home-testimonials-hero">
-          <div className="flex flex-wrap">
-            <div className="w-full lg:w-4/12">
-              <div className="feature-heading">
-                <h3 className="section-subtitle">Our Testimonials</h3>
-                <h2 className="section-title">
-                  People Say About TLA – Real Stories, Real Impact
-                </h2>
-                <div className="feature-heading-text">
-                  The Law App is changing the way people find legal help and how
-                  lawyers grow their practice. Whether you’re a client in need
-                  of expert advice or a lawyer looking to expand your reach, TLA
-                  makes the process seamless, transparent, and efficient. <br />
-                  <br />
-                  <b>Ready to Experience the Difference?</b>
-                </div>
-                <div className="flex flex-wrap gap-2 mt-8">
-                  <Link href="/register" className="btn-default btn-primary">
-                    Post your first job
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="btn-default btn-outline-black"
-                  >
-                    Join as Lawyer
-                  </Link>
-                </div>
-              </div>
-            </div>
-            <div className="w-full lg:w-8/12 lg:pl-28">
-              <div className="testimonial-images flex justify-between mt-10 lg:mt-0">
-                <div className="mt-32 lg:mt-40">
-                  <Image
-                    src="/assets/img/testimonial-1.png"
-                    alt="testimonial"
-                    width={386}
-                    height={325}
-                  />
-                </div>
-                <div className="div">
-                  <Image
-                    src="/assets/img/testimonial-2.png"
-                    alt="testimonial"
-                    width={386}
-                    height={325}
-                    className="flex-shrink-0"
-                  />
-                </div>
-              </div>
-            </div>
+    <section className="slider-wrapper">
+      <div className="slider" ref={sliderRef}>
+        {fixedSlots.map((id, i) => (
+          <div
+            key={id}
+            id={id}
+            className="img-box"
+            style={{
+              opacity: 1,
+              transition: 'opacity 0.3s ease-in-out',
+              cursor: 'pointer',
+            }}
+            onClick={() => handleThumbClick(i)}
+          >
+            {images[i] && imageHTML(images[i])}
           </div>
+        ))}
+
+        <div
+          className="active-card"
+          id="img0"
+          ref={activeCardRef}
+          style={{ opacity: 1 }}
+        >
+          {cardHTML(testimonials[currentIndex])}
         </div>
+      </div>
+
+      <div className="dots">
+        {Array(MAX_VISIBLE_DOTS)
+          .fill(0)
+          .map((_, i) => (
+            <div
+              key={i}
+              className={`dot ${i === currentIndex ? 'active' : ''}`}
+              style={
+                i >= testimonials.length
+                  ? { opacity: 0.3, pointerEvents: 'none' }
+                  : { cursor: 'pointer' }
+              }
+              onClick={() => {
+                resetInterval(); // ✅ Reset autoplay on dot click
+                fadeToSlide(i);
+              }}
+            />
+          ))}
       </div>
     </section>
   );
