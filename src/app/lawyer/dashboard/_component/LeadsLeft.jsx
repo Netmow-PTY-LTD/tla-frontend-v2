@@ -43,8 +43,7 @@ export default function LeadDetailsPage({
     return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
   };
 
-
-  console.log('single lead data ===>',singleLead)
+  console.log('single lead data ===>', singleLead);
   const currentUserId = useSelector(selectCurrentUser)?._id;
   const [onlineMap, setOnlineMap] = useState({});
   const [isExpanded, setIsExpanded] = useState(false);
@@ -77,10 +76,10 @@ export default function LeadDetailsPage({
 
   const profileType = singleLead?.userProfileId?.profileType;
   const badge = profileType
-    .replace(/[^a-zA-Z0-9]+/g, ' ')
-    .split(' ')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join('');
+    ?.replace(/[^a-zA-Z0-9]+/g, ' ')
+    ?.split(' ')
+    ?.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    ?.join('');
 
   const ResponseProgressBar = ({ responded = 0, total = 5 }) => {
     const bars = Array.from({ length: total }, (_, index) => (
@@ -250,7 +249,8 @@ export default function LeadDetailsPage({
                       />
                     )}
 
-                  {singleLead?.userProfileId?.user?.isPhoneVerified === true  && (
+                  {singleLead?.userProfileId?.user?.isPhoneVerified ===
+                    true && (
                     <TagButton
                       text="Verified Phone"
                       bgColor="#00C3C01A"
