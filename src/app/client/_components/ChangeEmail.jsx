@@ -33,7 +33,7 @@ export default function ChangeEmail({ open, setOpen }) {
         if (currentUserEmail) {
             setEmail(currentUserEmail);
         }
-    }, [currentUserEmail,currentUser]);
+    }, [currentUserEmail]);
 
 
 
