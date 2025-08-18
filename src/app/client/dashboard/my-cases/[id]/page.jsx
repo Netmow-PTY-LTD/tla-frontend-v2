@@ -120,6 +120,7 @@ export default function LeadDetailsPage() {
     isLoading: isLawyersLoading,
     isFetching,
     isSuccess,
+    refetch
   } = useGetAllServiceWiseLawyersSuggestionsQuery(
     { page, LIMIT, serviceId, leadId },
     {
@@ -399,6 +400,7 @@ export default function LeadDetailsPage() {
                           lawyer={lawyer}
                           id={id}
                           lawyerOnlineStatus={lawyerOnlineStatus}
+                          refetch={refetch}
                         />
                       ))}
                       <div ref={loader}>
