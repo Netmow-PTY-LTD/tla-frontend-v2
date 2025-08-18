@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Dialog,
     DialogContent,
@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logOut, selectCurrentUser } from "@/store/features/auth/authSlice";
 import { useRouter } from "next/navigation";
 import { useChangeEmailMutation, useSendOtpMutation, useVerifyOtpMutation } from "@/store/features/auth/authApiService";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 
 
 export default function ChangeEmail({ open, setOpen }) {
@@ -28,6 +28,13 @@ export default function ChangeEmail({ open, setOpen }) {
     const [otp, setOtp] = useState("");
     const [newEmail, setNewEmail] = useState("");
     const [email, setEmail] = useState(currentUserEmail); // current email
+
+    useEffect(() => {
+        if (currentUserEmail) {
+            setEmail(currentUserEmail);
+        }
+    }, [currentUserEmail]);
+
 
 
     const [sendOtp, { isLoading: sendingOtp }] = useSendOtpMutation();
@@ -103,7 +110,7 @@ export default function ChangeEmail({ open, setOpen }) {
                             <p>
                                 We will send an OTP to your current email: <b>{email}</b>
                             </p>
-                            <Button className="bg-[#12c7c4] text-white hover:bg-[#0fa9a7] transition-colors duration-300"  onClick={handleSendOtp} disabled={sendingOtp}>
+                            <Button className="bg-[#12c7c4] text-white hover:bg-[#0fa9a7] transition-colors duration-300" onClick={handleSendOtp} disabled={sendingOtp}>
                                 {sendingOtp ? "Sending..." : "Send OTP"}
                             </Button>
                         </div>

@@ -51,7 +51,7 @@ export default function Header() {
   const validToken = checkValidity(token);
 
   const { data: currentUser } = useAuthUserInfoQuery(undefined, {
-    skip: !token,
+    skip: !validToken,
   });
 
   useEffect(() => {
@@ -415,7 +415,7 @@ export default function Header() {
           </div>
         </div>
       </div>
-      {token && currentUser ? (
+      {validToken && currentUser ? (
         <CreateLeadWithAuthModal
           modalOpen={modalOpen}
           setModalOpen={setModalOpen}
