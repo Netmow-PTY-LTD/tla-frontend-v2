@@ -290,9 +290,20 @@ export default function CreateLeadWithAuthModal({
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Case registered successfully');
         setModalOpen(false);
-        setTimeout(() => {
-          router.push(`/client/dashboard/my-cases/${res?.data?.leadUser?._id}`);
-        }, 1000);
+        const userType = res?.data?.userData?.regUserType;
+
+        if (userType === 'lawyer') {
+          showErrorToast(
+            'You are registered as a lawyer. You can not create a case.'
+          );
+        }
+        if (userType === 'client') {
+          setTimeout(() => {
+            router.push(
+              `/client/dashboard/my-cases/${res?.data?.leadUser?._id}`
+            );
+          }, 1000);
+        }
       }
     } catch (err) {
       console.error('❌ Register error:', err);
@@ -316,20 +327,20 @@ export default function CreateLeadWithAuthModal({
   const isNextDisabled = (() => {
     // Step: Questions (required) — check checkedOptions length instead of answers
     if (step < totalQuestions) {
-      return stepwiseCheckedOptions.length === 0;
+      return stepwiseCheckedOptions?.length === 0;
     }
 
     //Step: Additional Details (optional)
     if (step === totalQuestions) {
-      return !leadPriority.trim();
+      return !leadPriority?.trim();
     }
 
     if (step === totalQuestions + 1) {
-      return !additionalDetails.trim();
+      return !additionalDetails?.trim();
     }
 
     if (step === totalSteps - 1) {
-      return !budgetAmount.trim();
+      return !budgetAmount?.trim();
     }
 
     // Step: Phone (optional)
@@ -392,9 +403,9 @@ export default function CreateLeadWithAuthModal({
               {viewData.question}
             </h4>
             <div className="border border-1 flex flex-col gap-2 rounded-lg max-h-[350px] overflow-y-auto">
-              {viewData.options?.length > 0 &&
+              {viewData?.options?.length > 0 &&
                 viewData.options?.map((option, index) => {
-                  const isLast = index === viewData.options.length - 1;
+                  const isLast = index === viewData?.options?.length - 1;
                   const isOther = option?.name?.toLowerCase() === 'other';
                   const isChecked = option?.is_checked;
 

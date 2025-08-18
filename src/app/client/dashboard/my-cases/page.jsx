@@ -91,7 +91,7 @@ export default function MyLeads() {
 
     if (
       !Array.isArray(allMyLeads?.data) ||
-      allMyLeads?.data.length === 0 ||
+      allMyLeads?.data?.length === 0 ||
       typeof totalPage !== 'number' ||
       totalPage <= 0 ||
       page >= totalPage
@@ -333,7 +333,7 @@ export default function MyLeads() {
                                     'font-normal': !selected,
                                   })}
                                 >
-                                  {item.zipcode}
+                                  {item?.zipcode}
                                 </span>
                                 {selected && (
                                   <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
