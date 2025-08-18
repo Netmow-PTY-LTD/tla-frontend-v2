@@ -135,13 +135,13 @@ const ClientLeadCard = ({ user, isExpanded }) => {
               />
             )}
 
-            {user?.userProfileId?.user?.isPhoneVerified === true && (
+            {/* {user?.userProfileId?.user?.isPhoneVerified === true && (
               <TagButton
                 text="Verified Phone"
                 bgColor="#00C3C01A"
                 icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
               />
-            )}
+            )} */}
           </div>
         </div>
       )}

@@ -1,9 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  useGetSingleLeadQuery,
-} from '@/store/features/lawyer/LeadsApiService';
+import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useParams } from 'next/navigation';
 import { useGetRequestFromClientByIdQuery } from '@/store/features/public/publicApiService';
@@ -204,8 +202,7 @@ export default function RequestDetails() {
                           Email:{' '}
                           {(() => {
                             const email =
-                              singleRequest?.data?.userProfileId
-                                ?.lawyerContactEmail;
+                              singleRequest?.data?.userProfileId?.user?.email;
                             if (!email) return;
 
                             const [user, domain] = email.split('@');
@@ -277,7 +274,7 @@ export default function RequestDetails() {
                               />
                             )}
 
-                          {singleRequest?.data?.userProfileId?.phone && (
+                          {/* {singleRequest?.data?.userProfileId?.phone && (
                             <TagButton
                               text="Verified Phone"
                               bgColor="#00C3C01A"
@@ -285,7 +282,7 @@ export default function RequestDetails() {
                                 <BadgeCheck className="text-[#00C3C0] w-4 h-4" />
                               }
                             />
-                          )}
+                          )} */}
 
                           {singleRequest?.data?.leadPriority?.toLowerCase() ===
                             'urgent' && (
