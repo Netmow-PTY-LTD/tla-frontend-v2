@@ -20,12 +20,12 @@ const JobRequest = ({ modalOpen, setModalOpen }) => {
             use day to day. We’ve got thousands of suppliers ready and waiting
             to quote.
           </p>
-          <button
+          {/* <button
             className="mt-10 sm:mt-12 lg:mt-[72px] rounded-[5px] bg-[#00c3c0] px-6 py-[10px] text-white hover:bg-[#00b5b2] transition-all"
             onClick={() => setModalOpen(true)}
           >
             Request a new case
-          </button>
+          </button> */}
         </div>
       </div>
     </>

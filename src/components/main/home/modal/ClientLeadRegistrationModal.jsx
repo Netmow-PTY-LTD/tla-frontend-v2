@@ -166,7 +166,7 @@ export default function ClientLeadRegistrationModal({
   //partial cloning
 
   useEffect(() => {
-    if (!fullClonedQuestions.length) return;
+    if (!fullClonedQuestions?.length) return;
 
     const cloned = fullClonedQuestions.map(({ options, ...rest }) => ({
       ...rest,
@@ -396,29 +396,29 @@ export default function ClientLeadRegistrationModal({
   const isNextDisabled = (() => {
     // Step: Questions (required) — check checkedOptions length instead of answers
     if (step < totalQuestions) {
-      return stepwiseCheckedOptions.length === 0;
+      return stepwiseCheckedOptions?.length === 0;
     }
 
     //Step: Additional Details (optional)
     if (step === totalQuestions) {
-      return !leadPriority.trim();
+      return !leadPriority?.trim();
     }
 
     if (step === totalQuestions + 1) {
-      return !additionalDetails.trim();
+      return !additionalDetails?.trim();
     }
 
     if (step === totalQuestions + 2) {
-      return !budgetAmount.trim();
+      return !budgetAmount?.trim();
     }
 
     // Step: ZIP Code (required)
     if (step === totalQuestions + 3) {
-      return !zipCode || !zipCode.trim();
+      return !zipCode || !zipCode?.trim();
     }
 
     if (step === totalQuestions + 4) {
-      return !name || !name.trim();
+      return !name || !name?.trim();
     }
 
     // Step: Email (required and validated)

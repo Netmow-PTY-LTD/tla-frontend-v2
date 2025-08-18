@@ -134,15 +134,15 @@ export default function ResponseCard({
                   icon={<List className="text-[var(--color-black)] w-4 h-4" />}
                 />
               )}
-          
-            {user?.leadId?.userProfileId?.user?.isPhoneVerified === true  && (
+
+            {/* {user?.leadId?.userProfileId?.user?.isPhoneVerified === true  && (
               <TagButton
                 text="Verified Phone"
                 textColor="text-[#00C3C0]"
                 bgColor="#00C3C01A"
                 icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
               />
-            )}
+            )} */}
             {user?.leadId?.leadPriority?.toLowerCase() === 'urgent' && (
               <TagButton
                 text={user?.leadId?.leadPriority}
