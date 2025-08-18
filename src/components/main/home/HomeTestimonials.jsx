@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import '@/styles/slider.css';
-import ResponseSkeleton from '@/app/lawyer/dashboard/my-responses/_components/ResponseSkeleton';
 
 const testimonials = [
   {
@@ -61,7 +60,7 @@ export default function TestimonialSlider() {
   const sliderRef = useRef(null);
   const activeCardRef = useRef(null);
 
-  // 1️⃣ Preload all images and set initial images only once
+  // ✅ Load all images
   useEffect(() => {
     const loadImages = async () => {
       const imagePromises = testimonials.map((t) => {
@@ -81,28 +80,35 @@ export default function TestimonialSlider() {
     loadImages();
   }, []);
 
-  // 2️⃣ Slide rendering and interval only when all images are loaded
+  // ✅ Helper: Advance to next slide
+  const nextSlide = () => {
+    const nextIndex =
+      currentIndex + 1 >= MAX_VISIBLE_DOTS ||
+      currentIndex + 1 >= testimonials.length
+        ? 0
+        : currentIndex + 1;
+    fadeToSlide(nextIndex);
+  };
+
+  // ✅ Helper: Reset interval after interaction
+  const resetInterval = () => {
+    clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(nextSlide, 4000);
+  };
+
+  // ✅ Autoplay setup
   useEffect(() => {
     if (!allLoaded) return;
 
-    const nextSlide = () => {
-      const nextIndex =
-        currentIndex + 1 >= MAX_VISIBLE_DOTS ||
-        currentIndex + 1 >= testimonials.length
-          ? 0
-          : currentIndex + 1;
-      fadeToSlide(nextIndex);
-    };
+    resetInterval(); // start autoplay
 
-    intervalRef.current = setInterval(nextSlide, 2000);
     const slider = sliderRef.current;
 
+    // Pause on hover
     const pause = () => clearInterval(intervalRef.current);
-    const resume = () => (intervalRef.current = setInterval(nextSlide, 2000));
+    const resume = () => resetInterval();
 
-    slider.addEventListener('mouseenter', pause);
-    slider.addEventListener('mouseleave', resume);
-
+    // Swipe detection
     let startX = 0;
     const onTouchStart = (e) => (startX = e.touches[0].clientX);
     const onTouchEnd = (e) => {
@@ -110,6 +116,8 @@ export default function TestimonialSlider() {
       if (endX < startX - 50 || endX > startX + 50) nextSlide();
     };
 
+    slider.addEventListener('mouseenter', pause);
+    slider.addEventListener('mouseleave', resume);
     slider.addEventListener('touchstart', onTouchStart);
     slider.addEventListener('touchend', onTouchEnd);
 
@@ -122,21 +130,12 @@ export default function TestimonialSlider() {
     };
   }, [allLoaded, currentIndex]);
 
-  const updateSlide = (index) => {
-    const targetImage = images.slice();
-    targetImage[(step - 1) % 6] = testimonials[currentIndex];
-    setImages(targetImage);
-    setCurrentIndex(index);
-    setStep((prev) => (prev % 6) + 1);
-  };
-
   const fadeToSlide = (index) => {
     if (index === currentIndex) return;
     const slider = sliderRef.current;
     const currentCard = activeCardRef.current;
     if (!slider || !currentCard) return;
 
-    // Clone current card for outgoing animation
     const outgoingCard = currentCard.cloneNode(true);
     outgoingCard.style.position = 'absolute';
     outgoingCard.style.top = currentCard.offsetTop + 'px';
@@ -148,10 +147,8 @@ export default function TestimonialSlider() {
     outgoingCard.style.zIndex = 2;
     slider.appendChild(outgoingCard);
 
-    // Update state immediately for new content
     setCurrentIndex(index);
 
-    // Ensure the new card starts invisible and fades in
     requestAnimationFrame(() => {
       if (activeCardRef.current) {
         activeCardRef.current.style.opacity = 0;
@@ -159,41 +156,34 @@ export default function TestimonialSlider() {
         activeCardRef.current.style.zIndex = 1;
 
         requestAnimationFrame(() => {
-          activeCardRef.current.style.opacity = 1; // fade in new
-          outgoingCard.style.opacity = 0; // fade out old
+          activeCardRef.current.style.opacity = 1;
+          outgoingCard.style.opacity = 0;
         });
       }
     });
 
-    // Remove outgoing card after transition
     setTimeout(() => {
       if (slider.contains(outgoingCard)) {
         slider.removeChild(outgoingCard);
       }
-    }, 2000);
-  };
-
-  // If your objects have a stable `id`, prefer matching by `id`.
-  const findGlobalIndex = (thumb) => {
-    // image-based fallback; use `t.id === thumb.id` if you have ids
-    return testimonials.findIndex((t) => t.image === thumb.image);
+    }, 1000);
   };
 
   const handleThumbClick = (slotIndex) => {
     const thumb = images[slotIndex];
     if (!thumb) return;
 
-    const targetIdx = findGlobalIndex(thumb);
+    const targetIdx = testimonials.findIndex((t) => t.image === thumb.image);
     if (targetIdx === -1 || targetIdx === currentIndex) return;
 
-    // Prevent the interval from firing mid-fade
-    clearInterval(intervalRef.current);
+    resetInterval(); // ✅ Reset autoplay
     fadeToSlide(targetIdx);
   };
 
   const cardHTML = (t) => (
     <>
       <div className="testimonial-icon text-4xl w-10 h-10 bg-[var(--primary-color)] text-white flex items-center justify-center rounded-full mb-10">
+        {/* Replace with your SVG or icon */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -207,7 +197,6 @@ export default function TestimonialSlider() {
           />
         </svg>
       </div>
-
       <img src={t.image} alt={t.name} />
       <div className="text mt-10">{t.text}</div>
       <div className="name">{t.name}</div>
@@ -220,7 +209,6 @@ export default function TestimonialSlider() {
 
   const imageHTML = (t) => <img src={t.image} alt={t.name} />;
 
-  // 3️⃣ Show nothing until images are fully loaded
   if (!allLoaded) return null;
 
   return (
@@ -234,7 +222,7 @@ export default function TestimonialSlider() {
             style={{
               opacity: 1,
               transition: 'opacity 0.3s ease-in-out',
-              cursor: 'pointer', // indicate it's clickable
+              cursor: 'pointer',
             }}
             onClick={() => handleThumbClick(i)}
           >
@@ -264,7 +252,10 @@ export default function TestimonialSlider() {
                   ? { opacity: 0.3, pointerEvents: 'none' }
                   : { cursor: 'pointer' }
               }
-              onClick={() => fadeToSlide(i)}
+              onClick={() => {
+                resetInterval(); // ✅ Reset autoplay on dot click
+                fadeToSlide(i);
+              }}
             />
           ))}
       </div>
