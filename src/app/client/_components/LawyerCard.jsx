@@ -132,14 +132,14 @@ const LawyerCard = ({ lawyer, isExpanded, id, lawyerOnlineStatus }) => {
                 icon={<Zap className="text-[#FF8602] w-4 h-4" />}
               />
             )}
-            {lawyer?.phone && (
+            {/* {lawyer?.phone && (
               <TagButton
                 text="Verified Phone"
                 textColor="text-[#00C3C0]"
                 bgColor="#00C3C01A"
                 icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
               />
-            )}
+            )} */}
           </div>
         </div>
       ) : null}
