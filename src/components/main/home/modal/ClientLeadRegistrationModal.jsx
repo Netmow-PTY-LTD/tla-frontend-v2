@@ -130,7 +130,7 @@ export default function ClientLeadRegistrationModal({
     postalCode: postalCode || '',
   };
 
-  console.log('addressInfo', addressInfo);
+  //console.log('addressInfo', addressInfo);
 
   //setting initial data
 
@@ -266,8 +266,8 @@ export default function ClientLeadRegistrationModal({
     }
   };
 
-  console.log('checkedOptions', checkedOptionsDetails);
-  console.log('step', step);
+  // console.log('checkedOptions', checkedOptionsDetails);
+  // console.log('step', step);
 
   useEffect(() => {
     if (step === 0) {
@@ -311,7 +311,7 @@ export default function ClientLeadRegistrationModal({
             questionId,
             question,
             order,
-            checkedOptionsDetails,
+            checkedOptionsDetails: stepwiseCheckedOptions || [],
           },
         ];
       });
@@ -386,15 +386,30 @@ export default function ClientLeadRegistrationModal({
     }
   };
 
+  // const handleBack = () => {
+  //   const newStep = Math.max(step - 1, 0);
+  //   setStep(newStep);
+  //   setClickButtonType('Prev');
+
+  //   const existingStepData = questionsPayload.find(
+  //     (item) => item.step === newStep
+  //   );
+  //   setCheckedOptionsDetails(existingStepData?.checkedOptionsDetails || []);
+  // };
+
   const handleBack = () => {
     const newStep = Math.max(step - 1, 0);
     setStep(newStep);
     setClickButtonType('Prev');
 
-    const existingStepData = questionsPayload.find(
+    const existingStepData = questionsPayload?.find(
       (item) => item.step === newStep
     );
-    setCheckedOptionsDetails(existingStepData?.checkedOptionsDetails || []);
+
+    const restoredOptions = existingStepData?.checkedOptionsDetails || [];
+
+    setCheckedOptionsDetails(restoredOptions);
+    setStepwiseCheckedOptions(restoredOptions); // 👈 keep in sync
   };
 
   const isValidPhone = (phone) => isValidPhoneNumber(phone);
@@ -456,11 +471,11 @@ export default function ClientLeadRegistrationModal({
   //console.log('allZipCodes:', allZipCodes);
 
   // console.log('step:', step);
-  // console.log('questionsPayload:', questionsPayload);
+  //console.log('questionsPayload:', questionsPayload);
 
   // Update stepwiseCheckedOptions whenever step or questionsPayload changes
   useEffect(() => {
-    const existing = questionsPayload.find((item) => item.step === step);
+    const existing = questionsPayload?.find((item) => item.step === step);
     setStepwiseCheckedOptions(existing?.checkedOptionsDetails || []);
   }, [step, questionsPayload]); // only run when step or questionsPayload change
 
@@ -488,7 +503,7 @@ export default function ClientLeadRegistrationModal({
     setViewData(updatedQuestion);
   }, [fullClonedQuestions, step, stepwiseCheckedOptions]);
 
-  //console.log('fullClonedQuestions:', fullClonedQuestions);
+  //console.log('stepwiseCheckedOptions:', stepwiseCheckedOptions);
 
   return (
     <Modal

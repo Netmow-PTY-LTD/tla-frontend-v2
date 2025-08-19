@@ -122,10 +122,6 @@ export default function CreateLeadWithAuthModal({
     postalCode: postalCode || '',
   };
 
-  console.log('addressInfo', addressInfo);
-
-  console.log('zipCode', zipCode);
-
   //setting initial data
 
   useEffect(() => {
@@ -306,7 +302,7 @@ export default function CreateLeadWithAuthModal({
             questionId,
             question,
             order,
-            checkedOptionsDetails,
+            checkedOptionsDetails: stepwiseCheckedOptions || [],
           },
         ];
       });
@@ -364,15 +360,30 @@ export default function CreateLeadWithAuthModal({
     }
   };
 
+  // const handleBack = () => {
+  //   const newStep = Math.max(step - 1, 0);
+  //   setStep(newStep);
+  //   setClickButtonType('Prev');
+
+  //   const existingStepData = questionsPayload.find(
+  //     (item) => item.step === newStep
+  //   );
+  //   setCheckedOptionsDetails(existingStepData?.checkedOptionsDetails || []);
+  // };
+
   const handleBack = () => {
     const newStep = Math.max(step - 1, 0);
     setStep(newStep);
     setClickButtonType('Prev');
 
-    const existingStepData = questionsPayload.find(
+    const existingStepData = questionsPayload?.find(
       (item) => item.step === newStep
     );
-    setCheckedOptionsDetails(existingStepData?.checkedOptionsDetails || []);
+
+    const restoredOptions = existingStepData?.checkedOptionsDetails || [];
+
+    setCheckedOptionsDetails(restoredOptions);
+    setStepwiseCheckedOptions(restoredOptions); // 👈 keep in sync
   };
 
   const isNextDisabled = (() => {
