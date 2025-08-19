@@ -5,6 +5,7 @@ import '@/styles/dashboard.css';
 import AdminSidebar, { SideNav } from '@/components/dashboard/common/SideNav';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import GlobalSocketListener from '@/hooks/GlobalSocketListener';
 
 export default function AdminDashboardLayout({ children }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -51,6 +52,8 @@ export default function AdminDashboardLayout({ children }) {
           </div>
         </div>
       </div>
+
+      <GlobalSocketListener/>
     </>
   );
 }

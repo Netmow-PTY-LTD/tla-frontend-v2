@@ -1,11 +1,12 @@
 import { Inter, Poppins } from 'next/font/google';
 import '@/styles/globals.css';
 import ReduxProvider from '@/store/Provider';
-import { Toaster } from '@/components/ui/sonner';
+// import { Toaster } from '@/components/ui/sonner';
 import { SocketProvider } from '@/contexts/SocketContext';
 import { Suspense } from 'react';
 import Preloader from '@/components/Preloader';
 import Script from 'next/script';
+import { Toaster } from 'sonner';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -40,7 +41,7 @@ export default function RootLayout({ children }) {
         <ReduxProvider>
           <Suspense fallback={<Preloader />}>
             <SocketProvider>
-              <Toaster />
+              <Toaster  position='top-center'/>
               {children}
             </SocketProvider>
           </Suspense>
