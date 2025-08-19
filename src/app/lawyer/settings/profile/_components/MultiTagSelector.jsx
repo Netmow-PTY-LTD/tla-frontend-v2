@@ -32,9 +32,10 @@ const languages = [
 export default function MultiTagSelector({ name }) {
   const [open, setOpen] = useState(false);
 
-  const { control } = useFormContext();
+  const { control ,   formState: { errors },} = useFormContext();
   const {
     field: { value = [], onChange },
+    
   } = useController({ name, control });
 
   const toggleTag = (tag) => {
@@ -73,7 +74,13 @@ export default function MultiTagSelector({ name }) {
       {/* Popover with Command */}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline" className="w-full justify-start h-[44px]">
+          <Button variant="outline" 
+           className={cn(
+              'w-full justify-start h-[44px]',
+              errors[name] ? 'border-red-500' : ''
+            )}
+
+          >
             Select Language
           </Button>
         </PopoverTrigger>
@@ -98,6 +105,12 @@ export default function MultiTagSelector({ name }) {
           </Command>
         </PopoverContent>
       </Popover>
+       {/* Error message */}
+      {errors[name] && (
+        <p className="text-sm text-red-500">
+          {errors[name]?.message }
+        </p>
+      )}
     </div>
   );
 }
