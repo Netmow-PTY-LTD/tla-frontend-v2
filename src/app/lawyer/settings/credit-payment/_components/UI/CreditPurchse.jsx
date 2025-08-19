@@ -49,7 +49,7 @@ const CreditsPurchase = ({ creditPackage }) => {
       console.log('Purchase result:', result);
       if (result.success) {
         showSuccessToast(result?.message);
-      }else{
+      } else {
         showErrorToast(result?.message);
       }
     } catch (error) {
@@ -60,7 +60,7 @@ const CreditsPurchase = ({ creditPackage }) => {
   return (
     <div>
       <div className="border-0 bg-white rounded-lg shadow-sm pt-4 pb-6 px-[17px] relative">
-          {creditPackage.discountPercentage > 0 && (
+        {creditPackage.discountPercentage > 0 && (
           <div className="bg-[#00C3C0] absolute text-white p-[10px] rounded-tl-md rounded-br-md text-sm font-medium top-0 left-0">
             <h2 className="text-sm font-medium text-white whitespace-nowrap">
               {creditPackage.discountPercentage}% OFF {creditPackage.name}
@@ -107,7 +107,7 @@ const CreditsPurchase = ({ creditPackage }) => {
                 Buy Now
               </Button>
 
-              <div className="flex items-start space-x-2 mt-3">
+              {/* <div className="flex items-start space-x-2 mt-3">
                 <Checkbox
                   id="auto-topup"
                   checked={autoTopUP}
@@ -120,7 +120,7 @@ const CreditsPurchase = ({ creditPackage }) => {
                 >
                   Auto top-up next time
                 </label>
-              </div>
+              </div> */}
             </div>
           </div>
 

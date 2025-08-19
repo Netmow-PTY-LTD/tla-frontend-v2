@@ -16,29 +16,40 @@ export const CreditTransactionLog = ({ setCreditSummaryProgress }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-
   // set proggression
 
   useEffect(() => {
-
     if (transactionData?.data?.length > 0) {
-      setCreditSummaryProgress(100)
+      setCreditSummaryProgress(100);
     }
-
-
-  }, [transactionData?.data])
-
-
+  }, [transactionData?.data]);
 
   // Filter on transactionData or searchTerm change
+  // useEffect(() => {
+  //   if (!transactionData?.data) return;
+
+  //   const filtered = transactionData.data.filter((transaction) => {
+  //     const id = transaction._id?.toLowerCase() || '';
+  //     const desc = transaction.description?.toLowerCase() || '';
+  //     const term = searchTerm.toLowerCase();
+  //     return id.includes(term) || desc.includes(term);
+  //   });
+
+  //   setFilteredTransactions(filtered);
+  //   setCurrentPage(1);
+  // }, [transactionData?.data, searchTerm]);
   useEffect(() => {
     if (!transactionData?.data) return;
 
+    const term = searchTerm.toLowerCase();
+
     const filtered = transactionData.data.filter((transaction) => {
-      const id = transaction._id?.toLowerCase() || '';
-      const desc = transaction.description?.toLowerCase() || '';
-      const term = searchTerm.toLowerCase();
-      return id.includes(term) || desc.includes(term);
+      return Object.values(transaction).some((value) => {
+        if (!value) return false;
+
+        // Convert value to string and lowercase for comparison
+        return value.toString().toLowerCase().includes(term);
+      });
     });
 
     setFilteredTransactions(filtered);
@@ -84,7 +95,7 @@ export const CreditTransactionLog = ({ setCreditSummaryProgress }) => {
             className="pl-10 bg-gray-50 border-gray-200 focus:bg-white transition-colors"
           />
         </div>
-        <div className="flex gap-2">
+        {/* <div className="flex gap-2">
           <Button
             variant="outline"
             size="sm"
@@ -109,7 +120,7 @@ export const CreditTransactionLog = ({ setCreditSummaryProgress }) => {
             <Download className="h-4 w-4" />
             Export
           </Button>
-        </div>
+        </div> */}
       </div>
 
       {/* Table */}
@@ -218,18 +229,15 @@ export const CreditTransactionLog = ({ setCreditSummaryProgress }) => {
         {(() => {
           const pages = [];
           const maxVisiblePages = 5;
-          const startPage = Math.floor((currentPage - 1) / maxVisiblePages) * maxVisiblePages + 1;
+          const startPage =
+            Math.floor((currentPage - 1) / maxVisiblePages) * maxVisiblePages +
+            1;
           const endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
 
           // Show leading ellipsis if needed
           if (startPage > 1) {
             pages.push(
-              <Button
-                key="prev-ellipsis"
-                size="sm"
-                variant="outline"
-                disabled
-              >
+              <Button key="prev-ellipsis" size="sm" variant="outline" disabled>
                 ...
               </Button>
             );
@@ -252,12 +260,7 @@ export const CreditTransactionLog = ({ setCreditSummaryProgress }) => {
           // Show trailing ellipsis if needed
           if (endPage < totalPages) {
             pages.push(
-              <Button
-                key="next-ellipsis"
-                size="sm"
-                variant="outline"
-                disabled
-              >
+              <Button key="next-ellipsis" size="sm" variant="outline" disabled>
                 ...
               </Button>
             );
@@ -275,7 +278,6 @@ export const CreditTransactionLog = ({ setCreditSummaryProgress }) => {
           Next
         </Button>
       </div>
-
     </div>
   );
 };

@@ -64,7 +64,7 @@ export default function NotificationDropdownClient() {
   };
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative flex-shrink-0" ref={dropdownRef}>
       <div
         className="cursor-pointer relative w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full"
         onClick={() => setIsOpen((prev) => !prev)}
