@@ -72,12 +72,12 @@ export default function LeadManagement() {
       accessorKey: 'userProfileId.user?.isVerifiedAccount',
       header: 'Email Verified',
       cell: ({ row }) => {
-          const isVerifiedAccount=row.original?.userProfileId.user?.isVerifiedAccount
-        return(
-        <div className="capitalize">
-          {isVerifiedAccount ? "Verified Account" : "Not Verified"}
-        </div>
-      )
+        const isVerifiedAccount = row.original?.userProfileId.user?.isVerifiedAccount
+        return (
+          <div className="capitalize">
+            {isVerifiedAccount ? "Verified Account" : "Not Verified"}
+          </div>
+        )
       },
     },
     {
@@ -96,7 +96,16 @@ export default function LeadManagement() {
     {
       accessorKey: 'budgetAmount',
       header: 'Budget',
-      cell: ({ row }) => <div>${row.getValue('budgetAmount')}</div>,
+      cell: ({ row }) => {
+        const countryCode = row.original.countryCode || "AUD";
+        const budgetAmount = row.getValue("budgetAmount");
+
+        return (
+          <div>
+            {countryCode} {budgetAmount.toLocaleString()}
+          </div>
+        );
+      },
     },
     {
       accessorKey: 'credit',
@@ -141,7 +150,16 @@ export default function LeadManagement() {
     {
       accessorKey: 'leadPriority',
       header: 'Priority',
-      cell: ({ row }) => <div> {row.getValue('leadPriority')}</div>,
+      cell: ({ row }) => {
+        const value = row.getValue('leadPriority');
+        const formatted = value
+          ? value
+            .split('_')
+            .map((word) => word[0].toUpperCase() + word.slice(1))
+            .join(' ')
+          : '';
+        return <div>{formatted}</div>;
+      },
     },
     {
       accessorKey: 'status',
