@@ -297,7 +297,7 @@ export default function HeroHome({ searchParam }) {
           selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
-          locationId={currentUser?.data?.profile?.zipCode}
+          locationId={location}
           isQuestionsLoading={isQuestionsLoading}
         />
       ) : (
