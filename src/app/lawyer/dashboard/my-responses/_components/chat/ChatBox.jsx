@@ -44,6 +44,7 @@ export default function ChatBox({ response }) {
     if (userId) {
       return getSocket(userId);
     }
+    console.log('userId',userId)
     return null;
   }, [userId]);
 

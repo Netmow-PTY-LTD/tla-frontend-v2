@@ -3,7 +3,7 @@
 import { getSocket } from '@/lib/socket';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import { useSelector } from 'react-redux';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useGetChatHistoryQuery } from '@/store/features/lawyer/ResponseApiService';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -42,6 +42,7 @@ export default function ChatBoxForLead({ response }) {
     if (userId) {
       return getSocket(userId);
     }
+      console.log('userId',userId)
     return null;
   }, [userId]);
 
