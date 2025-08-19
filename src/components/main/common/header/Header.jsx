@@ -423,7 +423,6 @@ export default function Header() {
           selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
-          locationId={currentUser?.data?.profile?.zipCode}
         />
       ) : (
         <ClientLeadRegistrationModal
