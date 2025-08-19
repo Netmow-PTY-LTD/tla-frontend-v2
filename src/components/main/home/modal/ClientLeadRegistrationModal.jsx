@@ -102,16 +102,21 @@ export default function ClientLeadRegistrationModal({
     useGetZipCodeListQuery();
 
   const filteredZipCodes = allZipCodes?.data?.filter((item) =>
-    zipCode
+    typeof zipCode === 'string'
       ? item?.zipcode?.toLowerCase().includes(zipCode.toLowerCase())
       : true
   );
 
   useEffect(() => {
     if (locationId && allZipCodes?.data?.length > 0) {
-      const matchedZip = allZipCodes.data.find((z) => z._id === locationId);
-      if (matchedZip) {
-        setZipCode(matchedZip?.zipcode); // ✅ Store ID for value
+      setZipCode(locationId);
+
+      const selectedZip = allZipCodes.data.find((z) => z._id === locationId);
+      if (selectedZip) {
+        setPostalCode(selectedZip.postalCode);
+        setLatitude(selectedZip.latitude);
+        setLongitude(selectedZip.longitude);
+        setAddress(selectedZip.zipcode); // full formatted address
       }
     }
   }, [locationId, allZipCodes]);
