@@ -39,6 +39,8 @@ export default function ChatBoxForLead({ response }) {
   const [liveMessages, setLiveMessages] = useState([]);
   const socket = getSocket(userId);
 
+  console.log('userId',userId)
+
   // ✅ Fetch old messages
   const { data: history = [], isLoading } = useGetChatHistoryQuery(responseId, {
     skip: !responseId,
