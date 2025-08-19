@@ -8,6 +8,15 @@ import { useDispatch } from 'react-redux';
 import { useCreateLeadMutation } from '@/store/features/client/LeadsApiService';
 import { StartFrequencyOptions } from '@/data/data';
 import country from '@/data/au.json';
+import {
+  Combobox,
+  ComboboxButton,
+  ComboboxInput,
+  ComboboxOption,
+  ComboboxOptions,
+} from '@headlessui/react';
+import { useGetZipCodeListQuery } from '@/store/features/public/publicApiService';
+import { cn } from '@/lib/utils';
 
 export default function CreateLeadWithAuthModal({
   modalOpen,
@@ -51,6 +60,11 @@ export default function CreateLeadWithAuthModal({
   const [budgetAmount, setBudgetAmount] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [stepwiseCheckedOptions, setStepwiseCheckedOptions] = useState(null);
+  const [zipCode, setZipCode] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [latitude, setLatitude] = useState('');
+  const [longitude, setLongitude] = useState('');
+  const [address, setAddress] = useState('');
 
   useEffect(() => {
     if (!selectedServiceWiseQuestions?.length) return;
@@ -76,6 +90,34 @@ export default function CreateLeadWithAuthModal({
   const dispatch = useDispatch();
   const router = useRouter();
 
+  const { data: allZipCodes, isLoading: isZipCodeLoading } =
+    useGetZipCodeListQuery();
+
+  const filteredZipCodes = allZipCodes?.data?.filter((item) =>
+    zipCode
+      ? item?.zipcode?.toLowerCase().includes(zipCode.toLowerCase())
+      : true
+  );
+
+  console.log('locationId', locationId);
+
+  useEffect(() => {
+    if (locationId) {
+      setZipCode(locationId);
+    }
+  }, [locationId]);
+
+  const addressInfo = {
+    countryId: country.countryId,
+    countryCode: country.code.toLowerCase(),
+    zipcode: address || '',
+    latitude: latitude?.toString() || '',
+    longitude: longitude?.toString() || '',
+    postalCode: postalCode || '',
+  };
+
+  console.log('addressInfo', addressInfo);
+
   //setting initial data
 
   useEffect(() => {
@@ -94,7 +136,7 @@ export default function CreateLeadWithAuthModal({
 
   const totalQuestions = selectedServiceWiseQuestions?.length;
 
-  const totalFormsSteps = 3;
+  const totalFormsSteps = 4;
 
   const totalSteps = totalQuestions + totalFormsSteps;
 
@@ -274,11 +316,12 @@ export default function CreateLeadWithAuthModal({
     const payload = {
       countryId,
       serviceId,
-      locationId,
+      locationId: zipCode,
       questions: [...questionsPayload],
       leadPriority,
       additionalDetails,
       budgetAmount,
+      addressInfo,
     };
 
     console.log('🚀 Submitting payload:', payload);
@@ -290,7 +333,7 @@ export default function CreateLeadWithAuthModal({
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Case registered successfully');
         setModalOpen(false);
-        const userType = res?.data?.userData?.regUserType;
+        const userType = res?.data?.leadDetails?.user?.regUserType;
 
         if (userType === 'lawyer') {
           showErrorToast(
@@ -339,8 +382,12 @@ export default function CreateLeadWithAuthModal({
       return !additionalDetails?.trim();
     }
 
-    if (step === totalSteps - 1) {
+    if (step === totalQuestions + 2) {
       return !budgetAmount?.trim();
+    }
+
+    if (step === totalSteps - 1) {
+      return !zipCode?.trim();
     }
 
     // Step: Phone (optional)
@@ -376,6 +423,8 @@ export default function CreateLeadWithAuthModal({
 
     setViewData(updatedQuestion);
   }, [fullClonedQuestions, step, stepwiseCheckedOptions]);
+
+  console.log('zipCode:', zipCode);
 
   return (
     <Modal
@@ -501,7 +550,7 @@ export default function CreateLeadWithAuthModal({
             />
           </label>
         </div>
-      ) : step === totalSteps - 1 ? (
+      ) : step === totalQuestions + 2 ? (
         <div className="space-y-6">
           <h4 className="text-[24px] font-semibold text-center">
             What is your estimated budget?
@@ -528,6 +577,85 @@ export default function CreateLeadWithAuthModal({
               />
             </div>
           </div>
+        </div>
+      ) : step === totalSteps - 1 ? (
+        <div className="space-y-4">
+          <h4 className="text-[24px] font-semibold text-center">
+            Where do you need the service?
+          </h4>
+          <div className="text-center">
+            The postcode or town for the address where you want the service.
+          </div>
+          <Combobox
+            value={zipCode ?? ''}
+            onChange={(selectedId) => {
+              setZipCode(selectedId);
+
+              const selectedZip = allZipCodes?.data?.find(
+                (z) => z._id === selectedId
+              );
+              if (selectedZip) {
+                setPostalCode(selectedZip.postalCode);
+                setLatitude(selectedZip.latitude);
+                setLongitude(selectedZip.longitude);
+                setAddress(selectedZip.zipcode); // full formatted address
+              }
+            }}
+          >
+            <div className="relative">
+              <ComboboxInput
+                className="border border-gray-300 rounded-md w-full h-[44px] px-4"
+                onChange={(event) => {
+                  // This is only for filtering typed text
+                  const value = event.target.value;
+                  setZipCode(value);
+                  // You can trigger filtering logic here if needed
+                }}
+                displayValue={(val) =>
+                  allZipCodes?.data?.find((z) => z._id === val)?.zipcode || val
+                }
+                placeholder="Select a postcode"
+                autoComplete="off"
+              />
+              <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
+                <ChevronDown className="h-4 w-4 text-gray-500" />
+              </ComboboxButton>
+              {filteredZipCodes?.length > 0 && (
+                <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  {filteredZipCodes?.slice(0, 10).map((item) => (
+                    <ComboboxOption
+                      key={item._id}
+                      value={item._id}
+                      className={({ active }) =>
+                        cn(
+                          'cursor-pointer select-none relative py-2 px-6',
+                          active ? 'bg-blue-100 text-black' : 'text-gray-900'
+                        )
+                      }
+                    >
+                      {({ selected }) => (
+                        <>
+                          <span
+                            className={cn('block truncate', {
+                              'font-medium': selected,
+                              'font-normal': !selected,
+                            })}
+                          >
+                            {item.zipcode}
+                          </span>
+                          {selected && (
+                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
+                              <Check className="h-4 w-4" />
+                            </span>
+                          )}
+                        </>
+                      )}
+                    </ComboboxOption>
+                  ))}
+                </ComboboxOptions>
+              )}
+            </div>
+          </Combobox>
         </div>
       ) : null}
 

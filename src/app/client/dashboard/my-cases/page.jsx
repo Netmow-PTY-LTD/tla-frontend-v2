@@ -27,6 +27,7 @@ import { cn } from '@/lib/utils';
 import CreateLeadWithAuthModal from '@/components/main/home/modal/CreateLeadWithAuthModal';
 import { useSelector } from 'react-redux';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import { showErrorToast } from '@/components/common/toasts';
 
 export default function MyLeads() {
   const [selectedService, setSelectedService] = useState(null);
@@ -395,7 +396,7 @@ export default function MyLeads() {
         selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
         countryId={defaultCountry?._id}
         serviceId={selectedService?._id}
-        locationId={currentUser?.data?.profile?.zipCode}
+        locationId={location}
         isQuestionsLoading={isQuestionsLoading}
         //allMyLeads={allMyLeads?.data}
       />

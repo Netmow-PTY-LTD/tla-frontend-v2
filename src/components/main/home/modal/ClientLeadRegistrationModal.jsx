@@ -705,6 +705,7 @@ export default function ClientLeadRegistrationModal({
                 onChange={(event) => {
                   // This is only for filtering typed text
                   const value = event.target.value;
+                  setZipCode(value);
                   // You can trigger filtering logic here if needed
                 }}
                 displayValue={(val) =>
