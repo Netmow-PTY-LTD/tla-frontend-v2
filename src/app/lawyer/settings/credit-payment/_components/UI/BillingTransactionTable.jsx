@@ -30,19 +30,46 @@ export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
     }
   }, [transactionData?.data]);
 
+  // useEffect(() => {
+  //   if (!transactionData?.data) return;
+
+  //   const filtered = transactionData.data.filter((t) => {
+  //     const id = t._id?.toLowerCase() || '';
+  //     const packageName = t.creditPackageId?.name?.toLowerCase() || '';
+  //     const term = searchTerm.toLowerCase();
+  //     return id.includes(term) || packageName.includes(term);
+  //   });
+
+  //   setFilteredTransactions(filtered);
+  //   setCurrentPage(1);
+  // }, [transactionData, searchTerm]);
+
   useEffect(() => {
     if (!transactionData?.data) return;
 
-    const filtered = transactionData.data.filter((t) => {
-      const id = t._id?.toLowerCase() || '';
-      const packageName = t.creditPackageId?.name?.toLowerCase() || '';
-      const term = searchTerm.toLowerCase();
-      return id.includes(term) || packageName.includes(term);
+    const term = searchTerm.toLowerCase();
+
+    const filtered = transactionData.data.filter((transaction) => {
+      const flatValues = [];
+
+      Object.values(transaction).forEach((val) => {
+        if (typeof val === 'object' && val !== null) {
+          // Flatten one level of nested fields (e.g., creditPackageId.name)
+          flatValues.push(...Object.values(val));
+        } else {
+          flatValues.push(val);
+        }
+      });
+
+      return flatValues.some((value) => {
+        if (!value) return false;
+        return value.toString().toLowerCase().includes(term);
+      });
     });
 
     setFilteredTransactions(filtered);
     setCurrentPage(1);
-  }, [transactionData, searchTerm]);
+  }, [transactionData?.data, searchTerm]);
 
   const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -80,7 +107,7 @@ export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
               className="pl-10 bg-gray-50 border-gray-200 focus:bg-white transition-colors"
             />
           </div>
-          <div className="flex gap-2">
+          {/* <div className="flex gap-2">
             <Button
               variant="outline"
               size="sm"
@@ -105,7 +132,7 @@ export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
               <Download className="h-4 w-4" />
               Export
             </Button>
-          </div>
+          </div> */}
         </div>
 
         {/* Table */}

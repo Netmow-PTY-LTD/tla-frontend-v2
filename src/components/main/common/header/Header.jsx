@@ -28,6 +28,7 @@ import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesA
 import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/questionApiService';
 import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
 import { checkValidity } from '@/helpers/validityCheck';
+import LawyerWarningModal from '../../home/modal/LawyerWarningModal';
 
 export default function Header() {
   const [isHeaderFixed, setIsHeaderFixed] = useState();
@@ -36,6 +37,7 @@ export default function Header() {
   const [selectedService, setSelectedService] = useState(null);
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
 
@@ -377,6 +379,13 @@ export default function Header() {
                       onMouseDown={() => {
                         // onMouseDown prevents input blur from firing first
                         setSelectedService(service);
+                        const currentUserType =
+                          currentUser?.data?.regUserType.toLowerCase();
+
+                        if (currentUserType === 'lawyer') {
+                          setAuthModalOpen(true);
+                          return;
+                        }
                         handleModalOpen();
                         setSearchTerm(service.name);
                         setShowSuggestions(false);
@@ -416,14 +425,26 @@ export default function Header() {
         </div>
       </div>
       {validToken && currentUser ? (
-        <CreateLeadWithAuthModal
-          modalOpen={modalOpen}
-          setModalOpen={setModalOpen}
-          handleModalOpen={handleModalOpen}
-          selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
-          countryId={defaultCountry?._id}
-          serviceId={selectedService?._id}
-        />
+        <>
+          {currentUser?.data?.regUserType?.toLowerCase() === 'lawyer' &&
+          authModalOpen ? (
+            <LawyerWarningModal
+              modalOpen={authModalOpen}
+              setModalOpen={setAuthModalOpen}
+            />
+          ) : (
+            <CreateLeadWithAuthModal
+              modalOpen={modalOpen}
+              setModalOpen={setModalOpen}
+              handleModalOpen={handleModalOpen}
+              selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
+              countryId={defaultCountry?._id}
+              serviceId={selectedService?._id}
+              locationId={location}
+              isQuestionsLoading={isQuestionsLoading}
+            />
+          )}
+        </>
       ) : (
         <ClientLeadRegistrationModal
           modalOpen={modalOpen}

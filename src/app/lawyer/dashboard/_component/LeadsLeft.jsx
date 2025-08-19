@@ -208,7 +208,7 @@ export default function LeadDetailsPage({
                 </div>
                 <div className="flex items-center gap-10">
                   <p className="text-[14px] font-medium text-gray-600">
-                    Covered by our Get Hired Guarantee
+                    Covered by our hiring policy
                   </p>
                   <Image
                     src="/assets/img/tlabadge.svg"
