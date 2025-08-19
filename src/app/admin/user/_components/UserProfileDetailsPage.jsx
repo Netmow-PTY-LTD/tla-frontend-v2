@@ -5,14 +5,14 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Globe, Mail, Phone, Facebook, Twitter, UserCheck, Shield, PhoneCall } from "lucide-react";
+import { Globe, Mail, Phone, Facebook, Twitter, UserCheck, Shield, PhoneCall, AlertCircle } from "lucide-react";
 import { useSingleUserQuery } from "@/store/features/admin/userApiService";
 
 export default function UserProfileDetailsPage({ userId }) {
   const { data } = useSingleUserQuery(userId);
   const user = data?.data || {};
 
-  if (!user || !user.profile) return <p>No user data found</p>;
+
 
 
 function formatCompanySize(size) {
@@ -29,6 +29,28 @@ function formatCompanySize(size) {
     .replace(/_/g, " ")
     .replace(/\b\w/g, c => c.toUpperCase());
 }
+
+if (!user || !user.profile) {
+  return (
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <Card className="border border-muted p-6 text-center max-w-md">
+        <CardContent className="space-y-4">
+          <AlertCircle className="w-12 h-12 mx-auto text-red-500" />
+          <CardTitle className="text-lg font-semibold">
+            No User Data Found
+          </CardTitle>
+          <p className="text-sm text-muted-foreground">
+            The requested user does not exist or their profile is unavailable.
+          </p>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+
+
+
 
 
   return (
