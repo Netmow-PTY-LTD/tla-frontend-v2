@@ -48,12 +48,19 @@ const LawyerContactButton = ({ leadDetail }) => {
       } else {
         toast.error(res.message || 'Something went wrong', {
           position: 'top-right',
+          style: {
+            background: '#f44336', // red background
+            color: '#ffffff',       // white text
+            fontWeight: 'bold',
+            padding: '12px 16px',
+            borderRadius: '8px',
+          },
         });
       }
     } catch (err) {
       toast.error(
         err?.data?.message ||
-          'Something went wrong while contacting the lawyer',
+        'Something went wrong while contacting the lawyer',
         { position: 'top-right' }
       );
     }
