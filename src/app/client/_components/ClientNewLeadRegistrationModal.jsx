@@ -93,10 +93,6 @@ export default function ClientNewLeadRegistrationModal({
     item?.zipcode?.toLowerCase().includes(zipCodeQuery?.toLowerCase())
   );
 
-  console.log('filteredZipCodes', filteredZipCodes);
-
-  console.log('zipCode', zipCode);
-
   const addressInfo = {
     countryId: country.countryId,
     countryCode: country.code.toLowerCase(),
@@ -105,8 +101,6 @@ export default function ClientNewLeadRegistrationModal({
     longitude: longitude?.toString() || '',
     postalCode: postalCode || '',
   };
-
-  console.log('addressInfo', addressInfo);
 
   const {
     data: selectedServiceWiseQuestions,
@@ -484,10 +478,10 @@ export default function ClientNewLeadRegistrationModal({
     setViewData(updatedQuestion);
   }, [fullClonedQuestions, step, stepwiseCheckedOptions]);
 
-  console.log('step', step);
-  console.log('questionsPayload', questionsPayload);
-  console.log('stepwiseCheckedOptions', stepwiseCheckedOptions);
-  console.log('viewData', viewData);
+  // console.log('step', step);
+  // console.log('questionsPayload', questionsPayload);
+  // console.log('stepwiseCheckedOptions', stepwiseCheckedOptions);
+  // console.log('viewData', viewData);
 
   return (
     <Modal

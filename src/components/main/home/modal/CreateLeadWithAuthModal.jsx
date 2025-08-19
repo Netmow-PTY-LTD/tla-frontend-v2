@@ -94,7 +94,7 @@ export default function CreateLeadWithAuthModal({
     useGetZipCodeListQuery();
 
   const filteredZipCodes = allZipCodes?.data?.filter((item) =>
-    zipCode
+    typeof zipCode === 'string'
       ? item?.zipcode?.toLowerCase().includes(zipCode.toLowerCase())
       : true
   );
@@ -123,6 +123,8 @@ export default function CreateLeadWithAuthModal({
   };
 
   console.log('addressInfo', addressInfo);
+
+  console.log('zipCode', zipCode);
 
   //setting initial data
 
