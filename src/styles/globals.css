@@ -27,6 +27,18 @@ body {
   padding: 0 1.25rem;
 }
 
+/* Preloader  */
+
+.loader-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+  perspective: 2000px;
+  /* transform: rotateX(-30deg) rotateY(-45deg); */
+}
+
 /* @media (min-width: 1921px) {
   .container {
     max-width: 112.5rem;
