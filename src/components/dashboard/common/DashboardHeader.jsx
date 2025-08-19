@@ -11,7 +11,7 @@ import NotificationDropdown from './NotificationDropdown';
 
 export default function DashboardHeader({ onToggleSidebar }) {
   const userInfo = useSelector(selectCurrentUser);
-  const { data} = useGetNotificationsQuery({ read: false });
+  const { data } = useGetNotificationsQuery({ read: false });
 
   return (
     <header className="db-header">
@@ -33,7 +33,7 @@ export default function DashboardHeader({ onToggleSidebar }) {
         </button>
       </div>
       <div className="flex items-center gap-3">
-        <button className="w-8 h-8 items-center justify-center border border-gray-300 rounded-full hidden sm:flex cursor-pointer">
+        <button className="w-8 h-8 items-center justify-center border border-gray-300 rounded-full hidden sm:flex cursor-pointer flex-shrink-0">
           <NotificationDropdown />
         </button>
         <ProfileDropDown data={userInfo} />

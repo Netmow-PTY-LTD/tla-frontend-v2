@@ -41,7 +41,7 @@ export default function AdminDashboardHeader({ onToggleSidebar }) {
   //     }
 
   //     const user = await getUserFromToken(token);
-  
+
   //     setUser(user);
 
   //     if (!user || user?.regUserType !== 'admin') {
@@ -78,7 +78,7 @@ export default function AdminDashboardHeader({ onToggleSidebar }) {
       <div className="flex items-center gap-4">
         <Link
           href="#"
-          className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full"
+          className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full flex-shrink-0"
         >
           <BellRing className="w-5 h-5 text-gray-500" />
         </Link>
