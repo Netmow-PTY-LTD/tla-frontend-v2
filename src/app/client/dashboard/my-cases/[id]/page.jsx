@@ -120,7 +120,7 @@ export default function LeadDetailsPage() {
     isLoading: isLawyersLoading,
     isFetching,
     isSuccess,
-    refetch
+    refetch,
   } = useGetAllServiceWiseLawyersSuggestionsQuery(
     { page, LIMIT, serviceId, leadId },
     {
@@ -393,22 +393,33 @@ export default function LeadDetailsPage() {
                       Total matched {totalLawyersCount}{' '}
                       {totalLawyersCount === 1 ? 'lawyer' : 'lawyers'}
                     </h4>
-                    <div className="flex flex-col gap-5">
-                      {lawyers?.map((lawyer, i) => (
-                        <LawyerCard
-                          key={i}
-                          lawyer={lawyer}
-                          id={id}
-                          lawyerOnlineStatus={lawyerOnlineStatus}
-                          refetch={refetch}
-                        />
-                      ))}
-                      <div ref={loader}>
-                        {isFetching && (
-                          <Loader className="w-5 h-5 animate-spin text-gray-500 mx-auto" />
+
+                    {!isFetching && totalLawyersCount === 0 ? (
+                      <p className="text-center text-gray-500 text-sm">
+                        Currently there is no matched lawyer
+                      </p>
+                    ) : (
+                      <div className="flex flex-col gap-5">
+                        {lawyers?.map((lawyer, i) => (
+                          <LawyerCard
+                            key={i}
+                            lawyer={lawyer}
+                            id={id}
+                            lawyerOnlineStatus={lawyerOnlineStatus}
+                            refetch={refetch}
+                          />
+                        ))}
+
+                        {/* Only show loader when fetching AND there are already some lawyers */}
+                        {lawyers?.length > 0 && (
+                          <div ref={loader}>
+                            {isFetching && (
+                              <Loader className="w-5 h-5 animate-spin text-gray-500 mx-auto" />
+                            )}
+                          </div>
                         )}
                       </div>
-                    </div>
+                    )}
                   </div>
                 </TabsContent>
               </Tabs>
