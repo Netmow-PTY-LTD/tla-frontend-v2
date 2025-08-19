@@ -99,13 +99,19 @@ export default function CreateLeadWithAuthModal({
       : true
   );
 
-  console.log('locationId', locationId);
-
   useEffect(() => {
-    if (locationId) {
+    if (locationId && allZipCodes?.data?.length) {
       setZipCode(locationId);
+
+      const selectedZip = allZipCodes.data.find((z) => z._id === locationId);
+      if (selectedZip) {
+        setPostalCode(selectedZip.postalCode);
+        setLatitude(selectedZip.latitude);
+        setLongitude(selectedZip.longitude);
+        setAddress(selectedZip.zipcode); // full formatted address
+      }
     }
-  }, [locationId]);
+  }, [locationId, allZipCodes]);
 
   const addressInfo = {
     countryId: country.countryId,
@@ -337,10 +343,10 @@ export default function CreateLeadWithAuthModal({
 
         if (userType === 'lawyer') {
           showErrorToast(
-            'You are registered as a lawyer. You can not create a case.'
+            'You are registered as a lawyer. You are not allowed to create a case.'
           );
         }
-        if (userType === 'client') {
+        if (userType === 'client' || userType === 'admin') {
           setTimeout(() => {
             router.push(
               `/client/dashboard/my-cases/${res?.data?.leadUser?._id}`
@@ -423,8 +429,6 @@ export default function CreateLeadWithAuthModal({
 
     setViewData(updatedQuestion);
   }, [fullClonedQuestions, step, stepwiseCheckedOptions]);
-
-  console.log('zipCode:', zipCode);
 
   return (
     <Modal
