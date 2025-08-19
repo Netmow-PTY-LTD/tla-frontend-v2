@@ -22,7 +22,7 @@ export default function LawyerWarningModal({ modalOpen, setModalOpen }) {
       </div>
       <div className="text-center mt-5">
         <button
-          className="btn-default bg-[--secondary-color]"
+          className="btn-default bg-[--secondary-color] focus:outline-none"
           onClick={handleLogout}
         >
           Logout
