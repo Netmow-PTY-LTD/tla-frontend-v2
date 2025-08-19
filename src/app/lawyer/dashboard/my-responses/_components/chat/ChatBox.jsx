@@ -3,7 +3,7 @@
 import { getSocket } from '@/lib/socket';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import { useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useGetChatHistoryQuery } from '@/store/features/lawyer/ResponseApiService';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -115,10 +115,22 @@ export default function ChatBox({ response }) {
     });
   }, [liveMessages, responseId, userId, socket]);
 
+  const messageBoxRef = useRef(null);
+
+  // Auto-scroll when new message comes in
+  useEffect(() => {
+    if (messageBoxRef.current) {
+      messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight;
+    }
+  }, [liveMessages]);
+
   return (
     <div>
       {/* Messages */}
-      <div className="h-64 overflow-y-auto border rounded py-3 px-2 space-y-2">
+      <div
+        className="h-64 overflow-y-auto border rounded py-3 px-2 space-y-2"
+        ref={messageBoxRef}
+      >
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
             <Loader className="animate-spin w-5 h-5" />

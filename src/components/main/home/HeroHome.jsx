@@ -26,10 +26,12 @@ import { cn } from '@/lib/utils';
 import { useParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { showErrorToast } from '@/components/common/toasts';
+import LawyerWarningModal from './modal/LawyerWarningModal';
 export default function HeroHome({ searchParam }) {
   const [selectedService, setSelectedService] = useState(null);
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
   const [service, setService] = useState(null);
   const [location, setLocation] = useState('');
   const [filteredServices, setFilteredServices] = useState([]);
@@ -114,8 +116,18 @@ export default function HeroHome({ searchParam }) {
       showErrorToast('Please select a service and location.');
       return;
     }
+
+    const currentUserType = currentUser?.data?.regUserType.toLowerCase();
+
+    if (currentUserType === 'lawyer') {
+      setAuthModalOpen(true);
+      return;
+    }
+
     setModalOpen(true);
   };
+
+  console.log('currentUser', currentUser?.data?.regUserType);
 
   return (
     <section className="hero-home section">
@@ -276,6 +288,13 @@ export default function HeroHome({ searchParam }) {
                   onClick={(e) => {
                     e.preventDefault(); // Prevent default anchor behavior
                     setSelectedService(service);
+                    const currentUserType =
+                      currentUser?.data?.regUserType.toLowerCase();
+
+                    if (currentUserType === 'lawyer') {
+                      setAuthModalOpen(true);
+                      return;
+                    }
                     handleModalOpen();
                   }}
                 >
@@ -290,16 +309,26 @@ export default function HeroHome({ searchParam }) {
       </div>
 
       {token && currentUser ? (
-        <CreateLeadWithAuthModal
-          modalOpen={modalOpen}
-          setModalOpen={setModalOpen}
-          handleModalOpen={handleModalOpen}
-          selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
-          countryId={defaultCountry?._id}
-          serviceId={selectedService?._id}
-          locationId={location}
-          isQuestionsLoading={isQuestionsLoading}
-        />
+        <>
+          {currentUser?.data?.regUserType?.toLowerCase() === 'lawyer' &&
+          authModalOpen ? (
+            <LawyerWarningModal
+              modalOpen={authModalOpen}
+              setModalOpen={setAuthModalOpen}
+            />
+          ) : (
+            <CreateLeadWithAuthModal
+              modalOpen={modalOpen}
+              setModalOpen={setModalOpen}
+              handleModalOpen={handleModalOpen}
+              selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
+              countryId={defaultCountry?._id}
+              serviceId={selectedService?._id}
+              locationId={location}
+              isQuestionsLoading={isQuestionsLoading}
+            />
+          )}
+        </>
       ) : (
         <ClientLeadRegistrationModal
           modalOpen={modalOpen}
