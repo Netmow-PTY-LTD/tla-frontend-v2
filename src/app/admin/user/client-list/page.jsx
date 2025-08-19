@@ -155,7 +155,7 @@ export default function Page() {
               <DropdownMenuItem asChild>
                 <Link
                   href={`/admin/user/edit/${userId}`}
-                  className="flex gap-2 items-center"
+                  className="flex gap-2 items-center cursor-pointer"
                 >
                   <Pencil />
                   Edit
@@ -165,23 +165,18 @@ export default function Page() {
               <DropdownMenuItem asChild>
                 <Link
                   href={`/admin/user/delete/${userId}`}
-                  className="flex gap-2 items-center"
+                  className="flex gap-2 items-center cursor-pointer"
                 >
                   <Trash2 />
                   Delete
                 </Link>
               </DropdownMenuItem>
               {/* Details Page */}
-              <DropdownMenuItem
-                onClick={() => {
-                  setSelectedUser(user); // set current lead
-                  setOpen(true); // open modal
-                }}
-                className="cursor-pointer"
-              >
-                <div className="flex items-center gap-2">
-                  <View className="w-4 h-4" /> View
-                </div>
+              <DropdownMenuItem asChild>
+                <Link href={`/admin/user/${userId}`} className="flex items-center gap-2 cursor-pointer ">
+                  <View className="w-4 h-4" />
+                  <span>View</span>
+                </Link>
               </DropdownMenuItem>
 
               <DropdownMenuSeparator />
