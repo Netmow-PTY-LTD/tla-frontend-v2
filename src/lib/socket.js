@@ -7,6 +7,8 @@ let socket = null; // singleton instance
 const url = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const getSocket = (userId) => {
+
+  console.log('socket userId',userId)
   // Don't initialize if userId is missing
   if (!userId) {
     console.warn("⚠️ No userId provided for socket connection.");
@@ -24,7 +26,7 @@ export const getSocket = (userId) => {
     forceNew: true,            // ensure fresh connection
     reconnection: true,        // allow reconnections
     reconnectionAttempts: 5,   // limit retry attempts
-    timeout: 10000             // 10 seconds timeout
+    timeout: 10000   ,          // 10 seconds timeout
   });
 
   socket.on('connect', () => {
