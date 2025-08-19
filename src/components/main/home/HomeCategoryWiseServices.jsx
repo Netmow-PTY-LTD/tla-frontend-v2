@@ -15,11 +15,13 @@ import CreateLeadWithAuthModal from './modal/CreateLeadWithAuthModal';
 import { toast } from 'sonner';
 import ClientLeadRegistrationModal from './modal/ClientLeadRegistrationModal';
 import SectionHeading from './SectionHeading';
+import LawyerWarningModal from './modal/LawyerWarningModal';
 
 export default function HomeCategoryWiseServices() {
   const [selectedService, setSelectedService] = useState(null);
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
   const [service, setService] = useState(null);
   const [location, setLocation] = useState(null);
 
@@ -100,6 +102,13 @@ export default function HomeCategoryWiseServices() {
                 onClick={(e) => {
                   e.preventDefault();
                   setSelectedService(service);
+                  const currentUserType =
+                    currentUser?.data?.regUserType.toLowerCase();
+
+                  if (currentUserType === 'lawyer') {
+                    setAuthModalOpen(true);
+                    return;
+                  }
                   handleModalOpen();
                 }}
                 className="category-wise-service-item flex flex-col gap-3 border border-gray-200 rounded-lg hover:shadow-md transition"
@@ -126,15 +135,26 @@ export default function HomeCategoryWiseServices() {
         )}
       </div>
       {token && currentUser ? (
-        <CreateLeadWithAuthModal
-          modalOpen={modalOpen}
-          setModalOpen={setModalOpen}
-          handleModalOpen={handleModalOpen}
-          selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
-          countryId={defaultCountry?._id}
-          serviceId={selectedService?._id}
-          locationId={currentUser?.data?.profile?.zipCode}
-        />
+        <>
+          {currentUser?.data?.regUserType?.toLowerCase() === 'lawyer' &&
+          authModalOpen ? (
+            <LawyerWarningModal
+              modalOpen={authModalOpen}
+              setModalOpen={setAuthModalOpen}
+            />
+          ) : (
+            <CreateLeadWithAuthModal
+              modalOpen={modalOpen}
+              setModalOpen={setModalOpen}
+              handleModalOpen={handleModalOpen}
+              selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
+              countryId={defaultCountry?._id}
+              serviceId={selectedService?._id}
+              locationId={location}
+              isQuestionsLoading={isQuestionsLoading}
+            />
+          )}
+        </>
       ) : (
         <ClientLeadRegistrationModal
           modalOpen={modalOpen}

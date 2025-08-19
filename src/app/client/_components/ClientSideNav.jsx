@@ -41,6 +41,12 @@ export default function ClientSideNav({ isCollapsed, setIsCollapsed }) {
     };
   }, [isCollapsed, setIsCollapsed]);
 
+  const handleItemClick = () => {
+    if (window.innerWidth <= 1280) {
+      setIsCollapsed(false);
+    }
+  };
+
   return (
     <aside
       ref={sidebarRef}
@@ -90,6 +96,7 @@ export default function ClientSideNav({ isCollapsed, setIsCollapsed }) {
                         <Link
                           key={subItem.title}
                           href={subItem.url}
+                          onClick={handleItemClick}
                           className={`flex items-center gap-2 px-2 py-1 rounded text-sm transition ${
                             isActive
                               ? 'bg-blue-100 text-blue-700 font-medium'
@@ -111,6 +118,7 @@ export default function ClientSideNav({ isCollapsed, setIsCollapsed }) {
             <Link
               key={item.title}
               href={item.url}
+              onClick={handleItemClick}
               className={`flex items-center gap-2 p-2 rounded transition font-medium ${
                 pathname === item.url ? 'bg-gray-100' : 'hover:bg-gray-100'
               }`}

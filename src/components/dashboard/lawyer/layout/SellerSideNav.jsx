@@ -41,6 +41,12 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
     };
   }, [isCollapsed, setIsCollapsed]);
 
+  const handleItemClick = () => {
+    if (window.innerWidth <= 1280) {
+      setIsCollapsed(false);
+    }
+  };
+
   return (
     <aside
       ref={sidebarRef}
@@ -92,6 +98,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
                         <Link
                           key={subItem.title}
                           href={subItem.url}
+                          onClick={handleItemClick}
                           className={`flex items-center gap-2 px-2 py-1 rounded text-sm transition ${
                             isActive
                               ? 'bg-[linear-gradient(121deg,_rgb(27,171,169),_#ffffff)] text-white font-medium'
@@ -114,6 +121,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
               key={item.title}
               href={item.url}
               target={item.target ? '_blank' : undefined}
+              onClick={handleItemClick}
               className={`flex items-center gap-2 p-2 rounded transition ${
                 pathname === item.url
                   ? 'bg-[linear-gradient(121deg,_rgb(27,171,169),_#ffffff)] font-medium text-white'
