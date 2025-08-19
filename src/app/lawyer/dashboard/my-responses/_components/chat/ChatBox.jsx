@@ -3,7 +3,7 @@
 import { getSocket } from '@/lib/socket';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import { useSelector } from 'react-redux';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useGetChatHistoryQuery } from '@/store/features/lawyer/ResponseApiService';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -37,8 +37,20 @@ export default function ChatBox({ response }) {
   const userId = currentUser?._id;
   const [message, setMessage] = useState('');
   const [liveMessages, setLiveMessages] = useState([]);
-  const socket = getSocket(userId);
-  console.log('userId', userId)
+
+
+  // ✅ Only create socket if userId exists
+  const socket = useMemo(() => {
+    if (userId) {
+      return getSocket(userId);
+    }
+    return null;
+  }, [userId]);
+
+
+
+
+
   // ✅ Fetch old messages
   const { data: history = [], isLoading } = useGetChatHistoryQuery(responseId, {
     skip: !responseId,
@@ -168,8 +180,8 @@ export default function ChatBox({ response }) {
                   </p>
                   <div
                     className={`rounded p-2 ${isCurrentUser
-                        ? 'bg-[var(--secondary-color)] text-right'
-                        : 'bg-gray-300 text-left'
+                      ? 'bg-[var(--secondary-color)] text-right'
+                      : 'bg-gray-300 text-left'
                       }`}
                   >
                     <div className="flex items-center justify-between gap-4">
