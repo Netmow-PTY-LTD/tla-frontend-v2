@@ -49,8 +49,8 @@ export default function ProfileDropDown() {
    */
   const [authLogout] = useAuthLogOutMutation();
   const handleLogout = () => {
-    disconnectSocket();
     authLogout();
+    disconnectSocket();
     dispatch(logOut());
 
     router.push('/login');
