@@ -27,6 +27,7 @@ import { cn } from '@/lib/utils';
 import CreateLeadWithAuthModal from '@/components/main/home/modal/CreateLeadWithAuthModal';
 import { useSelector } from 'react-redux';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import { showErrorToast } from '@/components/common/toasts';
 
 export default function MyLeads() {
   const [selectedService, setSelectedService] = useState(null);
@@ -161,18 +162,11 @@ export default function MyLeads() {
     setServiceWiseQuestions(singleServicewiseQuestionsData?.data || []);
   }, [isQuestionsLoading, singleServicewiseQuestionsData]);
 
-  const { data: allZipCodes, isLoading: isZipCodeLoading } =
-    useGetZipCodeListQuery();
-
-  const filteredZipCodes = allZipCodes?.data?.filter((item) =>
-    item?.zipcode?.toLowerCase().includes(location?.toLowerCase())
-  );
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
     setSelectedService(service);
-    if (!service || !service?._id || !location) {
+    if (!service || !service?._id) {
       showErrorToast('Please select a service and location.');
       return;
     }
@@ -223,9 +217,9 @@ export default function MyLeads() {
       <div className="rounded-xl p-4">
         <div className="flex items-center justify-between gap-4">
           <h2 className="text-xl font-semibold">My Cases</h2>
-          <form className="" onSubmit={handleSubmit}>
-            <div className="hero-search-area flex flex-wrap md:flex-nowrap gap-2 items-center w-full">
-              <div className="tla-form-group w-full lg:w-5/12">
+          <form className="w-full md:w-1/2" onSubmit={handleSubmit}>
+            <div className="hero-search-area flex flex-wrap md:flex-nowrap gap-2 items-center w-full justify-end">
+              <div className="tla-form-group w-full lg:w-1/2">
                 <Combobox value={service} onChange={(val) => setService(val)}>
                   <div className="relative">
                     <ComboboxInput
@@ -271,69 +265,6 @@ export default function MyLeads() {
                                   })}
                                 >
                                   {item.name}
-                                </span>
-                                {selected && (
-                                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
-                                    <Check className="h-4 w-4" />
-                                  </span>
-                                )}
-                              </>
-                            )}
-                          </ComboboxOption>
-                        ))}
-                      </ComboboxOptions>
-                    )}
-                  </div>
-                </Combobox>
-              </div>
-              <div className="tla-form-group w-full lg:w-5/12">
-                <Combobox value={location} onChange={setLocation}>
-                  <div className="relative">
-                    <ComboboxInput
-                      className="border border-gray-300 rounded-md w-full h-[44px] px-4 text-[14px]"
-                      onChange={(e) => {
-                        // const query = e.target.value.toLowerCase();
-                        // const filtered = allZipCodes?.data?.filter((z) =>
-                        //   z.zipcode.toLowerCase().includes(query)
-                        // );
-                        // setFilteredZipCodes(
-                        //   query ? filtered : allZipCodes?.data
-                        // );
-                        setLocation(e.target.value);
-                      }}
-                      displayValue={(val) =>
-                        allZipCodes?.data?.find((z) => z._id === val)
-                          ?.zipcode || val
-                      }
-                      placeholder="Search a location..."
-                      // onFocus={() =>
-                      //   setFilteredZipCodes(allZipCodes?.data ?? [])
-                      // }
-                    />
-                    {filteredZipCodes?.length > 0 && (
-                      <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {filteredZipCodes?.slice(0, 10)?.map((item) => (
-                          <ComboboxOption
-                            key={item._id}
-                            value={item._id}
-                            className={({ active }) =>
-                              cn(
-                                'cursor-pointer select-none relative py-2 px-6',
-                                active
-                                  ? 'bg-blue-100 text-black'
-                                  : 'text-gray-900'
-                              )
-                            }
-                          >
-                            {({ selected }) => (
-                              <>
-                                <span
-                                  className={cn('block truncate', {
-                                    'font-medium': selected,
-                                    'font-normal': !selected,
-                                  })}
-                                >
-                                  {item?.zipcode}
                                 </span>
                                 {selected && (
                                   <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
@@ -395,9 +326,7 @@ export default function MyLeads() {
         selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
         countryId={defaultCountry?._id}
         serviceId={selectedService?._id}
-        locationId={currentUser?.data?.profile?.zipCode}
         isQuestionsLoading={isQuestionsLoading}
-        //allMyLeads={allMyLeads?.data}
       />
     </>
   );
