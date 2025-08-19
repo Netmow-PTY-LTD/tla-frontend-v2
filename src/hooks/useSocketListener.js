@@ -42,31 +42,6 @@ export const useResponseRoomUser = (userId, onUpdate) => {
 };
 
 
-//  ------------------ user status event listener ------------
-
-// export const useUserStatus = (userId, onStatusChange) => {
-//   useEffect(() => {
-//     const socket = getSocket(userId);
-
-//     socket.on("userOnline", ({ userId }) =>
-//       onStatusChange(userId, "online"),
-//       console.log('test online ')
-//     );
-//     socket.on("userOffline", ({ userId }) =>
-//       onStatusChange(userId, "offline"),
-//     console.log('test offline ')
-//     );
-
-//     return () => {
-//       socket.off("userOnline");
-//       socket.off("userOffline");
-//     };
-//   }, [userId, onStatusChange]);
-// };
-
-
-
-
 
 
 
