@@ -38,7 +38,7 @@ export default function ChatBox({ response }) {
   const [message, setMessage] = useState('');
   const [liveMessages, setLiveMessages] = useState([]);
   const socket = getSocket(userId);
-
+  console.log('userId', userId)
   // ✅ Fetch old messages
   const { data: history = [], isLoading } = useGetChatHistoryQuery(responseId, {
     skip: !responseId,
@@ -49,7 +49,7 @@ export default function ChatBox({ response }) {
     setLiveMessages(history?.data || []);
   }, [history]);
 
-  console.log('messsage ==>', liveMessages);
+  // console.log('messsage ==>', liveMessages);
 
   // ✅ Join room and listen for events (including unread messages)
   useEffect(() => {
@@ -76,9 +76,9 @@ export default function ChatBox({ response }) {
         prev.map((msg) =>
           msg._id === messageId
             ? {
-                ...msg,
-                readBy: [...new Set([...(msg.readBy || []), readerId])],
-              }
+              ...msg,
+              readBy: [...new Set([...(msg.readBy || []), readerId])],
+            }
             : msg
         )
       );
@@ -149,9 +149,8 @@ export default function ChatBox({ response }) {
             return (
               <div
                 key={m._id || i}
-                className={`flex items-center gap-2 ${
-                  isCurrentUser ? 'flex-row-reverse' : 'justify-start'
-                }`}
+                className={`flex items-center gap-2 ${isCurrentUser ? 'flex-row-reverse' : 'justify-start'
+                  }`}
               >
                 <Image
                   src={m?.from?.profile?.profilePicture || userDummyImage}
@@ -162,30 +161,27 @@ export default function ChatBox({ response }) {
                 />
                 <div className="flex flex-col items-end gap-0.5">
                   <p
-                    className={`text-[11px] ${
-                      isCurrentUser ? 'text-right' : ''
-                    }`}
+                    className={`text-[11px] ${isCurrentUser ? 'text-right' : ''
+                      }`}
                   >
                     {dayjs(m.createdAt).locale('en-short').fromNow()}
                   </p>
                   <div
-                    className={`rounded p-2 ${
-                      isCurrentUser
+                    className={`rounded p-2 ${isCurrentUser
                         ? 'bg-[var(--secondary-color)] text-right'
                         : 'bg-gray-300 text-left'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center justify-between gap-4">
                       <p
-                        className={`text-xs font-semibold ${
-                          isCurrentUser ? 'text-white' : ''
-                        }`}
+                        className={`text-xs font-semibold ${isCurrentUser ? 'text-white' : ''
+                          }`}
                       >
                         {isCurrentUser
                           ? 'You'
                           : typeof m.from === 'object'
-                          ? m.from.profile?.name || m.from._id
-                          : m.from}
+                            ? m.from.profile?.name || m.from._id
+                            : m.from}
                       </p>
                     </div>
                     <div
