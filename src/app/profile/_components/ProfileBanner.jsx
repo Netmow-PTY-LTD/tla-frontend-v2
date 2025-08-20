@@ -10,8 +10,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
-export default function ProfileBanner({ data }) {
-  console.log('data', data);
+export default function ProfileBanner({ data, token, currentUser }) {
   return (
     <section
       className="pt-[50px] md:pt-[100px] pb-[40px] lg:pb-0"
@@ -58,29 +57,36 @@ export default function ProfileBanner({ data }) {
                 <span>
                   {(() => {
                     const email = data?.email;
-                    if (!email) return 't*******@e********.com';
+                    if (!email) return '';
 
-                    const [user, domain] = email.split('@');
-                    const maskedUser =
-                      user[0] + '*'.repeat(Math.max(user.length - 1, 0));
-                    const maskedDomain =
-                      domain[0] +
-                      '*'.repeat(Math.max(domain.indexOf('.'), 0)) +
-                      domain.slice(domain.indexOf('.'));
+                    const shouldMask = !(token && currentUser);
 
-                    return `${maskedUser}@${maskedDomain}`;
+                    if (shouldMask) {
+                      const [user, domain] = email.split('@');
+                      const maskedUser =
+                        user[0] + '*'.repeat(Math.max(user.length - 1, 0));
+                      const maskedDomain =
+                        domain[0] +
+                        '*'.repeat(Math.max(domain.indexOf('.'), 0)) +
+                        domain.slice(domain.indexOf('.'));
+                      return `${maskedUser}@${maskedDomain}`;
+                    }
+
+                    return email;
                   })()}
                 </span>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Info className="w-4 h-4" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Buy credit to send email</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                {!(token && currentUser) && (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Info className="w-4 h-4" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Buy credit to send email</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
               </div>
               <div className="text-white text-[16px] font-semibold flex items-center gap-4">
                 <div className="w-[40px] h-[40px] flex items-center justify-center border border-1 border-white  rounded-full">
@@ -100,26 +106,31 @@ export default function ProfileBanner({ data }) {
                 </div>
 
                 <span>
-                  {' '}
                   {(() => {
                     const phone = data?.phone;
-                    return phone
+                    if (!phone) return '';
+
+                    const shouldMask = !(token && currentUser);
+
+                    return shouldMask
                       ? `${phone.slice(0, 3)}${'*'.repeat(
                           Math.max(0, phone.length - 3)
                         )}`
-                      : '';
+                      : phone;
                   })()}
                 </span>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Info className="w-4 h-4" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Buy credit to call</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                {!(token && currentUser) && (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Info className="w-4 h-4" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Buy credit to call</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
               </div>
               <Link
                 href="/lawyer/settings/profile"
@@ -166,8 +177,9 @@ export default function ProfileBanner({ data }) {
 
             <div className="flex flex-wrap items-center gap-4 mt-8">
               <Link
-                href="/lawyer/settings/profile"
+                href="#"
                 className="text-white text-base font-medium flex items-center gap-2 bg-[#FF8602] rounded-[6px] py-[12px] px-[63px] hover:bg-[#e07502] transition-all duration-300"
+                onClick={(e) => e.preventDefault()}
               >
                 <span>Download vCard</span>
                 <svg
@@ -196,8 +208,9 @@ export default function ProfileBanner({ data }) {
                 </svg>
               </Link>
               <Link
-                href="/lawyer/settings/profile"
+                href="#"
                 className="text-white text-base font-medium flex items-center gap-2 border border-1 border-[#FF8602] rounded-[6px] py-[12px] px-[63px] hover:bg-[#e07502] transition-all duration-300"
+                onClick={(e) => e.preventDefault()}
               >
                 <span>Print</span>
                 <svg
