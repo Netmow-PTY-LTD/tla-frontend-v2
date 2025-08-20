@@ -6,6 +6,7 @@ import DashboardHeader from '@/components/dashboard/common/DashboardHeader';
 import DashboardFooter from '@/components/dashboard/common/DashboardFooter';
 import { usePathname, useRouter } from 'next/navigation';
 import Sidebar from '@/components/dashboard/lawyer/layout/SellerSideNav';
+import GlobalSocketListener from '@/hooks/GlobalSocketListener';
 
 
 export default function SellerDashboardLayout({ children }) {
@@ -55,7 +56,7 @@ export default function SellerDashboardLayout({ children }) {
           {/* <DashboardFooter /> */}
         </div>
       </div>
-      
+      <GlobalSocketListener/>
     </>
   );
 }

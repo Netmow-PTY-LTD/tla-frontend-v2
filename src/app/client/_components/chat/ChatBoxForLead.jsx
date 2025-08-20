@@ -32,10 +32,11 @@ dayjs.locale('en-short', {
 });
 
 export default function ChatBoxForLead({ response }) {
-    const responseId = response?._id;
+  const responseId = response?._id;
+ 
   const currentUser = useSelector(selectCurrentUser);
   const userId = currentUser?._id;
-
+  const toUserId = response?.responseBy?.user?._id  // this id of lawyer 
   const [message, setMessage] = useState('');
   const [liveMessages, setLiveMessages] = useState([]);
 
@@ -100,8 +101,9 @@ export default function ChatBoxForLead({ response }) {
   // ✅ Send message
   const sendMessage = () => {
     const socket = socketRef.current;
+      if (!message.trim() || !socket || !toUserId) return;
     if (message.trim() && socket) {
-      socket.emit('message', { responseId, from: userId, message });
+      socket.emit('message', { responseId, from: userId, message, to:toUserId });
       setMessage('');
     }
   };
@@ -125,22 +127,22 @@ export default function ChatBoxForLead({ response }) {
 
 
 
-useEffect(() => {
-  if (!socketRef.current || !userId || !responseId) return;
+  useEffect(() => {
+    if (!socketRef.current || !userId || !responseId) return;
 
-  const unreadMessages = liveMessages.filter((m) => {
-    const senderId = typeof m.from === 'object' ? m.from._id : m.from;
-    return senderId !== userId && !m.readBy?.includes(userId);
-  });
-
-  unreadMessages.forEach((m) => {
-    socketRef.current.emit('message-read', {
-      responseId,
-      messageId: m._id,
-      userId,
+    const unreadMessages = liveMessages.filter((m) => {
+      const senderId = typeof m.from === 'object' ? m.from._id : m.from;
+      return senderId !== userId && !m.readBy?.includes(userId);
     });
-  });
-}, [liveMessages, responseId, userId]);
+
+    unreadMessages.forEach((m) => {
+      socketRef.current.emit('message-read', {
+        responseId,
+        messageId: m._id,
+        userId,
+      });
+    });
+  }, [liveMessages, responseId, userId]);
 
 
 
@@ -201,8 +203,8 @@ useEffect(() => {
                   </p>
                   <div
                     className={`rounded p-2 ${isCurrentUser
-                        ? 'bg-[var(--secondary-color)] text-right'
-                        : 'bg-gray-300 text-left'
+                      ? 'bg-[var(--secondary-color)] text-right'
+                      : 'bg-gray-300 text-left'
                       }`}
                   >
                     <div className="flex items-center justify-between gap-4">
