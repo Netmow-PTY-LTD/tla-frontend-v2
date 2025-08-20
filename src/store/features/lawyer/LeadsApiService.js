@@ -31,7 +31,7 @@ const leadsApiService = baseApi.injectEndpoints({
         method: 'GET',
         params: { page, limit },
       }),
-      providesTags: ['lead'],
+      providesTags: ['lead-my'],
     }),
     updateLead: builder.mutation({
       query: (data) => ({
@@ -39,7 +39,7 @@ const leadsApiService = baseApi.injectEndpoints({
         method: 'PATCH',
         body: data?.data
       }),
-      providesTags: ['lead','lead-list-admin','lead-list'],
+      providesTags: ['lead','lead-list-admin','lead-list','lead-my'],
     }),
     contactLawyer: builder.mutation({
       query: (data) => ({
