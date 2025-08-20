@@ -26,9 +26,7 @@ export default function BuyerDashboardLayout({ children }) {
     /^\/client\/dashboard\/my-cases\/[a-zA-Z0-9]+$/, // Matches /client/dashboard/my-cases/:id
   ];
 
-  const isNoScrollPage =
-    noScrollRoutes.includes(cleanPathname) ||
-    noScrollRoutePatterns.some((pattern) => pattern.test(cleanPathname));
+  const isNoScrollPage = noScrollRoutes.includes(cleanPathname);
 
   useEffect(() => {
     if (isNoScrollPage) {

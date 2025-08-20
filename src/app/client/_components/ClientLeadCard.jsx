@@ -46,8 +46,8 @@ const responsesLeads = [
 
 const ClientLeadCard = ({ user, isExpanded }) => {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
-  const [openLeadClosedModal, setOpenLeadClosedModal] = useState(false)
-  const [leadId, setLeadId] = useState(false)
+  const [openLeadClosedModal, setOpenLeadClosedModal] = useState(false);
+  const [leadId, setLeadId] = useState(false);
 
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])
@@ -184,8 +184,9 @@ const ClientLeadCard = ({ user, isExpanded }) => {
         <div className="p-3 text-center">
           {user?.serviceId?.name && (
             <h3
-              className={`font-medium ${isExpanded ? 'heading-md' : 'text-[16px]'
-                }`}
+              className={`font-medium ${
+                isExpanded ? 'heading-md' : 'text-[16px]'
+              }`}
             >
               {user?.serviceId?.name}
             </h3>
@@ -196,7 +197,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
         </div>
         <div className="p-3 flex justify-center items-center">
           <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center">
-            <SearchCheck className="w-8 h-8 text-green-400" />
+            <SearchCheck className="w-8 h-8 text-[var(--primary-color)]" />
           </div>
         </div>
         {/* <div className="p-3">
@@ -256,49 +257,51 @@ const ClientLeadCard = ({ user, isExpanded }) => {
 
         {/* Footer Section */}
 
-        {
-          user?.status === "closed" ? <div className='text-center'>
+        {user?.status === 'closed' ? (
+          <div className="text-center">
             <span className="px-3 py-1 text-sm font-medium text-white bg-red-600 rounded-full">
               Closed
             </span>
-          </div> :
-            <>
-
-
-              <div className="flex flex-col sm:flex-row justify-center items-center p-3 gap-3 sm:gap-0">
-                <Link
-                  className={`px-4 py-2.5 w-full sm:w-auto rounded-lg ${isExpanded ? 'heading-base' : 'text-[12px] '
-                    } font-medium bg-[var(--color-special)] text-white hover:bg-gray-950 transition`}
-                  href={`/client/dashboard/my-cases/${user?._id}`}
-                >
-                  View Lawyers
-                </Link>
-              </div>
-              {/* <div className="p-3 flex justify-center items-center">
+          </div>
+        ) : (
+          <>
+            <div className="flex flex-col sm:flex-row justify-center items-center p-3 gap-3 sm:gap-0">
+              <Link
+                className={`px-4 py-2.5 w-full sm:w-auto rounded-lg ${
+                  isExpanded ? 'heading-base' : 'text-[12px] '
+                } font-medium bg-[var(--color-special)] text-white hover:bg-gray-950 transition`}
+                href={`/client/dashboard/my-cases/${user?._id}`}
+              >
+                View Lawyers
+              </Link>
+            </div>
+            {/* <div className="p-3 flex justify-center items-center">
                  <RespondersOnline user={user} />
                  </div> */}
-              <div className="flex justify-center items-center p-3 gap-3">
-                <button onClick={() => {
-                  setLeadId(user?._id)
-                  setOpenLeadClosedModal(true)
-
-                }} className="text-blue-500">
-                  Close case
-                </button>
-                <span>|</span>
-                <Link href="/#" className="text-blue-500">
-                  I hired someone
-                </Link>
-              </div>
-            </>
-
-
-        }
+            <div className="flex justify-center items-center p-3 gap-3">
+              <button
+                onClick={() => {
+                  setLeadId(user?._id);
+                  setOpenLeadClosedModal(true);
+                }}
+                className="text-blue-500"
+              >
+                Close case
+              </button>
+              <span>|</span>
+              <Link href="/#" className="text-blue-500">
+                I hired someone
+              </Link>
+            </div>
+          </>
+        )}
       </Card>
 
-      <LeadCloseModal leadId={leadId} onOpenChange={setOpenLeadClosedModal} open={openLeadClosedModal} />
-
-
+      <LeadCloseModal
+        leadId={leadId}
+        onOpenChange={setOpenLeadClosedModal}
+        open={openLeadClosedModal}
+      />
     </>
   );
 };

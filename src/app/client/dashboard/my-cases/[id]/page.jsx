@@ -139,11 +139,19 @@ export default function LeadDetailsPage() {
 
   useEffect(() => {
     if (lawyersData && lawyersData?.data?.length > 0) {
-      setLawyers(lawyersData?.data);
+      setLawyers((prev) => {
+        if (page === 1) {
+          // first page → replace
+          return lawyersData.data;
+        } else {
+          // next pages → append
+          return [...prev, ...lawyersData.data];
+        }
+      });
       setTotalPages(lawyersData?.pagination?.totalPage);
       setTotalLawyersCount(lawyersData?.pagination?.total);
     }
-  }, [lawyersData, lawyersData?.data]);
+  }, [lawyersData, page]);
 
   const lawyerIds = lawyersData?.data?.map((lawyer) => lawyer?._id) || [];
 
@@ -152,21 +160,34 @@ export default function LeadDetailsPage() {
     setLawyerOnlineStatus((prev) => ({ ...prev, [userId]: isOnline }));
   });
 
-  // Infinite scroll intersection observer
-  const loader = useRef(null);
-  useEffect(() => {
-    const scrollTarget = document.getElementById('scroll-target-for-data');
-    if (!scrollTarget) return;
+  //infinite scrolling
 
+  const loader = useRef(null);
+
+  useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
+
+        // only trigger when visible AND not already fetching
         if (entry.isIntersecting && !isFetching) {
-          if (totalPages && page >= totalPages) return;
-          setPage((prevPage) => prevPage + 1);
+          if (totalPages && page < totalPages) {
+            // use functional update to avoid stale closure
+            // setPage((prevPage) => {
+            //   if (prevPage < totalPages) {
+            //     return prevPage + 1;
+            //   }
+            //   return prevPage;
+            // });
+            setPage((prevPage) => prevPage + 1);
+          }
         }
       },
-      { root: scrollTarget, threshold: 1 }
+      {
+        root: null, // viewport (body scroll)
+        threshold: 1, // trigger only when fully visible
+        rootMargin: '0px 0px -50px 0px', // margin around viewport
+      }
     );
 
     const currentLoader = loader.current;
@@ -175,7 +196,9 @@ export default function LeadDetailsPage() {
     return () => {
       if (currentLoader) observer.unobserve(currentLoader);
     };
-  }, [page, isFetching, totalPages]);
+  }, [isFetching, totalPages]); // 👈 notice: no `page` dep here
+
+  console.log({ page, isFetching, totalPages });
 
   const handleShowLeadResponseDetails = (response) => {
     setSelectedLeadResponse(response);
@@ -194,7 +217,7 @@ export default function LeadDetailsPage() {
     <div className="lead-board-wraps">
       <div className="lead-board-containers">
         <div className={`w-full`}>
-          <div className="rounded-lg p-5">
+          <div className="rounded-lg p-5 sticky top-[100px]">
             <div className="max-w-full">
               <div className="flex items-center justify-between">
                 <Link
@@ -206,7 +229,7 @@ export default function LeadDetailsPage() {
                 </Link>
               </div>
               <div className="flex justify-center">
-                <div className="p-3 mt-3 rounded-lg">
+                <div className="">
                   <h5 className="font-semibold mb-2 text-2xl">
                     {singleLead?.data?.serviceId?.name ?? ''}
                   </h5>
@@ -215,7 +238,7 @@ export default function LeadDetailsPage() {
             </div>
           </div>
         </div>
-        <div className={`w-full mt-5`}>
+        <div className={`w-full`}>
           <div className="px-4 max-w-[1000px] mx-auto">
             <div className="flex w-full flex-col gap-6">
               <Tabs defaultValue="matched-lawyers">
@@ -224,13 +247,13 @@ export default function LeadDetailsPage() {
                     value="matched-lawyers"
                     className="border border-gray-200"
                   >
-                    Matched Lawyers
+                    Matched Lawyers ({totalLawyersCount ?? 0})
                   </TabsTrigger>
                   <TabsTrigger
                     value="responded-lawyers"
                     className="border border-gray-300 shadow-none"
                   >
-                    Lawyers who responded
+                    Responses ({leadWiseResponses?.data?.length ?? 0})
                   </TabsTrigger>
                 </TabsList>
                 <TabsContent value="responded-lawyers">
@@ -274,7 +297,7 @@ export default function LeadDetailsPage() {
                 </TabsContent>
                 <TabsContent value="matched-lawyers">
                   <div className="my-3">
-                    <div className="flex justify-between mb-8 gap-4">
+                    <div className="flex justify-between mb-5 gap-4 border-b border-gray-400 pt-2 pb-5">
                       <div className="flex gap-2 items-center">
                         <Select>
                           <SelectTrigger className="w-[200px] bg-white">
@@ -336,7 +359,10 @@ export default function LeadDetailsPage() {
                         Currently there is no matched lawyer
                       </p>
                     ) : (
-                      <div className="flex flex-col gap-5 max-h-[60vh] overflow-y-auto pr-3">
+                      <div
+                        className="flex flex-col gap-5"
+                        id="scroll-target-for-data"
+                      >
                         {lawyers?.map((lawyer, i) => (
                           <LawyerCard
                             key={i}
@@ -348,13 +374,14 @@ export default function LeadDetailsPage() {
                         ))}
 
                         {/* Only show loader when fetching AND there are already some lawyers */}
-                        {lawyers?.length > 0 && (
-                          <div ref={loader}>
-                            {isFetching && (
-                              <Loader className="w-5 h-5 animate-spin text-gray-500 mx-auto" />
-                            )}
-                          </div>
-                        )}
+                        <div
+                          ref={loader}
+                          className="h-10 flex items-center justify-center"
+                        >
+                          {isFetching && (
+                            <Loader className="w-5 h-5 animate-spin text-gray-500 mx-auto" />
+                          )}
+                        </div>
                       </div>
                     )}
                   </div>
