@@ -13,6 +13,8 @@ import Facebook from '@/components/icon/Facebook';
 import { Loader } from 'lucide-react';
 import ProfileServices from '../_components/ProfileServices';
 import Preloader from '@/components/Preloader';
+import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import { useSelector } from 'react-redux';
 
 const DynamicProfilePage = () => {
   const params = useParams();
@@ -31,6 +33,13 @@ const DynamicProfilePage = () => {
     return match?.[1] || null;
   }
 
+  const token = useSelector((state) => state.auth.token);
+
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    useAuthUserInfoQuery(undefined, { skip: !token });
+
+  //console.log('currentUser', currentUser);
+
   if (isUserInfoLoading) {
     return <Preloader />;
   }
@@ -38,7 +47,11 @@ const DynamicProfilePage = () => {
   return (
     <MainLayout>
       {' '}
-      <ProfileBanner data={userInfo?.data} />
+      <ProfileBanner
+        data={userInfo?.data}
+        currentUser={currentUser}
+        token={token}
+      />
       <div className="main-content pt-20">
         <div className="container">
           <div className="flex flex-wrap">
@@ -142,6 +155,27 @@ const DynamicProfilePage = () => {
             </div>
             <div className="w-full lg:w-1/3 pl-8 flex gap-10 items-start">
               <div className="related-areas relative">
+                {userInfo?.data?.languages?.length > 0 && (
+                  <>
+                    <h4 className="font-semibold mb-4">Languages</h4>
+                    <div className="flex flex-wrap mb-4">
+                      {Array.isArray(userInfo?.data?.languages) &&
+                      userInfo?.data?.languages?.length > 0 ? (
+                        userInfo?.data?.languages?.map((language, index) => (
+                          <div key={language + index}>
+                            <span className="py-2 px-4 mr-2 mb-2 rounded-lg inline-block bg-[#095761] text-white">
+                              {language}
+                            </span>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-gray-500 italic">
+                          No languages available.
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
                 {userInfo?.data?.services?.length > 0 && (
                   <>
                     <h4 className="font-semibold mb-4">
