@@ -7,7 +7,6 @@ import BuyerDashboardHeader from './_components/BuyerDashboardHeader';
 import { usePathname } from 'next/navigation';
 import ClientSideNav from './_components/ClientSideNav';
 
-
 export default function BuyerDashboardLayout({ children }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggleSidebar = () => setIsCollapsed((prev) => !prev);
@@ -61,7 +60,6 @@ export default function BuyerDashboardLayout({ children }) {
           </div>
         </div>
       </div>
-   
     </>
   );
 }
