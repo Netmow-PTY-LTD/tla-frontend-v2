@@ -7,6 +7,15 @@ import LeadsRight from '@/app/lawyer/dashboard/_component/LeadsRight';
 import ResponseSkeleton from '@/app/lawyer/dashboard/my-responses/_components/ResponseSkeleton';
 import LeadCard from '@/components/dashboard/lawyer/components/LeadCard';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { data, userDummyImage } from '@/data/data';
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
@@ -198,7 +207,7 @@ export default function LeadDetailsPage() {
               </div>
               <div className="flex justify-center">
                 <div className="p-3 mt-3 rounded-lg">
-                  <h5 className="font-medium mb-2 text-xl">
+                  <h5 className="font-semibold mb-2 text-2xl">
                     {singleLead?.data?.serviceId?.name ?? ''}
                   </h5>
                 </div>
@@ -207,12 +216,12 @@ export default function LeadDetailsPage() {
           </div>
         </div>
         <div className={`w-full mt-5`}>
-          <div className="px-4 max-w-[900px] mx-auto">
+          <div className="px-4 max-w-[1000px] mx-auto">
             <div className="flex w-full flex-col gap-6">
-              <Tabs value={tabValue} onValueChange={setTabValue}>
+              <Tabs defaultValue="matched-lawyers">
                 <TabsList className="w-full justify-center gap-2 pb-4 border-b border-gray-200">
                   <TabsTrigger
-                    value="find-lawyers"
+                    value="matched-lawyers"
                     className="border border-gray-200"
                   >
                     Matched Lawyers
@@ -263,21 +272,71 @@ export default function LeadDetailsPage() {
                     </>
                   )}
                 </TabsContent>
-                <TabsContent value="find-lawyers">
-                  <div className="my-3 max-h-[66vh] overflow-y-auto pr-3">
-                    <h4 className="font-medium heading-lg mb-5 text-center">
-                      Total {totalLawyersCount}{' '}
-                      {totalLawyersCount === 1
-                        ? 'matched lawyer'
-                        : 'matched lawyers'}
-                    </h4>
+                <TabsContent value="matched-lawyers">
+                  <div className="my-3">
+                    <div className="flex justify-between mb-8 gap-4">
+                      <div className="flex gap-2 items-center">
+                        <Select>
+                          <SelectTrigger className="w-[200px] bg-white">
+                            <SelectValue placeholder="All Ratings" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectLabel>All Ratings</SelectLabel>
+                              <SelectItem value="5">5 stars</SelectItem>
+                              <SelectItem value="4">4 stars</SelectItem>
+                              <SelectItem value="3">3 stars</SelectItem>
+                              <SelectItem value="2">2 stars</SelectItem>
+                              <SelectItem value="1">1 star</SelectItem>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                        <Select>
+                          <SelectTrigger className="w-[200px] bg-white">
+                            <SelectValue placeholder="All Response Times" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectLabel>All Ratings</SelectLabel>
+                              <SelectItem value="5">5 stars</SelectItem>
+                              <SelectItem value="4">4 stars</SelectItem>
+                              <SelectItem value="3">3 stars</SelectItem>
+                              <SelectItem value="2">2 stars</SelectItem>
+                              <SelectItem value="1">1 star</SelectItem>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                        <h4 className="font-medium heading-md text-center">
+                          Total {totalLawyersCount}{' '}
+                          {totalLawyersCount === 1 ? 'match' : 'matches'}
+                        </h4>
+                      </div>
+                      <Select>
+                        <SelectTrigger className="w-[200px] bg-white">
+                          <SelectValue placeholder="Sort By: Best Match" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem value="best-match">
+                              Sort By: Best Match
+                            </SelectItem>
+                            <SelectItem value="popularity">
+                              Sort By: popularity
+                            </SelectItem>
+                            <SelectItem value="order">
+                              Sort By: order
+                            </SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </div>
 
                     {!isFetching && totalLawyersCount === 0 ? (
                       <p className="text-center text-gray-500 text-sm">
                         Currently there is no matched lawyer
                       </p>
                     ) : (
-                      <div className="flex flex-col gap-5">
+                      <div className="flex flex-col gap-5 max-h-[60vh] overflow-y-auto pr-3">
                         {lawyers?.map((lawyer, i) => (
                           <LawyerCard
                             key={i}
