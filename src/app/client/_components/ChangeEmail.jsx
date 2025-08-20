@@ -20,22 +20,29 @@ import { toast } from "sonner";
 export default function ChangeEmail({ open, setOpen }) {
     const router = useRouter();
     const dispatch = useDispatch()
-    const currentUser = useSelector(selectCurrentUser);
-    const userId = currentUser?._id;
+    const userinfo = useSelector(selectCurrentUser);
+    const userId = userinfo?._id;
 
     const [step, setStep] = useState(1);
     const [otp, setOtp] = useState("");
     const [newEmail, setNewEmail] = useState("");
-    const [email, setEmail] = useState(currentUser?.email || ""); // current email
+    const [email, setEmail] = useState(userinfo?.email || ""); // current email
 
 
 
 
-    console.log('currentUser',currentUser)
+    console.log('currentUser1',userinfo)
     // Keep email state in sync if Redux updates (like after login)
     useEffect(() => {
-        setEmail(currentUser?.email || "");
-    }, [currentUser?.email]);
+        console.log('currentUser2',userinfo)
+        if(userinfo){
+
+            setEmail(userinfo?.email || "");
+        }
+    }, [userinfo]);
+
+     console.log('userinfo?.email ',userinfo?.email )
+     console.log('currentUser2',userinfo)
 
 
 

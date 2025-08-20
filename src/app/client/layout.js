@@ -6,6 +6,7 @@ import '@/styles/dashboard.css';
 import BuyerDashboardHeader from './_components/BuyerDashboardHeader';
 import { usePathname } from 'next/navigation';
 import ClientSideNav from './_components/ClientSideNav';
+import GlobalSocketListener from '@/hooks/GlobalSocketListener';
 
 export default function BuyerDashboardLayout({ children }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -60,6 +61,7 @@ export default function BuyerDashboardLayout({ children }) {
           </div>
         </div>
       </div>
+      <GlobalSocketListener />
     </>
   );
 }
