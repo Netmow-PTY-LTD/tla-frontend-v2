@@ -8,6 +8,7 @@ import {
   CircleAlert,
   List,
   Loader,
+  Star,
   Zap,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -35,6 +36,11 @@ const LawyerCard = ({
       )
       ?.join('') + ' Lawyer';
 
+  const getTruncatedText = (text, maxLength) => {
+    if (!text || typeof text !== 'string') return '';
+    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+  };
+
   const [requestLawyer, { isLoading }] = useRequestLawyerMutation();
 
   const handleRequest = async (message) => {
@@ -61,7 +67,7 @@ const LawyerCard = ({
   return (
    <>
     <Card className={`w-full max-w-full mx-auto flex flex-col p-5`}>
-      <div className="flex justify-between gap-4">
+      <div className="flex justify-between gap-5">
         <div className="flex-shrink-0">
           <figure className="max-w-[180px] max-h-[180px] overflow-hidden flex-shrink-0 border rounded-lg">
             <Image
@@ -74,9 +80,9 @@ const LawyerCard = ({
             />
           </figure>
         </div>
-        <div className="flex-1 border-r border-[#F3F3F3] border-opacity-65">
-          <div className="flex flex-wrap sm:flex-nowrap items-start justify-between gap-3">
-            <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 ">
+        <div className="flex-1 border-r border-[#F3F3F3] border-opacity-65 pr-4">
+          <div className="w-full">
+            <div className="flex flex-wrap sm:flex-nowrap justify-between items-center gap-2 ">
               <div className="flex w-full">
                 <div className="flex items-center gap-2">
                   {badge && badge?.toLowerCase() !== 'basic lawyer' && (
@@ -113,6 +119,16 @@ const LawyerCard = ({
                   </div>
                 </div>
               </div>
+              <div className="flex items-center gap-1">
+                <div className="flex gap-1">
+                  <Star className="w-4 h-4 text-yellow-500" />
+                  <Star className="w-4 h-4 text-yellow-500" />
+                  <Star className="w-4 h-4 text-yellow-500" />
+                  <Star className="w-4 h-4 text-yellow-500" />
+                  <Star className="w-4 h-4 text-yellow-500" />
+                </div>
+                <span className="text-sm">(1)</span>
+              </div>
             </div>
           </div>
           {lawyer?.profile?.serviceIds?.length > 0 && (
@@ -129,10 +145,29 @@ const LawyerCard = ({
           )}
 
           {lawyer?.profile?.bio && lawyer?.profile?.bio !== '' && (
-            <p className="text-[#6e6e6e] mt-[10px]">{lawyer?.profile?.bio}</p>
+            <p
+              className="text-[#6e6e6e] text-[13px] mt-[10px]"
+              dangerouslySetInnerHTML={{
+                __html: getTruncatedText(lawyer?.profile?.bio, 200),
+              }}
+            ></p>
           )}
+          <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg flex justify-between gap-4">
+            <div className="flex-shrink-0">
+              <h4 className={`font-medium mb-1 text-[16px] text-gray-500`}>
+                Me
+              </h4>
+              <p className={`text-[var(--color-black)] font-medium text-sm`}>
+                You viewed this profile.
+              </p>
+            </div>
+            <div className="flex-shrink-0 text-sm text-gray-400">
+              19 Aug, 10:39
+            </div>
+          </div>
           <Link
             href={`/profile/${lawyer?.profile?.slug}`}
+            target="_blank"
             className="text-blue-500 text-[14px] font-medium mt-2 flex items-center gap-2"
           >
             <span>View Profile</span>
