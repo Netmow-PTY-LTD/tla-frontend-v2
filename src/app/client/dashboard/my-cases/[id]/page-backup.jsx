@@ -182,11 +182,11 @@ export default function LeadDetailsPage() {
   }
 
   return (
-    <div className="lead-board-wraps">
-      <div className="lead-board-containers">
-        <div className={`w-full`}>
-          <div className="rounded-lg p-5">
-            <div className="max-w-full">
+    <div className="lead-board-wrap">
+      <div className="lead-board-container">
+        <div className={`${isMobile ? 'column-6' : 'left-column-7'}`}>
+          <div className="column-wrap-left bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
+            <div className="max-w-[600px]">
               <div className="flex items-center justify-between">
                 <Link
                   className="flex py-2 items-center gap-2"
@@ -196,32 +196,156 @@ export default function LeadDetailsPage() {
                   <MoveLeft /> <span>Back to my cases</span>
                 </Link>
               </div>
-              <div className="flex justify-center">
-                <div className="p-3 mt-3 rounded-lg">
-                  <h5 className="font-medium mb-2 text-xl">
-                    {singleLead?.data?.serviceId?.name ?? ''}
-                  </h5>
+              <div className="mt-3">
+                <div className="flex flex-col items-start gap-4 ">
+                  <figure className="w-20 h-20 overflow-hidden rounded-full border border-[#DCE2EA]">
+                    <Image
+                      src={
+                        singleLead?.data?.userProfileId?.profilePicture ??
+                        userDummyImage
+                      }
+                      alt={singleLead?.data?.userProfileId?.name ?? ''}
+                      width={80}
+                      height={80}
+                      priority
+                      className="w-full h-full rounded-full object-cover"
+                    />
+                  </figure>
+                  <div>
+                    <h2 className="font-medium heading-lg">
+                      {singleLead?.data?.userProfileId?.name ?? ''}
+                    </h2>
+                    <p className="text-gray-500 mt-2">
+                      {singleLead?.data?.userProfileId?.address ?? ''}
+                    </p>
+                  </div>
                 </div>
+                <hr className="my-5 w-full" />
+                <div className="mb-4">
+                  <div className="flex items-center gap-2 admin-text font-medium">
+                    <PhoneOutgoing className="w-4 h-4" />{' '}
+                    <span>
+                      Phone: {''}
+                      {singleLead?.data?.userProfileId?.phone || ''}
+                    </span>{' '}
+                  </div>
+                  <div className=" flex items-center gap-2 mt-2 admin-text font-medium">
+                    <AtSign className="w-4 h-4" />{' '}
+                    <span>
+                      Email:{' '}
+                      {singleLead?.data?.userProfileId?.user?.email || ''}
+                    </span>{' '}
+                  </div>
+                </div>
+                <div className="mt-5">
+                  <div className="flex flex-wrap gap-2">
+                    {urgentOption?.option && (
+                      <TagButton
+                        text={urgentOption?.option}
+                        bgColor="#FF86021A"
+                        icon={<Zap className="text-[#FF8602] w-4 h-4" />}
+                      />
+                    )}
+                    {singleLead?.data?.additionalDetails &&
+                      singleLead?.data?.additionalDetails !== '' && (
+                        <TagButton
+                          text="Additional Details"
+                          bgColor="#004DA61A"
+                          icon={
+                            <BadgeCheck className="text-[#00C3C0] w-4 h-4" />
+                          }
+                        />
+                      )}
+
+                    {/* {singleLead?.data?.userProfileId?.user?.isPhoneVerified ===
+                      true && (
+                      <TagButton
+                        text="Verified Phone"
+                        bgColor="#00C3C01A"
+                        icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+                      />
+                    )} */}
+                  </div>
+                </div>
+                <hr className="w-full mt-5" />
+                <div className="mt-5">
+                  <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
+                    <h5 className="font-medium mb-2 heading-base">
+                      {singleLead?.data?.serviceId?.name ?? ''}
+                    </h5>
+                    <div className="admin-text text-[#34495E] ">
+                      {displayText}
+                      {shouldTruncate && (
+                        <button
+                          onClick={toggleReadMore}
+                          className="text-[var(--color-black)] font-semibold hover:underline focus:outline-none ml-2"
+                        >
+                          {isExpanded ? 'Read less' : 'Read more'}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-5">
+                  <div className=" my-3 ">
+                    <h4 className="font-medium heading-lg my-2 heading-md">
+                      Location
+                    </h4>
+                    <div className="mt-5">
+                      <img src={mapUrl} className="rounded-lg" alt="map" />
+                    </div>
+                  </div>
+                </div>
+                <hr className="w-full mt-5" />
+                {singleLead?.data?.leadAnswers?.length > 0 && (
+                  <div className="mt-5 space-y-3">
+                    <h4 className="font-medium heading-lg mb-5">
+                      Answered some of selected questions
+                    </h4>
+                    <div className="flex flex-col gap-5">
+                      {singleLead?.data?.leadAnswers?.map((leadAnswer, i) => (
+                        <div key={i}>
+                          <p className="text-[var(--color-special)] font-medium">
+                            {leadAnswer?.question}
+                          </p>
+                          <div className="text-[#34495E] mt-2">
+                            {leadAnswer?.options &&
+                              leadAnswer?.options
+                                .map(
+                                  (option) =>
+                                    option?.option
+                                      ?.replace(/_/g, ' ') // replace underscores with spaces
+                                      ?.replace(/\b\w/g, (char) =>
+                                        char.toUpperCase()
+                                      ) // capitalize each word
+                                )
+                                .join(', ')}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
-        <div className={`w-full mt-5`}>
-          <div className="px-4 max-w-[900px] mx-auto">
+        <div className={`${isMobile ? 'column-6' : 'right-column-5'}`}>
+          <div className="column-wrap-right px-4" id="scroll-target-for-data">
             <div className="flex w-full flex-col gap-6">
               <Tabs value={tabValue} onValueChange={setTabValue}>
-                <TabsList className="w-full justify-center gap-2 pb-4 border-b border-gray-200">
-                  <TabsTrigger
-                    value="find-lawyers"
-                    className="border border-gray-200"
-                  >
-                    Matched Lawyers
-                  </TabsTrigger>
+                <TabsList className="w-full justify-start gap-2 pb-4 border-b border-gray-200">
                   <TabsTrigger
                     value="responded-lawyers"
                     className="border border-gray-300 shadow-none"
                   >
                     Lawyers who responded
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="find-lawyers"
+                    className="border border-gray-200"
+                  >
+                    Find Lawyers
                   </TabsTrigger>
                 </TabsList>
                 <TabsContent value="responded-lawyers">
@@ -264,12 +388,10 @@ export default function LeadDetailsPage() {
                   )}
                 </TabsContent>
                 <TabsContent value="find-lawyers">
-                  <div className="my-3 max-h-[66vh] overflow-y-auto pr-3">
+                  <div className="my-3">
                     <h4 className="font-medium heading-lg mb-5 text-center">
-                      Total {totalLawyersCount}{' '}
-                      {totalLawyersCount === 1
-                        ? 'matched lawyer'
-                        : 'matched lawyers'}
+                      Total matched {totalLawyersCount}{' '}
+                      {totalLawyersCount === 1 ? 'lawyer' : 'lawyers'}
                     </h4>
 
                     {!isFetching && totalLawyersCount === 0 ? (
