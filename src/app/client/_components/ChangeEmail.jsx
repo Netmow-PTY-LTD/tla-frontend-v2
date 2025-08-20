@@ -21,19 +21,21 @@ export default function ChangeEmail({ open, setOpen }) {
     const router = useRouter();
     const dispatch = useDispatch()
     const currentUser = useSelector(selectCurrentUser);
-    const currentUserEmail = currentUser?.email;
     const userId = currentUser?._id;
 
     const [step, setStep] = useState(1);
     const [otp, setOtp] = useState("");
     const [newEmail, setNewEmail] = useState("");
-    const [email, setEmail] = useState(currentUserEmail); // current email
+    const [email, setEmail] = useState(currentUser?.email || ""); // current email
 
+
+
+
+    console.log('currentUser',currentUser)
+    // Keep email state in sync if Redux updates (like after login)
     useEffect(() => {
-        if (currentUserEmail) {
-            setEmail(currentUserEmail);
-        }
-    }, [currentUserEmail]);
+        setEmail(currentUser?.email || "");
+    }, [currentUser?.email]);
 
 
 
