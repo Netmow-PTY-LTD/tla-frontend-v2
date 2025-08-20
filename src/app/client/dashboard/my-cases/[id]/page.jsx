@@ -139,11 +139,19 @@ export default function LeadDetailsPage() {
 
   useEffect(() => {
     if (lawyersData && lawyersData?.data?.length > 0) {
-      setLawyers(lawyersData?.data);
+      setLawyers((prev) => {
+        if (page === 1) {
+          // first page → replace
+          return lawyersData.data;
+        } else {
+          // next pages → append
+          return [...prev, ...lawyersData.data];
+        }
+      });
       setTotalPages(lawyersData?.pagination?.totalPage);
       setTotalLawyersCount(lawyersData?.pagination?.total);
     }
-  }, [lawyersData, lawyersData?.data]);
+  }, [lawyersData, page]);
 
   const lawyerIds = lawyersData?.data?.map((lawyer) => lawyer?._id) || [];
 
@@ -152,21 +160,34 @@ export default function LeadDetailsPage() {
     setLawyerOnlineStatus((prev) => ({ ...prev, [userId]: isOnline }));
   });
 
-  // Infinite scroll intersection observer
-  const loader = useRef(null);
-  useEffect(() => {
-    const scrollTarget = document.getElementById('scroll-target-for-data');
-    if (!scrollTarget) return;
+  //infinite scrolling
 
+  const loader = useRef(null);
+
+  useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
+
+        // only trigger when visible AND not already fetching
         if (entry.isIntersecting && !isFetching) {
-          if (totalPages && page >= totalPages) return;
-          setPage((prevPage) => prevPage + 1);
+          if (totalPages && page < totalPages) {
+            // use functional update to avoid stale closure
+            // setPage((prevPage) => {
+            //   if (prevPage < totalPages) {
+            //     return prevPage + 1;
+            //   }
+            //   return prevPage;
+            // });
+            setPage((prevPage) => prevPage + 1);
+          }
         }
       },
-      { root: scrollTarget, threshold: 1 }
+      {
+        root: null, // viewport (body scroll)
+        threshold: 1, // trigger only when fully visible
+        rootMargin: '0px 0px -50px 0px', // margin around viewport
+      }
     );
 
     const currentLoader = loader.current;
@@ -175,7 +196,9 @@ export default function LeadDetailsPage() {
     return () => {
       if (currentLoader) observer.unobserve(currentLoader);
     };
-  }, [page, isFetching, totalPages]);
+  }, [isFetching, totalPages]); // 👈 notice: no `page` dep here
+
+  console.log({ page, isFetching, totalPages });
 
   const handleShowLeadResponseDetails = (response) => {
     setSelectedLeadResponse(response);
@@ -351,13 +374,14 @@ export default function LeadDetailsPage() {
                         ))}
 
                         {/* Only show loader when fetching AND there are already some lawyers */}
-                        {lawyers?.length > 0 && (
-                          <div ref={loader}>
-                            {isFetching && (
-                              <Loader className="w-5 h-5 animate-spin text-gray-500 mx-auto" />
-                            )}
-                          </div>
-                        )}
+                        <div
+                          ref={loader}
+                          className="h-10 flex items-center justify-center"
+                        >
+                          {isFetching && (
+                            <Loader className="w-5 h-5 animate-spin text-gray-500 mx-auto" />
+                          )}
+                        </div>
                       </div>
                     )}
                   </div>
