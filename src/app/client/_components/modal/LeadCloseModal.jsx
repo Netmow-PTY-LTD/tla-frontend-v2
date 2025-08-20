@@ -76,7 +76,7 @@ export default function LeadCloseModal({
             <div className="space-y-6 p-4">
   {/* Title/Description (optional inside modal) */}
   <div className="space-y-1">
-    <h3 className="text-lg font-semibold text-gray-900">Close Lead</h3>
+    <h3 className="text-lg font-semibold text-gray-900">Close Case</h3>
     <p className="text-sm text-gray-500">Provide a reason for closing this lead.</p>
   </div>
 

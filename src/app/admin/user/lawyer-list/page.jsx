@@ -119,6 +119,31 @@ export default function Page() {
       },
     },
     {
+      id: 'serviceIds',
+      accessorKey: 'serviceIds',
+      header: 'Services',
+      cell: ({ row }) => {
+        const services = row.original?.profile?.serviceIds || []; // assuming array of service objects or names
+
+        return (
+          <div className="flex flex-wrap gap-1">
+            {services.length > 0 ? (
+              services.map((service, index) => (
+                <span
+                  key={index}
+                  className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full capitalize"
+                >
+                  {service?.name || service} {/* use service.name if object, else string */}
+                </span>
+              ))
+            ) : (
+              <span className="text-gray-400 text-xs">No Services</span>
+            )}
+          </div>
+        )
+      },
+    },
+    {
       accessorKey: 'profile.phone',
       header: 'Phone',
       cell: ({ row }) => <div>{row.original?.profile.phone || '-'}</div>,
