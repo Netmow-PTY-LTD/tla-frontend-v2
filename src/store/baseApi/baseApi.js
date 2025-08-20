@@ -51,22 +51,22 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
         result = await baseQuery(arg, api, extraOptions);
       } else {
         api.dispatch(logOut());
+        //  await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/logout`, {
+        //     credentials: 'include',
+        //     method: 'POST',
+        //   }).catch(console.error);
+
+        await api.dispatch(baseApi.endpoints.authLogOut.initiate()).unwrap();
+      }
+    } catch (err) {
+      api.dispatch(logOut());
       //  await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/logout`, {
       //     credentials: 'include',
       //     method: 'POST',
       //   }).catch(console.error);
 
-         await api.dispatch(baseApi.endpoints.authLogOut.initiate()).unwrap();
-      }
-    } catch (err) {
-      api.dispatch(logOut());
-    //  await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/logout`, {
-    //     credentials: 'include',
-    //     method: 'POST',
-    //   }).catch(console.error);
-    
-     await api.dispatch(baseApi.endpoints.authLogOut.initiate()).unwrap();
-  }
+      await api.dispatch(baseApi.endpoints.authLogOut.initiate()).unwrap();
+    }
   }
 
   return result;
@@ -121,6 +121,7 @@ export const baseApi = createApi({
     'request',
     'requests',
     'lawyer-suggestion',
+    'lead-my'
   ],
   endpoints: () => ({}),
 });
