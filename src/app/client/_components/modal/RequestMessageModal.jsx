@@ -28,7 +28,7 @@ export function RequestMessageModal({ open, onOpenChange, handleRequest }) {
             <div className="p-5 flex flex-col gap-4">
 
 
-                <h2 className="text-lg font-semibold">Send a message</h2>
+                <h2 className="text-lg font-semibold">Send a Request</h2>
                 <p className="text-sm text-gray-600">
                     Add a message to increase your chances of getting a response
                 </p>
