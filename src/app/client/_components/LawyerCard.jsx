@@ -41,7 +41,7 @@ const LawyerCard = ({
     const payload = {
       leadId: id,
       toRequestId: lawyer?._id,
-      message: 'Hello, I am interested in your services.',
+      message,
     };
 
     try {
