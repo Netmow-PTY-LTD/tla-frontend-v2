@@ -12,7 +12,7 @@ import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/question
 import ClientLeadRegistrationModal from './modal/ClientLeadRegistrationModal';
 import { useSelector } from 'react-redux';
 import CreateLeadWithAuthModal from './modal/CreateLeadWithAuthModal';
-import { Check, ChevronDown, Loader } from 'lucide-react';
+import { Check, ChevronDown, Loader, MapPin } from 'lucide-react';
 import HeroSlider from '../common/HeroSlider';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import {
@@ -135,7 +135,7 @@ export default function HeroHome({ searchParam }) {
           <div className="mb-[30px]">
             <h1 className="mb-[15px]">Need a Lawyer?</h1>
             <p className="text-[#444] text-2xl font-medium">
-              Get free quotes in minutes.
+              Get free quotes in minutes
             </p>
           </div>
           <form className="w-full" onSubmit={handleSubmit}>
@@ -144,7 +144,7 @@ export default function HeroHome({ searchParam }) {
                 <Combobox value={service} onChange={(val) => setService(val)}>
                   <div className="relative">
                     <ComboboxInput
-                      className="border border-gray-300 rounded-md w-full h-[44px] px-4 tla-form-control"
+                      className="border border-gray-300 rounded-md w-full h-[44px] px-4 text-sm font-medium"
                       onChange={(e) => {
                         const query = e.target.value.toLowerCase();
                         const matched = countryWiseServices?.data?.filter((s) =>
@@ -205,8 +205,21 @@ export default function HeroHome({ searchParam }) {
               <div className="tla-form-group w-full lg:w-5/12">
                 <Combobox value={location} onChange={setLocation}>
                   <div className="relative">
+                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          fill="var(--color-primary)"
+                          d="M12 11.5A2.5 2.5 0 0 1 9.5 9A2.5 2.5 0 0 1 12 6.5A2.5 2.5 0 0 1 14.5 9a2.5 2.5 0 0 1-2.5 2.5M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7"
+                        />
+                      </svg>
+                    </span>
                     <ComboboxInput
-                      className="border border-gray-300 rounded-md w-full h-[44px] px-4 tla-form-control"
+                      className="border border-gray-300 rounded-md w-full h-[44px] pl-10 pr-4 text-sm font-medium"
                       onChange={(e) => {
                         // const query = e.target.value.toLowerCase();
                         // const filtered = allZipCodes?.data?.filter((z) =>
@@ -221,7 +234,7 @@ export default function HeroHome({ searchParam }) {
                         allZipCodes?.data?.find((z) => z._id === val)
                           ?.zipcode || val
                       }
-                      placeholder="Your location"
+                      placeholder="Postcode"
                       // onFocus={() =>
                       //   setFilteredZipCodes(allZipCodes?.data ?? [])
                       // }
