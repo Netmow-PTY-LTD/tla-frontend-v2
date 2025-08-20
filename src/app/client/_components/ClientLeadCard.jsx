@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card';
 import React from 'react';
 import Image from 'next/image';
-import { BadgeCheck, Ban, CircleAlert, Zap } from 'lucide-react';
+import { BadgeCheck, Ban, CircleAlert, SearchCheck, Zap } from 'lucide-react';
 import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import Link from 'next/link';
@@ -77,9 +77,9 @@ const ClientLeadCard = ({ user, isExpanded }) => {
   //console.log('check lead user data ===>',user)
 
   return (
-    <Card className="w-full max-w-full mx-auto">
+    <Card className="w-full max-w-full mx-auto py-3">
       {/* Header Section */}
-      <div className="flex flex-wrap bg-[#004DA61A] sm:flex-nowrap items-center gap-3 p-3 rounded-tl-xl rounded-tr-xl">
+      {/* <div className="flex flex-wrap bg-[#004DA61A] sm:flex-nowrap items-center gap-3 p-3 rounded-tl-xl rounded-tr-xl">
         <figure className="w-8 h-8 overflow-hidden flex-shrink-0">
           <Image
             src={`${user?.userProfileId?.profilePicture ?? userDummyImage}`}
@@ -112,10 +112,10 @@ const ClientLeadCard = ({ user, isExpanded }) => {
             {user?.createdAt && formatRelativeTime(user?.createdAt)}
           </p>
         </div>
-      </div>
-      <hr className="border-[#F3F3F3] border" />
+      </div> */}
+      {/* <hr className="border-[#F3F3F3] border" /> */}
       {/* Matched Criteria */}
-      {(urgentOption?.option ||
+      {/* {(urgentOption?.option ||
         user?.additionalDetails ||
         user?.userProfileId?.phone) && (
         <div className="px-3 pt-3">
@@ -135,18 +135,18 @@ const ClientLeadCard = ({ user, isExpanded }) => {
               />
             )}
 
-            {/* {user?.userProfileId?.user?.isPhoneVerified === true && (
+            {user?.userProfileId?.user?.isPhoneVerified === true && (
               <TagButton
                 text="Verified Phone"
                 bgColor="#00C3C01A"
                 icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
               />
-            )} */}
+            )}
           </div>
         </div>
-      )}
+      )} */}
 
-      {singleLead?.data?.status && (
+      {/* {singleLead?.data?.status && (
         <div className="px-3 pt-2">
           <TagButton
             text={singleLead?.data?.status}
@@ -175,9 +175,28 @@ const ClientLeadCard = ({ user, isExpanded }) => {
             }
           />
         </div>
-      )}
+      )} */}
       {/* Job Description */}
-      <div className="p-3">
+      <div className="p-3 text-center">
+        {user?.serviceId?.name && (
+          <h3
+            className={`font-medium ${
+              isExpanded ? 'heading-md' : 'text-[16px]'
+            }`}
+          >
+            {user?.serviceId?.name}
+          </h3>
+        )}
+        <p className="text-[12px] text-gray-400">
+          {user?.createdAt && formatRelativeTime(user?.createdAt)}
+        </p>
+      </div>
+      <div className="p-3 flex justify-center items-center">
+        <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center">
+          <SearchCheck className="w-8 h-8 text-green-400" />
+        </div>
+      </div>
+      {/* <div className="p-3">
         {user?.serviceId?.name && (
           <h3
             className={`font-medium mb-2 ${
@@ -224,17 +243,35 @@ const ClientLeadCard = ({ user, isExpanded }) => {
               : user?.additionalDetails}
           </div>
         </div>
+      </div> */}
+
+      <div className="p-3 text-center">
+        <p className="text-[15px] text-gray-500">
+          We have got lawyers ready and available!
+        </p>
       </div>
-      <RespondersOnline user={user} />
+
       {/* Footer Section */}
-      <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">
+      <div className="flex flex-col sm:flex-row justify-center items-center p-3 gap-3 sm:gap-0">
         <Link
           className={`px-4 py-2.5 w-full sm:w-auto rounded-lg ${
             isExpanded ? 'heading-base' : 'text-[12px] '
           } font-medium bg-[var(--color-special)] text-white hover:bg-gray-950 transition`}
           href={`/client/dashboard/my-cases/${user?._id}`}
         >
-          View Details
+          View Lawyers
+        </Link>
+      </div>
+      {/* <div className="p-3 flex justify-center items-center">
+        <RespondersOnline user={user} />
+      </div> */}
+      <div className="flex justify-center items-center p-3 gap-3">
+        <Link href="/" className="text-blue-500">
+          Close case
+        </Link>
+        <span>|</span>
+        <Link href="/" className="text-blue-500">
+          I hired someone
         </Link>
       </div>
     </Card>
