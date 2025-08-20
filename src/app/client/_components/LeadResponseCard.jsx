@@ -1,12 +1,19 @@
 import { Card } from '@/components/ui/card';
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { BadgeCheck, CircleAlert, CircleDotDashed, Zap } from 'lucide-react';
+import {
+  BadgeCheck,
+  CircleAlert,
+  CircleDotDashed,
+  Star,
+  Zap,
+} from 'lucide-react';
 import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 import { Button } from '@/components/ui/button';
 import { formatRelativeTime } from '@/helpers/formatTime';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import { userDummyImage } from '@/data/data';
+import { getTruncatedText } from '@/helpers/getTruncatedText';
 
 const LeadResponseCard = ({
   handleShowLeadResponseDetails,
@@ -18,164 +25,129 @@ const LeadResponseCard = ({
     response?._id
   );
 
-  //console.log('Single Lead Data:', singleLead);
-
-  //   const urgentOption = response?.leadAnswers
-  //     .flatMap((answer) => answer.options || [])
-  //     .find((option) => option.option === 'Urgent');
-
   const badge = response?.lawyerBadge;
 
   return (
-    <Card className="w-full max-w-full mx-auto flex flex-col">
-      {/* Header Section */}
-      <div className="flex flex-wrap sm:flex-nowrap items-start justify-between gap-3 p-3">
-        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
-          <figure className="w-10 h-10 overflow-hidden flex-shrink-0 border rounded-full">
-            <Image
-              src={`${response?.responseBy?.profilePicture ?? userDummyImage}`}
-              alt={response?.responseBy?.name ?? ''}
-              width={40}
-              height={40}
-              priority
-              className="rounded-full object-cover w-full h-full"
-            />
-          </figure>
-
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
-            <div>
-              <div
-                className={`font-medium mb-1 ${
-                  isExpanded ? 'heading-base' : 'text-[13px]'
+    <>
+      <Card className={`w-full max-w-full mx-auto flex flex-col p-5`}>
+        <div className="flex justify-between gap-5">
+          <div className="flex-shrink-0">
+            <figure className="w-[150px] h-[150px] overflow-hidden flex-shrink-0 border">
+              <Image
+                src={`${
+                  response?.responseBy?.profilePicture ?? userDummyImage
                 }`}
-              >
-                {response?.responseBy?.name}
+                alt={response?.responseBy?.name ?? ''}
+                width={150}
+                height={150}
+                priority
+                className="object-cover w-full h-full"
+              />
+            </figure>
+          </div>
+          <div className="flex-1">
+            <div className="w-full">
+              <div className="flex flex-wrap sm:flex-nowrap justify-between items-center gap-2 ">
+                <div className="flex flex-col w-full">
+                  <div className="flex items-center gap-2">
+                    {badge && badge?.toLowerCase() !== 'basic lawyer' && (
+                      <div className="icon">
+                        <img
+                          src={
+                            badge.toLowerCase() === 'premium lawyer'
+                              ? '/assets/img/badge.svg'
+                              : badge.toLowerCase() === 'expert lawyer'
+                              ? '/assets/img/expert.png'
+                              : '/assets/img/basic.png'
+                          }
+                          width="30"
+                          height="30"
+                          alt={badge}
+                        />
+                      </div>
+                    )}
+                    <div
+                      className={`font-medium mb-1 ${
+                        isExpanded ? 'heading-base' : 'text-[18px]'
+                      }`}
+                    >
+                      {response?.responseBy?.name}
+                    </div>
+                    <div className="flex items-center gap-1 text-xs ">
+                      <span
+                        className={`w-2 h-2 rounded-full ${
+                          onlineMap[response?.responseBy?.user?._id]
+                            ? 'bg-green-500'
+                            : 'bg-gray-400'
+                        }`}
+                      ></span>
+                    </div>
+                  </div>
+                  <div
+                    className={`${
+                      isExpanded ? 'text-[13px]' : 'text-[10px]'
+                    } text-gray-500`}
+                  >
+                    {response?.responseBy?.address ?? ''}
+                  </div>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="flex gap-1">
+                    <Star className="w-4 h-4 text-yellow-500" />
+                    <Star className="w-4 h-4 text-yellow-500" />
+                    <Star className="w-4 h-4 text-yellow-500" />
+                    <Star className="w-4 h-4 text-yellow-500" />
+                    <Star className="w-4 h-4 text-yellow-500" />
+                  </div>
+                  <span className="text-sm">(1)</span>
+                </div>
               </div>
-              <div
-                className={`${
-                  isExpanded ? 'text-[13px]' : 'text-[10px]'
-                } text-gray-500`}
-              >
-                {response?.responseBy?.address ?? ''}
+            </div>
+            {response?.responseBy?.serviceIds?.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-3">
+                {response?.responseBy?.serviceIds?.map((service, i) => (
+                  <span
+                    key={i}
+                    className="inline-flex justify-center items-center gap-2 rounded-[30px] border px-2 py-1 text-[13px]"
+                  >
+                    {service?.name}
+                  </span>
+                ))}
               </div>
+            )}
+
+            {response?.responseBy?.bio && response?.responseBy?.bio !== '' && (
+              <p
+                className="text-[#6e6e6e] text-[13px] mt-[10px]"
+                dangerouslySetInnerHTML={{
+                  __html: getTruncatedText(response?.responseBy?.bio, 200),
+                }}
+              ></p>
+            )}
+            <div className="flex flex-col sm:flex-row items-center py-3 gap-4">
+              <Button
+                className={`px-4 py-2 w-full sm:w-auto rounded-lg ${
+                  isExpanded ? 'text-[14px]' : 'text-[12px] '
+                } font-medium bg-[var(--color-special)] text-white`}
+                onClick={() => handleShowLeadResponseDetails(response)}
+              >
+                View Details
+              </Button>
+              {response?.status && (
+                <div className="flex">
+                  <TagButton
+                    text={response?.status}
+                    bgColor="#FF8602"
+                    textColor="text-white"
+                    icon={<CircleDotDashed className="text-[#fff] w-4 h-4" />}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
-        <p className="font-medium text-[11px] text-gray-600 sm:ml-4 mt-2 sm:mt-0">
-          {response?.createdAt && formatRelativeTime(response?.createdAt)}
-        </p>
-        <span className="text-xs">
-          <div className="flex items-center gap-2 text-sm">
-            <span
-              className={`w-2 h-2 rounded-full ${
-                onlineMap[response?.responseBy?.user?._id]
-                  ? 'bg-green-500'
-                  : 'bg-gray-400'
-              }`}
-            ></span>
-            <span className="text-gray-700">
-              {onlineMap[response?.responseBy?.user?._id]
-                ? 'Online'
-                : 'Offline'}
-            </span>
-          </div>
-        </span>
-      </div>
-
-      <hr className="border-[#F3F3F3] border" />
-
-      {/* Matched Criteria */}
-
-      {/* {response?.additionalDetails &&
-            response?.additionalDetails !== '' && (
-              <TagButton
-                text="Additional Details"
-                bgColor="#004DA61A"
-                icon={<BadgeCheck className="text-[#000] w-4 h-4" />}
-              />
-            )} */}
-      {/* {urgentOption?.option && (
-            <TagButton
-              text={urgentOption?.option}
-              bgColor="#FF86021A"
-              icon={<Zap className="text-[#FF8602] w-4 h-4" />}
-            />
-          )} */}
-
-      {/* {response?.userProfileId?.phone && (
-        <div className="px-3 pt-3 pb-2">
-          <div className="flex flex-wrap gap-2">
-            <TagButton
-              text="Verified Phone"
-              bgColor="#00C3C01A"
-              icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
-            />
-          </div>
-        </div>
-      )} */}
-
-      {badge && badge?.toLowerCase() !== 'basic lawyer' && (
-        <div className="bg-[#F3f3f3] py-2 px-3 rounded-[6px] inline-flex items-center gap-2 mx-3 w-max mt-3">
-          <div className="icon">
-            <img
-              src={
-                badge.toLowerCase() === 'premium lawyer'
-                  ? '/assets/img/badge.svg'
-                  : badge.toLowerCase() === 'expert lawyer'
-                  ? '/assets/img/expert.png'
-                  : '/assets/img/basic.png'
-              }
-              width="30"
-              height="30"
-              alt={badge}
-            />
-          </div>
-          <span className="badge-name badge-name-alt">{badge}</span>
-          <span>
-            {badge?.toLowerCase() === 'premium lawyer'
-              ? '( 10+ Hired )'
-              : badge?.toLowerCase() === 'expert lawyer'
-              ? '( 5+ Hired )'
-              : ''}
-          </span>
-        </div>
-      )}
-
-      {response?.responseBy?.serviceIds?.length > 0 && (
-        <div className="flex flex-wrap gap-2 px-3 mt-3">
-          {response?.responseBy?.serviceIds?.map((service, i) => (
-            <span
-              key={i}
-              className="inline-flex justify-center items-center gap-2 rounded-[30px] bg-[#F3F3F3] px-2 py-1 text-[13px]"
-            >
-              {service?.name}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {/* Footer Section */}
-      <div className="flex flex-col sm:flex-row items-center p-3 gap-4">
-        <Button
-          className={`px-4 py-2 w-full sm:w-auto rounded-lg ${
-            isExpanded ? 'text-[14px]' : 'text-[12px] '
-          } font-medium bg-[var(--color-special)] text-white`}
-          onClick={() => handleShowLeadResponseDetails(response)}
-        >
-          View Details
-        </Button>
-        {response?.status && (
-          <div className="flex">
-            <TagButton
-              text={response?.status}
-              bgColor="#FF8602"
-              textColor="text-white"
-              icon={<CircleDotDashed className="text-[#fff] w-4 h-4" />}
-            />
-          </div>
-        )}
-      </div>
-    </Card>
+      </Card>
+    </>
   );
 };
 
