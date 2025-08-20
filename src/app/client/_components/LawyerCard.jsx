@@ -37,7 +37,7 @@ const LawyerCard = ({
 
   const [requestLawyer, { isLoading }] = useRequestLawyerMutation();
 
-  const handleRequest = async () => {
+  const handleRequest = async (message) => {
     const payload = {
       leadId: id,
       toRequestId: lawyer?._id,
@@ -50,6 +50,7 @@ const LawyerCard = ({
       if (response?.success) {
         refetch();
         showSuccessToast(response?.message || 'Request sent successfully');
+        setOpenRequestModal(false)
       }
     } catch (error) {
       console.error('Error:', error);
@@ -166,7 +167,7 @@ const LawyerCard = ({
       </div>
     </Card>
 
-    <RequestMessageModal onOpenChange={setOpenRequestModal} open={openRequestModal}/>
+    <RequestMessageModal onOpenChange={setOpenRequestModal} open={openRequestModal} handleRequest={handleRequest}/>
    
    </>
   );
