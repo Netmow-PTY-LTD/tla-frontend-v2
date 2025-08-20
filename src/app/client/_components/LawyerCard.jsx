@@ -15,6 +15,7 @@ import { userDummyImage } from '@/data/data';
 import { useRequestLawyerMutation } from '@/store/features/client/ClientApiServices';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import Link from 'next/link';
+import { RequestMessageModal } from './modal/RequestMessageModal';
 
 const LawyerCard = ({
   lawyer,
@@ -23,6 +24,7 @@ const LawyerCard = ({
   lawyerOnlineStatus,
   refetch,
 }) => {
+  const [openRequestModal,setOpenRequestModal]=useState(false)
   const profileType = lawyer?.profile?.profileType;
   const badge =
     profileType
@@ -35,7 +37,7 @@ const LawyerCard = ({
 
   const [requestLawyer, { isLoading }] = useRequestLawyerMutation();
 
-  const handleRequest = async () => {
+  const handleRequest = async (message) => {
     const payload = {
       leadId: id,
       toRequestId: lawyer?._id,
@@ -48,6 +50,7 @@ const LawyerCard = ({
       if (response?.success) {
         refetch();
         showSuccessToast(response?.message || 'Request sent successfully');
+        setOpenRequestModal(false)
       }
     } catch (error) {
       console.error('Error:', error);
@@ -56,6 +59,7 @@ const LawyerCard = ({
   };
 
   return (
+   <>
     <Card className={`w-full max-w-full mx-auto flex flex-col p-5`}>
       <div className="flex justify-between gap-4">
         <div className="flex-shrink-0">
@@ -143,7 +147,8 @@ const LawyerCard = ({
               } font-medium bg-[var(--color-special)] text-white ${
                 lawyer?.isRequested ? 'bg-[var(--primary-color)]' : ''
               }`}
-              onClick={handleRequest}
+              // onClick={handleRequest}
+              onClick={()=>setOpenRequestModal(true)}
               disabled={isLoading || lawyer?.isRequested} // Disable if loading or already requested
             >
               {isLoading ? (
@@ -161,6 +166,10 @@ const LawyerCard = ({
         </div>
       </div>
     </Card>
+
+    <RequestMessageModal onOpenChange={setOpenRequestModal} open={openRequestModal} handleRequest={handleRequest}/>
+   
+   </>
   );
 };
 
