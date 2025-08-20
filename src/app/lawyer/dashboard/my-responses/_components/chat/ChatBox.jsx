@@ -35,7 +35,9 @@ export default function ChatBox({ response }) {
   const responseId = response?._id;
   const currentUser = useSelector(selectCurrentUser);
   const userId = currentUser?._id;
+  const toUserId=response?.leadId?.userProfileId?.user?._id // this id of client
 
+      // console.log('reponse ===>', response?.leadId?.userProfileId?.user)
   const [message, setMessage] = useState('');
   const [liveMessages, setLiveMessages] = useState([]);
 
@@ -100,8 +102,9 @@ export default function ChatBox({ response }) {
   // ✅ Send message
   const sendMessage = () => {
     const socket = socketRef.current;
+    if (!message.trim() || !socket || !toUserId) return;
     if (message.trim() && socket) {
-      socket.emit('message', { responseId, from: userId, message });
+      socket.emit('message', { responseId, from: userId, message ,to:toUserId });
       setMessage('');
     }
   };
