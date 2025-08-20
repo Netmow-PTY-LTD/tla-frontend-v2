@@ -33,7 +33,7 @@ dayjs.locale('en-short', {
 
 export default function ChatBoxForLead({ response }) {
   const responseId = response?._id;
-  // console.log('reponse ===>', response?.responseBy?.user?._id)
+ 
   const currentUser = useSelector(selectCurrentUser);
   const userId = currentUser?._id;
   const toUserId = response?.responseBy?.user?._id  // this id of lawyer 
