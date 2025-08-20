@@ -360,9 +360,10 @@ export default function ClientLeadRegistrationModal({
 
       const token = res.token;
       const userPayload = verifyToken(token);
+  
 
       if (userPayload) {
-        dispatch(setUser({ user: res?.data, token }));
+        dispatch(setUser({ user: res?.data?.userData, token }));
 
         const userType = res?.data?.userData?.regUserType;
 
