@@ -197,7 +197,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
         </div>
         <div className="p-3 flex justify-center items-center">
           <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center">
-            <SearchCheck className="w-8 h-8 text-green-400" />
+            <SearchCheck className="w-8 h-8 text-[var(--primary-color)]" />
           </div>
         </div>
         {/* <div className="p-3">
