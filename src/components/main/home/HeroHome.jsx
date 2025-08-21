@@ -93,8 +93,10 @@ export default function HeroHome({ searchParam }) {
 
   const token = useSelector((state) => state.auth.token);
 
+  const validToken = checkValidity(token);
+
   const { data: currentUser } = useAuthUserInfoQuery(undefined, {
-    skip: !token,
+    skip: !validToken,
   });
 
   //console.log('currentUser', currentUser);
@@ -319,7 +321,7 @@ export default function HeroHome({ searchParam }) {
         {/* <HeroShowcase /> */}
       </div>
 
-      {token && currentUser ? (
+      {validToken && currentUser ? (
         <>
           {currentUser?.data?.regUserType?.toLowerCase() === 'lawyer' &&
           authModalOpen ? (

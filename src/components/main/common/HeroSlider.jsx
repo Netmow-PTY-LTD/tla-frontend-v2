@@ -9,6 +9,7 @@ import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/question
 import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
 import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
 import LawyerWarningModal from '../home/modal/LawyerWarningModal';
+import { checkValidity } from '@/helpers/validityCheck';
 
 const slidesData = [
   {
@@ -114,8 +115,10 @@ export default function HeroSlider() {
 
   const token = useSelector((state) => state.auth.token);
 
+  const validToken = checkValidity(token);
+
   const { data: currentUser } = useAuthUserInfoQuery(undefined, {
-    skip: !token,
+    skip: !validToken,
   });
 
   return (
@@ -190,7 +193,7 @@ export default function HeroSlider() {
         </div>
       </div>
 
-      {token && currentUser ? (
+      {validToken && currentUser ? (
         <>
           {currentUser?.data?.regUserType?.toLowerCase() === 'lawyer' &&
           authModalOpen ? (
