@@ -31,6 +31,7 @@ import { useRouter } from 'next/navigation';
 import { useGetUserCreditStatsQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 import { disconnectSocket } from '@/lib/socket';
 import { Skeleton } from '@/components/ui/skeleton';
+import { persistor } from '@/store/store';
 
 export default function ProfileDropDown() {
   const dispatch = useDispatch();
@@ -48,13 +49,22 @@ export default function ProfileDropDown() {
    * - Redirects the user to the login page using the Next.js router.
    */
   const [authLogout] = useAuthLogOutMutation();
-  const handleLogout = () => {
-    authLogout();
+  const handleLogout = async () => {
+    try {
+      await authLogout().unwrap();
+    } catch (error) {
+      console.log(error);
+    }
     disconnectSocket();
     dispatch(logOut());
 
+    await persistor.purge();
+
+    localStorage.clear();
+
     router.push('/login');
   };
+
   return (
     <div className="flex items-center">
       <DropdownMenu>

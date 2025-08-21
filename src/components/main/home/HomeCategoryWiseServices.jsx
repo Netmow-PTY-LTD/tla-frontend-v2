@@ -16,6 +16,7 @@ import { toast } from 'sonner';
 import ClientLeadRegistrationModal from './modal/ClientLeadRegistrationModal';
 import SectionHeading from './SectionHeading';
 import LawyerWarningModal from './modal/LawyerWarningModal';
+import { checkValidity } from '@/helpers/validityCheck';
 
 export default function HomeCategoryWiseServices() {
   const [selectedService, setSelectedService] = useState(null);
@@ -74,8 +75,10 @@ export default function HomeCategoryWiseServices() {
 
   const token = useSelector((state) => state.auth.token);
 
+  const validToken = checkValidity(token);
+
   const { data: currentUser } = useAuthUserInfoQuery(undefined, {
-    skip: !token,
+    skip: !validToken,
   });
 
   return (
@@ -134,7 +137,7 @@ export default function HomeCategoryWiseServices() {
           </div>
         )}
       </div>
-      {token && currentUser ? (
+      {validToken && currentUser ? (
         <>
           {currentUser?.data?.regUserType?.toLowerCase() === 'lawyer' &&
           authModalOpen ? (
