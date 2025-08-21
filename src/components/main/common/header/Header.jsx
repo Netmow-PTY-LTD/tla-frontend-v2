@@ -399,7 +399,7 @@ export default function Header() {
               )}
             </div>
 
-            {token && currentUser ? (
+            {validToken && currentUser ? (
               <div className="flex items-center gap-4 flex-shrink-0">
                 <Link href={dashboardUrl} className={styles.btn_register}>
                   <span>Dashboard</span>
@@ -458,3 +458,4 @@ export default function Header() {
     </header>
   );
 }
+

@@ -184,9 +184,8 @@ const ClientLeadCard = ({ user, isExpanded }) => {
         <div className="p-3 text-center">
           {user?.serviceId?.name && (
             <h3
-              className={`font-medium ${
-                isExpanded ? 'heading-md' : 'text-[16px]'
-              }`}
+              className={`font-medium ${isExpanded ? 'heading-md' : 'text-[16px]'
+                }`}
             >
               {user?.serviceId?.name}
             </h3>
@@ -257,6 +256,19 @@ const ClientLeadCard = ({ user, isExpanded }) => {
 
         {/* Footer Section */}
 
+        <div className="flex flex-col sm:flex-row justify-center items-center p-3 gap-3 sm:gap-0">
+          <Link
+            className={`px-4 py-2.5 w-full sm:w-auto rounded-lg ${isExpanded ? 'heading-base' : 'text-[12px] '
+              } font-medium bg-[var(--color-special)] text-white hover:bg-gray-950 transition`}
+            href={`/client/dashboard/my-cases/${user?._id}`}
+          >
+            View Lawyers
+          </Link>
+        </div>
+        {/* <div className="p-3 flex justify-center items-center">
+                 <RespondersOnline user={user} />
+                 </div> */}
+
         {user?.status === 'closed' ? (
           <div className="text-center">
             <span className="px-3 py-1 text-sm font-medium text-white bg-red-600 rounded-full">
@@ -265,19 +277,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
           </div>
         ) : (
           <>
-            <div className="flex flex-col sm:flex-row justify-center items-center p-3 gap-3 sm:gap-0">
-              <Link
-                className={`px-4 py-2.5 w-full sm:w-auto rounded-lg ${
-                  isExpanded ? 'heading-base' : 'text-[12px] '
-                } font-medium bg-[var(--color-special)] text-white hover:bg-gray-950 transition`}
-                href={`/client/dashboard/my-cases/${user?._id}`}
-              >
-                View Lawyers
-              </Link>
-            </div>
-            {/* <div className="p-3 flex justify-center items-center">
-                 <RespondersOnline user={user} />
-                 </div> */}
+
             <div className="flex justify-center items-center p-3 gap-3">
               <button
                 onClick={() => {
