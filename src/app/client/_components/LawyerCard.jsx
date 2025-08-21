@@ -69,12 +69,12 @@ const LawyerCard = ({
       <Card className={`w-full max-w-full mx-auto flex flex-col p-5`}>
         <div className="flex justify-between gap-5">
           <div className="flex-shrink-0">
-            <figure className="max-w-[180px] max-h-[180px] overflow-hidden flex-shrink-0 border rounded-lg">
+            <figure className="w-[180px] h-[180px] overflow-hidden flex-shrink-0 border rounded-lg">
               <Image
                 src={`${lawyer?.profile?.profilePicture ?? userDummyImage}`}
                 alt={lawyer?.profile?.name ?? ''}
-                width={200}
-                height={200}
+                width={180}
+                height={180}
                 priority
                 className="w-full h-full object-cover"
               />

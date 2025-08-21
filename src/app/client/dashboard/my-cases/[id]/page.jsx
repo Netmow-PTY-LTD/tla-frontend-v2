@@ -20,7 +20,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { data, userDummyImage } from '@/data/data';
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
-import { checkValidity } from '@/helpers/validityCheck';
 import { useRealTimeStatus } from '@/hooks/useSocketListener';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import { useGetAllServiceWiseLawyersSuggestionsQuery } from '@/store/features/client/ClientApiServices';
