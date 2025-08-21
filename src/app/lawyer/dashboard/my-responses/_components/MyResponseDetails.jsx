@@ -22,9 +22,8 @@ import { Fragment, useEffect, useState } from 'react';
 
 import {
   useActivityLogMutation,
-  useHireRequestMutation,
   useHireStatusMutation,
-  useUpdateResponseStatusMutation,
+
 } from '@/store/features/lawyer/ResponseApiService';
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
 import WhatsApp from '@/components/icon/WhatsApp';
@@ -215,7 +214,6 @@ export default function MyResponseDetails({
   };
 
 
-  console.log('check ', singleResponse?.data?.isHireRequested?.hireDecision)
 
   return (
     <>
@@ -237,34 +235,6 @@ export default function MyResponseDetails({
                   singleResponse?.data?.activity[0]?.updatedAt
                 )}
               </span>
-              {/* <div className="flex items-center gap-2">
-                <b className="text-black text-[14px]">Current Status:</b>
-                <select
-                  className="p-2 border border-gray-300 rounded-lg bg-white text-[13px]"
-                  value={currentStatus}
-                  onChange={(e) => handleUpdateStatus(e.target.value)}
-                >
-                  <option value="pending">Pending</option>
-                  <option value="hired">Hired</option>
-                  <option value="archive">Archive</option>
-                </select>
-              </div> */}
-              {/* {
-
-                singleResponse?.data?.isHireRequested && singleResponse?.data?.isHireRequested?.hireDecision === null ?
-                  <div className="flex items-center justify-between max-w-md">
-                    <p className="text-gray-800 text-sm font-medium mr-4">
-                      You have a request to hire
-                    </p>
-                    <button
-                      onClick={() => handleUpdateHireStatus('accepted')}
-                      className="px-4 py-2 rounded-lg bg-green-500 text-white text-sm font-semibold shadow-md hover:bg-green-600 transition-all duration-200"
-                    >
-                      Accept
-                    </button>
-                  </div> : singleResponse?.data?.isHireRequested?.hireDecision ==='accepted' ? <p> alredy hired</p>:<></>
-              } */}
-
               {
                 singleResponse?.data?.isHireRequested ? (
                   singleResponse?.data?.isHireRequested?.hireDecision === null ? (
@@ -281,14 +251,13 @@ export default function MyResponseDetails({
                         </button>
                       </div>
                     </div>
-                  ) : singleResponse?.data?.isHireRequested?.hireDecision === "accepted" ? (
+                  ) : singleResponse?.data?.hireDecision === "accepted" ? (
                     <p className="text-green-600 font-medium text-sm">
                       ✅ Already hired
                     </p>
                   ) : null
                 ) : null
               }
-
 
 
             </div>
@@ -333,7 +302,7 @@ export default function MyResponseDetails({
                   </p>
                 </div>
               </div>
-              {/* Current Status */}
+
 
               <hr className="w-full my-5  " />
               <div className="mb-4">
