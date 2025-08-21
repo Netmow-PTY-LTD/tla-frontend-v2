@@ -1,11 +1,11 @@
 import React from 'react';
 
-export default function Facebook() {
+export default function Facebook({ width, height }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="10"
-      height="17"
+      width={width}
+      height={height}
       viewBox="0 0 10 17"
       fill="none"
     >
