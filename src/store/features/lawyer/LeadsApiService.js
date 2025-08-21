@@ -39,7 +39,7 @@ const leadsApiService = baseApi.injectEndpoints({
         method: 'PATCH',
         body: data?.data
       }),
-      providesTags: ['lead','lead-list-admin','lead-list','lead-my'],
+      providesTags: ['lead', 'lead-list-admin', 'lead-list', 'lead-my'],
     }),
     contactLawyer: builder.mutation({
       query: (data) => ({
@@ -47,8 +47,20 @@ const leadsApiService = baseApi.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['lead', 'response', 'notification','lead-list-admin','lead-list','response-my','response-list'],
+      invalidatesTags: ['lead', 'response', 'notification', 'lead-list-admin', 'lead-list', 'response-my', 'response-list'],
     }),
+
+    closeLead: builder.mutation({
+      query: (data) => ({
+        url: `/lead/${data.id}/close`,
+        method: 'PATCH',
+        body: data?.data
+      }),
+      providesTags: ['lead', 'lead-list-admin', 'lead-list', 'lead-my'],
+    }),
+
+
+
   }),
 });
 
@@ -58,7 +70,8 @@ export const {
   useGetAllMyLeadsQuery,
   useContactLawyerMutation,
   useUpdateLeadMutation,
-  useGetAllLeadsForAdminQuery
+  useGetAllLeadsForAdminQuery,
+  useCloseLeadMutation,
 } = leadsApiService;
 
 
