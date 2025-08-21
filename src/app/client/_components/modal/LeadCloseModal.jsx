@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
-import { useUpdateLeadMutation } from "@/store/features/lawyer/LeadsApiService";
+import { useCloseLeadMutation, useUpdateLeadMutation } from "@/store/features/lawyer/LeadsApiService";
 import { Modal } from "@/components/UIComponents/Modal";
 
 export default function LeadCloseModal({
@@ -17,7 +17,7 @@ export default function LeadCloseModal({
   const [reason, setReason] = useState(defaultReason || "");
 
   // RTK Query mutation hook
-  const [updateLead, { isLoading }] = useUpdateLeadMutation();
+  const [closeLead, { isLoading }] = useCloseLeadMutation();
 
   const handleSave = async () => {
     if (!reason.trim()) {
@@ -26,11 +26,10 @@ export default function LeadCloseModal({
     }
 
     try {
-      const result = await updateLead({
+      const result = await closeLead({
         id: leadId,
         data: {
-          status: "closed",
-          leadClosedReason: reason,
+          reason,
         },
       }).unwrap();
 
