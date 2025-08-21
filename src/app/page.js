@@ -27,7 +27,7 @@ export default function Home() {
     // fallback to Australia if not found
     if (!cookieCountry) {
       cookieCountry = 'AU'; // default
-      Cookies.set('country', cookieCountry, { expires: 7 });
+      Cookies.set('country', cookieCountry, { expires: 3650 });
     }
 
     // find full country object from countries.json
@@ -38,6 +38,8 @@ export default function Home() {
 
     setCountry(selectedCountry);
   }, []);
+
+  console.log('country', country);
 
   return (
     <MainLayout>
