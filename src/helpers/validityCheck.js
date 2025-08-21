@@ -7,7 +7,7 @@ export const checkValidity = (token) => {
     const decoded = jwtDecode(token);
 
     const currentTime = Date.now() / 1000;
-    console.log('currentTime:', currentTime);
+
     if (decoded.exp && decoded.exp < currentTime) {
       console.warn('Token has expired');
       return false;

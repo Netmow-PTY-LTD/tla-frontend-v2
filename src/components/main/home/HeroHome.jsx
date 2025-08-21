@@ -28,7 +28,7 @@ import { toast } from 'sonner';
 import { showErrorToast } from '@/components/common/toasts';
 import LawyerWarningModal from './modal/LawyerWarningModal';
 import { checkValidity } from '@/helpers/validityCheck';
-export default function HeroHome({ searchParam }) {
+export default function HeroHome({ searchParam, cookieCountry }) {
   const [selectedService, setSelectedService] = useState(null);
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -55,7 +55,7 @@ export default function HeroHome({ searchParam }) {
   const { data: countryList } = useGetCountryListQuery();
 
   const defaultCountry = countryList?.data?.find(
-    (country) => country?.slug === 'au'
+    (country) => country?._id === cookieCountry?.countryId
   );
 
   // Default to Australia (AU) if available
@@ -63,8 +63,6 @@ export default function HeroHome({ searchParam }) {
     useGetCountryWiseServicesQuery(defaultCountry?._id, {
       skip: !defaultCountry?._id, // Skip
     });
-
-  //console.log('countryWiseServices', countryWiseServices);
 
   useEffect(() => {
     if (!selectedService?._id) return;
@@ -109,6 +107,12 @@ export default function HeroHome({ searchParam }) {
     item?.zipcode?.toLowerCase().includes(location?.toLowerCase())
   );
 
+  //console.log('allZipCodes', allZipCodes?.data);
+
+  const defaultCountryZipCodes = allZipCodes?.data?.filter(
+    (item) => item?.countryCode === defaultCountry?.slug
+  );
+
   //console.log('filteredZipCodes', filteredZipCodes);
 
   const handleSubmit = (e) => {
@@ -130,13 +134,18 @@ export default function HeroHome({ searchParam }) {
     setModalOpen(true);
   };
 
+  //console.log('cookieCountry', cookieCountry);
+  //  console.log('defaultCountryZipCodes', defaultCountryZipCodes);
+
   return (
     <section className="hero-home section">
       <div className="container">
         <div className="hero-content py-[50px]">
           {/* <h3>Get a quote for legal services.</h3> */}
           <div className="mb-[30px]">
-            <h1 className="mb-[15px]">Need a Lawyer?</h1>
+            <h1 className="mb-[15px]">
+              Need a Lawyer <br /> in {cookieCountry?.name}?
+            </h1>
             <p className="text-[#444] text-2xl font-medium">
               Get free quotes in minutes
             </p>

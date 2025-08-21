@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './Footer.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -9,8 +9,31 @@ import Facebook from '@/components/icon/Facebook';
 import Twiiter from '@/components/icon/Twiiter';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { useSelector } from 'react-redux';
+import Twitter from '@/components/icon/Twiiter';
+import ShowCountriesListModal from '../../home/modal/ShowCountriesListModal';
+import Chevron from '@/components/icon/ChevronDown';
+import Cookies from 'js-cookie';
+import countries from '@/data/countries.json';
 
 export default function Footer() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const cookieCountry = Cookies.get('country');
+
+  //console.log('cookieCountry', cookieCountry);
+
+  const defaultCountry = cookieCountry
+    ? countries.find((c) => c.code.toLowerCase() === cookieCountry)
+    : null;
+
+  //console.log('defaultCountry', defaultCountry);
+
+  const [selectedCountry, setSelectedCountry] = useState(
+    defaultCountry || null
+  );
+
+  // console.log('cookieCountry in footer', JSON.parse(cookieCountry));
+
   const token = useSelector((state) => state.auth.token);
 
   const { data: currentUser } = useAuthUserInfoQuery(undefined, {
@@ -35,35 +58,10 @@ export default function Footer() {
         className="main-footer"
         // style={{ backgroundImage: `url('/assets/img/footer_bg.png')` }}
       >
-        <div className="footer-top">
+        <div className="footer-top mb-[60px]">
           <div className="container">
             <div className="footer-top-widgets flex flex-wrap justify-between">
-              <div className="max-w-full lg:max-w-[380px] pr-0 lg:pr-5">
-                <div className="footer-info">
-                  {/* <Link href="/">
-                    <Image
-                      src={'/assets/img/logo.png'}
-                      alt="TLA Logo"
-                      width={220}
-                      height={50}
-                    />
-                  </Link> */}
-                  <div className="footer-text flex items-start">
-                    <div className="">
-                      <img
-                        src="/assets/img/favicon.png"
-                        alt="favicon"
-                        className="float-left"
-                      />
-                      {`he Law App is changing the way people find legal help and how
-                  lawyers grow their practice. Whether you’re a client in need
-                  of expert advice or a lawyer looking to expand your reach, TLA
-                  makes the process seamless, transparent, and efficient.`}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="max-w-full lg:max-w-[calc(100%-480px)] w-full pr-0 lg:pl-5 mt-4 lg:mt-0">
+              <div className="max-w-full w-full pr-0 lg:pl-5 mt-4 lg:mt-0">
                 <div className="flex flex-wrap justify-between gap-[30px] md:gap-10">
                   <div className="footer-widget w-[calc(50%-15px)] md:w-auto">
                     <h5>Navigate</h5>
@@ -155,55 +153,100 @@ export default function Footer() {
                       </li>
                     </ul>
                   </div>
+                  <div className="footer-widget w-[calc(50%-15px)] md:w-auto text-right">
+                    <h5 style={{ marginBottom: '25px' }}>Need help ?</h5>
+                    <Link href={'/contact'} className="btn-default btn-primary">
+                      Contact Us
+                    </Link>
+                    <div className="footer-social-icon mt-4 flex item-center gap-3 justify-end">
+                      <Link
+                        href="https://x.com/TheLawAppOnline"
+                        className="twitter"
+                        target="_blank"
+                      >
+                        <Twitter width={20} height={20} />
+                      </Link>
+                      <Link
+                        href="https://www.facebook.com/thelawapp"
+                        className="fb"
+                        target="_blank"
+                      >
+                        <Facebook width={22} height={22} />
+                      </Link>
+                      <Link
+                        href="https://www.linkedin.com/in/the-law-app-22b048166/"
+                        className="linkedin"
+                        target="_blank"
+                      >
+                        <LinkedIn width={22} height={22} />
+                      </Link>
+                    </div>
+                    <div className="footer-bottom-country-select mt-5">
+                      <button
+                        className="flex gap-3 items-center bg-[#F9F9FA] rounded-sm p-3"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setIsModalOpen(true);
+                        }}
+                      >
+                        <img
+                          src={selectedCountry?.flag}
+                          alt={`${selectedCountry?.name} flag`}
+                          className="w-8 h-6 object-cover rounded-sm"
+                        />
+                        <span className="font-medium">
+                          {selectedCountry?.name}
+                        </span>
+                        <Chevron />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <FooterContact />
+        {/* <FooterContact /> */}
         <div className="footer-bottom">
           <div className="container">
-            <div className="flex flex-wrap justify-between gap-4">
-              <div className="footer-copyright text-center">
-                <p>
-                  Copyright &copy; {new Date().getFullYear()}{' '}
-                  <Link href="/" className="text-[var(--primary-color)]">
-                    The Law App.
-                  </Link>
-                </p>
-              </div>
-              <div className="footer-social flex lg:justify-end">
-                <div className="flex items-center gap-4">
-                  <b className="inline-block relative pr-[70px] after:absolute after:top-[12px] after:left-[85px] after:w-[64px] after:h-[2px] after:bg-[#0B1C2D]">
-                    Follow Us{' '}
-                  </b>
-                  <Link
-                    href="https://www.linkedin.com/in/the-law-app-22b048166/"
-                    className="linkedin"
-                    target="_blank"
-                  >
-                    <LinkedIn />
-                  </Link>
-                  <Link
-                    href="https://www.facebook.com/thelawapp"
-                    className="fb"
-                    target="_blank"
-                  >
-                    <Facebook />
-                  </Link>
-                  <Link
-                    href="https://x.com/TheLawAppOnline"
-                    className="twitter"
-                    target="_blank"
-                  >
-                    <Twiiter />
-                  </Link>
+            <div className="footer-bottom-wrapper">
+              <div className="flex flex-wrap justify-between gap-4">
+                <div className="footer-copyright text-center">
+                  <p>
+                    Copyright &copy; {new Date().getFullYear()}{' '}
+                    <Link href="/" className="text-[var(--primary-color)]">
+                      The Law App.
+                    </Link>
+                  </p>
+                </div>
+                <div className="footer-social flex lg:justify-end">
+                  <div className="flex items-center gap-4">
+                    <div className="footer-bottom-menu">
+                      <ul className="flex items-center gap-3">
+                        <li>
+                          <Link href="/">Disclaimer</Link>
+                        </li>
+                        <li>
+                          <Link href="/">Privacy Policy</Link>
+                        </li>
+                        <li>
+                          <Link href="/">Terms & Use</Link>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </footer>
+      <ShowCountriesListModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        selectedCountry={selectedCountry}
+        setSelectedCountry={setSelectedCountry}
+      />
     </>
   );
 }
