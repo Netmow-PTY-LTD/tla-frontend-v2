@@ -132,10 +132,7 @@ export default function ProfileBanner({ data, token, currentUser }) {
                   </TooltipProvider>
                 )}
               </div>
-              <Link
-                href="/lawyer/settings/profile"
-                className="text-white text-[16px] font-semibold flex items-center gap-4"
-              >
+              <div className="text-white text-[16px] font-semibold flex items-center gap-4">
                 <div className="w-[40px] h-[40px] flex items-center justify-center border border-1 border-white  rounded-full">
                   {' '}
                   <svg
@@ -152,7 +149,7 @@ export default function ProfileBanner({ data, token, currentUser }) {
                   </svg>
                 </div>
                 <span>{data?.address}</span>
-              </Link>
+              </div>
             </div>
             {data?.badge && data?.badge?.toLowerCase() !== 'basic lawyer' && (
               <div className="bg-[#F3f3f3] py-2 px-3 rounded-[6px] inline-flex items-center gap-2 mt-8">

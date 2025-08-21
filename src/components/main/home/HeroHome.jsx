@@ -27,6 +27,7 @@ import { useParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { showErrorToast } from '@/components/common/toasts';
 import LawyerWarningModal from './modal/LawyerWarningModal';
+import { checkValidity } from '@/helpers/validityCheck';
 export default function HeroHome({ searchParam }) {
   const [selectedService, setSelectedService] = useState(null);
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
@@ -93,8 +94,10 @@ export default function HeroHome({ searchParam }) {
 
   const token = useSelector((state) => state.auth.token);
 
+  const validToken = checkValidity(token);
+
   const { data: currentUser } = useAuthUserInfoQuery(undefined, {
-    skip: !token,
+    skip: !validToken,
   });
 
   //console.log('currentUser', currentUser);
@@ -319,7 +322,7 @@ export default function HeroHome({ searchParam }) {
         {/* <HeroShowcase /> */}
       </div>
 
-      {token && currentUser ? (
+      {validToken && currentUser ? (
         <>
           {currentUser?.data?.regUserType?.toLowerCase() === 'lawyer' &&
           authModalOpen ? (
