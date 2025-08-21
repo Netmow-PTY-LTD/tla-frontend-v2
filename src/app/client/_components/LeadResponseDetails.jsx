@@ -12,6 +12,7 @@ import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import {
   useActivityLogMutation,
   useGetSingleResponseQuery,
+  useHireRequestMutation,
   useUpdateResponseStatusMutation,
 } from '@/store/features/lawyer/ResponseApiService';
 import {
@@ -21,6 +22,7 @@ import {
   Bell,
   CalendarCheck,
   Edit,
+  Loader2,
   LogIn,
   Mail,
   MessageSquare,
@@ -39,6 +41,7 @@ import { useSelector } from 'react-redux';
 import SendMailModalForClient from './my-leads/SendMailModalForClient';
 import SendSmsModalClient from './my-leads/SendSmsModalClient';
 import ChatBoxForLead from './chat/ChatBoxForLead';
+import { HireRequestMessageModal } from './modal/HireRequestMessageModal';
 
 export default function LeadResponseDetails({ onBack, response, onlineMap }) {
   const [activeTab, setActiveTab] = useState('activity');
@@ -46,7 +49,7 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
   const [openMail, setOpenMail] = useState(false);
   const [openSms, setOpenSms] = useState(false);
   const currentUser = useSelector(selectCurrentUser);
-
+  const [openRequestModal, setOpenRequestModal] = useState(false);
   const {
     data: singleResponse,
     isLoading: isSingleResponseLoading,
@@ -65,17 +68,17 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
     }
   });
 
-  const [updateStatus] = useUpdateResponseStatusMutation();
+  const [hireRequest, { isLoading: hireRequestLoading }] = useHireRequestMutation();
   const [updateActivity] = useActivityLogMutation();
 
-  const handleUpdateStatus = async (status) => {
+  const handlehireRequest = async (hireMessage) => {
     try {
-      const statusData = {
+      const hireMessageData = {
         responseId: response?._id,
-        data: { status },
+        data: { hireMessage },
       };
 
-      const result = await updateStatus(statusData).unwrap();
+      const result = await hireRequest(hireMessageData).unwrap();
       if (result.success) {
         showSuccessToast(result.message);
       }
@@ -162,6 +165,9 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
     }
   };
 
+
+
+
   if (isSingleResponseLoading) return <ResponseSkeleton />;
   return (
     <>
@@ -179,16 +185,24 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
               {getCompactTimeAgo(singleResponse?.data?.activity[0]?.updatedAt)}
             </span>
             <div className="flex items-center gap-2">
-              <b className="text-black text-[14px]">Current Status:</b>
-              <select
-                className="p-2 border border-gray-300 rounded-lg bg-white text-[13px]"
-                defaultValue={currentStatus}
-                onChange={(e) => handleUpdateStatus(e.target.value)}
-              >
-                <option value="pending">Pending</option>
-                <option value="hired">Hired</option>
-                <option value="archive">Archive</option>
-              </select>
+
+              {Boolean(singleResponse?.data?.isHireRequested) ? (
+                <button
+                  disabled
+                  className="px-4 py-2 rounded-lg bg-green-500 text-white font-semibold cursor-not-allowed shadow-md hover:bg-green-600 transition-all duration-200"
+                >
+                  Requested to Hire
+                </button>
+              ) : (
+                <button
+                  onClick={handlehireRequest}
+                  disabled={hireRequestLoading}
+                  className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold shadow-md hover:bg-blue-700 disabled:bg-gray-400 transition-all duration-200 flex items-center gap-2"
+                >
+                  {hireRequestLoading ? <Loader2 className="animate-spin h-5 w-5" /> : "Hire now"}
+                </button>
+              )}
+
             </div>
           </div>
           <div className="mt-3">
@@ -207,26 +221,26 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
                 />
               </figure>
               <div>
-               <div className='flex items-center gap-3'>
-                 <h2 className="font-medium heading-md">
-                  {singleResponse?.data?.responseBy?.name}
-                </h2>
-                 <span className="text-xs">
-                  <div className="flex items-center gap-2 text-sm">
-                    <span
-                      className={`w-2 h-2 rounded-full ${onlineMap[response?.responseBy?.user?._id] ? "bg-green-500" : "bg-gray-400"
-                        }`}
-                    ></span>
-                    <span className="text-gray-700">
-                      {onlineMap[response?.responseBy?.user?._id] ? "Online" : "Offline"}
-                    </span>
-                  </div>
-                </span>
-               </div>
+                <div className='flex items-center gap-3'>
+                  <h2 className="font-medium heading-md">
+                    {singleResponse?.data?.responseBy?.name}
+                  </h2>
+                  <span className="text-xs">
+                    <div className="flex items-center gap-2 text-sm">
+                      <span
+                        className={`w-2 h-2 rounded-full ${onlineMap[response?.responseBy?.user?._id] ? "bg-green-500" : "bg-gray-400"
+                          }`}
+                      ></span>
+                      <span className="text-gray-700">
+                        {onlineMap[response?.responseBy?.user?._id] ? "Online" : "Offline"}
+                      </span>
+                    </div>
+                  </span>
+                </div>
                 <p className="text-gray-500 mt-2">
                   {singleResponse?.data?.responseBy?.address}
                 </p>
-               
+
               </div>
             </div>
             {/* Current Status */}
@@ -292,8 +306,8 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
                 <button
                   onClick={() => setActiveTab('activity')}
                   className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
-                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                      : 'hover:text-black'
+                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                    : 'hover:text-black'
                     }`}
                 >
                   Activity
@@ -301,8 +315,8 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
                 <button
                   onClick={() => setActiveTab('chat')}
                   className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'chat'
-                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                      : 'hover:text-black'
+                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                    : 'hover:text-black'
                     }`}
                 >
                   Chat
@@ -393,6 +407,11 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
           </div>
         </div>
       </div>
+      <HireRequestMessageModal
+        onOpenChange={setOpenRequestModal}
+        open={openRequestModal}
+        handleRequest={handlehireRequest}
+      />
 
       <SendMailModalForClient
         info={singleResponse?.data}

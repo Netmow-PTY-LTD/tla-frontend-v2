@@ -22,6 +22,8 @@ import { Fragment, useEffect, useState } from 'react';
 
 import {
   useActivityLogMutation,
+  useHireRequestMutation,
+  useHireStatusMutation,
   useUpdateResponseStatusMutation,
 } from '@/store/features/lawyer/ResponseApiService';
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
@@ -83,7 +85,8 @@ export default function MyResponseDetails({
   //  -----------------------------------  socent end area --------------------------------------------
   const badge = singleResponse?.data?.leadId?.userProfileId?.profileType;
 
-  const [updateStatus] = useUpdateResponseStatusMutation();
+  // const [updateStatus] = useUpdateResponseStatusMutation();
+  const [hireStatusUpdate] = useHireStatusMutation();
   const [updateActivity] = useActivityLogMutation();
 
   const router = useRouter();
@@ -125,6 +128,24 @@ export default function MyResponseDetails({
       };
 
       const result = await updateStatus(statusData).unwrap();
+      if (result.success) {
+        showSuccessToast(result.message);
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+    }
+  };
+
+
+  const handleUpdateHireStatus = async (status) => {
+    try {
+      const statusData = {
+        responseId: singleResponse?.data?._id,
+        data: { status },
+      };
+
+      const result = await hireStatusUpdate(statusData).unwrap();
       if (result.success) {
         showSuccessToast(result.message);
       }
@@ -199,7 +220,7 @@ export default function MyResponseDetails({
             '_blank'
           );
         }
-      } catch (error) {}
+      } catch (error) { }
     }
     if (type === 'sendemail') {
       setOpenMail(true);
@@ -237,7 +258,7 @@ export default function MyResponseDetails({
                   singleResponse?.data?.activity[0]?.updatedAt
                 )}
               </span>
-              <div className="flex items-center gap-2">
+              {/* <div className="flex items-center gap-2">
                 <b className="text-black text-[14px]">Current Status:</b>
                 <select
                   className="p-2 border border-gray-300 rounded-lg bg-white text-[13px]"
@@ -247,6 +268,22 @@ export default function MyResponseDetails({
                   <option value="pending">Pending</option>
                   <option value="hired">Hired</option>
                   <option value="archive">Archive</option>
+                </select>
+              </div> */}
+              <button>
+                Request For Hire
+              </button>
+              <div className="flex items-center gap-2">
+                <b className="text-black text-[14px]">Current Status:</b>
+                <select
+                  className="p-2 border border-gray-300 rounded-lg bg-white text-[13px]"
+                  value={currentStatus}
+                  onChange={(e) => handleUpdateHireStatus(e.target.value)}
+                >
+                
+                  <option value="rejected">Rejected</option>
+                  <option value="hired">Hired</option>
+
                 </select>
               </div>
             </div>
@@ -276,9 +313,8 @@ export default function MyResponseDetails({
                     <span className="text-xs">
                       <div className="flex items-center gap-2 text-sm">
                         <span
-                          className={`ml-2 w-2 h-2 rounded-full ${
-                            onlineMap[leadUser] ? 'bg-green-500' : 'bg-gray-400'
-                          }`}
+                          className={`ml-2 w-2 h-2 rounded-full ${onlineMap[leadUser] ? 'bg-green-500' : 'bg-gray-400'
+                            }`}
                         ></span>
                         <span className="text-gray-700">
                           {onlineMap[leadUser] ? 'Online' : 'Offline'}
@@ -389,21 +425,19 @@ export default function MyResponseDetails({
                 <div className="flex border-b border-gray-200 gap-6">
                   <button
                     onClick={() => setActiveTab('activity')}
-                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                      activeTab === 'activity'
-                        ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                        : 'hover:text-black'
-                    }`}
+                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
+                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                      : 'hover:text-black'
+                      }`}
                   >
                     Activity
                   </button>
                   <button
                     onClick={() => setActiveTab('lead-details')}
-                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                      activeTab === 'lead-details'
-                        ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                        : 'hover:text-black'
-                    }`}
+                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'lead-details'
+                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                      : 'hover:text-black'
+                      }`}
                   >
                     Case Details
                   </button>
@@ -419,11 +453,10 @@ export default function MyResponseDetails({
                 </button> */}
                   <button
                     onClick={() => setActiveTab('chat')}
-                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${
-                      activeTab === 'chat'
-                        ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                        : 'hover:text-black'
-                    }`}
+                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'chat'
+                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                      : 'hover:text-black'
+                      }`}
                   >
                     Chat
                   </button>
@@ -450,20 +483,18 @@ export default function MyResponseDetails({
                         return (
                           <Fragment key={index}>
                             <div
-                              className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${
-                                index === 0 ? '' : 'border-l border-[#e6e7ec]'
-                              }`}
+                              className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${index === 0 ? '' : 'border-l border-[#e6e7ec]'
+                                }`}
                             >
                               {formattedDate}
                             </div>
                             {activity?.logs?.map((item, i) => {
                               return (
                                 <div
-                                  className={`activity-log-item flex gap-2 ${
-                                    index === 0 && i === 0
-                                      ? 'first-log-item'
-                                      : ''
-                                  }`}
+                                  className={`activity-log-item flex gap-2 ${index === 0 && i === 0
+                                    ? 'first-log-item'
+                                    : ''
+                                    }`}
                                   key={i}
                                 >
                                   <div className="left-track flex-grow-0 flex flex-col w-[32px] items-center">
