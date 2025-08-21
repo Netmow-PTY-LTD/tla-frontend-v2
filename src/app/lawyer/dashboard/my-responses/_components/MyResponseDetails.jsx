@@ -238,18 +238,16 @@ export default function MyResponseDetails({
               {
                 singleResponse?.data?.isHireRequested ? (
                   singleResponse?.data?.hireDecision === null ? (
-                    <div className="flex items-center justify-between max-w-md w-full p-4 bg-white rounded-lg shadow-md border border-gray-200">
-                      <p className="text-gray-800 text-sm font-medium">
+                    <div className="flex">
+                      <p className="text-gray-800 text-sm font-medium mr-3">
                         You have a request to hire.
                       </p>
-                      <div className="flex items-center gap-3">
-                        <button
-                          onClick={() => handleUpdateHireStatus("accepted")}
-                          className="px-4 py-2 rounded-lg bg-green-500 text-white text-sm font-semibold shadow-md hover:bg-green-600 active:scale-95 transition-all duration-200"
-                        >
-                          Accept
-                        </button>
-                      </div>
+                      <button
+                        onClick={() => handleUpdateHireStatus("accepted")}
+                        className="px-4 py-2 rounded-lg bg-green-500 text-white text-sm font-semibold shadow-md hover:bg-green-600 active:scale-95 transition-all duration-200"
+                      >
+                        Accept
+                      </button>
                     </div>
                   ) : singleResponse?.data?.hireDecision === "accepted" ? (
                     <p className="text-green-600 font-medium text-sm">
