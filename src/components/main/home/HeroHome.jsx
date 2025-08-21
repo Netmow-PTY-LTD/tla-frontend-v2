@@ -27,6 +27,7 @@ import { useParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { showErrorToast } from '@/components/common/toasts';
 import LawyerWarningModal from './modal/LawyerWarningModal';
+import { checkValidity } from '@/helpers/validityCheck';
 export default function HeroHome({ searchParam }) {
   const [selectedService, setSelectedService] = useState(null);
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
