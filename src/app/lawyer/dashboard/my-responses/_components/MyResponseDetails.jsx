@@ -85,7 +85,6 @@ export default function MyResponseDetails({
   //  -----------------------------------  socent end area --------------------------------------------
   const badge = singleResponse?.data?.leadId?.userProfileId?.profileType;
 
-  // const [updateStatus] = useUpdateResponseStatusMutation();
   const [hireStatusUpdate] = useHireStatusMutation();
   const [updateActivity] = useActivityLogMutation();
 
@@ -120,29 +119,12 @@ export default function MyResponseDetails({
 
   const mapUrl = getStaticMapUrl(singleResponse?.data?.responseBy?.address);
 
-  const handleUpdateStatus = async (status) => {
+
+  const handleUpdateHireStatus = async (hireDecision) => {
     try {
       const statusData = {
         responseId: singleResponse?.data?._id,
-        data: { status },
-      };
-
-      const result = await updateStatus(statusData).unwrap();
-      if (result.success) {
-        showSuccessToast(result.message);
-      }
-    } catch (error) {
-      const errorMessage = error?.data?.message || 'An error occurred';
-      showErrorToast(errorMessage);
-    }
-  };
-
-
-  const handleUpdateHireStatus = async (status) => {
-    try {
-      const statusData = {
-        responseId: singleResponse?.data?._id,
-        data: { status },
+        data: { hireDecision },
       };
 
       const result = await hireStatusUpdate(statusData).unwrap();
@@ -174,8 +156,6 @@ export default function MyResponseDetails({
       logs, // no sorting applied
     })
   );
-
-  const currentStatus = singleResponse?.data?.status || 'Pending';
 
   const iconStyles = {
     login: { Icon: LogIn, fill: '#3B82F6' }, // Blue
@@ -234,9 +214,8 @@ export default function MyResponseDetails({
     }
   };
 
-  // if (isSingleResponseLoading) {
-  //   return <ResponseSkeleton />;
-  // }
+
+  console.log('check ', singleResponse?.data?.isHireRequested?.hireDecision)
 
   return (
     <>
@@ -270,22 +249,48 @@ export default function MyResponseDetails({
                   <option value="archive">Archive</option>
                 </select>
               </div> */}
-              <button>
-                Request For Hire
-              </button>
-              <div className="flex items-center gap-2">
-                <b className="text-black text-[14px]">Current Status:</b>
-                <select
-                  className="p-2 border border-gray-300 rounded-lg bg-white text-[13px]"
-                  value={currentStatus}
-                  onChange={(e) => handleUpdateHireStatus(e.target.value)}
-                >
-                
-                  <option value="rejected">Rejected</option>
-                  <option value="hired">Hired</option>
+              {/* {
 
-                </select>
-              </div>
+                singleResponse?.data?.isHireRequested && singleResponse?.data?.isHireRequested?.hireDecision === null ?
+                  <div className="flex items-center justify-between max-w-md">
+                    <p className="text-gray-800 text-sm font-medium mr-4">
+                      You have a request to hire
+                    </p>
+                    <button
+                      onClick={() => handleUpdateHireStatus('accepted')}
+                      className="px-4 py-2 rounded-lg bg-green-500 text-white text-sm font-semibold shadow-md hover:bg-green-600 transition-all duration-200"
+                    >
+                      Accept
+                    </button>
+                  </div> : singleResponse?.data?.isHireRequested?.hireDecision ==='accepted' ? <p> alredy hired</p>:<></>
+              } */}
+
+              {
+                singleResponse?.data?.isHireRequested ? (
+                  singleResponse?.data?.isHireRequested?.hireDecision === null ? (
+                    <div className="flex items-center justify-between max-w-md w-full p-4 bg-white rounded-lg shadow-md border border-gray-200">
+                      <p className="text-gray-800 text-sm font-medium">
+                        You have a request to hire.
+                      </p>
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={() => handleUpdateHireStatus("accepted")}
+                          className="px-4 py-2 rounded-lg bg-green-500 text-white text-sm font-semibold shadow-md hover:bg-green-600 active:scale-95 transition-all duration-200"
+                        >
+                          Accept
+                        </button>
+                      </div>
+                    </div>
+                  ) : singleResponse?.data?.isHireRequested?.hireDecision === "accepted" ? (
+                    <p className="text-green-600 font-medium text-sm">
+                      ✅ Already hired
+                    </p>
+                  ) : null
+                ) : null
+              }
+
+
+
             </div>
             <div className="mt-3">
               <div className="flex flex-col items-start gap-4 ">
