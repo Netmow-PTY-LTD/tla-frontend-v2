@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { data, userDummyImage } from '@/data/data';
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
@@ -137,21 +138,32 @@ export default function LeadDetailsPage() {
     }
   );
 
+  //console.log('lawyersData', lawyersData);
+
   useEffect(() => {
     if (lawyersData && lawyersData?.data?.length > 0) {
+      const currentPage = lawyersData?.pagination?.page ?? 1;
+
       setLawyers((prev) => {
-        if (page === 1) {
-          // first page → replace
+        if (currentPage === 1) {
+          // first page → replace completely
           return lawyersData.data;
         } else {
-          // next pages → append
-          return [...prev, ...lawyersData.data];
+          // append new results (avoid duplicates by _id)
+          const existingIds = new Set(prev.map((l) => l._id));
+          const newItems = lawyersData?.data?.filter(
+            (l) => !existingIds.has(l._id)
+          );
+          return [...prev, ...newItems];
         }
       });
+
       setTotalPages(lawyersData?.pagination?.totalPage);
       setTotalLawyersCount(lawyersData?.pagination?.total);
     }
-  }, [lawyersData, page]);
+  }, [lawyersData]);
+
+  //console.log('lawyers', lawyers);
 
   const lawyerIds = lawyersData?.data?.map((lawyer) => lawyer?._id) || [];
 
@@ -168,25 +180,16 @@ export default function LeadDetailsPage() {
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
-
-        // only trigger when visible AND not already fetching
         if (entry.isIntersecting && !isFetching) {
           if (totalPages && page < totalPages) {
-            // use functional update to avoid stale closure
-            // setPage((prevPage) => {
-            //   if (prevPage < totalPages) {
-            //     return prevPage + 1;
-            //   }
-            //   return prevPage;
-            // });
             setPage((prevPage) => prevPage + 1);
           }
         }
       },
       {
-        root: null, // viewport (body scroll)
-        threshold: 1, // trigger only when fully visible
-        rootMargin: '0px 0px -50px 0px', // margin around viewport
+        root: null, // body scroll
+        threshold: 1, // trigger when fully visible
+        rootMargin: '0px 0px -50px 0px', // add buffer
       }
     );
 
@@ -196,9 +199,9 @@ export default function LeadDetailsPage() {
     return () => {
       if (currentLoader) observer.unobserve(currentLoader);
     };
-  }, [isFetching, totalPages]); // 👈 notice: no `page` dep here
+  }, [isFetching, totalPages, page]);
 
-  console.log({ page, isFetching, totalPages });
+  //console.log({ page, isFetching, totalPages });
 
   const handleShowLeadResponseDetails = (response) => {
     setSelectedLeadResponse(response);
@@ -210,7 +213,42 @@ export default function LeadDetailsPage() {
   }, []);
 
   if (isSingleLeadLoading) {
-    return <ResponseSkeleton />;
+    return (
+      <div className="p-6 space-y-8 animate-pulse">
+        {/* Header section */}
+        <div className="space-y-3">
+          <Skeleton className="h-8 w-1/2" />
+          <Skeleton className="h-4 w-1/3" />
+        </div>
+
+        {/* Content blocks */}
+        {Array.from({ length: 5 }).map((_, idx) => (
+          <div key={idx} className="flex gap-4">
+            {/* Avatar skeleton */}
+            <Skeleton className="h-14 w-14 rounded-full flex-shrink-0" />
+            {/* Text block */}
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-2/3" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
+          </div>
+        ))}
+
+        {/* Table or card-like block */}
+        <div className="space-y-4 mt-8">
+          <Skeleton className="h-6 w-1/3" />
+          {Array.from({ length: 4 }).map((_, idx) => (
+            <div key={idx} className="flex gap-4 items-center">
+              <Skeleton className="h-4 w-1/6" />
+              <Skeleton className="h-4 w-1/4" />
+              <Skeleton className="h-4 w-1/2" />1
+              <Skeleton className="h-4 w-1/5" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (
