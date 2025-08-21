@@ -23,10 +23,6 @@ const LeadCard = ({
 }) => {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
-  const urgentOption = singleLead?.data?.leadAnswers
-    .flatMap((answer) => answer.options || [])
-    .find((option) => option.option === 'Urgent');
-
   // const badge = singleLead?.data?.badge;
   const profileType = singleLead?.data?.userProfileId?.profileType;
   const badge = profileType
@@ -96,7 +92,7 @@ const LeadCard = ({
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
             <div>
               <div
-                className={`font-medium mb-1 ${
+                className={`font-medium mb-1 text-[var(--primary-color)] ${
                   isExpanded ? 'heading-base' : 'text-[13px]'
                 }`}
               >
@@ -109,24 +105,26 @@ const LeadCard = ({
               >
                 {user?.userProfileId?.address ?? ''}
               </div>
+              <div className="flex items-center gap-1 text-xs ">
+                <span
+                  className={`w-2 h-2 rounded-full ${
+                    onlineMap[user?.userProfileId?.user?._id]
+                      ? 'bg-green-500'
+                      : 'bg-gray-400'
+                  }`}
+                ></span>
+                <span className="text-gray-700">
+                  {onlineMap[user?.userProfileId?.user?._id]
+                    ? 'Online'
+                    : 'Offline'}
+                </span>
+              </div>
             </div>
           </div>
         </div>
         <p className="font-medium text-[11px] text-gray-600 mt-2 sm:mt-0 w-16 flex justify-end">
           {user?.createdAt && formatRelativeTime(user?.createdAt)}
         </p>
-        <div className="flex items-center gap-1 text-xs ">
-          <span
-            className={`w-2 h-2 rounded-full ${
-              onlineMap[user?.userProfileId?.user?._id]
-                ? 'bg-green-500'
-                : 'bg-gray-400'
-            }`}
-          ></span>
-          <span className="text-gray-700">
-            {onlineMap[user?.userProfileId?.user?._id] ? 'Online' : 'Offline'}
-          </span>
-        </div>
       </div>
 
       <hr className="border-[#F3F3F3] border" />
@@ -168,7 +166,7 @@ const LeadCard = ({
         {user?.serviceId?.name && (
           <h3
             className={`font-medium mb-2 ${
-              isExpanded ? 'heading-base' : 'text-[13px]'
+              isExpanded ? 'text-[14px]' : 'text-[13px]'
             }`}
           >
             Looking for a {user?.serviceId?.name} consultation
@@ -185,8 +183,8 @@ const LeadCard = ({
 
         <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
           <h4
-            className={`font-medium mb-2 ${
-              isExpanded ? 'heading-base' : 'text-[14px]'
+            className={`font-medium mb-2 italic ${
+              isExpanded ? 'text-sm' : 'text-[14px]'
             }`}
           >
             {user?.serviceId?.name}
