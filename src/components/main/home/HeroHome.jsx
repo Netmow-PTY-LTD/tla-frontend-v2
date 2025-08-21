@@ -28,7 +28,7 @@ import { toast } from 'sonner';
 import { showErrorToast } from '@/components/common/toasts';
 import LawyerWarningModal from './modal/LawyerWarningModal';
 import { checkValidity } from '@/helpers/validityCheck';
-export default function HeroHome({ searchParam }) {
+export default function HeroHome({ searchParam, cookieCountry }) {
   const [selectedService, setSelectedService] = useState(null);
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -55,7 +55,7 @@ export default function HeroHome({ searchParam }) {
   const { data: countryList } = useGetCountryListQuery();
 
   const defaultCountry = countryList?.data?.find(
-    (country) => country?.slug === 'au'
+    (country) => country?.slug === cookieCountry?.code?.toLowerCase()
   );
 
   // Default to Australia (AU) if available
@@ -130,13 +130,18 @@ export default function HeroHome({ searchParam }) {
     setModalOpen(true);
   };
 
+  console.log('cookieCountry', cookieCountry);
+  console.log('countryWiseServices', countryWiseServices);
+
   return (
     <section className="hero-home section">
       <div className="container">
         <div className="hero-content py-[50px]">
           {/* <h3>Get a quote for legal services.</h3> */}
           <div className="mb-[30px]">
-            <h1 className="mb-[15px]">Need a Lawyer?</h1>
+            <h1 className="mb-[15px]">
+              Need a Lawyer in {cookieCountry?.name}?
+            </h1>
             <p className="text-[#444] text-2xl font-medium">
               Get free quotes in minutes
             </p>

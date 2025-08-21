@@ -1,0 +1,90 @@
+[
+  {
+    "countryId": "682ecd01e6b730f229c8d3d3",
+    "name": "Australia",
+    "code": "AU",
+    "currency": "AUD",
+    "currencySymbol": "$",
+    "country_calling_code": "+61"
+  },
+  {
+    "countryId": "682ecd01e6b730f229c8d3d4",
+    "name": "United Kingdom",
+    "code": "GB",
+    "currency": "GBP",
+    "currencySymbol": "£",
+    "country_calling_code": "+44"
+  },
+  {
+    "countryId": "682ecd01e6b730f229c8d3d5",
+    "name": "United States",
+    "code": "US",
+    "currency": "USD",
+    "currencySymbol": "$",
+    "country_calling_code": "+1"
+  },
+  {
+    "countryId": "682ecd01e6b730f229c8d3d6",
+    "name": "Canada",
+    "code": "CA",
+    "currency": "CAD",
+    "currencySymbol": "$",
+    "country_calling_code": "+1"
+  },
+  {
+    "countryId": "682ecd01e6b730f229c8d3d7",
+    "name": "Ireland",
+    "code": "IE",
+    "currency": "EUR",
+    "currencySymbol": "€",
+    "country_calling_code": "+353"
+  },
+  {
+    "countryId": "682ecd01e6b730f229c8d3d8",
+    "name": "South Africa",
+    "code": "ZA",
+    "currency": "ZAR",
+    "currencySymbol": "R",
+    "country_calling_code": "+27"
+  },
+  {
+    "countryId": "682ecd01e6b730f229c8d3d9",
+    "name": "United Kindom",
+    "code": "GB",
+    "currency": "GBP",
+    "currencySymbol": "£",
+    "country_calling_code": "+44"
+  },
+  {
+    "countryId": "682ecd01e6b730f229c8d3da",
+    "name": "New Zealand",
+    "code": "NZ",
+    "currency": "NZD",
+    "currencySymbol": "$",
+    "country_calling_code": "+64"
+  },
+  {
+    "countryId": "682ecd01e6b730f229c8d3db",
+    "name": "Singapore",
+    "code": "SG",
+    "currency": "SGD",
+    "currencySymbol": "$",
+    "country_calling_code": "+65"
+  },
+  {
+    "countryId": "682ecd01e6b730f229c8d3dc",
+    "name": "France",
+    "code": "FR",
+    "currency": "EUR",
+    "currencySymbol": "€",
+    "country_calling_code": "+33"
+  },
+  {
+    "countryId": "682ecd01e6b730f229c8d3dd",
+    "name": "Deutschland",
+    "code": "DE",
+    "currency": "EUR",
+    "currencySymbol": "€",
+    "country_calling_code": "+49"
+  }
+]
