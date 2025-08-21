@@ -78,12 +78,15 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
         data: { hireMessage },
       };
 
+      console.log('hireMessageData', hireMessageData)
       const result = await hireRequest(hireMessageData).unwrap();
+      console.log('result  ==>', result)
       if (result.success) {
         showSuccessToast(result.message);
       }
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
+      console.log('error  ==>', error)
       showErrorToast(errorMessage);
     }
   };
@@ -186,24 +189,7 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
             </span>
             <div className="flex items-center gap-2">
 
-              {/* {Boolean(singleResponse?.data?.isHireRequested) ? (
-                <button
-                  disabled
-                  className="px-4 py-2 rounded-lg bg-green-500 text-white font-semibold cursor-not-allowed shadow-md hover:bg-green-600 transition-all duration-200"
-                >
-                  Requested to Hire
-                </button>
-              ) 
-              : (
-                <button
-                  onClick={handlehireRequest}
-                  disabled={hireRequestLoading}
-                  className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold shadow-md hover:bg-blue-700 disabled:bg-gray-400 transition-all duration-200 flex items-center gap-2"
-                >
-                  {hireRequestLoading ? <Loader2 className="animate-spin h-5 w-5" /> : "Hire now"}
-                </button>
-              )} */}
-
+              
               <div className="flex flex-col gap-2">
                 {singleResponse?.data?.hireDecision === "accepted" ? (
                   <p className="text-green-600 font-medium text-sm">
@@ -217,13 +203,13 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
                     Requested to Hire
                   </button>
                 ) : (
-                  <button
-                    onClick={handlehireRequest}
+                  <Button
+                    onClick={() => setOpenRequestModal(true)}
                     disabled={hireRequestLoading}
                     className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold shadow-md hover:bg-blue-700 disabled:bg-gray-400 transition-all duration-200 flex items-center gap-2"
                   >
                     {hireRequestLoading ? <Loader2 className="animate-spin h-5 w-5" /> : "Hire now"}
-                  </button>
+                  </Button>
                 )}
               </div>
 
