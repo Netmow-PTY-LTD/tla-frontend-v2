@@ -58,8 +58,8 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
     skip: !response?._id,
   });
 
-  // console.log('singleResponse in details', singleResponse);
-  const currentStatus = singleResponse?.data?.status || 'Pending';
+
+
   const toUser = singleResponse?.data?.responseBy?.user?._id;
   useNotifications(currentUser?._id, (data) => {
     console.log('🔔 Notification:', data);
@@ -186,14 +186,15 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
             </span>
             <div className="flex items-center gap-2">
 
-              {Boolean(singleResponse?.data?.isHireRequested) ? (
+              {/* {Boolean(singleResponse?.data?.isHireRequested) ? (
                 <button
                   disabled
                   className="px-4 py-2 rounded-lg bg-green-500 text-white font-semibold cursor-not-allowed shadow-md hover:bg-green-600 transition-all duration-200"
                 >
                   Requested to Hire
                 </button>
-              ) : (
+              ) 
+              : (
                 <button
                   onClick={handlehireRequest}
                   disabled={hireRequestLoading}
@@ -201,7 +202,32 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
                 >
                   {hireRequestLoading ? <Loader2 className="animate-spin h-5 w-5" /> : "Hire now"}
                 </button>
-              )}
+              )} */}
+
+              <div className="flex flex-col gap-2">
+                {singleResponse?.data?.hireDecision === "accepted" ? (
+                  <p className="text-green-600 font-medium text-sm">
+                    ✅ Already hired
+                  </p>
+                ) : Boolean(singleResponse?.data?.isHireRequested) ? (
+                  <button
+                    disabled
+                    className="px-4 py-2 rounded-lg bg-green-500 text-white font-semibold cursor-not-allowed shadow-md transition-all duration-200"
+                  >
+                    Requested to Hire
+                  </button>
+                ) : (
+                  <button
+                    onClick={handlehireRequest}
+                    disabled={hireRequestLoading}
+                    className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold shadow-md hover:bg-blue-700 disabled:bg-gray-400 transition-all duration-200 flex items-center gap-2"
+                  >
+                    {hireRequestLoading ? <Loader2 className="animate-spin h-5 w-5" /> : "Hire now"}
+                  </button>
+                )}
+              </div>
+
+
 
             </div>
           </div>

@@ -237,7 +237,7 @@ export default function MyResponseDetails({
               </span>
               {
                 singleResponse?.data?.isHireRequested ? (
-                  singleResponse?.data?.isHireRequested?.hireDecision === null ? (
+                  singleResponse?.data?.hireDecision === null ? (
                     <div className="flex items-center justify-between max-w-md w-full p-4 bg-white rounded-lg shadow-md border border-gray-200">
                       <p className="text-gray-800 text-sm font-medium">
                         You have a request to hire.
