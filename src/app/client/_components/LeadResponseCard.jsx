@@ -14,6 +14,7 @@ import { formatRelativeTime } from '@/helpers/formatTime';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import { userDummyImage } from '@/data/data';
 import { getTruncatedText } from '@/helpers/getTruncatedText';
+import RatingUI from './RatingUi';
 
 const LeadResponseCard = ({
   handleShowLeadResponseDetails,
@@ -34,9 +35,8 @@ const LeadResponseCard = ({
           <div className="flex-shrink-0">
             <figure className="w-[150px] h-[150px] overflow-hidden flex-shrink-0 border">
               <Image
-                src={`${
-                  response?.responseBy?.profilePicture ?? userDummyImage
-                }`}
+                src={`${response?.responseBy?.profilePicture ?? userDummyImage
+                  }`}
                 alt={response?.responseBy?.name ?? ''}
                 width={150}
                 height={150}
@@ -57,8 +57,8 @@ const LeadResponseCard = ({
                             badge.toLowerCase() === 'premium lawyer'
                               ? '/assets/img/badge.svg'
                               : badge.toLowerCase() === 'expert lawyer'
-                              ? '/assets/img/expert.png'
-                              : '/assets/img/basic.png'
+                                ? '/assets/img/expert.png'
+                                : '/assets/img/basic.png'
                           }
                           width="30"
                           height="30"
@@ -67,31 +67,28 @@ const LeadResponseCard = ({
                       </div>
                     )}
                     <div
-                      className={`font-medium mb-1 ${
-                        isExpanded ? 'heading-base' : 'text-[18px]'
-                      }`}
+                      className={`font-medium mb-1 ${isExpanded ? 'heading-base' : 'text-[18px]'
+                        }`}
                     >
                       {response?.responseBy?.name}
                     </div>
                     <div className="flex items-center gap-1 text-xs ">
                       <span
-                        className={`w-2 h-2 rounded-full ${
-                          onlineMap[response?.responseBy?.user?._id]
+                        className={`w-2 h-2 rounded-full ${onlineMap[response?.responseBy?.user?._id]
                             ? 'bg-green-500'
                             : 'bg-gray-400'
-                        }`}
+                          }`}
                       ></span>
                     </div>
                   </div>
                   <div
-                    className={`${
-                      isExpanded ? 'text-[13px]' : 'text-[10px]'
-                    } text-gray-500`}
+                    className={`${isExpanded ? 'text-[13px]' : 'text-[10px]'
+                      } text-gray-500`}
                   >
                     {response?.responseBy?.address ?? ''}
                   </div>
                 </div>
-                <div className="flex items-center gap-1">
+                {/* <div className="flex items-center gap-1">
                   <div className="flex gap-1">
                     <Star className="w-4 h-4 text-yellow-500" />
                     <Star className="w-4 h-4 text-yellow-500" />
@@ -100,7 +97,9 @@ const LeadResponseCard = ({
                     <Star className="w-4 h-4 text-yellow-500" />
                   </div>
                   <span className="text-sm">(1)</span>
-                </div>
+                </div> */}
+                <RatingUI singleResponse={response} />
+
               </div>
             </div>
             {response?.responseBy?.serviceIds?.length > 0 && (
@@ -126,9 +125,8 @@ const LeadResponseCard = ({
             )}
             <div className="flex flex-col sm:flex-row items-center py-3 gap-4">
               <Button
-                className={`px-4 py-2 w-full sm:w-auto rounded-lg ${
-                  isExpanded ? 'text-[14px]' : 'text-[12px] '
-                } font-medium bg-[var(--color-special)] text-white`}
+                className={`px-4 py-2 w-full sm:w-auto rounded-lg ${isExpanded ? 'text-[14px]' : 'text-[12px] '
+                  } font-medium bg-[var(--color-special)] text-white`}
                 onClick={() => handleShowLeadResponseDetails(response)}
               >
                 View Details

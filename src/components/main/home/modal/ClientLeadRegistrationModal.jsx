@@ -27,9 +27,12 @@ export default function ClientLeadRegistrationModal({
   modalOpen,
   setModalOpen,
   selectedServiceWiseQuestions,
+  selectedService,
   countryId,
+  defaultCountry,
   serviceId,
   locationId,
+  zipCodeList,
   isQuestionsLoading,
 }) {
   const [step, setStep] = useState(0);
@@ -68,11 +71,15 @@ export default function ClientLeadRegistrationModal({
   const [phone, setPhone] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [zipCode, setZipCode] = useState('');
+  const [searchZipCode, setSearchZipCode] = useState('');
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
   const [address, setAddress] = useState('');
   const [postalCode, setPostalCode] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [stepwiseCheckedOptions, setStepwiseCheckedOptions] = useState(null);
+  const [newZipCodeList, setNewZipCodeList] = useState([]);
+  const [isTypedNewValue, setIsTypedNewValue] = useState(false);
 
   useEffect(() => {
     if (!selectedServiceWiseQuestions?.length) return;
@@ -98,28 +105,54 @@ export default function ClientLeadRegistrationModal({
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const { data: allZipCodes, isLoading: isZipCodeLoading } =
-    useGetZipCodeListQuery();
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDebouncedSearch(searchZipCode);
+    }, 500); // wait 500ms after typing
 
-  const filteredZipCodes = allZipCodes?.data?.filter((item) =>
-    typeof zipCode === 'string'
-      ? item?.zipcode?.toLowerCase().includes(zipCode.toLowerCase())
-      : true
-  );
+    return () => clearTimeout(timeout); // cleanup on each keystroke
+  }, [searchZipCode]);
+
+  const paramsPayload = {
+    countryId: countryId,
+    search: debouncedSearch || '',
+  };
+
+  const { data: allZipCodes, isLoading: isZipCodeLoading } =
+    useGetZipCodeListQuery(paramsPayload, {
+      skip: !countryId || !debouncedSearch,
+    });
 
   useEffect(() => {
-    if (locationId && allZipCodes?.data?.length > 0) {
-      setZipCode(locationId);
+    if (isTypedNewValue) {
+      if (allZipCodes?.data?.length > 0) {
+        setNewZipCodeList(allZipCodes.data);
+      }
+    } else {
+      if (zipCodeList?.length > 0) {
+        setNewZipCodeList(zipCodeList);
+      }
 
-      const selectedZip = allZipCodes.data.find((z) => z._id === locationId);
-      if (selectedZip) {
-        setPostalCode(selectedZip.postalCode);
-        setLatitude(selectedZip.latitude);
-        setLongitude(selectedZip.longitude);
-        setAddress(selectedZip.zipcode); // full formatted address
+      if (locationId && newZipCodeList?.length > 0) {
+        setZipCode(locationId);
+
+        const selectedZip = newZipCodeList?.find((z) => z._id === locationId);
+        if (selectedZip) {
+          setPostalCode(selectedZip?.postalCode);
+          setLatitude(selectedZip?.latitude);
+          setLongitude(selectedZip?.longitude);
+          setAddress(selectedZip?.zipcode); // full formatted address
+          setSearchZipCode(selectedZip?.zipcode);
+        }
       }
     }
-  }, [locationId, allZipCodes]);
+  }, [locationId, newZipCodeList, allZipCodes, zipCodeList]);
+
+  const handleZipCodeSearch = (e) => {
+    if (e.target.value !== '') {
+      setIsTypedNewValue(true);
+    }
+  };
 
   const addressInfo = {
     countryId: country.countryId,
@@ -130,7 +163,7 @@ export default function ClientLeadRegistrationModal({
     postalCode: postalCode || '',
   };
 
-  //console.log('addressInfo', addressInfo);
+  // console.log('addressInfo', addressInfo);
 
   //setting initial data
 
@@ -360,7 +393,6 @@ export default function ClientLeadRegistrationModal({
 
       const token = res.token;
       const userPayload = verifyToken(token);
-  
 
       if (userPayload) {
         dispatch(setUser({ user: res?.data?.userData, token }));
@@ -462,18 +494,6 @@ export default function ClientLeadRegistrationModal({
     return false;
   })();
 
-  // console.log('isQuestionsLoading:', isQuestionsLoading);
-  // console.log('selectedServiceWiseQuestions:', selectedServiceWiseQuestions);
-  // console.log(
-  //   '!selectedServiceWiseQuestions?.length:',
-  //   !selectedServiceWiseQuestions?.length
-  // );
-
-  //console.log('allZipCodes:', allZipCodes);
-
-  // console.log('step:', step);
-  //console.log('questionsPayload:', questionsPayload);
-
   // Update stepwiseCheckedOptions whenever step or questionsPayload changes
   useEffect(() => {
     const existing = questionsPayload?.find((item) => item.step === step);
@@ -505,6 +525,8 @@ export default function ClientLeadRegistrationModal({
   }, [fullClonedQuestions, step, stepwiseCheckedOptions]);
 
   //console.log('stepwiseCheckedOptions:', stepwiseCheckedOptions);
+  //console.log('selectedService:', selectedService);
+  console.log('zipCode:', zipCode);
 
   return (
     <Modal
@@ -524,67 +546,83 @@ export default function ClientLeadRegistrationModal({
       overlayBg={
         step >= totalQuestions + 1 ? '/assets/img/blur-profile.webp' : ''
       }
+      paddingTop="pt-0"
+      paddingLeft="pl-0"
+      paddingRight="pr-0"
+      border="border-0"
+      showCloseButton={true}
     >
       {isQuestionsLoading || !selectedServiceWiseQuestions?.length ? (
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-2 pt-6 px-6">
           <Loader className="w-4 h-4 animate-spin" /> Loading question...
         </div>
       ) : step < totalQuestions ? (
         viewData?.question ? (
-          <div className="space-y-4 mt-4">
-            <h4 className="text-[24px] font-semibold text-center mb-8">
-              {viewData.question}
-            </h4>
-            <div className="border border-1 flex flex-col gap-2 rounded-lg max-h-[300px] overflow-y-auto">
-              {viewData.options?.length > 0 &&
-                viewData.options?.map((option, index) => {
-                  const isLast = index === viewData.options.length - 1;
-                  const isOther = option?.name?.toLowerCase() === 'other';
+          <div className="space-y-4">
+            {step === 0 && selectedService?.serviceField?.bannerImage && (
+              <div
+                className="w-full max-h-[120px] bg-cover bg-center bg-no-repeat rounded-t-lg"
+                style={{
+                  backgroundImage: `url(${selectedService.serviceField.bannerImage})`,
+                  height: '120px',
+                }}
+              />
+            )}
+            <div className="px-6 pt-6">
+              <h4 className="text-[24px] font-semibold text-center mb-8">
+                {viewData.question}
+              </h4>
+              <div className="border border-1 flex flex-col gap-2 rounded-lg max-h-[300px] overflow-y-auto">
+                {viewData?.options?.length > 0 &&
+                  viewData?.options?.map((option, index) => {
+                    const isLast = index === viewData.options.length - 1;
+                    const isOther = option?.name?.toLowerCase() === 'other';
 
-                  const isChecked = option?.is_checked;
+                    const isChecked = option?.is_checked;
 
-                  return (
-                    <label
-                      key={option._id || index}
-                      className={`flex gap-3 px-4 py-3 ${
-                        !isLast ? 'border-b' : ''
-                      }`}
-                    >
-                      <span className="flex items-center gap-3">
-                        <input
-                          type={
-                            viewData.questionType === 'checkbox'
-                              ? 'checkbox'
-                              : 'radio'
-                          }
-                          name={`question-${viewData._id}`}
-                          onChange={(e) =>
-                            handleOptionChange(option._id, e.target.checked)
-                          }
-                          checked={isChecked}
-                        />
+                    return (
+                      <label
+                        key={option._id || index}
+                        className={`flex gap-3 px-4 py-3 ${
+                          !isLast ? 'border-b' : ''
+                        }`}
+                      >
+                        <span className="flex items-center gap-3">
+                          <input
+                            type={
+                              viewData.questionType === 'checkbox'
+                                ? 'checkbox'
+                                : 'radio'
+                            }
+                            name={`question-${viewData._id}`}
+                            onChange={(e) =>
+                              handleOptionChange(option._id, e.target.checked)
+                            }
+                            checked={isChecked}
+                          />
 
-                        {/* Render name only if not 'Other' */}
-                        {option?.name !== 'Other' && (
-                          <span>{option?.name}</span>
+                          {/* Render name only if not 'Other' */}
+                          {option?.name !== 'Other' && (
+                            <span>{option?.name}</span>
+                          )}
+                        </span>
+
+                        {/* Render input only if option is 'Other' */}
+                        {isOther && (
+                          <input
+                            type="text"
+                            id={`${option._id}-other`}
+                            placeholder="Other"
+                            className="border rounded px-2 py-1 w-full"
+                            // onChange={(e) =>
+                            //   handleOptionChange(option._id, e.target.value)
+                            // }
+                          />
                         )}
-                      </span>
-
-                      {/* Render input only if option is 'Other' */}
-                      {isOther && (
-                        <input
-                          type="text"
-                          id={`${option._id}-other`}
-                          placeholder="Other"
-                          className="border rounded px-2 py-1 w-full"
-                          // onChange={(e) =>
-                          //   handleOptionChange(option._id, e.target.value)
-                          // }
-                        />
-                      )}
-                    </label>
-                  );
-                })}
+                      </label>
+                    );
+                  })}
+              </div>
             </div>
           </div>
         ) : (
@@ -593,7 +631,7 @@ export default function ClientLeadRegistrationModal({
           </div>
         )
       ) : step === totalQuestions ? (
-        <div className="space-y-6">
+        <div className="space-y-6 px-6 pt-6">
           <h4 className="text-[24px] font-semibold text-center">
             When are you looking to get started?
           </h4>
@@ -621,7 +659,7 @@ export default function ClientLeadRegistrationModal({
           </div>
         </div>
       ) : step === totalQuestions + 1 ? (
-        <div className="space-y-6">
+        <div className="space-y-6 pt-6 px-6">
           <div className="text-center flex flex-col items-center gap-4 border-b border-gray-200 pb-6">
             <svg
               width="50"
@@ -654,7 +692,7 @@ export default function ClientLeadRegistrationModal({
           </div>
         </div>
       ) : step === totalQuestions + 2 ? (
-        <div className="space-y-6">
+        <div className="space-y-6 px-6 pt-6">
           <h4 className="text-[24px] font-semibold text-center">
             Want to share anything more?
           </h4>
@@ -669,7 +707,7 @@ export default function ClientLeadRegistrationModal({
           </label>
         </div>
       ) : step === totalQuestions + 3 ? (
-        <div className="space-y-6">
+        <div className="space-y-6 pt-6 px-6">
           <h4 className="text-[24px] font-semibold text-center">
             What is your estimated budget?
           </h4>
@@ -697,7 +735,7 @@ export default function ClientLeadRegistrationModal({
           </div>
         </div>
       ) : step === totalQuestions + 4 ? (
-        <div className="space-y-4">
+        <div className="space-y-4 pt-6 px-6">
           <h4 className="text-[24px] font-semibold text-center">
             Where do you need the service?
           </h4>
@@ -707,9 +745,10 @@ export default function ClientLeadRegistrationModal({
           <Combobox
             value={zipCode ?? ''}
             onChange={(selectedId) => {
+              console.log('selectedId', selectedId);
               setZipCode(selectedId);
 
-              const selectedZip = allZipCodes?.data?.find(
+              const selectedZip = newZipCodeList?.find(
                 (z) => z._id === selectedId
               );
               if (selectedZip) {
@@ -717,6 +756,7 @@ export default function ClientLeadRegistrationModal({
                 setLatitude(selectedZip.latitude);
                 setLongitude(selectedZip.longitude);
                 setAddress(selectedZip.zipcode); // full formatted address
+                setSearchZipCode(selectedZip.zipcode);
               }
             }}
           >
@@ -724,13 +764,11 @@ export default function ClientLeadRegistrationModal({
               <ComboboxInput
                 className="border border-gray-300 rounded-md w-full h-[44px] px-4"
                 onChange={(event) => {
-                  // This is only for filtering typed text
-                  const value = event.target.value;
-                  setZipCode(value);
-                  // You can trigger filtering logic here if needed
+                  setSearchZipCode(event.target.value);
                 }}
-                displayValue={(val) =>
-                  allZipCodes?.data?.find((z) => z._id === val)?.zipcode || val
+                onKeyUp={(e) => handleZipCodeSearch(e)}
+                displayValue={(id) =>
+                  allZipCodes?.data?.find((z) => z._id === id)?.zipcode || ''
                 }
                 placeholder="Select a postcode"
                 autoComplete="off"
@@ -738,12 +776,13 @@ export default function ClientLeadRegistrationModal({
               <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
                 <ChevronDown className="h-4 w-4 text-gray-500" />
               </ComboboxButton>
-              {filteredZipCodes?.length > 0 && (
+
+              {newZipCodeList?.length > 0 && (
                 <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  {filteredZipCodes?.slice(0, 10).map((item) => (
+                  {newZipCodeList?.slice(0, 10).map((item) => (
                     <ComboboxOption
                       key={item._id}
-                      value={item._id}
+                      value={item._id} // ✅ keep _id as the value
                       className={({ active }) =>
                         cn(
                           'cursor-pointer select-none relative py-2 px-6',
@@ -776,7 +815,7 @@ export default function ClientLeadRegistrationModal({
           </Combobox>
         </div>
       ) : step === totalQuestions + 5 ? (
-        <div className="space-y-6">
+        <div className="space-y-6 pt-6 px-6">
           <h4 className="text-[24px] font-semibold text-center">
             Write a few words about yourself?
           </h4>
@@ -792,7 +831,7 @@ export default function ClientLeadRegistrationModal({
           </label>
         </div>
       ) : step === totalQuestions + 6 ? (
-        <div className="space-y-6">
+        <div className="space-y-6 pt-6 px-6">
           <h4 className="text-[24px] font-semibold text-center">
             What email address would you like quotes sent to?
           </h4>
@@ -810,7 +849,7 @@ export default function ClientLeadRegistrationModal({
           </label>
         </div>
       ) : step === totalSteps ? (
-        <div className="space-y-6">
+        <div className="space-y-6 pt-6 px-6">
           <h4 className="text-[24px] font-semibold text-center">
             What phone number can we reach you on?
           </h4>
@@ -844,7 +883,7 @@ export default function ClientLeadRegistrationModal({
           <div
             className={`flex ${
               step === 0 ? 'justify-end' : 'justify-between'
-            } mt-8`}
+            } mt-8 px-6`}
           >
             {step !== 0 && (
               <Button

@@ -24,6 +24,7 @@ const LawyerCard = ({
   id,
   lawyerOnlineStatus,
   refetch,
+  isHiredLead
 }) => {
   const [openRequestModal, setOpenRequestModal] = useState(false);
   const profileType = lawyer?.profile?.profileType;
@@ -176,6 +177,7 @@ const LawyerCard = ({
           </div>
           <div className="flex flex-col justify-end items-center">
             <div className="flex flex-col p-3 gap-3 sm:gap-0">
+              
               <Button
                 className={`px-4 py-2 w-full sm:w-auto rounded-lg ${
                   isExpanded ? 'text-[14px]' : 'text-[12px]'
@@ -184,14 +186,14 @@ const LawyerCard = ({
                 }`}
                 // onClick={handleRequest}
                 onClick={() => setOpenRequestModal(true)}
-                disabled={isLoading || lawyer?.isRequested} // Disable if loading or already requested
+                disabled={isLoading || isHiredLead || lawyer?.isRequested} // Disable if loading or already requested
               >
                 {isLoading ? (
                   <div className="flex items-center gap-1">
                     <Loader />
                     <span>Requesting...</span>
                   </div>
-                ) : lawyer?.isRequested ? (
+                ) : isHiredLead? ('Alredy Hired'): lawyer?.isRequested ? (
                   'Requested'
                 ) : (
                   'Request Reply'

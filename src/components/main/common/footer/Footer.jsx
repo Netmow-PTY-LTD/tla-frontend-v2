@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect, useState } from 'react';
 import styles from './Footer.module.css';
 import Link from 'next/link';
@@ -17,20 +18,26 @@ import countries from '@/data/countries.json';
 
 export default function Footer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
-  const cookieCountry = Cookies.get('country');
+  useEffect(() => {
+    let cookieCountry = JSON.parse(Cookies.get('countryObj'));
 
-  //console.log('cookieCountry', cookieCountry);
+    console.log('cookieCountry', cookieCountry);
 
-  const defaultCountry = cookieCountry
-    ? countries.find((c) => c.code.toLowerCase() === cookieCountry)
-    : null;
+    // if (!cookieCountry) {
+    //   cookieCountry = 'au'; // default
+    //   Cookies.set('country', cookieCountry, { expires: 3650 });
+    // }
 
-  //console.log('defaultCountry', defaultCountry);
+    const defaultCountry = cookieCountry
+      ? countries.find((c) => c.code.toLowerCase() === cookieCountry?.code)
+      : null;
 
-  const [selectedCountry, setSelectedCountry] = useState(
-    defaultCountry || null
-  );
+    setSelectedCountry(cookieCountry);
+  }, [countries]);
+
+  console.log('selectedCountry', selectedCountry);
 
   // console.log('cookieCountry in footer', JSON.parse(cookieCountry));
 

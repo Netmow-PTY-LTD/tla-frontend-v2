@@ -42,6 +42,8 @@ import SendMailModalForClient from './my-leads/SendMailModalForClient';
 import SendSmsModalClient from './my-leads/SendSmsModalClient';
 import ChatBoxForLead from './chat/ChatBoxForLead';
 import { HireRequestMessageModal } from './modal/HireRequestMessageModal';
+import RatingForm from '../dashboard/my-cases/_components/RatingForm';
+import RatingUI from './RatingUi';
 
 export default function LeadResponseDetails({ onBack, response, onlineMap }) {
   const [activeTab, setActiveTab] = useState('activity');
@@ -59,6 +61,9 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
   });
 
 
+
+  console.log('single respoonse ==>', singleResponse?.data?.leadId)
+  console.log('singleResponse?.data?.clientRating ==>', singleResponse?.data?.clientRating)
 
   const toUser = singleResponse?.data?.responseBy?.user?._id;
   useNotifications(currentUser?._id, (data) => {
@@ -189,7 +194,8 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
             </span>
             <div className="flex items-center gap-2">
 
-              
+              <RatingUI singleResponse={singleResponse?.data} />
+
               <div className="flex flex-col gap-2">
                 {singleResponse?.data?.hireDecision === "accepted" ? (
                   <p className="text-green-600 font-medium text-sm">
@@ -210,10 +216,12 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
                   >
                     {hireRequestLoading ? <Loader2 className="animate-spin h-5 w-5" /> : "Hire now"}
                   </Button>
+
                 )}
+
+
+
               </div>
-
-
 
             </div>
           </div>
