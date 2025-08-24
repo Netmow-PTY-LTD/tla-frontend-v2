@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Star } from "lucide-react";
 import { Modal } from "@/components/UIComponents/Modal";
+import { useCreateRatingMutation } from "@/store/features/public/publicApiService";
+import { toast } from "sonner";
 
 const ratingSchema = z.object({
   rating: z
@@ -27,10 +29,7 @@ export default function RatingForm({ response }) {
   const [open, setOpen] = useState(false);
   const [hoveredStar, setHoveredStar] = useState(null);
 
-
-
-  console.log('lead', response)
-
+  const [rateLawyer] = useCreateRatingMutation()
 
 
   const {
@@ -57,9 +56,13 @@ export default function RatingForm({ response }) {
       leadId: response?.leadId?._id
     }
 
+    const res = await rateLawyer(payloadRating).unwrap();
 
-    console.log('payloadRating ==>', payloadRating)
-    setOpen(false);
+    if (res.success) {
+      toast.success(`${res.message}`)
+      setOpen(false);
+    }
+
   };
 
   return (
