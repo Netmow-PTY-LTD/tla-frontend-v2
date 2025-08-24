@@ -167,6 +167,16 @@ export default function LeadManagement() {
       cell: ({ row }) => <div> {row.getValue('status')}</div>,
     },
     {
+      accessorKey: 'closeStatus',
+      header: 'Close Status',
+      cell: ({ row }) => <div> {row.getValue('closeStatus')}</div>,
+    },
+    {
+      accessorKey: 'hireStatus',
+      header: 'Hire Status',
+      cell: ({ row }) => <div> {row.getValue('hireStatus')}</div>,
+    },
+    {
       id: 'actions',
       header: 'Actions',
       enableHiding: false,

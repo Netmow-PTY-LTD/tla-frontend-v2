@@ -1,0 +1,92 @@
+[
+  {
+    "countryId": "682ecd01e6b730f229c8d3d3",
+    "name": "Australia",
+    "code": "AU",
+    "currency": "AUD",
+    "currencySymbol": "$",
+    "country_calling_code": "+61",
+    "flag": "/assets/img/flags/au-flag.png"
+  },
+  {
+    "countryId": "68a6c60a551ac20293f25a98",
+    "name": "United Kingdom",
+    "code": "GB",
+    "currency": "GBP",
+    "currencySymbol": "£",
+    "country_calling_code": "+44",
+    "flag": "/assets/img/flags/gb-flag.png"
+  },
+  {
+    "countryId": "68a6c616551ac20293f25ae5",
+    "name": "United States",
+    "code": "US",
+    "currency": "USD",
+    "currencySymbol": "$",
+    "country_calling_code": "+1",
+    "flag": "/assets/img/flags/us-flag.png"
+  },
+  {
+    "countryId": "68a6c6c2551ac20293f25f38",
+    "name": "Canada",
+    "code": "CA",
+    "currency": "CAD",
+    "currencySymbol": "$",
+    "country_calling_code": "+1",
+    "flag": "/assets/img/flags/ca-flag.png"
+  },
+  {
+    "countryId": "68a6c6d2551ac20293f25fa5",
+    "name": "Ireland",
+    "code": "IE",
+    "currency": "EUR",
+    "currencySymbol": "€",
+    "country_calling_code": "+353",
+    "flag": "/assets/img/flags/ie-flag.png"
+  },
+  {
+    "countryId": "68a6c6de551ac20293f25ff3",
+    "name": "South Africa",
+    "code": "ZA",
+    "currency": "ZAR",
+    "currencySymbol": "R",
+    "country_calling_code": "+27",
+    "flag": "/assets/img/flags/za-flag.png"
+  },
+  {
+    "countryId": "68a6c6eb551ac20293f26048",
+    "name": "New Zealand",
+    "code": "NZ",
+    "currency": "NZD",
+    "currencySymbol": "$",
+    "country_calling_code": "+64",
+    "flag": "/assets/img/flags/nz-flag.png"
+  },
+  {
+    "countryId": "68a6c6f5551ac20293f26088",
+    "name": "Singapore",
+    "code": "SG",
+    "currency": "SGD",
+    "currencySymbol": "$",
+    "country_calling_code": "+65",
+    "flag": "/assets/img/flags/sg-flag.png"
+  },
+  {
+    "countryId": "68a6c700551ac20293f260d0",
+    "name": "France",
+    "code": "FR",
+    "currency": "EUR",
+    "currencySymbol": "€",
+    "country_calling_code": "+33",
+    "flag": "/assets/img/flags/fr-flag.png"
+  },
+  {
+    "countryId": "68a6c70d551ac20293f26132",
+    "name": "Deutschland",
+    "code": "DE",
+    "currency": "EUR",
+    "currencySymbol": "€",
+    "country_calling_code": "+49",
+    "flag": "/assets/img/flags/de-flag.png"
+  }
+]

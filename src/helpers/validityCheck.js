@@ -6,14 +6,14 @@ export const checkValidity = (token) => {
 
     const decoded = jwtDecode(token);
 
-    // Check if the token has expired
-    const currentTime = Date.now() / 1000; // in seconds
+    const currentTime = Date.now() / 1000;
+
     if (decoded.exp && decoded.exp < currentTime) {
       console.warn('Token has expired');
       return false;
     }
 
-    return decoded; // token is valid
+    return true; // Just return boolean
   } catch (err) {
     console.error('Invalid token:', err);
     return false;

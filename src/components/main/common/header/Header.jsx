@@ -141,11 +141,6 @@ export default function Header() {
     setServiceWiseQuestions(singleServicewiseQuestionsData?.data || []);
   }, [singleServicewiseQuestionsData]);
 
-  // if (!validToken) {
-  //   dispatch(LogOut());
-  //   Cookies.remove('token');
-  // }
-
   const filteredServices = countryWiseServices?.data?.filter((service) =>
     service.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -399,7 +394,7 @@ export default function Header() {
               )}
             </div>
 
-            {validToken && currentUser ? (
+            {validToken ? (
               <div className="flex items-center gap-4 flex-shrink-0">
                 <Link href={dashboardUrl} className={styles.btn_register}>
                   <span>Dashboard</span>

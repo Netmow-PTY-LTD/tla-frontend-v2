@@ -8,7 +8,7 @@ export const responseApiService = baseApi.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags:['response','response-my','response-list'],
+      invalidatesTags: ['response', 'response-my', 'response-list'],
     }),
 
     getAllResponses: builder.query({
@@ -30,7 +30,7 @@ export const responseApiService = baseApi.injectEndpoints({
       query: (queryParams) => ({
         url: '/response/my',
         method: 'GET',
-        params:queryParams
+        params: queryParams
       }),
       providesTags: ['response-my'],
     }),
@@ -43,7 +43,7 @@ export const responseApiService = baseApi.injectEndpoints({
           body: body.data,
         }
       },
-      invalidatesTags: ['response','notification','response-my','response-list'],
+      invalidatesTags: ['response', 'notification', 'response-my', 'response-list'],
     }),
 
     // activity log
@@ -63,15 +63,36 @@ export const responseApiService = baseApi.injectEndpoints({
           body,
         }
       },
-      invalidatesTags: ['response','notification','response-my','response-list','credit-payment','user-credit-stats','transaction-history','transaction-history-list','next-offer'],
+      invalidatesTags: ['response', 'notification', 'response-my', 'response-list', 'credit-payment', 'user-credit-stats', 'transaction-history', 'transaction-history-list', 'next-offer'],
     }),
-  getChatHistory: builder.query({
+    getChatHistory: builder.query({
       query: (responseId) => ({
         url: `/chat/${responseId}`,
         method: 'GET',
-       
+
       }),
       // providesTags: ['chat'],
+    }),
+
+    hireRequest: builder.mutation({
+      query: (body) => {
+        return {
+          url: `/response/${body.responseId}/request-hire`,
+          method: 'PATCH',
+          body: body.data,
+        }
+      },
+      invalidatesTags: ['response', 'notification', 'response-my', 'response-list'],
+    }),
+    hireStatus: builder.mutation({
+      query: (body) => {
+        return {
+          url: `/response/${body.responseId}/hire-status`,
+          method: 'PATCH',
+          body: body.data,
+        }
+      },
+      invalidatesTags: ['response', 'notification', 'response-my', 'response-list'],
     }),
 
   }),
@@ -85,8 +106,10 @@ export const {
   useUpdateResponseStatusMutation,
   useActivityLogMutation,
   useContactLeadMutation,
-  useGetChatHistoryQuery
-  
+  useGetChatHistoryQuery,
+  useHireRequestMutation,
+  useHireStatusMutation
+
 
 
 } = responseApiService;

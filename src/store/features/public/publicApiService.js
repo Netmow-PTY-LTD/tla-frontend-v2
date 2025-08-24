@@ -8,7 +8,7 @@ const publicApiService = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['Country','Country-list'],
+      invalidatesTags: ['Country', 'Country-list'],
     }),
     getCountryList: builder.query({
       query: () => ({
@@ -49,9 +49,10 @@ const publicApiService = baseApi.injectEndpoints({
       invalidatesTags: ['Country'],
     }),
     getZipCodeList: builder.query({
-      query: () => ({
+      query: (params) => ({
         url: `/country/zipcode/list`,
         method: 'GET',
+        params,
       }),
       providesTags: ['zipcode-list'],
     }),

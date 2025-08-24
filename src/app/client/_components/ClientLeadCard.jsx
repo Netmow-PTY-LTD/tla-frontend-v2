@@ -269,7 +269,18 @@ const ClientLeadCard = ({ user, isExpanded }) => {
                  <RespondersOnline user={user} />
                  </div> */}
 
-        {user?.status === 'closed' ? (
+        {
+          user?.hireStatus !== 'not_requested' ? (
+            <div className="text-center">
+              <span className="px-3 py-1 text-sm font-medium 00 rounded-full">
+                {
+                  user?.hireStatus
+                }
+              </span>
+            </div>
+          ) : <></>
+        }
+        {user?.closeStatus === 'closed' ? (
           <div className="text-center">
             <span className="px-3 py-1 text-sm font-medium text-white bg-red-600 rounded-full">
               Closed

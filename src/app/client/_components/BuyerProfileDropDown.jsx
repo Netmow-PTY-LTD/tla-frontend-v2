@@ -23,6 +23,7 @@ import {
   useAuthUserInfoQuery,
 } from '@/store/features/auth/authApiService';
 import { Skeleton } from '@/components/ui/skeleton';
+import Cookies from 'js-cookie';
 
 export default function BuyerProfileDropDown({ data }) {
   const dispatch = useDispatch();
@@ -40,10 +41,20 @@ export default function BuyerProfileDropDown({ data }) {
    * - Redirects the user to the login page using the Next.js router.
    */
   const [authLogout] = useAuthLogOutMutation();
-  const handleLogout = () => {
-    authLogout();
+  const handleLogout = async () => {
+    try {
+      await authLogout().unwrap();
+    } catch (error) {
+      console.log(error);
+    }
     disconnectSocket();
     dispatch(logOut());
+    Cookies.remove('token');
+
+    await persistor.purge();
+
+    localStorage.clear();
+
     router.push('/login');
   };
 
