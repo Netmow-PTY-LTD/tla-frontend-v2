@@ -28,6 +28,7 @@ import { toast } from 'sonner';
 import { showErrorToast } from '@/components/common/toasts';
 import LawyerWarningModal from './modal/LawyerWarningModal';
 import { checkValidity } from '@/helpers/validityCheck';
+import { useGetAllCategoriesQuery } from '@/store/features/public/catagorywiseServiceApiService';
 export default function HeroHome({ searchParam, cookieCountry }) {
   const [selectedService, setSelectedService] = useState(null);
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
@@ -35,7 +36,9 @@ export default function HeroHome({ searchParam, cookieCountry }) {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [service, setService] = useState(null);
   const [location, setLocation] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [selectedZipCodeId, setSelectedZipCodeId] = useState(null);
+  const [zipCodeList, setZipCodeList] = useState([]);
 
   const [filteredServices, setFilteredServices] = useState([]);
   //const [filteredZipCodes, setFilteredZipCodes] = useState([]);
@@ -56,15 +59,29 @@ export default function HeroHome({ searchParam, cookieCountry }) {
 
   const { data: countryList } = useGetCountryListQuery();
 
+  console.log('countryList', countryList);
+  console.log('cookieCountry', cookieCountry);
+
   const defaultCountry = countryList?.data?.find(
     (country) => country?._id === cookieCountry?.countryId
   );
+
+  console.log('defaultCountry', defaultCountry);
 
   // Default to Australia (AU) if available
   const { data: countryWiseServices, isLoading: isCountryWiseServicesLoading } =
     useGetCountryWiseServicesQuery(defaultCountry?._id, {
       skip: !defaultCountry?._id, // Skip
     });
+
+  const { data: allCategories, isLoading: isAllCategoriesLoading } =
+    useGetAllCategoriesQuery();
+
+  const allServices =
+    allCategories?.data?.flatMap((category) => category.services) || [];
+
+  console.log('categories', allCategories?.data);
+  console.log('allServices', allServices);
 
   useEffect(() => {
     if (!selectedService?._id) return;
@@ -102,14 +119,24 @@ export default function HeroHome({ searchParam, cookieCountry }) {
 
   //console.log('currentUser', currentUser);
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDebouncedSearch(location);
+    }, 500); // wait 500ms after typing
+
+    return () => clearTimeout(timeout); // cleanup on each keystroke
+  }, [location]);
+
   const paramsPayload = {
     countryId: defaultCountry?._id,
-    search: location || '',
+    search: debouncedSearch || '',
   };
+
+  console.log('paramsPayload', paramsPayload);
 
   const { data: allZipCodes, isLoading: isZipCodeLoading } =
     useGetZipCodeListQuery(paramsPayload, {
-      skip: !defaultCountry?._id,
+      skip: !defaultCountry?._id || !debouncedSearch,
     });
 
   const selectedZipCode = allZipCodes?.data?.find(
@@ -120,11 +147,16 @@ export default function HeroHome({ searchParam, cookieCountry }) {
     item?.zipcode?.toLowerCase().includes(location?.toLowerCase())
   );
 
-  const defaultCountryZipCodes = allZipCodes?.data?.filter(
-    (item) => item?.countryCode === defaultCountry?.slug
-  );
+  // const defaultCountryZipCodes = allZipCodes?.data?.filter(
+  //   (item) => item?.countryCode === defaultCountry?.slug
+  // );
 
-  //console.log('filteredZipCodes', filteredZipCodes);
+  console.log('allZipCodes', allZipCodes?.data);
+
+  useEffect(() => {
+    if (isZipCodeLoading) return; // ✅ Wait for loading to complete
+    setZipCodeList(allZipCodes?.data || []);
+  }, [isZipCodeLoading, allZipCodes]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -135,6 +167,12 @@ export default function HeroHome({ searchParam, cookieCountry }) {
       return;
     }
 
+    // const selectedZipCode = defaultCountryZipCodes?.find(
+    //   (z) => z._id === selectedZipCodeId
+    // );
+
+    // setZipCodeList(defaultCountryZipCodes);
+
     const currentUserType = currentUser?.data?.regUserType.toLowerCase();
 
     if (currentUserType === 'lawyer') {
@@ -144,6 +182,11 @@ export default function HeroHome({ searchParam, cookieCountry }) {
 
     setModalOpen(true);
   };
+
+  console.log('selectedZipCodeId', selectedZipCodeId);
+  console.log('selectedService', selectedService);
+  console.log('serviceWiseQuestions', serviceWiseQuestions);
+  console.log('zipCodeList', zipCodeList);
 
   return (
     <section className="hero-home section">
@@ -183,9 +226,9 @@ export default function HeroHome({ searchParam, cookieCountry }) {
                       ref={inputRef}
                       autoComplete="off"
                     />
-                    {filteredServices?.length > 0 && (
+                    {allServices?.length > 0 && (
                       <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {filteredServices.map((item) => (
+                        {allServices.map((item) => (
                           <ComboboxOption
                             key={item._id}
                             value={item}
@@ -252,9 +295,9 @@ export default function HeroHome({ searchParam, cookieCountry }) {
                       placeholder="Postcode"
                       autoComplete="off"
                     />
-                    {allZipCodes?.data?.length > 0 && (
+                    {zipCodeList?.length > 0 && (
                       <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {allZipCodes?.data
+                        {zipCodeList
                           .filter((item) =>
                             item.zipcode
                               .toLowerCase()
@@ -307,11 +350,11 @@ export default function HeroHome({ searchParam, cookieCountry }) {
           </form>
           <div className="flex flex-wrap gap-2 w-full suggestion-area">
             <b>Popular</b>:
-            {isCountryWiseServicesLoading ? (
+            {isAllCategoriesLoading ? (
               <Loader className="w-6 h-6 animate-spin" />
             ) : (
-              countryWiseServices?.data?.length > 0 &&
-              countryWiseServices?.data?.slice(0, 5).map((service) => (
+              allServices?.length > 0 &&
+              allServices?.slice(0, 5).map((service) => (
                 <Link
                   href="#"
                   className="flex flex-wrap justify-center items-center gap-[10px] text-center  border py-1 px-3 rounded-full"
@@ -335,7 +378,7 @@ export default function HeroHome({ searchParam, cookieCountry }) {
             )}
           </div>
         </div>
-        <HeroSlider />
+        {/* <HeroSlider /> */}
         {/* <HeroShowcase /> */}
       </div>
 
@@ -353,9 +396,11 @@ export default function HeroHome({ searchParam, cookieCountry }) {
               setModalOpen={setModalOpen}
               handleModalOpen={handleModalOpen}
               selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
+              selectedService={selectedService}
               countryId={defaultCountry?._id}
+              defaultCountry={defaultCountry}
               serviceId={selectedService?._id}
-              locationId={location}
+              locationId={selectedZipCodeId}
               isQuestionsLoading={isQuestionsLoading}
             />
           )}
@@ -366,10 +411,13 @@ export default function HeroHome({ searchParam, cookieCountry }) {
           setModalOpen={setModalOpen}
           handleModalOpen={handleModalOpen}
           selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
+          selectedService={selectedService}
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
-          locationId={location}
+          locationId={selectedZipCodeId}
           isQuestionsLoading={isQuestionsLoading}
+          defaultCountry={defaultCountry}
+          zipCodeList={zipCodeList}
         />
       )}
     </section>

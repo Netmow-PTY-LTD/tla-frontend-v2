@@ -18,28 +18,44 @@ export default function Home() {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
-
     const value = searchParams.get('clientRegister');
 
     setSearchParam(value);
-    let cookieCountry = Cookies.get('country');
 
-    // fallback to Australia if not found
-    if (!cookieCountry) {
-      cookieCountry = 'AU'; // default
-      Cookies.set('country', cookieCountry, { expires: 3650 });
+    // Try to get full country object from cookie
+    let cookieCountryObj = Cookies.get('countryObj');
+    let selectedCountry;
+
+    if (cookieCountryObj) {
+      try {
+        selectedCountry = JSON.parse(cookieCountryObj);
+      } catch (e) {
+        console.error('Invalid country cookie, falling back to code');
+      }
     }
 
-    // find full country object from countries.json
-    const selectedCountry =
-      countries.find(
-        (c) => c.code.toLowerCase() === cookieCountry.toLowerCase()
-      ) || countries.find((c) => c.name === 'Australia'); // fallback
+    // If no full object in cookie, fallback to basic code or default
+    if (!selectedCountry) {
+      let cookieCountryCode = Cookies.get('country');
+
+      if (!cookieCountryCode) {
+        cookieCountryCode = 'au'; // default
+        Cookies.set('country', cookieCountryCode, { expires: 3650 });
+      }
+
+      selectedCountry =
+        countries.find(
+          (c) => c.code.toLowerCase() === cookieCountryCode.toLowerCase()
+        ) || countries.find((c) => c.name === 'Australia'); // fallback
+
+      // Save full country object in cookie (stringified)
+      Cookies.set('countryObj', JSON.stringify(selectedCountry), {
+        expires: 3650,
+      });
+    }
 
     setCountry(selectedCountry);
   }, []);
-
-  console.log('country', country);
 
   return (
     <MainLayout>
