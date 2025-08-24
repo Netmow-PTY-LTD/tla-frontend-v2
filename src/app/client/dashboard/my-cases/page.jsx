@@ -70,7 +70,7 @@ export default function MyLeads() {
     setSelectedCountry(cookieCountry);
   }, []);
 
-  console.log('selectedCountry', selectedCountry);
+  //console.log('selectedCountry', selectedCountry);
 
   const { data: countryList } = useGetCountryListQuery();
 
@@ -78,7 +78,7 @@ export default function MyLeads() {
     (country) => country?._id === selectedCountry?.countryId
   );
 
-  console.log('defaultCountry in my cases', defaultCountry);
+  //console.log('defaultCountry in my cases', defaultCountry);
 
   const { data: allCategories } = useGetAllCategoriesQuery();
 
