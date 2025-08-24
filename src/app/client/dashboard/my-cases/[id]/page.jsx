@@ -407,6 +407,7 @@ export default function LeadDetailsPage() {
                             id={id}
                             lawyerOnlineStatus={lawyerOnlineStatus}
                             refetch={refetch}
+                            isHiredLead={singleLead?.data?.isHired}
                           />
                         ))}
 
