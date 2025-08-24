@@ -42,6 +42,7 @@ import SendMailModalForClient from './my-leads/SendMailModalForClient';
 import SendSmsModalClient from './my-leads/SendSmsModalClient';
 import ChatBoxForLead from './chat/ChatBoxForLead';
 import { HireRequestMessageModal } from './modal/HireRequestMessageModal';
+import RatingForm from '../dashboard/my-cases/_components/RatingForm';
 
 export default function LeadResponseDetails({ onBack, response, onlineMap }) {
   const [activeTab, setActiveTab] = useState('activity');
@@ -211,6 +212,7 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
                     {hireRequestLoading ? <Loader2 className="animate-spin h-5 w-5" /> : "Hire now"}
                   </Button>
                 )}
+                 <RatingForm response={singleResponse?.data} />
               </div>
 
 

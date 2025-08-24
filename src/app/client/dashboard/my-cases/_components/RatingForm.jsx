@@ -23,9 +23,15 @@ const ratingSchema = z.object({
 
 
 
-export default function RatingForm() {
+export default function RatingForm({ response }) {
   const [open, setOpen] = useState(false);
   const [hoveredStar, setHoveredStar] = useState(null);
+
+
+
+  console.log('lead', response)
+
+
 
   const {
     register,
@@ -42,12 +48,23 @@ export default function RatingForm() {
 
   const onSubmit = async (data) => {
     console.log("Rating submitted:", data);
+
+    const payloadRating = {
+      lawyerId: response?.responseBy?.user?._id,
+      responseId: response?._id,
+      feedback: data.feedback,
+      rating: data.rating,
+      leadId: response?.leadId?._id
+    }
+
+
+    console.log('payloadRating ==>', payloadRating)
     setOpen(false);
   };
 
   return (
     <>
-      <button onClick={()=> setOpen(true)}  className="text-blue-500">
+      <button onClick={() => setOpen(true)} className="text-blue-500">
         Rate to lawyer
       </button>
       <Modal
@@ -73,8 +90,8 @@ export default function RatingForm() {
               >
                 <Star
                   className={`w-8 h-8 cursor-pointer ${(hoveredStar ?? rating) >= star
-                      ? "fill-yellow-400 text-yellow-400"
-                      : "text-gray-300"
+                    ? "fill-yellow-400 text-yellow-400"
+                    : "text-gray-300"
                     }`}
                 />
               </button>

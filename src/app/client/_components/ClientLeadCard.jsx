@@ -298,11 +298,8 @@ const ClientLeadCard = ({ user, isExpanded }) => {
               >
                 Close case
               </button>
-              <span>|</span>
-              {/* <button  className="text-blue-500">
-                Rate to lawyer
-              </button> */}
-                 <RatingForm />
+           
+                
             </div>
           </>
         )}
