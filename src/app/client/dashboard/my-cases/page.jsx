@@ -14,7 +14,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import ClientLeadCard from '../../_components/ClientLeadCard';
 import ClientNewLeadRegistrationModal from '../../_components/ClientNewLeadRegistrationModal';
 import JobRequest from '../../_components/JobRequest';
-import { Loader } from 'lucide-react';
+import { Check, Loader } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Combobox,
@@ -28,14 +28,15 @@ import CreateLeadWithAuthModal from '@/components/main/home/modal/CreateLeadWith
 import { useSelector } from 'react-redux';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { showErrorToast } from '@/components/common/toasts';
+import { useGetAllCategoriesQuery } from '@/store/features/public/catagorywiseServiceApiService';
+import Cookies from 'js-cookie';
 
 export default function MyLeads() {
   const [selectedService, setSelectedService] = useState(null);
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [service, setService] = useState(null);
-  const [location, setLocation] = useState('');
-  const [filteredServices, setFilteredServices] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState('');
   const [leads, setLeads] = useState(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -64,11 +65,25 @@ export default function MyLeads() {
     }
   }, [allMyLeads, redirect]);
 
+  useEffect(() => {
+    const cookieCountry = JSON.parse(Cookies.get('countryObj'));
+    setSelectedCountry(cookieCountry);
+  }, []);
+
+  console.log('selectedCountry', selectedCountry);
+
   const { data: countryList } = useGetCountryListQuery();
 
   const defaultCountry = countryList?.data?.find(
-    (country) => country?.slug === 'au'
+    (country) => country?._id === selectedCountry?.countryId
   );
+
+  console.log('defaultCountry in my cases', defaultCountry);
+
+  const { data: allCategories } = useGetAllCategoriesQuery();
+
+  const allServices =
+    allCategories?.data?.flatMap((category) => category.services) || [];
 
   // Default to Australia (AU) if available
   const { data: countryWiseServices } = useGetCountryWiseServicesQuery(
@@ -212,6 +227,8 @@ export default function MyLeads() {
     );
   }
 
+  console.log('selectedService', selectedService);
+
   return (
     <>
       <div className="rounded-xl p-4">
@@ -225,25 +242,15 @@ export default function MyLeads() {
                     <ComboboxInput
                       className="border border-gray-300 rounded-md w-full h-[44px] px-4 text-[14px]"
                       onChange={(e) => {
-                        const query = e.target.value.toLowerCase();
-                        const matched = countryWiseServices?.data?.filter((s) =>
-                          s.name.toLowerCase().includes(query)
-                        );
-                        setFilteredServices(
-                          query ? matched : countryWiseServices?.data
-                        );
                         setService(e.target.value);
                       }}
                       displayValue={(val) => val?.name || ''}
                       placeholder="Search a service..."
-                      onFocus={() =>
-                        setFilteredServices(countryWiseServices?.data ?? [])
-                      }
                       autoComplete="off"
                     />
-                    {filteredServices?.length > 0 && (
+                    {allServices?.length > 0 && (
                       <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {filteredServices.map((item) => (
+                        {allServices?.map((item) => (
                           <ComboboxOption
                             key={item._id}
                             value={item}
@@ -324,7 +331,9 @@ export default function MyLeads() {
         setModalOpen={setModalOpen}
         onClose={() => setModalOpen(false)}
         selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
+        selectedService={selectedService}
         countryId={defaultCountry?._id}
+        defaultCountry={defaultCountry}
         serviceId={selectedService?._id}
         isQuestionsLoading={isQuestionsLoading}
       />

@@ -9,9 +9,10 @@ export default function ShowCountriesListModal({
   selectedCountry, // ✅ add this prop from parent
 }) {
   const handleSelect = (country) => {
-    Cookies.set('country', country?.code?.toLowerCase(), { expires: 3650 });
+    Cookies.set('countryObj', JSON.stringify(country), { expires: 3650 });
     setSelectedCountry(country);
     setIsModalOpen(false);
+    window.location.reload();
   };
 
   return (
