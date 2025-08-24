@@ -235,25 +235,31 @@ export default function MyResponseDetails({
                   singleResponse?.data?.activity[0]?.updatedAt
                 )}
               </span>
+
+
+
               {
-                singleResponse?.data?.isHireRequested ? (
-                  singleResponse?.data?.hireDecision === null ? (
-                    <div className="flex">
-                      <p className="text-gray-800 text-sm font-medium mr-3">
-                        You have a request to hire.
-                      </p>
-                      <button
-                        onClick={() => handleUpdateHireStatus("accepted")}
-                        className="px-4 py-2 rounded-lg bg-green-500 text-white text-sm font-semibold shadow-md hover:bg-green-600 active:scale-95 transition-all duration-200"
-                      >
-                        Accept
-                      </button>
-                    </div>
-                  ) : singleResponse?.data?.hireDecision === "accepted" ? (
-                    <p className="text-green-600 font-medium text-sm">
-                      ✅ Already hired
+
+                // 1st - if hired == already hired some one 
+                // 2nd - if there is requested == requested 
+                singleResponse?.data?.leadId?.isHired ? (
+                  <p className="text-green-600 font-medium text-sm">
+                    {currentUserId === singleResponse?.data?.leadId?.hiredBy?.user?._id
+                      ? "✅ You hired on this case"
+                      : "✅ Someone already hired"}
+                  </p>
+                ) : singleResponse?.data?.isHireRequested ? (
+                  <div className="flex items-center space-x-3">
+                    <p className="text-gray-800 text-sm font-medium">
+                      You have a request to hire.
                     </p>
-                  ) : null
+                    <button
+                      onClick={() => handleUpdateHireStatus("accepted")}
+                      className="px-4 py-2 rounded-lg bg-green-500 text-white text-sm font-semibold shadow-md hover:bg-green-600 active:scale-95 transition-all duration-200"
+                    >
+                      Accept
+                    </button>
+                  </div>
                 ) : null
               }
 

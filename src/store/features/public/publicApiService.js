@@ -147,6 +147,16 @@ const publicApiService = baseApi.injectEndpoints({
       }),
       providesTags: ['request'],
     }),
+
+     createRating: builder.mutation({
+      query: (body) => ({
+        url: '/rating',
+        method: 'POST',
+        body,
+      }),
+     
+    }),
+
   }),
 });
 
@@ -170,4 +180,5 @@ export const {
   useGetUserProfileBySlugQuery,
   useGetAllRequestsFromClientQuery,
   useGetRequestFromClientByIdQuery,
+  useCreateRatingMutation
 } = publicApiService;
