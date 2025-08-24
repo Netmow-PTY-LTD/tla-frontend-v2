@@ -6,6 +6,7 @@ import RatingForm from "../dashboard/my-cases/_components/RatingForm";
 
 const RatingUI = ({ singleResponse }) => {
   // Function to render star icons based on rating value
+  console.log('singleResponse',singleResponse)
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, index) => (
       <Star
@@ -20,19 +21,19 @@ const RatingUI = ({ singleResponse }) => {
 
   return (
     <>
-      {singleResponse?.data?.leadId?.isHired ? (
+      {singleResponse?.leadId?.isHired ? (
         <>
-          {singleResponse?.data?.clientRating ? (
+          {singleResponse?.clientRating ? (
             <div className="flex items-center gap-2">
               {/* Show rating stars */}
-              <div className="flex">{renderStars(singleResponse?.data?.clientRating?.rating)}</div>
+              <div className="flex">{renderStars(singleResponse?.clientRating?.rating)}</div>
               {/* Show numeric value beside stars */}
               <span className="text-sm text-gray-600">
-                ({singleResponse?.data?.clientRating?.rating})
+                ({singleResponse?.clientRating?.rating})
               </span>
             </div>
           ) : (
-            <RatingForm response={singleResponse?.data} />
+            <RatingForm response={singleResponse} />
           )}
         </>
       ) : (

@@ -194,7 +194,7 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
             </span>
             <div className="flex items-center gap-2">
 
-              <RatingUI singleResponse={singleResponse} />
+              <RatingUI singleResponse={singleResponse?.data} />
 
               <div className="flex flex-col gap-2">
                 {singleResponse?.data?.hireDecision === "accepted" ? (
