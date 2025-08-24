@@ -9,9 +9,12 @@ import TestimonialSlider from '@/components/main/home/HomeTestimonials';
 import HomeCategoryWiseServices from '@/components/main/home/HomeCategoryWiseServices';
 import { useEffect, useState } from 'react';
 import TestimonialSliderTest from '@/components/main/home/HomeTestimonialsTest copy';
+import Cookies from 'js-cookie';
+import countries from '@/data/countries';
 
 export default function Home() {
   const [searchParam, setSearchParam] = useState('');
+  const [country, setCountry] = useState(null);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -19,11 +22,28 @@ export default function Home() {
     const value = searchParams.get('clientRegister');
 
     setSearchParam(value);
+    let cookieCountry = Cookies.get('country');
+
+    // fallback to Australia if not found
+    if (!cookieCountry) {
+      cookieCountry = 'AU'; // default
+      Cookies.set('country', cookieCountry, { expires: 3650 });
+    }
+
+    // find full country object from countries.json
+    const selectedCountry =
+      countries.find(
+        (c) => c.code.toLowerCase() === cookieCountry.toLowerCase()
+      ) || countries.find((c) => c.name === 'Australia'); // fallback
+
+    setCountry(selectedCountry);
   }, []);
+
+  console.log('country', country);
 
   return (
     <MainLayout>
-      <HeroHome searchParam={searchParam} />
+      <HeroHome searchParam={searchParam} cookieCountry={country} />
       {/* <HomeAboutPreview /> */}
       {/* <HomeServices /> */}
       <HomeCategoryWiseServices />

@@ -30,6 +30,7 @@ import { Check, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  useGetCountryListQuery,
   useGetRangeListQuery,
   useGetZipCodeListQuery,
 } from '@/store/features/public/publicApiService';
@@ -44,6 +45,7 @@ import Link from 'next/link';
 import { showErrorToast } from '../common/toasts';
 import { Input } from '../ui/input';
 import country from '@/data/au.json';
+import Cookies from 'js-cookie';
 
 export default function RegisterStepTwo() {
   const [zipcode, setZipcode] = useState('');
@@ -62,9 +64,37 @@ export default function RegisterStepTwo() {
   const { zipCode, rangeInKm, practiceWithin, practiceInternationally } =
     lawyerServiceMap;
 
-  const { data: zipcodeData } = useGetZipCodeListQuery();
+  const cookieCountry = Cookies.get('country');
 
-  //console.log('zipcodeData', zipcodeData);
+  const { data: countryList } = useGetCountryListQuery();
+
+  const defaultCountry = countryList?.data?.find(
+    (country) => country?.slug === cookieCountry
+  );
+
+  console.log('defaultCountry', defaultCountry);
+
+  const paramsPayload = {
+    countryId: defaultCountry?._id,
+    search: query || '',
+  };
+
+  const { data: allZipCodes, isLoading: isZipCodeLoading } =
+    useGetZipCodeListQuery(paramsPayload, {
+      skip: !defaultCountry?._id,
+    });
+
+  // const selectedZipCode = allZipCodes?.data?.find(
+  //   (z) => z._id === selectedZipCodeId
+  // );
+
+  //console.log('allZipCodes', allZipCodes);
+
+  console.log('paramsPayload', paramsPayload);
+
+  const filteredZipCodes = allZipCodes?.data?.filter((z) =>
+    z.zipcode?.toLowerCase()?.includes(query.toLowerCase())
+  );
 
   const { data: rangeData } = useGetRangeListQuery({
     zipcodeId: zipCode || '',
@@ -145,12 +175,6 @@ export default function RegisterStepTwo() {
     dispatch(nextStep());
   };
 
-  const filteredZipcodes = zipcodeData?.data?.filter((item) =>
-    item?.zipcode?.toLowerCase().includes(query.toLowerCase())
-  );
-
-  console.log('filteredZipcodes', filteredZipcodes);
-
   return (
     <div className="flex flex-wrap lg:flex-nowrap w-full">
       <div className="w-full">
@@ -199,7 +223,7 @@ export default function RegisterStepTwo() {
                         //console.log('val', val);
                         field.onChange(val);
                         setZipcode(val);
-                        const selectedZipcode = zipcodeData?.data?.find(
+                        const selectedZipcode = allZipCodes?.data?.find(
                           (z) => z._id === val
                         );
                         if (selectedZipcode) {
@@ -223,7 +247,7 @@ export default function RegisterStepTwo() {
                           className="tla-form-control w-full"
                           onChange={(event) => setQuery(event.target.value)}
                           displayValue={(val) =>
-                            zipcodeData?.data?.find((z) => z._id === val)
+                            allZipCodes?.data?.find((z) => z._id === val)
                               ?.zipcode || ''
                           }
                           placeholder="Select a Zipcode"
@@ -231,9 +255,9 @@ export default function RegisterStepTwo() {
                         <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
                           <ChevronDown className="h-4 w-4 text-gray-500" />
                         </ComboboxButton>
-                        {filteredZipcodes?.length > 0 && (
+                        {filteredZipCodes?.length > 0 && (
                           <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            {filteredZipcodes?.slice(0, 10).map((item) => (
+                            {filteredZipCodes?.slice(0, 10).map((item) => (
                               <ComboboxOption
                                 key={item._id}
                                 value={item._id}

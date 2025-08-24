@@ -28,13 +28,15 @@ import { toast } from 'sonner';
 import { showErrorToast } from '@/components/common/toasts';
 import LawyerWarningModal from './modal/LawyerWarningModal';
 import { checkValidity } from '@/helpers/validityCheck';
-export default function HeroHome({ searchParam }) {
+export default function HeroHome({ searchParam, cookieCountry }) {
   const [selectedService, setSelectedService] = useState(null);
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [service, setService] = useState(null);
   const [location, setLocation] = useState('');
+  const [selectedZipCodeId, setSelectedZipCodeId] = useState(null);
+
   const [filteredServices, setFilteredServices] = useState([]);
   //const [filteredZipCodes, setFilteredZipCodes] = useState([]);
   const [shouldAutoFocus, setShouldAutoFocus] = useState(false);
@@ -55,7 +57,7 @@ export default function HeroHome({ searchParam }) {
   const { data: countryList } = useGetCountryListQuery();
 
   const defaultCountry = countryList?.data?.find(
-    (country) => country?.slug === 'au'
+    (country) => country?._id === cookieCountry?.countryId
   );
 
   // Default to Australia (AU) if available
@@ -63,8 +65,6 @@ export default function HeroHome({ searchParam }) {
     useGetCountryWiseServicesQuery(defaultCountry?._id, {
       skip: !defaultCountry?._id, // Skip
     });
-
-  //console.log('countryWiseServices', countryWiseServices);
 
   useEffect(() => {
     if (!selectedService?._id) return;
@@ -102,11 +102,26 @@ export default function HeroHome({ searchParam }) {
 
   //console.log('currentUser', currentUser);
 
+  const paramsPayload = {
+    countryId: defaultCountry?._id,
+    search: location || '',
+  };
+
   const { data: allZipCodes, isLoading: isZipCodeLoading } =
-    useGetZipCodeListQuery();
+    useGetZipCodeListQuery(paramsPayload, {
+      skip: !defaultCountry?._id,
+    });
+
+  const selectedZipCode = allZipCodes?.data?.find(
+    (z) => z._id === selectedZipCodeId
+  );
 
   const filteredZipCodes = allZipCodes?.data?.filter((item) =>
     item?.zipcode?.toLowerCase().includes(location?.toLowerCase())
+  );
+
+  const defaultCountryZipCodes = allZipCodes?.data?.filter(
+    (item) => item?.countryCode === defaultCountry?.slug
   );
 
   //console.log('filteredZipCodes', filteredZipCodes);
@@ -136,7 +151,9 @@ export default function HeroHome({ searchParam }) {
         <div className="hero-content py-[50px]">
           {/* <h3>Get a quote for legal services.</h3> */}
           <div className="mb-[30px]">
-            <h1 className="mb-[15px]">Need a Lawyer?</h1>
+            <h1 className="mb-[15px]">
+              Need a Lawyer <br /> in {cookieCountry?.name}?
+            </h1>
             <p className="text-[#444] text-2xl font-medium">
               Get free quotes in minutes
             </p>
@@ -206,76 +223,76 @@ export default function HeroHome({ searchParam }) {
                 </Combobox>
               </div>
               <div className="tla-form-group w-full lg:w-5/12">
-                <Combobox value={location} onChange={setLocation}>
+                <Combobox
+                  value={selectedZipCodeId}
+                  onChange={setSelectedZipCodeId}
+                >
                   <div className="relative">
                     <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          fill="var(--color-primary)"
-                          d="M12 11.5A2.5 2.5 0 0 1 9.5 9A2.5 2.5 0 0 1 12 6.5A2.5 2.5 0 0 1 14.5 9a2.5 2.5 0 0 1-2.5 2.5M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7"
-                        />
-                      </svg>
+                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+                        {' '}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                        >
+                          {' '}
+                          <path
+                            fill="var(--color-primary)"
+                            d="M12 11.5A2.5 2.5 0 0 1 9.5 9A2.5 2.5 0 0 1 12 6.5A2.5 2.5 0 0 1 14.5 9a2.5 2.5 0 0 1-2.5 2.5M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7"
+                          />{' '}
+                        </svg>{' '}
+                      </span>
                     </span>
                     <ComboboxInput
                       className="border border-gray-300 rounded-md w-full h-[44px] pl-10 pr-4 text-sm font-medium"
-                      onChange={(e) => {
-                        // const query = e.target.value.toLowerCase();
-                        // const filtered = allZipCodes?.data?.filter((z) =>
-                        //   z.zipcode.toLowerCase().includes(query)
-                        // );
-                        // setFilteredZipCodes(
-                        //   query ? filtered : allZipCodes?.data
-                        // );
-                        setLocation(e.target.value);
-                      }}
-                      displayValue={(val) =>
-                        allZipCodes?.data?.find((z) => z._id === val)
-                          ?.zipcode || val
-                      }
+                      onChange={(e) => setLocation(e.target.value)}
+                      displayValue={() => selectedZipCode?.zipcode || location}
                       placeholder="Postcode"
-                      // onFocus={() =>
-                      //   setFilteredZipCodes(allZipCodes?.data ?? [])
-                      // }
+                      autoComplete="off"
                     />
-                    {filteredZipCodes?.length > 0 && (
+                    {allZipCodes?.data?.length > 0 && (
                       <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {filteredZipCodes?.slice(0, 10)?.map((item) => (
-                          <ComboboxOption
-                            key={item._id}
-                            value={item._id}
-                            className={({ active }) =>
-                              cn(
-                                'cursor-pointer select-none relative py-2 px-6',
-                                active
-                                  ? 'bg-blue-100 text-black'
-                                  : 'text-gray-900'
-                              )
-                            }
-                          >
-                            {({ selected }) => (
-                              <>
-                                <span
-                                  className={cn('block truncate', {
-                                    'font-medium': selected,
-                                    'font-normal': !selected,
-                                  })}
-                                >
-                                  {item.zipcode}
-                                </span>
-                                {selected && (
-                                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
-                                    <Check className="h-4 w-4" />
+                        {allZipCodes?.data
+                          .filter((item) =>
+                            item.zipcode
+                              .toLowerCase()
+                              .includes(location.toLowerCase())
+                          )
+                          .slice(0, 10)
+                          .map((item) => (
+                            <ComboboxOption
+                              key={item._id}
+                              value={item._id}
+                              className={({ active }) =>
+                                cn(
+                                  'cursor-pointer select-none relative py-2 px-6',
+                                  active
+                                    ? 'bg-blue-100 text-black'
+                                    : 'text-gray-900'
+                                )
+                              }
+                            >
+                              {({ selected }) => (
+                                <>
+                                  <span
+                                    className={cn('block truncate', {
+                                      'font-medium': selected,
+                                      'font-normal': !selected,
+                                    })}
+                                  >
+                                    {item.zipcode}
                                   </span>
-                                )}
-                              </>
-                            )}
-                          </ComboboxOption>
-                        ))}
+                                  {selected && (
+                                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
+                                      <Check className="h-4 w-4" />
+                                    </span>
+                                  )}
+                                </>
+                              )}
+                            </ComboboxOption>
+                          ))}
                       </ComboboxOptions>
                     )}
                   </div>

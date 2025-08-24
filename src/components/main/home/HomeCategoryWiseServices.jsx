@@ -17,6 +17,7 @@ import ClientLeadRegistrationModal from './modal/ClientLeadRegistrationModal';
 import SectionHeading from './SectionHeading';
 import LawyerWarningModal from './modal/LawyerWarningModal';
 import { checkValidity } from '@/helpers/validityCheck';
+import Cookies from 'js-cookie';
 
 export default function HomeCategoryWiseServices() {
   const [selectedService, setSelectedService] = useState(null);
@@ -36,10 +37,12 @@ export default function HomeCategoryWiseServices() {
     setModalOpen(true);
   };
 
+  const cookieCountry = Cookies.get('country');
+
   const { data: countryList } = useGetCountryListQuery();
 
   const defaultCountry = countryList?.data?.find(
-    (country) => country?.slug === 'au'
+    (country) => country?.slug === cookieCountry
   );
 
   useEffect(() => {
