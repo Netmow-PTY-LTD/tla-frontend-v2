@@ -59,14 +59,9 @@ export default function HeroHome({ searchParam, cookieCountry }) {
 
   const { data: countryList } = useGetCountryListQuery();
 
-  console.log('countryList', countryList);
-  console.log('cookieCountry', cookieCountry);
-
   const defaultCountry = countryList?.data?.find(
     (country) => country?._id === cookieCountry?.countryId
   );
-
-  console.log('defaultCountry', defaultCountry);
 
   // Default to Australia (AU) if available
   const { data: countryWiseServices, isLoading: isCountryWiseServicesLoading } =
@@ -79,9 +74,6 @@ export default function HeroHome({ searchParam, cookieCountry }) {
 
   const allServices =
     allCategories?.data?.flatMap((category) => category.services) || [];
-
-  console.log('categories', allCategories?.data);
-  console.log('allServices', allServices);
 
   useEffect(() => {
     if (!selectedService?._id) return;
@@ -132,8 +124,6 @@ export default function HeroHome({ searchParam, cookieCountry }) {
     search: debouncedSearch || '',
   };
 
-  console.log('paramsPayload', paramsPayload);
-
   const { data: allZipCodes, isLoading: isZipCodeLoading } =
     useGetZipCodeListQuery(paramsPayload, {
       skip: !defaultCountry?._id || !debouncedSearch,
@@ -142,16 +132,6 @@ export default function HeroHome({ searchParam, cookieCountry }) {
   const selectedZipCode = allZipCodes?.data?.find(
     (z) => z._id === selectedZipCodeId
   );
-
-  const filteredZipCodes = allZipCodes?.data?.filter((item) =>
-    item?.zipcode?.toLowerCase().includes(location?.toLowerCase())
-  );
-
-  // const defaultCountryZipCodes = allZipCodes?.data?.filter(
-  //   (item) => item?.countryCode === defaultCountry?.slug
-  // );
-
-  console.log('allZipCodes', allZipCodes?.data);
 
   useEffect(() => {
     if (isZipCodeLoading) return; // ✅ Wait for loading to complete

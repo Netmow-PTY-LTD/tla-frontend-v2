@@ -241,7 +241,7 @@ export default function LeadDetailsPage() {
             <div key={idx} className="flex gap-4 items-center">
               <Skeleton className="h-4 w-1/6" />
               <Skeleton className="h-4 w-1/4" />
-              <Skeleton className="h-4 w-1/2" />1
+              <Skeleton className="h-4 w-1/2" />
               <Skeleton className="h-4 w-1/5" />
             </div>
           ))}
