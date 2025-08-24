@@ -183,10 +183,10 @@ export default function HeroHome({ searchParam, cookieCountry }) {
     setModalOpen(true);
   };
 
-  console.log('selectedZipCodeId', selectedZipCodeId);
-  console.log('selectedService', selectedService);
-  console.log('serviceWiseQuestions', serviceWiseQuestions);
-  console.log('zipCodeList', zipCodeList);
+  // console.log('selectedZipCodeId', selectedZipCodeId);
+  // console.log('selectedService', selectedService);
+  // console.log('serviceWiseQuestions', serviceWiseQuestions);
+  // console.log('zipCodeList', zipCodeList);
 
   return (
     <section className="hero-home section">
@@ -378,7 +378,7 @@ export default function HeroHome({ searchParam, cookieCountry }) {
             )}
           </div>
         </div>
-        {/* <HeroSlider /> */}
+        <HeroSlider />
         {/* <HeroShowcase /> */}
       </div>
 
