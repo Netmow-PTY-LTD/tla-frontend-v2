@@ -227,8 +227,6 @@ export default function MyLeads() {
     );
   }
 
-  console.log('selectedService', selectedService);
-
   return (
     <>
       <div className="rounded-xl p-4">

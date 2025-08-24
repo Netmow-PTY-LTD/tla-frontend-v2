@@ -96,11 +96,11 @@ export default function CreateLeadWithAuthModal({
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setDebouncedSearch(zipCode);
+      setDebouncedSearch(searchZipCode);
     }, 500); // wait 500ms after typing
 
     return () => clearTimeout(timeout); // cleanup on each keystroke
-  }, [zipCode]);
+  }, [searchZipCode]);
 
   const paramsPayload = {
     countryId: countryId,
@@ -120,12 +120,6 @@ export default function CreateLeadWithAuthModal({
 
   console.log('paramsPayload', paramsPayload);
   console.log('defaultCountry', defaultCountry);
-
-  const defaultCountryZipCodes = allZipCodes?.data?.filter(
-    (item) => item?.countryCode === defaultCountry?.slug
-  );
-
-  console.log('defaultCountryZipCodes', defaultCountryZipCodes);
 
   useEffect(() => {
     if (locationId && allZipCodes?.data?.length > 0) {
@@ -661,6 +655,7 @@ export default function CreateLeadWithAuthModal({
                 setLatitude(selectedZip.latitude);
                 setLongitude(selectedZip.longitude);
                 setAddress(selectedZip.zipcode); // show proper text
+                setSearchZipCode(selectedZip.zipcode);
               }
             }}
           >
@@ -669,14 +664,10 @@ export default function CreateLeadWithAuthModal({
                 className="border border-gray-300 rounded-md w-full h-[44px] px-4"
                 onChange={(event) => {
                   const value = event.target.value;
-                  setZipCode(value); // when typing, zipCode is string
+                  setSearchZipCode(value); // when typing, zipCode is string
                 }}
                 // ✅ FIX: Always map _id → zipcode text
-                displayValue={(val) => {
-                  // if val is _id, map it back to zipcode
-                  const found = allZipCodes?.data?.find((z) => z._id === val);
-                  return found ? found.zipcode : val; // fallback to typed string
-                }}
+                displayValue={() => searchZipCode}
                 placeholder="Select a postcode"
                 autoComplete="off"
               />
@@ -684,9 +675,9 @@ export default function CreateLeadWithAuthModal({
               <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
                 <ChevronDown className="h-4 w-4 text-gray-500" />
               </ComboboxButton>
-              {defaultCountryZipCodes?.length > 0 && (
+              {allZipCodes?.data?.length > 0 && (
                 <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  {defaultCountryZipCodes?.slice(0, 10).map((item) => (
+                  {allZipCodes?.data?.slice(0, 10).map((item) => (
                     <ComboboxOption
                       key={item._id}
                       value={item._id}
