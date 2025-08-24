@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { userDummyImage } from '@/data/data';
 import RespondersOnline from './RespondersOnline';
 import LeadCloseModal from './modal/LeadCloseModal';
+import RatingForm from '../dashboard/my-cases/_components/RatingForm';
 
 const responsesLeads = [
   {
@@ -265,9 +266,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
             View Lawyers
           </Link>
         </div>
-        {/* <div className="p-3 flex justify-center items-center">
-                 <RespondersOnline user={user} />
-                 </div> */}
+
 
         {
           user?.hireStatus !== 'not_requested' ? (
@@ -300,9 +299,10 @@ const ClientLeadCard = ({ user, isExpanded }) => {
                 Close case
               </button>
               <span>|</span>
-              <Link href="/#" className="text-blue-500">
-                I hired someone
-              </Link>
+              {/* <button  className="text-blue-500">
+                Rate to lawyer
+              </button> */}
+                 <RatingForm />
             </div>
           </>
         )}
