@@ -11,6 +11,8 @@ import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesA
 import LawyerWarningModal from '../home/modal/LawyerWarningModal';
 import { checkValidity } from '@/helpers/validityCheck';
 import { useGetAllCategoriesQuery } from '@/store/features/public/catagorywiseServiceApiService';
+import { safeJsonParse } from '@/helpers/safeJsonParse';
+import Cookies from 'js-cookie';
 
 const slidesData = [
   {
@@ -74,14 +76,21 @@ export default function HeroSlider() {
     setModalOpen(true);
   };
 
+  const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
+
   const { data: countryList } = useGetCountryListQuery();
 
   const defaultCountry = countryList?.data?.find(
-    (country) => country?.slug === 'au'
+    (country) => country?._id === cookieCountry?.countryId
   );
 
   const { data: allCategories, isLoading: isAllCategoriesLoading } =
-    useGetAllCategoriesQuery();
+    useGetAllCategoriesQuery(
+      { countryId: defaultCountry?._id },
+      {
+        skip: !defaultCountry?._id,
+      }
+    );
 
   const allServices =
     allCategories?.data?.flatMap((category) => category.services) || [];

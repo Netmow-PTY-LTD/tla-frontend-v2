@@ -569,6 +569,23 @@ export default function ClientLeadRegistrationModal({
               />
             )}
             <div className="px-6 pt-6">
+              {totalSteps > 0 && (
+                <div
+                  className={`w-full h-2 bg-gray-200 rounded-full mb-6 ${
+                    step === 0 ? '' : 'mt-8'
+                  }`}
+                >
+                  <div
+                    className="h-2 bg-green-600 rounded-full transition-all duration-300"
+                    style={{
+                      width: `${Math.min(
+                        ((step + 1) / totalSteps) * 100,
+                        100
+                      )}%`,
+                    }}
+                  />
+                </div>
+              )}
               <h4 className="text-[24px] font-semibold text-center mb-8">
                 {viewData.question}
               </h4>
@@ -632,6 +649,16 @@ export default function ClientLeadRegistrationModal({
         )
       ) : step === totalQuestions ? (
         <div className="space-y-6 px-6 pt-6">
+          {totalSteps > 0 && (
+            <div className="w-full h-2 bg-gray-200 rounded-full mb-6 mt-8">
+              <div
+                className="h-2 bg-green-600 rounded-full transition-all duration-300"
+                style={{
+                  width: `${Math.min(((step + 1) / totalSteps) * 100, 100)}%`,
+                }}
+              />
+            </div>
+          )}
           <h4 className="text-[24px] font-semibold text-center">
             When are you looking to get started?
           </h4>
@@ -693,6 +720,16 @@ export default function ClientLeadRegistrationModal({
         </div>
       ) : step === totalQuestions + 2 ? (
         <div className="space-y-6 px-6 pt-6">
+          {totalSteps > 0 && (
+            <div className="w-full h-2 bg-gray-200 rounded-full mb-6 mt-8">
+              <div
+                className="h-2 bg-green-600 rounded-full transition-all duration-300"
+                style={{
+                  width: `${Math.min(((step + 1) / totalSteps) * 100, 100)}%`,
+                }}
+              />
+            </div>
+          )}
           <h4 className="text-[24px] font-semibold text-center">
             Want to share anything more?
           </h4>
@@ -708,6 +745,16 @@ export default function ClientLeadRegistrationModal({
         </div>
       ) : step === totalQuestions + 3 ? (
         <div className="space-y-6 pt-6 px-6">
+          {totalSteps > 0 && (
+            <div className="w-full h-2 bg-gray-200 rounded-full mb-6 mt-8">
+              <div
+                className="h-2 bg-green-600 rounded-full transition-all duration-300"
+                style={{
+                  width: `${Math.min(((step + 1) / totalSteps) * 100, 100)}%`,
+                }}
+              />
+            </div>
+          )}
           <h4 className="text-[24px] font-semibold text-center">
             What is your estimated budget?
           </h4>
@@ -736,6 +783,16 @@ export default function ClientLeadRegistrationModal({
         </div>
       ) : step === totalQuestions + 4 ? (
         <div className="space-y-4 pt-6 px-6">
+          {totalSteps > 0 && (
+            <div className="w-full h-2 bg-gray-200 rounded-full mb-6 mt-8">
+              <div
+                className="h-2 bg-green-600 rounded-full transition-all duration-300"
+                style={{
+                  width: `${Math.min(((step + 1) / totalSteps) * 100, 100)}%`,
+                }}
+              />
+            </div>
+          )}
           <h4 className="text-[24px] font-semibold text-center">
             Where do you need the service?
           </h4>
@@ -816,6 +873,16 @@ export default function ClientLeadRegistrationModal({
         </div>
       ) : step === totalQuestions + 5 ? (
         <div className="space-y-6 pt-6 px-6">
+          {totalSteps > 0 && (
+            <div className="w-full h-2 bg-gray-200 rounded-full mb-6 mt-8">
+              <div
+                className="h-2 bg-green-600 rounded-full transition-all duration-300"
+                style={{
+                  width: `${Math.min(((step + 1) / totalSteps) * 100, 100)}%`,
+                }}
+              />
+            </div>
+          )}
           <h4 className="text-[24px] font-semibold text-center">
             Write a few words about yourself?
           </h4>
@@ -832,6 +899,16 @@ export default function ClientLeadRegistrationModal({
         </div>
       ) : step === totalQuestions + 6 ? (
         <div className="space-y-6 pt-6 px-6">
+          {totalSteps > 0 && step < totalSteps && (
+            <div className="w-full h-2 bg-gray-200 rounded-full mb-6 mt-8">
+              <div
+                className="h-2 bg-green-600 rounded-full transition-all duration-300"
+                style={{
+                  width: `${Math.min(((step + 1) / totalSteps) * 100, 100)}%`,
+                }}
+              />
+            </div>
+          )}
           <h4 className="text-[24px] font-semibold text-center">
             What email address would you like quotes sent to?
           </h4>
@@ -850,6 +927,19 @@ export default function ClientLeadRegistrationModal({
         </div>
       ) : step === totalSteps ? (
         <div className="space-y-6 pt-6 px-6">
+          {totalSteps > 0 && step === totalSteps && (
+            <div className="w-full h-2 bg-gray-200 rounded-full mb-6 mt-8">
+              <div
+                className="h-2 bg-green-600 rounded-full transition-all duration-300"
+                style={{
+                  width:
+                    step === totalSteps
+                      ? '100%' // only last step is full
+                      : `${((step + 1) / totalSteps) * 100}%`,
+                }}
+              />
+            </div>
+          )}
           <h4 className="text-[24px] font-semibold text-center">
             What phone number can we reach you on?
           </h4>

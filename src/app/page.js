@@ -35,12 +35,7 @@ export default function Home() {
 
     // If no full object in cookie, fallback to basic code or default
     if (!selectedCountry) {
-      let cookieCountryCode = Cookies.get('country');
-
-      if (!cookieCountryCode) {
-        cookieCountryCode = countries[0].code.toLowerCase(); // default
-        Cookies.set('country', cookieCountryCode, { expires: 3650 });
-      }
+      let cookieCountryCode = countries[0].code.toLowerCase();
 
       selectedCountry =
         countries.find(

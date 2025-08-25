@@ -70,10 +70,18 @@ export default function HeroHome({ searchParam, cookieCountry }) {
     });
 
   const { data: allCategories, isLoading: isAllCategoriesLoading } =
-    useGetAllCategoriesQuery();
+    useGetAllCategoriesQuery(
+      { countryId: defaultCountry?._id },
+      {
+        skip: !defaultCountry?._id,
+      }
+    );
 
   const allServices =
     allCategories?.data?.flatMap((category) => category.services) || [];
+
+  console.log('allCategories', allCategories);
+  console.log('allServices', allServices);
 
   useEffect(() => {
     if (!selectedService?._id) return;
