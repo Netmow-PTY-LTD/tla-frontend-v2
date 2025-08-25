@@ -8,7 +8,6 @@ import HomeAboutPreview from '@/components/main/home/HomeAboutPreview';
 import TestimonialSlider from '@/components/main/home/HomeTestimonials';
 import HomeCategoryWiseServices from '@/components/main/home/HomeCategoryWiseServices';
 import { useEffect, useState } from 'react';
-import TestimonialSliderTest from '@/components/main/home/HomeTestimonialsTest copy';
 import Cookies from 'js-cookie';
 import countries from '@/data/countries';
 

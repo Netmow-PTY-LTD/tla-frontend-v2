@@ -102,6 +102,9 @@ export default function Header() {
 
   const { data: allCategories } = useGetAllCategoriesQuery();
 
+  const allServices =
+    allCategories?.data?.flatMap((category) => category.services) || [];
+
   const { data: countryList } = useGetCountryListQuery();
 
   const defaultCountry = countryList?.data?.find(
@@ -141,7 +144,7 @@ export default function Header() {
     setServiceWiseQuestions(singleServicewiseQuestionsData?.data || []);
   }, [singleServicewiseQuestionsData]);
 
-  const filteredServices = countryWiseServices?.data?.filter((service) =>
+  const filteredServices = allServices?.filter((service) =>
     service.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -433,6 +436,7 @@ export default function Header() {
               setModalOpen={setModalOpen}
               handleModalOpen={handleModalOpen}
               selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
+              selectedService={selectedService}
               countryId={defaultCountry?._id}
               serviceId={selectedService?._id}
               locationId={location}
@@ -446,6 +450,7 @@ export default function Header() {
           setModalOpen={setModalOpen}
           handleModalOpen={handleModalOpen}
           selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
+          selectedService={selectedService}
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
         />
@@ -453,4 +458,3 @@ export default function Header() {
     </header>
   );
 }
-

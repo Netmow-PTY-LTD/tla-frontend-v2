@@ -154,6 +154,7 @@ export default function HomeCategoryWiseServices() {
               setModalOpen={setModalOpen}
               handleModalOpen={handleModalOpen}
               selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
+              selectedService={selectedService}
               countryId={defaultCountry?._id}
               serviceId={selectedService?._id}
               locationId={location}
@@ -167,6 +168,7 @@ export default function HomeCategoryWiseServices() {
           setModalOpen={setModalOpen}
           handleModalOpen={handleModalOpen}
           selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
+          selectedService={selectedService}
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
         />
