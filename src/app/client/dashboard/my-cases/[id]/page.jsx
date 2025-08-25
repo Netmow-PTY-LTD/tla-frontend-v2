@@ -55,6 +55,7 @@ export default function LeadDetailsPage() {
   const [totalPages, setTotalPages] = useState(null);
   const [totalLawyersCount, setTotalLawyersCount] = useState(0);
   const [lawyerOnlineStatus, setLawyerOnlineStatus] = useState({});
+  const [minRating, setMinRating] = useState(undefined);
 
   const LIMIT = '10';
 
@@ -131,13 +132,19 @@ export default function LeadDetailsPage() {
     isSuccess,
     refetch,
   } = useGetAllServiceWiseLawyersSuggestionsQuery(
-    { page, LIMIT, serviceId, leadId },
+    { page, LIMIT, serviceId, leadId, minRating },
     {
       skip: !serviceId || !leadId,
     }
   );
 
   //console.log('lawyersData', lawyersData);
+
+useEffect(() => {
+  setPage(1);
+  setLawyers([]);
+}, [minRating]);
+
 
   useEffect(() => {
     if (lawyersData && lawyersData?.data?.length > 0) {
@@ -212,7 +219,7 @@ export default function LeadDetailsPage() {
   }, []);
 
 
-console.log('singleLead ==>',singleLead)
+  console.log('singleLead ==>', singleLead)
 
   if (isSingleLeadLoading) {
     return (
@@ -339,7 +346,10 @@ console.log('singleLead ==>',singleLead)
                   <div className="my-3">
                     <div className="flex justify-between mb-5 gap-4 border-b border-gray-400 pt-2 pb-5">
                       <div className="flex gap-2 items-center">
-                        <Select>
+                        <Select
+                          value={minRating?.toString() || ""}
+                          onValueChange={(value) => setMinRating(Number(value))}
+                        >
                           <SelectTrigger className="w-[200px] bg-white">
                             <SelectValue placeholder="All Ratings" />
                           </SelectTrigger>
@@ -354,21 +364,7 @@ console.log('singleLead ==>',singleLead)
                             </SelectGroup>
                           </SelectContent>
                         </Select>
-                        <Select>
-                          <SelectTrigger className="w-[200px] bg-white">
-                            <SelectValue placeholder="All Response Times" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup>
-                              <SelectLabel>All Ratings</SelectLabel>
-                              <SelectItem value="5">5 stars</SelectItem>
-                              <SelectItem value="4">4 stars</SelectItem>
-                              <SelectItem value="3">3 stars</SelectItem>
-                              <SelectItem value="2">2 stars</SelectItem>
-                              <SelectItem value="1">1 star</SelectItem>
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
+
                         <h4 className="font-medium heading-md text-center">
                           Total {totalLawyersCount}{' '}
                           {totalLawyersCount === 1 ? 'match' : 'matches'}
