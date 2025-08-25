@@ -154,6 +154,8 @@ const publicApiService = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
+
+      invalidatesTags:['response','response-list','lead','lead-my','request']
      
     }),
 
