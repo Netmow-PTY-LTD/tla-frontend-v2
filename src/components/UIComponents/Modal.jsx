@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -9,6 +10,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+import { X } from 'lucide-react';
 
 export function Modal({
   buttonName,
@@ -21,6 +23,11 @@ export function Modal({
   height = '',
   overflowY = '',
   overlayBg = '',
+  paddingTop = '',
+  paddingLeft = '',
+  paddingRight = '',
+  border = '',
+  showCloseButton = false,
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange} className="z-[999]">
@@ -36,7 +43,18 @@ export function Modal({
           </Button>
         </DialogTrigger>
       )}
-      <DialogContent className={`${width} ${height} w-full z-[9999]`}>
+      <DialogContent
+        className={`${width} ${height} w-full z-[9999] ${paddingTop} ${paddingLeft} ${paddingRight} ${border} ${
+          showCloseButton ? '[&>button.absolute.top-4.right-4]:hidden' : ''
+        }`}
+      >
+        {showCloseButton && (
+          <DialogClose asChild>
+            <button className="absolute top-3 right-3 p-2 rounded-full bg-white hover:bg-gray-100 transition">
+              <X className="w-5 h-5 text-gray-400 hover:text-black transition-all duration-300" />
+            </button>
+          </DialogClose>
+        )}
         {/* Dialog Header */}
         <DialogHeader className="hidden">
           <DialogTitle>

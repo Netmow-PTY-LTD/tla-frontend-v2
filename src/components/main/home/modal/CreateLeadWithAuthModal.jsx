@@ -22,7 +22,9 @@ export default function CreateLeadWithAuthModal({
   modalOpen,
   setModalOpen,
   selectedServiceWiseQuestions,
+  selectedService,
   countryId,
+  defaultCountry,
   serviceId,
   locationId,
   isQuestionsLoading,
@@ -61,10 +63,12 @@ export default function CreateLeadWithAuthModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [stepwiseCheckedOptions, setStepwiseCheckedOptions] = useState(null);
   const [zipCode, setZipCode] = useState('');
+  const [searchZipCode, setSearchZipCode] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
   const [address, setAddress] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
 
   useEffect(() => {
     if (!selectedServiceWiseQuestions?.length) return;
@@ -90,25 +94,44 @@ export default function CreateLeadWithAuthModal({
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const { data: allZipCodes, isLoading: isZipCodeLoading } =
-    useGetZipCodeListQuery();
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDebouncedSearch(searchZipCode);
+    }, 500); // wait 500ms after typing
 
-  const filteredZipCodes = allZipCodes?.data?.filter((item) =>
-    typeof zipCode === 'string'
-      ? item?.zipcode?.toLowerCase().includes(zipCode.toLowerCase())
-      : true
-  );
+    return () => clearTimeout(timeout); // cleanup on each keystroke
+  }, [searchZipCode]);
+
+  const paramsPayload = {
+    countryId: countryId,
+    search: debouncedSearch || '',
+  };
+
+  const { data: allZipCodes, isLoading: isZipCodeLoading } =
+    useGetZipCodeListQuery(paramsPayload, {
+      skip: !countryId || !debouncedSearch,
+    });
+
+  // const filteredZipCodes = allZipCodes?.data?.filter((item) =>
+  //   typeof zipCode === 'string'
+  //     ? item?.zipcode?.toLowerCase().includes(zipCode.toLowerCase())
+  //     : true
+  // );
+
+  console.log('paramsPayload', paramsPayload);
+  console.log('defaultCountry', defaultCountry);
 
   useEffect(() => {
-    if (locationId && allZipCodes?.data?.length) {
+    if (locationId && allZipCodes?.data?.length > 0) {
       setZipCode(locationId);
 
-      const selectedZip = allZipCodes.data.find((z) => z._id === locationId);
+      const selectedZip = allZipCodes?.data?.find((z) => z._id === locationId);
       if (selectedZip) {
-        setPostalCode(selectedZip.postalCode);
-        setLatitude(selectedZip.latitude);
-        setLongitude(selectedZip.longitude);
-        setAddress(selectedZip.zipcode); // full formatted address
+        setPostalCode(selectedZip?.postalCode);
+        setLatitude(selectedZip?.latitude);
+        setLongitude(selectedZip?.longitude);
+        setAddress(selectedZip?.zipcode); // full formatted address
+        setSearchZipCode(selectedZip?.zipcode);
       }
     }
   }, [locationId, allZipCodes]);
@@ -457,66 +480,82 @@ export default function CreateLeadWithAuthModal({
       title=""
       width="max-w-[570px]"
       height="max-h-[90vh]"
+      paddingTop="pt-0"
+      paddingLeft="pl-0"
+      paddingRight="pr-0"
+      border="border-0"
+      showCloseButton={true}
     >
       {isQuestionsLoading || !selectedServiceWiseQuestions?.length ? (
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-2 pt-6 px-6">
           <Loader className="w-4 h-4 animate-spin" /> Loading question...
         </div>
       ) : step < totalQuestions ? (
         viewData?.question ? (
-          <div className="space-y-4 mt-4">
-            <h4 className="text-[24px] font-semibold text-center mb-8">
-              {viewData.question}
-            </h4>
-            <div className="border border-1 flex flex-col gap-2 rounded-lg max-h-[350px] overflow-y-auto">
-              {viewData?.options?.length > 0 &&
-                viewData.options?.map((option, index) => {
-                  const isLast = index === viewData?.options?.length - 1;
-                  const isOther = option?.name?.toLowerCase() === 'other';
-                  const isChecked = option?.is_checked;
+          <div className="space-y-4">
+            {step === 0 && selectedService?.serviceField?.bannerImage && (
+              <div
+                className="w-full max-h-[120px] bg-cover bg-center bg-no-repeat rounded-t-lg"
+                style={{
+                  backgroundImage: `url(${selectedService.serviceField.bannerImage})`,
+                  height: '120px',
+                }}
+              />
+            )}
+            <div className="pt-6 px-6">
+              <h4 className="text-[24px] font-semibold text-center mb-8">
+                {viewData.question}
+              </h4>
+              <div className="border border-1 flex flex-col gap-2 rounded-lg max-h-[350px] overflow-y-auto">
+                {viewData?.options?.length > 0 &&
+                  viewData?.options?.map((option, index) => {
+                    const isLast = index === viewData?.options?.length - 1;
+                    const isOther = option?.name?.toLowerCase() === 'other';
+                    const isChecked = option?.is_checked;
 
-                  return (
-                    <label
-                      key={option._id || index}
-                      className={`flex gap-3 px-4 py-3 ${
-                        !isLast ? 'border-b' : ''
-                      }`}
-                    >
-                      <span className="flex items-center gap-3">
-                        <input
-                          type={
-                            viewData.questionType === 'checkbox'
-                              ? 'checkbox'
-                              : 'radio'
-                          }
-                          name={`question-${viewData._id}`}
-                          onChange={(e) =>
-                            handleOptionChange(option._id, e.target.checked)
-                          }
-                          checked={isChecked}
-                        />
+                    return (
+                      <label
+                        key={option._id || index}
+                        className={`flex gap-3 px-4 py-3 ${
+                          !isLast ? 'border-b' : ''
+                        }`}
+                      >
+                        <span className="flex items-center gap-3">
+                          <input
+                            type={
+                              viewData.questionType === 'checkbox'
+                                ? 'checkbox'
+                                : 'radio'
+                            }
+                            name={`question-${viewData._id}`}
+                            onChange={(e) =>
+                              handleOptionChange(option._id, e.target.checked)
+                            }
+                            checked={isChecked}
+                          />
 
-                        {/* Render name only if not 'Other' */}
-                        {option?.name !== 'Other' && (
-                          <span>{option?.name}</span>
+                          {/* Render name only if not 'Other' */}
+                          {option?.name !== 'Other' && (
+                            <span>{option?.name}</span>
+                          )}
+                        </span>
+
+                        {/* Render input only if option is 'Other' */}
+                        {isOther && (
+                          <input
+                            type="text"
+                            id={`${option._id}-other`}
+                            placeholder="Other"
+                            className="border rounded px-2 py-1 w-full"
+                            // onChange={(e) =>
+                            //   handleOptionChange(option._id, e.target.value)
+                            // }
+                          />
                         )}
-                      </span>
-
-                      {/* Render input only if option is 'Other' */}
-                      {isOther && (
-                        <input
-                          type="text"
-                          id={`${option._id}-other`}
-                          placeholder="Other"
-                          className="border rounded px-2 py-1 w-full"
-                          // onChange={(e) =>
-                          //   handleOptionChange(option._id, e.target.value)
-                          // }
-                        />
-                      )}
-                    </label>
-                  );
-                })}
+                      </label>
+                    );
+                  })}
+              </div>
             </div>
           </div>
         ) : (
@@ -525,7 +564,7 @@ export default function CreateLeadWithAuthModal({
           </div>
         )
       ) : step === totalQuestions ? (
-        <div className="space-y-6">
+        <div className="space-y-6 pt-6 px-6">
           <h4 className="text-[24px] font-semibold text-center">
             When are you looking to get started?
           </h4>
@@ -553,7 +592,7 @@ export default function CreateLeadWithAuthModal({
           </div>
         </div>
       ) : step === totalQuestions + 1 ? (
-        <div className="space-y-6">
+        <div className="space-y-6 pt-6 px-6">
           <h4 className="text-[24px] font-semibold text-center">
             Want to share anything more?
           </h4>
@@ -568,7 +607,7 @@ export default function CreateLeadWithAuthModal({
           </label>
         </div>
       ) : step === totalQuestions + 2 ? (
-        <div className="space-y-6">
+        <div className="space-y-6 pt-6 px-6">
           <h4 className="text-[24px] font-semibold text-center">
             What is your estimated budget?
           </h4>
@@ -596,7 +635,7 @@ export default function CreateLeadWithAuthModal({
           </div>
         </div>
       ) : step === totalSteps - 1 ? (
-        <div className="space-y-4">
+        <div className="space-y-4 pt-6 px-6">
           <h4 className="text-[24px] font-semibold text-center">
             Where do you need the service?
           </h4>
@@ -615,7 +654,8 @@ export default function CreateLeadWithAuthModal({
                 setPostalCode(selectedZip.postalCode);
                 setLatitude(selectedZip.latitude);
                 setLongitude(selectedZip.longitude);
-                setAddress(selectedZip.zipcode); // full formatted address
+                setAddress(selectedZip.zipcode); // show proper text
+                setSearchZipCode(selectedZip.zipcode);
               }
             }}
           >
@@ -623,23 +663,21 @@ export default function CreateLeadWithAuthModal({
               <ComboboxInput
                 className="border border-gray-300 rounded-md w-full h-[44px] px-4"
                 onChange={(event) => {
-                  // This is only for filtering typed text
                   const value = event.target.value;
-                  setZipCode(value);
-                  // You can trigger filtering logic here if needed
+                  setSearchZipCode(value); // when typing, zipCode is string
                 }}
-                displayValue={(val) =>
-                  allZipCodes?.data?.find((z) => z._id === val)?.zipcode || val
-                }
+                // ✅ FIX: Always map _id → zipcode text
+                displayValue={() => searchZipCode}
                 placeholder="Select a postcode"
                 autoComplete="off"
               />
+
               <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
                 <ChevronDown className="h-4 w-4 text-gray-500" />
               </ComboboxButton>
-              {filteredZipCodes?.length > 0 && (
+              {allZipCodes?.data?.length > 0 && (
                 <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  {filteredZipCodes?.slice(0, 10).map((item) => (
+                  {allZipCodes?.data?.slice(0, 10).map((item) => (
                     <ComboboxOption
                       key={item._id}
                       value={item._id}
@@ -679,7 +717,7 @@ export default function CreateLeadWithAuthModal({
       {isQuestionsLoading ||
         (selectedServiceWiseQuestions?.length > 0 && (
           <div
-            className={`flex ${
+            className={`flex px-6 ${
               step === 0 ? 'justify-end' : 'justify-between'
             } mt-8`}
           >

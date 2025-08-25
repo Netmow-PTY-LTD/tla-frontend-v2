@@ -24,6 +24,7 @@ import {
 } from '@/store/features/auth/authApiService';
 import { Skeleton } from '@/components/ui/skeleton';
 import Cookies from 'js-cookie';
+import { persistor } from '@/store/store';
 
 export default function BuyerProfileDropDown({ data }) {
   const dispatch = useDispatch();
