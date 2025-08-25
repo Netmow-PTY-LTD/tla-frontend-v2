@@ -10,6 +10,7 @@ import { useGetCountryListQuery } from '@/store/features/public/publicApiService
 import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
 import LawyerWarningModal from '../home/modal/LawyerWarningModal';
 import { checkValidity } from '@/helpers/validityCheck';
+import { useGetAllCategoriesQuery } from '@/store/features/public/catagorywiseServiceApiService';
 
 const slidesData = [
   {
@@ -79,6 +80,12 @@ export default function HeroSlider() {
     (country) => country?.slug === 'au'
   );
 
+  const { data: allCategories, isLoading: isAllCategoriesLoading } =
+    useGetAllCategoriesQuery();
+
+  const allServices =
+    allCategories?.data?.flatMap((category) => category.services) || [];
+
   // Default to Australia (AU) if available
   const { data: countryWiseServices, isLoading: isCountryWiseServicesLoading } =
     useGetCountryWiseServicesQuery(defaultCountry?._id, {
@@ -125,13 +132,13 @@ export default function HeroSlider() {
     <>
       <div className={styles.carouselWrapper}>
         <div className={styles.carouselContainer}>
-          {isCountryWiseServicesLoading ? (
+          {isAllCategoriesLoading ? (
             <div className="flex justify-center items-center">
               <Loader className="w-6 h-6 animate-spin" />
             </div>
           ) : (
-            countryWiseServices?.data?.length > 0 &&
-            countryWiseServices?.data?.slice(0, 5).map((service, index) => {
+            allServices?.length > 0 &&
+            allServices?.slice(0, 5).map((service, index) => {
               const image =
                 slidesData[index % slidesData.length]?.image ||
                 '/assets/img/services/service-slider-1.webp';
@@ -207,6 +214,7 @@ export default function HeroSlider() {
               setModalOpen={setModalOpen}
               handleModalOpen={handleModalOpen}
               selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
+              selectedService={selectedService}
               countryId={defaultCountry?._id}
               serviceId={selectedService?._id}
               locationId={location}
@@ -220,6 +228,7 @@ export default function HeroSlider() {
           setModalOpen={setModalOpen}
           handleModalOpen={handleModalOpen}
           selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
+          selectedService={selectedService}
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
           locationId={location}
