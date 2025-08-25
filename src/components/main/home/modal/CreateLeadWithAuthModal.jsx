@@ -28,6 +28,7 @@ export default function CreateLeadWithAuthModal({
   serviceId,
   locationId,
   isQuestionsLoading,
+  zipCodeList,
 }) {
   const [step, setStep] = useState(0);
 
@@ -69,6 +70,8 @@ export default function CreateLeadWithAuthModal({
   const [longitude, setLongitude] = useState('');
   const [address, setAddress] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [newZipCodeList, setNewZipCodeList] = useState([]);
+  const [isTypedNewValue, setIsTypedNewValue] = useState(false);
 
   useEffect(() => {
     if (!selectedServiceWiseQuestions?.length) return;
@@ -112,29 +115,36 @@ export default function CreateLeadWithAuthModal({
       skip: !countryId || !debouncedSearch,
     });
 
-  // const filteredZipCodes = allZipCodes?.data?.filter((item) =>
-  //   typeof zipCode === 'string'
-  //     ? item?.zipcode?.toLowerCase().includes(zipCode.toLowerCase())
-  //     : true
-  // );
-
-  console.log('paramsPayload', paramsPayload);
-  console.log('defaultCountry', defaultCountry);
-
   useEffect(() => {
-    if (locationId && allZipCodes?.data?.length > 0) {
-      setZipCode(locationId);
+    if (isTypedNewValue) {
+      if (allZipCodes?.data?.length > 0) {
+        setNewZipCodeList(allZipCodes.data);
+      }
+    } else {
+      if (zipCodeList?.length > 0) {
+        setNewZipCodeList(zipCodeList);
+      }
 
-      const selectedZip = allZipCodes?.data?.find((z) => z._id === locationId);
-      if (selectedZip) {
-        setPostalCode(selectedZip?.postalCode);
-        setLatitude(selectedZip?.latitude);
-        setLongitude(selectedZip?.longitude);
-        setAddress(selectedZip?.zipcode); // full formatted address
-        setSearchZipCode(selectedZip?.zipcode);
+      if (locationId && newZipCodeList?.length > 0) {
+        setZipCode(locationId);
+
+        const selectedZip = newZipCodeList?.find((z) => z._id === locationId);
+        if (selectedZip) {
+          setPostalCode(selectedZip?.postalCode);
+          setLatitude(selectedZip?.latitude);
+          setLongitude(selectedZip?.longitude);
+          setAddress(selectedZip?.zipcode); // full formatted address
+          setSearchZipCode(selectedZip?.zipcode);
+        }
       }
     }
-  }, [locationId, allZipCodes]);
+  }, [locationId, newZipCodeList, allZipCodes, zipCodeList]);
+
+  const handleZipCodeSearch = (e) => {
+    if (e.target.value !== '') {
+      setIsTypedNewValue(true);
+    }
+  };
 
   const addressInfo = {
     countryId: country.countryId,
@@ -666,8 +676,10 @@ export default function CreateLeadWithAuthModal({
                   const value = event.target.value;
                   setSearchZipCode(value); // when typing, zipCode is string
                 }}
-                // ✅ FIX: Always map _id → zipcode text
-                displayValue={() => searchZipCode}
+                onKeyUp={(e) => handleZipCodeSearch(e)}
+                displayValue={(id) =>
+                  allZipCodes?.data?.find((z) => z._id === id)?.zipcode || ''
+                }
                 placeholder="Select a postcode"
                 autoComplete="off"
               />
@@ -675,9 +687,9 @@ export default function CreateLeadWithAuthModal({
               <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
                 <ChevronDown className="h-4 w-4 text-gray-500" />
               </ComboboxButton>
-              {allZipCodes?.data?.length > 0 && (
+              {newZipCodeList?.length > 0 && (
                 <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  {allZipCodes?.data?.slice(0, 10).map((item) => (
+                  {newZipCodeList?.slice(0, 10).map((item) => (
                     <ComboboxOption
                       key={item._id}
                       value={item._id}
