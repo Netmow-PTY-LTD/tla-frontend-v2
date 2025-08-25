@@ -18,6 +18,7 @@ import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import Link from 'next/link';
 import { RequestMessageModal } from './modal/RequestMessageModal';
 import { RatingStars } from './RatingUi';
+import dayjs from 'dayjs';
 
 const LawyerCard = ({
   lawyer,
@@ -67,7 +68,8 @@ const LawyerCard = ({
     }
   };
 
-console.log(' lawyer', lawyer)
+  console.log(' lawyer', lawyer?.isProfileVisited)
+  console.log(' lawyer', lawyer?.profileVisit)
 
   return (
     <>
@@ -115,8 +117,8 @@ console.log(' lawyer', lawyer)
                     <div className="flex items-center gap-1 text-xs ">
                       <span
                         className={`w-2 h-2 rounded-full ${lawyerOnlineStatus[lawyer?._id]
-                            ? 'bg-green-500'
-                            : 'bg-gray-400'
+                          ? 'bg-green-500'
+                          : 'bg-gray-400'
                           }`}
                       ></span>
                     </div>
@@ -148,19 +150,30 @@ console.log(' lawyer', lawyer)
                 }}
               ></p>
             )}
-            <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg flex justify-between gap-4">
-              <div className="flex-shrink-0">
-                <h4 className={`font-medium mb-1 text-[16px] text-gray-500`}>
-                  Me
-                </h4>
-                <p className={`text-[var(--color-black)] font-medium text-sm`}>
-                  You viewed this profile.
-                </p>
-              </div>
-              <div className="flex-shrink-0 text-sm text-gray-400">
-                19 Aug, 10:39
-              </div>
-            </div>
+            {
+              lawyer?.isProfileVisited && (
+
+                <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg flex justify-between gap-4">
+                  <div className="flex-shrink-0">
+                    <h4 className={`font-medium mb-1 text-[16px] text-gray-500`}>
+                      Me
+                    </h4>
+                    <p className={`text-[var(--color-black)] font-medium text-sm`}>
+                      You viewed this profile.
+                    </p>
+                  </div>
+                  <div className="flex-shrink-0 text-sm text-gray-400">
+
+                    {
+                      lawyer?.profileVisit?.visitedAt
+                        ? dayjs(lawyer.profileVisit.visitedAt).format("DD MMM, hh:mm A")
+                        : null
+                    }
+                  </div>
+                </div>
+              )
+
+            }
             <Link
               href={`/profile/${lawyer?.profile?.slug}`}
               target="_blank"
@@ -178,7 +191,7 @@ console.log(' lawyer', lawyer)
                   }`}
                 // onClick={handleRequest}
                 onClick={() => setOpenRequestModal(true)}
-                disabled={isLoading || isHiredLead || isClosed || lawyer?.isRequested } // Disable if loading or already requested
+                disabled={isLoading || isHiredLead || isClosed || lawyer?.isRequested} // Disable if loading or already requested
               >
                 {isLoading ? (
                   <div className="flex items-center gap-1">
