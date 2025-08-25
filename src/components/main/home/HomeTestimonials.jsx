@@ -5,51 +5,122 @@ import '@/styles/slider.css';
 
 const testimonials = [
   {
+    id: 1,
     image: '/assets/img/testimonials/testimonial-1.webp',
     name: 'Alicia Green',
-    rating: 5,
     text: 'Amazing legal service. Fast and professional.',
   },
   {
+    id: 2,
     image: '/assets/img/testimonials/testimonial-2.webp',
     name: 'Mark Benson',
-    rating: 4,
     text: 'Best legal experience I’ve had. Highly recommend.',
   },
   {
+    id: 3,
     image: '/assets/img/testimonials/testimonial-3.webp',
     name: 'Sara Lee',
-    rating: 5,
     text: 'Very supportive and timely updates.',
   },
   {
+    id: 4,
     image: '/assets/img/testimonials/testimonial-4.webp',
     name: 'John Smith',
-    rating: 4,
     text: 'Confident, clear, and trustworthy advice.',
   },
   {
+    id: 5,
     image: '/assets/img/testimonials/testimonial-5.webp',
     name: 'Emily Reed',
-    rating: 5,
     text: 'Truly helpful legal team. Great results.',
   },
   {
+    id: 6,
     image: '/assets/img/testimonials/testimonial-6.webp',
     name: 'Paul Stone',
-    rating: 3,
     text: 'Listened, understood, and delivered perfectly.',
   },
   {
+    id: 7,
     image: '/assets/img/testimonials/testimonial-7.webp',
     name: 'Jasmine Wu',
-    rating: 5,
     text: 'Professional, friendly, and results-driven.',
+  },
+  {
+    id: 8,
+    image: '/assets/img/testimonials/testimonial-8.webp',
+    name: 'Carlos Rivera',
+    text: 'Exceeded expectations at every step.',
+  },
+  {
+    id: 9,
+    image: '/assets/img/testimonials/testimonial-9.webp',
+    name: 'Nina Patel',
+    text: 'Clear communication and great outcome.',
+  },
+  {
+    id: 10,
+    image: '/assets/img/testimonials/testimonial-10.webp',
+    name: 'David Kim',
+    text: 'Handled my case with expertise and care.',
+  },
+  {
+    id: 11,
+    image: '/assets/img/testimonials/testimonial-11.webp',
+    name: 'Olivia Moore',
+    text: 'Incredible team—highly professional and reliable.',
+  },
+  {
+    id: 12,
+    image: '/assets/img/testimonials/testimonial-12.webp',
+    name: 'Anthony Brooks',
+    text: 'Supportive and knowledgeable throughout the case.',
+  },
+  {
+    id: 13,
+    image: '/assets/img/testimonials/testimonial-13.webp',
+    name: 'Lena Ortiz',
+    text: 'Courteous service and outstanding representation.',
+  },
+  {
+    id: 14,
+    image: '/assets/img/testimonials/testimonial-14.webp',
+    name: 'George Allen',
+    text: 'Highly efficient legal team that gets results.',
+  },
+  {
+    id: 15,
+    image: '/assets/img/testimonials/testimonial-15.webp',
+    name: 'Maya Chen',
+    text: 'Always available and willing to help.',
+  },
+  {
+    id: 16,
+    image: '/assets/img/testimonials/testimonial-16.webp',
+    name: 'Derek Nguyen',
+    text: 'Professional, precise, and incredibly helpful.',
   },
 ];
 
-const MAX_VISIBLE_DOTS = 7;
-const fixedSlots = ['img1', 'img2', 'img3', 'img4', 'img5', 'img6'];
+const MAX_VISIBLE_DOTS = testimonials.length;
+const fixedSlots = [
+  'img1',
+  'img2',
+  'img3',
+  'img4',
+  'img5',
+  'img6',
+  'img7',
+  'img8',
+  'img9',
+  'img10',
+  'img11',
+  'img12',
+  'img13',
+  'img14',
+  'img15',
+  'img16',
+];
 
 export default function TestimonialSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -73,7 +144,7 @@ export default function TestimonialSlider() {
       });
 
       await Promise.all(imagePromises);
-      setImages(fixedSlots.map((_, i) => testimonials[i + 1]));
+      setImages(fixedSlots.map((_, i) => testimonials[i]));
       setAllLoaded(true);
     };
 
@@ -200,10 +271,6 @@ export default function TestimonialSlider() {
       <img src={t.image} alt={t.name} />
       <div className="text mt-10">{t.text}</div>
       <div className="name">{t.name}</div>
-      <div className="stars">
-        {'★'.repeat(t.rating)}
-        {'☆'.repeat(5 - t.rating)}
-      </div>
     </>
   );
 
@@ -240,6 +307,7 @@ export default function TestimonialSlider() {
         </div>
       </div>
 
+      {/* Navigation Dots */}
       <div className="dots">
         {Array(MAX_VISIBLE_DOTS)
           .fill(0)
