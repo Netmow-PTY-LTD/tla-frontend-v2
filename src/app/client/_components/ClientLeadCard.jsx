@@ -9,6 +9,7 @@ import { userDummyImage } from '@/data/data';
 import RespondersOnline from './RespondersOnline';
 import LeadCloseModal from './modal/LeadCloseModal';
 import RatingForm from '../dashboard/my-cases/_components/RatingForm';
+import { RatingStars } from './RatingUi';
 
 const responsesLeads = [
   {
@@ -78,7 +79,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
     }
   };
 
-  //console.log('check lead user data ===>',user)
+  
 
   return (
     <>
@@ -270,12 +271,16 @@ const ClientLeadCard = ({ user, isExpanded }) => {
 
         {
           user?.hireStatus !== 'not_requested' ? (
-            <div className="text-center">
-              <span className="px-3 py-1 text-sm font-medium 00 rounded-full">
+            <div className="flex flex-col items-center ">
+              <span className="px-3 py-1 text-sm font-medium 00 rounded-full capitalize ">
                 {
                   user?.hireStatus
                 }
               </span>
+              {
+                user?.hireStatus ==="hired" && user?.hiredLawyerRating?.rating&&   <RatingStars rating={user?.hiredLawyerRating?.rating} showNumber={false} />
+              }
+            
             </div>
           ) : <></>
         }
@@ -298,6 +303,8 @@ const ClientLeadCard = ({ user, isExpanded }) => {
               >
                 Close case
               </button>
+
+              
            
                 
             </div>

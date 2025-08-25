@@ -17,6 +17,7 @@ import { useRequestLawyerMutation } from '@/store/features/client/ClientApiServi
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import Link from 'next/link';
 import { RequestMessageModal } from './modal/RequestMessageModal';
+import { RatingStars } from './RatingUi';
 
 const LawyerCard = ({
   lawyer,
@@ -25,6 +26,7 @@ const LawyerCard = ({
   lawyerOnlineStatus,
   refetch,
   isHiredLead,
+  isClosed
 }) => {
   const [openRequestModal, setOpenRequestModal] = useState(false);
   const profileType = lawyer?.profile?.profileType;
@@ -65,6 +67,8 @@ const LawyerCard = ({
     }
   };
 
+console.log(' lawyer', lawyer)
+
   return (
     <>
       <Card className={`w-full max-w-full mx-auto flex flex-col p-5`}>
@@ -93,8 +97,8 @@ const LawyerCard = ({
                             badge.toLowerCase() === 'premium lawyer'
                               ? '/assets/img/badge.svg'
                               : badge.toLowerCase() === 'expert lawyer'
-                              ? '/assets/img/expert.png'
-                              : '/assets/img/basic.png'
+                                ? '/assets/img/expert.png'
+                                : '/assets/img/basic.png'
                           }
                           width="30"
                           height="30"
@@ -103,33 +107,24 @@ const LawyerCard = ({
                       </div>
                     )}
                     <div
-                      className={`font-medium mb-1 ${
-                        isExpanded ? 'heading-base' : 'text-[18px]'
-                      }`}
+                      className={`font-medium mb-1 ${isExpanded ? 'heading-base' : 'text-[18px]'
+                        }`}
                     >
                       {lawyer?.profile?.name}
                     </div>
                     <div className="flex items-center gap-1 text-xs ">
                       <span
-                        className={`w-2 h-2 rounded-full ${
-                          lawyerOnlineStatus[lawyer?._id]
+                        className={`w-2 h-2 rounded-full ${lawyerOnlineStatus[lawyer?._id]
                             ? 'bg-green-500'
                             : 'bg-gray-400'
-                        }`}
+                          }`}
                       ></span>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-1">
-                  <div className="flex gap-1">
-                    <Star className="w-4 h-4 text-yellow-500" />
-                    <Star className="w-4 h-4 text-yellow-500" />
-                    <Star className="w-4 h-4 text-yellow-500" />
-                    <Star className="w-4 h-4 text-yellow-500" />
-                    <Star className="w-4 h-4 text-yellow-500" />
-                  </div>
-                  <span className="text-sm">(1)</span>
-                </div>
+
+
+                <RatingStars rating={lawyer?.profile?.avgRating} showNumber={false} />
               </div>
             </div>
             {lawyer?.profile?.serviceIds?.length > 0 && (
@@ -178,14 +173,12 @@ const LawyerCard = ({
           <div className="flex flex-col justify-end items-center">
             <div className="flex flex-col p-3 gap-3 sm:gap-0">
               <Button
-                className={`px-4 py-2 w-full sm:w-auto rounded-lg ${
-                  isExpanded ? 'text-[14px]' : 'text-[12px]'
-                } font-medium bg-[var(--color-special)] text-white ${
-                  lawyer?.isRequested ? 'bg-[var(--primary-color)]' : ''
-                }`}
+                className={`px-4 py-2 w-full sm:w-auto rounded-lg ${isExpanded ? 'text-[14px]' : 'text-[12px]'
+                  } font-medium bg-[var(--color-special)] text-white ${lawyer?.isRequested ? 'bg-[var(--primary-color)]' : ''
+                  }`}
                 // onClick={handleRequest}
                 onClick={() => setOpenRequestModal(true)}
-                disabled={isLoading || isHiredLead || lawyer?.isRequested} // Disable if loading or already requested
+                disabled={isLoading || isHiredLead || isClosed || lawyer?.isRequested } // Disable if loading or already requested
               >
                 {isLoading ? (
                   <div className="flex items-center gap-1">

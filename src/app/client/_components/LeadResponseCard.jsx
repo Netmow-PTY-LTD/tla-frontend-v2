@@ -28,6 +28,9 @@ const LeadResponseCard = ({
 
   const badge = response?.lawyerBadge;
 
+console.log('response',response?.responseBy?.avgRating)
+
+
   return (
     <>
       <Card className={`w-full max-w-full mx-auto flex flex-col p-5`}>
@@ -88,18 +91,9 @@ const LeadResponseCard = ({
                     {response?.responseBy?.address ?? ''}
                   </div>
                 </div>
-                {/* <div className="flex items-center gap-1">
-                  <div className="flex gap-1">
-                    <Star className="w-4 h-4 text-yellow-500" />
-                    <Star className="w-4 h-4 text-yellow-500" />
-                    <Star className="w-4 h-4 text-yellow-500" />
-                    <Star className="w-4 h-4 text-yellow-500" />
-                    <Star className="w-4 h-4 text-yellow-500" />
-                  </div>
-                  <span className="text-sm">(1)</span>
-                </div> */}
-                {/* <RatingUI singleResponse={response} /> */}
-                  <RatingStars rating={3} showNumber={false} /> 
+          
+              
+                  <RatingStars rating={response?.responseBy?.avgRating} showNumber={false} /> 
 
               </div>
             </div>
