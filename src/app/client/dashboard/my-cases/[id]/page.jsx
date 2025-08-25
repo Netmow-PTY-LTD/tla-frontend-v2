@@ -211,6 +211,9 @@ export default function LeadDetailsPage() {
     setIsMobile(window.innerWidth <= 1280);
   }, []);
 
+
+console.log('singleLead ==>',singleLead)
+
   if (isSingleLeadLoading) {
     return (
       <div className="p-6 space-y-8 animate-pulse">
@@ -408,6 +411,7 @@ export default function LeadDetailsPage() {
                             lawyerOnlineStatus={lawyerOnlineStatus}
                             refetch={refetch}
                             isHiredLead={singleLead?.data?.isHired}
+                            isClosed={singleLead?.data?.isClosed}
                           />
                         ))}
 

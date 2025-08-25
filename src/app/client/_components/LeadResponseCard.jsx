@@ -14,7 +14,7 @@ import { formatRelativeTime } from '@/helpers/formatTime';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import { userDummyImage } from '@/data/data';
 import { getTruncatedText } from '@/helpers/getTruncatedText';
-import RatingUI from './RatingUi';
+import RatingUI, { RatingStars } from './RatingUi';
 
 const LeadResponseCard = ({
   handleShowLeadResponseDetails,
@@ -27,6 +27,9 @@ const LeadResponseCard = ({
   );
 
   const badge = response?.lawyerBadge;
+
+console.log('response',response?.responseBy?.avgRating)
+
 
   return (
     <>
@@ -88,17 +91,9 @@ const LeadResponseCard = ({
                     {response?.responseBy?.address ?? ''}
                   </div>
                 </div>
-                {/* <div className="flex items-center gap-1">
-                  <div className="flex gap-1">
-                    <Star className="w-4 h-4 text-yellow-500" />
-                    <Star className="w-4 h-4 text-yellow-500" />
-                    <Star className="w-4 h-4 text-yellow-500" />
-                    <Star className="w-4 h-4 text-yellow-500" />
-                    <Star className="w-4 h-4 text-yellow-500" />
-                  </div>
-                  <span className="text-sm">(1)</span>
-                </div> */}
-                <RatingUI singleResponse={response} />
+          
+              
+                  <RatingStars rating={response?.responseBy?.avgRating} showNumber={false} /> 
 
               </div>
             </div>
