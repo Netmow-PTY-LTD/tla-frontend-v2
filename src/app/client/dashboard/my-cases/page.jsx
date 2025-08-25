@@ -64,7 +64,7 @@ export default function MyLeads() {
 
   useEffect(() => {
     if (redirect !== 'false' && allMyLeads?.data?.length === 1) {
-      router.push(`/client/dashboard/my-cases/${allMyLeads.data[0]?._id}`);
+      router.push(`/client/dashboard/my-cases/${allMyLeads?.data[0]?._id}`);
     }
   }, [allMyLeads, redirect]);
 
@@ -127,55 +127,6 @@ export default function MyLeads() {
       if (currentLoader) observer.unobserve(currentLoader);
     };
   }, [isFetching, totalPages]);
-
-  // useEffect(() => {
-  //   if (!allMyLeads) return;
-
-  //   setLeads((prev) => {
-  //     const updatedLeads =
-  //       page === 1 ? allMyLeads?.data : [...prev, ...allMyLeads?.data];
-
-  //     return updatedLeads;
-  //   });
-
-  //   const totalPage = allMyLeads?.pagination?.totalPage;
-
-  //   if (
-  //     !Array.isArray(allMyLeads?.data) ||
-  //     allMyLeads?.data?.length === 0 ||
-  //     typeof totalPage !== 'number' ||
-  //     totalPage <= 0 ||
-  //     page >= totalPage
-  //   ) {
-  //     setHasMore(false);
-  //   } else {
-  //     setHasMore(true);
-  //   }
-  // }, [allMyLeads?.data, page]);
-
-  // // Scroll event handler for infinite loading
-  // useEffect(() => {
-  //   const container = scrollContainerRef.current;
-  //   if (!container) return;
-
-  //   const handleScroll = () => {
-  //     const { scrollTop, scrollHeight, clientHeight } = container;
-  //     const nearBottom = scrollTop + clientHeight >= scrollHeight - 50;
-
-  //     if (nearBottom && hasMore && !isFetching) {
-  //       setPage((prev) => prev + 1);
-  //     }
-  //   };
-
-  //   container.addEventListener('scroll', handleScroll);
-
-  //   return () => {
-  //     container.removeEventListener('scroll', handleScroll);
-  //   };
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [hasMore, isFetching, scrollContainerRef?.current]);
-
-  console.log('leads', leads);
 
   const token = useSelector((state) => state.auth.token);
 

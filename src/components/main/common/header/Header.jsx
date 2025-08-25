@@ -101,11 +101,6 @@ export default function Header() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const { data: allCategories } = useGetAllCategoriesQuery();
-
-  const allServices =
-    allCategories?.data?.flatMap((category) => category.services) || [];
-
   const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
 
   const { data: countryList } = useGetCountryListQuery();
@@ -113,6 +108,15 @@ export default function Header() {
   const defaultCountry = countryList?.data?.find(
     (country) => country?._id === cookieCountry?.countryId
   );
+
+  const { data: allCategories, isLoading: isAllCategoriesLoading } =
+    useGetAllCategoriesQuery(
+      { countryId: defaultCountry?._id },
+      { skip: !defaultCountry?._id }
+    );
+
+  const allServices =
+    allCategories?.data?.flatMap((category) => category.services) || [];
 
   // Default to Australia (AU) if available
   const { data: countryWiseServices, isLoading: isCountryWiseServicesLoading } =
