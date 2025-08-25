@@ -30,6 +30,7 @@ import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { showErrorToast } from '@/components/common/toasts';
 import { useGetAllCategoriesQuery } from '@/store/features/public/catagorywiseServiceApiService';
 import Cookies from 'js-cookie';
+import { safeJsonParse } from '@/helpers/safeJsonParse';
 
 export default function MyLeads() {
   const [selectedService, setSelectedService] = useState(null);
@@ -37,8 +38,10 @@ export default function MyLeads() {
   const [modalOpen, setModalOpen] = useState(false);
   const [service, setService] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState('');
-  const [leads, setLeads] = useState(null);
+  const [leads, setLeads] = useState([]);
   const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(null);
+  const [totalLeadsCount, setTotalLeadsCount] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const scrollContainerRef = useRef(null);
 
@@ -65,17 +68,14 @@ export default function MyLeads() {
     }
   }, [allMyLeads, redirect]);
 
-  useEffect(() => {
-    const cookieCountry = JSON.parse(Cookies.get('countryObj'));
-    setSelectedCountry(cookieCountry);
-  }, []);
+  const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
 
   //console.log('selectedCountry', selectedCountry);
 
   const { data: countryList } = useGetCountryListQuery();
 
   const defaultCountry = countryList?.data?.find(
-    (country) => country?._id === selectedCountry?.countryId
+    (country) => country?._id === cookieCountry?.countryId
   );
 
   //console.log('defaultCountry in my cases', defaultCountry);
@@ -93,52 +93,89 @@ export default function MyLeads() {
     }
   );
 
+  const loader = useRef(null);
+
+  // Append new data to existing list
   useEffect(() => {
-    if (!allMyLeads) return;
-
-    setLeads((prev) => {
-      const updatedLeads =
-        page === 1 ? allMyLeads?.data : [...prev, ...allMyLeads?.data];
-
-      return updatedLeads;
-    });
-
-    const totalPage = allMyLeads?.pagination?.totalPage;
-
-    if (
-      !Array.isArray(allMyLeads?.data) ||
-      allMyLeads?.data?.length === 0 ||
-      typeof totalPage !== 'number' ||
-      totalPage <= 0 ||
-      page >= totalPage
-    ) {
-      setHasMore(false);
-    } else {
-      setHasMore(true);
+    if (allMyLeads && allMyLeads?.data?.length > 0) {
+      setTotalPages(allMyLeads?.pagination?.totalPage);
+      setLeads((prev) => [...prev, ...allMyLeads.data]);
+      setTotalLeadsCount(allMyLeads?.pagination?.total);
     }
-  }, [allMyLeads?.data, page]);
+  }, [allMyLeads]);
 
-  // Scroll event handler for infinite loading
+  // Infinite scroll intersection observer
   useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
+    const scrollTarget = document.getElementById('scroll-target-for-data');
+    if (!scrollTarget) return;
 
-    const handleScroll = () => {
-      const { scrollTop, scrollHeight, clientHeight } = container;
-      const nearBottom = scrollTop + clientHeight >= scrollHeight - 50;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting && !isFetching) {
+          if (totalPages && page >= totalPages) return;
+          setPage((prevPage) => prevPage + 1);
+        }
+      },
+      { root: scrollTarget, threshold: 1 }
+    );
 
-      if (nearBottom && hasMore && !isFetching) {
-        setPage((prev) => prev + 1);
-      }
-    };
-
-    container.addEventListener('scroll', handleScroll);
+    const currentLoader = loader.current;
+    if (currentLoader) observer.observe(currentLoader);
 
     return () => {
-      container.removeEventListener('scroll', handleScroll);
+      if (currentLoader) observer.unobserve(currentLoader);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasMore, isFetching, scrollContainerRef?.current]);
+  }, [isFetching, totalPages]);
+
+  // useEffect(() => {
+  //   if (!allMyLeads) return;
+
+  //   setLeads((prev) => {
+  //     const updatedLeads =
+  //       page === 1 ? allMyLeads?.data : [...prev, ...allMyLeads?.data];
+
+  //     return updatedLeads;
+  //   });
+
+  //   const totalPage = allMyLeads?.pagination?.totalPage;
+
+  //   if (
+  //     !Array.isArray(allMyLeads?.data) ||
+  //     allMyLeads?.data?.length === 0 ||
+  //     typeof totalPage !== 'number' ||
+  //     totalPage <= 0 ||
+  //     page >= totalPage
+  //   ) {
+  //     setHasMore(false);
+  //   } else {
+  //     setHasMore(true);
+  //   }
+  // }, [allMyLeads?.data, page]);
+
+  // // Scroll event handler for infinite loading
+  // useEffect(() => {
+  //   const container = scrollContainerRef.current;
+  //   if (!container) return;
+
+  //   const handleScroll = () => {
+  //     const { scrollTop, scrollHeight, clientHeight } = container;
+  //     const nearBottom = scrollTop + clientHeight >= scrollHeight - 50;
+
+  //     if (nearBottom && hasMore && !isFetching) {
+  //       setPage((prev) => prev + 1);
+  //     }
+  //   };
+
+  //   container.addEventListener('scroll', handleScroll);
+
+  //   return () => {
+  //     container.removeEventListener('scroll', handleScroll);
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [hasMore, isFetching, scrollContainerRef?.current]);
+
+  console.log('leads', leads);
 
   const token = useSelector((state) => state.auth.token);
 
@@ -231,7 +268,9 @@ export default function MyLeads() {
     <>
       <div className="rounded-xl p-4">
         <div className="flex items-center justify-between gap-4">
-          <h2 className="text-xl font-semibold">My Cases</h2>
+          <h2 className="text-xl font-semibold">
+            My Cases ({totalLeadsCount || 0})
+          </h2>
           <form className="w-full md:w-1/2" onSubmit={handleSubmit}>
             <div className="hero-search-area flex flex-wrap md:flex-nowrap gap-2 items-center w-full justify-end">
               <div className="tla-form-group w-full lg:w-1/2">
@@ -293,7 +332,8 @@ export default function MyLeads() {
         </div>
         <div
           className="max-h-[calc(100vh-170px)] overflow-y-auto"
-          ref={scrollContainerRef}
+          // ref={scrollContainerRef}
+          id="scroll-target-for-data"
         >
           <div className="mt-5 max-w-[1400px] mx-auto">
             {leads?.length === 0 && (
@@ -313,11 +353,11 @@ export default function MyLeads() {
                     // <JobPostCard key={index} lead={lead} />
                     <ClientLeadCard key={index} user={lead} />
                   ))}
-                  {hasMore && (
-                    <div className="py-6 text-center">
+                  <div className="py-6 text-center" ref={loader}>
+                    {isFetching && (
                       <Loader className="w-5 h-5 animate-spin text-gray-500 mx-auto" />
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
               </>
             )}
