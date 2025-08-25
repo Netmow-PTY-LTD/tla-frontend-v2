@@ -1,6 +1,6 @@
 'use client';
 import MainLayout from '@/components/main/common/layout';
-import React from 'react';
+import React, { useEffect } from 'react';
 import ProfileBanner from '../_components/ProfileBanner';
 import AboutProfile from '../_components/AboutProfile';
 import Link from 'next/link';
@@ -15,9 +15,13 @@ import ProfileServices from '../_components/ProfileServices';
 import Preloader from '@/components/Preloader';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { useSelector } from 'react-redux';
+import { useVisitProfileMutation } from '@/store/features/visitorTracker/visitorTracker';
+import { checkValidity } from '@/helpers/validityCheck';
+
 
 const DynamicProfilePage = () => {
   const params = useParams();
+  const token = useSelector((state) => state.auth.token);
   const {
     data: userInfo,
     isLoading: isUserInfoLoading,
@@ -26,6 +30,8 @@ const DynamicProfilePage = () => {
     refetch,
   } = useGetUserProfileBySlugQuery(params?.slug);
 
+  console.log('userInfo ===>', userInfo?.data?.userId)
+
   function extractYouTubeVideoId(url) {
     const regex =
       /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^\s&?/]+)/;
@@ -33,12 +39,39 @@ const DynamicProfilePage = () => {
     return match?.[1] || null;
   }
 
-  const token = useSelector((state) => state.auth.token);
-
+  //   if valid token then call curren user api
+  const isValidToken = checkValidity(token)
   const { data: currentUser, isLoading: isCurrentUserLoading } =
-    useAuthUserInfoQuery(undefined, { skip: !token });
+    useAuthUserInfoQuery(undefined, { skip: !isValidToken });
 
-  //console.log('currentUser', currentUser);
+  const [visitProfile] = useVisitProfileMutation();
+  // ✅ Trigger visit API only when user is valid and profile is loaded
+  useEffect(() => {
+    const targetId = userInfo?.data?.userId;
+    const visitorId = currentUser?.data?._id;
+
+    if (
+      isValidToken &&    // ✅ Only if logged in
+      targetId &&
+      visitorId &&
+      targetId !== visitorId // ✅ Avoid visiting own profile
+    ) {
+      const trackVisit = async () => {
+        try {
+          await visitProfile({ targetId }).unwrap();
+        } catch (error) {
+          console.error("Error visiting profile:", error);
+        }
+      };
+
+      trackVisit();
+    }
+
+
+
+  }, [isValidToken, userInfo?.data?.userId, currentUser?.data?._id, visitProfile]);
+
+
 
   if (isUserInfoLoading) {
     return <Preloader />;
@@ -160,7 +193,7 @@ const DynamicProfilePage = () => {
                     <h4 className="font-semibold mb-4">Languages</h4>
                     <div className="flex flex-wrap mb-4">
                       {Array.isArray(userInfo?.data?.languages) &&
-                      userInfo?.data?.languages?.length > 0 ? (
+                        userInfo?.data?.languages?.length > 0 ? (
                         userInfo?.data?.languages?.map((language, index) => (
                           <div key={language + index}>
                             <span className="py-2 px-4 mr-2 mb-2 rounded-lg inline-block bg-[#095761] text-white">
@@ -183,7 +216,7 @@ const DynamicProfilePage = () => {
                     </h4>
                     <div className="">
                       {Array.isArray(userInfo?.data?.services) &&
-                      userInfo?.data?.services?.length > 0 ? (
+                        userInfo?.data?.services?.length > 0 ? (
                         userInfo?.data?.services?.map((service, index) => (
                           <div key={service + index}>
                             <span className="py-2 px-4 mr-2 mb-2 rounded-lg inline-block chip">
