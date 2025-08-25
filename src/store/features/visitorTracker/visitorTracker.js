@@ -17,7 +17,7 @@ const visitorTrackerApiService = baseApi.injectEndpoints({
                 method: 'POST',
                 body: data
             }),
-            invalidatesTags: ['recent-visitor']
+            invalidatesTags: ['recent-visitor',"lawyer-suggestion"]
         }),
 
 
