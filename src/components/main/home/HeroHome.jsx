@@ -382,6 +382,7 @@ export default function HeroHome({ searchParam, cookieCountry }) {
               serviceId={selectedService?._id}
               locationId={selectedZipCodeId}
               isQuestionsLoading={isQuestionsLoading}
+              zipCodeList={zipCodeList}
             />
           )}
         </>

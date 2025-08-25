@@ -38,7 +38,7 @@ export default function Home() {
       let cookieCountryCode = Cookies.get('country');
 
       if (!cookieCountryCode) {
-        cookieCountryCode = 'au'; // default
+        cookieCountryCode = countries[0].code.toLowerCase(); // default
         Cookies.set('country', cookieCountryCode, { expires: 3650 });
       }
 
