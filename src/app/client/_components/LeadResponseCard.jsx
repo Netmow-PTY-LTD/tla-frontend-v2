@@ -14,7 +14,7 @@ import { formatRelativeTime } from '@/helpers/formatTime';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import { userDummyImage } from '@/data/data';
 import { getTruncatedText } from '@/helpers/getTruncatedText';
-import RatingUI from './RatingUi';
+import RatingUI, { RatingStars } from './RatingUi';
 
 const LeadResponseCard = ({
   handleShowLeadResponseDetails,
@@ -98,7 +98,8 @@ const LeadResponseCard = ({
                   </div>
                   <span className="text-sm">(1)</span>
                 </div> */}
-                <RatingUI singleResponse={response} />
+                {/* <RatingUI singleResponse={response} /> */}
+                  <RatingStars rating={3} showNumber={false} /> 
 
               </div>
             </div>
