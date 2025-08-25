@@ -11,12 +11,13 @@ const clientApiService = baseApi.injectEndpoints({
       invalidatesTags: ['lawyer-suggestion','requests','request'],
     }),
     getAllServiceWiseLawyersSuggestions: builder.query({
-      query: ({ leadId, serviceId, page, limit }) => ({
+      query: ({ leadId, serviceId, page, limit ,minRating}) => ({
         url: `lawyer-suggestions?leadId=${leadId}&serviceId=${serviceId}`,
         method: 'GET',
         params: {
           page: page,
           limit: limit,
+          minRating
         },
       }),
 
