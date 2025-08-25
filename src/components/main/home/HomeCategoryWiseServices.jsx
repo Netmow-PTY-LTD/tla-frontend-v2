@@ -18,6 +18,7 @@ import SectionHeading from './SectionHeading';
 import LawyerWarningModal from './modal/LawyerWarningModal';
 import { checkValidity } from '@/helpers/validityCheck';
 import Cookies from 'js-cookie';
+import countries from '@/data/countries.json';
 
 export default function HomeCategoryWiseServices() {
   const [selectedService, setSelectedService] = useState(null);
@@ -37,12 +38,20 @@ export default function HomeCategoryWiseServices() {
     setModalOpen(true);
   };
 
-  const cookieCountry = Cookies.get('country');
+  const cookieCountryCode = Cookies.get('country');
+
+  console.log('cookieCountryCode', cookieCountryCode);
+
+  const country = countries.find(
+    (country) => country.code.toLowerCase() === cookieCountryCode.toLowerCase()
+  );
+
+  console.log('country in home', country);
 
   const { data: countryList } = useGetCountryListQuery();
 
   const defaultCountry = countryList?.data?.find(
-    (country) => country?.slug === cookieCountry
+    (country) => country?.slug === cookieCountryCode
   );
 
   useEffect(() => {
@@ -154,6 +163,7 @@ export default function HomeCategoryWiseServices() {
               setModalOpen={setModalOpen}
               handleModalOpen={handleModalOpen}
               selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
+              selectedService={selectedService}
               countryId={defaultCountry?._id}
               serviceId={selectedService?._id}
               locationId={location}
@@ -167,6 +177,7 @@ export default function HomeCategoryWiseServices() {
           setModalOpen={setModalOpen}
           handleModalOpen={handleModalOpen}
           selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
+          selectedService={selectedService}
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
         />

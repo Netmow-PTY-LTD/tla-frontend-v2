@@ -8,7 +8,6 @@ import HomeAboutPreview from '@/components/main/home/HomeAboutPreview';
 import TestimonialSlider from '@/components/main/home/HomeTestimonials';
 import HomeCategoryWiseServices from '@/components/main/home/HomeCategoryWiseServices';
 import { useEffect, useState } from 'react';
-import TestimonialSliderTest from '@/components/main/home/HomeTestimonialsTest copy';
 import Cookies from 'js-cookie';
 import countries from '@/data/countries';
 
@@ -39,7 +38,7 @@ export default function Home() {
       let cookieCountryCode = Cookies.get('country');
 
       if (!cookieCountryCode) {
-        cookieCountryCode = 'au'; // default
+        cookieCountryCode = countries[0].code.toLowerCase(); // default
         Cookies.set('country', cookieCountryCode, { expires: 3650 });
       }
 

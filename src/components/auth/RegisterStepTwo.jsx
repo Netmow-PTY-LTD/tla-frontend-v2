@@ -46,6 +46,7 @@ import { showErrorToast } from '../common/toasts';
 import { Input } from '../ui/input';
 import country from '@/data/au.json';
 import Cookies from 'js-cookie';
+import { safeJsonParse } from '@/helpers/safeJsonParse';
 
 export default function RegisterStepTwo() {
   const [zipcode, setZipcode] = useState('');
@@ -64,15 +65,15 @@ export default function RegisterStepTwo() {
   const { zipCode, rangeInKm, practiceWithin, practiceInternationally } =
     lawyerServiceMap;
 
-  const cookieCountry = Cookies.get('country');
+  const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
 
   const { data: countryList } = useGetCountryListQuery();
 
   const defaultCountry = countryList?.data?.find(
-    (country) => country?.slug === cookieCountry
+    (country) => country?._id === cookieCountry?.countryId
   );
 
-  console.log('defaultCountry', defaultCountry);
+  //console.log('defaultCountry', defaultCountry);
 
   const paramsPayload = {
     countryId: defaultCountry?._id,

@@ -46,8 +46,8 @@
 
 .img-box {
   position: absolute;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   overflow: hidden;
   background: #fff;
@@ -94,8 +94,8 @@
 }
 
 .active-card img {
-  width: 230px;
-  height: 230px;
+  width: 200px;
+  height: 200px;
   object-fit: cover;
   margin-bottom: 10px;
   border-radius: 5px;

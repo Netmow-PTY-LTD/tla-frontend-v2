@@ -29,6 +29,7 @@ import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/question
 import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
 import { checkValidity } from '@/helpers/validityCheck';
 import LawyerWarningModal from '../../home/modal/LawyerWarningModal';
+import { safeJsonParse } from '@/helpers/safeJsonParse';
 
 export default function Header() {
   const [isHeaderFixed, setIsHeaderFixed] = useState();
@@ -102,10 +103,15 @@ export default function Header() {
 
   const { data: allCategories } = useGetAllCategoriesQuery();
 
+  const allServices =
+    allCategories?.data?.flatMap((category) => category.services) || [];
+
+  const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
+
   const { data: countryList } = useGetCountryListQuery();
 
   const defaultCountry = countryList?.data?.find(
-    (country) => country?.slug === 'au'
+    (country) => country?._id === cookieCountry?.countryId
   );
 
   // Default to Australia (AU) if available
@@ -141,7 +147,7 @@ export default function Header() {
     setServiceWiseQuestions(singleServicewiseQuestionsData?.data || []);
   }, [singleServicewiseQuestionsData]);
 
-  const filteredServices = countryWiseServices?.data?.filter((service) =>
+  const filteredServices = allServices?.filter((service) =>
     service.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -433,6 +439,7 @@ export default function Header() {
               setModalOpen={setModalOpen}
               handleModalOpen={handleModalOpen}
               selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
+              selectedService={selectedService}
               countryId={defaultCountry?._id}
               serviceId={selectedService?._id}
               locationId={location}
@@ -446,6 +453,7 @@ export default function Header() {
           setModalOpen={setModalOpen}
           handleModalOpen={handleModalOpen}
           selectedServiceWiseQuestions={serviceWiseQuestions ?? []}
+          selectedService={selectedService}
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
         />
@@ -453,4 +461,3 @@ export default function Header() {
     </header>
   );
 }
-
