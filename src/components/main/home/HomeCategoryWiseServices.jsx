@@ -19,6 +19,7 @@ import LawyerWarningModal from './modal/LawyerWarningModal';
 import { checkValidity } from '@/helpers/validityCheck';
 import Cookies from 'js-cookie';
 import countries from '@/data/countries.json';
+import { safeJsonParse } from '@/helpers/safeJsonParse';
 
 export default function HomeCategoryWiseServices() {
   const [selectedService, setSelectedService] = useState(null);
@@ -28,31 +29,31 @@ export default function HomeCategoryWiseServices() {
   const [service, setService] = useState(null);
   const [location, setLocation] = useState(null);
 
-  const { data: allCategories } = useGetAllCategoriesQuery();
-
-  const allServices =
-    allCategories?.data?.flatMap((category) => category.services) || [];
-
   //console.log('categories', allCategories?.data);
   const handleModalOpen = () => {
     setModalOpen(true);
   };
 
-  const cookieCountryCode = Cookies.get('country');
+  const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
 
-  console.log('cookieCountryCode', cookieCountryCode);
-
-  const country = countries.find(
-    (country) => country.code.toLowerCase() === cookieCountryCode.toLowerCase()
-  );
-
-  console.log('country in home', country);
+  //console.log('country in home', cookieCountry);
 
   const { data: countryList } = useGetCountryListQuery();
 
   const defaultCountry = countryList?.data?.find(
-    (country) => country?.slug === cookieCountryCode
+    (country) => country?._id === cookieCountry?.countryId
   );
+
+  const { data: allCategories, isLoading: isAllCategoriesLoading } =
+    useGetAllCategoriesQuery(
+      { countryId: defaultCountry?._id },
+      { skip: !defaultCountry?._id }
+    );
+
+  const allServices =
+    allCategories?.data?.flatMap((category) => category.services) || [];
+
+  //console.log('defaultCountry', defaultCountry);
 
   useEffect(() => {
     if (!selectedService?._id) return;
