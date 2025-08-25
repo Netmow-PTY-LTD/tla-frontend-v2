@@ -15,13 +15,15 @@ import ShowCountriesListModal from '../../home/modal/ShowCountriesListModal';
 import Chevron from '@/components/icon/ChevronDown';
 import Cookies from 'js-cookie';
 import countries from '@/data/countries.json';
+import { safeJsonParse } from '@/helpers/safeJsonParse';
+import { checkValidity } from '@/helpers/validityCheck';
 
 export default function Footer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(null);
 
   useEffect(() => {
-    let cookieCountry = JSON.parse(Cookies.get('countryObj'));
+    let cookieCountry = safeJsonParse(Cookies.get('countryObj'));
 
     console.log('cookieCountry', cookieCountry);
 
@@ -46,6 +48,8 @@ export default function Footer() {
   const { data: currentUser } = useAuthUserInfoQuery(undefined, {
     skip: !token,
   });
+
+  const isValidToken = checkValidity(token);
 
   // console.log('token', token);
   // console.log('currentUser', currentUser);
@@ -100,7 +104,7 @@ export default function Footer() {
                       <li>
                         <Link
                           href={
-                            token || currentUser
+                            isValidToken || currentUser
                               ? dashboardUrl
                               : '/?clientRegister=true'
                           }
@@ -113,7 +117,11 @@ export default function Footer() {
                       </li>
                       <li>
                         <Link
-                          href={token || currentUser ? dashboardUrl : '/login'}
+                          href={
+                            isValidToken || currentUser
+                              ? dashboardUrl
+                              : '/login'
+                          }
                         >
                           Login Client
                         </Link>
@@ -129,7 +137,9 @@ export default function Footer() {
                       <li>
                         <Link
                           href={
-                            token || currentUser ? dashboardUrl : '/register'
+                            isValidToken || currentUser
+                              ? dashboardUrl
+                              : '/register'
                           }
                         >
                           Join as a Lawyer
@@ -189,23 +199,36 @@ export default function Footer() {
                       </Link>
                     </div>
                     <div className="footer-bottom-country-select mt-5">
-                      <button
-                        className="flex gap-3 items-center bg-[#F9F9FA] rounded-sm p-3"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setIsModalOpen(true);
-                        }}
-                      >
-                        <img
-                          src={selectedCountry?.flag}
-                          alt={`${selectedCountry?.name} flag`}
-                          className="w-8 h-6 object-cover rounded-sm"
-                        />
-                        <span className="font-medium">
-                          {selectedCountry?.name}
-                        </span>
-                        <Chevron />
-                      </button>
+                      {isValidToken ? (
+                        <button className="flex gap-3 items-center bg-[#F9F9FA] rounded-sm p-3">
+                          <img
+                            src={selectedCountry?.flag}
+                            alt={`${selectedCountry?.name} flag`}
+                            className="w-8 h-6 object-cover rounded-sm"
+                          />
+                          <span className="font-medium">
+                            {selectedCountry?.name}
+                          </span>
+                        </button>
+                      ) : (
+                        <button
+                          className="flex gap-3 items-center bg-[#F9F9FA] rounded-sm p-3"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setIsModalOpen(true);
+                          }}
+                        >
+                          <img
+                            src={selectedCountry?.flag}
+                            alt={`${selectedCountry?.name} flag`}
+                            className="w-8 h-6 object-cover rounded-sm"
+                          />
+                          <span className="font-medium">
+                            {selectedCountry?.name}
+                          </span>
+                          <Chevron />
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -5,12 +5,14 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { userDummyImage } from '@/data/data';
+import { checkValidity } from '@/helpers/validityCheck';
 import { Info } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
 export default function ProfileBanner({ data, token, currentUser }) {
+  const validToken = checkValidity(token);
   return (
     <section
       className="pt-[50px] md:pt-[100px] pb-[40px] lg:pb-0"
@@ -59,7 +61,7 @@ export default function ProfileBanner({ data, token, currentUser }) {
                     const email = data?.email;
                     if (!email) return '';
 
-                    const shouldMask = !(token && currentUser);
+                    const shouldMask = !(validToken && currentUser);
 
                     if (shouldMask) {
                       const [user, domain] = email.split('@');
@@ -75,7 +77,7 @@ export default function ProfileBanner({ data, token, currentUser }) {
                     return email;
                   })()}
                 </span>
-                {!(token && currentUser) && (
+                {!(validToken && currentUser) && (
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -110,7 +112,7 @@ export default function ProfileBanner({ data, token, currentUser }) {
                     const phone = data?.phone;
                     if (!phone) return '';
 
-                    const shouldMask = !(token && currentUser);
+                    const shouldMask = !(validToken && currentUser);
 
                     return shouldMask
                       ? `${phone.slice(0, 3)}${'*'.repeat(
@@ -119,7 +121,7 @@ export default function ProfileBanner({ data, token, currentUser }) {
                       : phone;
                   })()}
                 </span>
-                {!(token && currentUser) && (
+                {!(validToken && currentUser) && (
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>

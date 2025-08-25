@@ -64,8 +64,8 @@
 
 .active-card {
   position: absolute;
-  /* width: 90%; */
-  /* max-width: 340px; */
+  width: 100%;
+  max-width: 440px;
   /* height: 320px; */
   /* background: white; */
   border-radius: 20px;
