@@ -129,7 +129,7 @@ console.log('response',response?.responseBy?.avgRating)
               {response?.status && (
                 <div className="flex">
                   <TagButton
-                    text={response?.status}
+                    text={response.status.replace(/[-_]/g, ' ')}
                     bgColor="#FF8602"
                     textColor="text-white"
                     icon={<CircleDotDashed className="text-[#fff] w-4 h-4" />}

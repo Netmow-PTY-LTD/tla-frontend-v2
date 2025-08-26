@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card';
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { BadgeCheck, Ban, CircleAlert, SearchCheck, Zap } from 'lucide-react';
+import { BadgeCheck, Ban, CircleAlert, Info, SearchCheck, Zap } from 'lucide-react';
 import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import Link from 'next/link';
@@ -10,6 +10,8 @@ import RespondersOnline from './RespondersOnline';
 import LeadCloseModal from './modal/LeadCloseModal';
 import RatingForm from '../dashboard/my-cases/_components/RatingForm';
 import { RatingStars } from './RatingUi';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+
 
 const responsesLeads = [
   {
@@ -79,7 +81,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
     }
   };
 
-  
+
 
   return (
     <>
@@ -278,18 +280,41 @@ const ClientLeadCard = ({ user, isExpanded }) => {
                 }
               </span>
               {
-                user?.hireStatus ==="hired" && user?.hiredLawyerRating?.rating&&   <RatingStars rating={user?.hiredLawyerRating?.rating} showNumber={false} />
+                user?.hireStatus === "hired" && user?.hiredLawyerRating?.rating && <RatingStars rating={user?.hiredLawyerRating?.rating} showNumber={false} />
               }
-            
+
             </div>
           ) : <></>
         }
         {user?.closeStatus === 'closed' ? (
-          <div className="text-center">
-            <span className="px-3 py-1 text-sm font-medium text-white bg-red-600 rounded-full">
-              Closed
-            </span>
+          <div className='flex flex-col items-center gap-3'>
+            <div className="text-center">
+              <span className="px-3 py-1 text-sm font-medium text-white bg-red-600 rounded-full">
+                Closed
+              </span>
+            </div>
+
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    className="px-3 py-1 text-sm font-medium text-white bg-indigo-600 rounded-full shadow-sm border border-indigo-700 hover:bg-indigo-700 hover:shadow-md transition-all duration-200 ease-in-out"
+                  >
+                    Repost Case
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="max-w-xs text-center">
+                  <p>
+                    Reposting this case will make it visible to lawyers again and allow them to respond with new offers.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
           </div>
+
+
         ) : (
           <>
 
@@ -304,9 +329,9 @@ const ClientLeadCard = ({ user, isExpanded }) => {
                 Close case
               </button>
 
-              
-           
-                
+
+
+
             </div>
           </>
         )}
