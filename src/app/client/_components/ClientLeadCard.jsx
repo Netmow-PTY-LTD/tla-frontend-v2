@@ -320,7 +320,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
                       }}
                       className=" text-sm   hover:text-blue-600 transition"
                     >
-                      Repost Case
+                      Unhire and Repost
                     </button>
                   }
                 </>
