@@ -186,7 +186,7 @@ export default function HeroHome({ searchParam, cookieCountry }) {
               Need a Lawyer <br /> in {cookieCountry?.name}?
             </h1>
             <p className="text-[#444] text-2xl font-medium">
-              Get free quotes in minutes
+              Post a case in minutes
             </p>
           </div>
           <form className="w-full" onSubmit={handleSubmit}>
