@@ -23,7 +23,6 @@ import { Fragment, useEffect, useState } from 'react';
 import {
   useActivityLogMutation,
   useHireStatusMutation,
-
 } from '@/store/features/lawyer/ResponseApiService';
 import { getStaticMapUrl } from '@/helpers/generateStaticMapUrl';
 import WhatsApp from '@/components/icon/WhatsApp';
@@ -44,6 +43,7 @@ export default function MyResponseDetails({
   setIsLoading,
   singleResponse,
   isSingleResponseLoading,
+  singleResponseRefetch,
   data,
 }) {
   const [activeTab, setActiveTab] = useState('activity');
@@ -70,14 +70,14 @@ export default function MyResponseDetails({
   useNotifications(currentUserId, (data) => {
     // console.log('🔔 Notification:', data);
     if (data?.userId) {
-      refetch();
+      singleResponseRefetch();
     }
   });
 
   useNotifications(currentUserId, (data) => {
     // console.log('🔔 Notification:', data);
     if (data?.userId) {
-      refetch();
+      singleResponseRefetch();
     }
   });
 
@@ -117,7 +117,6 @@ export default function MyResponseDetails({
   }, []);
 
   const mapUrl = getStaticMapUrl(singleResponse?.data?.responseBy?.address);
-
 
   const handleUpdateHireStatus = async (hireDecision) => {
     try {
@@ -199,7 +198,7 @@ export default function MyResponseDetails({
             '_blank'
           );
         }
-      } catch (error) { }
+      } catch (error) {}
     }
     if (type === 'sendemail') {
       setOpenMail(true);
@@ -212,8 +211,6 @@ export default function MyResponseDetails({
     if (type === 'Sendestimate') {
     }
   };
-
-
 
   return (
     <>
@@ -236,17 +233,15 @@ export default function MyResponseDetails({
                 )}
               </span>
 
-
-
               {
-
-                // 1st - if hired == already hired some one 
-                // 2nd - if there is requested == requested 
+                // 1st - if hired == already hired some one
+                // 2nd - if there is requested == requested
                 singleResponse?.data?.leadId?.isHired ? (
                   <p className="text-green-600 font-medium text-sm">
-                    {currentUserId === singleResponse?.data?.leadId?.hiredBy?.user?._id
-                      ? "✅ You hired on this case"
-                      : "✅ Someone already hired"}
+                    {currentUserId ===
+                    singleResponse?.data?.leadId?.hiredBy?.user?._id
+                      ? '✅ You hired on this case'
+                      : '✅ Someone already hired'}
                   </p>
                 ) : singleResponse?.data?.isHireRequested ? (
                   <div className="flex items-center space-x-3">
@@ -254,7 +249,7 @@ export default function MyResponseDetails({
                       You have a request to hire.
                     </p>
                     <button
-                      onClick={() => handleUpdateHireStatus("accepted")}
+                      onClick={() => handleUpdateHireStatus('accepted')}
                       className="px-4 py-2 rounded-lg bg-green-500 text-white text-sm font-semibold shadow-md hover:bg-green-600 active:scale-95 transition-all duration-200"
                     >
                       Accept
@@ -262,8 +257,6 @@ export default function MyResponseDetails({
                   </div>
                 ) : null
               }
-
-
             </div>
             <div className="mt-3">
               <div className="flex flex-col items-start gap-4 ">
@@ -291,8 +284,9 @@ export default function MyResponseDetails({
                     <span className="text-xs">
                       <div className="flex items-center gap-2 text-sm">
                         <span
-                          className={`ml-2 w-2 h-2 rounded-full ${onlineMap[leadUser] ? 'bg-green-500' : 'bg-gray-400'
-                            }`}
+                          className={`ml-2 w-2 h-2 rounded-full ${
+                            onlineMap[leadUser] ? 'bg-green-500' : 'bg-gray-400'
+                          }`}
                         ></span>
                         <span className="text-gray-700">
                           {onlineMap[leadUser] ? 'Online' : 'Offline'}
@@ -306,7 +300,6 @@ export default function MyResponseDetails({
                   </p>
                 </div>
               </div>
-
 
               <hr className="w-full my-5  " />
               <div className="mb-4">
@@ -403,19 +396,21 @@ export default function MyResponseDetails({
                 <div className="flex border-b border-gray-200 gap-6">
                   <button
                     onClick={() => setActiveTab('activity')}
-                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
-                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                      : 'hover:text-black'
-                      }`}
+                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                      activeTab === 'activity'
+                        ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                        : 'hover:text-black'
+                    }`}
                   >
                     Activity
                   </button>
                   <button
                     onClick={() => setActiveTab('lead-details')}
-                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'lead-details'
-                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                      : 'hover:text-black'
-                      }`}
+                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                      activeTab === 'lead-details'
+                        ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                        : 'hover:text-black'
+                    }`}
                   >
                     Case Details
                   </button>
@@ -431,10 +426,11 @@ export default function MyResponseDetails({
                 </button> */}
                   <button
                     onClick={() => setActiveTab('chat')}
-                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'chat'
-                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                      : 'hover:text-black'
-                      }`}
+                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                      activeTab === 'chat'
+                        ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                        : 'hover:text-black'
+                    }`}
                   >
                     Chat
                   </button>
@@ -461,18 +457,20 @@ export default function MyResponseDetails({
                         return (
                           <Fragment key={index}>
                             <div
-                              className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${index === 0 ? '' : 'border-l border-[#e6e7ec]'
-                                }`}
+                              className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${
+                                index === 0 ? '' : 'border-l border-[#e6e7ec]'
+                              }`}
                             >
                               {formattedDate}
                             </div>
                             {activity?.logs?.map((item, i) => {
                               return (
                                 <div
-                                  className={`activity-log-item flex gap-2 ${index === 0 && i === 0
-                                    ? 'first-log-item'
-                                    : ''
-                                    }`}
+                                  className={`activity-log-item flex gap-2 ${
+                                    index === 0 && i === 0
+                                      ? 'first-log-item'
+                                      : ''
+                                  }`}
                                   key={i}
                                 >
                                   <div className="left-track flex-grow-0 flex flex-col w-[32px] items-center">

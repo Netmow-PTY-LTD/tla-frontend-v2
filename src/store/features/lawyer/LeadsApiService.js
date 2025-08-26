@@ -59,6 +59,15 @@ const leadsApiService = baseApi.injectEndpoints({
       providesTags: ['lead', 'lead-list-admin', 'lead-list', 'lead-my'],
     }),
 
+    repostLead: builder.mutation({
+      query: (data) => ({
+        url: `/lead/repost`,
+        method: 'POST',
+        body:data
+      }),
+      providesTags: ['lead', 'lead-list-admin', 'lead-list', 'lead-my'],
+    }),
+
 
 
   }),
@@ -72,6 +81,7 @@ export const {
   useUpdateLeadMutation,
   useGetAllLeadsForAdminQuery,
   useCloseLeadMutation,
+  useRepostLeadMutation
 } = leadsApiService;
 
 
