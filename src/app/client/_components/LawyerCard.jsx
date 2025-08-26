@@ -19,6 +19,9 @@ import Link from 'next/link';
 import { RequestMessageModal } from './modal/RequestMessageModal';
 import { RatingStars } from './RatingUi';
 import dayjs from 'dayjs';
+import ReadRequestMessageModal from './modal/ReadRequestMessageModal';
+import { useSelector } from 'react-redux';
+import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 
 const LawyerCard = ({
   lawyer,
@@ -27,9 +30,16 @@ const LawyerCard = ({
   lawyerOnlineStatus,
   refetch,
   isHiredLead,
-  isClosed
+  isClosed,
 }) => {
   const [openRequestModal, setOpenRequestModal] = useState(false);
+  const [openReadMessageModal, setOpenReadMessageModal] = useState(false);
+  const [selectedLawyerMessage, setSelectedLawyerMessage] = useState('');
+
+  const { data: currentUser } = useAuthUserInfoQuery();
+
+  console.log('currentUser', currentUser);
+
   const profileType = lawyer?.profile?.profileType;
   const badge =
     profileType
@@ -44,6 +54,10 @@ const LawyerCard = ({
     if (!text || typeof text !== 'string') return '';
     return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
   };
+
+  const lawyerRequestMessage = lawyer?.requestInfo?.filter(
+    (item) => item?.requestedId === currentUser?.data?.profile?._id
+  )[0]?.message;
 
   const [requestLawyer, { isLoading }] = useRequestLawyerMutation();
 
@@ -68,8 +82,8 @@ const LawyerCard = ({
     }
   };
 
-  console.log(' lawyer', lawyer?.isProfileVisited)
-  console.log(' lawyer', lawyer?.profileVisit)
+  // console.log(' lawyer', lawyer);
+  // console.log('lawyer message', lawyerRequestMessage);
 
   return (
     <>
@@ -99,8 +113,8 @@ const LawyerCard = ({
                             badge.toLowerCase() === 'premium lawyer'
                               ? '/assets/img/badge.svg'
                               : badge.toLowerCase() === 'expert lawyer'
-                                ? '/assets/img/expert.png'
-                                : '/assets/img/basic.png'
+                              ? '/assets/img/expert.png'
+                              : '/assets/img/basic.png'
                           }
                           width="30"
                           height="30"
@@ -109,24 +123,28 @@ const LawyerCard = ({
                       </div>
                     )}
                     <div
-                      className={`font-medium mb-1 ${isExpanded ? 'heading-base' : 'text-[18px]'
-                        }`}
+                      className={`font-medium mb-1 ${
+                        isExpanded ? 'heading-base' : 'text-[18px]'
+                      }`}
                     >
                       {lawyer?.profile?.name}
                     </div>
                     <div className="flex items-center gap-1 text-xs ">
                       <span
-                        className={`w-2 h-2 rounded-full ${lawyerOnlineStatus[lawyer?._id]
-                          ? 'bg-green-500'
-                          : 'bg-gray-400'
-                          }`}
+                        className={`w-2 h-2 rounded-full ${
+                          lawyerOnlineStatus[lawyer?._id]
+                            ? 'bg-green-500'
+                            : 'bg-gray-400'
+                        }`}
                       ></span>
                     </div>
                   </div>
                 </div>
 
-
-                <RatingStars rating={lawyer?.profile?.avgRating} showNumber={false} />
+                <RatingStars
+                  rating={lawyer?.profile?.avgRating}
+                  showNumber={false}
+                />
               </div>
             </div>
             {lawyer?.profile?.serviceIds?.length > 0 && (
@@ -150,34 +168,31 @@ const LawyerCard = ({
                 }}
               ></p>
             )}
-            {
-              lawyer?.isProfileVisited && (
-
-                <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg flex justify-between gap-4">
-                  <div className="flex-shrink-0">
-                    <h4 className={`font-medium mb-1 text-[16px] text-gray-500`}>
-                      Me
-                    </h4>
-                    <p className={`text-[var(--color-black)] font-medium text-sm`}>
-                      You viewed this profile.
-                    </p>
-                  </div>
-                  <div className="flex-shrink-0 text-sm text-gray-400">
-
-                    {
-                      lawyer?.profileVisit?.visitedAt
-                        ? dayjs(lawyer.profileVisit.visitedAt).format("DD MMM, hh:mm A")
-                        : null
-                    }
-                  </div>
+            {lawyer?.isProfileVisited && (
+              <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg flex justify-between gap-4">
+                <div className="flex-shrink-0">
+                  <h4 className={`font-medium mb-1 text-[16px] text-gray-500`}>
+                    Me
+                  </h4>
+                  <p
+                    className={`text-[var(--color-black)] font-medium text-sm`}
+                  >
+                    You viewed this profile.
+                  </p>
                 </div>
-              )
-
-            }
+                <div className="flex-shrink-0 text-sm text-gray-400">
+                  {lawyer?.profileVisit?.visitedAt
+                    ? dayjs(lawyer.profileVisit.visitedAt).format(
+                        'DD MMM, hh:mm A'
+                      )
+                    : null}
+                </div>
+              </div>
+            )}
             <Link
               href={`/profile/${lawyer?.profile?.slug}`}
               target="_blank"
-              className="text-blue-500 text-[14px] font-medium mt-2 flex items-center gap-1"
+              className="text-blue-500 text-[14px] font-medium mt-2 inline-flex items-center gap-1"
             >
               <span>View Profile</span>
               <ArrowRight className="w-5 h-5" />
@@ -186,12 +201,22 @@ const LawyerCard = ({
           <div className="flex flex-col justify-end items-center">
             <div className="flex flex-col p-3 gap-3 sm:gap-0">
               <Button
-                className={`px-4 py-2 w-full sm:w-auto rounded-lg ${isExpanded ? 'text-[14px]' : 'text-[12px]'
-                  } font-medium bg-[var(--color-special)] text-white ${lawyer?.isRequested ? 'bg-[var(--primary-color)]' : ''
-                  }`}
-                // onClick={handleRequest}
-                onClick={() => setOpenRequestModal(true)}
-                disabled={isLoading || isHiredLead || isClosed || lawyer?.isRequested} // Disable if loading or already requested
+                className={`px-4 py-2 w-full sm:w-auto rounded-lg ${
+                  isExpanded ? 'text-[14px]' : 'text-[12px]'
+                } font-medium bg-[var(--color-special)] text-white ${
+                  lawyer?.isRequested ? 'bg-[var(--primary-color)]' : ''
+                }`}
+                onClick={() => {
+                  if (lawyer?.isRequested) {
+                    setSelectedLawyerMessage(
+                      lawyerRequestMessage || 'No message available'
+                    );
+                    setOpenReadMessageModal(true);
+                  } else {
+                    setOpenRequestModal(true);
+                  }
+                }}
+                disabled={isLoading || isClosed || isHiredLead}
               >
                 {isLoading ? (
                   <div className="flex items-center gap-1">
@@ -199,7 +224,7 @@ const LawyerCard = ({
                     <span>Requesting...</span>
                   </div>
                 ) : lawyer?.isRequested ? (
-                  'Requested'
+                  'Read Message'
                 ) : (
                   'Request Reply'
                 )}
@@ -214,6 +239,14 @@ const LawyerCard = ({
         open={openRequestModal}
         handleRequest={handleRequest}
       />
+
+      {openReadMessageModal && (
+        <ReadRequestMessageModal
+          openReadMessageModal={openReadMessageModal}
+          setOpenReadMessageModal={setOpenReadMessageModal}
+          selectedLawyerMessage={selectedLawyerMessage}
+        />
+      )}
     </>
   );
 };

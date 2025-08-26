@@ -60,7 +60,7 @@ export default function MyResponsesPage() {
     return defaultQueryParams;
   });
 
-  console.log('queryParams in MyResponsesPage', queryParams);
+  //console.log('queryParams in MyResponsesPage', queryParams);
 
   useEffect(() => {
     if (responseId) {
@@ -101,7 +101,7 @@ export default function MyResponsesPage() {
     skip: !selectedResponseId,
   });
 
-  console.log('singleResponse in MyResponsesPage', singleResponse);
+  //console.log('singleResponse in MyResponsesPage', singleResponse);
 
   //console.log('selectedResponseId', selectedResponseId);
   // Prevent body scroll when in this route
@@ -123,7 +123,22 @@ export default function MyResponsesPage() {
   // ------------------------ Reset responses on filter change (new search) --------------------------
   useEffect(() => {
     if (allMyResponses && allMyResponses?.data?.length > 0) {
-      setResponses((prev) => [...prev, ...allMyResponses?.data]);
+      const currentPage = allMyResponses?.pagination?.page ?? 1;
+
+      setResponses((prev) => {
+        if (currentPage === 1) {
+          // first page → replace completely
+          return allMyResponses.data;
+        } else {
+          // append new results (avoid duplicates by _id)
+          const existingIds = new Set(prev.map((res) => res._id));
+          const newItems = allMyResponses?.data?.filter(
+            (res) => !existingIds.has(res._id)
+          );
+          return [...prev, ...newItems];
+        }
+      });
+
       setTotalPages(allMyResponses?.pagination?.totalPage);
       setTotalResponsesCount(allMyResponses?.pagination?.total);
     }
@@ -244,7 +259,7 @@ export default function MyResponsesPage() {
                   onBack={() => setShowResponseDetails(false)}
                   setIsLoading={setIsLoading}
                   isLoading={isLoading}
-                  singleResponse={singleResponse}
+                  singleResponse={singleResponse || selectedResponse}
                   isSingleResponseLoading={isSingleResponseLoading}
                   singleResponseRefetch={singleResponseRefetch}
                   data={responses || []}
