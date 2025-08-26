@@ -56,6 +56,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
   const [leadId, setLeadId] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [repostLead] = useRepostLeadMutation()
+  
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])
     .find((option) => option.option === 'Urgent');
@@ -92,7 +93,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
       const result = await repostLead({ leadId }).unwrap();
       if (result.success) {
         showSuccessToast(result?.message);
-        console.log('result ==>', result)
+       
       } else {
         showErrorToast(result?.message);
       }
@@ -103,7 +104,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
 
 
   };
-  console.log('user ==>', user?.isReposted)
+
 
 
   return (
