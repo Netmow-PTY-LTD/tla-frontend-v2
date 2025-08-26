@@ -49,13 +49,15 @@ export default function LeadDetailsPage() {
   const [selectedLeadResponse, setSelectedLeadResponse] = useState(null);
   const currentUserId = useSelector(selectCurrentUser)?._id;
   const [onlineMap, setOnlineMap] = useState({});
-  const [tabValue, setTabValue] = useState('find-lawyers');
+  //const [tabValue, setTabValue] = useState('find-lawyers');
   const [isMobile, setIsMobile] = useState(false);
   const [lawyers, setLawyers] = useState([]);
   const [totalPages, setTotalPages] = useState(null);
   const [totalLawyersCount, setTotalLawyersCount] = useState(0);
   const [lawyerOnlineStatus, setLawyerOnlineStatus] = useState({});
   const [minRating, setMinRating] = useState(undefined);
+  const [activeTab, setActiveTab] = useState('matched-lawyers');
+  const [hiredStatus, setHiredStatus] = useState('');
 
   const LIMIT = '10';
 
@@ -91,20 +93,32 @@ export default function LeadDetailsPage() {
       ? fullText
       : getTruncatedText(fullText, maxLength);
 
-  const mapUrl = getStaticMapUrl(singleLead?.data?.userProfileId?.address);
-
-  const urgentOption = singleLead?.data?.leadAnswers
-    .flatMap((answer) => answer.options || [])
-    .find((option) => option.option === 'Urgent');
-
   const { data: leadWiseResponses, isLoading: isSingleLeadResponseLoading } =
     useGetAllLeadWiseResponsesQuery(id);
 
+  // useEffect(() => {
+  //   if (leadWiseResponses?.data?.length > 0) {
+  //     setTabValue('responded-lawyers');
+  //   }
+  // }, [leadWiseResponses?.data?.length]);
+
   useEffect(() => {
-    if (leadWiseResponses?.data?.length > 0) {
-      setTabValue('responded-lawyers');
+    const params = new URLSearchParams(window.location.search);
+    const statusParam = params.get('status') || '';
+
+    if (statusParam?.toLowerCase().trim() === 'hired') {
+      setActiveTab('responded-lawyers'); // auto-select responded tab
+
+      const hiredResponse = leadWiseResponses?.data?.find(
+        (res) => res.status?.toLowerCase().trim() === 'hired'
+      );
+
+      if (hiredResponse) {
+        setSelectedLeadResponse(hiredResponse);
+        setShowLeadResponseDetails(true);
+      }
     }
-  }, [leadWiseResponses?.data?.length]);
+  }, [leadWiseResponses?.data]);
 
   //  ----------- user online offline ---------------------
 
@@ -140,11 +154,10 @@ export default function LeadDetailsPage() {
 
   //console.log('lawyersData', lawyersData);
 
-useEffect(() => {
-  setPage(1);
-  setLawyers([]);
-}, [minRating]);
-
+  useEffect(() => {
+    setPage(1);
+    setLawyers([]);
+  }, [minRating]);
 
   useEffect(() => {
     if (lawyersData && lawyersData?.data?.length > 0) {
@@ -218,8 +231,7 @@ useEffect(() => {
     setIsMobile(window.innerWidth <= 1280);
   }, []);
 
-
-  console.log('singleLead ==>', singleLead)
+  console.log('singleLead ==>', singleLead);
 
   if (isSingleLeadLoading) {
     return (
@@ -288,7 +300,11 @@ useEffect(() => {
         <div className={`w-full`}>
           <div className="px-4 max-w-[1000px] mx-auto">
             <div className="flex w-full flex-col gap-6">
-              <Tabs defaultValue="matched-lawyers">
+              <Tabs
+                //defaultValue="matched-lawyers"
+                value={activeTab}
+                onValueChange={setActiveTab}
+              >
                 <TabsList className="w-full justify-center gap-2 pb-4 border-b border-gray-200">
                   <TabsTrigger
                     value="matched-lawyers"
@@ -347,7 +363,7 @@ useEffect(() => {
                     <div className="flex justify-between mb-5 gap-4 border-b border-gray-400 pt-2 pb-5">
                       <div className="flex gap-2 items-center">
                         <Select
-                          value={minRating?.toString() || ""}
+                          value={minRating?.toString() || ''}
                           onValueChange={(value) => setMinRating(Number(value))}
                         >
                           <SelectTrigger className="w-[200px] bg-white">

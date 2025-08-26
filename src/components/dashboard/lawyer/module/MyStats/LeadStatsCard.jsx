@@ -49,8 +49,8 @@ const LeadStatsCard = ({ locations, profile }) => {
   const approveLead =
     allMyLeads?.data?.filter((lead) => lead.status === 'approved')?.length ?? 0;
 
-  console.log(' allMyLeads', allMyLeads?.data);
-  console.log('approved lead', approveLead);
+  // console.log(' allMyLeads', allMyLeads?.data);
+  // console.log('approved lead', approveLead);
 
   return (
     <Card className="w-full max-w-md md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto bg-white shadow-sm rounded-2xl">

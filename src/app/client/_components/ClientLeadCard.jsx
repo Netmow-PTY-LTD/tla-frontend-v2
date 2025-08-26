@@ -1,8 +1,18 @@
 import { Card } from '@/components/ui/card';
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { BadgeCheck, Ban, CircleAlert, Info, SearchCheck, Zap } from 'lucide-react';
-import { useGetSingleLeadQuery, useRepostLeadMutation } from '@/store/features/lawyer/LeadsApiService';
+import {
+  BadgeCheck,
+  Ban,
+  CircleAlert,
+  Info,
+  SearchCheck,
+  Zap,
+} from 'lucide-react';
+import {
+  useGetSingleLeadQuery,
+  useRepostLeadMutation,
+} from '@/store/features/lawyer/LeadsApiService';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import Link from 'next/link';
 import { userDummyImage } from '@/data/data';
@@ -10,10 +20,14 @@ import RespondersOnline from './RespondersOnline';
 import LeadCloseModal from './modal/LeadCloseModal';
 import RatingForm from '../dashboard/my-cases/_components/RatingForm';
 import { RatingStars } from './RatingUi';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
-
 
 const responsesLeads = [
   {
@@ -55,8 +69,8 @@ const ClientLeadCard = ({ user, isExpanded }) => {
   const [openLeadClosedModal, setOpenLeadClosedModal] = useState(false);
   const [leadId, setLeadId] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-  const [repostLead] = useRepostLeadMutation()
-  
+  const [repostLead] = useRepostLeadMutation();
+
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])
     .find((option) => option.option === 'Urgent');
@@ -85,15 +99,11 @@ const ClientLeadCard = ({ user, isExpanded }) => {
     }
   };
 
-
-
   const handleRepostCase = async (leadId) => {
-
     try {
       const result = await repostLead({ leadId }).unwrap();
       if (result.success) {
         showSuccessToast(result?.message);
-       
       } else {
         showErrorToast(result?.message);
       }
@@ -101,11 +111,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);
     }
-
-
   };
-
-
 
   return (
     <>
@@ -212,8 +218,9 @@ const ClientLeadCard = ({ user, isExpanded }) => {
         <div className="p-3 text-center">
           {user?.serviceId?.name && (
             <h3
-              className={`font-medium ${isExpanded ? 'heading-md' : 'text-[16px]'
-                }`}
+              className={`font-medium ${
+                isExpanded ? 'heading-md' : 'text-[16px]'
+              }`}
             >
               {user?.serviceId?.name}
             </h3>
@@ -286,67 +293,65 @@ const ClientLeadCard = ({ user, isExpanded }) => {
 
         <div className="flex flex-col sm:flex-row justify-center items-center p-3 gap-3 sm:gap-0">
           <Link
-            className={`px-4 py-2.5 w-full sm:w-auto rounded-lg ${isExpanded ? 'heading-base' : 'text-[12px] '
-              } font-medium bg-[var(--color-special)] text-white hover:bg-gray-950 transition`}
+            className={`px-4 py-2.5 w-full sm:w-auto rounded-lg ${
+              isExpanded ? 'heading-base' : 'text-[12px] '
+            } font-medium bg-[var(--color-special)] text-white hover:bg-gray-950 transition`}
             href={`/client/dashboard/my-cases/${user?._id}`}
           >
             View Lawyers
           </Link>
         </div>
 
-
-
-
-        {user?.hireStatus !== "not_requested" && (
-          <div className="flex flex-col items-center gap-1">
-            <div className="flex items-center gap-2">
-              {/* Hire status badge */}
-              <span className=" text-sm font-medium rounded-full capitalize  text-gray-800">
-                {user?.hireStatus}
-              </span>
-
-              {/* Repost Case button if hired */}
-              {user?.hireStatus === "hired" && (
-                <>
-                  <span className="text-gray-400">|</span>
-                  {
-                    user?.isReposted ? <p className="text-sm font-medium text-blue-600">
-                      Reposted
-                    </p> : <button
-
-                      onClick={() => {
-                        setLeadId(user?._id);
-                        setIsOpen(true);
-                      }}
-                      className=" text-sm   hover:text-blue-600 transition"
-                    >
-                      Unhire and Repost
-                    </button>
-                  }
-                </>
-              )}
-            </div>
-
-            {/* Show rating stars if hired and rating exists */}
-            {user?.hireStatus === "hired" && user?.hiredLawyerRating?.rating && (
-              <RatingStars rating={user?.hiredLawyerRating?.rating} showNumber={false} />
+        {user?.hireStatus !== 'not_requested' ? (
+          <div className="flex justify-center items-center ">
+            <Link
+              href={`/client/dashboard/my-cases/${user?._id}?status=${user?.hireStatus}`}
+              className="px-2 py-1 text-sm font-medium 00 rounded-full capitalize "
+            >
+              {user?.hireStatus}
+            </Link>
+            {/* Repost Case button if hired */}
+            {user?.hireStatus === 'hired' && (
+              <>
+                <span className="text-gray-400">|</span>
+                {user?.isReposted ? (
+                  <p className="text-sm font-medium text-blue-600 px-3">
+                    Reposted
+                  </p>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setLeadId(user?._id);
+                      setIsOpen(true);
+                    }}
+                    className=" text-sm px-2 hover:text-blue-600 transition font-medium"
+                  >
+                    Unhire and Repost
+                  </button>
+                )}
+              </>
             )}
+            {user?.hireStatus === 'hired' &&
+              user?.hiredLawyerRating?.rating && (
+                <RatingStars
+                  rating={user?.hiredLawyerRating?.rating}
+                  showNumber={false}
+                />
+              )}
           </div>
+        ) : (
+          <></>
         )}
         {user?.closeStatus === 'closed' ? (
-          <div className='flex flex-col items-center gap-3'>
+          <div className="flex flex-col items-center gap-3">
             <div className="text-center">
               <span className="px-3 py-1 text-sm font-medium text-white bg-red-600 rounded-full">
                 Closed
               </span>
             </div>
-
           </div>
-
-
         ) : (
           <>
-
             <div className="flex justify-center items-center p-3 gap-3">
               <button
                 onClick={() => {
@@ -357,10 +362,6 @@ const ClientLeadCard = ({ user, isExpanded }) => {
               >
                 Close case
               </button>
-
-
-
-
             </div>
           </>
         )}
@@ -371,7 +372,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
         open={isOpen}
         onOpenChange={setIsOpen}
         description="Are you sure you want to repost this case?"
-        cancelText='No'
+        cancelText="No"
       />
 
       <LeadCloseModal

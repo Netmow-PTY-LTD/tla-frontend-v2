@@ -63,7 +63,7 @@ export default function MyLeads() {
   const redirect = searchParams.get('redirect');
 
   useEffect(() => {
-    if (redirect !== 'false' && allMyLeads?.data?.length === 1) {
+    if (redirect !== 'false' && allMyLeads?.pagination?.total === 1) {
       router.push(`/client/dashboard/my-cases/${allMyLeads?.data[0]?._id}`);
     }
   }, [allMyLeads, redirect]);
@@ -106,11 +106,28 @@ export default function MyLeads() {
   // Append new data to existing list
   useEffect(() => {
     if (allMyLeads && allMyLeads?.data?.length > 0) {
+      const currentPage = allMyLeads?.pagination?.page ?? 1;
+
+      setLeads((prev) => {
+        if (currentPage === 1) {
+          // first page → replace completely
+          return allMyLeads.data;
+        } else {
+          // append new results (avoid duplicates by _id)
+          const existingIds = new Set(prev.map((lead) => lead._id));
+          const newItems = allMyLeads?.data?.filter(
+            (lead) => !existingIds.has(lead._id)
+          );
+          return [...prev, ...newItems];
+        }
+      });
+
       setTotalPages(allMyLeads?.pagination?.totalPage);
-      setLeads((prev) => [...prev, ...allMyLeads.data]);
       setTotalLeadsCount(allMyLeads?.pagination?.total);
     }
   }, [allMyLeads]);
+
+  //console.log('leads', leads);
 
   // Infinite scroll intersection observer
   useEffect(() => {
@@ -134,7 +151,13 @@ export default function MyLeads() {
     return () => {
       if (currentLoader) observer.unobserve(currentLoader);
     };
-  }, [isFetching, totalPages]);
+  }, [page, isFetching, totalPages]);
+
+  console.log({
+    page,
+    isFetching,
+    totalPages,
+  });
 
   const token = useSelector((state) => state.auth.token);
 
@@ -312,11 +335,13 @@ export default function MyLeads() {
                     // <JobPostCard key={index} lead={lead} />
                     <ClientLeadCard key={index} user={lead} />
                   ))}
-                  <div className="py-6 text-center" ref={loader}>
-                    {isFetching && (
-                      <Loader className="w-5 h-5 animate-spin text-gray-500 mx-auto" />
-                    )}
-                  </div>
+                  {(page < totalPages || isFetching) && (
+                    <div className="py-6 text-center" ref={loader}>
+                      {isFetching && (
+                        <Loader className="w-5 h-5 animate-spin text-gray-500 mx-auto" />
+                      )}
+                    </div>
+                  )}
                 </div>
               </>
             )}

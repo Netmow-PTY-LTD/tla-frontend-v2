@@ -55,7 +55,7 @@ export default function LeadsCountCard() {
           {/* Total */}
           {totalLeads > 0 && (
             <div className="flex flex-col items-center gap-1">
-              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-slate-900 text-white">
+              <div className="flex items-center justify-center min-w-16 min-h-16 rounded-full bg-slate-900 text-white">
                 <p className="text-2xl font-bold">
                   {isAllLeadsLoading ? '...' : totalLeads}
                 </p>
