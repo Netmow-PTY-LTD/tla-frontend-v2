@@ -68,7 +68,7 @@ export default function SendMailModalForClient({ openMail, setOpenMail, info }) 
             >
                 <FormWrapper onSubmit={onSubmit}  >
                     <div className="text-center max-w-[90%] mx-auto">
-                        <h3 className="text-2xl mb-3 font-semibold text-gray-800">Send an Mail</h3>
+                        <h3 className="text-2xl mb-3 font-semibold text-gray-800">Send Email</h3>
                         <p className="text-gray-600">
                             We'll send your Mail to  {lead?.name} and send you any replies from them over email.
                         </p>

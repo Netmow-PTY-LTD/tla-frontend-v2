@@ -9,7 +9,10 @@ import {
   SearchCheck,
   Zap,
 } from 'lucide-react';
-import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
+import {
+  useGetSingleLeadQuery,
+  useRepostLeadMutation,
+} from '@/store/features/lawyer/LeadsApiService';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import Link from 'next/link';
 import { userDummyImage } from '@/data/data';
@@ -23,6 +26,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
 const responsesLeads = [
   {
@@ -62,7 +67,9 @@ const responsesLeads = [
 const ClientLeadCard = ({ user, isExpanded }) => {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
   const [openLeadClosedModal, setOpenLeadClosedModal] = useState(false);
-  const [leadId, setLeadId] = useState(false);
+  const [leadId, setLeadId] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [repostLead] = useRepostLeadMutation();
 
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])
@@ -89,6 +96,20 @@ const ClientLeadCard = ({ user, isExpanded }) => {
         const value = Math.floor(diffInSeconds / unit.value);
         return `${value}${unit.name} ago`;
       }
+    }
+  };
+
+  const handleRepostCase = async (leadId) => {
+    try {
+      const result = await repostLead({ leadId }).unwrap();
+      if (result.success) {
+        showSuccessToast(result?.message);
+      } else {
+        showErrorToast(result?.message);
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
     }
   };
 
@@ -282,13 +303,34 @@ const ClientLeadCard = ({ user, isExpanded }) => {
         </div>
 
         {user?.hireStatus !== 'not_requested' ? (
-          <div className="flex flex-col items-center ">
+          <div className="flex justify-center items-center ">
             <Link
               href={`/client/dashboard/my-cases/${user?._id}?status=${user?.hireStatus}`}
-              className="px-3 py-1 text-sm font-medium 00 rounded-full capitalize "
+              className="px-2 py-1 text-sm font-medium 00 rounded-full capitalize "
             >
               {user?.hireStatus}
             </Link>
+            {/* Repost Case button if hired */}
+            {user?.hireStatus === 'hired' && (
+              <>
+                <span className="text-gray-400">|</span>
+                {user?.isReposted ? (
+                  <p className="text-sm font-medium text-blue-600 px-3">
+                    Reposted
+                  </p>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setLeadId(user?._id);
+                      setIsOpen(true);
+                    }}
+                    className=" text-sm px-2 hover:text-blue-600 transition font-medium"
+                  >
+                    Unhire and Repost
+                  </button>
+                )}
+              </>
+            )}
             {user?.hireStatus === 'hired' &&
               user?.hiredLawyerRating?.rating && (
                 <RatingStars
@@ -307,25 +349,6 @@ const ClientLeadCard = ({ user, isExpanded }) => {
                 Closed
               </span>
             </div>
-
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    type="button"
-                    className="px-3 py-1 text-sm font-medium text-white bg-indigo-600 rounded-full shadow-sm border border-indigo-700 hover:bg-indigo-700 hover:shadow-md transition-all duration-200 ease-in-out"
-                  >
-                    Repost Case
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent side="top" className="max-w-xs text-center">
-                  <p>
-                    Reposting this case will make it visible to lawyers again
-                    and allow them to respond with new offers.
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
           </div>
         ) : (
           <>
@@ -343,6 +366,14 @@ const ClientLeadCard = ({ user, isExpanded }) => {
           </>
         )}
       </Card>
+
+      <ConfirmationModal
+        onConfirm={() => handleRepostCase(leadId)}
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        description="Are you sure you want to repost this case?"
+        cancelText="No"
+      />
 
       <LeadCloseModal
         leadId={leadId}
