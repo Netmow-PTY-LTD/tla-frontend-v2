@@ -68,7 +68,7 @@ export default function RatingForm({ response }) {
   return (
     <>
       <button onClick={() => setOpen(true)} className="text-blue-500">
-        Rate to lawyer
+       Provide your feedback
       </button>
       <Modal
         title="Rate Your Experience"
