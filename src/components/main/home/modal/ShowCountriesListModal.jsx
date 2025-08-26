@@ -29,10 +29,10 @@ export default function ShowCountriesListModal({
             return (
               <li
                 key={country.countryId || country.code}
-                className={`flex items-center gap-3 mb-2 p-2 rounded-sm cursor-pointer transition ${
+                className={`flex items-center gap-3 mb-2 p-2 rounded-sm transition ${
                   isSelected ? 'border border-[#f3f3f3]' : '' // only selected has border
                 }`}
-                onClick={() => handleSelect(country)}
+                // onClick={() => handleSelect(country)}
               >
                 {country.flag && (
                   <img
