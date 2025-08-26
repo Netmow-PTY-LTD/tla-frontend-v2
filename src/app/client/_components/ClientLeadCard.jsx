@@ -92,7 +92,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
       const result = await repostLead({ leadId }).unwrap();
       if (result.success) {
         showSuccessToast(result?.message);
-        console.log('result ==>',result)
+        console.log('result ==>', result)
       } else {
         showErrorToast(result?.message);
       }
@@ -103,8 +103,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
 
 
   };
-
-
+  console.log('user ==>', user?.isReposted)
 
 
   return (
@@ -309,16 +308,20 @@ const ClientLeadCard = ({ user, isExpanded }) => {
               {user?.hireStatus === "hired" && (
                 <>
                   <span className="text-gray-400">|</span>
-                  <button
+                  {
+                    user?.isReposted ? <p className="text-sm font-medium text-blue-600">
+                      Reposted
+                    </p> : <button
 
-                    onClick={() => {
-                      setLeadId(user?._id);
-                      setIsOpen(true);
-                    }}
-                    className=" text-sm   hover:text-blue-600 transition"
-                  >
-                    Repost Case
-                  </button>
+                      onClick={() => {
+                        setLeadId(user?._id);
+                        setIsOpen(true);
+                      }}
+                      className=" text-sm   hover:text-blue-600 transition"
+                    >
+                      Repost Case
+                    </button>
+                  }
                 </>
               )}
             </div>
