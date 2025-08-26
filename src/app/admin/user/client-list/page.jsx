@@ -21,17 +21,49 @@ import Link from 'next/link';
 import { UserDetailsModal } from '../_components/UserDetailsModal';
 import { useChangeUserAccountStatsMutation } from '@/store/features/auth/authApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import { UserDataTable } from '../_components/UserDataTable';
 
 
 
 export default function Page() {
+
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null); // state for selected lead
-  const { data: userList } = useAllUsersQuery();
+
+
+  // Filters
+  const [search, setSearch] = useState('');
+  const [role, setRole] = useState();
+  const [regUserType, setRegUserType] = useState("client");
+  const [accountStatus, setAccountStatus] = useState();
+  const [isVerifiedAccount, setIsVerifiedAccount] = useState();
+  const [isPhoneVerified, setIsPhoneVerified] = useState();
+
+  // Pagination & sorting
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [sortBy, setSortBy] = useState('createdAt');
+  const [sortOrder, setSortOrder] = useState('desc');
+
+
+  const { data: clientlist, isFetching } = useAllUsersQuery({
+    page,
+    limit,
+    search,
+    role,
+    regUserType,
+    accountStatus,
+    isVerifiedAccount,
+    isPhoneVerified,
+    sortBy,
+    sortOrder,
+  });
+
+
+
+
+
   const [changeAccoutStatus] = useChangeUserAccountStatsMutation();
-  const clinetlist = userList?.data?.filter((client) => client.regUserType === "client")
-
-
 
   const handleChangeStatus = async (userId, status) => {
     try {
@@ -211,17 +243,19 @@ export default function Page() {
 
 
 
-
-
-
   return (
     <div>
       <h1>Client List Page</h1>
-      <DataTable
-        data={clinetlist || []}
+      <UserDataTable
+        data={clientlist?.data || []}
         columns={columns}
         searchColumn="profile.name"
+        page={page}
+        setPage={setPage}
+        totalPages={clientlist?.pagination?.totalPage || 1}
+        isFetching={isFetching}
       />
+
       <UserDetailsModal data={selectedUser} open={open}
         onOpenChange={setOpen} />
     </div>
