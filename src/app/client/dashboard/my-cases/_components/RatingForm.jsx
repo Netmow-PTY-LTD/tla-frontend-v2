@@ -68,7 +68,7 @@ export default function RatingForm({ response }) {
   return (
     <>
       <button onClick={() => setOpen(true)} className="text-blue-500">
-       Provide your feedback
+        Provide feedback
       </button>
       <Modal
         title="Rate Your Experience"
@@ -76,6 +76,11 @@ export default function RatingForm({ response }) {
         onOpenChange={setOpen}
         width="max-w-[450px]"
       >
+
+       
+        <h3 class="text-lg font-semibold text-center text-gray-800">
+         Provide your feedback
+        </h3>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-5 p-4"
