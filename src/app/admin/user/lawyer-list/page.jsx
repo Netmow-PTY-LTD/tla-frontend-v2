@@ -11,7 +11,19 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import { Archive, CheckCircle, Clock, Eye, MoreHorizontal, Pencil, Slash, Trash2, View } from 'lucide-react';
+import {
+  Archive,
+  CheckCircle,
+  Clock,
+  Eye,
+  Loader,
+  Loader2,
+  MoreHorizontal,
+  Pencil,
+  Slash,
+  Trash2,
+  View,
+} from 'lucide-react';
 import { useAllUsersQuery } from '@/store/features/admin/userApiService';
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -19,40 +31,43 @@ import { UserDetailsModal } from '../_components/UserDetailsModal';
 import { useChangeUserAccountStatsMutation } from '@/store/features/auth/authApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
-
-
 export default function Page() {
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null); // state for selected lead
-  const { data: userList } = useAllUsersQuery();
+  const { data: userList, isLoading: isUsersListLoading } = useAllUsersQuery();
 
-  console.log('user list =====>', userList)
+  console.log('user list =====>', userList);
   const [changeAccoutStatus] = useChangeUserAccountStatsMutation();
-  const lawyerlist = userList?.data?.filter((lawyer) => lawyer.regUserType === "lawyer")
+  const lawyerlist = userList?.data?.filter(
+    (lawyer) => lawyer.regUserType === 'lawyer'
+  );
+
+  if (isUsersListLoading) {
+    return (
+      <div className="flex justify-center items-center gap-2 py-20">
+        <Loader2 />
+        <span>Loading...</span>
+      </div>
+    );
+  }
 
   const handleChangeStatus = async (userId, status) => {
     try {
       const payload = {
         userId,
-        data: { accountStatus: status }
-      }
+        data: { accountStatus: status },
+      };
 
-      const res = await changeAccoutStatus(payload).unwrap()
-
+      const res = await changeAccoutStatus(payload).unwrap();
 
       if (res.success) {
         showSuccessToast(res?.message || 'Status Update Successful');
       }
-
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);
     }
-
-  }
-
-
-
+  };
 
   const columns = [
     {
@@ -89,7 +104,9 @@ export default function Page() {
     {
       accessorKey: 'email',
       header: 'Email',
-      cell: ({ row }) => <div className="lowercase">{row.getValue('email')}</div>,
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue('email')}</div>
+      ),
     },
     {
       accessorKey: 'regUserType',
@@ -102,7 +119,9 @@ export default function Page() {
       accessorKey: 'accountStatus',
       header: 'Account Status',
       cell: ({ row }) => (
-        <div className="capitalize text-center">{row.getValue('accountStatus')}</div>
+        <div className="capitalize text-center">
+          {row.getValue('accountStatus')}
+        </div>
       ),
     },
     {
@@ -110,12 +129,12 @@ export default function Page() {
       accessorKey: 'isVerifiedAccount',
       header: 'Email Verified',
       cell: ({ row }) => {
-        const isVerifiedAccount = row.original?.isVerifiedAccount
+        const isVerifiedAccount = row.original?.isVerifiedAccount;
         return (
           <div className="capitalize">
-            {isVerifiedAccount ? "Verified Account" : "Not Verified"}
+            {isVerifiedAccount ? 'Verified Account' : 'Not Verified'}
           </div>
-        )
+        );
       },
     },
     {
@@ -133,14 +152,15 @@ export default function Page() {
                   key={index}
                   className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full capitalize"
                 >
-                  {service?.name || service} {/* use service.name if object, else string */}
+                  {service?.name || service}{' '}
+                  {/* use service.name if object, else string */}
                 </span>
               ))
             ) : (
               <span className="text-gray-400 text-xs">No Services</span>
             )}
           </div>
-        )
+        );
       },
     },
     {
@@ -151,9 +171,7 @@ export default function Page() {
     {
       accessorKey: 'address',
       header: 'Address',
-      cell: ({ row }) => (
-        <div>{row.original?.profile.address || '-'}</div>
-      ),
+      cell: ({ row }) => <div>{row.original?.profile.address || '-'}</div>,
     },
     {
       id: 'actions',
@@ -195,7 +213,10 @@ export default function Page() {
               </DropdownMenuItem>
               {/* Details Page */}
               <DropdownMenuItem asChild>
-                <Link href={`/admin/user/${userId}`} className="flex items-center gap-2 cursor-pointer">
+                <Link
+                  href={`/admin/user/${userId}`}
+                  className="flex items-center gap-2 cursor-pointer"
+                >
                   <View className="w-4 h-4" />
                   <span>View</span>
                 </Link>
@@ -206,7 +227,10 @@ export default function Page() {
               <DropdownMenuLabel>Change Status</DropdownMenuLabel>
 
               {[
-                { status: 'approved', icon: <CheckCircle className="w-4 h-4" /> },
+                {
+                  status: 'approved',
+                  icon: <CheckCircle className="w-4 h-4" />,
+                },
                 { status: 'pending', icon: <Clock className="w-4 h-4" /> },
                 { status: 'suspended', icon: <Slash className="w-4 h-4" /> },
                 { status: 'archived', icon: <Archive className="w-4 h-4" /> },
@@ -222,19 +246,12 @@ export default function Page() {
                   </div>
                 </DropdownMenuItem>
               ))}
-
-
             </DropdownMenuContent>
           </DropdownMenu>
         );
       },
     },
   ];
-
-
-
-
-
 
   return (
     <div>
@@ -244,8 +261,11 @@ export default function Page() {
         columns={columns}
         searchColumn="profile.name"
       />
-      <UserDetailsModal data={selectedUser} open={open}
-        onOpenChange={setOpen} />
+      <UserDetailsModal
+        data={selectedUser}
+        open={open}
+        onOpenChange={setOpen}
+      />
     </div>
   );
 }

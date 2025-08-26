@@ -513,6 +513,23 @@ export default function CreateLeadWithAuthModal({
               />
             )}
             <div className="pt-6 px-6">
+              {totalSteps > 0 && (
+                <div
+                  className={`w-full h-2 bg-gray-200 rounded-full mb-6 ${
+                    step === 0 ? '' : 'mt-8'
+                  }`}
+                >
+                  <div
+                    className="h-2 bg-green-600 rounded-full transition-all duration-300"
+                    style={{
+                      width: `${Math.min(
+                        ((step + 1) / totalSteps) * 100,
+                        100
+                      )}%`,
+                    }}
+                  />
+                </div>
+              )}
               <h4 className="text-[24px] font-semibold text-center mb-8">
                 {viewData.question}
               </h4>
@@ -575,6 +592,16 @@ export default function CreateLeadWithAuthModal({
         )
       ) : step === totalQuestions ? (
         <div className="space-y-6 pt-6 px-6">
+          {totalSteps > 0 && (
+            <div className={`w-full h-2 bg-gray-200 rounded-full mb-6 mt-8`}>
+              <div
+                className="h-2 bg-green-600 rounded-full transition-all duration-300"
+                style={{
+                  width: `${Math.min(((step + 1) / totalSteps) * 100, 100)}%`,
+                }}
+              />
+            </div>
+          )}
           <h4 className="text-[24px] font-semibold text-center">
             When are you looking to get started?
           </h4>
@@ -603,6 +630,16 @@ export default function CreateLeadWithAuthModal({
         </div>
       ) : step === totalQuestions + 1 ? (
         <div className="space-y-6 pt-6 px-6">
+          {totalSteps > 0 && (
+            <div className={`w-full h-2 bg-gray-200 rounded-full mb-6 mt-8`}>
+              <div
+                className="h-2 bg-green-600 rounded-full transition-all duration-300"
+                style={{
+                  width: `${Math.min(((step + 1) / totalSteps) * 100, 100)}%`,
+                }}
+              />
+            </div>
+          )}
           <h4 className="text-[24px] font-semibold text-center">
             Want to share anything more?
           </h4>
@@ -618,6 +655,16 @@ export default function CreateLeadWithAuthModal({
         </div>
       ) : step === totalQuestions + 2 ? (
         <div className="space-y-6 pt-6 px-6">
+          {totalSteps > 0 && (
+            <div className={`w-full h-2 bg-gray-200 rounded-full mb-6 mt-8`}>
+              <div
+                className="h-2 bg-green-600 rounded-full transition-all duration-300"
+                style={{
+                  width: `${Math.min(((step + 1) / totalSteps) * 100, 100)}%`,
+                }}
+              />
+            </div>
+          )}
           <h4 className="text-[24px] font-semibold text-center">
             What is your estimated budget?
           </h4>
@@ -646,6 +693,16 @@ export default function CreateLeadWithAuthModal({
         </div>
       ) : step === totalSteps - 1 ? (
         <div className="space-y-4 pt-6 px-6">
+          {totalSteps > 0 && (
+            <div className={`w-full h-2 bg-gray-200 rounded-full mb-6 mt-8`}>
+              <div
+                className="h-2 bg-green-600 rounded-full transition-all duration-300"
+                style={{
+                  width: `${Math.min(((step + 1) / totalSteps) * 100, 100)}%`,
+                }}
+              />
+            </div>
+          )}
           <h4 className="text-[24px] font-semibold text-center">
             Where do you need the service?
           </h4>

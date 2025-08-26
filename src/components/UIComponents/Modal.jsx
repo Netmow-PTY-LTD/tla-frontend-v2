@@ -30,7 +30,7 @@ export function Modal({
   showCloseButton = false,
 }) {
   return (
-    <Dialog open={open} onOpenChange={onOpenChange} className="z-[999]">
+    <Dialog open={open} onOpenChange={onOpenChange} className="z-[99999]">
       <DialogOverlay overlayBg={overlayBg} className="bg-transparent" />
 
       {buttonName && (

@@ -80,7 +80,15 @@ export default function MyLeads() {
 
   //console.log('defaultCountry in my cases', defaultCountry);
 
-  const { data: allCategories } = useGetAllCategoriesQuery();
+  const { data: allCategories, isLoading: isAllCategoriesLoading } =
+    useGetAllCategoriesQuery(
+      {
+        countryId: defaultCountry?._id,
+      },
+      {
+        skip: !defaultCountry?._id,
+      }
+    );
 
   const allServices =
     allCategories?.data?.flatMap((category) => category.services) || [];
