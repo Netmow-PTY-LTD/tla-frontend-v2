@@ -59,9 +59,9 @@ export function UserDataTable({
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter names..."
-          value={table.getColumn(searchColumn)?.getFilterValue() ?? ''}
+          value={search ?? ''}
           onChange={(event) =>
-            table.getColumn(searchColumn)?.setFilterValue(event.target.value)
+            setSearch(event.target.value)
           }
           className="max-w-sm"
         />

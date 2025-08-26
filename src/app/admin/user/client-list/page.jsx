@@ -16,7 +16,7 @@ import {
 
 import { Archive, CheckCircle, Clock, MoreHorizontal, Pencil, Slash, Trash2, View } from 'lucide-react';
 import { useAllUsersQuery } from '@/store/features/admin/userApiService';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { UserDetailsModal } from '../_components/UserDetailsModal';
 import { useChangeUserAccountStatsMutation } from '@/store/features/auth/authApiService';
@@ -33,6 +33,7 @@ export default function Page() {
 
   // Filters
   const [search, setSearch] = useState('');
+   const [debouncedSearch, setDebouncedSearch] = useState(search);
   const [role, setRole] = useState();
   const [regUserType, setRegUserType] = useState("client");
   const [accountStatus, setAccountStatus] = useState();
@@ -49,7 +50,7 @@ export default function Page() {
   const { data: clientlist, isFetching } = useAllUsersQuery({
     page,
     limit,
-    search,
+    search:debouncedSearch,
     role,
     regUserType,
     accountStatus,
@@ -59,6 +60,18 @@ export default function Page() {
     sortOrder,
   });
 
+
+  // Debounce effect
+    useEffect(() => {
+      const handler = setTimeout(() => {
+        setDebouncedSearch(search);
+      }, 500); // 500ms debounce
+  
+      return () => {
+        clearTimeout(handler);
+      };
+    }, [search]);
+  
 
 
 
@@ -254,6 +267,8 @@ export default function Page() {
         setPage={setPage}
         totalPages={clientlist?.pagination?.totalPage || 1}
         isFetching={isFetching}
+        search={search}
+        setSearch={setSearch}
       />
 
       <UserDetailsModal data={selectedUser} open={open}
