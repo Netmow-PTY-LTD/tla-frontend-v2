@@ -2,7 +2,7 @@ import { Card } from '@/components/ui/card';
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { BadgeCheck, Ban, CircleAlert, Info, SearchCheck, Zap } from 'lucide-react';
-import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
+import { useGetSingleLeadQuery, useRepostLeadMutation } from '@/store/features/lawyer/LeadsApiService';
 import TagButton from '@/components/dashboard/lawyer/components/TagButton';
 import Link from 'next/link';
 import { userDummyImage } from '@/data/data';
@@ -11,6 +11,8 @@ import LeadCloseModal from './modal/LeadCloseModal';
 import RatingForm from '../dashboard/my-cases/_components/RatingForm';
 import { RatingStars } from './RatingUi';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
 
 const responsesLeads = [
@@ -51,8 +53,9 @@ const responsesLeads = [
 const ClientLeadCard = ({ user, isExpanded }) => {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
   const [openLeadClosedModal, setOpenLeadClosedModal] = useState(false);
-  const [leadId, setLeadId] = useState(false);
-
+  const [leadId, setLeadId] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [repostLead] = useRepostLeadMutation()
   const urgentOption = singleLead?.data?.leadAnswers
     .flatMap((answer) => answer.options || [])
     .find((option) => option.option === 'Urgent');
@@ -80,6 +83,27 @@ const ClientLeadCard = ({ user, isExpanded }) => {
       }
     }
   };
+
+
+
+  const handleRepostCase = async (leadId) => {
+
+    try {
+      const result = await repostLead({ leadId }).unwrap();
+      if (result.success) {
+        showSuccessToast(result?.message);
+        console.log('result ==>',result)
+      } else {
+        showErrorToast(result?.message);
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+    }
+
+
+  };
+
 
 
 
@@ -271,7 +295,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
         </div>
 
 
-  
+
 
         {user?.hireStatus !== "not_requested" && (
           <div className="flex flex-col items-center gap-1">
@@ -285,7 +309,14 @@ const ClientLeadCard = ({ user, isExpanded }) => {
               {user?.hireStatus === "hired" && (
                 <>
                   <span className="text-gray-400">|</span>
-                  <button className=" text-sm   hover:text-blue-600 transition">
+                  <button
+
+                    onClick={() => {
+                      setLeadId(user?._id);
+                      setIsOpen(true);
+                    }}
+                    className=" text-sm   hover:text-blue-600 transition"
+                  >
                     Repost Case
                   </button>
                 </>
@@ -330,6 +361,14 @@ const ClientLeadCard = ({ user, isExpanded }) => {
           </>
         )}
       </Card>
+
+      <ConfirmationModal
+        onConfirm={() => handleRepostCase(leadId)}
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        description="Are you sure you want to repost this case?"
+        cancelText='No'
+      />
 
       <LeadCloseModal
         leadId={leadId}
