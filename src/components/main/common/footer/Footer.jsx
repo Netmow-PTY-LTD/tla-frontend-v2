@@ -245,7 +245,7 @@ export default function Footer() {
                   <p>
                     Copyright &copy; {new Date().getFullYear()}{' '}
                     <Link href="/" className="text-[var(--primary-color)]">
-                      The Law App.
+                      TheLawApp.
                     </Link>
                   </p>
                 </div>
