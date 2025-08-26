@@ -148,7 +148,7 @@ export default function RegisterStepOne() {
           </p>
 
           <h5 className="text-[var(--color-black)] text-[24px] uppercase text-center font-semibold mb-5">
-            Register
+            Register as Lawyer
           </h5>
 
           <Form {...form}>
