@@ -20,7 +20,7 @@ export default function CreditsStatsCard() {
             Track your credit usage and balance
           </p>
         </div>
-        <Link href="/lawyer/settings/credit-payment">
+        <Link href="/lawyer/settings/credit-payment?section=my-credits">
           <Button
             variant="primary"
             size="sm"
