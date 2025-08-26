@@ -271,21 +271,33 @@ const ClientLeadCard = ({ user, isExpanded }) => {
         </div>
 
 
-        {
-          user?.hireStatus !== 'not_requested' ? (
-            <div className="flex flex-col items-center ">
-              <span className="px-3 py-1 text-sm font-medium 00 rounded-full capitalize ">
-                {
-                  user?.hireStatus
-                }
-              </span>
-              {
-                user?.hireStatus === "hired" && user?.hiredLawyerRating?.rating && <RatingStars rating={user?.hiredLawyerRating?.rating} showNumber={false} />
-              }
+  
 
+        {user?.hireStatus !== "not_requested" && (
+          <div className="flex flex-col items-center gap-1">
+            <div className="flex items-center gap-2">
+              {/* Hire status badge */}
+              <span className=" text-sm font-medium rounded-full capitalize  text-gray-800">
+                {user?.hireStatus}
+              </span>
+
+              {/* Repost Case button if hired */}
+              {user?.hireStatus === "hired" && (
+                <>
+                  <span className="text-gray-400">|</span>
+                  <button className=" text-sm   hover:text-blue-600 transition">
+                    Repost Case
+                  </button>
+                </>
+              )}
             </div>
-          ) : <></>
-        }
+
+            {/* Show rating stars if hired and rating exists */}
+            {user?.hireStatus === "hired" && user?.hiredLawyerRating?.rating && (
+              <RatingStars rating={user?.hiredLawyerRating?.rating} showNumber={false} />
+            )}
+          </div>
+        )}
         {user?.closeStatus === 'closed' ? (
           <div className='flex flex-col items-center gap-3'>
             <div className="text-center">
@@ -293,24 +305,6 @@ const ClientLeadCard = ({ user, isExpanded }) => {
                 Closed
               </span>
             </div>
-
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    type="button"
-                    className="px-3 py-1 text-sm font-medium text-white bg-indigo-600 rounded-full shadow-sm border border-indigo-700 hover:bg-indigo-700 hover:shadow-md transition-all duration-200 ease-in-out"
-                  >
-                    Repost Case
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent side="top" className="max-w-xs text-center">
-                  <p>
-                    Reposting this case will make it visible to lawyers again and allow them to respond with new offers.
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
 
           </div>
 
