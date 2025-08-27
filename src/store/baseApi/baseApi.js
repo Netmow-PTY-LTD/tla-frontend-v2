@@ -122,7 +122,8 @@ export const baseApi = createApi({
     'requests',
     'lawyer-suggestion',
     'lead-my',
-    'recent-visitor'
+    'recent-visitor',
+    'client-cases',
   ],
   endpoints: () => ({}),
 });

@@ -39,7 +39,7 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { use, useEffect, useRef, useState } from 'react';
+import { use, useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 export default function LeadDetailsPage() {
@@ -193,34 +193,40 @@ export default function LeadDetailsPage() {
 
   //infinite scrolling
 
-  const loader = useRef(null);
+  // const loaderRef = useRef(null);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (entry.isIntersecting && !isFetching) {
-          if (totalPages && page < totalPages) {
-            setPage((prevPage) => prevPage + 1);
+  const loaderRef = useCallback(
+    (node) => {
+      if (!node || activeTab !== 'matched-lawyers') return;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          if (entry.isIntersecting && !isFetching) {
+            if (totalPages && page < totalPages) {
+              setPage((prevPage) => prevPage + 1);
+            }
           }
+        },
+        {
+          root: null,
+          threshold: 1,
+          rootMargin: '0px 0px -50px 0px',
         }
-      },
-      {
-        root: null, // body scroll
-        threshold: 1, // trigger when fully visible
-        rootMargin: '0px 0px -50px 0px', // add buffer
-      }
-    );
+      );
 
-    const currentLoader = loader.current;
-    if (currentLoader) observer.observe(currentLoader);
+      observer.observe(node);
 
-    return () => {
-      if (currentLoader) observer.unobserve(currentLoader);
-    };
-  }, [isFetching, totalPages, page]);
+      return () => {
+        observer.disconnect();
+      };
+    },
+    [activeTab, isFetching, totalPages]
+  );
 
-  //console.log({ page, isFetching, totalPages });
+  console.log('Lawyers ==> ', lawyers);
+
+  console.log({ page, isFetching, totalPages });
 
   const handleShowLeadResponseDetails = (response) => {
     setSelectedLeadResponse(response);
@@ -231,7 +237,7 @@ export default function LeadDetailsPage() {
     setIsMobile(window.innerWidth <= 1280);
   }, []);
 
-  console.log('singleLead ==>', singleLead);
+  //console.log('singleLead ==>', singleLead);
 
   if (isSingleLeadLoading) {
     return (
@@ -429,7 +435,7 @@ export default function LeadDetailsPage() {
 
                         {/* Only show loader when fetching AND there are already some lawyers */}
                         <div
-                          ref={loader}
+                          ref={loaderRef}
                           className="h-10 flex items-center justify-center"
                         >
                           {isFetching && (
