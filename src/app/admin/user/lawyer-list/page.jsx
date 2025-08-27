@@ -14,6 +14,7 @@ import {
 import {
   Archive,
   CheckCircle,
+  Circle,
   Clock,
   Eye,
   Loader,
@@ -31,6 +32,11 @@ import { UserDetailsModal } from '../_components/UserDetailsModal';
 import { useChangeUserAccountStatsMutation } from '@/store/features/auth/authApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { UserDataTable } from '../_components/UserDataTable';
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+// Enable relative time support
+dayjs.extend(relativeTime);
 
 export default function Page() {
   const [open, setOpen] = useState(false);
@@ -75,6 +81,8 @@ export default function Page() {
     };
   }, [search]);
 
+
+  console.log('check user list', userList)
   const [changeAccoutStatus] = useChangeUserAccountStatsMutation();
 
   const handleChangeStatus = async (userId, status) => {
@@ -134,13 +142,7 @@ export default function Page() {
         <div className="lowercase">{row.getValue('email')}</div>
       ),
     },
-    {
-      accessorKey: 'regUserType',
-      header: 'Type',
-      cell: ({ row }) => (
-        <div className="capitalize">{row.getValue('regUserType')}</div>
-      ),
-    },
+
     {
       accessorKey: 'accountStatus',
       header: 'Account Status',
@@ -198,6 +200,51 @@ export default function Page() {
       accessorKey: 'address',
       header: 'Address',
       cell: ({ row }) => <div>{row.original?.profile.address || '-'}</div>,
+    },
+    {
+      accessorKey: "isOnline",
+      header: "Status",
+      cell: ({ row }) => {
+        const isOnline = row.original?.isOnline;
+
+        return (
+          <div className="flex items-center gap-2">
+            <Circle
+              size={12}
+              className={isOnline ? "text-green-500" : "text-gray-400"}
+              fill={isOnline ? "green" : "gray"}
+            />
+            <span className="text-sm font-medium">
+              {isOnline ? "Online" : "Offline"}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "lastSeen",
+      header: "Last Seen",
+      cell: ({ row }) => {
+        const isOnline = row.original?.isOnline;
+        const lastSeen = row.original?.lastSeen;
+
+        // If online, show "Now Online" instead of last seen time
+        if (isOnline) {
+          return <span className="text-green-500 font-semibold">Now Online</span>;
+        }
+
+        // If offline but no lastSeen value, fallback
+        if (!lastSeen) {
+          return <span className="text-gray-400">-</span>;
+        }
+
+        // Human-readable last seen time using dayjs
+        return (
+          <span className="text-gray-700">
+            {dayjs(lastSeen).fromNow()} {/* e.g., "5 minutes ago" */}
+          </span>
+        );
+      },
     },
     {
       id: 'actions',
