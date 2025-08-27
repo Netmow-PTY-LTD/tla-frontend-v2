@@ -32,14 +32,14 @@ export default function LeadManagement() {
   const [open, setOpen] = useState(false);
   const [selectedLead, setSelectedLead] = useState(null); // state for selected lead
   const [page, setPage] = useState(1);
- const [search, setSearch] = useState('');
-   const [debouncedSearch, setDebouncedSearch] = useState(search);
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
 
   const {
     data: leadList,
     refetch,
     isFetching,
-  } = useGetAllLeadsForAdminQuery({ page, limit: 10 ,search:debouncedSearch});
+  } = useGetAllLeadsForAdminQuery({ page, limit: 10, search: debouncedSearch });
 
 
   // Debounce effect
@@ -187,7 +187,16 @@ export default function LeadManagement() {
     {
       accessorKey: 'hireStatus',
       header: 'Hire Status',
-      cell: ({ row }) => <div> {row.getValue('hireStatus')}</div>,
+      cell: ({ row }) => {
+        const formatHireStatus = (value) => {
+          if (!value) return '-';
+          return value
+            .replace(/[-_]/g, ' ')        // replace - and _ with space
+            .replace(/\b\w/g, (c) => c.toUpperCase()); // capitalize first letter of each word
+        };
+
+        return (<div>{formatHireStatus(row.getValue('hireStatus'))}</div>)
+      },
     },
     {
       id: 'actions',
@@ -269,10 +278,10 @@ export default function LeadManagement() {
         setPage={setPage}
         totalPages={leadList?.pagination?.totalPage || 1}
         isFetching={isFetching}
-         search={search}
+        search={search}
         setSearch={setSearch}
       />
-   
+
 
       <LeadDetailsModal
         data={selectedLead}
