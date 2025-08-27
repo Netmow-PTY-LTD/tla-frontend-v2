@@ -19,7 +19,7 @@ import { useAllUsersQuery } from '@/store/features/admin/userApiService';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { UserDetailsModal } from '../_components/UserDetailsModal';
-import { useChangeUserAccountStatsMutation } from '@/store/features/auth/authApiService';
+import { useChangeUserAccountStatsMutation, useUpdateUserDefalultPicMutation } from '@/store/features/auth/authApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { UserDataTable } from '../_components/UserDataTable';
 
@@ -37,7 +37,7 @@ export default function Page() {
 
   // Filters
   const [search, setSearch] = useState('');
-   const [debouncedSearch, setDebouncedSearch] = useState(search);
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
   const [role, setRole] = useState();
   const [regUserType, setRegUserType] = useState("client");
   const [accountStatus, setAccountStatus] = useState();
@@ -54,7 +54,7 @@ export default function Page() {
   const { data: clientlist, isFetching } = useAllUsersQuery({
     page,
     limit,
-    search:debouncedSearch,
+    search: debouncedSearch,
     role,
     regUserType,
     accountStatus,
@@ -66,16 +66,16 @@ export default function Page() {
 
 
   // Debounce effect
-    useEffect(() => {
-      const handler = setTimeout(() => {
-        setDebouncedSearch(search);
-      }, 500); // 500ms debounce
-  
-      return () => {
-        clearTimeout(handler);
-      };
-    }, [search]);
-  
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500); // 500ms debounce
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [search]);
+
 
 
 
@@ -139,11 +139,65 @@ export default function Page() {
       },
     },
     {
+      id: 'profile.profilePicture',
+      accessorKey: 'profile.profilePicture',
+      header: 'Profile Picture',
+      cell: ({ row }) => {
+        const profile = row.original.profile;
+        const [uploadProfilePicture, { isLoading }] = useUpdateUserDefalultPicMutation();
+        console.log("profile.profilePicture", profile)
+        const handleUpload = async (e) => {
+          const file = e.target.files?.[0];
+          if (file) {
+            console.log('Upload image for:', profile, file);
+            try {
+              const formData = new FormData();
+              // Append the image file
+              formData.append('file', file);
+              const payload = {
+                userId: profile.user,
+                data: formData,
+              }
+
+              // Call RTK Query mutation
+              await uploadProfilePicture(payload).unwrap();
+              console.log('Upload successful');
+              // Optionally, update row locally or refetch table
+            } catch (err) {
+              console.error('Upload failed', err);
+            }
+          }
+        };
+
+        return (
+          <div className="flex items-center gap-2">
+            {profile.profilePicture ? (
+              <img
+                src={profile.profilePicture}
+                alt={profile.name || 'Profile'}
+                className="w-8 h-8 rounded-full object-cover"
+              />
+            ) : (
+              <label className="px-2 py-1 bg-[#12C7C4] text-white text-xs rounded cursor-pointer hover:bg-[#0fa9a5]">
+                Upload
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleUpload}
+                  className="hidden"
+                />
+              </label>
+            )}
+          </div>
+        );
+      },
+    },
+    {
       accessorKey: 'email',
       header: 'Email',
       cell: ({ row }) => <div className="lowercase">{row.getValue('email')}</div>,
     },
-    
+
     {
       id: 'isVerifiedAccount',
       accessorKey: 'isVerifiedAccount',
@@ -170,7 +224,7 @@ export default function Page() {
       ),
     },
 
- {
+    {
       accessorKey: "isOnline",
       header: "Status",
       cell: ({ row }) => {
