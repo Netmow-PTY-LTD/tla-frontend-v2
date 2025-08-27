@@ -50,13 +50,13 @@ export default function SettingsForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6 bg-white p-6 rounded-xl shadow-md  mx-auto mt-10"
+      className="space-y-6 bg-white p-6 rounded-xl shadow-md  mx-auto "
     >
       <h2 className="text-2xl font-semibold mb-4">⚙️ Application Settings</h2>
 
       {/* Site Name */}
       <div>
-        <label className="block font-medium">Site Name</label>
+        <label className="block font-medium">App Name</label>
         <input
           {...register('siteName')}
           className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1"
@@ -68,13 +68,10 @@ export default function SettingsForm() {
         { label: 'Maintenance Mode', key: 'maintenanceMode' },
         { label: 'Email Provider Enabled', key: 'emailProviderEnabled' },
         { label: 'SMS Provider Enabled', key: 'smsProviderEnabled' },
-        { label: 'Allow Credit Purchase', key: 'allowCreditPurchase' },
-        { label: 'Require Credits to Respond', key: 'requireCreditsToRespond' },
+        // { label: 'Allow Credit Purchase', key: 'allowCreditPurchase' },
+        // { label: 'Require Credits to Respond', key: 'requireCreditsToRespond' },
         { label: 'Stripe Live Mode', key: 'stripeLiveMode' },
-        {
-          label: 'Auto Refund If Case Inactive',
-          key: 'autoRefundIfLeadInactive',
-        },
+       
       ].map(({ label, key }) => (
         <div key={key} className="flex items-center justify-between">
           <label className="font-medium">{label}</label>
@@ -83,14 +80,6 @@ export default function SettingsForm() {
       ))}
 
       {/* Numeric field */}
-      <div>
-        <label className="block font-medium">Response Limit Per Case</label>
-        <input
-          type="number"
-          {...register('responseLimitPerLead', { valueAsNumber: true })}
-          className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1"
-        />
-      </div>
 
       <button
         type="submit"
