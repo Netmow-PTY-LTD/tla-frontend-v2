@@ -41,11 +41,17 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }) {
     };
   }, [isCollapsed, setIsCollapsed]);
 
+  const handleItemClick = () => {
+    if (window.innerWidth <= 1280) {
+      setIsCollapsed(false);
+    }
+  };
+
   return (
     <aside
       ref={sidebarRef}
       className={`h-[calc(100vh-64px)] w-[250px] lg:w-[300px] bg-white border-r shadow z-20
-        fixed top-16 left-0 transform transition-transform duration-300 ease-in-out ${
+        fixed top-16 left-0 transform transition-transform duration-300 ease-in-out pb-8 ${
           isCollapsed ? 'translate-x-0' : '-translate-x-full'
         } xl:static xl:translate-x-0 xl:transform-none xl:z-auto`}
     >
@@ -92,6 +98,7 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }) {
                         <Link
                           key={subItem.title}
                           href={subItem.url}
+                          onClick={handleItemClick}
                           className={`flex items-center gap-2 px-2 py-1 rounded text-sm transition ${
                             isActive
                               ? 'bg-[linear-gradient(121deg,_rgb(27,171,169),_#ffffff)] text-white font-medium'
@@ -113,6 +120,7 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }) {
             <Link
               key={item.title}
               href={item.url}
+              onClick={handleItemClick}
               className={`flex items-center gap-2 p-2 rounded transition font-medium ${
                 pathname === item.url
                   ? 'bg-[linear-gradient(121deg,_rgb(27,171,169),_#ffffff)] text-white font-medium'
