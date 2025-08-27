@@ -255,7 +255,7 @@ export default function MyLeads() {
           </h2>
           <form className="w-full md:w-1/2" onSubmit={handleSubmit}>
             <div className="hero-search-area flex flex-wrap md:flex-nowrap gap-2 items-center w-full justify-end">
-              <div className="tla-form-group w-full lg:w-1/2">
+              <div className="tla-form-group w-full max-w-[300px]">
                 <Combobox value={service} onChange={(val) => setService(val)}>
                   <div className="relative">
                     <ComboboxInput

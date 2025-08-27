@@ -301,7 +301,6 @@ const ClientLeadCard = ({ user, isExpanded }) => {
             View Lawyers
           </Link>
         </div>
-
         {user?.hireStatus !== 'not_requested' ? (
           <div className="flex justify-center items-center ">
             <Link
@@ -365,6 +364,9 @@ const ClientLeadCard = ({ user, isExpanded }) => {
             </div>
           </>
         )}
+        <div className="px-3 flex justify-center">
+          <RespondersOnline user={user} />
+        </div>
       </Card>
 
       <ConfirmationModal
