@@ -192,7 +192,7 @@ export default function AddOptionPage() {
     setSelectedService(val);
   };
 
- 
+
 
   //single service wise questions
 
@@ -219,7 +219,7 @@ export default function AddOptionPage() {
   //   }
   // }, [selectedCountry, selectedService]);
 
- 
+
 
   //Add option modal handling
 
@@ -234,7 +234,7 @@ export default function AddOptionPage() {
   //handling adding service wise question
 
   async function onSubmit(values) {
-  
+
     // try {
     //   const result = await addQuestion(values).unwrap();
     //   // Optionally reset form or show success toast
@@ -260,7 +260,7 @@ export default function AddOptionPage() {
   //       skip: !selectedQuestionId,
   //     });
 
- 
+
 
   //handle SelectOptionsModal
   const handleSelectOptionsModal = (option, currentOrder) => {
@@ -277,7 +277,7 @@ export default function AddOptionPage() {
 
   //handle SelectOptionsModal
   const handleEditOptionModal = (questionId, OptionId) => {
-   
+
     const singleQuestion = singleServicewiseQuestionsData?.data?.find(
       (item) => item?._id === questionId
     );
@@ -308,6 +308,10 @@ export default function AddOptionPage() {
       showErrorToast(err?.data?.message || 'Failed to delete option.');
     }
   };
+
+  console.log('singleServicewiseQuestionsData', JSON.stringify(singleServicewiseQuestionsData?.data, null, 2));
+
+  console.log('selectedService', selectedService);
 
   return (
     <>
