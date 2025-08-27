@@ -26,12 +26,12 @@ export default function RespondersOnline({ user }) {
   });
 
   return (
-    <div className="px-3 py-2">
+    <div className="px-3 py-1">
       {user?.responders?.length > 0 && (
         <div className="flex items-center gap-2">
-          {/* <div className="text-[var(--color-black)] text-xs font-semibold">
-                        Responders:
-                    </div> */}
+          <div className="text-[var(--color-black)] text-xs font-semibold">
+            Responders:
+          </div>
 
           <div className="flex items-center gap-2">
             <TooltipProvider>
