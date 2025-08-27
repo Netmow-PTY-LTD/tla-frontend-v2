@@ -249,15 +249,17 @@ export default function RequestDetails() {
                         </div>
                       )}
 
-                    {!singleRequest?.data?.isContact && (
-                      <div className="flex flex-wrap items-center gap-4">
-                        <>
-                          <LawyerContactButton
-                            leadDetail={singleRequest?.data}
-                          />
-                        </>
-                      </div>
-                    )}
+                    {!singleRequest?.data?.isContact &&
+                      (!singleRequest?.data?.isHired ||
+                        singleRequest?.data?.hireStatus !== 'hired') && (
+                        <div className="flex flex-wrap items-center gap-4">
+                          <>
+                            <LawyerContactButton
+                              leadDetail={singleRequest?.data}
+                            />
+                          </>
+                        </div>
+                      )}
                     {(singleRequest?.data?.additionalDetails &&
                       singleRequest?.data?.additionalDetails !== '') ||
                     singleRequest?.data?.leadPriority?.toLowerCase() ===

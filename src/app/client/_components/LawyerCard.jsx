@@ -38,7 +38,7 @@ const LawyerCard = ({
 
   const { data: currentUser } = useAuthUserInfoQuery();
 
-  console.log('currentUser', currentUser);
+  //console.log('currentUser', currentUser);
 
   const profileType = lawyer?.profile?.profileType;
   const badge =
