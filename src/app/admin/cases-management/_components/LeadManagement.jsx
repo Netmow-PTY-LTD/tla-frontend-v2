@@ -24,7 +24,7 @@ import {
   View,
   X,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LeadDataTable } from './LeadDataTable';
 import { LeadDetailsModal } from './LeadDetailsModal';
 
@@ -32,13 +32,26 @@ export default function LeadManagement() {
   const [open, setOpen] = useState(false);
   const [selectedLead, setSelectedLead] = useState(null); // state for selected lead
   const [page, setPage] = useState(1);
-  const [search, setSearch] = useState(''); // Search term
+ const [search, setSearch] = useState('');
+   const [debouncedSearch, setDebouncedSearch] = useState(search);
 
   const {
     data: leadList,
     refetch,
     isFetching,
-  } = useGetAllLeadsForAdminQuery({ page, limit: 10 });
+  } = useGetAllLeadsForAdminQuery({ page, limit: 10 ,search:debouncedSearch});
+
+
+  // Debounce effect
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500); // 500ms debounce
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [search]);
 
 
   const [changeStatus] = useUpdateLeadMutation();
@@ -256,16 +269,10 @@ export default function LeadManagement() {
         setPage={setPage}
         totalPages={leadList?.pagination?.totalPage || 1}
         isFetching={isFetching}
+         search={search}
+        setSearch={setSearch}
       />
-      {/* <DataTable
-        data={leadList?.data || []}
-        columns={columns}
-        searchColumn={'name'}
-        page={page}
-        setPage={setPage}
-        totalPages={leadList?.pagination?.totalPages || 1}
-        isFetching={isFetching}
-      /> */}
+   
 
       <LeadDetailsModal
         data={selectedLead}
