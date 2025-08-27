@@ -192,6 +192,12 @@ export const AdminSidebarItems = {
         },
       ],
     },
+    {
+      title: 'Transection Management',
+      url: '/admin/transection-management',
+      icon: Package, // Set size if needed
+      isActive: true,  
+    },
 
     {
       title: 'Users',

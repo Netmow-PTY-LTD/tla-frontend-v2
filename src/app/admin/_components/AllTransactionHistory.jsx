@@ -103,7 +103,7 @@ export const AllTransactionHistory = () => {
               {transactions.map((tx) => (
                 <tr key={tx._id} className="hover:bg-gray-50">
                   <td className="py-4 px-6 text-sm font-mono text-gray-800">
-                    {tx._id.slice(0, 8)}...
+                    {tx.transactionId}
                   </td>
                   <td className="py-4 px-6 text-sm text-gray-900 font-medium">
                     {tx.userId?.profile?.name || "-"}
