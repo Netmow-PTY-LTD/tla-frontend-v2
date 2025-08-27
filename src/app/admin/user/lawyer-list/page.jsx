@@ -29,7 +29,7 @@ import { useAllUsersQuery } from '@/store/features/admin/userApiService';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { UserDetailsModal } from '../_components/UserDetailsModal';
-import { useChangeUserAccountStatsMutation } from '@/store/features/auth/authApiService';
+import { useChangeUserAccountStatsMutation, useUpdateUserDataMutation, useUpdateUserDefalultPicMutation } from '@/store/features/auth/authApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { UserDataTable } from '../_components/UserDataTable';
 import dayjs from "dayjs";
@@ -142,11 +142,28 @@ export default function Page() {
       header: 'Profile Picture',
       cell: ({ row }) => {
         const profile = row.original.profile;
-        const handleUpload = (e) => {
+        const [uploadProfilePicture, { isLoading }] = useUpdateUserDefalultPicMutation();
+        console.log("profile.profilePicture", profile)
+        const handleUpload = async (e) => {
           const file = e.target.files?.[0];
           if (file) {
             console.log('Upload image for:', profile, file);
-            // Here you can call an API or update state to save the image
+            try {
+              const formData = new FormData();
+              // Append the image file
+              formData.append('file', file);
+              const payload = {
+                userId: profile.user,
+                data: formData,
+              }
+
+              // Call RTK Query mutation
+              await uploadProfilePicture(payload).unwrap();
+              console.log('Upload successful');
+              // Optionally, update row locally or refetch table
+            } catch (err) {
+              console.error('Upload failed', err);
+            }
           }
         };
 
