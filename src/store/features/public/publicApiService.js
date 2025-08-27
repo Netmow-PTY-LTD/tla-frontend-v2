@@ -14,6 +14,7 @@ const publicApiService = baseApi.injectEndpoints({
       query: () => ({
         url: `/country/list`,
         method: 'GET',
+        params: {},
       }),
       providesTags: ['Country-list'],
     }),
@@ -148,17 +149,21 @@ const publicApiService = baseApi.injectEndpoints({
       providesTags: ['request'],
     }),
 
-     createRating: builder.mutation({
+    createRating: builder.mutation({
       query: (body) => ({
         url: '/rating',
         method: 'POST',
         body,
       }),
 
-      invalidatesTags:['response','response-list','lead','lead-my','request']
-     
+      invalidatesTags: [
+        'response',
+        'response-list',
+        'lead',
+        'lead-my',
+        'request',
+      ],
     }),
-
   }),
 });
 
@@ -182,5 +187,5 @@ export const {
   useGetUserProfileBySlugQuery,
   useGetAllRequestsFromClientQuery,
   useGetRequestFromClientByIdQuery,
-  useCreateRatingMutation
+  useCreateRatingMutation,
 } = publicApiService;

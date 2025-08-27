@@ -37,6 +37,9 @@ import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 const formSchema = z.object({
   zipcode: z.string().min(4, { message: 'Zip Code must be at least 4 digits' }),
   countryId: z.string().min(1, { message: 'Country is required' }),
+  postalCode: z.string().min(1, { message: 'Postal Code is required' }),
+  latitude: z.string().min(1, { message: 'Latitude is required' }),
+  longitude: z.string().min(1, { message: 'Longitude is required' }),
 });
 
 export default function EditZipCodeModal({ open, onClose, zipId }) {
@@ -47,6 +50,9 @@ export default function EditZipCodeModal({ open, onClose, zipId }) {
     defaultValues: {
       zipcode: '',
       countryId: '',
+      postalCode: '',
+      latitude: '',
+      longitude: '',
     },
   });
 
@@ -73,8 +79,11 @@ export default function EditZipCodeModal({ open, onClose, zipId }) {
   useEffect(() => {
     if (isSuccess && singleZipCode?.data) {
       form.reset({
-        zipcode: singleZipCode.data.zipcode,
-        countryId: singleZipCode.data.countryId,
+        zipcode: singleZipCode?.data?.zipcode,
+        countryId: singleZipCode?.data?.countryId?._id,
+        postalCode: singleZipCode?.data?.postalCode,
+        latitude: singleZipCode?.data?.latitude,
+        longitude: singleZipCode?.data?.longitude,
       });
       setIsLocalLoading(false);
     }
@@ -86,6 +95,9 @@ export default function EditZipCodeModal({ open, onClose, zipId }) {
         _id: zipId,
         zipcode: values.zipcode,
         countryId: values.countryId,
+        postalCode: values.postalCode,
+        latitude: values.latitude,
+        longitude: values.longitude,
       };
       const res = await editZipCode(payload).unwrap();
       showSuccessToast(res?.message || 'Zip Code updated successfully!');
@@ -142,6 +154,46 @@ export default function EditZipCodeModal({ open, onClose, zipId }) {
                         ))}
                       </SelectContent>
                     </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="postalCode"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Post Code</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter post code" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="latitude"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Post Code</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter latitude" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="longitude"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Post Code</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter longitude" {...field} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
