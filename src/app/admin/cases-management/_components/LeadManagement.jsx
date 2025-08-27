@@ -24,7 +24,7 @@ import {
   View,
   X,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LeadDataTable } from './LeadDataTable';
 import { LeadDetailsModal } from './LeadDetailsModal';
 
@@ -32,13 +32,26 @@ export default function LeadManagement() {
   const [open, setOpen] = useState(false);
   const [selectedLead, setSelectedLead] = useState(null); // state for selected lead
   const [page, setPage] = useState(1);
-  const [search, setSearch] = useState(''); // Search term
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
 
   const {
     data: leadList,
     refetch,
     isFetching,
-  } = useGetAllLeadsForAdminQuery({ page, limit: 10 });
+  } = useGetAllLeadsForAdminQuery({ page, limit: 10, search: debouncedSearch });
+
+
+  // Debounce effect
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500); // 500ms debounce
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [search]);
 
 
   const [changeStatus] = useUpdateLeadMutation();
@@ -174,7 +187,16 @@ export default function LeadManagement() {
     {
       accessorKey: 'hireStatus',
       header: 'Hire Status',
-      cell: ({ row }) => <div> {row.getValue('hireStatus')}</div>,
+      cell: ({ row }) => {
+        const formatHireStatus = (value) => {
+          if (!value) return '-';
+          return value
+            .replace(/[-_]/g, ' ')        // replace - and _ with space
+            .replace(/\b\w/g, (c) => c.toUpperCase()); // capitalize first letter of each word
+        };
+
+        return (<div>{formatHireStatus(row.getValue('hireStatus'))}</div>)
+      },
     },
     {
       id: 'actions',
@@ -256,16 +278,10 @@ export default function LeadManagement() {
         setPage={setPage}
         totalPages={leadList?.pagination?.totalPage || 1}
         isFetching={isFetching}
+        search={search}
+        setSearch={setSearch}
       />
-      {/* <DataTable
-        data={leadList?.data || []}
-        columns={columns}
-        searchColumn={'name'}
-        page={page}
-        setPage={setPage}
-        totalPages={leadList?.pagination?.totalPages || 1}
-        isFetching={isFetching}
-      /> */}
+
 
       <LeadDetailsModal
         data={selectedLead}

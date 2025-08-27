@@ -1,5 +1,6 @@
 'use client';
 import {
+  ArrowLeftRight,
   ChartBarStacked,
   ChartColumnStacked,
   CircleEllipsis,
@@ -191,6 +192,12 @@ export const AdminSidebarItems = {
           isActive: true,
         },
       ],
+    },
+    {
+      title: 'Transaction Management',
+      url: '/admin/transection-management',
+      icon: ArrowLeftRight, // Set size if needed
+      isActive: true,  
     },
 
     {

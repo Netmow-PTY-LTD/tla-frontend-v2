@@ -59,9 +59,9 @@ export function LeadDataTable({
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter names..."
-          value={table.getColumn(searchColumn)?.getFilterValue() ?? ''}
+          value={search ?? ''}
           onChange={(event) =>
-            table.getColumn(searchColumn)?.setFilterValue(event.target.value)
+            setSearch(event.target.value)
           }
           className="max-w-sm"
         />
@@ -78,9 +78,9 @@ export function LeadDataTable({
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                   </TableHead>
                 ))}
               </TableRow>

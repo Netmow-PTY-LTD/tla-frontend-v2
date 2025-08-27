@@ -93,10 +93,18 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
     }),
 
     transactionHistoryList: builder.query({
-      query: () => ({
+      query: (params) => {
+
+        console.log('params',params)
+
+        return {
         url: '/settings/credit-payment/transaction/list',
         method: 'GET',
-      }),
+        params
+        
+      }
+      }
+      ,
       providesTags: ['transaction-history-list'],
     }),
     //  credit transaction

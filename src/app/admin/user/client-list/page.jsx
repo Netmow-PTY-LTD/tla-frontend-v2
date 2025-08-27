@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import { Archive, CheckCircle, Clock, MoreHorizontal, Pencil, Slash, Trash2, View } from 'lucide-react';
+import { Archive, CheckCircle, Circle, Clock, MoreHorizontal, Pencil, Slash, Trash2, View } from 'lucide-react';
 import { useAllUsersQuery } from '@/store/features/admin/userApiService';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -23,7 +23,11 @@ import { useChangeUserAccountStatsMutation } from '@/store/features/auth/authApi
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { UserDataTable } from '../_components/UserDataTable';
 
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
+// Enable relative time support
+dayjs.extend(relativeTime);
 
 export default function Page() {
 
@@ -139,20 +143,7 @@ export default function Page() {
       header: 'Email',
       cell: ({ row }) => <div className="lowercase">{row.getValue('email')}</div>,
     },
-    {
-      accessorKey: 'regUserType',
-      header: 'Type',
-      cell: ({ row }) => (
-        <div className="capitalize">{row.getValue('regUserType')}</div>
-      ),
-    },
-    {
-      accessorKey: 'accountStatus',
-      header: 'Account Status',
-      cell: ({ row }) => (
-        <div className="capitalize text-center">{row.getValue('accountStatus')}</div>
-      ),
-    },
+    
     {
       id: 'isVerifiedAccount',
       accessorKey: 'isVerifiedAccount',
@@ -178,6 +169,53 @@ export default function Page() {
         <div>{row.original?.profile.address || '-'}</div>
       ),
     },
+
+ {
+      accessorKey: "isOnline",
+      header: "Status",
+      cell: ({ row }) => {
+        const isOnline = row.original?.isOnline;
+
+        return (
+          <div className="flex items-center gap-2">
+            <Circle
+              size={12}
+              className={isOnline ? "text-green-500" : "text-gray-400"}
+              fill={isOnline ? "green" : "gray"}
+            />
+            <span className="text-sm font-medium">
+              {isOnline ? "Online" : "Offline"}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "lastSeen",
+      header: "Last Seen",
+      cell: ({ row }) => {
+        const isOnline = row.original?.isOnline;
+        const lastSeen = row.original?.lastSeen;
+
+        // If online, show "Now Online" instead of last seen time
+        if (isOnline) {
+          return <span className="text-green-500 font-semibold">Now Online</span>;
+        }
+
+        // If offline but no lastSeen value, fallback
+        if (!lastSeen) {
+          return <span className="text-gray-400">-</span>;
+        }
+
+        // Human-readable last seen time using dayjs
+        return (
+          <span className="text-gray-700">
+            {dayjs(lastSeen).fromNow()} {/* e.g., "5 minutes ago" */}
+          </span>
+        );
+      },
+    },
+
     {
       id: 'actions',
       header: 'Actions',
@@ -258,7 +296,7 @@ export default function Page() {
 
   return (
     <div>
-      <h1>Client List Page</h1>
+      <h1>Client List </h1>
       <UserDataTable
         data={clientlist?.data || []}
         columns={columns}

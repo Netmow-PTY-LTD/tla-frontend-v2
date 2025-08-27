@@ -1,52 +1,57 @@
-"use client"
-import React, { useEffect, useState } from 'react';
-import { Search, Download, Filter, Calendar } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useTransactionHistoryListQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
+
+"use client";
+import React, { useEffect, useState } from "react";
+import { Search, Download, Filter, Calendar } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useTransactionHistoryListQuery } from "@/store/features/credit_and_payment/creditAndPaymentApiService";
 
 export const AllTransactionHistory = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredTransactions, setFilteredTransactions] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
-  const {
-    data: transactionData,
-    isError,
-    isLoading,
-  } = useTransactionHistoryListQuery();
+  const { data: transactionData, isError, isLoading } =
+    useTransactionHistoryListQuery({ page, limit: 10, search:debouncedSearch });
 
-  useEffect(() => {
-    if (!transactionData?.data) return;
 
-    const filtered = transactionData.data.filter((t) => {
-      const id = t._id?.toLowerCase() || '';
-      const packageName = t.creditPackageId?.name?.toLowerCase() || '';
-      const term = searchTerm.toLowerCase();
-      return id.includes(term) || packageName.includes(term);
-    });
+// Debounce effect
+    useEffect(() => {
+      const handler = setTimeout(() => {
+        setDebouncedSearch(search);
+      }, 500); // 500ms debounce
+  
+      return () => {
+        clearTimeout(handler);
+      };
+    }, [search]);
+  
 
-    setFilteredTransactions(filtered);
-    setCurrentPage(1);
-  }, [transactionData, searchTerm]);
 
-  const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedTransactions = filteredTransactions.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
+
+
+
+
+
+
+  const transactions = transactionData?.data || [];
+  const totalPages = transactionData?.pagination?.totalPage || 1;
+  const totalTransactions = transactionData?.pagination?.total || 0;
 
   const formatDate = (date) =>
-    new Date(date).toLocaleDateString('en-GB', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
+    new Date(date).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
     });
 
+  const totalCredits = transactions.reduce(
+    (sum, t) => sum + (t.creditPackageId?.credit || 0),
+    0
+  );
+
   return (
-    <div className="w-full  p-6  rounded-lg shadow-lg">
+    <div className="w-full p-6 rounded-lg shadow-lg">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-gray-900 mb-2">
@@ -61,33 +66,22 @@ export const AllTransactionHistory = () => {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input
             placeholder="Search transactions..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && setPage(1)}
             className="pl-10 bg-gray-50 border-gray-200 focus:bg-white transition-colors"
           />
         </div>
         <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className="flex items-center gap-2"
-          >
+          <Button variant="outline" size="sm" className="flex items-center gap-2">
             <Calendar className="h-4 w-4" />
             Date Range
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="flex items-center gap-2"
-          >
+          <Button variant="outline" size="sm" className="flex items-center gap-2">
             <Filter className="h-4 w-4" />
             Filter
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="flex items-center gap-2"
-          >
+          <Button variant="outline" size="sm" className="flex items-center gap-2">
             <Download className="h-4 w-4" />
             Export
           </Button>
@@ -127,34 +121,34 @@ export const AllTransactionHistory = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {paginatedTransactions.map((tx) => (
+              {transactions.map((tx) => (
                 <tr key={tx._id} className="hover:bg-gray-50">
                   <td className="py-4 px-6 text-sm font-mono text-gray-800">
-                    {tx._id.slice(0, 8)}...
+                    {tx.transactionId}
                   </td>
                   <td className="py-4 px-6 text-sm text-gray-900 font-medium">
-                    {tx.userId?.profile?.name || '-'}
+                    {tx.userId?.profile?.name || "-"}
                   </td>
                   <td className="py-4 px-6 text-sm text-gray-900 font-medium">
-                    {tx.userId?.email || '-'}
+                    {tx.userId?.email || "-"}
                   </td>
                   <td className="py-4 px-6 text-sm text-gray-900 font-medium">
-                    {tx.creditPackageId?.name || '-'}
+                    {tx.creditPackageId?.name || "-"}
                   </td>
                   <td className="py-4 px-6 text-sm font-semibold text-green-600">
-                    +{tx.creditPackageId?.credit}
+                    +{tx.creditPackageId?.credit || 0}
                   </td>
                   <td className="py-4 px-6 text-sm text-gray-800">
-                    ${tx.amountPaid}{' '}
+                    ${tx.amountPaid}{" "}
                     <span className="text-gray-500">
                       ({tx.currency.toUpperCase()})
                     </span>
                   </td>
                   <td className="py-4 px-6 text-sm">
                     <span
-                      className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${tx.status === 'completed'
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-yellow-100 text-yellow-700'
+                      className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${tx.status === "completed"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-yellow-100 text-yellow-700"
                         }`}
                     >
                       {tx.status}
@@ -170,7 +164,7 @@ export const AllTransactionHistory = () => {
         </div>
 
         {/* Empty State */}
-        {paginatedTransactions.length === 0 && (
+        {transactions.length === 0 && (
           <div className="text-center py-12">
             <div className="text-gray-400 mb-4">
               <Search className="h-12 w-12 mx-auto" />
@@ -188,93 +182,51 @@ export const AllTransactionHistory = () => {
       {/* Pagination Footer */}
       <div className="mt-6 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-600">
         <div>
-          Showing {startIndex + 1}–
-          {Math.min(startIndex + itemsPerPage, filteredTransactions.length)} of{' '}
-          {filteredTransactions.length} transactions
+          {/* Calculate from/to */}
+          {transactions.length > 0 ? (
+            <>
+              Showing {(page - 1) * 10 + 1}–{/* start index */}
+              {(page - 1) * 10 + transactions.length} of {totalTransactions} transactions
+            </>
+          ) : (
+            <>No transactions to show</>
+          )}
         </div>
         <div className="flex items-center gap-4 mt-2 sm:mt-0">
           <span>
-            Total credits purchased:{' '}
-            <span className="font-semibold text-green-600">
-              +
-              {filteredTransactions.reduce(
-                (sum, t) => sum + (t.credit > 0 ? t.credit : 0),
-                0
-              )}
-            </span>
+            Total credits purchased:{" "}
+            <span className="font-semibold text-green-600">+{totalCredits}</span>
           </span>
         </div>
       </div>
-
 
       {/* Pagination Controls */}
       <div className="mt-6 flex justify-center gap-2">
         <Button
           size="sm"
           variant="outline"
-          disabled={currentPage === 1}
-          onClick={() => setCurrentPage((p) => p - 1)}
+          disabled={page === 1}
+          onClick={() => setPage((p) => p - 1)}
         >
           Previous
         </Button>
 
-        {/* Page Numbers with dynamic range */}
-        {(() => {
-          const pages = [];
-          const maxVisiblePages = 5;
-          const startPage = Math.floor((currentPage - 1) / maxVisiblePages) * maxVisiblePages + 1;
-          const endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
-
-          // Show leading ellipsis if needed
-          if (startPage > 1) {
-            pages.push(
-              <Button
-                key="prev-ellipsis"
-                size="sm"
-                variant="outline"
-                disabled
-              >
-                ...
-              </Button>
-            );
-          }
-
-          // Page buttons
-          for (let i = startPage; i <= endPage; i++) {
-            pages.push(
-              <Button
-                key={i}
-                size="sm"
-                variant={currentPage === i ? 'default' : 'outline'}
-                onClick={() => setCurrentPage(i)}
-              >
-                {i}
-              </Button>
-            );
-          }
-
-          // Show trailing ellipsis if needed
-          if (endPage < totalPages) {
-            pages.push(
-              <Button
-                key="next-ellipsis"
-                size="sm"
-                variant="outline"
-                disabled
-              >
-                ...
-              </Button>
-            );
-          }
-
-          return pages;
-        })()}
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+          <Button
+            key={p}
+            size="sm"
+            variant={page === p ? "default" : "outline"}
+            onClick={() => setPage(p)}
+          >
+            {p}
+          </Button>
+        ))}
 
         <Button
           size="sm"
           variant="outline"
-          disabled={currentPage === totalPages}
-          onClick={() => setCurrentPage((p) => p + 1)}
+          disabled={page === totalPages}
+          onClick={() => setPage((p) => p + 1)}
         >
           Next
         </Button>
@@ -282,3 +234,300 @@ export const AllTransactionHistory = () => {
     </div>
   );
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+// "use client"
+// import React, { useEffect, useState } from 'react';
+// import { Search, Download, Filter, Calendar } from 'lucide-react';
+// import { Button } from '@/components/ui/button';
+// import { Input } from '@/components/ui/input';
+// import { useTransactionHistoryListQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
+
+// export const AllTransactionHistory = () => {
+//   const [searchTerm, setSearchTerm] = useState('');
+//   const [filteredTransactions, setFilteredTransactions] = useState([]);
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const itemsPerPage = 5;
+
+//   const {
+//     data: transactionData,
+//     isError,
+//     isLoading,
+//   } = useTransactionHistoryListQuery();
+
+//   useEffect(() => {
+//     if (!transactionData?.data) return;
+
+//     const filtered = transactionData.data.filter((t) => {
+//       const id = t._id?.toLowerCase() || '';
+//       const packageName = t.creditPackageId?.name?.toLowerCase() || '';
+//       const term = searchTerm.toLowerCase();
+//       return id.includes(term) || packageName.includes(term);
+//     });
+
+//     setFilteredTransactions(filtered);
+//     setCurrentPage(1);
+//   }, [transactionData, searchTerm]);
+
+//   const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
+//   const startIndex = (currentPage - 1) * itemsPerPage;
+//   const paginatedTransactions = filteredTransactions.slice(
+//     startIndex,
+//     startIndex + itemsPerPage
+//   );
+
+//   const formatDate = (date) =>
+//     new Date(date).toLocaleDateString('en-GB', {
+//       day: 'numeric',
+//       month: 'short',
+//       year: 'numeric',
+//     });
+
+//   return (
+//     <div className="w-full  p-6  rounded-lg shadow-lg">
+//       {/* Header */}
+//       <div className="mb-8">
+//         <h1 className="text-2xl font-semibold text-gray-900 mb-2">
+//           Transaction History
+//         </h1>
+//         <p className="text-gray-600">Track users credit purchase history</p>
+//       </div>
+
+//       {/* Controls */}
+//       <div className="flex flex-col sm:flex-row gap-4 mb-6">
+//         <div className="relative flex-1">
+//           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+//           <Input
+//             placeholder="Search transactions..."
+//             value={searchTerm}
+//             onChange={(e) => setSearchTerm(e.target.value)}
+//             className="pl-10 bg-gray-50 border-gray-200 focus:bg-white transition-colors"
+//           />
+//         </div>
+//         <div className="flex gap-2">
+//           <Button
+//             variant="outline"
+//             size="sm"
+//             className="flex items-center gap-2"
+//           >
+//             <Calendar className="h-4 w-4" />
+//             Date Range
+//           </Button>
+//           <Button
+//             variant="outline"
+//             size="sm"
+//             className="flex items-center gap-2"
+//           >
+//             <Filter className="h-4 w-4" />
+//             Filter
+//           </Button>
+//           <Button
+//             variant="outline"
+//             size="sm"
+//             className="flex items-center gap-2"
+//           >
+//             <Download className="h-4 w-4" />
+//             Export
+//           </Button>
+//         </div>
+//       </div>
+
+//       {/* Table */}
+//       <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+//         <div className="overflow-x-auto">
+//           <table className="w-full">
+//             <thead>
+//               <tr className="bg-gray-50 border-b border-gray-200">
+//                 <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
+//                   ID
+//                 </th>
+//                 <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
+//                   User Name
+//                 </th>
+//                 <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
+//                   User Email
+//                 </th>
+//                 <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
+//                   Package
+//                 </th>
+//                 <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
+//                   Credits
+//                 </th>
+//                 <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
+//                   Amount
+//                 </th>
+//                 <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
+//                   Status
+//                 </th>
+//                 <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
+//                   Date
+//                 </th>
+//               </tr>
+//             </thead>
+//             <tbody className="divide-y divide-gray-100">
+//               {paginatedTransactions.map((tx) => (
+//                 <tr key={tx._id} className="hover:bg-gray-50">
+//                   <td className="py-4 px-6 text-sm font-mono text-gray-800">
+//                     {tx._id.slice(0, 8)}...
+//                   </td>
+//                   <td className="py-4 px-6 text-sm text-gray-900 font-medium">
+//                     {tx.userId?.profile?.name || '-'}
+//                   </td>
+//                   <td className="py-4 px-6 text-sm text-gray-900 font-medium">
+//                     {tx.userId?.email || '-'}
+//                   </td>
+//                   <td className="py-4 px-6 text-sm text-gray-900 font-medium">
+//                     {tx.creditPackageId?.name || '-'}
+//                   </td>
+//                   <td className="py-4 px-6 text-sm font-semibold text-green-600">
+//                     +{tx.creditPackageId?.credit}
+//                   </td>
+//                   <td className="py-4 px-6 text-sm text-gray-800">
+//                     ${tx.amountPaid}{' '}
+//                     <span className="text-gray-500">
+//                       ({tx.currency.toUpperCase()})
+//                     </span>
+//                   </td>
+//                   <td className="py-4 px-6 text-sm">
+//                     <span
+//                       className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${tx.status === 'completed'
+//                         ? 'bg-green-100 text-green-700'
+//                         : 'bg-yellow-100 text-yellow-700'
+//                         }`}
+//                     >
+//                       {tx.status}
+//                     </span>
+//                   </td>
+//                   <td className="py-4 px-6 text-sm text-gray-600">
+//                     {formatDate(tx.createdAt)}
+//                   </td>
+//                 </tr>
+//               ))}
+//             </tbody>
+//           </table>
+//         </div>
+
+//         {/* Empty State */}
+//         {paginatedTransactions.length === 0 && (
+//           <div className="text-center py-12">
+//             <div className="text-gray-400 mb-4">
+//               <Search className="h-12 w-12 mx-auto" />
+//             </div>
+//             <h3 className="text-lg font-medium text-gray-900 mb-2">
+//               No Transactions Found
+//             </h3>
+//             <p className="text-gray-600">
+//               Try adjusting your search terms or filters.
+//             </p>
+//           </div>
+//         )}
+//       </div>
+
+//       {/* Pagination Footer */}
+//       <div className="mt-6 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-600">
+//         <div>
+//           Showing {startIndex + 1}–
+//           {Math.min(startIndex + itemsPerPage, filteredTransactions.length)} of{' '}
+//           {filteredTransactions.length} transactions
+//         </div>
+//         <div className="flex items-center gap-4 mt-2 sm:mt-0">
+//           <span>
+//             Total credits purchased:{' '}
+//             <span className="font-semibold text-green-600">
+//               +
+//               {filteredTransactions.reduce(
+//                 (sum, t) => sum + (t.credit > 0 ? t.credit : 0),
+//                 0
+//               )}
+//             </span>
+//           </span>
+//         </div>
+//       </div>
+
+
+//       {/* Pagination Controls */}
+//       <div className="mt-6 flex justify-center gap-2">
+//         <Button
+//           size="sm"
+//           variant="outline"
+//           disabled={currentPage === 1}
+//           onClick={() => setCurrentPage((p) => p - 1)}
+//         >
+//           Previous
+//         </Button>
+
+//         {/* Page Numbers with dynamic range */}
+//         {(() => {
+//           const pages = [];
+//           const maxVisiblePages = 5;
+//           const startPage = Math.floor((currentPage - 1) / maxVisiblePages) * maxVisiblePages + 1;
+//           const endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+
+//           // Show leading ellipsis if needed
+//           if (startPage > 1) {
+//             pages.push(
+//               <Button
+//                 key="prev-ellipsis"
+//                 size="sm"
+//                 variant="outline"
+//                 disabled
+//               >
+//                 ...
+//               </Button>
+//             );
+//           }
+
+//           // Page buttons
+//           for (let i = startPage; i <= endPage; i++) {
+//             pages.push(
+//               <Button
+//                 key={i}
+//                 size="sm"
+//                 variant={currentPage === i ? 'default' : 'outline'}
+//                 onClick={() => setCurrentPage(i)}
+//               >
+//                 {i}
+//               </Button>
+//             );
+//           }
+
+//           // Show trailing ellipsis if needed
+//           if (endPage < totalPages) {
+//             pages.push(
+//               <Button
+//                 key="next-ellipsis"
+//                 size="sm"
+//                 variant="outline"
+//                 disabled
+//               >
+//                 ...
+//               </Button>
+//             );
+//           }
+
+//           return pages;
+//         })()}
+
+//         <Button
+//           size="sm"
+//           variant="outline"
+//           disabled={currentPage === totalPages}
+//           onClick={() => setCurrentPage((p) => p + 1)}
+//         >
+//           Next
+//         </Button>
+//       </div>
+//     </div>
+//   );
+// };
