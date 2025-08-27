@@ -1,6 +1,6 @@
 
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Search, Download, Filter, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,9 +9,30 @@ import { useTransactionHistoryListQuery } from "@/store/features/credit_and_paym
 export const AllTransactionHistory = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
   const { data: transactionData, isError, isLoading } =
-    useTransactionHistoryListQuery({ page, limit: 10, search });
+    useTransactionHistoryListQuery({ page, limit: 10, search:debouncedSearch });
+
+
+// Debounce effect
+    useEffect(() => {
+      const handler = setTimeout(() => {
+        setDebouncedSearch(search);
+      }, 500); // 500ms debounce
+  
+      return () => {
+        clearTimeout(handler);
+      };
+    }, [search]);
+  
+
+
+
+
+
+
+
 
   const transactions = transactionData?.data || [];
   const totalPages = transactionData?.pagination?.totalPage || 1;

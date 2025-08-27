@@ -75,6 +75,8 @@ export default function Page() {
     };
   }, [search]);
 
+
+  console.log('check user list',userList)
   const [changeAccoutStatus] = useChangeUserAccountStatsMutation();
 
   const handleChangeStatus = async (userId, status) => {
