@@ -258,7 +258,7 @@ export default function Page() {
 
   return (
     <div>
-      <h1>Client List Page</h1>
+      <h1>Client List </h1>
       <UserDataTable
         data={clientlist?.data || []}
         columns={columns}

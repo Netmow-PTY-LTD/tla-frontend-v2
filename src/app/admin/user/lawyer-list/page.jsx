@@ -281,7 +281,7 @@ export default function Page() {
 
   return (
     <div>
-      <h1>Lawyer List Page</h1>
+      <h1>Lawyer List </h1>
       <UserDataTable
         data={userList?.data || []}
         columns={columns}
