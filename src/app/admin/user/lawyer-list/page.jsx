@@ -135,6 +135,46 @@ export default function Page() {
         return <div className="capitalize">{profile.name || 'N/A'}</div>;
       },
     },
+
+    {
+      id: 'profile.profilePicture',
+      accessorKey: 'profile.profilePicture',
+      header: 'Profile Picture',
+      cell: ({ row }) => {
+        const profile = row.original.profile;
+        const handleUpload = (e) => {
+          const file = e.target.files?.[0];
+          if (file) {
+            console.log('Upload image for:', profile, file);
+            // Here you can call an API or update state to save the image
+          }
+        };
+
+        return (
+          <div className="flex items-center gap-2">
+            {profile.profilePicture ? (
+              <img
+                src={profile.profilePicture}
+                alt={profile.name || 'Profile'}
+                className="w-8 h-8 rounded-full object-cover"
+              />
+            ) : (
+              <label className="px-2 py-1 bg-[#12C7C4] text-white text-xs rounded cursor-pointer hover:bg-[#0fa9a5]">
+                Upload
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleUpload}
+                  className="hidden"
+                />
+              </label>
+            )}
+          </div>
+        );
+      },
+    },
+
+
     {
       accessorKey: 'email',
       header: 'Email',
@@ -246,6 +286,7 @@ export default function Page() {
         );
       },
     },
+
     {
       id: 'actions',
       header: 'Actions',
