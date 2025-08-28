@@ -26,7 +26,10 @@ import { useAllUsersQuery } from '@/store/features/admin/userApiService';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { UserDetailsModal } from '../_components/UserDetailsModal';
-import { useChangeUserAccountStatsMutation } from '@/store/features/auth/authApiService';
+import {
+  useChangeUserAccountStatsMutation,
+  useUpdateUserDefalultPicMutation,
+} from '@/store/features/auth/authApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { UserDataTable } from '../_components/UserDataTable';
 
@@ -129,6 +132,61 @@ export default function Page() {
       cell: ({ row }) => {
         const profile = row.original.profile;
         return <div className="capitalize">{profile.name || 'N/A'}</div>;
+      },
+    },
+    {
+      id: 'profile.profilePicture',
+      accessorKey: 'profile.profilePicture',
+      header: 'Profile Picture',
+      cell: ({ row }) => {
+        const profile = row.original.profile;
+        const [uploadProfilePicture, { isLoading }] =
+          useUpdateUserDefalultPicMutation();
+        console.log('profile.profilePicture', profile);
+        const handleUpload = async (e) => {
+          const file = e.target.files?.[0];
+          if (file) {
+            console.log('Upload image for:', profile, file);
+            try {
+              const formData = new FormData();
+              // Append the image file
+              formData.append('file', file);
+              const payload = {
+                userId: profile.user,
+                data: formData,
+              };
+
+              // Call RTK Query mutation
+              await uploadProfilePicture(payload).unwrap();
+              console.log('Upload successful');
+              // Optionally, update row locally or refetch table
+            } catch (err) {
+              console.error('Upload failed', err);
+            }
+          }
+        };
+
+        return (
+          <div className="flex items-center gap-2">
+            {profile.profilePicture ? (
+              <img
+                src={profile.profilePicture}
+                alt={profile.name || 'Profile'}
+                className="w-8 h-8 rounded-full object-cover"
+              />
+            ) : (
+              <label className="px-2 py-1 bg-[#12C7C4] text-white text-xs rounded cursor-pointer hover:bg-[#0fa9a5]">
+                Upload
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleUpload}
+                  className="hidden"
+                />
+              </label>
+            )}
+          </div>
+        );
       },
     },
     {

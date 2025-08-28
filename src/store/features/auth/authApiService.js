@@ -80,7 +80,7 @@ const authApi = baseApi.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-     
+
     }),
     resendVerificationEmail: builder.mutation({
       query: (data) => ({
@@ -88,7 +88,7 @@ const authApi = baseApi.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-     
+
     }),
     changeUserAccountStats: builder.mutation({
       query: (payload) => ({
@@ -96,36 +96,48 @@ const authApi = baseApi.injectEndpoints({
         method: 'PATCH',
         body: payload.data,
       }),
-     invalidatesTags:['all-users']
+      invalidatesTags: ['all-users']
     }),
- sendOtp: builder.mutation({
+    sendOtp: builder.mutation({
       query: (data) => ({
         url: '/auth/send-otp',
         method: 'POST',
         body: data,
       }),
-     
+
     }),
 
- verifyOtp: builder.mutation({
+    verifyOtp: builder.mutation({
       query: (data) => ({
         url: '/auth/verify-otp',
         method: 'POST',
         body: data,
       }),
-     
+
     }),
- changeEmail: builder.mutation({
+    changeEmail: builder.mutation({
       query: (data) => ({
         url: '/auth/change-email',
         method: 'POST',
         body: data,
       }),
-     
+
     }),
-    
+
+    updateUserDefalultPic: builder.mutation({
+      query: (data) => ({
+        url: `/user/update/default/${data.userId}`,
+        method: 'PATCH',
+        body: data?.data,
+      }),
+      invalidatesTags: ['lead-list-admin'],
+    }),
+
+
   }),
 });
+
+
 
 export const {
   useAuthLoginMutation,
@@ -142,5 +154,6 @@ export const {
   useChangeUserAccountStatsMutation,
   useChangeEmailMutation,
   useVerifyOtpMutation,
-  useSendOtpMutation
+  useSendOtpMutation,
+  useUpdateUserDefalultPicMutation
 } = authApi;
