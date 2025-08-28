@@ -28,14 +28,9 @@ import {
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-
-import { useChangeUserAccountStatsMutation, useUpdateUserDataMutation, useUpdateUserDefalultPicMutation } from '@/store/features/auth/authApiService';
-import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
-
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import resizeAndConvertToWebP from '@/components/UIComponents/resizeAndConvertToWebP';
-import { useAllLawyerDetailsQuery, useAllUsersQuery } from '@/store/features/admin/userApiService';
+import { useAllLawyerDetailsQuery } from '@/store/features/admin/userApiService';
 import { UserDataTable } from '../user/_components/UserDataTable';
 import { UserDetailsModal } from '../user/_components/UserDetailsModal';
 

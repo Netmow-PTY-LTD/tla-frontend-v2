@@ -13,25 +13,16 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import {
-  Archive,
-  CheckCircle,
-  Circle,
-  Clock,
-  Eye,
-  Loader,
-  Loader2,
+
   MoreHorizontal,
-  Pencil,
-  Slash,
-  Trash2,
+
   View,
 } from 'lucide-react';
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-import { useChangeUserAccountStatsMutation, useUpdateUserDefalultPicMutation } from '@/store/features/auth/authApiService';
-import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -79,9 +70,7 @@ export default function Page() {
 
 
 
-
-
-  const columns = [
+const columns = [
     {
       id: 'select',
       header: ({ table }) => (
