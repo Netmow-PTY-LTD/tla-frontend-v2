@@ -28,14 +28,9 @@ import {
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-
-import { useChangeUserAccountStatsMutation, useUpdateUserDataMutation, useUpdateUserDefalultPicMutation } from '@/store/features/auth/authApiService';
-import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
-
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import resizeAndConvertToWebP from '@/components/UIComponents/resizeAndConvertToWebP';
-import { useAllUsersQuery } from '@/store/features/admin/userApiService';
+import { useAllLawyerDetailsQuery } from '@/store/features/admin/userApiService';
 import { UserDataTable } from '../user/_components/UserDataTable';
 import { UserDetailsModal } from '../user/_components/UserDetailsModal';
 
@@ -50,11 +45,7 @@ export default function Page() {
   // Filters
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState(search);
-  const [role, setRole] = useState();
-  const [regUserType, setRegUserType] = useState('lawyer');
-  const [accountStatus, setAccountStatus] = useState();
-  const [isVerifiedAccount, setIsVerifiedAccount] = useState();
-  const [isPhoneVerified, setIsPhoneVerified] = useState();
+
 
   // Pagination & sorting
   const [page, setPage] = useState(1);
@@ -62,15 +53,10 @@ export default function Page() {
   const [sortBy, setSortBy] = useState('createdAt');
   const [sortOrder, setSortOrder] = useState('desc');
 
-  const { data: userList, isFetching, refetch } = useAllUsersQuery({
+  const { data: userList, isFetching, refetch } = useAllLawyerDetailsQuery({
     page,
     limit,
     search: debouncedSearch,
-    role,
-    regUserType,
-    accountStatus,
-    isVerifiedAccount,
-    isPhoneVerified,
     sortBy,
     sortOrder,
   });
@@ -88,27 +74,10 @@ export default function Page() {
 
 
   console.log('check user list', userList)
-  const [changeAccoutStatus] = useChangeUserAccountStatsMutation();
 
-  const handleChangeStatus = async (userId, status) => {
-    try {
-      const payload = {
-        userId,
-        data: { accountStatus: status },
-      };
 
-      const res = await changeAccoutStatus(payload).unwrap();
 
-      if (res.success) {
-        showSuccessToast(res?.message || 'Status Update Successful');
-      }
-    } catch (error) {
-      const errorMessage = error?.data?.message || 'An error occurred';
-      showErrorToast(errorMessage);
-    }
-  };
-
- const columns = [
+  const columns = [
     {
       id: 'select',
       header: ({ table }) => (
@@ -132,53 +101,10 @@ export default function Page() {
       enableHiding: false,
     },
     {
-      id: 'profile.name',
+      id: 'name',
       accessorKey: 'name',
       header: 'Name',
       cell: ({ row }) => <div className="capitalize">{row.original.name || 'N/A'}</div>,
-    },
-    {
-      id: 'profile.profilePicture',
-      accessorKey: 'profilePicture',
-      header: 'Profile Picture',
-      cell: ({ row }) => {
-        const profile = row.original;
-        const [uploadProfilePicture, { isLoading }] = useUpdateUserDefalultPicMutation();
-
-        const handleUpload = async (e) => {
-          const file = e.target.files?.[0];
-          if (!file) return;
-
-          const webpFile = await resizeAndConvertToWebP(file, 500, 0.8);
-
-          const formData = new FormData();
-          formData.append('file', webpFile);
-
-          try {
-            await uploadProfilePicture({ userId: profile._id, data: formData }).unwrap();
-            refetch(); // Optional: refetch table after upload
-          } catch (err) {
-            console.error('Upload failed', err);
-          }
-        };
-
-        return (
-          <div className="flex items-center gap-2">
-            {profile.profilePicture ? (
-              <img
-                src={profile.profilePicture}
-                alt={profile.name || 'Profile'}
-                className="w-8 h-8 rounded-full object-cover"
-              />
-            ) : (
-              <label className="px-2 py-1 bg-[#12C7C4] text-white text-xs rounded cursor-pointer hover:bg-[#0fa9a5]">
-                Upload
-                <input type="file" accept="image/*" onChange={handleUpload} className="hidden" />
-              </label>
-            )}
-          </div>
-        );
-      },
     },
     {
       id: 'totalResponses',
@@ -193,22 +119,28 @@ export default function Page() {
       cell: ({ row }) => <div>{row.original.totalHired || 0}</div>,
     },
     {
-      id: 'totalCreditPurchase',
-      accessorKey: 'totalCreditPurchase',
-      header: 'Total Credit Purchase',
-      cell: ({ row }) => <div>{row.original.totalCreditPurchase || 0}</div>,
+      id: 'totalHireRequests',
+      accessorKey: 'totalHireRequests',
+      header: 'Total Hire Requests',
+      cell: ({ row }) => <div>{row.original.totalHireRequests || 0}</div>,
     },
     {
-      id: 'totalCreditExpense',
-      accessorKey: 'totalCreditExpense',
-      header: 'Total Credit Expense',
-      cell: ({ row }) => <div>{row.original.totalCreditExpense || 0}</div>,
+      id: 'totalCreditsPurchased',
+      accessorKey: 'totalCreditsPurchased',
+      header: 'Total Credit Purchased',
+      cell: ({ row }) => <div>{row.original.totalCreditsPurchased || 0}</div>,
     },
     {
-      id: 'totalPaymentMethods',
-      accessorKey: 'totalPaymentMethods',
-      header: 'Total Payment Methods',
-      cell: ({ row }) => <div>{row.original.totalPaymentMethods || 0}</div>,
+      id: 'totalCreditsUsed',
+      accessorKey: 'totalCreditsUsed',
+      header: 'Total Credit Used',
+      cell: ({ row }) => <div>{row.original.totalCreditsUsed || 0}</div>,
+    },
+    {
+      id: 'availableCredits',
+      accessorKey: 'availableCredits',
+      header: 'Available Credits',
+      cell: ({ row }) => <div>{row.original.availableCredits || 0}</div>,
     },
     {
       id: 'actions',
