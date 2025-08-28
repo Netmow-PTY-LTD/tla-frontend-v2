@@ -28,6 +28,7 @@ export function UserDataTable({
   page,
   setPage,
   totalPages,
+  total,
   isFetching,
   search,
   setSearch,
@@ -60,9 +61,7 @@ export function UserDataTable({
         <Input
           placeholder="Filter names..."
           value={search ?? ''}
-          onChange={(event) =>
-            setSearch(event.target.value)
-          }
+          onChange={(event) => setSearch(event.target.value)}
           className="max-w-sm"
         />
       </div>
@@ -118,26 +117,32 @@ export function UserDataTable({
       </div>
 
       {/* Pagination Controls */}
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-          disabled={page <= 1}
-        >
-          Previous
-        </Button>
-        <span className="text-sm">
-          Page {page} of {totalPages}
-        </span>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-          disabled={page >= totalPages}
-        >
-          Next
-        </Button>
+      <div className="flex items-center justify-between space-x-2 py-4">
+        <div className="font-semibold">
+          Total {data[0]?.regUserType === 'lawyer' ? 'Lawyers' : 'Clients'}:{' '}
+          {total}
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+            disabled={page <= 1}
+          >
+            Previous
+          </Button>
+          <span className="text-sm">
+            Page {page} of {totalPages}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={page >= totalPages}
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </div>
   );

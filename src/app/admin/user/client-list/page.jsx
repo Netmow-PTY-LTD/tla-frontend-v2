@@ -1,6 +1,3 @@
-
-
-
 'use client';
 import { DataTable } from '@/components/common/DataTable';
 import { Button } from '@/components/ui/button';
@@ -14,7 +11,17 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import { Archive, CheckCircle, Circle, Clock, MoreHorizontal, Pencil, Slash, Trash2, View } from 'lucide-react';
+import {
+  Archive,
+  CheckCircle,
+  Circle,
+  Clock,
+  MoreHorizontal,
+  Pencil,
+  Slash,
+  Trash2,
+  View,
+} from 'lucide-react';
 import { useAllUsersQuery } from '@/store/features/admin/userApiService';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -23,23 +30,21 @@ import { useChangeUserAccountStatsMutation } from '@/store/features/auth/authApi
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { UserDataTable } from '../_components/UserDataTable';
 
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 // Enable relative time support
 dayjs.extend(relativeTime);
 
 export default function Page() {
-
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null); // state for selected lead
 
-
   // Filters
   const [search, setSearch] = useState('');
-   const [debouncedSearch, setDebouncedSearch] = useState(search);
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
   const [role, setRole] = useState();
-  const [regUserType, setRegUserType] = useState("client");
+  const [regUserType, setRegUserType] = useState('client');
   const [accountStatus, setAccountStatus] = useState();
   const [isVerifiedAccount, setIsVerifiedAccount] = useState();
   const [isPhoneVerified, setIsPhoneVerified] = useState();
@@ -50,11 +55,10 @@ export default function Page() {
   const [sortBy, setSortBy] = useState('createdAt');
   const [sortOrder, setSortOrder] = useState('desc');
 
-
   const { data: clientlist, isFetching } = useAllUsersQuery({
     page,
     limit,
-    search:debouncedSearch,
+    search: debouncedSearch,
     role,
     regUserType,
     accountStatus,
@@ -64,21 +68,16 @@ export default function Page() {
     sortOrder,
   });
 
-
   // Debounce effect
-    useEffect(() => {
-      const handler = setTimeout(() => {
-        setDebouncedSearch(search);
-      }, 500); // 500ms debounce
-  
-      return () => {
-        clearTimeout(handler);
-      };
-    }, [search]);
-  
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500); // 500ms debounce
 
-
-
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [search]);
 
   const [changeAccoutStatus] = useChangeUserAccountStatsMutation();
 
@@ -86,25 +85,19 @@ export default function Page() {
     try {
       const payload = {
         userId,
-        data: { accountStatus: status }
-      }
+        data: { accountStatus: status },
+      };
 
-      const res = await changeAccoutStatus(payload).unwrap()
-
+      const res = await changeAccoutStatus(payload).unwrap();
 
       if (res.success) {
         showSuccessToast(res?.message || 'Status Update Successful');
       }
-
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);
     }
-
-  }
-
-
-
+  };
 
   const columns = [
     {
@@ -141,20 +134,22 @@ export default function Page() {
     {
       accessorKey: 'email',
       header: 'Email',
-      cell: ({ row }) => <div className="lowercase">{row.getValue('email')}</div>,
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue('email')}</div>
+      ),
     },
-    
+
     {
       id: 'isVerifiedAccount',
       accessorKey: 'isVerifiedAccount',
       header: 'Email Verified',
       cell: ({ row }) => {
-        const isVerifiedAccount = row.original?.isVerifiedAccount
+        const isVerifiedAccount = row.original?.isVerifiedAccount;
         return (
           <div className="capitalize">
-            {isVerifiedAccount ? "Verified Account" : "Not Verified"}
+            {isVerifiedAccount ? 'Verified Account' : 'Not Verified'}
           </div>
-        )
+        );
       },
     },
     {
@@ -165,41 +160,41 @@ export default function Page() {
     {
       accessorKey: 'address',
       header: 'Address',
-      cell: ({ row }) => (
-        <div>{row.original?.profile.address || '-'}</div>
-      ),
+      cell: ({ row }) => <div>{row.original?.profile.address || '-'}</div>,
     },
 
- {
-      accessorKey: "isOnline",
-      header: "Status",
+    {
+      accessorKey: 'isOnline',
+      header: 'Status',
       cell: ({ row }) => {
         const isOnline = row.original?.isOnline;
 
         return (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <Circle
-              size={12}
-              className={isOnline ? "text-green-500" : "text-gray-400"}
-              fill={isOnline ? "green" : "gray"}
+              size={8}
+              className={isOnline ? 'text-green-500' : 'text-gray-300'}
+              fill={isOnline ? 'green' : 'gray'}
             />
-            <span className="text-sm font-medium">
-              {isOnline ? "Online" : "Offline"}
+            <span className="text-[13px] font-medium">
+              {isOnline ? 'Online' : 'Offline'}
             </span>
           </div>
         );
       },
     },
     {
-      accessorKey: "lastSeen",
-      header: "Last Seen",
+      accessorKey: 'lastSeen',
+      header: 'Last Seen',
       cell: ({ row }) => {
         const isOnline = row.original?.isOnline;
         const lastSeen = row.original?.lastSeen;
 
         // If online, show "Now Online" instead of last seen time
         if (isOnline) {
-          return <span className="text-green-500 font-semibold">Now Online</span>;
+          return (
+            <span className="text-green-500 font-semibold">Now Online</span>
+          );
         }
 
         // If offline but no lastSeen value, fallback
@@ -256,7 +251,10 @@ export default function Page() {
               </DropdownMenuItem>
               {/* Details Page */}
               <DropdownMenuItem asChild>
-                <Link href={`/admin/user/${userId}`} className="flex items-center gap-2 cursor-pointer ">
+                <Link
+                  href={`/admin/user/${userId}`}
+                  className="flex items-center gap-2 cursor-pointer "
+                >
                   <View className="w-4 h-4" />
                   <span>View</span>
                 </Link>
@@ -267,7 +265,10 @@ export default function Page() {
               <DropdownMenuLabel>Change Status</DropdownMenuLabel>
 
               {[
-                { status: 'approved', icon: <CheckCircle className="w-4 h-4" /> },
+                {
+                  status: 'approved',
+                  icon: <CheckCircle className="w-4 h-4" />,
+                },
                 { status: 'pending', icon: <Clock className="w-4 h-4" /> },
                 { status: 'suspended', icon: <Slash className="w-4 h-4" /> },
                 { status: 'archived', icon: <Archive className="w-4 h-4" /> },
@@ -283,16 +284,12 @@ export default function Page() {
                   </div>
                 </DropdownMenuItem>
               ))}
-
-
             </DropdownMenuContent>
           </DropdownMenu>
         );
       },
     },
   ];
-
-
 
   return (
     <div>
@@ -304,13 +301,17 @@ export default function Page() {
         page={page}
         setPage={setPage}
         totalPages={clientlist?.pagination?.totalPage || 1}
+        total={clientlist?.pagination?.total || 0}
         isFetching={isFetching}
         search={search}
         setSearch={setSearch}
       />
 
-      <UserDetailsModal data={selectedUser} open={open}
-        onOpenChange={setOpen} />
+      <UserDetailsModal
+        data={selectedUser}
+        open={open}
+        onOpenChange={setOpen}
+      />
     </div>
   );
 }
