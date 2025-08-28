@@ -82,8 +82,7 @@ export default function Page() {
     };
   }, [search]);
 
-
-  console.log('check user list', userList)
+  console.log('check user list', userList);
   const [changeAccoutStatus] = useChangeUserAccountStatsMutation();
 
   const handleChangeStatus = async (userId, status) => {
@@ -267,8 +266,8 @@ export default function Page() {
       cell: ({ row }) => <div>{row.original?.profile.address || '-'}</div>,
     },
     {
-      accessorKey: "isOnline",
-      header: "Status",
+      accessorKey: 'isOnline',
+      header: 'Status',
       cell: ({ row }) => {
         const isOnline = row.original?.isOnline;
 
@@ -276,26 +275,28 @@ export default function Page() {
           <div className="flex items-center gap-2">
             <Circle
               size={12}
-              className={isOnline ? "text-green-500" : "text-gray-400"}
-              fill={isOnline ? "green" : "gray"}
+              className={isOnline ? 'text-green-500' : 'text-gray-400'}
+              fill={isOnline ? 'green' : 'gray'}
             />
             <span className="text-sm font-medium">
-              {isOnline ? "Online" : "Offline"}
+              {isOnline ? 'Online' : 'Offline'}
             </span>
           </div>
         );
       },
     },
     {
-      accessorKey: "lastSeen",
-      header: "Last Seen",
+      accessorKey: 'lastSeen',
+      header: 'Last Seen',
       cell: ({ row }) => {
         const isOnline = row.original?.isOnline;
         const lastSeen = row.original?.lastSeen;
 
         // If online, show "Now Online" instead of last seen time
         if (isOnline) {
-          return <span className="text-green-500 font-semibold">Now Online</span>;
+          return (
+            <span className="text-green-500 font-semibold">Now Online</span>
+          );
         }
 
         // If offline but no lastSeen value, fallback
@@ -402,6 +403,7 @@ export default function Page() {
         page={page}
         setPage={setPage}
         totalPages={userList?.pagination?.totalPage || 1}
+        total={userList?.pagination?.total || 0}
         isFetching={isFetching}
         search={search}
         setSearch={setSearch}

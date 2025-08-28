@@ -165,7 +165,7 @@ export default function RegisterStepOne() {
                           <FormControl>
                             <Input
                               placeholder="John Doe"
-                              className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA]"
+                              className="h-[44px] bg-[#F2F2F2] border-[#DCE2EA] focus-visible:ring-inset"
                               {...field}
                               onChange={(e) => {
                                 field.onChange(e);
@@ -194,7 +194,7 @@ export default function RegisterStepOne() {
                           placeholder="Type to search..."
                           value={inputValue}
                           onChange={(e) => setInputValue(e.target.value)}
-                          className="tla-form-control"
+                          className="tla-form-control focus-visible:ring-inset"
                           autoComplete="off"
                         />
 
