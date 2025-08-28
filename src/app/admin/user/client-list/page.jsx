@@ -351,7 +351,7 @@ export default function Page() {
 
   return (
     <div>
-      <h1>Client List </h1>
+      <h1 className="text-3xl font-semibold">Client List </h1>
       <UserDataTable
         data={clientlist?.data || []}
         columns={columns}
@@ -360,6 +360,7 @@ export default function Page() {
         setPage={setPage}
         totalPages={clientlist?.pagination?.totalPage || 1}
         total={clientlist?.pagination?.total || 0}
+        limit={limit}
         isFetching={isFetching}
         search={search}
         setSearch={setSearch}

@@ -29,7 +29,11 @@ import { useAllUsersQuery } from '@/store/features/admin/userApiService';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { UserDetailsModal } from '../_components/UserDetailsModal';
-import { useChangeUserAccountStatsMutation, useUpdateUserDataMutation, useUpdateUserDefalultPicMutation } from '@/store/features/auth/authApiService';
+import {
+  useChangeUserAccountStatsMutation,
+  useUpdateUserDataMutation,
+  useUpdateUserDefalultPicMutation,
+} from '@/store/features/auth/authApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { UserDataTable } from '../_components/UserDataTable';
 import dayjs from 'dayjs';
@@ -141,8 +145,9 @@ export default function Page() {
       header: 'Profile Picture',
       cell: ({ row }) => {
         const profile = row.original.profile;
-        const [uploadProfilePicture, { isLoading }] = useUpdateUserDefalultPicMutation();
-        console.log("profile.profilePicture", profile)
+        const [uploadProfilePicture, { isLoading }] =
+          useUpdateUserDefalultPicMutation();
+        console.log('profile.profilePicture', profile);
         const handleUpload = async (e) => {
           const file = e.target.files?.[0];
           if (file) {
@@ -154,7 +159,7 @@ export default function Page() {
               const payload = {
                 userId: profile.user,
                 data: formData,
-              }
+              };
 
               // Call RTK Query mutation
               await uploadProfilePicture(payload).unwrap();
@@ -189,7 +194,6 @@ export default function Page() {
         );
       },
     },
-
 
     {
       accessorKey: 'email',
@@ -387,7 +391,7 @@ export default function Page() {
 
   return (
     <div>
-      <h1>Lawyer List </h1>
+      <h1 className="text-3xl font-semibold">Lawyer List </h1>
       <UserDataTable
         data={userList?.data || []}
         columns={columns}
@@ -396,6 +400,7 @@ export default function Page() {
         setPage={setPage}
         totalPages={userList?.pagination?.totalPage || 1}
         total={userList?.pagination?.total || 0}
+        limit={limit}
         isFetching={isFetching}
         search={search}
         setSearch={setSearch}

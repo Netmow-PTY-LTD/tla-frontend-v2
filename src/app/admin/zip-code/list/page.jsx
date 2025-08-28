@@ -241,8 +241,10 @@ export default function Page() {
         columns={columns}
         pagination={ZipCodeList?.pagination || { page: 1, totalPage: 1 }}
         totalPage={ZipCodeList?.pagination?.totalPage || 1}
+        total={ZipCodeList?.pagination?.total || 0}
         page={page}
         onPageChange={setPage}
+        limit={LIMIT}
         onSearch={(val) => {
           setSearch(val);
           setPage(1); // reset to first page when searching

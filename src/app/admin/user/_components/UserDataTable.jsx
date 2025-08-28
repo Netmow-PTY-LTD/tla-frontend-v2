@@ -29,6 +29,7 @@ export function UserDataTable({
   setPage,
   totalPages,
   total,
+  limit,
   isFetching,
   search,
   setSearch,
@@ -118,9 +119,14 @@ export function UserDataTable({
 
       {/* Pagination Controls */}
       <div className="flex items-center justify-between space-x-2 py-4">
-        <div className="font-semibold">
-          Total {data[0]?.regUserType === 'lawyer' ? 'Lawyers' : 'Clients'}:{' '}
-          {total}
+        <div className="text-sm font-medium">
+          Showing {(page - 1) * limit + 1}–{Math.min(page * limit, total)} of{' '}
+          {total}{' '}
+          {data[0]?.regUserType === 'lawyer'
+            ? 'Lawyers'
+            : data[0]?.regUserType === 'client'
+            ? 'Clients'
+            : 'Users'}
         </div>
         <div className="flex items-center gap-2">
           <Button
