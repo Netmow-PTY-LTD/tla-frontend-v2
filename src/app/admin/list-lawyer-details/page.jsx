@@ -6,3 +6,5 @@ export default function ClientWiseCases() {
 
   return <div>Lawyer details</div>;
 }
+
+

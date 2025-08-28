@@ -25,6 +25,7 @@ import { UserDataTable } from '../_components/UserDataTable';
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import resizeAndConvertToWebP from '@/components/UIComponents/resizeAndConvertToWebP';
 
 // Enable relative time support
 dayjs.extend(relativeTime);
@@ -51,7 +52,7 @@ export default function Page() {
   const [sortOrder, setSortOrder] = useState('desc');
 
 
-  const { data: clientlist, isFetching } = useAllUsersQuery({
+  const { data: clientlist, isFetching, refetch } = useAllUsersQuery({
     page,
     limit,
     search: debouncedSearch,
@@ -149,18 +150,25 @@ export default function Page() {
         const handleUpload = async (e) => {
           const file = e.target.files?.[0];
           if (file) {
+            const webpFile = await resizeAndConvertToWebP(file, 500, 0.8);
             console.log('Upload image for:', profile, file);
             try {
               const formData = new FormData();
               // Append the image file
-              formData.append('file', file);
+              formData.append('file', webpFile);
               const payload = {
                 userId: profile.user,
                 data: formData,
               }
 
               // Call RTK Query mutation
-              await uploadProfilePicture(payload).unwrap();
+              const res = await uploadProfilePicture(payload).unwrap();
+
+              if (res.success) {
+                refetch()
+
+                console.log('Upload successful');
+              }
               console.log('Upload successful');
               // Optionally, update row locally or refetch table
             } catch (err) {
