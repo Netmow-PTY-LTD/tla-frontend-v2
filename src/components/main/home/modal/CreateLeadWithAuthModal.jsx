@@ -496,327 +496,329 @@ export default function CreateLeadWithAuthModal({
       border="border-0"
       showCloseButton={true}
     >
-      {isQuestionsLoading || !selectedServiceWiseQuestions?.length ? (
-        <div className="flex items-center justify-center gap-2 pt-6 px-6">
-          <Loader className="w-4 h-4 animate-spin" /> Loading question...
-        </div>
-      ) : step < totalQuestions ? (
-        viewData?.question ? (
-          <div className="space-y-4">
-            {step === 0 && selectedService?.serviceField?.bannerImage && (
-              <div
-                className="w-full max-h-[120px] bg-cover bg-center bg-no-repeat rounded-t-lg"
-                style={{
-                  backgroundImage: `url(${selectedService.serviceField.bannerImage})`,
-                  height: '120px',
-                }}
-              />
-            )}
-            <div className="pt-6 px-6">
-              {totalSteps > 0 && (
+      <div className="max-h-[90vh] overflow-y-auto">
+        {isQuestionsLoading || !selectedServiceWiseQuestions?.length ? (
+          <div className="flex items-center justify-center gap-2 pt-6 px-6">
+            <Loader className="w-4 h-4 animate-spin" /> Loading question...
+          </div>
+        ) : step < totalQuestions ? (
+          viewData?.question ? (
+            <div className="space-y-4">
+              {step === 0 && selectedService?.serviceField?.bannerImage && (
                 <div
-                  className={`w-full h-2 bg-gray-200 rounded-full mb-6 ${
-                    step === 0 ? '' : 'mt-8'
-                  }`}
-                >
-                  <div
-                    className="h-2 bg-green-600 rounded-full transition-all duration-300"
-                    style={{
-                      width: `${Math.min(
-                        ((step + 1) / totalSteps) * 100,
-                        100
-                      )}%`,
-                    }}
-                  />
-                </div>
+                  className="w-full max-h-[120px] bg-cover bg-center bg-no-repeat rounded-t-lg"
+                  style={{
+                    backgroundImage: `url(${selectedService.serviceField.bannerImage})`,
+                    height: '120px',
+                  }}
+                />
               )}
-              <h4 className="text-[24px] font-semibold text-center mb-8">
-                {viewData.question}
-              </h4>
-              <div className="border border-1 flex flex-col gap-2 rounded-lg max-h-[350px] overflow-y-auto">
-                {viewData?.options?.length > 0 &&
-                  viewData?.options?.map((option, index) => {
-                    const isLast = index === viewData?.options?.length - 1;
-                    const isOther = option?.name?.toLowerCase() === 'other';
-                    const isChecked = option?.is_checked;
+              <div className="pt-6 px-6">
+                {totalSteps > 0 && (
+                  <div
+                    className={`w-full h-2 bg-gray-200 rounded-full mb-6 ${
+                      step === 0 ? '' : 'mt-8'
+                    }`}
+                  >
+                    <div
+                      className="h-2 bg-green-600 rounded-full transition-all duration-300"
+                      style={{
+                        width: `${Math.min(
+                          ((step + 1) / totalSteps) * 100,
+                          100
+                        )}%`,
+                      }}
+                    />
+                  </div>
+                )}
+                <h4 className="text-[24px] font-semibold text-center mb-8">
+                  {viewData.question}
+                </h4>
+                <div className="border border-1 flex flex-col gap-2 rounded-lg">
+                  {viewData?.options?.length > 0 &&
+                    viewData?.options?.map((option, index) => {
+                      const isLast = index === viewData?.options?.length - 1;
+                      const isOther = option?.name?.toLowerCase() === 'other';
+                      const isChecked = option?.is_checked;
 
-                    return (
-                      <label
-                        key={option._id || index}
-                        className={`flex gap-3 px-4 py-3 ${
-                          !isLast ? 'border-b' : ''
-                        }`}
-                      >
-                        <span className="flex items-center gap-3">
-                          <input
-                            type={
-                              viewData.questionType === 'checkbox'
-                                ? 'checkbox'
-                                : 'radio'
-                            }
-                            name={`question-${viewData._id}`}
-                            onChange={(e) =>
-                              handleOptionChange(option._id, e.target.checked)
-                            }
-                            checked={isChecked}
-                          />
+                      return (
+                        <label
+                          key={option._id || index}
+                          className={`flex gap-3 px-4 py-3 ${
+                            !isLast ? 'border-b' : ''
+                          }`}
+                        >
+                          <span className="flex items-center gap-3">
+                            <input
+                              type={
+                                viewData.questionType === 'checkbox'
+                                  ? 'checkbox'
+                                  : 'radio'
+                              }
+                              name={`question-${viewData._id}`}
+                              onChange={(e) =>
+                                handleOptionChange(option._id, e.target.checked)
+                              }
+                              checked={isChecked}
+                            />
 
-                          {/* Render name only if not 'Other' */}
-                          {option?.name !== 'Other' && (
-                            <span>{option?.name}</span>
+                            {/* Render name only if not 'Other' */}
+                            {option?.name !== 'Other' && (
+                              <span>{option?.name}</span>
+                            )}
+                          </span>
+
+                          {/* Render input only if option is 'Other' */}
+                          {isOther && (
+                            <input
+                              type="text"
+                              id={`${option._id}-other`}
+                              placeholder="Other"
+                              className="border rounded px-2 py-1 w-full"
+                              // onChange={(e) =>
+                              //   handleOptionChange(option._id, e.target.value)
+                              // }
+                            />
                           )}
-                        </span>
+                        </label>
+                      );
+                    })}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center text-gray-500 mt-4">
+              No question found
+            </div>
+          )
+        ) : step === totalQuestions ? (
+          <div className="space-y-6 pt-6 px-6">
+            {totalSteps > 0 && (
+              <div className={`w-full h-2 bg-gray-200 rounded-full mb-6 mt-8`}>
+                <div
+                  className="h-2 bg-green-600 rounded-full transition-all duration-300"
+                  style={{
+                    width: `${Math.min(((step + 1) / totalSteps) * 100, 100)}%`,
+                  }}
+                />
+              </div>
+            )}
+            <h4 className="text-[24px] font-semibold text-center">
+              When are you looking to get started?
+            </h4>
+            <div className="border border-1 flex flex-col gap-2 rounded-lg">
+              {StartFrequencyOptions.map((frequency) => {
+                const isLast = frequency.value === 'not_sure';
+                return (
+                  <label
+                    className={`flex gap-3 px-4 py-3 ${
+                      !isLast ? 'border-b' : ''
+                    }`}
+                    key={frequency.id}
+                  >
+                    <input
+                      type="radio"
+                      name="frequency"
+                      value={frequency.value}
+                      checked={leadPriority === frequency.value}
+                      onChange={(e) => setLeadPriority(e.target.value)}
+                    />
+                    <span>{frequency.label}</span>
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+        ) : step === totalQuestions + 1 ? (
+          <div className="space-y-6 pt-6 px-6">
+            {totalSteps > 0 && (
+              <div className={`w-full h-2 bg-gray-200 rounded-full mb-6 mt-8`}>
+                <div
+                  className="h-2 bg-green-600 rounded-full transition-all duration-300"
+                  style={{
+                    width: `${Math.min(((step + 1) / totalSteps) * 100, 100)}%`,
+                  }}
+                />
+              </div>
+            )}
+            <h4 className="text-[24px] font-semibold text-center">
+              Want to share anything more?
+            </h4>
+            <label className="flex flex-col gap-2">
+              <span className="text-sm font-medium">Additional Details</span>
+              <textarea
+                className="border rounded px-3 py-2 min-h-[100px]"
+                value={additionalDetails}
+                onChange={(e) => setAdditionalDetails(e.target.value)}
+                placeholder="Provide any specific info or instructions for the service..."
+              />
+            </label>
+          </div>
+        ) : step === totalQuestions + 2 ? (
+          <div className="space-y-6 pt-6 px-6">
+            {totalSteps > 0 && (
+              <div className={`w-full h-2 bg-gray-200 rounded-full mb-6 mt-8`}>
+                <div
+                  className="h-2 bg-green-600 rounded-full transition-all duration-300"
+                  style={{
+                    width: `${Math.min(((step + 1) / totalSteps) * 100, 100)}%`,
+                  }}
+                />
+              </div>
+            )}
+            <h4 className="text-[24px] font-semibold text-center">
+              What is your estimated budget?
+            </h4>
 
-                        {/* Render input only if option is 'Other' */}
-                        {isOther && (
-                          <input
-                            type="text"
-                            id={`${option._id}-other`}
-                            placeholder="Other"
-                            className="border rounded px-2 py-1 w-full"
-                            // onChange={(e) =>
-                            //   handleOptionChange(option._id, e.target.value)
-                            // }
-                          />
-                        )}
-                      </label>
-                    );
-                  })}
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium">Estimated Budget</label>
+              <div className="flex gap-3 items-center">
+                <input
+                  type="number"
+                  min={0}
+                  step={1}
+                  className="border rounded px-3 py-2 w-full"
+                  value={budgetAmount}
+                  onChange={(e) => setBudgetAmount(e.target.value)}
+                  placeholder="Enter amount"
+                />
+                <input
+                  type="text"
+                  className="border rounded px-3 py-2 w-20 text-center"
+                  value={country.currency}
+                  placeholder='currency i.e."AUD"'
+                  readOnly
+                />
               </div>
             </div>
           </div>
-        ) : (
-          <div className="text-center text-gray-500 mt-4">
-            No question found
-          </div>
-        )
-      ) : step === totalQuestions ? (
-        <div className="space-y-6 pt-6 px-6">
-          {totalSteps > 0 && (
-            <div className={`w-full h-2 bg-gray-200 rounded-full mb-6 mt-8`}>
-              <div
-                className="h-2 bg-green-600 rounded-full transition-all duration-300"
-                style={{
-                  width: `${Math.min(((step + 1) / totalSteps) * 100, 100)}%`,
-                }}
-              />
-            </div>
-          )}
-          <h4 className="text-[24px] font-semibold text-center">
-            When are you looking to get started?
-          </h4>
-          <div className="border border-1 flex flex-col gap-2 rounded-lg">
-            {StartFrequencyOptions.map((frequency) => {
-              const isLast = frequency.value === 'not_sure';
-              return (
-                <label
-                  className={`flex gap-3 px-4 py-3 ${
-                    !isLast ? 'border-b' : ''
-                  }`}
-                  key={frequency.id}
-                >
-                  <input
-                    type="radio"
-                    name="frequency"
-                    value={frequency.value}
-                    checked={leadPriority === frequency.value}
-                    onChange={(e) => setLeadPriority(e.target.value)}
-                  />
-                  <span>{frequency.label}</span>
-                </label>
-              );
-            })}
-          </div>
-        </div>
-      ) : step === totalQuestions + 1 ? (
-        <div className="space-y-6 pt-6 px-6">
-          {totalSteps > 0 && (
-            <div className={`w-full h-2 bg-gray-200 rounded-full mb-6 mt-8`}>
-              <div
-                className="h-2 bg-green-600 rounded-full transition-all duration-300"
-                style={{
-                  width: `${Math.min(((step + 1) / totalSteps) * 100, 100)}%`,
-                }}
-              />
-            </div>
-          )}
-          <h4 className="text-[24px] font-semibold text-center">
-            Want to share anything more?
-          </h4>
-          <label className="flex flex-col gap-2">
-            <span className="text-sm font-medium">Additional Details</span>
-            <textarea
-              className="border rounded px-3 py-2 min-h-[100px]"
-              value={additionalDetails}
-              onChange={(e) => setAdditionalDetails(e.target.value)}
-              placeholder="Provide any specific info or instructions for the service..."
-            />
-          </label>
-        </div>
-      ) : step === totalQuestions + 2 ? (
-        <div className="space-y-6 pt-6 px-6">
-          {totalSteps > 0 && (
-            <div className={`w-full h-2 bg-gray-200 rounded-full mb-6 mt-8`}>
-              <div
-                className="h-2 bg-green-600 rounded-full transition-all duration-300"
-                style={{
-                  width: `${Math.min(((step + 1) / totalSteps) * 100, 100)}%`,
-                }}
-              />
-            </div>
-          )}
-          <h4 className="text-[24px] font-semibold text-center">
-            What is your estimated budget?
-          </h4>
-
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium">Estimated Budget</label>
-            <div className="flex gap-3 items-center">
-              <input
-                type="number"
-                min={0}
-                step={1}
-                className="border rounded px-3 py-2 w-full"
-                value={budgetAmount}
-                onChange={(e) => setBudgetAmount(e.target.value)}
-                placeholder="Enter amount"
-              />
-              <input
-                type="text"
-                className="border rounded px-3 py-2 w-20 text-center"
-                value={country.currency}
-                placeholder='currency i.e."AUD"'
-                readOnly
-              />
-            </div>
-          </div>
-        </div>
-      ) : step === totalSteps - 1 ? (
-        <div className="space-y-4 pt-6 px-6">
-          {totalSteps > 0 && (
-            <div className={`w-full h-2 bg-gray-200 rounded-full mb-6 mt-8`}>
-              <div
-                className="h-2 bg-green-600 rounded-full transition-all duration-300"
-                style={{
-                  width: `${Math.min(((step + 1) / totalSteps) * 100, 100)}%`,
-                }}
-              />
-            </div>
-          )}
-          <h4 className="text-[24px] font-semibold text-center">
-            Where do you need the service?
-          </h4>
-          <div className="text-center">
-            The postcode or town for the address where you want the service.
-          </div>
-          <Combobox
-            value={zipCode ?? ''}
-            onChange={(selectedId) => {
-              setZipCode(selectedId);
-
-              const selectedZip = allZipCodes?.data?.find(
-                (z) => z._id === selectedId
-              );
-              if (selectedZip) {
-                setPostalCode(selectedZip.postalCode);
-                setLatitude(selectedZip.latitude);
-                setLongitude(selectedZip.longitude);
-                setAddress(selectedZip.zipcode); // show proper text
-                setSearchZipCode(selectedZip.zipcode);
-              }
-            }}
-          >
-            <div className="relative">
-              <ComboboxInput
-                className="border border-gray-300 rounded-md w-full h-[44px] px-4"
-                onChange={(event) => {
-                  const value = event.target.value;
-                  setSearchZipCode(value); // when typing, zipCode is string
-                }}
-                onKeyUp={(e) => handleZipCodeSearch(e)}
-                displayValue={(id) =>
-                  allZipCodes?.data?.find((z) => z._id === id)?.zipcode || ''
-                }
-                placeholder="Select a postcode"
-                autoComplete="off"
-              />
-
-              <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
-                <ChevronDown className="h-4 w-4 text-gray-500" />
-              </ComboboxButton>
-              {newZipCodeList?.length > 0 && (
-                <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  {newZipCodeList?.slice(0, 10).map((item) => (
-                    <ComboboxOption
-                      key={item._id}
-                      value={item._id}
-                      className={({ active }) =>
-                        cn(
-                          'cursor-pointer select-none relative py-2 px-6',
-                          active ? 'bg-blue-100 text-black' : 'text-gray-900'
-                        )
-                      }
-                    >
-                      {({ selected }) => (
-                        <>
-                          <span
-                            className={cn('block truncate', {
-                              'font-medium': selected,
-                              'font-normal': !selected,
-                            })}
-                          >
-                            {item.zipcode}
-                          </span>
-                          {selected && (
-                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
-                              <Check className="h-4 w-4" />
-                            </span>
-                          )}
-                        </>
-                      )}
-                    </ComboboxOption>
-                  ))}
-                </ComboboxOptions>
-              )}
-            </div>
-          </Combobox>
-        </div>
-      ) : null}
-
-      {isQuestionsLoading ||
-        (selectedServiceWiseQuestions?.length > 0 && (
-          <div
-            className={`flex px-6 ${
-              step === 0 ? 'justify-end' : 'justify-between'
-            } mt-8`}
-          >
-            {step !== 0 && (
-              <Button
-                variant="outline"
-                onClick={handleBack}
-                disabled={step === 0}
-              >
-                Back
-              </Button>
+        ) : step === totalSteps - 1 ? (
+          <div className="space-y-4 pt-6 px-6">
+            {totalSteps > 0 && (
+              <div className={`w-full h-2 bg-gray-200 rounded-full mb-6 mt-8`}>
+                <div
+                  className="h-2 bg-green-600 rounded-full transition-all duration-300"
+                  style={{
+                    width: `${Math.min(((step + 1) / totalSteps) * 100, 100)}%`,
+                  }}
+                />
+              </div>
             )}
+            <h4 className="text-[24px] font-semibold text-center">
+              Where do you need the service?
+            </h4>
+            <div className="text-center">
+              The postcode or town for the address where you want the service.
+            </div>
+            <Combobox
+              value={zipCode ?? ''}
+              onChange={(selectedId) => {
+                setZipCode(selectedId);
 
-            <Button
-              onClick={handleNext}
-              disabled={isNextDisabled || isSubmitting}
+                const selectedZip = allZipCodes?.data?.find(
+                  (z) => z._id === selectedId
+                );
+                if (selectedZip) {
+                  setPostalCode(selectedZip.postalCode);
+                  setLatitude(selectedZip.latitude);
+                  setLongitude(selectedZip.longitude);
+                  setAddress(selectedZip.zipcode); // show proper text
+                  setSearchZipCode(selectedZip.zipcode);
+                }
+              }}
             >
-              {isSubmitting ? (
-                <span className="flex items-center gap-2">
-                  <Loader className="w-4 h-4 animate-spin" />
-                  Submitting...
-                </span>
-              ) : step === totalSteps - 1 ? (
-                'Finish'
-              ) : (
-                'Next'
-              )}
-            </Button>
+              <div className="relative z-[9]">
+                <ComboboxInput
+                  className="border border-gray-300 rounded-md w-full h-[44px] px-4"
+                  onChange={(event) => {
+                    const value = event.target.value;
+                    setSearchZipCode(value); // when typing, zipCode is string
+                  }}
+                  onKeyUp={(e) => handleZipCodeSearch(e)}
+                  displayValue={(id) =>
+                    allZipCodes?.data?.find((z) => z._id === id)?.zipcode || ''
+                  }
+                  placeholder="Select a postcode"
+                  autoComplete="off"
+                />
+
+                <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
+                  <ChevronDown className="h-4 w-4 text-gray-500" />
+                </ComboboxButton>
+                {newZipCodeList?.length > 0 && (
+                  <ComboboxOptions className="absolute z-[99999] mt-1 max-h-60 w-full overflow-y-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    {newZipCodeList?.slice(0, 10).map((item) => (
+                      <ComboboxOption
+                        key={item._id}
+                        value={item._id}
+                        className={({ active }) =>
+                          cn(
+                            'cursor-pointer select-none relative py-2 px-6',
+                            active ? 'bg-blue-100 text-black' : 'text-gray-900'
+                          )
+                        }
+                      >
+                        {({ selected }) => (
+                          <>
+                            <span
+                              className={cn('block truncate', {
+                                'font-medium': selected,
+                                'font-normal': !selected,
+                              })}
+                            >
+                              {item.zipcode}
+                            </span>
+                            {selected && (
+                              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
+                                <Check className="h-4 w-4" />
+                              </span>
+                            )}
+                          </>
+                        )}
+                      </ComboboxOption>
+                    ))}
+                  </ComboboxOptions>
+                )}
+              </div>
+            </Combobox>
           </div>
-        ))}
+        ) : null}
+
+        {isQuestionsLoading ||
+          (selectedServiceWiseQuestions?.length > 0 && (
+            <div
+              className={`flex px-6 ${
+                step === 0 ? 'justify-end' : 'justify-between'
+              } mt-8`}
+            >
+              {step !== 0 && (
+                <Button
+                  variant="outline"
+                  onClick={handleBack}
+                  disabled={step === 0}
+                >
+                  Back
+                </Button>
+              )}
+
+              <Button
+                onClick={handleNext}
+                disabled={isNextDisabled || isSubmitting}
+              >
+                {isSubmitting ? (
+                  <span className="flex items-center gap-2">
+                    <Loader className="w-4 h-4 animate-spin" />
+                    Submitting...
+                  </span>
+                ) : step === totalSteps - 1 ? (
+                  'Finish'
+                ) : (
+                  'Next'
+                )}
+              </Button>
+            </div>
+          ))}
+      </div>
     </Modal>
   );
 }

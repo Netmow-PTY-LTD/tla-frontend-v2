@@ -31,7 +31,9 @@ export function ZipCodeDataTable({
   columns,
   pagination,
   page,
+  limit,
   totalPage,
+  total,
   onPageChange,
   onSearch,
   isFetching,
@@ -168,10 +170,11 @@ export function ZipCodeDataTable({
 
       {/* Pagination */}
       <div className="flex items-center justify-between py-4">
-        <div className="text-sm text-muted-foreground">
-          Page {page} of {totalPage}
+        <div className="text-sm">
+          Showing {(page - 1) * limit + 1}–{Math.min(page * limit, total)} of{' '}
+          {total} zip codes
         </div>
-        <div className="space-x-2">
+        <div className="space-x-2 flex items-center">
           <Button
             variant="outline"
             size="sm"
@@ -180,6 +183,9 @@ export function ZipCodeDataTable({
           >
             Previous
           </Button>
+          <div className="text-sm text-muted-foreground">
+            Page {page} of {totalPage}
+          </div>
           <Button
             variant="outline"
             size="sm"

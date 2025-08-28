@@ -16,6 +16,7 @@ export default function ResponseCard({
   onlineMap,
   selectedResponse,
   selectedResponseId,
+  searchParams,
 }) {
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
@@ -49,6 +50,21 @@ export default function ResponseCard({
     if (!text || typeof text !== 'string') return '';
     return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
   };
+  console.log('searchParams', searchParams.has('responseId'));
+  const handleClick = () => {
+    setIsLoading(true);
+    onViewDetails(user, user?._id);
+
+    if (searchParams.has('responseId')) {
+      const newParams = new URLSearchParams(searchParams.toString());
+      newParams.delete('responseId');
+
+      const queryString = newParams.toString();
+      const newUrl = queryString ? `?${queryString}` : window.location.pathname;
+
+      router.replace(newUrl, { scroll: false });
+    }
+  };
 
   const isSelected = selectedResponseId === user?._id;
   //console.log('selectedResponse', selectedResponse);
@@ -62,10 +78,7 @@ export default function ResponseCard({
           ? 'border-l-[3px] border-l-[var(--secondary-color)] rounded-tl-none rounded-bl-none'
           : 'border-transparent'
       }`}
-      onClick={() => {
-        setIsLoading(true);
-        onViewDetails(user, user?._id);
-      }}
+      onClick={handleClick}
     >
       {/* Header Section */}
       <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 p-3">
@@ -98,13 +111,7 @@ export default function ResponseCard({
             >
               {user?.leadId?.userProfileId?.address ?? ''}
             </div>
-          </div>
-          <p className="font-medium text-[11px] text-gray-600 mt-2 sm:mt-0 w-16 flex justify-end">
-            {/* {user?.leadId?.userProfileId?.user && formatRelativeTime(user?.leadId?.userProfileId?.user.isOnline)}
-             */}
-          </p>
-          <span className="text-xs">
-            <div className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-1 text-xs mt-1">
               <span
                 className={`ml-2 w-2 h-2 rounded-full ${
                   onlineMap[leadUser] ? 'bg-green-500' : 'bg-gray-400'
@@ -114,7 +121,10 @@ export default function ResponseCard({
                 {onlineMap[leadUser] ? 'Online' : 'Offline'}
               </span>
             </div>
-          </span>
+          </div>
+          <p className="font-medium text-[11px] text-gray-600 mt-2 sm:mt-0  flex justify-end">
+            {user?.createdAt && formatRelativeTime(user?.createdAt)}
+          </p>
         </div>
       </div>
 
@@ -192,11 +202,11 @@ export default function ResponseCard({
       </div>
 
       {/* Footer Section */}
-      <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">
+      {/* <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">
         <p className="font-medium text-[11px] text-gray-600 mt-2 sm:mt-0  flex justify-end">
           Responded At: {user?.createdAt && formatRelativeTime(user?.createdAt)}
         </p>
-        {/* {user?.credit && (
+        {user?.credit && (
           <p
             className={`text-[#34495E] ${
               isExpanded ? 'heading-base' : 'text-[12px]'
@@ -205,8 +215,8 @@ export default function ResponseCard({
             <span>{user?.credit} Credits required</span>
             <CircleAlert className="w-4 h-4" />
           </p>
-        )} */}
-      </div>
+        )}
+      </div> */}
     </Card>
   );
 }
