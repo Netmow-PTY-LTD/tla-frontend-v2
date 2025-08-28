@@ -219,14 +219,14 @@ export const AdminSidebarItems = {
           isActive: true,
         },
         {
-          title: 'List of Client wise cases',
-          url: '/admin/client-wise-cases',
+          title: 'List of Client Details',
+          url: '/admin/list-client-details',
           icon: List,
           isActive: true,
         },
         {
-          title: 'List of Case wise responses',
-          url: '/admin/case-wise-responses',
+          title: 'List of Lawyer Details',
+          url: '/admin/list-lawyer-details',
           icon: List,
           isActive: true,
         },
