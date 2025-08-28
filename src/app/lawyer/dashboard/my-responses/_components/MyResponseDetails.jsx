@@ -45,6 +45,7 @@ export default function MyResponseDetails({
   isSingleResponseLoading,
   singleResponseRefetch,
   data,
+  searchParams,
 }) {
   const [activeTab, setActiveTab] = useState('activity');
   const [isExpanded, setIsExpanded] = useState(false);
@@ -212,6 +213,20 @@ export default function MyResponseDetails({
     }
   };
 
+  const handleClick = () => {
+    onBack();
+
+    if (searchParams.has('responseId')) {
+      const newParams = new URLSearchParams(searchParams.toString());
+      newParams.delete('responseId');
+
+      const queryString = newParams.toString();
+      const newUrl = queryString ? `?${queryString}` : window.location.pathname;
+
+      router.replace(newUrl, { scroll: false });
+    }
+  };
+
   return (
     <>
       {isSingleResponseLoading ? (
@@ -220,7 +235,10 @@ export default function MyResponseDetails({
         <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
           <div className="max-w-[900px]">
             <div className="flex items-center justify-between">
-              <button className="flex py-2 items-center gap-2" onClick={onBack}>
+              <button
+                className="flex py-2 items-center gap-2"
+                onClick={handleClick}
+              >
                 {' '}
                 <MoveLeft /> <span>Back to Responses</span>
               </button>
@@ -277,7 +295,7 @@ export default function MyResponseDetails({
                 </figure>
 
                 <div>
-                  <div className="flex items-center  gap-3">
+                  <div className="flex items-center gap-3">
                     <h2 className="font-medium heading-md">
                       {singleResponse?.data?.leadId?.userProfileId?.name}
                     </h2>

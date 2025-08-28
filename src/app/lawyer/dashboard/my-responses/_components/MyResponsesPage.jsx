@@ -248,6 +248,8 @@ export default function MyResponsesPage() {
     );
   }
 
+  console.log('searchParams', searchParams);
+
   return (
     <div className="lead-board-wrap">
       {responses && responses.length > 0 ? (
@@ -263,6 +265,7 @@ export default function MyResponsesPage() {
                   isSingleResponseLoading={isSingleResponseLoading}
                   singleResponseRefetch={singleResponseRefetch}
                   data={responses || []}
+                  searchParams={searchParams}
                 />
               </div>
             </div>
@@ -300,6 +303,7 @@ export default function MyResponsesPage() {
                   data={responses || []}
                   setIsLoading={setIsLoading}
                   selectedResponseId={selectedResponseId}
+                  searchParams={searchParams}
                 />
                 <div ref={loader}>
                   {isFetching ? (
