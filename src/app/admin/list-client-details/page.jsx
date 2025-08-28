@@ -13,25 +13,16 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import {
-  Archive,
-  CheckCircle,
-  Circle,
-  Clock,
-  Eye,
-  Loader,
-  Loader2,
+
   MoreHorizontal,
-  Pencil,
-  Slash,
-  Trash2,
+
   View,
 } from 'lucide-react';
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-import { useChangeUserAccountStatsMutation, useUpdateUserDefalultPicMutation } from '@/store/features/auth/authApiService';
-import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -77,28 +68,9 @@ export default function Page() {
   }, [search]);
 
 
-  console.log('check user list', userList)
-  const [changeAccoutStatus] = useChangeUserAccountStatsMutation();
 
-  const handleChangeStatus = async (userId, status) => {
-    try {
-      const payload = {
-        userId,
-        data: { accountStatus: status },
-      };
 
-      const res = await changeAccoutStatus(payload).unwrap();
-
-      if (res.success) {
-        showSuccessToast(res?.message || 'Status Update Successful');
-      }
-    } catch (error) {
-      const errorMessage = error?.data?.message || 'An error occurred';
-      showErrorToast(errorMessage);
-    }
-  };
-
-  const columns = [
+const columns = [
     {
       id: 'select',
       header: ({ table }) => (
@@ -127,48 +99,12 @@ export default function Page() {
       header: 'Name',
       cell: ({ row }) => <div className="capitalize">{row.original.name || 'N/A'}</div>,
     },
+  
     {
-      id: 'profile.profilePicture',
-      accessorKey: 'profilePicture',
-      header: 'Profile Picture',
-      cell: ({ row }) => {
-        const profile = row.original;
-        const [uploadProfilePicture, { isLoading }] = useUpdateUserDefalultPicMutation();
-
-        const handleUpload = async (e) => {
-          const file = e.target.files?.[0];
-          if (!file) return;
-
-          const webpFile = await resizeAndConvertToWebP(file, 500, 0.8);
-
-          const formData = new FormData();
-          formData.append('file', webpFile);
-
-          try {
-            await uploadProfilePicture({ userId: profile._id, data: formData }).unwrap();
-            refetch(); // Optional: refetch table after upload
-          } catch (err) {
-            console.error('Upload failed', err);
-          }
-        };
-
-        return (
-          <div className="flex items-center gap-2">
-            {profile.profilePicture ? (
-              <img
-                src={profile.profilePicture}
-                alt={profile.name || 'Profile'}
-                className="w-8 h-8 rounded-full object-cover"
-              />
-            ) : (
-              <label className="px-2 py-1 bg-[#12C7C4] text-white text-xs rounded cursor-pointer hover:bg-[#0fa9a5]">
-                Upload
-                <input type="file" accept="image/*" onChange={handleUpload} className="hidden" />
-              </label>
-            )}
-          </div>
-        );
-      },
+      id: 'totalLeads',
+      accessorKey: 'totalLeads',
+      header: 'Total Leads',
+      cell: ({ row }) => <div>{row.original.totalLeads || 0}</div>,
     },
     {
       id: 'totalResponses',
