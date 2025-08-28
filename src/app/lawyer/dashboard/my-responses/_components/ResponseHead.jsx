@@ -95,7 +95,7 @@ export default function ResponseHead({
           >
             {total} {total > 1 ? 'Responses' : 'Response'}
           </h2>
-          <div className="flex items-center gap-3">
+          {/* <div className="flex items-center gap-3">
             <button
               className={`flex item-center leading-none ${
                 isExpanded ? 'text-[14px]' : 'text-[12px]'
@@ -112,7 +112,7 @@ export default function ResponseHead({
               <span className={`w-3 h-3 rounded-full bg-[#00C3C0] mr-1`}></span>
               <span>{hiredStatusLength || 0} Hired</span>
             </button>
-          </div>
+          </div> */}
         </div>
         <Link
           href={'/lawyer/settings/profile'}
