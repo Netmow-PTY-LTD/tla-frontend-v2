@@ -77,26 +77,9 @@ export default function Page() {
   }, [search]);
 
 
-  console.log('check user list', userList)
-  const [changeAccoutStatus] = useChangeUserAccountStatsMutation();
 
-  const handleChangeStatus = async (userId, status) => {
-    try {
-      const payload = {
-        userId,
-        data: { accountStatus: status },
-      };
 
-      const res = await changeAccoutStatus(payload).unwrap();
 
-      if (res.success) {
-        showSuccessToast(res?.message || 'Status Update Successful');
-      }
-    } catch (error) {
-      const errorMessage = error?.data?.message || 'An error occurred';
-      showErrorToast(errorMessage);
-    }
-  };
 
   const columns = [
     {

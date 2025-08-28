@@ -75,6 +75,15 @@ const userApiService = baseApi.injectEndpoints({
       providesTags: ['all-client']
     }),
 
+    allLawyerDetails: builder.query({
+      query: (params) => ({
+        url: '/admin/lawyer/all',
+        method: 'GET',
+        params
+      }),
+      providesTags: ['all-lawyer']
+    }),
+
 
 
 
@@ -91,5 +100,6 @@ export const {
   useDeleteCustomServiceMutation,
   useDeleteAccreditationMutation,
   useDeleteProfileVideoUrlMutation,
-  useAllClientDetailsQuery
+  useAllClientDetailsQuery,
+  useAllLawyerDetailsQuery
 } = userApiService;
