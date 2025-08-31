@@ -12,6 +12,7 @@ const LeadsRight = ({
   setIsLoading,
   selectedResponse,
   selectedResponseId,
+  setSelectedResponseId,
   searchParams,
 }) => {
   const currentUserId = useSelector(selectCurrentUser)?._id;
@@ -52,6 +53,7 @@ const LeadsRight = ({
             onlineMap={onlineMap}
             selectedResponse={selectedResponse}
             selectedResponseId={selectedResponseId}
+            setSelectedResponseId={setSelectedResponseId}
             searchParams={searchParams}
           />
         ))}
