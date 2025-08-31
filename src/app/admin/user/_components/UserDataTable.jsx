@@ -137,9 +137,21 @@ export function UserDataTable({
           >
             Previous
           </Button>
-          <span className="text-sm">
-            Page {page} of {totalPages}
-          </span>
+          <div className="flex items-center gap-1 text-sm">
+            <span>Page</span>
+            <select
+              value={page}
+              onChange={(e) => setPage(Number(e.target.value))}
+              className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none"
+            >
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))}
+            </select>
+            <span>of {totalPages}</span>
+          </div>
           <Button
             variant="outline"
             size="sm"
