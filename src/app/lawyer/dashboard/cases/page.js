@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -47,6 +46,12 @@ const LeadsBoardPage = () => {
   }, []);
 
   //console.log('searchKeyword', searchKeyword);
+
+  useEffect(() => {
+    setPage(1);
+    setLeads([]);
+    setSelectedLead(null); // reset selection so first item can be auto-selected
+  }, [searchKeyword]);
 
   const {
     data,
