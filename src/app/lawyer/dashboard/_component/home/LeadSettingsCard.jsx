@@ -11,7 +11,7 @@ export default function LeadSettingsCard({
   error,
   locations,
 }) {
-  console.log('locations', locations);
+  //console.log('locations', locations);
   return (
     <Card className="w-full rounded-2xl shadow-sm">
       <div className="p-4">
@@ -19,7 +19,7 @@ export default function LeadSettingsCard({
           Skill Settings
         </h3>
         <p className="text-xs text-gray-500">
-          Track your credit usage and balance
+          Keep track of your skill activity
         </p>
       </div>
 

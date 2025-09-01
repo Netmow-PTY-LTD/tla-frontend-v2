@@ -72,9 +72,9 @@ export default function FilterSidebar({
 
   const onSubmit = (values) => {
     // payload shape transformation (if needed)
-    setPage(1);
+    //setPage(1);
     const payload = {
-      page: page,
+      // page: page,
       keyword: values.keyword,
       sort: values.sort,
       view: values.view,
@@ -92,7 +92,7 @@ export default function FilterSidebar({
     showSuccessToast('Filters applied and saved.');
     // Close sidebar after form submit
     setIsOpen(false);
-    setLeads([]);
+    //setLeads([]);
   };
 
   return (
