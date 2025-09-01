@@ -56,7 +56,6 @@ export default function ClientRequests() {
 
   return (
     <div className="p-4 max-w-[1100px] mx-auto">
-
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-gray-800">All Requests</h2>
         <div className="h-1 w-[20%] bg-[#00C3C0] mt-2 rounded"></div>
@@ -71,14 +70,25 @@ export default function ClientRequests() {
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
-            <h3 className="text-lg font-semibold text-gray-700 mb-1">No Requests Yet</h3>
+            <h3 className="text-lg font-semibold text-gray-700 mb-1">
+              No Requests Yet
+            </h3>
             <p className="text-sm text-gray-500 mb-4">
-              You haven’t received any requests at the moment.
-              Stay tuned — new requests will appear here.
+              You haven’t received any requests at the moment. Stay tuned — new
+              requests will appear here.
             </p>
-            <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => window.location.reload()}
+            >
               Refresh
             </Button>
           </div>
@@ -87,8 +97,9 @@ export default function ClientRequests() {
           <div className="bg-white p-4 rounded-lg">
             {requests?.map((request, index) => (
               <div
-                className={`flex items-start justify-between gap-4 py-3 px-4 rounded-lg border border-gray-200 ${index === 0 && index === requests?.length - 1 ? '' : 'mb-4'
-                  }`}
+                className={`flex items-start justify-between gap-4 py-3 px-4 rounded-lg border border-gray-200 ${
+                  index === 0 && index === requests?.length - 1 ? '' : 'mb-4'
+                }`}
                 key={index}
               >
                 <div className="flex items-center gap-4">
@@ -99,7 +110,7 @@ export default function ClientRequests() {
                         userDummyImage
                       }
                       alt={request?.leadId?.userProfileId?.name || ''}
-                      className="w-10 h-10 rounded-full"
+                      className="w-10 h-10 rounded-full object-cover"
                     />
                   </div>
                   <div className="flex flex-col">

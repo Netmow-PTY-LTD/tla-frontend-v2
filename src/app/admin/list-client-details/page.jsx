@@ -1,4 +1,4 @@
-'use client'
+'use client';
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -12,25 +12,17 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import {
-
-  MoreHorizontal,
-
-  View,
-} from 'lucide-react';
+import { MoreHorizontal, View } from 'lucide-react';
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-
-
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import resizeAndConvertToWebP from '@/components/UIComponents/resizeAndConvertToWebP';
 import { useAllClientDetailsQuery } from '@/store/features/admin/userApiService';
 import { UserDataTable } from '../user/_components/UserDataTable';
 import { UserDetailsModal } from '../user/_components/UserDetailsModal';
-
 
 // Enable relative time support
 dayjs.extend(relativeTime);
@@ -48,7 +40,11 @@ export default function Page() {
   const [sortBy, setSortBy] = useState('createdAt');
   const [sortOrder, setSortOrder] = useState('desc');
 
-  const { data: userList, isFetching, refetch } = useAllClientDetailsQuery({
+  const {
+    data: userList,
+    isFetching,
+    refetch,
+  } = useAllClientDetailsQuery({
     page,
     limit,
     search: debouncedSearch,
@@ -67,10 +63,7 @@ export default function Page() {
     };
   }, [search]);
 
-
-
-
-const columns = [
+  const columns = [
     {
       id: 'select',
       header: ({ table }) => (
@@ -97,9 +90,11 @@ const columns = [
       id: 'profile.name',
       accessorKey: 'name',
       header: 'Name',
-      cell: ({ row }) => <div className="capitalize">{row.original.name || 'N/A'}</div>,
+      cell: ({ row }) => (
+        <div className="capitalize">{row.original.name || 'N/A'}</div>
+      ),
     },
-  
+
     {
       id: 'totalLeads',
       accessorKey: 'totalLeads',
@@ -118,7 +113,7 @@ const columns = [
       header: 'Total Hired',
       cell: ({ row }) => <div>{row.original.totalHired || 0}</div>,
     },
-  
+
     {
       id: 'actions',
       header: 'Actions',
@@ -135,15 +130,14 @@ const columns = [
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-
               <DropdownMenuItem asChild>
-                <Link href={`/admin/user/${user._id}`} className="flex gap-2 items-center">
+                <Link
+                  href={`/admin/user/${user._id}`}
+                  className="flex gap-2 items-center"
+                >
                   <View className="w-4 h-4" /> View
                 </Link>
               </DropdownMenuItem>
-
-
-
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -153,14 +147,16 @@ const columns = [
 
   return (
     <div>
-      <h1>All client Details </h1>
+      <h2 className="font-semibold text-2xl">All Client Details</h2>
       <UserDataTable
         data={userList?.data || []}
         columns={columns}
         searchColumn="profile.name"
         page={page}
         setPage={setPage}
+        limit={limit}
         totalPages={userList?.pagination?.totalPage || 1}
+        total={userList?.pagination?.total || 0}
         isFetching={isFetching}
         search={search}
         setSearch={setSearch}
@@ -174,4 +170,3 @@ const columns = [
     </div>
   );
 }
-
