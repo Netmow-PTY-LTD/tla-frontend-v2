@@ -552,7 +552,7 @@ export default function ClientLeadRegistrationModal({
       border="border-0"
       showCloseButton={true}
     >
-      <div className="max-h-[90vh] overflow-auto pb-6">
+      <div className="max-h-[90vh] overflow-auto">
         {isQuestionsLoading || !selectedServiceWiseQuestions?.length ? (
           <div className="flex items-center justify-center gap-2 pt-6 px-6">
             <Loader className="w-4 h-4 animate-spin" /> Loading question...
