@@ -35,12 +35,15 @@ export default function LeadManagement() {
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState(search);
 
+  const LIMIT = 10;
+
   const {
     data: leadList,
     refetch,
     isFetching,
-  } = useGetAllLeadsForAdminQuery({ page, limit: 10, search: debouncedSearch });
+  } = useGetAllLeadsForAdminQuery({ page, LIMIT, search: debouncedSearch });
 
+  console.log('leadList', leadList);
 
   // Debounce effect
   useEffect(() => {
@@ -52,7 +55,6 @@ export default function LeadManagement() {
       clearTimeout(handler);
     };
   }, [search]);
-
 
   const [changeStatus] = useUpdateLeadMutation();
 
@@ -85,12 +87,13 @@ export default function LeadManagement() {
       accessorKey: 'userProfileId.user?.isVerifiedAccount',
       header: 'Email Verified',
       cell: ({ row }) => {
-        const isVerifiedAccount = row.original?.userProfileId.user?.isVerifiedAccount
+        const isVerifiedAccount =
+          row.original?.userProfileId.user?.isVerifiedAccount;
         return (
           <div className="capitalize">
-            {isVerifiedAccount ? "Verified Account" : "Not Verified"}
+            {isVerifiedAccount ? 'Verified Account' : 'Not Verified'}
           </div>
-        )
+        );
       },
     },
     {
@@ -110,8 +113,8 @@ export default function LeadManagement() {
       accessorKey: 'budgetAmount',
       header: 'Budget',
       cell: ({ row }) => {
-        const countryCode = row.original.countryCode || "AUD";
-        const budgetAmount = row.getValue("budgetAmount");
+        const countryCode = row.original.countryCode || 'AUD';
+        const budgetAmount = row.getValue('budgetAmount');
 
         return (
           <div>
@@ -167,9 +170,9 @@ export default function LeadManagement() {
         const value = row.getValue('leadPriority');
         const formatted = value
           ? value
-            .split('_')
-            .map((word) => word[0].toUpperCase() + word.slice(1))
-            .join(' ')
+              .split('_')
+              .map((word) => word[0].toUpperCase() + word.slice(1))
+              .join(' ')
           : '';
         return <div>{formatted}</div>;
       },
@@ -191,11 +194,11 @@ export default function LeadManagement() {
         const formatHireStatus = (value) => {
           if (!value) return '-';
           return value
-            .replace(/[-_]/g, ' ')        // replace - and _ with space
+            .replace(/[-_]/g, ' ') // replace - and _ with space
             .replace(/\b\w/g, (c) => c.toUpperCase()); // capitalize first letter of each word
         };
 
-        return (<div>{formatHireStatus(row.getValue('hireStatus'))}</div>)
+        return <div>{formatHireStatus(row.getValue('hireStatus'))}</div>;
       },
     },
     {
@@ -270,6 +273,7 @@ export default function LeadManagement() {
 
   return (
     <>
+      <h2 className="font-bold text-2xl">Cases List</h2>
       <LeadDataTable
         data={leadList?.data || []}
         columns={columns}
@@ -277,11 +281,15 @@ export default function LeadManagement() {
         page={page}
         setPage={setPage}
         totalPages={leadList?.pagination?.totalPage || 1}
+        total={leadList?.pagination?.total || 0}
+        limit={LIMIT}
         isFetching={isFetching}
         search={search}
-        setSearch={setSearch}
+        onSearch={(val) => {
+          setSearch(val);
+          setPage(1); // reset to first page when searching
+        }}
       />
-
 
       <LeadDetailsModal
         data={selectedLead}
