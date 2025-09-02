@@ -55,7 +55,7 @@ export default function LeadDetailsPage() {
   const [totalPages, setTotalPages] = useState(null);
   const [totalLawyersCount, setTotalLawyersCount] = useState(0);
   const [lawyerOnlineStatus, setLawyerOnlineStatus] = useState({});
-  const [minRating, setMinRating] = useState(undefined);
+  const [minRating, setMinRating] = useState(null);
   const [activeTab, setActiveTab] = useState('matched-lawyers');
   const [hiredStatus, setHiredStatus] = useState('');
 
@@ -369,23 +369,35 @@ export default function LeadDetailsPage() {
                     <div className="flex justify-between mb-5 gap-4 border-b border-gray-400 pt-2 pb-5">
                       <div className="flex gap-2 items-center">
                         <Select
-                          value={minRating?.toString() || ''}
-                          onValueChange={(value) => setMinRating(Number(value))}
+                          value={
+                            minRating === null || minRating === undefined
+                              ? "all" // ✅ Default to "All Ratings"
+                              : String(minRating) // ✅ Safely convert number to string
+                          }
+                          onValueChange={(value) => {
+                            if (value === "all") {
+                              setMinRating(null); // ✅ No rating filter applied
+                            } else {
+                              setMinRating(Number(value)); // ✅ Set numeric rating
+                            }
+                          }}
                         >
                           <SelectTrigger className="w-[200px] bg-white">
                             <SelectValue placeholder="All Ratings" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
-                              <SelectLabel>All Ratings</SelectLabel>
-                              <SelectItem value="5">5 stars</SelectItem>
-                              <SelectItem value="4">4 stars</SelectItem>
-                              <SelectItem value="3">3 stars</SelectItem>
-                              <SelectItem value="2">2 stars</SelectItem>
+                              <SelectLabel>Ratings</SelectLabel>
+                              <SelectItem value="all">All Ratings</SelectItem>
                               <SelectItem value="1">1 star</SelectItem>
+                              <SelectItem value="2">2 stars</SelectItem>
+                              <SelectItem value="3">3 stars</SelectItem>
+                              <SelectItem value="4">4 stars</SelectItem>
+                              <SelectItem value="5">5 stars</SelectItem>
                             </SelectGroup>
                           </SelectContent>
                         </Select>
+
 
                         <h4 className="font-medium heading-md text-center">
                           Total {totalLawyersCount}{' '}
