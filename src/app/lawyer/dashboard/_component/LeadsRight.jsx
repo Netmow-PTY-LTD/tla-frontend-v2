@@ -11,14 +11,12 @@ const LeadsRight = ({ isExpanded, onViewDetails, data, selectedLead }) => {
   // Safely extract user IDs from AllLeadData
   const userIds = data?.map((lead) => lead.userProfileId?.user?._id) || [];
 
- console.log('check onlineMap',onlineMap)
+  // console.log('check onlineMap',onlineMap)
 
   // ✅ Use hook directly (at top level of component)
   useRealTimeStatus(currentUserId, userIds, (userId, isOnline) => {
     setOnlineMap((prev) => ({ ...prev, [userId]: isOnline }));
   });
-
-
 
   return (
     <>

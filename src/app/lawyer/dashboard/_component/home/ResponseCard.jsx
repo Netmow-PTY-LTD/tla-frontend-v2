@@ -6,6 +6,7 @@ import { userDummyImage } from '@/data/data';
 import { useGetSingleLeadQuery } from '@/store/features/lawyer/LeadsApiService';
 import { BadgeCheck, List, Zap } from 'lucide-react';
 import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
 
 export default function ResponseCard({
@@ -16,8 +17,10 @@ export default function ResponseCard({
   onlineMap,
   selectedResponse,
   selectedResponseId,
+  setSelectedResponseId,
   searchParams,
 }) {
+  const router = useRouter();
   const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
   const leadUser = user?.leadId?.userProfileId?.user?._id;
@@ -50,9 +53,12 @@ export default function ResponseCard({
     if (!text || typeof text !== 'string') return '';
     return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
   };
-  console.log('searchParams', searchParams.has('responseId'));
-  const handleClick = () => {
+
+  const pathname = usePathname();
+
+  const handleClick = (user) => {
     setIsLoading(true);
+    setSelectedResponseId(user?._id);
     onViewDetails(user, user?._id);
 
     if (searchParams.has('responseId')) {
@@ -60,7 +66,7 @@ export default function ResponseCard({
       newParams.delete('responseId');
 
       const queryString = newParams.toString();
-      const newUrl = queryString ? `?${queryString}` : window.location.pathname;
+      const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
 
       router.replace(newUrl, { scroll: false });
     }
@@ -70,6 +76,7 @@ export default function ResponseCard({
   //console.log('selectedResponse', selectedResponse);
   // console.log('user', user);
   // console.log('isSelected', isSelected);
+  console.log('selectedResponseId', selectedResponseId);
 
   return (
     <Card
@@ -78,7 +85,7 @@ export default function ResponseCard({
           ? 'border-l-[3px] border-l-[var(--secondary-color)] rounded-tl-none rounded-bl-none'
           : 'border-transparent'
       }`}
-      onClick={handleClick}
+      onClick={() => handleClick(user)}
     >
       {/* Header Section */}
       <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 p-3">

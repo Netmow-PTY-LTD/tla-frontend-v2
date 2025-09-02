@@ -28,12 +28,11 @@ import {
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { useAllLawyerDetailsQuery } from '@/store/features/admin/userApiService';
 import { UserDataTable } from '../user/_components/UserDataTable';
 import { UserDetailsModal } from '../user/_components/UserDetailsModal';
-
 
 // Enable relative time support
 dayjs.extend(relativeTime);
@@ -46,14 +45,17 @@ export default function Page() {
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState(search);
 
-
   // Pagination & sorting
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [sortBy, setSortBy] = useState('createdAt');
   const [sortOrder, setSortOrder] = useState('desc');
 
-  const { data: userList, isFetching, refetch } = useAllLawyerDetailsQuery({
+  const {
+    data: userList,
+    isFetching,
+    refetch,
+  } = useAllLawyerDetailsQuery({
     page,
     limit,
     search: debouncedSearch,
@@ -72,10 +74,7 @@ export default function Page() {
     };
   }, [search]);
 
-
-  console.log('check user list', userList)
-
-
+  //  console.log('check user list', userList)
 
   const columns = [
     {
@@ -104,7 +103,9 @@ export default function Page() {
       id: 'name',
       accessorKey: 'name',
       header: 'Name',
-      cell: ({ row }) => <div className="capitalize">{row.original.name || 'N/A'}</div>,
+      cell: ({ row }) => (
+        <div className="capitalize">{row.original.name || 'N/A'}</div>
+      ),
     },
     {
       id: 'totalResponses',
@@ -158,15 +159,14 @@ export default function Page() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-
               <DropdownMenuItem asChild>
-                <Link href={`/admin/user/${user._id}`} className="flex gap-2 items-center">
+                <Link
+                  href={`/admin/user/${user._id}`}
+                  className="flex gap-2 items-center"
+                >
                   <View className="w-4 h-4" /> View
                 </Link>
               </DropdownMenuItem>
-
-
-
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -176,14 +176,16 @@ export default function Page() {
 
   return (
     <div>
-      <h1>Lawyer List </h1>
+      <h2 className="font-semibold text-2xl">All Lawyers Details</h2>
       <UserDataTable
         data={userList?.data || []}
         columns={columns}
         searchColumn="profile.name"
         page={page}
         setPage={setPage}
+        limit={limit}
         totalPages={userList?.pagination?.totalPage || 1}
+        total={userList?.pagination?.total || 0}
         isFetching={isFetching}
         search={search}
         setSearch={setSearch}
@@ -197,4 +199,3 @@ export default function Page() {
     </div>
   );
 }
-

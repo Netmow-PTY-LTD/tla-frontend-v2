@@ -7,6 +7,7 @@ import React from 'react';
 import FilterSidebar from './FilterSidebar';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { toast } from 'sonner';
+import { set } from 'zod';
 
 export default function LeadsHead({
   isExpanded,
@@ -26,6 +27,7 @@ export default function LeadsHead({
   // const stored = localStorage.getItem('lead-filters');
   const clearFilters = () => {
     localStorage.removeItem('lead-filters');
+    setPage(1);
     setSearchKeyword({});
     setLeads([]);
     setSelectedLead(null);
