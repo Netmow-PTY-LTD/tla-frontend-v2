@@ -8,6 +8,7 @@ import { BrandIcon } from '@/assets/icon';
 import AddCardForm from './AddCardForm';
 import {
   useAddPaymentMethodMutation,
+  useGetUserCreditStatsQuery,
   usePurchaseCreditPackageMutation,
 } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 import { useState } from 'react';
@@ -31,6 +32,9 @@ const CreditPurchaseLead = ({
   const [openAccordion, setOpenAccordion] = useState(null);
   const [addPaymentMethod] = useAddPaymentMethodMutation();
   const [purchaseCredits, { isLoading }] = usePurchaseCreditPackageMutation();
+
+  const { data: credits, refetch: refetchCredits } =
+    useGetUserCreditStatsQuery();
 
   const handleBuyClick = async () => {
     if (needAddCard) {
@@ -78,6 +82,7 @@ const CreditPurchaseLead = ({
           position: 'top-right',
         });
         onSuccess();
+        refetchCredits();
       } else {
         toast.error(result.message || 'Purchase failed', {
           position: 'top-right',

@@ -35,7 +35,6 @@ export default function DashboardHeader({ onToggleSidebar }) {
         </button>
       </div>
       <div className="flex items-center gap-3">
-
         {/* Remaining Credits */}
         <div className="flex items-center gap-1 bg-gray-50 border border-gray-200 rounded-full px-3 py-1 shadow-sm">
           <BadgeCent className="w-5 h-5 text-primary" />
