@@ -30,23 +30,23 @@ export default function UserProfileDetailsPage({ userId }) {
             .replace(/\b\w/g, c => c.toUpperCase());
     }
 
-    if (!user || !user.profile) {
-        return (
-            <div className="flex items-center justify-center min-h-[60vh]">
-                <Card className="border border-muted p-6 text-center max-w-md">
-                    <CardContent className="space-y-4">
-                        <AlertCircle className="w-12 h-12 mx-auto text-red-500" />
-                        <CardTitle className="text-lg font-semibold">
-                            No User Data Found
-                        </CardTitle>
-                        <p className="text-sm text-muted-foreground">
-                            The requested user does not exist or their profile is unavailable.
-                        </p>
-                    </CardContent>
-                </Card>
-            </div>
-        );
-    }
+    // if (!user || !user.profile) {
+    //     return (
+    //         <div className="flex items-center justify-center min-h-[60vh]">
+    //             <Card className="border border-muted p-6 text-center max-w-md">
+    //                 <CardContent className="space-y-4">
+    //                     <AlertCircle className="w-12 h-12 mx-auto text-red-500" />
+    //                     <CardTitle className="text-lg font-semibold">
+    //                         No User Data Found
+    //                     </CardTitle>
+    //                     <p className="text-sm text-muted-foreground">
+    //                         The requested user does not exist or their profile is unavailable.
+    //                     </p>
+    //                 </CardContent>
+    //             </Card>
+    //         </div>
+    //     );
+    // }
 
 
 
