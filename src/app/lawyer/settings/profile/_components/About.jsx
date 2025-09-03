@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { use, useEffect, useMemo, useState } from 'react';
 import CompanyProfile from './about/CompanyProfile';
 import PersonalProfile from './about/PersonalProfile';
 import CompanyContactDetails from './about/CompanyContactDetails';
@@ -41,7 +41,9 @@ export default function About() {
   const [postalCode, setPostalCode] = useState('');
 
   const [open, setOpen] = useState(false);
-    const [openEmail, setOpenEmail] = useState(false);
+  const [openEmail, setOpenEmail] = useState(false);
+  const [showCompanyProfile, setShowCompanyProfile] = useState(false);
+
   const {
     data: userInfo,
     isLoading,
@@ -52,9 +54,19 @@ export default function About() {
     refetchOnMountOrArgChange: true, // keep data fresh
   });
 
+  console.log('userInfo', userInfo);
+
   const [updateUserData, { isLoading: userIsLoading }] =
     useUpdateUserDataMutation();
   const profile = userInfo?.data?.profile;
+
+  useEffect(() => {
+    if (profile?.companyProfile) {
+      setShowCompanyProfile(!!profile?.companyProfile);
+    }
+  }, [profile?.companyProfile]);
+
+  console.log('showCompanyProfile', showCompanyProfile);
 
   const defaultValues = useMemo(
     () => ({
@@ -111,6 +123,7 @@ export default function About() {
         userProfileLogo,
         ...rest
       } = data;
+
       const companyInfo = {
         companyName: rest.companyName,
         contactEmail: rest.contactEmail,
@@ -151,7 +164,7 @@ export default function About() {
           bio,
           lawyerContactEmail,
         },
-        companyInfo,
+        companyInfo: showCompanyProfile ? companyInfo : null,
       };
 
       console.log('payload', payload);
@@ -264,7 +277,7 @@ export default function About() {
               placeholder="Enter your personal address"
               textColor="text-[#4b4949]"
             /> */}
-            <AddressCombobox/>
+            <AddressCombobox />
             <TextInput
               label="Contact Email"
               name="lawyerContactEmail"
@@ -297,18 +310,34 @@ export default function About() {
           /> */}
           <SimpleEditor name="bio" />
         </div>
-        <div className="border-t border-white" />
-        <CompanyProfile />
+        <div className="flex items-center gap-2 mb-4">
+          <input
+            type="checkbox"
+            id="showCompanyProfile"
+            checked={showCompanyProfile}
+            onChange={(e) => setShowCompanyProfile(e.target.checked)}
+          />
+          <label htmlFor="showCompanyProfile" className="text-sm">
+            Add company information
+          </label>
+        </div>
 
-        <div className="border-t border-white" />
-        <CompanyLocation
-          setZipCode={setZipCode}
-          setLatitude={setLatitude}
-          setLongitude={setLongitude}
-          setPostalCode={setPostalCode}
-        />
-        <div className="border-t border-white" />
-        <CompanyAbout />
+        {showCompanyProfile && (
+          <>
+            <div className="border-t border-white" />
+            <CompanyProfile />
+            <div className="border-t border-white" />
+            <CompanyLocation
+              setZipCode={setZipCode}
+              setLatitude={setLatitude}
+              setLongitude={setLongitude}
+              setPostalCode={setPostalCode}
+            />
+            <div className="border-t border-white" />
+            <CompanyAbout />
+          </>
+        )}
+
         <div className="border-t border-white" />
         {/* Footer Buttons */}
         <AboutFormActions
@@ -318,7 +347,7 @@ export default function About() {
       </FormWrapper>
       <>
         <ChangePassword setOpen={setOpen} open={open} />
-         <ChangeEmail setOpen={setOpenEmail} open={openEmail} />
+        <ChangeEmail setOpen={setOpenEmail} open={openEmail} />
       </>
     </div>
   );

@@ -45,6 +45,8 @@ export default function Home() {
       // Save full country object in cookie (stringified)
       Cookies.set('countryObj', JSON.stringify(selectedCountry), {
         expires: 3650,
+        path: '/',
+        sameSite: 'lax',
       });
     }
 
