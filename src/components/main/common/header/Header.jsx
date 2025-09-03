@@ -373,7 +373,10 @@ export default function Header() {
                 }}
                 className="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none text-[14px]"
               />
-              <SearchIcon className="w-5 h-5 text-gray-500 absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer" />
+              <SearchIcon
+                className="w-5 h-5 text-gray-500 absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
+                onClick={(e) => e.preventDefault()}
+              />
 
               {/* Suggestions Dropdown */}
               {showSuggestions && filteredServices?.length > 0 && (

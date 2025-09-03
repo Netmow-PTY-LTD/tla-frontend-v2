@@ -60,6 +60,35 @@ const userApiService = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['userInfo'],
     }),
+
+
+    //  -----------------------  client & lawyer specific api -----------------------
+
+
+
+    allClientDetails: builder.query({
+      query: (params) => ({
+        url: '/admin/client/all',
+        method: 'GET',
+        params
+      }),
+      providesTags: ['all-client']
+    }),
+
+    allLawyerDetails: builder.query({
+      query: (params) => ({
+        url: '/admin/lawyer/all',
+        method: 'GET',
+        params
+      }),
+      providesTags: ['all-lawyer']
+    }),
+
+
+
+
+
+
   }),
 });
 
@@ -71,4 +100,6 @@ export const {
   useDeleteCustomServiceMutation,
   useDeleteAccreditationMutation,
   useDeleteProfileVideoUrlMutation,
+  useAllClientDetailsQuery,
+   useAllLawyerDetailsQuery
 } = userApiService;

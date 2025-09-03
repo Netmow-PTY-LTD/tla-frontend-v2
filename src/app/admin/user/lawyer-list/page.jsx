@@ -14,6 +14,7 @@ import {
 import {
   Archive,
   CheckCircle,
+  Circle,
   Clock,
   Eye,
   Loader,
@@ -28,9 +29,19 @@ import { useAllUsersQuery } from '@/store/features/admin/userApiService';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { UserDetailsModal } from '../_components/UserDetailsModal';
-import { useChangeUserAccountStatsMutation } from '@/store/features/auth/authApiService';
+import {
+  useChangeUserAccountStatsMutation,
+  useUpdateUserDataMutation,
+  useUpdateUserDefalultPicMutation,
+} from '@/store/features/auth/authApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { UserDataTable } from '../_components/UserDataTable';
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import resizeAndConvertToWebP from '@/components/UIComponents/resizeAndConvertToWebP';
+
+// Enable relative time support
+dayjs.extend(relativeTime);
 
 export default function Page() {
   const [open, setOpen] = useState(false);
@@ -51,7 +62,7 @@ export default function Page() {
   const [sortBy, setSortBy] = useState('createdAt');
   const [sortOrder, setSortOrder] = useState('desc');
 
-  const { data: userList, isFetching } = useAllUsersQuery({
+  const { data: userList, isFetching, refetch } = useAllUsersQuery({
     page,
     limit,
     search: debouncedSearch,
@@ -75,6 +86,7 @@ export default function Page() {
     };
   }, [search]);
 
+  console.log('check user list', userList);
   const [changeAccoutStatus] = useChangeUserAccountStatsMutation();
 
   const handleChangeStatus = async (userId, status) => {
@@ -127,6 +139,70 @@ export default function Page() {
         return <div className="capitalize">{profile.name || 'N/A'}</div>;
       },
     },
+
+    {
+      id: 'profile.profilePicture',
+      accessorKey: 'profile.profilePicture',
+      header: 'Profile Picture',
+      cell: ({ row }) => {
+        const profile = row.original.profile;
+        const [uploadProfilePicture, { isLoading }] =
+          useUpdateUserDefalultPicMutation();
+        console.log('profile.profilePicture', profile);
+        const handleUpload = async (e) => {
+          const file = e.target.files?.[0];
+          if (file) {
+            console.log('Upload image for:', profile, file);
+            // Resize to max 500px width AND compress to WebP (quality 0.8)
+            const webpFile = await resizeAndConvertToWebP(file, 500, 0.8);
+            console.log('webpFile ===>',webpFile)
+            try {
+              const formData = new FormData();
+              // Append the image file
+              formData.append('file', webpFile);
+              const payload = {
+                userId: profile.user,
+                data: formData,
+              };
+
+              // Call RTK Query mutation
+           const res=   await uploadProfilePicture(payload).unwrap();
+           if(res.success){
+            refetch()
+
+            console.log('Upload successful');
+           }
+              // Optionally, update row locally or refetch table
+            } catch (err) {
+              console.error('Upload failed', err);
+            }
+          }
+        };
+
+        return (
+          <div className="flex items-center gap-2">
+            {profile.profilePicture ? (
+              <img
+                src={profile.profilePicture}
+                alt={profile.name || 'Profile'}
+                className="w-8 h-8 rounded-full object-cover"
+              />
+            ) : (
+              <label className="px-2 py-1 bg-[#12C7C4] text-white text-xs rounded cursor-pointer hover:bg-[#0fa9a5]">
+                Upload
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleUpload}
+                  className="hidden"
+                />
+              </label>
+            )}
+          </div>
+        );
+      },
+    },
+
     {
       accessorKey: 'email',
       header: 'Email',
@@ -134,13 +210,7 @@ export default function Page() {
         <div className="lowercase">{row.getValue('email')}</div>
       ),
     },
-    {
-      accessorKey: 'regUserType',
-      header: 'Type',
-      cell: ({ row }) => (
-        <div className="capitalize">{row.getValue('regUserType')}</div>
-      ),
-    },
+
     {
       accessorKey: 'accountStatus',
       header: 'Account Status',
@@ -199,6 +269,54 @@ export default function Page() {
       header: 'Address',
       cell: ({ row }) => <div>{row.original?.profile.address || '-'}</div>,
     },
+    {
+      accessorKey: 'isOnline',
+      header: 'Status',
+      cell: ({ row }) => {
+        const isOnline = row.original?.isOnline;
+
+        return (
+          <div className="flex items-center gap-2">
+            <Circle
+              size={12}
+              className={isOnline ? 'text-green-500' : 'text-gray-400'}
+              fill={isOnline ? 'green' : 'gray'}
+            />
+            <span className="text-sm font-medium">
+              {isOnline ? 'Online' : 'Offline'}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: 'lastSeen',
+      header: 'Last Seen',
+      cell: ({ row }) => {
+        const isOnline = row.original?.isOnline;
+        const lastSeen = row.original?.lastSeen;
+
+        // If online, show "Now Online" instead of last seen time
+        if (isOnline) {
+          return (
+            <span className="text-green-500 font-semibold">Now Online</span>
+          );
+        }
+
+        // If offline but no lastSeen value, fallback
+        if (!lastSeen) {
+          return <span className="text-gray-400">-</span>;
+        }
+
+        // Human-readable last seen time using dayjs
+        return (
+          <span className="text-gray-700">
+            {dayjs(lastSeen).fromNow()} {/* e.g., "5 minutes ago" */}
+          </span>
+        );
+      },
+    },
+
     {
       id: 'actions',
       header: 'Actions',
@@ -281,7 +399,7 @@ export default function Page() {
 
   return (
     <div>
-      <h1>Lawyer List Page</h1>
+      <h1 className="text-3xl font-semibold">Lawyer List </h1>
       <UserDataTable
         data={userList?.data || []}
         columns={columns}
@@ -289,6 +407,8 @@ export default function Page() {
         page={page}
         setPage={setPage}
         totalPages={userList?.pagination?.totalPage || 1}
+        total={userList?.pagination?.total || 0}
+        limit={limit}
         isFetching={isFetching}
         search={search}
         setSearch={setSearch}

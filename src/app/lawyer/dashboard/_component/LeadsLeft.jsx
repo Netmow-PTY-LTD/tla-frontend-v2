@@ -43,7 +43,7 @@ export default function LeadDetailsPage({
     return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
   };
 
-  console.log('single lead data ===>', singleLead);
+  //console.log('single lead data ===>', lead);
   const currentUserId = useSelector(selectCurrentUser)?._id;
   const [onlineMap, setOnlineMap] = useState({});
   const [isExpanded, setIsExpanded] = useState(false);
@@ -69,10 +69,6 @@ export default function LeadDetailsPage({
   useRealTimeStatus(currentUserId, userIds, (userId, isOnline) => {
     setOnlineMap((prev) => ({ ...prev, [userId]: isOnline }));
   });
-
-  const urgentOption = singleLead?.leadAnswers
-    .flatMap((answer) => answer.options || [])
-    .find((option) => option.option === 'Urgent');
 
   const profileType = singleLead?.userProfileId?.profileType;
   const badge = profileType
@@ -222,7 +218,7 @@ export default function LeadDetailsPage({
 
             <div className="flex flex-wrap items-center gap-4">
               {/*  need to credit purchase modal */}
-              {!lead?.isContact ? (
+              {!lead?.isContact || !singleLead?.isHired ? (
                 <>
                   <LawyerContactButton leadDetail={singleLead} />
                 </>

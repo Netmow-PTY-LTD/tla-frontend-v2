@@ -39,7 +39,7 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { use, useEffect, useRef, useState } from 'react';
+import { use, useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 export default function LeadDetailsPage() {
@@ -55,7 +55,7 @@ export default function LeadDetailsPage() {
   const [totalPages, setTotalPages] = useState(null);
   const [totalLawyersCount, setTotalLawyersCount] = useState(0);
   const [lawyerOnlineStatus, setLawyerOnlineStatus] = useState({});
-  const [minRating, setMinRating] = useState(undefined);
+  const [minRating, setMinRating] = useState(null);
   const [activeTab, setActiveTab] = useState('matched-lawyers');
   const [hiredStatus, setHiredStatus] = useState('');
 
@@ -193,34 +193,40 @@ export default function LeadDetailsPage() {
 
   //infinite scrolling
 
-  const loader = useRef(null);
+  // const loaderRef = useRef(null);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (entry.isIntersecting && !isFetching) {
-          if (totalPages && page < totalPages) {
-            setPage((prevPage) => prevPage + 1);
+  const loaderRef = useCallback(
+    (node) => {
+      if (!node || activeTab !== 'matched-lawyers') return;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          if (entry.isIntersecting && !isFetching) {
+            if (totalPages && page < totalPages) {
+              setPage((prevPage) => prevPage + 1);
+            }
           }
+        },
+        {
+          root: null,
+          threshold: 1,
+          rootMargin: '0px 0px -50px 0px',
         }
-      },
-      {
-        root: null, // body scroll
-        threshold: 1, // trigger when fully visible
-        rootMargin: '0px 0px -50px 0px', // add buffer
-      }
-    );
+      );
 
-    const currentLoader = loader.current;
-    if (currentLoader) observer.observe(currentLoader);
+      observer.observe(node);
 
-    return () => {
-      if (currentLoader) observer.unobserve(currentLoader);
-    };
-  }, [isFetching, totalPages, page]);
+      return () => {
+        observer.disconnect();
+      };
+    },
+    [activeTab, isFetching, totalPages]
+  );
 
-  //console.log({ page, isFetching, totalPages });
+  console.log('Lawyers ==> ', lawyers);
+
+  console.log({ page, isFetching, totalPages });
 
   const handleShowLeadResponseDetails = (response) => {
     setSelectedLeadResponse(response);
@@ -231,7 +237,7 @@ export default function LeadDetailsPage() {
     setIsMobile(window.innerWidth <= 1280);
   }, []);
 
-  console.log('singleLead ==>', singleLead);
+  //console.log('singleLead ==>', singleLead);
 
   if (isSingleLeadLoading) {
     return (
@@ -363,23 +369,35 @@ export default function LeadDetailsPage() {
                     <div className="flex justify-between mb-5 gap-4 border-b border-gray-400 pt-2 pb-5">
                       <div className="flex gap-2 items-center">
                         <Select
-                          value={minRating?.toString() || ''}
-                          onValueChange={(value) => setMinRating(Number(value))}
+                          value={
+                            minRating === null || minRating === undefined
+                              ? "all" // ✅ Default to "All Ratings"
+                              : String(minRating) // ✅ Safely convert number to string
+                          }
+                          onValueChange={(value) => {
+                            if (value === "all") {
+                              setMinRating(null); // ✅ No rating filter applied
+                            } else {
+                              setMinRating(Number(value)); // ✅ Set numeric rating
+                            }
+                          }}
                         >
                           <SelectTrigger className="w-[200px] bg-white">
                             <SelectValue placeholder="All Ratings" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
-                              <SelectLabel>All Ratings</SelectLabel>
-                              <SelectItem value="5">5 stars</SelectItem>
-                              <SelectItem value="4">4 stars</SelectItem>
-                              <SelectItem value="3">3 stars</SelectItem>
-                              <SelectItem value="2">2 stars</SelectItem>
+                              <SelectLabel>Ratings</SelectLabel>
+                              <SelectItem value="all">All Ratings</SelectItem>
                               <SelectItem value="1">1 star</SelectItem>
+                              <SelectItem value="2">2 stars</SelectItem>
+                              <SelectItem value="3">3 stars</SelectItem>
+                              <SelectItem value="4">4 stars</SelectItem>
+                              <SelectItem value="5">5 stars</SelectItem>
                             </SelectGroup>
                           </SelectContent>
                         </Select>
+
 
                         <h4 className="font-medium heading-md text-center">
                           Total {totalLawyersCount}{' '}
@@ -429,7 +447,7 @@ export default function LeadDetailsPage() {
 
                         {/* Only show loader when fetching AND there are already some lawyers */}
                         <div
-                          ref={loader}
+                          ref={loaderRef}
                           className="h-10 flex items-center justify-center"
                         >
                           {isFetching && (

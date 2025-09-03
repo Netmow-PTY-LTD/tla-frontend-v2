@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -36,17 +35,22 @@ const LeadsBoardPage = () => {
       try {
         const parsedData = JSON.parse(stored);
         setParsed(parsedData);
-        setSearchKeyword(parsedData); // <-- Set it here
+        setSearchKeyword({ ...parsedData }); // <-- Set it here
       } catch (err) {
         console.error('Invalid JSON in localStorage:', err);
       }
     } else {
       setSearchKeyword({});
     }
-    setLeads([]);
   }, []);
 
   //console.log('searchKeyword', searchKeyword);
+
+  useEffect(() => {
+    setPage(1);
+    //setLeads([]);
+    //setSelectedLead(null); // reset selection so first item can be auto-selected
+  }, [searchKeyword]);
 
   const {
     data,
@@ -59,13 +63,30 @@ const LeadsBoardPage = () => {
     searchKeyword: JSON.stringify(searchKeyword || {}),
   });
 
+  console.log('data', data);
+
   const loader = useRef(null);
 
   // Append new data to existing list
   useEffect(() => {
-    if (data && data?.data?.length > 0) {
+    if (data && Array.isArray(data?.data) && data.data.length > 0) {
+      const currentPage = data?.pagination?.page ?? 1;
+
+      setLeads((prev) => {
+        if (currentPage === 1) {
+          // reset list on first page (new filter or reload)
+          return data.data;
+        }
+
+        // append new items, skip duplicates by _id
+        const existingIds = new Set(prev.map((lead) => lead._id));
+        const uniqueNew = data.data.filter(
+          (lead) => !existingIds.has(lead._id)
+        );
+        return [...prev, ...uniqueNew];
+      });
+
       setTotalPages(data?.pagination?.totalPage);
-      setLeads((prev) => [...prev, ...data.data]);
       setTotalLeadsCount(data?.pagination?.total);
     }
   }, [data]);
@@ -92,13 +113,18 @@ const LeadsBoardPage = () => {
     return () => {
       if (currentLoader) observer.unobserve(currentLoader);
     };
-  }, [isFetching, totalPages]);
+  }, [page, isFetching, totalPages, leads]);
+
+  // console.log({ page, isFetching, totalPages });
+  // console.log('leads', leads);
 
   useEffect(() => {
-    if (leads?.length > 0 && !selectedLead) {
+    if (leads?.length > 0) {
       setSelectedLead(leads[0]);
+    } else {
+      setSelectedLead(null);
     }
-  }, [leads, selectedLead]);
+  }, [leads, searchKeyword]);
 
   // Fetch detailed data for selected lead
   const { data: selectedLeadData, isLoading: isSingleLeadLoading } =

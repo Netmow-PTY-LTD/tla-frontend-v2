@@ -24,7 +24,7 @@ import {
   View,
   X,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LeadDataTable } from './LeadDataTable';
 import { LeadDetailsModal } from './LeadDetailsModal';
 
@@ -32,14 +32,29 @@ export default function LeadManagement() {
   const [open, setOpen] = useState(false);
   const [selectedLead, setSelectedLead] = useState(null); // state for selected lead
   const [page, setPage] = useState(1);
-  const [search, setSearch] = useState(''); // Search term
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+
+  const LIMIT = 10;
 
   const {
     data: leadList,
     refetch,
     isFetching,
-  } = useGetAllLeadsForAdminQuery({ page, limit: 10 });
+  } = useGetAllLeadsForAdminQuery({ page, LIMIT, search: debouncedSearch });
 
+  console.log('leadList', leadList);
+
+  // Debounce effect
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500); // 500ms debounce
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [search]);
 
   const [changeStatus] = useUpdateLeadMutation();
 
@@ -72,12 +87,13 @@ export default function LeadManagement() {
       accessorKey: 'userProfileId.user?.isVerifiedAccount',
       header: 'Email Verified',
       cell: ({ row }) => {
-        const isVerifiedAccount = row.original?.userProfileId.user?.isVerifiedAccount
+        const isVerifiedAccount =
+          row.original?.userProfileId.user?.isVerifiedAccount;
         return (
           <div className="capitalize">
-            {isVerifiedAccount ? "Verified Account" : "Not Verified"}
+            {isVerifiedAccount ? 'Verified Account' : 'Not Verified'}
           </div>
-        )
+        );
       },
     },
     {
@@ -97,8 +113,8 @@ export default function LeadManagement() {
       accessorKey: 'budgetAmount',
       header: 'Budget',
       cell: ({ row }) => {
-        const countryCode = row.original.countryCode || "AUD";
-        const budgetAmount = row.getValue("budgetAmount");
+        const countryCode = row.original.countryCode || 'AUD';
+        const budgetAmount = row.getValue('budgetAmount');
 
         return (
           <div>
@@ -154,9 +170,9 @@ export default function LeadManagement() {
         const value = row.getValue('leadPriority');
         const formatted = value
           ? value
-            .split('_')
-            .map((word) => word[0].toUpperCase() + word.slice(1))
-            .join(' ')
+              .split('_')
+              .map((word) => word[0].toUpperCase() + word.slice(1))
+              .join(' ')
           : '';
         return <div>{formatted}</div>;
       },
@@ -174,7 +190,16 @@ export default function LeadManagement() {
     {
       accessorKey: 'hireStatus',
       header: 'Hire Status',
-      cell: ({ row }) => <div> {row.getValue('hireStatus')}</div>,
+      cell: ({ row }) => {
+        const formatHireStatus = (value) => {
+          if (!value) return '-';
+          return value
+            .replace(/[-_]/g, ' ') // replace - and _ with space
+            .replace(/\b\w/g, (c) => c.toUpperCase()); // capitalize first letter of each word
+        };
+
+        return <div>{formatHireStatus(row.getValue('hireStatus'))}</div>;
+      },
     },
     {
       id: 'actions',
@@ -248,6 +273,7 @@ export default function LeadManagement() {
 
   return (
     <>
+      <h2 className="font-bold text-2xl">Cases List</h2>
       <LeadDataTable
         data={leadList?.data || []}
         columns={columns}
@@ -255,17 +281,15 @@ export default function LeadManagement() {
         page={page}
         setPage={setPage}
         totalPages={leadList?.pagination?.totalPage || 1}
+        total={leadList?.pagination?.total || 0}
+        limit={LIMIT}
         isFetching={isFetching}
+        search={search}
+        onSearch={(val) => {
+          setSearch(val);
+          setPage(1); // reset to first page when searching
+        }}
       />
-      {/* <DataTable
-        data={leadList?.data || []}
-        columns={columns}
-        searchColumn={'name'}
-        page={page}
-        setPage={setPage}
-        totalPages={leadList?.pagination?.totalPages || 1}
-        isFetching={isFetching}
-      /> */}
 
       <LeadDetailsModal
         data={selectedLead}

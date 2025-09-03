@@ -12,6 +12,8 @@ const LeadsRight = ({
   setIsLoading,
   selectedResponse,
   selectedResponseId,
+  setSelectedResponseId,
+  searchParams,
 }) => {
   const currentUserId = useSelector(selectCurrentUser)?._id;
   const [onlineMap, setOnlineMap] = useState({});
@@ -37,7 +39,7 @@ const LeadsRight = ({
       <section
         className={`grid ${
           isExpanded
-            ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 py-2 lg:pr-4'
+            ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 py-4 lg:pr-4'
             : 'grid-cols-1 p-4 md:pr-1'
         } gap-4`}
       >
@@ -51,6 +53,8 @@ const LeadsRight = ({
             onlineMap={onlineMap}
             selectedResponse={selectedResponse}
             selectedResponseId={selectedResponseId}
+            setSelectedResponseId={setSelectedResponseId}
+            searchParams={searchParams}
           />
         ))}
       </section>

@@ -44,9 +44,18 @@ export default function MyResponsesPage() {
   };
 
   const [queryParams, setQueryParams] = useState(() => {
-    if (saved) {
-      const savedObj = JSON.parse(saved);
+    let savedObj = null;
 
+    if (saved) {
+      try {
+        savedObj = JSON.parse(saved);
+      } catch (e) {
+        console.warn('Invalid JSON in localStorage, using defaultQueryParams');
+        savedObj = null;
+      }
+    }
+
+    if (savedObj) {
       // Remove page & limit before comparison
       const { page: _, limit: __, ...restSaved } = savedObj;
       const { page: ___, limit: ____, ...restDefault } = defaultQueryParams;
@@ -66,17 +75,20 @@ export default function MyResponsesPage() {
     if (responseId) {
       setSelectedResponseId(responseId);
       setShowResponseDetails(true);
-      localStorage.setItem('responseFilters', {
-        page: 1,
-        limit: 10,
-        sortBy: 'createdAt',
-        sortOrder: 'desc',
-        keyword: '',
-        spotlight: '',
-        clientActions: '',
-        actionsTaken: '',
-        leadSubmission: '',
-      });
+      localStorage.setItem(
+        'responseFilters',
+        JSON.stringify({
+          page: 1,
+          limit: 10,
+          sortBy: 'createdAt',
+          sortOrder: 'desc',
+          keyword: '',
+          spotlight: '',
+          clientActions: '',
+          actionsTaken: '',
+          leadSubmission: '',
+        })
+      );
     }
   }, [queryParams, responseId]);
 
@@ -144,13 +156,20 @@ export default function MyResponsesPage() {
     }
   }, [allMyResponses]);
 
+  // useEffect(() => {
+  //   if (!responseId) {
+  //     if (responses.length > 0) {
+  //       setSelectedResponseId(responses[0]._id);
+  //     }
+  //   }
+  // }, [responseId, responses]);
+
   useEffect(() => {
-    if (!responseId) {
-      if (responses.length > 0) {
-        setSelectedResponseId(responses[0]._id);
-      }
-    }
-  }, [responseId, responses]);
+    if (responseId) return; // URL controls selection when present
+    if (!selectedResponseId && responses?.length > 0)
+      // <-- guard!
+      setSelectedResponseId(responses[0]._id);
+  }, [responseId, selectedResponseId, responses]);
 
   //console.log('Responses', responses);
   // console.log('Total responses count', totalPages);
@@ -248,6 +267,8 @@ export default function MyResponsesPage() {
     );
   }
 
+  console.log('searchParams', searchParams);
+
   return (
     <div className="lead-board-wrap">
       {responses && responses.length > 0 ? (
@@ -263,6 +284,7 @@ export default function MyResponsesPage() {
                   isSingleResponseLoading={isSingleResponseLoading}
                   singleResponseRefetch={singleResponseRefetch}
                   data={responses || []}
+                  searchParams={searchParams}
                 />
               </div>
             </div>
@@ -300,6 +322,8 @@ export default function MyResponsesPage() {
                   data={responses || []}
                   setIsLoading={setIsLoading}
                   selectedResponseId={selectedResponseId}
+                  setSelectedResponseId={setSelectedResponseId}
+                  searchParams={searchParams}
                 />
                 <div ref={loader}>
                   {isFetching ? (

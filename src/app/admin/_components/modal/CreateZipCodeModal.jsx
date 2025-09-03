@@ -34,11 +34,24 @@ import {
 } from '@/components/ui/dialog';
 
 const formSchema = z.object({
-  countryId: z.string().min(2, {
-    message: 'Country name must be at least 2 characters.',
+  countryId: z.string().nonempty('Country name is required').min(1, {
+    message: 'Country name must be at least 1 character.',
   }),
-  zipcode: z.string().min(2, {
-    message: 'Zip code must be 2 to 3 characters.',
+
+  zipcode: z.string().nonempty('Zip code is required').min(1, {
+    message: 'Zip code must be at least 1 character.',
+  }),
+
+  postalCode: z.string().nonempty('Postal code is required').min(2, {
+    message: 'Postal code must be at least 1 character.',
+  }),
+
+  latitude: z.string().nonempty('Latitude is required').min(2, {
+    message: 'Latitude must be at least 1 character.',
+  }),
+
+  longitude: z.string().nonempty('Longitude is required').min(2, {
+    message: 'Longitude must be at least 1 character.',
   }),
 });
 
@@ -48,6 +61,9 @@ export default function CreateZipCodeModal({ isOpen, onClose, onSuccess }) {
     defaultValues: {
       countryId: '',
       zipcode: '',
+      postalCode: '',
+      latitude: '',
+      longitude: '',
     },
   });
 
@@ -58,6 +74,9 @@ export default function CreateZipCodeModal({ isOpen, onClose, onSuccess }) {
     const payload = {
       countryId: values.countryId,
       zipcode: values.zipcode,
+      postalCode: values.postalCode,
+      latitude: values.latitude,
+      longitude: values.longitude,
     };
 
     try {
@@ -117,6 +136,45 @@ export default function CreateZipCodeModal({ isOpen, onClose, onSuccess }) {
                   <FormLabel>Zip Code</FormLabel>
                   <FormControl>
                     <Input placeholder="Zip Code" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="postalCode"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Post Code</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter post code" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="latitude"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Latitude</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter post code" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="longitude"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Longitude</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter post code" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

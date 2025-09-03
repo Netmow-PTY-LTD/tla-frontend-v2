@@ -1,6 +1,3 @@
-
-
-
 'use client';
 import { DataTable } from '@/components/common/DataTable';
 import { Button } from '@/components/ui/button';
@@ -14,28 +11,44 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import { Archive, CheckCircle, Clock, MoreHorizontal, Pencil, Slash, Trash2, View } from 'lucide-react';
+import {
+  Archive,
+  CheckCircle,
+  Circle,
+  Clock,
+  MoreHorizontal,
+  Pencil,
+  Slash,
+  Trash2,
+  View,
+} from 'lucide-react';
 import { useAllUsersQuery } from '@/store/features/admin/userApiService';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { UserDetailsModal } from '../_components/UserDetailsModal';
-import { useChangeUserAccountStatsMutation } from '@/store/features/auth/authApiService';
+import {
+  useChangeUserAccountStatsMutation,
+  useUpdateUserDefalultPicMutation,
+} from '@/store/features/auth/authApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { UserDataTable } from '../_components/UserDataTable';
 
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import resizeAndConvertToWebP from '@/components/UIComponents/resizeAndConvertToWebP';
 
+// Enable relative time support
+dayjs.extend(relativeTime);
 
 export default function Page() {
-
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null); // state for selected lead
 
-
   // Filters
   const [search, setSearch] = useState('');
-   const [debouncedSearch, setDebouncedSearch] = useState(search);
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
   const [role, setRole] = useState();
-  const [regUserType, setRegUserType] = useState("client");
+  const [regUserType, setRegUserType] = useState('client');
   const [accountStatus, setAccountStatus] = useState();
   const [isVerifiedAccount, setIsVerifiedAccount] = useState();
   const [isPhoneVerified, setIsPhoneVerified] = useState();
@@ -47,10 +60,10 @@ export default function Page() {
   const [sortOrder, setSortOrder] = useState('desc');
 
 
-  const { data: clientlist, isFetching } = useAllUsersQuery({
+  const { data: clientlist, isFetching, refetch } = useAllUsersQuery({
     page,
     limit,
-    search:debouncedSearch,
+    search: debouncedSearch,
     role,
     regUserType,
     accountStatus,
@@ -60,21 +73,16 @@ export default function Page() {
     sortOrder,
   });
 
-
   // Debounce effect
-    useEffect(() => {
-      const handler = setTimeout(() => {
-        setDebouncedSearch(search);
-      }, 500); // 500ms debounce
-  
-      return () => {
-        clearTimeout(handler);
-      };
-    }, [search]);
-  
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500); // 500ms debounce
 
-
-
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [search]);
 
   const [changeAccoutStatus] = useChangeUserAccountStatsMutation();
 
@@ -82,25 +90,19 @@ export default function Page() {
     try {
       const payload = {
         userId,
-        data: { accountStatus: status }
-      }
+        data: { accountStatus: status },
+      };
 
-      const res = await changeAccoutStatus(payload).unwrap()
-
+      const res = await changeAccoutStatus(payload).unwrap();
 
       if (res.success) {
         showSuccessToast(res?.message || 'Status Update Successful');
       }
-
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);
     }
-
-  }
-
-
-
+  };
 
   const columns = [
     {
@@ -135,35 +137,86 @@ export default function Page() {
       },
     },
     {
+      id: 'profile.profilePicture',
+      accessorKey: 'profile.profilePicture',
+      header: 'Profile Picture',
+      cell: ({ row }) => {
+        const profile = row.original.profile;
+        const [uploadProfilePicture, { isLoading }] =
+          useUpdateUserDefalultPicMutation();
+        console.log('profile.profilePicture', profile);
+        const handleUpload = async (e) => {
+          const file = e.target.files?.[0];
+          if (file) {
+            const webpFile = await resizeAndConvertToWebP(file, 500, 0.8);
+            console.log('Upload image for:', profile, file);
+            try {
+              const formData = new FormData();
+              // Append the image file
+              formData.append('file', webpFile);
+              const payload = {
+                userId: profile.user,
+                data: formData,
+              };
+
+              // Call RTK Query mutation
+              const res = await uploadProfilePicture(payload).unwrap();
+
+              if (res.success) {
+                refetch()
+
+                console.log('Upload successful');
+              }
+              console.log('Upload successful');
+              // Optionally, update row locally or refetch table
+            } catch (err) {
+              console.error('Upload failed', err);
+            }
+          }
+        };
+
+        return (
+          <div className="flex items-center gap-2">
+            {profile.profilePicture ? (
+              <img
+                src={profile.profilePicture}
+                alt={profile.name || 'Profile'}
+                className="w-8 h-8 rounded-full object-cover"
+              />
+            ) : (
+              <label className="px-2 py-1 bg-[#12C7C4] text-white text-xs rounded cursor-pointer hover:bg-[#0fa9a5]">
+                Upload
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleUpload}
+                  className="hidden"
+                />
+              </label>
+            )}
+          </div>
+        );
+      },
+    },
+    {
       accessorKey: 'email',
       header: 'Email',
-      cell: ({ row }) => <div className="lowercase">{row.getValue('email')}</div>,
-    },
-    {
-      accessorKey: 'regUserType',
-      header: 'Type',
       cell: ({ row }) => (
-        <div className="capitalize">{row.getValue('regUserType')}</div>
+        <div className="lowercase">{row.getValue('email')}</div>
       ),
     },
-    {
-      accessorKey: 'accountStatus',
-      header: 'Account Status',
-      cell: ({ row }) => (
-        <div className="capitalize text-center">{row.getValue('accountStatus')}</div>
-      ),
-    },
+
     {
       id: 'isVerifiedAccount',
       accessorKey: 'isVerifiedAccount',
       header: 'Email Verified',
       cell: ({ row }) => {
-        const isVerifiedAccount = row.original?.isVerifiedAccount
+        const isVerifiedAccount = row.original?.isVerifiedAccount;
         return (
           <div className="capitalize">
-            {isVerifiedAccount ? "Verified Account" : "Not Verified"}
+            {isVerifiedAccount ? 'Verified Account' : 'Not Verified'}
           </div>
-        )
+        );
       },
     },
     {
@@ -174,10 +227,57 @@ export default function Page() {
     {
       accessorKey: 'address',
       header: 'Address',
-      cell: ({ row }) => (
-        <div>{row.original?.profile.address || '-'}</div>
-      ),
+      cell: ({ row }) => <div>{row.original?.profile.address || '-'}</div>,
     },
+
+    {
+      accessorKey: 'isOnline',
+      header: 'Status',
+      cell: ({ row }) => {
+        const isOnline = row.original?.isOnline;
+
+        return (
+          <div className="flex items-center gap-1">
+            <Circle
+              size={8}
+              className={isOnline ? 'text-green-500' : 'text-gray-300'}
+              fill={isOnline ? 'green' : 'gray'}
+            />
+            <span className="text-[13px] font-medium">
+              {isOnline ? 'Online' : 'Offline'}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: 'lastSeen',
+      header: 'Last Seen',
+      cell: ({ row }) => {
+        const isOnline = row.original?.isOnline;
+        const lastSeen = row.original?.lastSeen;
+
+        // If online, show "Now Online" instead of last seen time
+        if (isOnline) {
+          return (
+            <span className="text-green-500 font-semibold">Now Online</span>
+          );
+        }
+
+        // If offline but no lastSeen value, fallback
+        if (!lastSeen) {
+          return <span className="text-gray-400">-</span>;
+        }
+
+        // Human-readable last seen time using dayjs
+        return (
+          <span className="text-gray-700">
+            {dayjs(lastSeen).fromNow()} {/* e.g., "5 minutes ago" */}
+          </span>
+        );
+      },
+    },
+
     {
       id: 'actions',
       header: 'Actions',
@@ -218,7 +318,10 @@ export default function Page() {
               </DropdownMenuItem>
               {/* Details Page */}
               <DropdownMenuItem asChild>
-                <Link href={`/admin/user/${userId}`} className="flex items-center gap-2 cursor-pointer ">
+                <Link
+                  href={`/admin/user/${userId}`}
+                  className="flex items-center gap-2 cursor-pointer "
+                >
                   <View className="w-4 h-4" />
                   <span>View</span>
                 </Link>
@@ -229,7 +332,10 @@ export default function Page() {
               <DropdownMenuLabel>Change Status</DropdownMenuLabel>
 
               {[
-                { status: 'approved', icon: <CheckCircle className="w-4 h-4" /> },
+                {
+                  status: 'approved',
+                  icon: <CheckCircle className="w-4 h-4" />,
+                },
                 { status: 'pending', icon: <Clock className="w-4 h-4" /> },
                 { status: 'suspended', icon: <Slash className="w-4 h-4" /> },
                 { status: 'archived', icon: <Archive className="w-4 h-4" /> },
@@ -245,8 +351,6 @@ export default function Page() {
                   </div>
                 </DropdownMenuItem>
               ))}
-
-
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -254,11 +358,9 @@ export default function Page() {
     },
   ];
 
-
-
   return (
     <div>
-      <h1>Client List Page</h1>
+      <h1 className="text-3xl font-semibold">Client List </h1>
       <UserDataTable
         data={clientlist?.data || []}
         columns={columns}
@@ -266,13 +368,18 @@ export default function Page() {
         page={page}
         setPage={setPage}
         totalPages={clientlist?.pagination?.totalPage || 1}
+        total={clientlist?.pagination?.total || 0}
+        limit={limit}
         isFetching={isFetching}
         search={search}
         setSearch={setSearch}
       />
 
-      <UserDetailsModal data={selectedUser} open={open}
-        onOpenChange={setOpen} />
+      <UserDetailsModal
+        data={selectedUser}
+        open={open}
+        onOpenChange={setOpen}
+      />
     </div>
   );
 }

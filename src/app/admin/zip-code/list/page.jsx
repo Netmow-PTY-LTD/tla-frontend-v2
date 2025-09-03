@@ -25,38 +25,50 @@ import {
 } from '@/store/features/public/publicApiService';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import Link from 'next/link';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import CreateZipCodeModal from '../../_components/modal/CreateZipCodeModal';
 import EditZipCodeModal from '../../_components/modal/EditZipCodeModal';
+import { ZipCodeDataTable } from '../_components/ZipCodeTable';
 
 export default function Page() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedZipId, setSelectedZipId] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState('');
+
+  const LIMIT = 10;
 
   const { data: countryList, refetch: refetchCountry } =
     useGetCountryListQuery();
-  const { data: ZipCodeList } = useGetZipCodeListQuery();
 
-  console.log('ZipCodeList', ZipCodeList);
+  useEffect(() => {
+    if (countryList?.data?.length && !selectedCountry) {
+      const aus = countryList.data.find(
+        (c) => c.name.toLowerCase() === 'australia'
+      );
+      if (aus) {
+        setSelectedCountry(aus._id);
+      }
+    }
+  }, [countryList, selectedCountry]);
 
-  const [selectedCountry, setSelectedCountry] = useState(null);
+  const {
+    data: ZipCodeList,
+    isLoading: isZipCodeListLoading,
+    isFetching,
+  } = useGetZipCodeListQuery({
+    page,
+    limit: LIMIT,
+    search,
+    countryId: selectedCountry,
+  });
 
   const handleCountryWiseServiceChange = (val) => {
     setSelectedCountry(val);
   };
-
-  const filteredZipCodes = useMemo(() => {
-    if (!ZipCodeList?.data) return [];
-
-    if (selectedCountry) {
-      return ZipCodeList.data.filter(
-        (zip) => zip.countryId === selectedCountry
-      );
-    }
-
-    return ZipCodeList.data;
-  }, [ZipCodeList, selectedCountry]);
 
   const [zipCodeDelete] = useDeleteZipCodeMutation();
 
@@ -112,8 +124,8 @@ export default function Page() {
       cell: ({ row }) => {
         const item = row.original;
         const countryName =
-          countryList?.data?.find((c) => c._id === item.countryId)?.name ||
-          'N/A';
+          countryList?.data?.find((c) => c._id === item?.countryId?._id)
+            ?.name || 'N/A';
         return <div>{countryName}</div>;
       },
     },
@@ -163,7 +175,7 @@ export default function Page() {
                   setSelectedZipId(item?._id);
                   setEditModalOpen(true);
                 }}
-                className="flex gap-2 cursor-pointer"
+                className="flex gap-2 cursor-pointer py-1 px-2"
               >
                 <Pencil className="w-4 h-4" />
                 Edit
@@ -171,7 +183,7 @@ export default function Page() {
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <div
-                  className="flex gap-2 cursor-pointer"
+                  className="flex gap-2 cursor-pointer py-1 px-2"
                   onClick={() => handleDeleteZipCode(item?._id)}
                 >
                   <Trash2 className="w-4 h-4" /> Delete
@@ -218,10 +230,27 @@ export default function Page() {
           onSuccess={handleModalSuccess}
         />
       </div>
-      <DataTable
+      {/* <DataTable
         data={filteredZipCodes}
         columns={columns}
         searchColumn={'zipcode'}
+      /> */}
+
+      <ZipCodeDataTable
+        data={ZipCodeList?.data || []}
+        columns={columns}
+        pagination={ZipCodeList?.pagination || { page: 1, totalPage: 1 }}
+        totalPage={ZipCodeList?.pagination?.totalPage || 1}
+        total={ZipCodeList?.pagination?.total || 0}
+        page={page}
+        onPageChange={setPage}
+        limit={LIMIT}
+        onSearch={(val) => {
+          setSearch(val);
+          setPage(1); // reset to first page when searching
+        }}
+        isFetching={isFetching}
+        isZipCodeListLoading={isZipCodeListLoading}
       />
     </div>
   );

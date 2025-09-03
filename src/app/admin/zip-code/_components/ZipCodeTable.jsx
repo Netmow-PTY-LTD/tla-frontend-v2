@@ -5,13 +5,8 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { Button } from '@/components/ui/button';
-
-import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -20,23 +15,31 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { ChevronDown, Loader } from 'lucide-react';
 
-export function LeadDataTable({
+// 🟢 Props: pass data, pagination, totalPage, onPageChange, onSearch
+export function ZipCodeDataTable({
   data,
   columns,
-  searchColumn,
+  pagination,
   page,
-  setPage,
   limit,
-  totalPages,
+  totalPage,
   total,
-  isFetching,
-  search,
-  setSearch,
+  onPageChange,
   onSearch,
+  isFetching,
+  isZipCodeListLoading,
 }) {
   const [sorting, setSorting] = React.useState([]);
-  const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [globalFilter, setGlobalFilter] = React.useState('');
@@ -44,25 +47,28 @@ export function LeadDataTable({
   const table = useReactTable({
     data,
     columns,
-    getRowId: (row) => row._id,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      sorting,
+      columnVisibility,
+      rowSelection,
+      globalFilter, // 👈 add this
+    },
     onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    onGlobalFilterChange: setGlobalFilter, // 👈 add this
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(), // 👈 enable filtering
     enableRowSelection: true,
-    state: { sorting, columnFilters, columnVisibility, rowSelection },
+    globalFilterFn: 'includesString', // default fuzzy filter
   });
 
   return (
     <div className="w-full">
-      {/* Search Input */}
+      {/* 🔍 Search */}
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter names..."
+          placeholder="Search..."
           value={globalFilter}
           onChange={(e) => {
             setGlobalFilter(e.target.value);
@@ -70,6 +76,30 @@ export function LeadDataTable({
           }}
           className="max-w-sm"
         />
+
+        {/* Column visibility toggle */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-auto">
+              Columns <ChevronDown />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => (
+                <DropdownMenuCheckboxItem
+                  key={column.id}
+                  className="capitalize"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                >
+                  {column.id}
+                </DropdownMenuCheckboxItem>
+              ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* Table */}
@@ -91,8 +121,23 @@ export function LeadDataTable({
               </TableRow>
             ))}
           </TableHeader>
+
           <TableBody>
-            {data?.length ? (
+            {isFetching && (!data || data.length === 0) ? (
+              // Loading only if no data yet
+              <TableRow>
+                <TableCell
+                  colSpan={columns?.length}
+                  className="h-24 text-center"
+                >
+                  <div className="flex items-center justify-center gap-2">
+                    <Loader className="animate-spin w-4 h-4" />
+                    <span>Loading...</span>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : data && data.length > 0 ? (
+              // Render rows
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -109,12 +154,13 @@ export function LeadDataTable({
                 </TableRow>
               ))
             ) : (
+              // Show No results only if fetch finished and data is empty
               <TableRow>
                 <TableCell
                   colSpan={columns?.length}
                   className="h-24 text-center"
                 >
-                  {isFetching ? 'Loading...' : 'No results.'}
+                  No results.
                 </TableCell>
               </TableRow>
             )}
@@ -122,17 +168,17 @@ export function LeadDataTable({
         </Table>
       </div>
 
-      {/* Pagination Controls */}
-      <div className="flex items-center justify-between space-x-2 py-4">
+      {/* Pagination */}
+      <div className="flex items-center justify-between py-4">
         <div className="text-sm">
           Showing {(page - 1) * limit + 1}–{Math.min(page * limit, total)} of{' '}
-          {total} cases
+          {total} zip codes
         </div>
         <div className="space-x-2 flex items-center">
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+            onClick={() => onPageChange(page - 1)}
             disabled={page <= 1}
           >
             Previous
@@ -141,22 +187,22 @@ export function LeadDataTable({
             <span>Page</span>
             <select
               value={page}
-              onChange={(e) => setPage(Number(e.target.value))}
+              onChange={(e) => onPageChange(Number(e.target.value))}
               className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none"
             >
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+              {Array.from({ length: totalPage }, (_, i) => i + 1).map((p) => (
                 <option key={p} value={p}>
                   {p}
                 </option>
               ))}
             </select>
-            <span>of {totalPages}</span>
+            <span>of {totalPage}</span>
           </div>
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={page >= totalPages}
+            onClick={() => onPageChange(page + 1)}
+            disabled={page >= totalPage}
           >
             Next
           </Button>

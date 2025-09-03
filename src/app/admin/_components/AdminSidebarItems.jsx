@@ -1,5 +1,6 @@
 'use client';
 import {
+  ArrowLeftRight,
   ChartBarStacked,
   ChartColumnStacked,
   CircleEllipsis,
@@ -158,26 +159,26 @@ export const AdminSidebarItems = {
       icon: CircleEllipsis,
       isActive: true,
     },
-    {
-      title: 'Subscriptions',
-      url: '#',
-      icon: Podcast,
-      isActive: true,
-      items: [
-        {
-          title: 'Add Subscription',
-          url: '/admin/subscription/add',
-          icon: Plus,
-          isActive: true,
-        },
-        {
-          title: 'List of Subscriptions',
-          url: '/admin/subscription/list',
-          icon: List,
-          isActive: true,
-        },
-      ],
-    },
+    // {
+    //   title: 'Subscriptions',
+    //   url: '#',
+    //   icon: Podcast,
+    //   isActive: true,
+    //   items: [
+    //     {
+    //       title: 'Add Subscription',
+    //       url: '/admin/subscription/add',
+    //       icon: Plus,
+    //       isActive: true,
+    //     },
+    //     {
+    //       title: 'List of Subscriptions',
+    //       url: '/admin/subscription/list',
+    //       icon: List,
+    //       isActive: true,
+    //     },
+    //   ],
+    // },
     {
       title: 'Credit Packages',
       url: '#',
@@ -192,6 +193,12 @@ export const AdminSidebarItems = {
         },
       ],
     },
+    {
+      title: 'Transaction Management',
+      url: '/admin/transection-management',
+      icon: ArrowLeftRight, // Set size if needed
+      isActive: true,  
+    },
 
     {
       title: 'Users',
@@ -199,12 +206,6 @@ export const AdminSidebarItems = {
       icon: Users,
       isActive: true,
       items: [
-        // {
-        //   title: 'List of Users',
-        //   url: '/admin/user/list',
-        //   icon: List,
-        //   isActive: true,
-        // },
         {
           title: 'List of Lawyers',
           url: '/admin/user/lawyer-list',
@@ -217,7 +218,18 @@ export const AdminSidebarItems = {
           icon: Logs,
           isActive: true,
         },
-
+        {
+          title: 'List of Client Details',
+          url: '/admin/list-client-details',
+          icon: List,
+          isActive: true,
+        },
+        {
+          title: 'List of Lawyer Details',
+          url: '/admin/list-lawyer-details',
+          icon: List,
+          isActive: true,
+        },
       ],
     },
     {

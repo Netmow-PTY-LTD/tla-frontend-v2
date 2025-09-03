@@ -28,6 +28,8 @@ export function UserDataTable({
   page,
   setPage,
   totalPages,
+  total,
+  limit,
   isFetching,
   search,
   setSearch,
@@ -60,9 +62,7 @@ export function UserDataTable({
         <Input
           placeholder="Filter names..."
           value={search ?? ''}
-          onChange={(event) =>
-            setSearch(event.target.value)
-          }
+          onChange={(event) => setSearch(event.target.value)}
           className="max-w-sm"
         />
       </div>
@@ -118,26 +118,49 @@ export function UserDataTable({
       </div>
 
       {/* Pagination Controls */}
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-          disabled={page <= 1}
-        >
-          Previous
-        </Button>
-        <span className="text-sm">
-          Page {page} of {totalPages}
-        </span>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-          disabled={page >= totalPages}
-        >
-          Next
-        </Button>
+      <div className="flex items-center justify-between space-x-2 py-4">
+        <div className="text-sm font-medium">
+          Showing {(page - 1) * limit + 1}–{Math.min(page * limit, total)} of{' '}
+          {total}{' '}
+          {data[0]?.regUserType === 'lawyer'
+            ? 'Lawyers'
+            : data[0]?.regUserType === 'client'
+            ? 'Clients'
+            : 'Users'}
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+            disabled={page <= 1}
+          >
+            Previous
+          </Button>
+          <div className="flex items-center gap-1 text-sm">
+            <span>Page</span>
+            <select
+              value={page}
+              onChange={(e) => setPage(Number(e.target.value))}
+              className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none"
+            >
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))}
+            </select>
+            <span>of {totalPages}</span>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={page >= totalPages}
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </div>
   );

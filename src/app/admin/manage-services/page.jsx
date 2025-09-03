@@ -172,11 +172,8 @@ export default function ManageServices() {
   //country wise service change handler
 
   const handleCountryWiseServiceChange = (val) => {
-  
     setSelectedService(val);
   };
-
- 
 
   //single service wise questions
 
@@ -213,9 +210,7 @@ export default function ManageServices() {
   const [manageService] = useManageServiceMutation();
 
   async function onSubmit(values) {
-    
-
-    const { baseCredit, thumbImage, bannerImage } = values;
+    const { baseCredit } = values;
 
     const formData = new FormData();
 
@@ -232,16 +227,15 @@ export default function ManageServices() {
     // formData.append('baseCredit', baseCredit || '');
 
     // Append images if FileList contains a File
-    if (thumbImage?.[0] instanceof File) {
-      formData.append('thumbImage', thumbImage[0]);
+    if (thumbImageFile) {
+      formData.append('thumbImage', thumbImageFile);
     }
 
-    if (bannerImage?.[0] instanceof File) {
-      formData.append('bannerImage', bannerImage[0]);
+    if (bannerImageFile) {
+      formData.append('bannerImage', bannerImageFile);
     }
 
-   
-
+    console.log('formdata', formData);
     try {
       const res = await manageService(formData).unwrap();
       if (res) {
@@ -382,17 +376,17 @@ export default function ManageServices() {
                   onSubmit={onSubmit}
                   defaultValues={serviceDefaultValues}
                 >
+                  {/* Base Credit */}
                   <TextInput
                     type="text"
                     name="baseCredit"
                     label="Base Credit"
                     placeholder="Base Credit"
                   />
+
+                  {/* Thumb Image */}
                   <div>
-                    <label
-                      htmlFor="attachment"
-                      className="text-[var(--color-black)] font-medium block mb-2"
-                    >
+                    <label className="text-[var(--color-black)] font-medium block mb-2">
                       Thumb Image
                     </label>
                     {thumbPreviewUrl && (
@@ -432,11 +426,10 @@ export default function ManageServices() {
                       width="w-full"
                     />
                   </div>
+
+                  {/* Banner Image */}
                   <div>
-                    <label
-                      htmlFor="attachment"
-                      className="text-[var(--color-black)] font-medium block mb-2"
-                    >
+                    <label className="text-[var(--color-black)] font-medium block mb-2">
                       Banner Image
                     </label>
                     {bannerPreviewUrl && (
@@ -476,8 +469,9 @@ export default function ManageServices() {
                       width="w-full"
                     />
                   </div>
+
                   <div className="text-center mt-5">
-                    <Button type="submit">{'Save'}</Button>
+                    <Button type="submit">Save</Button>
                   </div>
                 </FormWrapper>
               </CardContent>

@@ -41,7 +41,7 @@ export default function HomeCategoryWiseServices() {
   const { data: countryList } = useGetCountryListQuery();
 
   const defaultCountry = countryList?.data?.find(
-    (country) => country?._id === cookieCountry?.countryId
+    (country) => country?.slug === 'gb'
   );
 
   const { data: allCategories, isLoading: isAllCategoriesLoading } =

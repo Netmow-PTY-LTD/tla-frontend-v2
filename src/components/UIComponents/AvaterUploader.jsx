@@ -5,6 +5,7 @@ import { useFormContext } from 'react-hook-form';
 import { CloudUpload, X } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { userDummyImage } from '@/data/data';
+import resizeAndConvertToWebP from './resizeAndConvertToWebP';
 
 export default function AvatarUploader({
   name = 'avatar',
@@ -30,10 +31,11 @@ export default function AvatarUploader({
   }, [file]);
 
   // Handle file input
-  const handleChange = (e) => {
+  const handleChange =async (e) => {
     const uploaded = e.target.files?.[0];
-    if (uploaded) {
-      setValue(name, uploaded, { shouldValidate: true });
+        const webpFile = await resizeAndConvertToWebP(uploaded, 500, 0.8);
+    if (webpFile) {
+      setValue(name, webpFile, { shouldValidate: true });
     }
   };
 

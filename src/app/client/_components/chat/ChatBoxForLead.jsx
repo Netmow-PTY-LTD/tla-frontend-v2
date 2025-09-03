@@ -33,10 +33,10 @@ dayjs.locale('en-short', {
 
 export default function ChatBoxForLead({ response }) {
   const responseId = response?._id;
- 
+
   const currentUser = useSelector(selectCurrentUser);
   const userId = currentUser?._id;
-  const toUserId = response?.responseBy?.user?._id  // this id of lawyer 
+  const toUserId = response?.responseBy?.user?._id; // this id of lawyer
   const [message, setMessage] = useState('');
   const [liveMessages, setLiveMessages] = useState([]);
 
@@ -81,7 +81,10 @@ export default function ChatBoxForLead({ response }) {
       setLiveMessages((prev) =>
         prev.map((msg) =>
           msg._id === messageId
-            ? { ...msg, readBy: [...new Set([...(msg.readBy || []), readerId])] }
+            ? {
+                ...msg,
+                readBy: [...new Set([...(msg.readBy || []), readerId])],
+              }
             : msg
         )
       );
@@ -101,9 +104,14 @@ export default function ChatBoxForLead({ response }) {
   // ✅ Send message
   const sendMessage = () => {
     const socket = socketRef.current;
-      if (!message.trim() || !socket || !toUserId) return;
+    if (!message.trim() || !socket || !toUserId) return;
     if (message.trim() && socket) {
-      socket.emit('message', { responseId, from: userId, message, to:toUserId });
+      socket.emit('message', {
+        responseId,
+        from: userId,
+        message,
+        to: toUserId,
+      });
       setMessage('');
     }
   };
@@ -125,8 +133,6 @@ export default function ChatBoxForLead({ response }) {
   //   });
   // }, [liveMessages, responseId, userId]);
 
-
-
   useEffect(() => {
     if (!socketRef.current || !userId || !responseId) return;
 
@@ -143,12 +149,6 @@ export default function ChatBoxForLead({ response }) {
       });
     });
   }, [liveMessages, responseId, userId]);
-
-
-
-
-
-
 
   const messageBoxRef = useRef(null);
 
@@ -184,8 +184,11 @@ export default function ChatBoxForLead({ response }) {
             return (
               <div
                 key={m._id || i}
-                className={`flex items-center gap-2 ${isCurrentUser ? 'flex-row-reverse' : 'justify-start'
-                  }`}
+                className={`flex items-center gap-2 w-1/2 ${
+                  isCurrentUser
+                    ? 'flex-row-reverse ml-auto'
+                    : 'justify-start mr-auto'
+                }`}
               >
                 <Image
                   src={m?.from?.profile?.profilePicture || userDummyImage}
@@ -194,29 +197,33 @@ export default function ChatBoxForLead({ response }) {
                   height={40}
                   className="rounded-full object-cover w-10 h-10 border border-gray-300"
                 />
-                <div className="flex flex-col items-end gap-0.5">
-                  <p
-                    className={`text-[11px] ${isCurrentUser ? 'text-right' : ''
-                      }`}
-                  >
+                <div
+                  className={`flex flex-col gap-0.5 ${
+                    isCurrentUser ? 'items-end' : 'items-start'
+                  }`}
+                >
+                  <p className="text-[11px] text-gray-500">
                     {dayjs(m.createdAt).locale('en-short').fromNow()}
                   </p>
+
                   <div
-                    className={`rounded p-2 ${isCurrentUser
-                      ? 'bg-[var(--secondary-color)] text-right'
-                      : 'bg-gray-300 text-left'
-                      }`}
+                    className={`rounded p-2 ${
+                      isCurrentUser
+                        ? 'bg-[var(--secondary-color)] text-right'
+                        : 'bg-gray-300 text-left'
+                    }`}
                   >
                     <div className="flex items-center justify-between gap-4">
                       <p
-                        className={`text-xs font-semibold ${isCurrentUser ? 'text-white' : ''
-                          }`}
+                        className={`text-xs font-semibold ${
+                          isCurrentUser ? 'text-white' : ''
+                        }`}
                       >
                         {isCurrentUser
                           ? 'You'
                           : typeof m.from === 'object'
-                            ? m.from.profile?.name || m.from._id
-                            : m.from}
+                          ? m.from.profile?.name || m.from._id
+                          : m.from}
                       </p>
                     </div>
                     <div
@@ -255,6 +262,3 @@ export default function ChatBoxForLead({ response }) {
     </div>
   );
 }
-
-
-

@@ -18,7 +18,7 @@ export default function DashboardFooter() {
       <div className="container">
         <p className="font-semibold">
           Copyright &copy; {new Date().getFullYear()} |{' '}
-          <Link href={homeUrl}>The LawAppOnline</Link>.
+          <Link href={homeUrl}>TheLawApp</Link>.
         </p>
       </div>
     </footer>
