@@ -42,16 +42,11 @@ export default function MyResponseDetails({
   onBack,
   setIsLoading,
   singleResponse,
-  selectedResponse,
   isSingleResponseLoading,
   singleResponseRefetch,
   data,
   searchParams,
-  forceSkeleton = false,
-  onSkeletonFinish = () => { },
 }) {
-  // Find the selected responseId from selectedResponse (if present)
-  const selectedResponseId = selectedResponse?._id || selectedResponse?.data?._id;
   const [activeTab, setActiveTab] = useState('activity');
   const [isExpanded, setIsExpanded] = useState(false);
   const [openMail, setOpenMail] = useState(false);
@@ -59,10 +54,9 @@ export default function MyResponseDetails({
   const [onlineMap, setOnlineMap] = useState({});
   const currentUserId = useSelector(selectCurrentUser)?._id;
 
-  // Use selectedResponse for instant display, update to singleResponse when loaded
-  const responseData = singleResponse || selectedResponse;
-  const toUser = responseData?.data?.leadId?.userProfileId?.user?._id;
-  const leadUser = responseData?.data?.leadId?.userProfileId?.user?._id;
+  const toUser = singleResponse?.data?.leadId?.userProfileId?.user?._id;
+
+  const leadUser = singleResponse?.data?.leadId?.userProfileId?.user?._id;
 
   //  ---------------------------     This  For socket start area -----------------------
   // Safely extract user IDs from AllLeadData
@@ -89,7 +83,7 @@ export default function MyResponseDetails({
   });
 
   //  -----------------------------------  socent end area --------------------------------------------
-  const badge = responseData?.data?.leadId?.userProfileId?.profileType;
+  const badge = singleResponse?.data?.leadId?.userProfileId?.profileType;
 
   const [hireStatusUpdate] = useHireStatusMutation();
   const [updateActivity] = useActivityLogMutation();
@@ -98,7 +92,7 @@ export default function MyResponseDetails({
 
   const fallbackText = `If you're facing a divorce, it's crucial to seek professional legal advice. Our consultations cover everything from asset division to child custody arrangements, ensuring you understand your rights and options. Let us help you navigate this challenging time with expert guidance.`;
 
-  const additionalDetails = responseData?.data?.leadId?.additionalDetails;
+  const additionalDetails = singleResponse?.data?.leadId?.additionalDetails;
   const fullText =
     additionalDetails && additionalDetails.trim() !== ''
       ? additionalDetails
@@ -123,7 +117,7 @@ export default function MyResponseDetails({
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, []);
 
-  const mapUrl = getStaticMapUrl(responseData?.data?.responseBy?.address);
+  const mapUrl = getStaticMapUrl(singleResponse?.data?.responseBy?.address);
 
   const handleUpdateHireStatus = async (hireDecision) => {
     try {
@@ -143,7 +137,8 @@ export default function MyResponseDetails({
   };
 
   const groupedByDate = (() => {
-    const logs = responseData?.data?.activity || [];
+    const logs = singleResponse?.data?.activity || [];
+
     return logs.reduce((acc, log) => {
       const dateKey = new Date(log.date).toISOString().split('T')[0];
       if (!acc[dateKey]) {
@@ -204,7 +199,7 @@ export default function MyResponseDetails({
             '_blank'
           );
         }
-      } catch (error) { }
+      } catch (error) {}
     }
     if (type === 'sendemail') {
       setOpenMail(true);
@@ -232,19 +227,9 @@ export default function MyResponseDetails({
     }
   };
 
-  // Show skeleton if forceSkeleton is true or API is loading
-  // When API data arrives, call onSkeletonFinish to reset skeleton state in parent
-  useEffect(() => {
-    if (!isSingleResponseLoading && forceSkeleton) {
-      onSkeletonFinish();
-    }
-  }, [isSingleResponseLoading, forceSkeleton, onSkeletonFinish]);
-
-  const showSkeleton = forceSkeleton || (isSingleResponseLoading && selectedResponse);
-
   return (
     <>
-      {showSkeleton ? (
+      {isSingleResponseLoading ? (
         <ResponseSkeleton />
       ) : (
         <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
@@ -269,14 +254,14 @@ export default function MyResponseDetails({
               {
                 // 1st - if hired == already hired some one
                 // 2nd - if there is requested == requested
-                responseData?.data?.leadId?.isHired ? (
+                singleResponse?.data?.leadId?.isHired ? (
                   <p className="text-green-600 font-medium text-sm">
                     {currentUserId ===
-                      responseData?.data?.leadId?.hiredBy?.user?._id
+                    singleResponse?.data?.leadId?.hiredBy?.user?._id
                       ? '✅ You hired on this case'
                       : '✅ Someone already hired'}
                   </p>
-                ) : responseData?.data?.isHireRequested ? (
+                ) : singleResponse?.data?.isHireRequested ? (
                   <div className="flex items-center space-x-3">
                     <p className="text-gray-800 text-sm font-medium">
                       You have a request to hire.
@@ -296,11 +281,11 @@ export default function MyResponseDetails({
                 <figure className="w-20 h-20 overflow-hidden ">
                   <Image
                     src={
-                      responseData?.data?.leadId?.userProfileId
+                      singleResponse?.data?.leadId?.userProfileId
                         ?.profilePicture || userDummyImage
                     }
                     alt={
-                      responseData?.data?.leadId?.userProfileId?.name || ''
+                      singleResponse?.data?.leadId?.userProfileId?.name || ''
                     }
                     width={80}
                     height={80}
@@ -312,13 +297,14 @@ export default function MyResponseDetails({
                 <div>
                   <div className="flex items-center gap-3">
                     <h2 className="font-medium heading-md">
-                      {responseData?.data?.leadId?.userProfileId?.name}
+                      {singleResponse?.data?.leadId?.userProfileId?.name}
                     </h2>
                     <span className="text-xs">
                       <div className="flex items-center gap-2 text-sm">
                         <span
-                          className={`ml-2 w-2 h-2 rounded-full ${onlineMap[leadUser] ? 'bg-green-500' : 'bg-gray-400'
-                            }`}
+                          className={`ml-2 w-2 h-2 rounded-full ${
+                            onlineMap[leadUser] ? 'bg-green-500' : 'bg-gray-400'
+                          }`}
                         ></span>
                         <span className="text-gray-700">
                           {onlineMap[leadUser] ? 'Online' : 'Offline'}
@@ -328,7 +314,7 @@ export default function MyResponseDetails({
                   </div>
 
                   <p className="text-gray-500 mt-2">
-                    {responseData?.data?.leadId?.userProfileId?.address}
+                    {singleResponse?.data?.leadId?.userProfileId?.address}
                   </p>
                 </div>
               </div>
@@ -339,14 +325,14 @@ export default function MyResponseDetails({
                   <PhoneOutgoing className="w-5 h-5" />{' '}
                   <span>
                     Phone:{' '}
-                    {responseData?.data?.leadId?.userProfileId?.phone || ''}
+                    {singleResponse?.data?.leadId?.userProfileId?.phone || ''}
                   </span>{' '}
                 </div>
                 <div className=" flex items-center gap-2 mt-2 admin-text font-medium">
                   <AtSign className="w-5 h-5" />{' '}
                   <span>
                     Email:{' '}
-                    {responseData?.data?.leadId?.userProfileId?.user?.email ||
+                    {singleResponse?.data?.leadId?.userProfileId?.user?.email ||
                       ''}
                   </span>{' '}
                 </div>
@@ -396,19 +382,19 @@ export default function MyResponseDetails({
                 <BadgeCent />
                 <b>
                   {' '}
-                  {responseData?.data?.credit}{' '}
-                  {responseData?.data?.credit > 1 ? 'credits' : 'credit'}{' '}
+                  {singleResponse?.data?.credit}{' '}
+                  {singleResponse?.data?.credit > 1 ? 'credits' : 'credit'}{' '}
                 </b>
               </div>
               <hr className="w-full mt-5" />
               <div className="mt-5">
                 <h4 className="font-medium mb-1 heading-base">
-                  Looking for a {responseData?.data?.serviceId?.name || ''}{' '}
+                  Looking for a {singleResponse?.data?.serviceId?.name || ''}{' '}
                   consultation
                 </h4>
                 <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
                   <h5 className="font-medium mb-2 heading-base">
-                    {responseData?.data?.serviceId?.name || ''}
+                    {singleResponse?.data?.serviceId?.name || ''}
                   </h5>
                   <div className="text-sm text-[#34495E] ">
                     {displayText}
@@ -428,19 +414,21 @@ export default function MyResponseDetails({
                 <div className="flex border-b border-gray-200 gap-6">
                   <button
                     onClick={() => setActiveTab('activity')}
-                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
-                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                      : 'hover:text-black'
-                      }`}
+                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                      activeTab === 'activity'
+                        ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                        : 'hover:text-black'
+                    }`}
                   >
                     Activity
                   </button>
                   <button
                     onClick={() => setActiveTab('lead-details')}
-                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'lead-details'
-                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                      : 'hover:text-black'
-                      }`}
+                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                      activeTab === 'lead-details'
+                        ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                        : 'hover:text-black'
+                    }`}
                   >
                     Case Details
                   </button>
@@ -456,10 +444,11 @@ export default function MyResponseDetails({
                 </button> */}
                   <button
                     onClick={() => setActiveTab('chat')}
-                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'chat'
-                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                      : 'hover:text-black'
-                      }`}
+                    className={`relative pb-2 text-gray-600 font-normal transition-colors ${
+                      activeTab === 'chat'
+                        ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                        : 'hover:text-black'
+                    }`}
                   >
                     Chat
                   </button>
@@ -486,18 +475,20 @@ export default function MyResponseDetails({
                         return (
                           <Fragment key={index}>
                             <div
-                              className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${index === 0 ? '' : 'border-l border-[#e6e7ec]'
-                                }`}
+                              className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${
+                                index === 0 ? '' : 'border-l border-[#e6e7ec]'
+                              }`}
                             >
                               {formattedDate}
                             </div>
                             {activity?.logs?.map((item, i) => {
                               return (
                                 <div
-                                  className={`activity-log-item flex gap-2 ${index === 0 && i === 0
-                                    ? 'first-log-item'
-                                    : ''
-                                    }`}
+                                  className={`activity-log-item flex gap-2 ${
+                                    index === 0 && i === 0
+                                      ? 'first-log-item'
+                                      : ''
+                                  }`}
                                   key={i}
                                 >
                                   <div className="left-track flex-grow-0 flex flex-col w-[32px] items-center">
@@ -575,7 +566,7 @@ export default function MyResponseDetails({
                   )}
                   {activeTab === 'lead-details' && (
                     <div className="flex flex-col gap-5">
-                      {responseData?.data?.leadAnswers?.map(
+                      {singleResponse?.data?.leadAnswers?.map(
                         (leadAnswer, i) => (
                           <div key={i}>
                             <p className="text-[var(--color-special)] font-medium">
@@ -607,8 +598,8 @@ export default function MyResponseDetails({
                   )}
                   {activeTab === 'chat' && (
                     <div>
-                      {responseData?.data && (
-                        <ChatBox response={responseData?.data} />
+                      {singleResponse?.data && (
+                        <ChatBox response={singleResponse?.data} />
                       )}
                     </div>
                   )}
@@ -620,12 +611,12 @@ export default function MyResponseDetails({
       )}
 
       <SendMailModal
-        info={responseData?.data}
+        info={singleResponse?.data}
         openMail={openMail}
         setOpenMail={setOpenMail}
       />
       <SendSmsModal
-        info={responseData?.data}
+        info={singleResponse?.data}
         openSms={openSms}
         setOpenSms={setOpenSms}
       />

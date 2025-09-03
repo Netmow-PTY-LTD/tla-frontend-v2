@@ -120,16 +120,10 @@ const LeadsBoardPage = () => {
 
   useEffect(() => {
     if (leads?.length > 0) {
-      // If selectedLead is not in the new leads list, select the first one
-      const stillExists = selectedLead && leads.some(l => l._id === selectedLead._id);
-      if (!stillExists) {
-        setSelectedLead(leads[0]);
-      }
-      // else: keep the current selectedLead
+      setSelectedLead(leads[0]);
     } else {
       setSelectedLead(null);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [leads, searchKeyword]);
 
   // Fetch detailed data for selected lead
