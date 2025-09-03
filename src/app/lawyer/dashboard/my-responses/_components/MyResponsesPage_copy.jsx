@@ -22,10 +22,6 @@ export default function MyResponsesPage() {
   const [totalPages, setTotalPages] = useState(null);
   const [totalResponsesCount, setTotalResponsesCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  // --- Skeleton loader control ---
-  const [forceSkeleton, setForceSkeleton] = useState(false);
-  const skeletonTimerRef = useRef(null);
-
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const responseId = searchParams.get('responseId');
@@ -284,22 +280,11 @@ export default function MyResponsesPage() {
                   onBack={() => setShowResponseDetails(false)}
                   setIsLoading={setIsLoading}
                   isLoading={isLoading}
-                  singleResponse={singleResponse}
-                  selectedResponse={selectedResponse}
+                  singleResponse={singleResponse || selectedResponse}
                   isSingleResponseLoading={isSingleResponseLoading}
                   singleResponseRefetch={singleResponseRefetch}
                   data={responses || []}
                   searchParams={searchParams}
-                  forceSkeleton={forceSkeleton}
-                  onSkeletonFinish={() => {
-                    // Always show skeleton for at least 3 seconds, reset timer on every click
-                    if (skeletonTimerRef.current) {
-                      clearTimeout(skeletonTimerRef.current);
-                    }
-                    skeletonTimerRef.current = setTimeout(() => {
-                      setForceSkeleton(false);
-                    }, 3000);
-                  }}
                 />
               </div>
             </div>
@@ -329,16 +314,9 @@ export default function MyResponsesPage() {
                 <LeadsRight
                   isExpanded={!showResponseDetails}
                   onViewDetails={(response, responseId) => {
-                    setSelectedResponse(null); // Reset to force skeleton
+                    setSelectedResponse(response);
                     setShowResponseDetails(true);
                     setSelectedResponseId(responseId);
-                    setForceSkeleton(true); // Always force skeleton on every click
-                    // Clear any previous skeleton timer
-                    if (skeletonTimerRef.current) {
-                      clearTimeout(skeletonTimerRef.current);
-                    }
-                    // Set selectedResponse after a tick to allow skeleton to show
-                    setTimeout(() => setSelectedResponse(response), 0);
                   }}
                   selectedResponse={selectedResponse}
                   data={responses || []}
