@@ -26,7 +26,7 @@ export default function MyProfilePage() {
       content: <PublicProfile />,
     },
     // { id: 'media', title: 'Photos', content: <Media /> },
-    { id: 'media', title: 'Photos', content: <MediaTest /> },
+    { id: 'media', title: 'Photos & Videos', content: <MediaTest /> },
     {
       id: 'social',
       title: 'Social Media Links',
@@ -66,5 +66,3 @@ export default function MyProfilePage() {
     </div>
   );
 }
-
-

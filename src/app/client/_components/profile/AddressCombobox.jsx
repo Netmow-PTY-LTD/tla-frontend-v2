@@ -4,8 +4,12 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { safeJsonParse } from '@/helpers/safeJsonParse';
 import { cn } from '@/lib/utils';
-import { useGetZipCodeListQuery } from '@/store/features/public/publicApiService';
+import {
+  useGetCountryListQuery,
+  useGetZipCodeListQuery,
+} from '@/store/features/public/publicApiService';
 import {
   Combobox,
   ComboboxButton,
@@ -13,19 +17,46 @@ import {
   ComboboxOption,
   ComboboxOptions,
 } from '@headlessui/react';
+import Cookies from 'js-cookie';
 import { Check, ChevronDown } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 export default function AddressCombobox() {
   const { control } = useFormContext();
   const { data: zipcodeData } = useGetZipCodeListQuery();
   const [query, setQuery] = useState('');
-  const [selectedZipcode, setSelectedZipcode] = useState(null);
+  const [selectedZipcodeId, setSelectedZipcodeId] = useState(null);
+  const [debouncedSearch, setDebouncedSearch] = useState('');
 
-  // Filter zipcodes based on query
-  const filteredZipcodes = zipcodeData?.data?.filter((item) =>
-    item.zipcode.toLowerCase().includes(query.toLowerCase())
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDebouncedSearch(query);
+    }, 500); // wait 500ms after typing
+
+    return () => clearTimeout(timeout); // cleanup on each keystroke
+  }, [query]);
+
+  const { data: countryList } = useGetCountryListQuery();
+
+  const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
+
+  const defaultCountry = countryList?.data?.find(
+    (country) => country?._id === cookieCountry?.countryId
+  );
+
+  const paramsPayload = {
+    countryId: defaultCountry?._id,
+    search: debouncedSearch || '',
+  };
+
+  const { data: allZipCodes, isLoading: isZipCodeLoading } =
+    useGetZipCodeListQuery(paramsPayload, {
+      skip: !defaultCountry?._id || !debouncedSearch,
+    });
+
+  const selectedZipCode = allZipCodes?.data?.find(
+    (z) => z._id === selectedZipcodeId
   );
 
   return (
@@ -36,9 +67,9 @@ export default function AddressCombobox() {
         <FormItem>
           <FormLabel>Address</FormLabel>
           <Combobox
-            value={selectedZipcode || field.value}
+            value={selectedZipcodeId || field.value}
             onChange={(val) => {
-              setSelectedZipcode(val);
+              setSelectedZipcodeId(val);
               field.onChange(val);
             }}
           >
@@ -46,16 +77,14 @@ export default function AddressCombobox() {
               <ComboboxInput
                 className="border border-gray-300 rounded-md w-full h-[44px] px-4"
                 onChange={(e) => setQuery(e.target.value)}
-                displayValue={(val) =>
-                  zipcodeData?.data?.find((z) => z.zipcode === val)?.zipcode ||
-                  ''
-                }
+                displayValue={selectedZipCode?.zipcode || field.value || ''} // Display the selected value
                 placeholder="Select an Address"
+                autoComplete="off"
               />
 
-              {filteredZipcodes?.length > 0 && (
+              {allZipCodes?.data?.length > 0 && (
                 <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  {filteredZipcodes.slice(0, 10).map((item) => (
+                  {allZipCodes?.data?.slice(0, 10).map((item) => (
                     <ComboboxOption
                       key={item._id}
                       value={item.zipcode}
