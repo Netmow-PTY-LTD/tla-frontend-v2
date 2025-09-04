@@ -10,16 +10,26 @@ const dashboardStatsApiService = baseApi.injectEndpoints({
       }),
       providesTags: ['dashboard-stats'],
     }),
+    getDashboardBarChartData: builder.query({
+      query: ({ year, month }) => ({
+        url: `/admin/dashboard/bar-chart`,
+        method: 'GET',
+        params: { year, month },
+      }),
+      providesTags: ['dashboard-stats'],
+    }),
     getDashboardStats: builder.query({
-      query: ({ startDate, endDate }) => ({
+      query: () => ({
         url: `/admin/dashboard/stats`,
         method: 'GET',
-        params: { startDate, endDate },
       }),
       providesTags: ['dashboard-stats'],
     }),
   }),
 });
 
-export const { useGetDashboardSChartDataQuery, useGetDashboardStatsQuery } =
-  dashboardStatsApiService;
+export const {
+  useGetDashboardSChartDataQuery,
+  useGetDashboardBarChartDataQuery,
+  useGetDashboardStatsQuery,
+} = dashboardStatsApiService;
