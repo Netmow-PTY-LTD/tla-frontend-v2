@@ -6,6 +6,9 @@ import data from '@/data/data.json';
 import { AllTransactionHistory } from './_components/AllTransactionHistory';
 import { safeJsonParse } from '@/helpers/safeJsonParse';
 import Cookies from 'js-cookie';
+import { ChartBarInteractive } from './_components/ChartBarInteractive';
+import { ChartBarYearly } from './_components/ChartBarMultiple';
+import { ChartBarMonthly } from './_components/ChartBarMonthly';
 
 const AdminDashboardPage = () => {
   const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
@@ -15,6 +18,13 @@ const AdminDashboardPage = () => {
       <SectionCards />
       <div>
         <ChartAreaInteractive />
+      </div>
+      <div className="grid grid-cols-1">
+        {/* <ChartBarInteractive /> */}
+        <ChartBarMonthly />
+      </div>
+      <div className="grid grid-cols-1">
+        <ChartBarYearly />
       </div>
       <AllTransactionHistory />
       {/* <AdminHomeDataTable data={data} /> */}

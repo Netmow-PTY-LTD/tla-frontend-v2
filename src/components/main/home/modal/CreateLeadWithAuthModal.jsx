@@ -362,7 +362,7 @@ export default function CreateLeadWithAuthModal({
       questions: [...questionsPayload],
       leadPriority,
       additionalDetails,
-      budgetAmount,
+      budgetAmount: budgetAmount || 0,
       addressInfo,
     };
 
