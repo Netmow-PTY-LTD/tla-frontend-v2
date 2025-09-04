@@ -9,6 +9,7 @@ import Cookies from 'js-cookie';
 import { ChartBarInteractive } from './_components/ChartBarInteractive';
 import { ChartBarYearly } from './_components/ChartBarMultiple';
 import { ChartBarMonthly } from './_components/ChartBarMonthly';
+import InteractiveBarChart from './_components/ChartBarWithMultipleFilter';
 
 const AdminDashboardPage = () => {
   const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
@@ -20,12 +21,16 @@ const AdminDashboardPage = () => {
         <ChartAreaInteractive />
       </div>
       <div className="grid grid-cols-1">
+        <InteractiveBarChart />
+      </div>
+      <div className="grid grid-cols-1">
         {/* <ChartBarInteractive /> */}
         <ChartBarMonthly />
       </div>
       <div className="grid grid-cols-1">
         <ChartBarYearly />
       </div>
+
       <AllTransactionHistory />
       {/* <AdminHomeDataTable data={data} /> */}
     </div>
