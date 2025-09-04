@@ -7,6 +7,7 @@ import { Suspense } from 'react';
 import Preloader from '@/components/Preloader';
 import Script from 'next/script';
 import { Toaster } from 'sonner';
+import CookieGlobalInit from '@/components/CookieGlobalInit';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -38,10 +39,11 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className={`${poppins.variable} antialiased`}>
+        <CookieGlobalInit />
         <ReduxProvider>
           <Suspense fallback={<Preloader />}>
             <SocketProvider>
-              <Toaster  position='top-center'/>
+              <Toaster position="top-center" />
               {children}
             </SocketProvider>
           </Suspense>

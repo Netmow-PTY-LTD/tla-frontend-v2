@@ -126,6 +126,7 @@ export const baseApi = createApi({
     'client-cases',
     'all-client',
     'all-lawyer',
+    'dashboard-stats',
   ],
   endpoints: () => ({}),
 });

@@ -80,8 +80,8 @@ export default function HeroHome({ searchParam, cookieCountry }) {
   const allServices =
     allCategories?.data?.flatMap((category) => category.services) || [];
 
-  console.log('allCategories', allCategories);
-  console.log('allServices', allServices);
+  // console.log('allCategories', allCategories);
+  // console.log('allServices', allServices);
 
   useEffect(() => {
     if (!selectedService?._id) return;

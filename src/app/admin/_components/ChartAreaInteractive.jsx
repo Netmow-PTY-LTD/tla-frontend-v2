@@ -25,6 +25,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import {
+  useGetDashboardSChartDataQuery,
+  useGetDashboardStatsQuery,
+} from '@/store/features/admin/dashboardStatsApiService';
 
 const chartData = [
   {
@@ -343,6 +347,8 @@ const chartConfig = {
 export function ChartAreaInteractive() {
   const isMobile = useIsMobile();
   const [timeRange, setTimeRange] = React.useState('30d');
+  const [startDate, setStartDate] = React.useState('2025-08-01');
+  const [endDate, setEndDate] = React.useState('2025-08-30');
 
   React.useEffect(() => {
     if (isMobile) {
@@ -350,22 +356,30 @@ export function ChartAreaInteractive() {
     }
   }, [isMobile]);
 
-  const filteredData = chartData.filter((item) => {
-    const date = new Date(item.date);
-    const referenceDate = new Date('2024-06-30'); // fixed end date
-    let daysToSubtract = 90;
-
-    if (timeRange === '30d') {
-      daysToSubtract = 30;
-    } else if (timeRange === '7d') {
-      daysToSubtract = 7;
-    }
-
-    const startDate = new Date(referenceDate);
-    startDate.setDate(startDate.getDate() - (daysToSubtract - 1)); // <-- key change
-
-    return date >= startDate && date <= referenceDate;
+  const { data: dashboardData } = useGetDashboardSChartDataQuery({
+    startDate,
+    endDate,
   });
+
+  console.log('dashboardData', dashboardData);
+
+  const filteredData = React.useMemo(() => {
+    if (!dashboardData?.data) return [];
+
+    let daysToSubtract = 90;
+    if (timeRange === '30d') daysToSubtract = 30;
+    if (timeRange === '7d') daysToSubtract = 7;
+
+    // Convert state values (strings) into Date objects
+    const end = new Date(endDate); // reference end date
+    const start = new Date(end); // clone
+    start.setDate(start.getDate() - (daysToSubtract - 1));
+
+    return dashboardData.data.filter((item) => {
+      const date = new Date(item.date);
+      return date >= start && date <= end;
+    });
+  }, [dashboardData, timeRange, startDate, endDate]);
 
   return (
     <Card className="@container/card">
