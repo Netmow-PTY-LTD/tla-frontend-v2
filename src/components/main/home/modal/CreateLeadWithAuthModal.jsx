@@ -17,6 +17,8 @@ import {
 } from '@headlessui/react';
 import { useGetZipCodeListQuery } from '@/store/features/public/publicApiService';
 import { cn } from '@/lib/utils';
+import { safeJsonParse } from '@/helpers/safeJsonParse';
+import Cookies from 'js-cookie';
 
 export default function CreateLeadWithAuthModal({
   modalOpen,
@@ -61,6 +63,7 @@ export default function CreateLeadWithAuthModal({
   const [questionLoading, setQuestionLoading] = useState(false);
 
   const [budgetAmount, setBudgetAmount] = useState('');
+  const [isNotSure, setIsNotSure] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [stepwiseCheckedOptions, setStepwiseCheckedOptions] = useState(null);
   const [zipCode, setZipCode] = useState('');
@@ -93,6 +96,8 @@ export default function CreateLeadWithAuthModal({
   const handleModalOpen = () => {
     setModalOpen(true);
   };
+
+  const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -357,7 +362,7 @@ export default function CreateLeadWithAuthModal({
       questions: [...questionsPayload],
       leadPriority,
       additionalDetails,
-      budgetAmount,
+      budgetAmount: budgetAmount || 0,
       addressInfo,
     };
 
@@ -435,7 +440,7 @@ export default function CreateLeadWithAuthModal({
     }
 
     if (step === totalQuestions + 2) {
-      return !budgetAmount?.trim();
+      return !budgetAmount?.trim() && !isNotSure;
     }
 
     if (step === totalSteps - 1) {
@@ -681,15 +686,34 @@ export default function CreateLeadWithAuthModal({
                   value={budgetAmount}
                   onChange={(e) => setBudgetAmount(e.target.value)}
                   placeholder="Enter amount"
+                  disabled={isNotSure}
                 />
                 <input
                   type="text"
                   className="border rounded px-3 py-2 w-20 text-center"
-                  value={country.currency}
+                  value={cookieCountry.currency}
                   placeholder='currency i.e."AUD"'
                   readOnly
                 />
               </div>
+            </div>
+            <div className="flex items-center gap-2 mt-2">
+              <input
+                type="checkbox"
+                id="notSure"
+                className="w-4 h-4"
+                checked={isNotSure}
+                onChange={(e) => {
+                  const checked = e.target.checked;
+                  setIsNotSure(checked);
+                  if (checked) {
+                    setBudgetAmount('');
+                  }
+                }}
+              />
+              <label htmlFor="notSure" className="text-sm cursor-pointer">
+                I'm not sure
+              </label>
             </div>
           </div>
         ) : step === totalSteps - 1 ? (

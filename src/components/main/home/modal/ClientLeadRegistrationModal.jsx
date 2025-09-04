@@ -22,6 +22,8 @@ import parsePhoneNumberFromString, {
 } from 'libphonenumber-js';
 import { useGetZipCodeListQuery } from '@/store/features/public/publicApiService';
 import country from '@/data/au.json';
+import { safeJsonParse } from '@/helpers/safeJsonParse';
+import Cookies from 'js-cookie';
 
 export default function ClientLeadRegistrationModal({
   modalOpen,
@@ -66,6 +68,7 @@ export default function ClientLeadRegistrationModal({
   const [questionLoading, setQuestionLoading] = useState(false);
 
   const [budgetAmount, setBudgetAmount] = useState('');
+  const [isNotSure, setIsNotSure] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -102,6 +105,11 @@ export default function ClientLeadRegistrationModal({
     setModalOpen(true);
   };
 
+  const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
+
+  //console.log('cookieCountry', cookieCountry);
+
+  const [authClientRegister] = useAuthClientRegisterMutation();
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -363,7 +371,7 @@ export default function ClientLeadRegistrationModal({
     const leadDetails = {
       leadPriority,
       additionalDetails,
-      budgetAmount,
+      budgetAmount: budgetAmount || 0,
       zipCode: addressInfo?.zipcode,
       name,
       email,
@@ -467,7 +475,7 @@ export default function ClientLeadRegistrationModal({
     }
 
     if (step === totalQuestions + 3) {
-      return !budgetAmount?.trim();
+      return !budgetAmount?.trim() && !isNotSure;
     }
 
     // Step: ZIP Code (required)
@@ -771,15 +779,34 @@ export default function ClientLeadRegistrationModal({
                   value={budgetAmount}
                   onChange={(e) => setBudgetAmount(e.target.value)}
                   placeholder="Enter amount"
+                  disabled={isNotSure}
                 />
                 <input
                   type="text"
                   className="border rounded px-3 py-2 w-20 text-center"
-                  defaultValue={country.currency}
+                  defaultValue={cookieCountry.currency}
                   placeholder='currency i.e. "AUD"'
                   readOnly
                 />
               </div>
+            </div>
+            <div className="flex items-center gap-2 mt-2">
+              <input
+                type="checkbox"
+                id="notSure"
+                className="w-4 h-4"
+                checked={isNotSure}
+                onChange={(e) => {
+                  const checked = e.target.checked;
+                  setIsNotSure(checked);
+                  if (checked) {
+                    setBudgetAmount('');
+                  }
+                }}
+              />
+              <label htmlFor="notSure" className="text-sm cursor-pointer">
+                I'm not sure
+              </label>
             </div>
           </div>
         ) : step === totalQuestions + 4 ? (

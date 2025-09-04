@@ -25,117 +25,334 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-const chartData = [
-  { date: '2024-04-01', desktop: 222, mobile: 150 },
-  { date: '2024-04-02', desktop: 97, mobile: 180 },
-  { date: '2024-04-03', desktop: 167, mobile: 120 },
-  { date: '2024-04-04', desktop: 242, mobile: 260 },
-  { date: '2024-04-05', desktop: 373, mobile: 290 },
-  { date: '2024-04-06', desktop: 301, mobile: 340 },
-  { date: '2024-04-07', desktop: 245, mobile: 180 },
-  { date: '2024-04-08', desktop: 409, mobile: 320 },
-  { date: '2024-04-09', desktop: 59, mobile: 110 },
-  { date: '2024-04-10', desktop: 261, mobile: 190 },
-  { date: '2024-04-11', desktop: 327, mobile: 350 },
-  { date: '2024-04-12', desktop: 292, mobile: 210 },
-  { date: '2024-04-13', desktop: 342, mobile: 380 },
-  { date: '2024-04-14', desktop: 137, mobile: 220 },
-  { date: '2024-04-15', desktop: 120, mobile: 170 },
-  { date: '2024-04-16', desktop: 138, mobile: 190 },
-  { date: '2024-04-17', desktop: 446, mobile: 360 },
-  { date: '2024-04-18', desktop: 364, mobile: 410 },
-  { date: '2024-04-19', desktop: 243, mobile: 180 },
-  { date: '2024-04-20', desktop: 89, mobile: 150 },
-  { date: '2024-04-21', desktop: 137, mobile: 200 },
-  { date: '2024-04-22', desktop: 224, mobile: 170 },
-  { date: '2024-04-23', desktop: 138, mobile: 230 },
-  { date: '2024-04-24', desktop: 387, mobile: 290 },
-  { date: '2024-04-25', desktop: 215, mobile: 250 },
-  { date: '2024-04-26', desktop: 75, mobile: 130 },
-  { date: '2024-04-27', desktop: 383, mobile: 420 },
-  { date: '2024-04-28', desktop: 122, mobile: 180 },
-  { date: '2024-04-29', desktop: 315, mobile: 240 },
-  { date: '2024-04-30', desktop: 454, mobile: 380 },
-  { date: '2024-05-01', desktop: 165, mobile: 220 },
-  { date: '2024-05-02', desktop: 293, mobile: 310 },
-  { date: '2024-05-03', desktop: 247, mobile: 190 },
-  { date: '2024-05-04', desktop: 385, mobile: 420 },
-  { date: '2024-05-05', desktop: 481, mobile: 390 },
-  { date: '2024-05-06', desktop: 498, mobile: 520 },
-  { date: '2024-05-07', desktop: 388, mobile: 300 },
-  { date: '2024-05-08', desktop: 149, mobile: 210 },
-  { date: '2024-05-09', desktop: 227, mobile: 180 },
-  { date: '2024-05-10', desktop: 293, mobile: 330 },
-  { date: '2024-05-11', desktop: 335, mobile: 270 },
-  { date: '2024-05-12', desktop: 197, mobile: 240 },
-  { date: '2024-05-13', desktop: 197, mobile: 160 },
-  { date: '2024-05-14', desktop: 448, mobile: 490 },
-  { date: '2024-05-15', desktop: 473, mobile: 380 },
-  { date: '2024-05-16', desktop: 338, mobile: 400 },
-  { date: '2024-05-17', desktop: 499, mobile: 420 },
-  { date: '2024-05-18', desktop: 315, mobile: 350 },
-  { date: '2024-05-19', desktop: 235, mobile: 180 },
-  { date: '2024-05-20', desktop: 177, mobile: 230 },
-  { date: '2024-05-21', desktop: 82, mobile: 140 },
-  { date: '2024-05-22', desktop: 81, mobile: 120 },
-  { date: '2024-05-23', desktop: 252, mobile: 290 },
-  { date: '2024-05-24', desktop: 294, mobile: 220 },
-  { date: '2024-05-25', desktop: 201, mobile: 250 },
-  { date: '2024-05-26', desktop: 213, mobile: 170 },
-  { date: '2024-05-27', desktop: 420, mobile: 460 },
-  { date: '2024-05-28', desktop: 233, mobile: 190 },
-  { date: '2024-05-29', desktop: 78, mobile: 130 },
-  { date: '2024-05-30', desktop: 340, mobile: 280 },
-  { date: '2024-05-31', desktop: 178, mobile: 230 },
-  { date: '2024-06-01', desktop: 178, mobile: 200 },
-  { date: '2024-06-02', desktop: 470, mobile: 410 },
-  { date: '2024-06-03', desktop: 103, mobile: 160 },
-  { date: '2024-06-04', desktop: 439, mobile: 380 },
-  { date: '2024-06-05', desktop: 88, mobile: 140 },
-  { date: '2024-06-06', desktop: 294, mobile: 250 },
-  { date: '2024-06-07', desktop: 323, mobile: 370 },
-  { date: '2024-06-08', desktop: 385, mobile: 320 },
-  { date: '2024-06-09', desktop: 438, mobile: 480 },
-  { date: '2024-06-10', desktop: 155, mobile: 200 },
-  { date: '2024-06-11', desktop: 92, mobile: 150 },
-  { date: '2024-06-12', desktop: 492, mobile: 420 },
-  { date: '2024-06-13', desktop: 81, mobile: 130 },
-  { date: '2024-06-14', desktop: 426, mobile: 380 },
-  { date: '2024-06-15', desktop: 307, mobile: 350 },
-  { date: '2024-06-16', desktop: 371, mobile: 310 },
-  { date: '2024-06-17', desktop: 475, mobile: 520 },
-  { date: '2024-06-18', desktop: 107, mobile: 170 },
-  { date: '2024-06-19', desktop: 341, mobile: 290 },
-  { date: '2024-06-20', desktop: 408, mobile: 450 },
-  { date: '2024-06-21', desktop: 169, mobile: 210 },
-  { date: '2024-06-22', desktop: 317, mobile: 270 },
-  { date: '2024-06-23', desktop: 480, mobile: 530 },
-  { date: '2024-06-24', desktop: 132, mobile: 180 },
-  { date: '2024-06-25', desktop: 141, mobile: 190 },
-  { date: '2024-06-26', desktop: 434, mobile: 380 },
-  { date: '2024-06-27', desktop: 448, mobile: 490 },
-  { date: '2024-06-28', desktop: 149, mobile: 200 },
-  { date: '2024-06-29', desktop: 103, mobile: 160 },
-  { date: '2024-06-30', desktop: 446, mobile: 400 },
-];
+import {
+  useGetDashboardSChartDataQuery,
+  useGetDashboardStatsQuery,
+} from '@/store/features/admin/dashboardStatsApiService';
+
+import dashboardData from '@/data/dashboardData.json';
+
+const chartData = {
+  data: [
+    {
+      date: '2024-06-01',
+      users: 97,
+      payments: 35,
+      creditsSpent: 217,
+      casePosts: 24,
+      hires: 12,
+      lawyerRegistrations: 7,
+    },
+    {
+      date: '2024-06-02',
+      users: 138,
+      payments: 49,
+      creditsSpent: 317,
+      casePosts: 11,
+      hires: 13,
+      lawyerRegistrations: 3,
+    },
+    {
+      date: '2024-06-03',
+      users: 114,
+      payments: 51,
+      creditsSpent: 457,
+      casePosts: 30,
+      hires: 13,
+      lawyerRegistrations: 6,
+    },
+    {
+      date: '2024-06-04',
+      users: 108,
+      payments: 46,
+      creditsSpent: 479,
+      casePosts: 27,
+      hires: 14,
+      lawyerRegistrations: 7,
+    },
+    {
+      date: '2024-06-05',
+      users: 93,
+      payments: 36,
+      creditsSpent: 358,
+      casePosts: 18,
+      hires: 12,
+      lawyerRegistrations: 7,
+    },
+    {
+      date: '2024-06-06',
+      users: 91,
+      payments: 54,
+      creditsSpent: 453,
+      casePosts: 14,
+      hires: 10,
+      lawyerRegistrations: 3,
+    },
+    {
+      date: '2024-06-07',
+      users: 84,
+      payments: 37,
+      creditsSpent: 328,
+      casePosts: 22,
+      hires: 12,
+      lawyerRegistrations: 7,
+    },
+    {
+      date: '2024-06-08',
+      users: 142,
+      payments: 47,
+      creditsSpent: 359,
+      casePosts: 26,
+      hires: 6,
+      lawyerRegistrations: 2,
+    },
+    {
+      date: '2024-06-09',
+      users: 101,
+      payments: 31,
+      creditsSpent: 237,
+      casePosts: 19,
+      hires: 7,
+      lawyerRegistrations: 2,
+    },
+    {
+      date: '2024-06-10',
+      users: 116,
+      payments: 56,
+      creditsSpent: 300,
+      casePosts: 29,
+      hires: 14,
+      lawyerRegistrations: 3,
+    },
+    {
+      date: '2024-06-11',
+      users: 148,
+      payments: 53,
+      creditsSpent: 455,
+      casePosts: 17,
+      hires: 5,
+      lawyerRegistrations: 4,
+    },
+    {
+      date: '2024-06-12',
+      users: 85,
+      payments: 41,
+      creditsSpent: 282,
+      casePosts: 11,
+      hires: 6,
+      lawyerRegistrations: 2,
+    },
+    {
+      date: '2024-06-13',
+      users: 102,
+      payments: 40,
+      creditsSpent: 320,
+      casePosts: 18,
+      hires: 10,
+      lawyerRegistrations: 4,
+    },
+    {
+      date: '2024-06-14',
+      users: 121,
+      payments: 49,
+      creditsSpent: 395,
+      casePosts: 21,
+      hires: 6,
+      lawyerRegistrations: 6,
+    },
+    {
+      date: '2024-06-15',
+      users: 98,
+      payments: 32,
+      creditsSpent: 277,
+      casePosts: 29,
+      hires: 6,
+      lawyerRegistrations: 7,
+    },
+    {
+      date: '2024-06-16',
+      users: 111,
+      payments: 53,
+      creditsSpent: 449,
+      casePosts: 12,
+      hires: 8,
+      lawyerRegistrations: 2,
+    },
+    {
+      date: '2024-06-17',
+      users: 118,
+      payments: 45,
+      creditsSpent: 440,
+      casePosts: 18,
+      hires: 13,
+      lawyerRegistrations: 6,
+    },
+    {
+      date: '2024-06-18',
+      users: 129,
+      payments: 59,
+      creditsSpent: 317,
+      casePosts: 28,
+      hires: 5,
+      lawyerRegistrations: 5,
+    },
+    {
+      date: '2024-06-19',
+      users: 112,
+      payments: 36,
+      creditsSpent: 414,
+      casePosts: 14,
+      hires: 13,
+      lawyerRegistrations: 5,
+    },
+    {
+      date: '2024-06-20',
+      users: 127,
+      payments: 46,
+      creditsSpent: 262,
+      casePosts: 14,
+      hires: 9,
+      lawyerRegistrations: 4,
+    },
+    {
+      date: '2024-06-21',
+      users: 132,
+      payments: 30,
+      creditsSpent: 377,
+      casePosts: 17,
+      hires: 13,
+      lawyerRegistrations: 3,
+    },
+    {
+      date: '2024-06-22',
+      users: 121,
+      payments: 38,
+      creditsSpent: 312,
+      casePosts: 19,
+      hires: 14,
+      lawyerRegistrations: 6,
+    },
+    {
+      date: '2024-06-23',
+      users: 83,
+      payments: 45,
+      creditsSpent: 401,
+      casePosts: 18,
+      hires: 7,
+      lawyerRegistrations: 7,
+    },
+    {
+      date: '2024-06-24',
+      users: 124,
+      payments: 57,
+      creditsSpent: 437,
+      casePosts: 28,
+      hires: 9,
+      lawyerRegistrations: 5,
+    },
+    {
+      date: '2024-06-25',
+      users: 115,
+      payments: 59,
+      creditsSpent: 450,
+      casePosts: 28,
+      hires: 6,
+      lawyerRegistrations: 4,
+    },
+    {
+      date: '2024-06-26',
+      users: 109,
+      payments: 56,
+      creditsSpent: 423,
+      casePosts: 30,
+      hires: 5,
+      lawyerRegistrations: 6,
+    },
+    {
+      date: '2024-06-27',
+      users: 128,
+      payments: 33,
+      creditsSpent: 480,
+      casePosts: 19,
+      hires: 7,
+      lawyerRegistrations: 4,
+    },
+    {
+      date: '2024-06-28',
+      users: 96,
+      payments: 59,
+      creditsSpent: 362,
+      casePosts: 21,
+      hires: 11,
+      lawyerRegistrations: 3,
+    },
+    {
+      date: '2024-06-29',
+      users: 110,
+      payments: 47,
+      creditsSpent: 445,
+      casePosts: 29,
+      hires: 12,
+      lawyerRegistrations: 3,
+    },
+    {
+      date: '2024-06-30',
+      users: 134,
+      payments: 58,
+      creditsSpent: 376,
+      casePosts: 26,
+      hires: 13,
+      lawyerRegistrations: 2,
+    },
+  ],
+};
+
+// const chartConfig = {
+//   visitors: {
+//     label: 'Visitors',
+//   },
+//   desktop: {
+//     label: 'Desktop',
+//     color: 'hsl(var(--chart-1))',
+//   },
+//   mobile: {
+//     label: 'Mobile',
+//     color: 'hsl(var(--chart-2))',
+//   },
+// };
 
 const chartConfig = {
-  visitors: {
-    label: 'Visitors',
-  },
-  desktop: {
-    label: 'Desktop',
+  users: {
+    label: 'Users',
     color: 'hsl(var(--chart-1))',
   },
-  mobile: {
-    label: 'Mobile',
+  payments: {
+    label: 'Payments',
     color: 'hsl(var(--chart-2))',
+  },
+  creditsSpent: {
+    label: 'Credits Spent',
+    color: 'hsl(var(--chart-3))',
+  },
+  casePosts: {
+    label: 'Case Posts',
+    color: 'hsl(var(--chart-4))',
+  },
+  hires: {
+    label: 'Hires',
+    color: 'hsl(var(--chart-5))',
+  },
+  lawyerRegistrations: {
+    label: 'Lawyer Registrations',
+    color: 'hsl(var(--chart-6))',
   },
 };
 
 export function ChartAreaInteractive() {
   const isMobile = useIsMobile();
   const [timeRange, setTimeRange] = React.useState('30d');
+  const [startDate, setStartDate] = React.useState('2025-09-01');
+  const [endDate, setEndDate] = React.useState('2025-09-20');
 
   React.useEffect(() => {
     if (isMobile) {
@@ -143,29 +360,72 @@ export function ChartAreaInteractive() {
     }
   }, [isMobile]);
 
-  const filteredData = chartData.filter((item) => {
-    const date = new Date(item.date);
-    const referenceDate = new Date('2024-06-30');
+  // const { data: dashboardData } = useGetDashboardSChartDataQuery({
+  //   startDate,
+  //   endDate,
+  // });
+
+  //console.log('dashboardData', dashboardData);
+
+  // const filteredData = React.useMemo(() => {
+  //   if (!dashboardData?.data) return [];
+
+  //   let daysToSubtract = 90;
+  //   if (timeRange === '30d') daysToSubtract = 30;
+  //   if (timeRange === '7d') daysToSubtract = 7;
+
+  //   // Convert state values (strings) into Date objects
+  //   const end = new Date(endDate); // reference end date
+  //   const start = new Date(end); // clone
+  //   start.setDate(start.getDate() - (daysToSubtract - 1));
+
+  //   return dashboardData.data.filter((item) => {
+  //     const date = new Date(item.date);
+  //     return date >= start && date <= end;
+  //   });
+  // }, [dashboardData, timeRange, startDate, endDate]);
+
+  const filteredData = React.useMemo(() => {
+    if (!dashboardData) return [];
+
     let daysToSubtract = 90;
-    if (timeRange === '30d') {
-      daysToSubtract = 30;
-    } else if (timeRange === '7d') {
-      daysToSubtract = 7;
-    }
-    const startDate = new Date(referenceDate);
-    startDate.setDate(startDate.getDate() - daysToSubtract);
-    return date >= startDate;
-  });
+    if (timeRange === '30d') daysToSubtract = 30;
+    if (timeRange === '7d') daysToSubtract = 7;
+
+    // Reference end date
+    const end = new Date(endDate);
+    end.setHours(23, 59, 59, 999); // include entire day
+
+    const start = new Date(end);
+    start.setDate(start.getDate() - (daysToSubtract - 1));
+    start.setHours(0, 0, 0, 0);
+
+    return dashboardData.filter((item) => {
+      const date = new Date(item.date);
+      return date >= start && date <= end;
+    });
+  }, [dashboardData, timeRange, startDate, endDate]);
+
+  //  console.log('filteredData', filteredData);
 
   return (
     <Card className="@container/card">
       <CardHeader className="relative">
-        <CardTitle>Total Users</CardTitle>
+        <CardTitle>Total Data</CardTitle>
         <CardDescription>
           <span className="@[540px]/card:block hidden">
             Total for the last {timeRange}
           </span>
-          <span className="@[540px]/card:hidden">Last {timeRange==='90d'?"3 months":timeRange==="30d"?'30 days':timeRange==='7d'?"7 days":''}</span>
+          <span className="@[540px]/card:hidden">
+            Last{' '}
+            {timeRange === '90d'
+              ? '3 months'
+              : timeRange === '30d'
+              ? '30 days'
+              : timeRange === '7d'
+              ? '7 days'
+              : ''}
+          </span>
         </CardDescription>
         <div className="absolute right-4 top-4">
           <ToggleGroup
@@ -213,31 +473,91 @@ export function ChartAreaInteractive() {
         >
           <AreaChart data={filteredData}>
             <defs>
-              <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="fillUsers" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor="var(--color-desktop)"
-                  stopOpacity={1.0}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-desktop)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-              <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-mobile)"
+                  stopColor="var(--color-users)"
                   stopOpacity={0.8}
                 />
                 <stop
                   offset="95%"
-                  stopColor="var(--color-mobile)"
+                  stopColor="var(--color-users)"
+                  stopOpacity={0.1}
+                />
+              </linearGradient>
+
+              <linearGradient id="fillPayments" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor="var(--color-payments)"
+                  stopOpacity={0.8}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="var(--color-payments)"
+                  stopOpacity={0.1}
+                />
+              </linearGradient>
+
+              <linearGradient id="fillCreditsSpent" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor="var(--color-creditsSpent)"
+                  stopOpacity={0.8}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="var(--color-creditsSpent)"
+                  stopOpacity={0.1}
+                />
+              </linearGradient>
+
+              <linearGradient id="fillCasePosts" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor="var(--color-casePosts)"
+                  stopOpacity={0.8}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="var(--color-casePosts)"
+                  stopOpacity={0.1}
+                />
+              </linearGradient>
+
+              <linearGradient id="fillHires" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor="var(--color-hires)"
+                  stopOpacity={0.8}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="var(--color-hires)"
+                  stopOpacity={0.1}
+                />
+              </linearGradient>
+
+              <linearGradient
+                id="fillLawyerRegistrations"
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="1"
+              >
+                <stop
+                  offset="5%"
+                  stopColor="var(--color-lawyerRegistrations)"
+                  stopOpacity={0.8}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="var(--color-lawyerRegistrations)"
                   stopOpacity={0.1}
                 />
               </linearGradient>
             </defs>
+
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="date"
@@ -245,6 +565,7 @@ export function ChartAreaInteractive() {
               axisLine={false}
               tickMargin={8}
               minTickGap={32}
+              interval={0}
               tickFormatter={(value) => {
                 const date = new Date(value);
                 return date.toLocaleDateString('en-US', {
@@ -268,18 +589,40 @@ export function ChartAreaInteractive() {
               }
             />
             <Area
-              dataKey="mobile"
-              type="natural"
-              fill="url(#fillMobile)"
-              stroke="var(--color-mobile)"
-              stackId="a"
+              dataKey="users"
+              type="monotone"
+              fill="url(#fillUsers)"
+              stroke="var(--color-users)"
             />
             <Area
-              dataKey="desktop"
-              type="natural"
-              fill="url(#fillDesktop)"
-              stroke="var(--color-desktop)"
-              stackId="a"
+              dataKey="payments"
+              type="monotone"
+              fill="url(#fillPayments)"
+              stroke="var(--color-payments)"
+            />
+            <Area
+              dataKey="creditsSpent"
+              type="monotone"
+              fill="url(#fillCreditsSpent)"
+              stroke="var(--color-creditsSpent)"
+            />
+            <Area
+              dataKey="casePosts"
+              type="monotone"
+              fill="url(#fillCasePosts)"
+              stroke="var(--color-casePosts)"
+            />
+            <Area
+              dataKey="hires"
+              type="monotone"
+              fill="url(#fillHires)"
+              stroke="var(--color-hires)"
+            />
+            <Area
+              dataKey="lawyerRegistrations"
+              type="monotone"
+              fill="url(#fillLawyerRegistrations)"
+              stroke="var(--color-lawyerRegistrations)"
             />
           </AreaChart>
         </ChartContainer>

@@ -1,0 +1,22 @@
+[
+  { "date": "2025-09-01", "users": 12, "payments": 3, "creditsSpent": 5, "casePosts": 1, "hires": 0, "lawyerRegistrations": 7 },
+  { "date": "2025-09-02", "users": 20, "payments": 5, "creditsSpent": 10, "casePosts": 2, "hires": 1, "lawyerRegistrations": 8 },
+  { "date": "2025-09-03", "users": 29, "payments": 0, "creditsSpent": 0, "casePosts": 5, "hires": 0, "lawyerRegistrations": 26 },
+  { "date": "2025-09-04", "users": 15, "payments": 2, "creditsSpent": 4, "casePosts": 1, "hires": 0, "lawyerRegistrations": 10 },
+  { "date": "2025-09-05", "users": 18, "payments": 1, "creditsSpent": 6, "casePosts": 0, "hires": 0, "lawyerRegistrations": 12 },
+  { "date": "2025-09-06", "users": 25, "payments": 4, "creditsSpent": 8, "casePosts": 3, "hires": 1, "lawyerRegistrations": 15 },
+  { "date": "2025-09-07", "users": 10, "payments": 2, "creditsSpent": 1, "casePosts": 1, "hires": 0, "lawyerRegistrations": 5 },
+  { "date": "2025-09-08", "users": 22, "payments": 3, "creditsSpent": 7, "casePosts": 2, "hires": 1, "lawyerRegistrations": 14 },
+  { "date": "2025-09-09", "users": 19, "payments": 1, "creditsSpent": 3, "casePosts": 0, "hires": 0, "lawyerRegistrations": 11 },
+  { "date": "2025-09-10", "users": 30, "payments": 5, "creditsSpent": 12, "casePosts": 4, "hires": 2, "lawyerRegistrations": 20 },
+  { "date": "2025-09-11", "users": 14, "payments": 2, "creditsSpent": 2, "casePosts": 1, "hires": 0, "lawyerRegistrations": 9 },
+  { "date": "2025-09-12", "users": 17, "payments": 3, "creditsSpent": 4, "casePosts": 0, "hires": 0, "lawyerRegistrations": 12 },
+  { "date": "2025-09-13", "users": 21, "payments": 4, "creditsSpent": 6, "casePosts": 2, "hires": 1, "lawyerRegistrations": 16 },
+  { "date": "2025-09-14", "users": 26, "payments": 5, "creditsSpent": 9, "casePosts": 3, "hires": 1, "lawyerRegistrations": 18 },
+  { "date": "2025-09-15", "users": 13, "payments": 2, "creditsSpent": 2, "casePosts": 0, "hires": 0, "lawyerRegistrations": 8 },
+  { "date": "2025-09-16", "users": 24, "payments": 4, "creditsSpent": 7, "casePosts": 2, "hires": 1, "lawyerRegistrations": 15 },
+  { "date": "2025-09-17", "users": 20, "payments": 3, "creditsSpent": 5, "casePosts": 1, "hires": 0, "lawyerRegistrations": 12 },
+  { "date": "2025-09-18", "users": 28, "payments": 5, "creditsSpent": 10, "casePosts": 3, "hires": 1, "lawyerRegistrations": 19 },
+  { "date": "2025-09-19", "users": 16, "payments": 2, "creditsSpent": 3, "casePosts": 0, "hires": 0, "lawyerRegistrations": 10 },
+  { "date": "2025-09-20", "users": 23, "payments": 4, "creditsSpent": 8, "casePosts": 2, "hires": 1, "lawyerRegistrations": 14 }
+]
