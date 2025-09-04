@@ -1,4 +1,3 @@
-
 'use client';
 import { TrendingDownIcon, TrendingUpIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -11,23 +10,27 @@ import {
 } from '@/components/ui/card';
 import { useAllUsersQuery } from '@/store/features/admin/userApiService';
 import { useAllServicesQuery } from '@/store/features/admin/servicesApiService';
-import { useGetAllCreditPackagesQuery, useTransactionHistoryListQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
+import {
+  useGetAllCreditPackagesQuery,
+  useTransactionHistoryListQuery,
+} from '@/store/features/credit_and_payment/creditAndPaymentApiService';
+import { useGetDashboardStatsQuery } from '@/store/features/admin/dashboardStatsApiService';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function SectionCards() {
-  const { data: userList } = useAllUsersQuery();
-  const { data: packages } = useGetAllCreditPackagesQuery();
-  const { data: allServices } = useAllServicesQuery();
-  const { data: transactionData } = useTransactionHistoryListQuery();
+  const { data: dashboardStats, isLoading: isLoadingDashboardStats } =
+    useGetDashboardStatsQuery();
 
   return (
     <div className="*:data-[slot=card]:shadow-xs grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card">
-
       {/* Total Users */}
       <Card className="@container/card">
         <CardHeader className="relative">
           <CardDescription>Total Users</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-            {userList?.pagination?.total ?? 0}
+            {isLoadingDashboardStats
+              ? '...'
+              : dashboardStats?.data?.totalUsers ?? 0}
           </CardTitle>
           <div className="absolute right-4 top-4">
             <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
@@ -51,7 +54,9 @@ export function SectionCards() {
         <CardHeader className="relative">
           <CardDescription>Total Services</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-            {allServices?.data?.length ?? 0}
+            {isLoadingDashboardStats
+              ? '...'
+              : dashboardStats?.data?.totalServices ?? 0}
           </CardTitle>
           <div className="absolute right-4 top-4">
             <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
@@ -75,7 +80,9 @@ export function SectionCards() {
         <CardHeader className="relative">
           <CardDescription>Total Transactions</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-            {transactionData?.data?.length ?? 0}
+            {isLoadingDashboardStats
+              ? '...'
+              : dashboardStats?.data?.totalTransactions ?? 0}
           </CardTitle>
           <div className="absolute right-4 top-4">
             <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
@@ -99,7 +106,9 @@ export function SectionCards() {
         <CardHeader className="relative">
           <CardDescription>Total Packages</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-            {packages?.data?.length ?? 0}
+            {isLoadingDashboardStats
+              ? '...'
+              : dashboardStats?.data?.totalPackages ?? 0}
           </CardTitle>
           <div className="absolute right-4 top-4">
             <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
