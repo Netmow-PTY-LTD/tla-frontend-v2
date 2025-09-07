@@ -18,6 +18,13 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart';
 import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 // Deep colors
 const chartConfig = {
@@ -133,26 +140,28 @@ export default function InteractiveBarChartForPayment() {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Payment & credit spent overview</CardTitle>
-        <CardDescription>
-          Stats filtered by <span className="font-semibold">{filter}</span>
-        </CardDescription>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
+        <div>
+          <CardTitle>Payment & credit spent overview</CardTitle>
+          <CardDescription>
+            Stats filtered by <span className="font-semibold">{filter}</span>
+          </CardDescription>
+        </div>
+        <div className="w-[200px] px-4 pb-4">
+          <Select value={filter} onValueChange={(value) => setFilter(value)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select Range" />
+            </SelectTrigger>
+            <SelectContent>
+              {FILTERS.map((f) => (
+                <SelectItem key={f} value={f}>
+                  {f}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </CardHeader>
-
-      {/* Filter buttons */}
-      <div className="flex flex-wrap gap-2 px-4 pb-4">
-        {FILTERS.map((f) => (
-          <Button
-            key={f}
-            variant={filter === f ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setFilter(f)}
-          >
-            {f}
-          </Button>
-        ))}
-      </div>
 
       <CardContent>
         <ChartContainer config={chartConfig} className="h-[280px] w-full">
