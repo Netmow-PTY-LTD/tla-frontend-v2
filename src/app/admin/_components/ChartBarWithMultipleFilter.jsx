@@ -46,62 +46,35 @@ const FILTERS = [
   '7 Days',
 ];
 
-// --- Dummy data generator ---
-function generateDummyData() {
-  const data = [];
-  const start = new Date('2024-09-01');
-  const today = new Date('2025-09-04'); // reference today
-
-  for (let d = new Date(start); d <= today; d.setDate(d.getDate() + 1)) {
-    data.push({
-      date: d.toISOString().split('T')[0], // "YYYY-MM-DD"
-      users: Math.floor(Math.random() * 100),
-      // payments: Math.floor(Math.random() * 50),
-      // creditsSpent: Math.floor(Math.random() * 30),
-      casePosts: Math.floor(Math.random() * 20),
-      hires: Math.floor(Math.random() * 10),
-      lawyerRegistrations: Math.floor(Math.random() * 15),
-    });
-  }
-  return data;
-}
-
-const dummyData = generateDummyData();
-
-console.log('dummyData', dummyData);
+const FilterType = {
+  Yearly: 'yearly',
+  '6 Months': 'six-months',
+  '3 Months': 'three-months',
+  Monthly: 'monthly',
+  '15 Days': 'fifteen-days',
+  '7 Days': 'seven-days',
+};
 
 export default function InteractiveBarChart() {
   const [filter, setFilter] = useState('Yearly');
 
-  function generateMonthDays(year, month) {
-    const days = [];
-    const date = new Date(year, month - 1, 1); // month is 0-indexed
-    while (date.getMonth() === month - 1) {
-      const day = date.getDate().toString().padStart(2, '0');
-      days.push(`${year}-${month}-${day}`);
-      date.setDate(date.getDate() + 1);
-    }
-    return days;
-  }
-
-  const today = new Date();
-  const month = (today.getMonth() + 1).toString().padStart(2, '0'); // "09"
-  const year = today.getFullYear();
-
   // Fetch daily data for current month
-  const { data: barChartData } = useGetDashboardBarChartDataQuery({
-    year,
-    month,
-  });
+  const { data: barChartData } = useGetDashboardBarChartDataQuery(
+    FilterType[filter]
+  );
 
-  console.log('barChartData in ChartBarMonthly', barChartData);
+  // console.log('barChartData in ChartBarMonthly', barChartData);
 
-  const allDays = generateMonthDays(year, month);
+  // Get today
+  const today = new Date();
 
-  const chartData = useMemo(() => {
-    if (!dummyData.length) return [];
+  const chartData = React.useMemo(() => {
+    if (!barChartData?.data) return [];
 
-    const normalized = dummyData.map((item) => {
+    let data = [...barChartData.data];
+
+    // Ensure all values are positive
+    data = data.map((item) => {
       const cleaned = { ...item };
       Object.keys(chartConfig).forEach((key) => {
         cleaned[key] = Math.abs(item[key] || 0);
@@ -109,62 +82,53 @@ export default function InteractiveBarChart() {
       return cleaned;
     });
 
-    const now = new Date('2025-09-04'); // fixed reference
-    let days = 365;
-    if (filter === '6 Months') days = 180;
-    if (filter === '3 Months') days = 90;
-    if (filter === 'Monthly') days = 30;
-    if (filter === '15 Days') days = 15;
-    if (filter === '7 Days') days = 7;
+    // Get date range
+    let start, end;
+    if (filter === 'Monthly') {
+      end = new Date(today);
+      start = new Date(today);
+      start.setDate(end.getDate() - 29); // ✅ 30 days total (inclusive)
+    } else if (filter === '15 Days') {
+      end = new Date(today);
+      start = new Date(today);
+      start.setDate(end.getDate() - 14); // ✅ 15 days total
+    } else if (filter === '7 Days') {
+      end = new Date(today);
+      start = new Date(today);
+      start.setDate(end.getDate() - 6); // ✅ 7 days total
+    }
 
-    const end = now;
-    const start = new Date();
-    start.setDate(end.getDate() - (days - 1));
+    // Fill missing dates
+    if (['Monthly', '15 Days', '7 Days'].includes(filter)) {
+      const filled = [];
+      const current = new Date(start);
 
-    let filtered = normalized.filter((item) => {
-      const date = new Date(item.date);
-      return date >= start && date <= end;
-    });
+      while (current <= end) {
+        const dateStr = current.toISOString().split('T')[0]; // "YYYY-MM-DD"
 
-    // --- Aggregate by month when yearly / 6 months ---
-    if (filter === 'Yearly' || filter === '6 Months') {
-      const monthMap = {};
-
-      filtered.forEach((item) => {
-        const dateObj = new Date(item.date);
-        const key = `${dateObj.getFullYear()}-${String(
-          dateObj.getMonth() + 1
-        ).padStart(2, '0')}`; // "2025-01"
-
-        if (!monthMap[key]) {
-          monthMap[key] = {
-            date: key,
+        const existing = data.find((item) => item.date === dateStr);
+        if (existing) {
+          filled.push(existing);
+        } else {
+          filled.push({
+            date: dateStr,
             users: 0,
             payments: 0,
             creditsSpent: 0,
             casePosts: 0,
             hires: 0,
             lawyerRegistrations: 0,
-          };
+          });
         }
 
-        Object.keys(chartConfig).forEach((k) => {
-          monthMap[key][k] += item[k];
-        });
-      });
-
-      filtered = Object.values(monthMap).sort(
-        (a, b) => new Date(a.date) - new Date(b.date)
-      );
-
-      // If 6 months → last 6 months only
-      if (filter === '6 Months') {
-        filtered = filtered.slice(-6);
+        current.setDate(current.getDate() + 1); // ✅ move forward by 1 day
       }
+
+      data = filled;
     }
 
-    return filtered;
-  }, [filter]);
+    return data;
+  }, [barChartData, filter]);
 
   return (
     <Card>
@@ -172,7 +136,7 @@ export default function InteractiveBarChart() {
         <div>
           <CardTitle>Key Metrics Overview</CardTitle>
           <CardDescription>
-            Stats filtered by <span className="font-semibold">{filter}</span>
+            Showing <b>{filter.toLowerCase()} </b>statistics
           </CardDescription>
         </div>
         <div className="w-[200px] px-4 pb-4">
@@ -192,42 +156,55 @@ export default function InteractiveBarChart() {
       </CardHeader>
 
       <CardContent>
-        <ChartContainer config={chartConfig} className="h-[280px] w-full">
-          <BarChart data={chartData} margin={{ left: 12, right: 12 }}>
+        <ChartContainer config={chartConfig} className="h-[250px] w-full">
+          <BarChart
+            accessibilityLayer
+            data={chartData}
+            margin={{ left: 12, right: 12 }}
+          >
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="date"
               tickLine={false}
-              axisLine={false}
               tickMargin={10}
+              axisLine={false}
+              interval={0}
               tickFormatter={(value) => {
-                const dateObj = new Date(value);
-                if (filter === 'Yearly' || filter === '6 Months') {
-                  return dateObj.toLocaleDateString('en-US', {
+                const d = new Date(value);
+
+                if (['Yearly', '6 Months', '3 Months'].includes(filter)) {
+                  // Show only month names
+                  return d.toLocaleString('en-US', { month: 'short' });
+                }
+
+                if (['Monthly', '15 Days', '7 Days'].includes(filter)) {
+                  // Show month + day (e.g., "Aug 09")
+                  return d.toLocaleDateString('en-US', {
                     month: 'short',
+                    day: '2-digit',
                   });
                 }
-                return dateObj.toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                });
+
+                return d.getDate(); // fallback
               }}
             />
+
             <ChartTooltip
               cursor={false}
               content={
                 <ChartTooltipContent
                   className="w-[250px]"
-                  indicator="dashed"
+                  indicator="dot"
                   labelFormatter={(value) => {
-                    const dateObj = new Date(value);
-                    if (filter === 'Yearly' || filter === '6 Months') {
-                      return dateObj.toLocaleDateString('en-US', {
+                    const d = new Date(value);
+                    if (['Yearly', '6 Months', '3 Months'].includes(filter)) {
+                      return d.toLocaleString('en-US', {
                         month: 'long',
                         year: 'numeric',
                       });
                     }
-                    return dateObj.toLocaleDateString('en-US', {
+                    // For daily ranges (monthly, 15d, 7d) → full date
+                    return d.toLocaleDateString('en-US', {
                       month: 'long',
                       day: 'numeric',
                       year: 'numeric',
@@ -236,6 +213,7 @@ export default function InteractiveBarChart() {
                 />
               }
             />
+
             {Object.keys(chartConfig).map((key) => (
               <Bar
                 key={key}
@@ -249,11 +227,18 @@ export default function InteractiveBarChart() {
       </CardContent>
 
       <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
+        <div className="flex gap-2 leading-none font-medium">
           Trending up <TrendingUp className="h-4 w-4" />
         </div>
         <div className="text-muted-foreground leading-none">
-          Showing data for {filter}
+          Showing data for last{' '}
+          <b>
+            {filter === 'Yearly'
+              ? 'year'
+              : filter === 'Monthly'
+              ? 'month'
+              : filter}
+          </b>
         </div>
       </CardFooter>
     </Card>

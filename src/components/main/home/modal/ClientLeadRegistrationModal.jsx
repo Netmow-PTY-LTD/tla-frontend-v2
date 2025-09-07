@@ -24,6 +24,7 @@ import { useGetZipCodeListQuery } from '@/store/features/public/publicApiService
 import country from '@/data/au.json';
 import { safeJsonParse } from '@/helpers/safeJsonParse';
 import Cookies from 'js-cookie';
+import { validateAndNormalizePhone } from '@/helpers/phoneValidation';
 
 export default function ClientLeadRegistrationModal({
   modalOpen,
@@ -83,6 +84,8 @@ export default function ClientLeadRegistrationModal({
   const [stepwiseCheckedOptions, setStepwiseCheckedOptions] = useState(null);
   const [newZipCodeList, setNewZipCodeList] = useState([]);
   const [isTypedNewValue, setIsTypedNewValue] = useState(false);
+  const [phoneError, setPhoneError] = useState('');
+  const [isPhoneEmpty, setIsPhoneEmpty] = useState(false);
 
   useEffect(() => {
     if (!selectedServiceWiseQuestions?.length) return;
@@ -327,6 +330,30 @@ export default function ClientLeadRegistrationModal({
     setViewData(partialClonedQuestions?.[step]);
   }, [step, partialClonedQuestions]);
 
+  const handlePhoneChange = (e) => {
+    const raw = e.target.value.replace(/\s+/g, '');
+    setPhone(raw);
+
+    const defaultCountry = cookieCountry?.code;
+    const { ok, error } = validateAndNormalizePhone(raw, { defaultCountry });
+
+    if (!raw) {
+      setPhoneError('');
+      setIsPhoneEmpty(true);
+      return;
+    }
+
+    setIsPhoneEmpty(false);
+
+    if (!ok) {
+      setPhoneError(
+        error || `Phone number must be valid for ${defaultCountry}`
+      ); // show error message
+    } else {
+      setPhoneError('');
+    }
+  };
+
   const [questionsPayload, setQuestionsPayload] = useState([]);
 
   const [clientRegister] = useAuthClientRegisterMutation();
@@ -362,6 +389,15 @@ export default function ClientLeadRegistrationModal({
     if (!isFinalStep) {
       setStep((prev) => prev + 1);
       setClickButtonType('Next');
+      return;
+    }
+
+    const defaultCountry = cookieCountry?.code;
+    const { ok } = validateAndNormalizePhone(phone, { defaultCountry });
+
+    if (!ok) {
+      // prevent submission and show error
+      setPhoneError(`Phone number must be valid for ${defaultCountry}`);
       return;
     }
 
@@ -493,9 +529,14 @@ export default function ClientLeadRegistrationModal({
     }
 
     if (step === totalQuestions + 7) {
-      const parsed = parsePhoneNumberFromString(phone, 'AU');
+      return isPhoneEmpty;
+      // const parsed = parsePhoneNumberFromString(phone, 'AU');
 
-      return !parsed || !parsed.isValid() || parsed.country !== 'AU';
+      // return !parsed || !parsed.isValid() || parsed.country !== 'AU';
+      // const { ok } = validateAndNormalizePhone(phone, {
+      //   defaultCountry: cookieCountry?.code,
+      // });
+      // return !ok;
     }
 
     // Step: Phone (optional)
@@ -979,20 +1020,11 @@ export default function ClientLeadRegistrationModal({
                 type="tel"
                 className="border rounded px-3 py-2"
                 value={phone}
-                onChange={(e) => {
-                  const input = e.target.value;
-
-                  // Remove all spaces
-                  const noSpaces = input.replace(/\s+/g, '');
-
-                  // Allow only numbers, or numbers starting with + (for +61)
-                  const sanitized = noSpaces.replace(/(?!^\+)[^\d]/g, '');
-
-                  setPhone(sanitized);
-                }}
+                onChange={handlePhoneChange}
                 placeholder="e.g., 0123456789"
               />
             </label>
+            {phoneError && <p className="text-red-500 text-sm">{phoneError}</p>}
           </div>
         ) : null}
 
