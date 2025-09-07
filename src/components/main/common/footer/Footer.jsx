@@ -200,7 +200,7 @@ export default function Footer() {
                     </div>
                     <div className="footer-bottom-country-select mt-5">
                       {isValidToken ? (
-                        <button className="flex gap-3 items-center bg-[#F9F9FA] rounded-sm p-3 cursor-auto">
+                        <button className="flex gap-3 items-center bg-[#F9F9FA] rounded-sm p-3 cursor-auto w-full">
                           <img
                             src={selectedCountry?.flag}
                             alt={`${selectedCountry?.name} flag`}
@@ -212,7 +212,7 @@ export default function Footer() {
                         </button>
                       ) : (
                         <button
-                          className="flex gap-3 items-center bg-[#F9F9FA] rounded-sm p-3 cursor-pointer"
+                          className="flex gap-3 items-center bg-[#F9F9FA] rounded-sm p-3 cursor-pointer w-full"
                           onClick={(e) => {
                             e.preventDefault();
                             setIsModalOpen(true);
