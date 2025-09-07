@@ -184,7 +184,7 @@ export default function About() {
       console.log(JSON.parse(formData.get('data')));
       const res = await updateUserData(formData).unwrap();
       if (res?.success === true) {
-        showSuccessToast(res?.message || ' update successful');
+        showSuccessToast(res?.message || 'update successful');
       }
       console.log('Update response:', res);
     } catch (error) {
@@ -310,7 +310,7 @@ export default function About() {
           /> */}
           <SimpleEditor name="bio" />
         </div>
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center gap-2 mb-4 cursor-pointer">
           <input
             type="checkbox"
             id="showCompanyProfile"

@@ -25,13 +25,6 @@ export default function Footer() {
   useEffect(() => {
     let cookieCountry = safeJsonParse(Cookies.get('countryObj'));
 
-    console.log('cookieCountry', cookieCountry);
-
-    // if (!cookieCountry) {
-    //   cookieCountry = 'au'; // default
-    //   Cookies.set('country', cookieCountry, { expires: 3650 });
-    // }
-
     const defaultCountry = cookieCountry
       ? countries.find((c) => c.code.toLowerCase() === cookieCountry?.code)
       : null;
