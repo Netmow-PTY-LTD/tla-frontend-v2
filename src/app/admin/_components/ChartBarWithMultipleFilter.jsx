@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useGetDashboardBarChartDataQuery } from '@/store/features/admin/dashboardStatsApiService';
 
 // Deep colors
 const chartConfig = {
@@ -67,8 +68,35 @@ function generateDummyData() {
 
 const dummyData = generateDummyData();
 
+console.log('dummyData', dummyData);
+
 export default function InteractiveBarChart() {
   const [filter, setFilter] = useState('Yearly');
+
+  function generateMonthDays(year, month) {
+    const days = [];
+    const date = new Date(year, month - 1, 1); // month is 0-indexed
+    while (date.getMonth() === month - 1) {
+      const day = date.getDate().toString().padStart(2, '0');
+      days.push(`${year}-${month}-${day}`);
+      date.setDate(date.getDate() + 1);
+    }
+    return days;
+  }
+
+  const today = new Date();
+  const month = (today.getMonth() + 1).toString().padStart(2, '0'); // "09"
+  const year = today.getFullYear();
+
+  // Fetch daily data for current month
+  const { data: barChartData } = useGetDashboardBarChartDataQuery({
+    year,
+    month,
+  });
+
+  console.log('barChartData in ChartBarMonthly', barChartData);
+
+  const allDays = generateMonthDays(year, month);
 
   const chartData = useMemo(() => {
     if (!dummyData.length) return [];
