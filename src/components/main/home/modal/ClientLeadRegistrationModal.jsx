@@ -529,7 +529,7 @@ export default function ClientLeadRegistrationModal({
     }
 
     if (step === totalQuestions + 7) {
-      return isPhoneEmpty;
+      return !phone;
       // const parsed = parsePhoneNumberFromString(phone, 'AU');
 
       // return !parsed || !parsed.isValid() || parsed.country !== 'AU';
