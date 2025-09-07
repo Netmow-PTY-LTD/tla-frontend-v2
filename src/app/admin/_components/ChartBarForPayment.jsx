@@ -22,8 +22,8 @@ import { Button } from '@/components/ui/button';
 // Deep colors
 const chartConfig = {
   //   users: { label: 'Users', color: '#2563EB' },
-  payments: { label: 'Payments', color: '#D97706' },
-  creditsSpent: { label: 'Credits Spent', color: '#059669' },
+  payments: { label: 'Payments', color: '#7DCCEB' },
+  creditsSpent: { label: 'Credits Spent', color: '#EE3A89' },
   //   casePosts: { label: 'Case Posts', color: '#DB2777' },
   //   hires: { label: 'Hires', color: '#7C3AED' },
   //   lawyerRegistrations: { label: 'Lawyer Registrations', color: '#DC2626' },

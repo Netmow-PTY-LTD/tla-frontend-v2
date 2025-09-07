@@ -21,12 +21,12 @@ import { Button } from '@/components/ui/button';
 
 // Deep colors
 const chartConfig = {
-  users: { label: 'Users', color: '#2563EB' },
+  users: { label: 'Users', color: '#3A6CC5' },
   // payments: { label: 'Payments', color: '#D97706' },
   // creditsSpent: { label: 'Credits Spent', color: '#059669' },
-  casePosts: { label: 'Case Posts', color: '#DB2777' },
-  hires: { label: 'Hires', color: '#7C3AED' },
-  lawyerRegistrations: { label: 'Lawyer Registrations', color: '#DC2626' },
+  casePosts: { label: 'Case Posts', color: '#F07623' },
+  hires: { label: 'Hires', color: '#979797' },
+  lawyerRegistrations: { label: 'Lawyer Registrations', color: '#F1BE01' },
 };
 
 const FILTERS = [
