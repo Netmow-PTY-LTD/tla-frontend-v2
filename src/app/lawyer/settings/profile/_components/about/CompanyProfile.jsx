@@ -42,7 +42,7 @@ export default function CompanyProfile() {
         <TextInput
           name="phoneNumber"
           label="Phone Number"
-          placeholder="+8801XXXXXXX"
+          placeholder="XXXXXXX"
           textColor="text-[#4b4949]"
         />
         <TextInput
