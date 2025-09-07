@@ -205,7 +205,7 @@ export default function RegisterStepTwo() {
                       />
                     </FormControl>
                     <FormLabel className="ml-2 font-bold">
-                      I will practice within
+                      I will practice within {cookieCountry?.name}
                     </FormLabel>
                     <FormMessage className="text-red-600" />
                   </FormItem>

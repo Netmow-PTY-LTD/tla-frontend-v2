@@ -13,8 +13,6 @@ import InteractiveBarChart from './_components/ChartBarWithMultipleFilter';
 import InteractiveBarChartForPayment from './_components/ChartBarForPayment';
 
 const AdminDashboardPage = () => {
-  const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
-  console.log('cookieCountry', cookieCountry);
   return (
     <div className="flex flex-col gap-4 md:gap-6">
       <SectionCards />
