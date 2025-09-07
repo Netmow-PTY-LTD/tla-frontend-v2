@@ -10,6 +10,7 @@ import { ChartBarInteractive } from './_components/ChartBarInteractive';
 import { ChartBarYearly } from './_components/ChartBarMultiple';
 import { ChartBarMonthly } from './_components/ChartBarMonthly';
 import InteractiveBarChart from './_components/ChartBarWithMultipleFilter';
+import InteractiveBarChartForPayment from './_components/ChartBarForPayment';
 
 const AdminDashboardPage = () => {
   const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
@@ -24,12 +25,14 @@ const AdminDashboardPage = () => {
         <InteractiveBarChart />
       </div>
       <div className="grid grid-cols-1">
-        {/* <ChartBarInteractive /> */}
+        <InteractiveBarChartForPayment />
+      </div>
+      {/* <div className="grid grid-cols-1">
         <ChartBarMonthly />
-      </div>
-      <div className="grid grid-cols-1">
+      </div> */}
+      {/* <div className="grid grid-cols-1">
         <ChartBarYearly />
-      </div>
+      </div> */}
 
       <AllTransactionHistory />
       {/* <AdminHomeDataTable data={data} /> */}

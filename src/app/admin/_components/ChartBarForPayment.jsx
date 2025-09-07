@@ -21,12 +21,12 @@ import { Button } from '@/components/ui/button';
 
 // Deep colors
 const chartConfig = {
-  users: { label: 'Users', color: '#2563EB' },
-  // payments: { label: 'Payments', color: '#D97706' },
-  // creditsSpent: { label: 'Credits Spent', color: '#059669' },
-  casePosts: { label: 'Case Posts', color: '#DB2777' },
-  hires: { label: 'Hires', color: '#7C3AED' },
-  lawyerRegistrations: { label: 'Lawyer Registrations', color: '#DC2626' },
+  //   users: { label: 'Users', color: '#2563EB' },
+  payments: { label: 'Payments', color: '#D97706' },
+  creditsSpent: { label: 'Credits Spent', color: '#059669' },
+  //   casePosts: { label: 'Case Posts', color: '#DB2777' },
+  //   hires: { label: 'Hires', color: '#7C3AED' },
+  //   lawyerRegistrations: { label: 'Lawyer Registrations', color: '#DC2626' },
 };
 
 const FILTERS = [
@@ -47,12 +47,12 @@ function generateDummyData() {
   for (let d = new Date(start); d <= today; d.setDate(d.getDate() + 1)) {
     data.push({
       date: d.toISOString().split('T')[0], // "YYYY-MM-DD"
-      users: Math.floor(Math.random() * 100),
-      // payments: Math.floor(Math.random() * 50),
-      // creditsSpent: Math.floor(Math.random() * 30),
-      casePosts: Math.floor(Math.random() * 20),
-      hires: Math.floor(Math.random() * 10),
-      lawyerRegistrations: Math.floor(Math.random() * 15),
+      //   users: Math.floor(Math.random() * 100),
+      payments: Math.floor(Math.random() * 50),
+      creditsSpent: Math.floor(Math.random() * 30),
+      //   casePosts: Math.floor(Math.random() * 20),
+      //   hires: Math.floor(Math.random() * 10),
+      //   lawyerRegistrations: Math.floor(Math.random() * 15),
     });
   }
   return data;
@@ -60,7 +60,7 @@ function generateDummyData() {
 
 const dummyData = generateDummyData();
 
-export default function InteractiveBarChart() {
+export default function InteractiveBarChartForPayment() {
   const [filter, setFilter] = useState('Yearly');
 
   const chartData = useMemo(() => {
@@ -134,7 +134,7 @@ export default function InteractiveBarChart() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Key Metrics Overview</CardTitle>
+        <CardTitle>Payment & credit spent overview</CardTitle>
         <CardDescription>
           Stats filtered by <span className="font-semibold">{filter}</span>
         </CardDescription>
