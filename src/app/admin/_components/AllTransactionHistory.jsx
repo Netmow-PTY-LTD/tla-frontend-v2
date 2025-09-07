@@ -1,48 +1,45 @@
-
-"use client";
-import React, { useEffect, useState } from "react";
-import { Search, Download, Filter, Calendar } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useTransactionHistoryListQuery } from "@/store/features/credit_and_payment/creditAndPaymentApiService";
+'use client';
+import React, { useEffect, useState } from 'react';
+import { Search, Download, Filter, Calendar } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useTransactionHistoryListQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 
 export const AllTransactionHistory = () => {
   const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
 
-  const { data: transactionData, isError, isLoading } =
-    useTransactionHistoryListQuery({ page, limit: 10, search:debouncedSearch });
+  const {
+    data: transactionData,
+    isError,
+    isLoading,
+  } = useTransactionHistoryListQuery({
+    page,
+    limit: 10,
+    search: debouncedSearch,
+  });
 
+  // Debounce effect
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500); // 500ms debounce
 
-// Debounce effect
-    useEffect(() => {
-      const handler = setTimeout(() => {
-        setDebouncedSearch(search);
-      }, 500); // 500ms debounce
-  
-      return () => {
-        clearTimeout(handler);
-      };
-    }, [search]);
-  
-
-
-
-
-
-
-
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [search]);
 
   const transactions = transactionData?.data || [];
   const totalPages = transactionData?.pagination?.totalPage || 1;
   const totalTransactions = transactionData?.pagination?.total || 0;
 
   const formatDate = (date) =>
-    new Date(date).toLocaleDateString("en-GB", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
+    new Date(date).toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
     });
 
   const totalCredits = transactions.reduce(
@@ -61,27 +58,31 @@ export const AllTransactionHistory = () => {
       </div>
 
       {/* Controls */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-6">
-        <div className="relative flex-1">
+      <div className="flex flex-col sm:flex-row gap-4 mb-6 justify-between">
+        <div className="relative flex-1 max-w-2xl">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input
             placeholder="Search transactions..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && setPage(1)}
+            onKeyDown={(e) => e.key === 'Enter' && setPage(1)}
             className="pl-10 bg-gray-50 border-gray-200 focus:bg-white transition-colors"
           />
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="flex items-center gap-2">
+          {/* <Button variant="outline" size="sm" className="flex items-center gap-2">
             <Calendar className="h-4 w-4" />
             Date Range
           </Button>
           <Button variant="outline" size="sm" className="flex items-center gap-2">
             <Filter className="h-4 w-4" />
             Filter
-          </Button>
-          <Button variant="outline" size="sm" className="flex items-center gap-2">
+          </Button> */}
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-2"
+          >
             <Download className="h-4 w-4" />
             Export
           </Button>
@@ -127,29 +128,30 @@ export const AllTransactionHistory = () => {
                     {tx.transactionId}
                   </td>
                   <td className="py-4 px-6 text-sm text-gray-900 font-medium">
-                    {tx.userId?.profile?.name || "-"}
+                    {tx.userId?.profile?.name || '-'}
                   </td>
                   <td className="py-4 px-6 text-sm text-gray-900 font-medium">
-                    {tx.userId?.email || "-"}
+                    {tx.userId?.email || '-'}
                   </td>
                   <td className="py-4 px-6 text-sm text-gray-900 font-medium">
-                    {tx.creditPackageId?.name || "-"}
+                    {tx.creditPackageId?.name || '-'}
                   </td>
                   <td className="py-4 px-6 text-sm font-semibold text-green-600">
                     +{tx.creditPackageId?.credit || 0}
                   </td>
                   <td className="py-4 px-6 text-sm text-gray-800">
-                    ${tx.amountPaid}{" "}
+                    ${tx.amountPaid}{' '}
                     <span className="text-gray-500">
                       ({tx.currency.toUpperCase()})
                     </span>
                   </td>
                   <td className="py-4 px-6 text-sm">
                     <span
-                      className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${tx.status === "completed"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-yellow-100 text-yellow-700"
-                        }`}
+                      className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
+                        tx.status === 'completed'
+                          ? 'bg-green-100 text-green-700'
+                          : 'bg-yellow-100 text-yellow-700'
+                      }`}
                     >
                       {tx.status}
                     </span>
@@ -186,7 +188,8 @@ export const AllTransactionHistory = () => {
           {transactions.length > 0 ? (
             <>
               Showing {(page - 1) * 10 + 1}–{/* start index */}
-              {(page - 1) * 10 + transactions.length} of {totalTransactions} transactions
+              {(page - 1) * 10 + transactions.length} of {totalTransactions}{' '}
+              transactions
             </>
           ) : (
             <>No transactions to show</>
@@ -194,8 +197,10 @@ export const AllTransactionHistory = () => {
         </div>
         <div className="flex items-center gap-4 mt-2 sm:mt-0">
           <span>
-            Total credits purchased:{" "}
-            <span className="font-semibold text-green-600">+{totalCredits}</span>
+            Total credits purchased:{' '}
+            <span className="font-semibold text-green-600">
+              +{totalCredits}
+            </span>
           </span>
         </div>
       </div>
@@ -215,7 +220,7 @@ export const AllTransactionHistory = () => {
           <Button
             key={p}
             size="sm"
-            variant={page === p ? "default" : "outline"}
+            variant={page === p ? 'default' : 'outline'}
             onClick={() => setPage(p)}
           >
             {p}
@@ -234,18 +239,6 @@ export const AllTransactionHistory = () => {
     </div>
   );
 };
-
-
-
-
-
-
-
-
-
-
-
-
 
 // "use client"
 // import React, { useEffect, useState } from 'react';
@@ -454,7 +447,6 @@ export const AllTransactionHistory = () => {
 //           </span>
 //         </div>
 //       </div>
-
 
 //       {/* Pagination Controls */}
 //       <div className="mt-6 flex justify-center gap-2">
