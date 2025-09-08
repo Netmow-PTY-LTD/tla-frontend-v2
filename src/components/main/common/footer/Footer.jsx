@@ -30,7 +30,7 @@ export default function Footer() {
     }
   }, [countries]);
 
-  console.log('selectedCountry', selectedCountry);
+  //console.log('selectedCountry', selectedCountry);
 
   // console.log('cookieCountry in footer', JSON.parse(cookieCountry));
 
