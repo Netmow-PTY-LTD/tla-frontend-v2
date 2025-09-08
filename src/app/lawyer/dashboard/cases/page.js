@@ -70,28 +70,63 @@ const LeadsBoardPage = () => {
   const loader = useRef(null);
 
   // Append new data to existing list
+  // useEffect(() => {
+
+  //   if (data && Array.isArray(data?.data) && data.data.length > 0) {
+  //     const currentPage = data?.pagination?.page ?? 1;
+
+  //     setLeads((prev) => {
+  //       if (currentPage === 1) {
+  //         // reset list on first page (new filter or reload)
+  //         return data.data;
+  //       }
+
+  //       // append new items, skip duplicates by _id
+  //       const existingIds = new Set(prev.map((lead) => lead._id));
+  //       const uniqueNew = data.data.filter(
+  //         (lead) => !existingIds.has(lead._id)
+  //       );
+  //       return [...prev, ...uniqueNew];
+
+
+  //     });
+
+
+
+  //     setTotalPages(data?.pagination?.totalPage);
+  //     setTotalLeadsCount(data?.pagination?.total);
+  //   }
+  // }, [data]);
+
   useEffect(() => {
-    if (data && Array.isArray(data?.data) && data.data.length > 0) {
-      const currentPage = data?.pagination?.page ?? 1;
+  if (!data) return;
 
-      setLeads((prev) => {
-        if (currentPage === 1) {
-          // reset list on first page (new filter or reload)
-          return data.data;
-        }
+  const currentPage = data?.pagination?.page ?? 1;
+  const newLeads = Array.isArray(data?.data) ? data.data : [];
 
-        // append new items, skip duplicates by _id
-        const existingIds = new Set(prev.map((lead) => lead._id));
-        const uniqueNew = data.data.filter(
-          (lead) => !existingIds.has(lead._id)
-        );
-        return [...prev, ...uniqueNew];
-      });
-
-      setTotalPages(data?.pagination?.totalPage);
-      setTotalLeadsCount(data?.pagination?.total);
+  setLeads((prev) => {
+    // Always reset leads when on first page
+    if (currentPage === 1) {
+      return newLeads;
     }
-  }, [data]);
+
+    // ✅ If no new leads on next pages, just keep old ones
+    if (newLeads.length === 0) {
+      return prev;
+    }
+
+    // ✅ Remove duplicates based on `_id`
+    const existingIds = new Set(prev.map((lead) => lead._id));
+    const uniqueNew = newLeads.filter((lead) => !existingIds.has(lead._id));
+
+    return [...prev, ...uniqueNew];
+  });
+
+  // ✅ Always update pagination & total counts
+  setTotalPages(data?.pagination?.totalPage || 1);
+  setTotalLeadsCount(data?.pagination?.total || 0);
+}, [data]);
+
 
   // Infinite scroll intersection observer
   useEffect(() => {
