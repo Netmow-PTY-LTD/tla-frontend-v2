@@ -10,11 +10,13 @@ import HomeCategoryWiseServices from '@/components/main/home/HomeCategoryWiseSer
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import countries from '@/data/countries';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [searchParam, setSearchParam] = useState('');
   const [country, setCountry] = useState(null);
 
+  const router = useRouter();
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const value = searchParams.get('clientRegister');
@@ -51,6 +53,8 @@ export default function Home() {
     }
 
     setCountry(selectedCountry);
+
+    router.push(`/${selectedCountry.slug}`);
   }, []);
 
   return (

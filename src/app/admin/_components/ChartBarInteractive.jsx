@@ -53,7 +53,7 @@ export function ChartBarInteractive() {
 
   const { data: barChartData } = useGetDashboardBarChartDataQuery(2025);
 
-  console.log('barChartData', barChartData);
+  //console.log('barChartData', barChartData);
 
   const total = React.useMemo(() => {
     const totals = {};

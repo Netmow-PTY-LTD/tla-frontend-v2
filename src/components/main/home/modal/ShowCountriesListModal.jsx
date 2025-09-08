@@ -1,6 +1,7 @@
 import Cookies from 'js-cookie';
 import countries from '@/data/countries.json'; // adjust path
 import { Modal } from '@/components/UIComponents/Modal';
+import { useRouter } from 'next/navigation';
 
 export default function ShowCountriesListModal({
   isModalOpen,
@@ -8,14 +9,16 @@ export default function ShowCountriesListModal({
   setSelectedCountry,
   selectedCountry, // ✅ add this prop from parent
 }) {
+  const router = useRouter();
   const handleSelect = (country) => {
-    Cookies.set('countryObj', JSON.stringify(country), {
-      expires: 3650,
-      path: '/',
-    });
+    // Cookies.set('countryObj', JSON.stringify(country), {
+    //   expires: 3650,
+    //   path: '/',
+    // });
     setSelectedCountry(country);
     setIsModalOpen(false);
-    window.location.reload();
+    //window.location.reload();
+    router.push(`/${country?.slug}`);
   };
 
   return (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Accordion } from '@/components/ui/accordion';
@@ -9,8 +9,11 @@ import { useGetLeadServiceListQuery } from '@/store/features/leadService/leadSer
 import { Skeleton } from '@/components/ui/skeleton';
 import { AlertCircle } from 'lucide-react';
 import Link from 'next/link';
+import AddLocationModal from './AddLocationModal';
 
 const ServicesList = () => {
+  const [open, setOpen] = useState(false);
+
   const {
     data: leadServicesData,
     isLoading,
@@ -19,6 +22,10 @@ const ServicesList = () => {
   } = useGetLeadServiceListQuery();
   const leadServices = leadServicesData?.data.service || [];
   const locations = leadServicesData?.data.locations || [];
+
+  const handleModalOpen = () => {
+    setOpen(true);
+  };
 
   return (
     <div className=" max-[900px] mx-auto">
@@ -78,7 +85,10 @@ const ServicesList = () => {
             <h2 className="text-xl font-semibold text-gray-800">
               Your Locations
             </h2>
-            {/* <Button className="bg-[#12C7C4CC] hover:bg-teal-300 px-4 py-3 text-sm rounded-lg text-white mt-5">
+            {/* <Button
+              className="bg-[#12C7C4CC] hover:bg-teal-300 px-4 py-3 text-sm rounded-lg text-white mt-5"
+              onClick={handleModalOpen}
+            >
               + Add a location
             </Button> */}
           </div>
@@ -141,6 +151,7 @@ const ServicesList = () => {
             </Link>
           </div>
         </section> */}
+        <AddLocationModal open={open} setOpen={setOpen} />
       </div>
     </div>
   );
