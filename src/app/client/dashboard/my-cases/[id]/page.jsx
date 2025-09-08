@@ -57,7 +57,7 @@ export default function LeadDetailsPage() {
   const [lawyerOnlineStatus, setLawyerOnlineStatus] = useState({});
   const [minRating, setMinRating] = useState(null);
   const [activeTab, setActiveTab] = useState('matched-lawyers');
-  const [hiredStatus, setHiredStatus] = useState('');
+  const [sortOrder, setSortOrder] = useState('asc');
 
   const LIMIT = '10';
 
@@ -146,13 +146,14 @@ export default function LeadDetailsPage() {
     isSuccess,
     refetch,
   } = useGetAllServiceWiseLawyersSuggestionsQuery(
-    { page, LIMIT, serviceId, leadId, minRating },
+    { page, LIMIT, serviceId, leadId, minRating ,sortOrder},
     {
       skip: !serviceId || !leadId,
     }
   );
 
-  //console.log('lawyersData', lawyersData);
+
+  console.log('sortOrder', sortOrder);
 
   useEffect(() => {
     setPage(1);
@@ -404,21 +405,14 @@ export default function LeadDetailsPage() {
                           {totalLawyersCount === 1 ? 'match' : 'matches'}
                         </h4>
                       </div>
-                      <Select>
+                      <Select value={sortOrder} onValueChange={(value) => setSortOrder(value)} >
                         <SelectTrigger className="w-[200px] bg-white">
-                          <SelectValue placeholder="Sort By: Best Match" />
+                          <SelectValue placeholder="Sort By" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            <SelectItem value="best-match">
-                              Sort By: Best Match
-                            </SelectItem>
-                            <SelectItem value="popularity">
-                              Sort By: popularity
-                            </SelectItem>
-                            <SelectItem value="order">
-                              Sort By: order
-                            </SelectItem>
+                            <SelectItem value="asc">Sort By: Ascending</SelectItem>
+                            <SelectItem value="desc">Sort By: Descending</SelectItem>
                           </SelectGroup>
                         </SelectContent>
                       </Select>
