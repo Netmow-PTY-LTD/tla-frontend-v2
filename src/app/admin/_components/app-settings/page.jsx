@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 import {
   useChangeAppSettingsMutation,
-  useGetSettingsQuery,
 } from '@/store/features/admin/appSettings';
 import { Button } from '@/components/ui/button';
 
@@ -20,12 +19,12 @@ const defaultValues = {
   autoRefundIfLeadInactive: true,
 };
 
-export default function SettingsForm() {
+export default function SettingsForm({appSettings,isLoading}) {
   const { register, handleSubmit, reset } = useForm({
     defaultValues,
   });
 
-  const { data: appSettings, isLoading } = useGetSettingsQuery();
+
   const [changeAppSettings] = useChangeAppSettingsMutation();
 
   useEffect(() => {
@@ -44,9 +43,7 @@ export default function SettingsForm() {
     }
   };
 
-  if (isLoading) {
-    return <div className="text-center p-4">Loading settings...</div>;
-  }
+ 
 
   return (
     <form
@@ -59,6 +56,7 @@ export default function SettingsForm() {
       <div>
         <label className="block font-medium">App Name</label>
         <input
+        disabled={isLoading}
           {...register('siteName')}
           className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1"
         />
@@ -75,7 +73,7 @@ export default function SettingsForm() {
       ].map(({ label, key }) => (
         <div key={key} className="flex items-center justify-between">
           <label className="font-medium">{label}</label>
-          <input type="checkbox" {...register(key)} className="w-5 h-5" />
+          <input    disabled={isLoading} type="checkbox" {...register(key)} className="w-5 h-5" />
         </div>
       ))}
 
