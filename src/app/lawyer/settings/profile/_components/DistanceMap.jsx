@@ -7,6 +7,7 @@ import {
   Marker,
   Circle,
 } from '@react-google-maps/api';
+import { useGetRangeListQuery } from '@/store/features/public/publicApiService';
 
 const libraries = ['places']; // needed for autocomplete
 
@@ -23,9 +24,15 @@ export default function DistanceMap() {
     libraries,
   });
 
+  const { data: rangeData } = useGetRangeListQuery();
+
+  console.log('rangeData', rangeData);
+
   const [location, setLocation] = useState('New York, NY');
   const [radius, setRadius] = useState(100); // miles
   const [center, setCenter] = useState({ lat: 40.7128, lng: -74.006 });
+  const [zoom, setZoom] = useState(6); // 👈 zoom state
+  const [map, setMap] = useState(null); // store map instance
 
   // Geocode on demand
   const geocodeLocation = useCallback(async () => {
@@ -39,17 +46,27 @@ export default function DistanceMap() {
       if (data.status === 'OK') {
         const { lat, lng } = data.results[0].geometry.location;
         setCenter({ lat, lng });
+        if (map) {
+          map.panTo({ lat, lng });
+        }
       } else {
         alert('Location not found');
       }
     } catch (err) {
       console.error(err);
     }
-  }, [location]);
+  }, [location, map]);
 
   useEffect(() => {
     geocodeLocation();
   }, []);
+
+  // 👇 Whenever zoom changes, update map directly
+  useEffect(() => {
+    if (map) {
+      map.setZoom(zoom);
+    }
+  }, [zoom, map]);
 
   if (!isLoaded) return <div>Loading Map...</div>;
 
@@ -67,23 +84,45 @@ export default function DistanceMap() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium">Radius</label>
+        <label className="block text-sm font-medium">Distance</label>
         <select
           value={radius}
           onChange={(e) => setRadius(parseInt(e.target.value, 10))}
           className="mt-1 block w-full border rounded-lg px-3 py-2"
         >
-          {[10, 25, 50, 100].map((m) => (
-            <option key={m} value={m}>
-              {m} miles
+          {rangeData?.data?.map((m) => (
+            <option key={m?._id} value={m?.value}>
+              {m?.name}
             </option>
           ))}
         </select>
       </div>
 
-      <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>
+      {/* Zoom selector */}
+      {/* <div>
+        <label className="block text-sm font-medium">Zoom</label>
+        <select
+          value={zoom}
+          onChange={(e) => setZoom(parseInt(e.target.value, 10))}
+          className="mt-1 block w-full border rounded-lg px-3 py-2"
+        >
+          {[5, 8, 10, 12, 14, 16].map((z) => (
+            <option key={z} value={z}>
+              {z}
+            </option>
+          ))}
+        </select>
+      </div> */}
+
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={center}
+        zoom={zoom}
+        onLoad={(mapInstance) => setMap(mapInstance)} // 👈 store instance
+      >
         <Marker position={center} />
         <Circle
+          key={radius} // 👈 reset whenever miles (radius) changes
           center={center}
           radius={milesToMeters(radius)}
           options={{

@@ -22,14 +22,12 @@ export default function Footer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(null);
 
+  let cookieCountry = safeJsonParse(Cookies.get('countryObj'));
+
   useEffect(() => {
-    let cookieCountry = safeJsonParse(Cookies.get('countryObj'));
-
-    const defaultCountry = cookieCountry
-      ? countries.find((c) => c.code.toLowerCase() === cookieCountry?.code)
-      : null;
-
-    setSelectedCountry(cookieCountry);
+    if (cookieCountry) {
+      setSelectedCountry(cookieCountry);
+    }
   }, [countries]);
 
   console.log('selectedCountry', selectedCountry);
@@ -99,7 +97,7 @@ export default function Footer() {
                           href={
                             isValidToken || currentUser
                               ? dashboardUrl
-                              : '/?clientRegister=true'
+                              : `/${cookieCountry?.slug}?clientRegister=true`
                           }
                         >
                           Find Lawyers

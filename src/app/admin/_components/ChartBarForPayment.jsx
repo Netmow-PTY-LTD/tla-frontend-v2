@@ -30,6 +30,7 @@ import { useGetDashboardBarChartDataQuery } from '@/store/features/admin/dashboa
 const chartConfig = {
   //   users: { label: 'Users', color: '#2563EB' },
   payments: { label: 'Payments', color: '#5C96A4' },
+  creditsPurchased: { label: 'Credits Purchased', color: '#8884D8' },
   creditsSpent: { label: 'Credits Spent', color: '#F5C767' },
   //   casePosts: { label: 'Case Posts', color: '#DB2777' },
   //   hires: { label: 'Hires', color: '#7C3AED' },
@@ -83,7 +84,7 @@ export default function InteractiveBarChartForPayment() {
     FilterType[filter]
   );
 
-  //console.log('barChartData in ChartBarForPayment', barChartData);
+  console.log('barChartData in ChartBarForPayment', barChartData);
 
   // Inside ChartBarFilterable
 
