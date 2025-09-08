@@ -17,7 +17,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
-import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
@@ -29,12 +28,12 @@ import { useGetDashboardBarChartDataQuery } from '@/store/features/admin/dashboa
 
 // Deep colors
 const chartConfig = {
-  users: { label: 'Users', color: '#478ECC' },
-  // payments: { label: 'Payments', color: '#D97706' },
-  // creditsSpent: { label: 'Credits Spent', color: '#059669' },
-  casePosts: { label: 'Case Posts', color: '#8DAACA' },
-  hires: { label: 'Hires', color: '#FF7061' },
-  lawyerRegistrations: { label: 'Lawyer Registrations', color: '#4CD4B0' },
+  //   users: { label: 'Users', color: '#2563EB' },
+  payments: { label: 'Payments', color: '#5C96A4' },
+  creditsSpent: { label: 'Credits Spent', color: '#F5C767' },
+  //   casePosts: { label: 'Case Posts', color: '#DB2777' },
+  //   hires: { label: 'Hires', color: '#7C3AED' },
+  //   lawyerRegistrations: { label: 'Lawyer Registrations', color: '#DC2626' },
 };
 
 const FILTERS = [
@@ -55,18 +54,48 @@ const FilterType = {
   '7 Days': 'seven-days',
 };
 
-export default function InteractiveBarChart() {
+// --- Dummy data generator ---
+// function generateDummyData() {
+//   const data = [];
+//   const start = new Date('2024-09-01');
+//   const today = new Date('2025-09-04'); // reference today
+
+//   for (let d = new Date(start); d <= today; d.setDate(d.getDate() + 1)) {
+//     data.push({
+//       date: d.toISOString().split('T')[0], // "YYYY-MM-DD"
+//       //   users: Math.floor(Math.random() * 100),
+//       payments: Math.floor(Math.random() * 50),
+//       creditsSpent: Math.floor(Math.random() * 30),
+//       //   casePosts: Math.floor(Math.random() * 20),
+//       //   hires: Math.floor(Math.random() * 10),
+//       //   lawyerRegistrations: Math.floor(Math.random() * 15),
+//     });
+//   }
+//   return data;
+// }
+
+// const dummyData = generateDummyData();
+
+export default function InteractiveBarChartForPayment() {
   const [filter, setFilter] = useState('Yearly');
 
-  // Fetch daily data for current month
   const { data: barChartData } = useGetDashboardBarChartDataQuery(
     FilterType[filter]
   );
 
-  // console.log('barChartData in ChartBarMonthly', barChartData);
+  //console.log('barChartData in ChartBarForPayment', barChartData);
+
+  // Inside ChartBarFilterable
 
   // Get today
   const today = new Date();
+
+  // Helper to subtract days
+  //   function subtractDays(date, days) {
+  //     const d = new Date(date);
+  //     d.setDate(d.getDate() - days);
+  //     return d;
+  //   }
 
   const chartData = React.useMemo(() => {
     if (!barChartData?.data) return [];
@@ -134,9 +163,9 @@ export default function InteractiveBarChart() {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
         <div>
-          <CardTitle>Key Metrics Overview</CardTitle>
+          <CardTitle>Payment & credit spent overview</CardTitle>
           <CardDescription>
-            Showing <b>{filter.toLowerCase()} </b>statistics
+            Stats filtered by <span className="font-semibold">{filter}</span>
           </CardDescription>
         </div>
         <div className="w-[200px] px-4 pb-4">

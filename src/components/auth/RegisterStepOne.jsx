@@ -24,6 +24,8 @@ import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesA
 import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { lawyerRegistrationStepOneFormValidation } from '@/schema/auth/lawyerRegistration.schema';
+import { safeJsonParse } from '@/helpers/safeJsonParse';
+import Cookies from 'js-cookie';
 
 export default function RegisterStepOne() {
   const dispatch = useDispatch();
@@ -41,9 +43,12 @@ export default function RegisterStepOne() {
 
   const [inputValue, setInputValue] = useState('');
   const [hasServiceError, setHasServiceError] = useState(false);
+
+  const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
+
   const { data: countryList } = useGetCountryListQuery();
   const defaultCountry = countryList?.data?.find(
-    (country) => country.slug === 'au'
+    (country) => country._id === cookieCountry?.countryId
   );
   // Default to Australia (AU) if available
   const { data: countryWiseServices } = useGetCountryWiseServicesQuery(

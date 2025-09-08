@@ -11,10 +11,10 @@ const dashboardStatsApiService = baseApi.injectEndpoints({
       providesTags: ['dashboard-stats'],
     }),
     getDashboardBarChartData: builder.query({
-      query: ({ year, month }) => ({
+      query: (filterType) => ({
         url: `/admin/dashboard/bar-chart`,
         method: 'GET',
-        params: { year, month },
+        params: { filterType },
       }),
       providesTags: ['dashboard-stats'],
     }),

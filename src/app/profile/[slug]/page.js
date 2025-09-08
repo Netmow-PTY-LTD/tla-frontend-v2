@@ -18,7 +18,6 @@ import { useSelector } from 'react-redux';
 import { useVisitProfileMutation } from '@/store/features/visitorTracker/visitorTracker';
 import { checkValidity } from '@/helpers/validityCheck';
 
-
 const DynamicProfilePage = () => {
   const params = useParams();
   const token = useSelector((state) => state.auth.token);
@@ -30,7 +29,7 @@ const DynamicProfilePage = () => {
     refetch,
   } = useGetUserProfileBySlugQuery(params?.slug);
 
-  console.log('userInfo ===>', userInfo?.data?.userId)
+  console.log('userInfo ===>', userInfo?.data?.userId);
 
   function extractYouTubeVideoId(url) {
     const regex =
@@ -40,7 +39,7 @@ const DynamicProfilePage = () => {
   }
 
   //   if valid token then call curren user api
-  const isValidToken = checkValidity(token)
+  const isValidToken = checkValidity(token);
   const { data: currentUser, isLoading: isCurrentUserLoading } =
     useAuthUserInfoQuery(undefined, { skip: !isValidToken });
 
@@ -51,7 +50,7 @@ const DynamicProfilePage = () => {
     const visitorId = currentUser?.data?._id;
 
     if (
-      isValidToken &&    // ✅ Only if logged in
+      isValidToken && // ✅ Only if logged in
       targetId &&
       visitorId &&
       targetId !== visitorId // ✅ Avoid visiting own profile
@@ -60,18 +59,18 @@ const DynamicProfilePage = () => {
         try {
           await visitProfile({ targetId }).unwrap();
         } catch (error) {
-          console.error("Error visiting profile:", error);
+          console.error('Error visiting profile:', error);
         }
       };
 
       trackVisit();
     }
-
-
-
-  }, [isValidToken, userInfo?.data?.userId, currentUser?.data?._id, visitProfile]);
-
-
+  }, [
+    isValidToken,
+    userInfo?.data?.userId,
+    currentUser?.data?._id,
+    visitProfile,
+  ]);
 
   if (isUserInfoLoading) {
     return <Preloader />;
@@ -193,7 +192,7 @@ const DynamicProfilePage = () => {
                     <h4 className="font-semibold mb-4">Languages</h4>
                     <div className="flex flex-wrap mb-4">
                       {Array.isArray(userInfo?.data?.languages) &&
-                        userInfo?.data?.languages?.length > 0 ? (
+                      userInfo?.data?.languages?.length > 0 ? (
                         userInfo?.data?.languages?.map((language, index) => (
                           <div key={language + index}>
                             <span className="py-2 px-4 mr-2 mb-2 rounded-lg inline-block bg-[#095761] text-white">
@@ -216,7 +215,7 @@ const DynamicProfilePage = () => {
                     </h4>
                     <div className="">
                       {Array.isArray(userInfo?.data?.services) &&
-                        userInfo?.data?.services?.length > 0 ? (
+                      userInfo?.data?.services?.length > 0 ? (
                         userInfo?.data?.services?.map((service, index) => (
                           <div key={service + index}>
                             <span className="py-2 px-4 mr-2 mb-2 rounded-lg inline-block chip">

@@ -44,7 +44,6 @@ import { lawyerRegistrationStepTwoFormValidation } from '@/schema/auth/lawyerReg
 import Link from 'next/link';
 import { showErrorToast } from '../common/toasts';
 import { Input } from '../ui/input';
-import country from '@/data/au.json';
 import Cookies from 'js-cookie';
 import { safeJsonParse } from '@/helpers/safeJsonParse';
 
@@ -117,8 +116,8 @@ export default function RegisterStepTwo() {
   //const practiceInternationalWatch = form.watch('practiceInternational');
 
   const addressInfo = {
-    countryId: country.countryId,
-    countryCode: country.code.toLowerCase(),
+    countryId: cookieCountry?.countryId,
+    countryCode: cookieCountry?.code?.toLowerCase(),
     zipcode: address,
     latitude: latitude?.toString(),
     longitude: longitude?.toString(),
@@ -205,7 +204,7 @@ export default function RegisterStepTwo() {
                       />
                     </FormControl>
                     <FormLabel className="ml-2 font-bold">
-                      I will practice within
+                      I will practice within {cookieCountry?.name}
                     </FormLabel>
                     <FormMessage className="text-red-600" />
                   </FormItem>

@@ -3,6 +3,8 @@
 import CheckboxInput from '@/components/form/CheckboxInput';
 import SelectInput from '@/components/form/SelectInput';
 import TextInput from '@/components/form/TextInput';
+import { safeJsonParse } from '@/helpers/safeJsonParse';
+import Cookies from 'js-cookie';
 import { AlertCircle } from 'lucide-react';
 import React, { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -16,11 +18,16 @@ export default function CompanyLocation({
 }) {
   const { watch, setValue } = useFormContext();
 
+  const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
+
   const address = watch('location.address');
+  console.log('address', address);
   const hideFromProfile = watch('location.hideFromProfile');
   const coordinates = watch('location.coordinates');
 
-  const mapQuery = address?.trim() ? encodeURIComponent(address) : 'Australia';
+  const mapQuery = address?.trim()
+    ? encodeURIComponent(address)
+    : cookieCountry?.name;
 
   const mapSrc = `https://www.google.com/maps?q=${mapQuery}&output=embed`;
 
@@ -37,7 +44,7 @@ export default function CompanyLocation({
 
       // ✅ Restrict search to Australia
       autocomplete.setComponentRestrictions({
-        country: ['au'],
+        country: [cookieCountry?.code?.toLowerCase()],
       });
 
       autocomplete.addListener('place_changed', () => {

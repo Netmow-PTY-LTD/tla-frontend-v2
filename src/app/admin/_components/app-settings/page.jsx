@@ -6,6 +6,7 @@ import {
   useChangeAppSettingsMutation,
   useGetSettingsQuery,
 } from '@/store/features/admin/appSettings';
+import { Button } from '@/components/ui/button';
 
 const defaultValues = {
   siteName: '',
@@ -71,7 +72,6 @@ export default function SettingsForm() {
         // { label: 'Allow Credit Purchase', key: 'allowCreditPurchase' },
         // { label: 'Require Credits to Respond', key: 'requireCreditsToRespond' },
         { label: 'Stripe Live Mode', key: 'stripeLiveMode' },
-       
       ].map(({ label, key }) => (
         <div key={key} className="flex items-center justify-between">
           <label className="font-medium">{label}</label>
@@ -81,12 +81,9 @@ export default function SettingsForm() {
 
       {/* Numeric field */}
 
-      <button
-        type="submit"
-        className="hover:bg-[#0eb6b4] text-white px-6 py-2 rounded-md bg-[#3cfcf8]"
-      >
+      <Button type="submit" className=" text-white px-6 py-2 rounded-md">
         Save Settings
-      </button>
+      </Button>
     </form>
   );
 }

@@ -9,7 +9,10 @@ export default function ShowCountriesListModal({
   selectedCountry, // ✅ add this prop from parent
 }) {
   const handleSelect = (country) => {
-    Cookies.set('countryObj', JSON.stringify(country), { expires: 3650 });
+    Cookies.set('countryObj', JSON.stringify(country), {
+      expires: 3650,
+      path: '/',
+    });
     setSelectedCountry(country);
     setIsModalOpen(false);
     window.location.reload();
@@ -29,10 +32,10 @@ export default function ShowCountriesListModal({
             return (
               <li
                 key={country.countryId || country.code}
-                className={`flex items-center gap-3 mb-2 p-2 rounded-sm transition ${
+                className={`flex items-center gap-3 mb-2 p-2 rounded-sm transition cursor-pointer ${
                   isSelected ? 'border border-[#f3f3f3]' : '' // only selected has border
                 }`}
-                // onClick={() => handleSelect(country)}
+                onClick={() => handleSelect(country)}
               >
                 {country.flag && (
                   <img

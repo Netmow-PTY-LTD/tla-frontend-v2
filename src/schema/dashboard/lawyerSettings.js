@@ -1,7 +1,16 @@
 import { z } from 'zod';
+import { validateAndNormalizePhone } from '@/helpers/phoneValidation';
+import { safeJsonParse } from '@/helpers/safeJsonParse';
+import Cookies from 'js-cookie';
 
 const bdPhoneRegex = /^(?:\+88|88)?01[3-9]\d{8}$/;
 const auPhoneRegex = /^(?:\+?61|0)[2-478]\d{8}$/;
+
+// Get country from cookie
+const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
+const defaultCountry = cookieCountry?.code; //
+
+console.log('defaultCountry in lawyersettings', defaultCountry);
 
 export const lawyerSettingAboutSchema = z.object({
   name: z
@@ -16,12 +25,8 @@ export const lawyerSettingAboutSchema = z.object({
   gender: z.enum(['male', 'female', 'other'], {
     required_error: 'is required',
   }),
-  law_society_member_number: z
-    .string()
-    .min(1, ' * required'),
-  practising_certificate_number: z
-    .string()
-    .min(1, '* required'),
+  law_society_member_number: z.string().min(1, ' * required'),
+  practising_certificate_number: z.string().min(1, '* required'),
   lawyerContactEmail: z
     .string()
     .trim()
@@ -43,9 +48,14 @@ export const lawyerSettingAboutSchema = z.object({
   phoneNumber: z
     .string()
     .trim()
-    .refine((val) => bdPhoneRegex.test(val) || auPhoneRegex.test(val), {
-      message: 'Phone number must be a valid number',
-    })
+    .refine(
+      (val) => {
+        if (!val) return true; // allow empty
+        const { ok } = validateAndNormalizePhone(val, { defaultCountry });
+        return ok;
+      },
+      { message: `Phone number must be a valid number for ${defaultCountry}` }
+    )
     .or(z.literal(''))
     .optional(),
 
@@ -65,8 +75,7 @@ export const lawyerSettingAboutSchema = z.object({
     })
     .optional(),
   location: z.object({
-    address: z
-      .string().optional(),
+    address: z.string().optional(),
     hideFromProfile: z.boolean(),
     locationReason: z.string().optional(),
     // coordinates: z
