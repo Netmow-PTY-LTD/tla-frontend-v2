@@ -120,7 +120,12 @@ export default function RegisterStepThree() {
         const token = result.token;
         const userPayload = verifyToken(token);
         if (userPayload) {
-          dispatch(setUser({ user: result?.data, token }));
+          dispatch(
+            setUser({
+              user: { ...result?.data, country: userPayload?.country },
+              token,
+            })
+          );
           const userType = result?.data?.regUserType;
           if (userType === 'lawyer') router.push('/lawyer/dashboard');
           else if (userType === 'client') router.push('/client/dashboard');

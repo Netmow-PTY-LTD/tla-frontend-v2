@@ -1,6 +1,6 @@
 'use client';
 import Cookies from 'js-cookie';
-import { usePathname, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import countries from '@/data/countries';
@@ -15,11 +15,11 @@ export default function page() {
   const token = useSelector((state) => state.auth.token);
   //console.log('token', token);
   const currentUser = useSelector((state) => state.auth.user);
-  console.log('currentUser', currentUser);
+  //console.log('currentUser', currentUser);
+
+  const params = useParams();
 
   const router = useRouter();
-  const pathname = usePathname();
-  const cleanPath = pathname.startsWith('/') ? pathname.slice(1) : pathname;
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -40,7 +40,9 @@ export default function page() {
       router.push(`/${selectedCountry?.slug}`);
     } else {
       // check if cleanPath exists in country slugs
-      const matchedCountry = countries.find((c) => c.slug === cleanPath);
+      const matchedCountry = countries.find(
+        (c) => c.slug === params?.country?.toLowerCase()
+      );
 
       //console.log('matchedCountry', matchedCountry);
 
