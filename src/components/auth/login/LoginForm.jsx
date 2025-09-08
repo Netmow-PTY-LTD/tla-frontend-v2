@@ -49,7 +49,7 @@ const LoginForm = () => {
         if (user) {
           const dispatchUser = dispatch(
             setUser({
-              user: res?.data,
+              user: { ...res?.data, country: user?.country },
               token: res?.token,
             })
           );
