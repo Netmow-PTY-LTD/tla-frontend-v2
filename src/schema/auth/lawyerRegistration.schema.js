@@ -1,3 +1,6 @@
+import { validateAndNormalizePhone } from '@/helpers/phoneValidation';
+import { safeJsonParse } from '@/helpers/safeJsonParse';
+import Cookies from 'js-cookie';
 import { z } from 'zod';
 
 export const lawyerRegistrationStepTwoFormValidation = z
@@ -36,7 +39,10 @@ export const lawyerRegistrationStepOneFormValidation = z.object({
 });
 
 // const bdPhoneRegex = /^(?:\+88|88)?01[3-9]\d{8}$/;
-const auPhoneRegex = /^(?:\+?61|0)[2-478]\d{8}$/;
+//const auPhoneRegex = /^(?:\+?61|0)[2-478]\d{8}$/;
+
+const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
+const defaultCountry = cookieCountry?.code;
 
 export const lawyerRegistrationStepThreeFormValidation = z
   .object({
@@ -44,10 +50,16 @@ export const lawyerRegistrationStepThreeFormValidation = z
     phone: z
       .string()
       .min(1, 'is required')
-      .refine((val) => auPhoneRegex.test(val), {
-        message:
-          'Phone number must be a valid Australian number (e.g. +61412345678)',
-      }),
+      .refine(
+        (val) => {
+          if (!val) return true; // allow empty
+          const { ok } = validateAndNormalizePhone(val, { defaultCountry });
+          return ok;
+        },
+        {
+          message: `Phone number must be a valid number for ${cookieCountry?.name}`,
+        }
+      ),
 
     password: z.string().min(6, 'Password must be at least 6 characters'),
     gender: z.enum(['male', 'female', 'other'], {
