@@ -347,7 +347,7 @@ export default function ClientLeadRegistrationModal({
 
     if (!ok) {
       setPhoneError(
-        error || `Phone number must be valid for ${defaultCountry}`
+        error || `Phone number must be valid for ${cookieCountry?.name}`
       ); // show error message
     } else {
       setPhoneError('');
@@ -397,7 +397,7 @@ export default function ClientLeadRegistrationModal({
 
     if (!ok) {
       // prevent submission and show error
-      setPhoneError(`Phone number must be valid for ${defaultCountry}`);
+      setPhoneError(`Phone number must be valid for ${cookieCountry?.name}`);
       return;
     }
 
@@ -981,6 +981,10 @@ export default function ClientLeadRegistrationModal({
             <h4 className="text-[24px] font-semibold text-center">
               What email address would you like quotes sent to?
             </h4>
+            <p className="text-red-500 text-sm">
+              <b>Please note:</b> Your login credentials will be sent via this
+              email. Kindly Check your inbox for details.
+            </p>
             <label className="flex flex-col gap-2">
               <span className="text-sm font-medium">
                 Enter Your Valid Email Address

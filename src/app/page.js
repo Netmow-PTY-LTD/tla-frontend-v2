@@ -59,7 +59,7 @@ export default function Home() {
 
   return (
     <MainLayout>
-      <HeroHome searchParam={searchParam} cookieCountry={country} />
+      <HeroHome searchParam={searchParam} />
       {/* <HomeAboutPreview /> */}
       {/* <HomeServices /> */}
       <HomeCategoryWiseServices />
