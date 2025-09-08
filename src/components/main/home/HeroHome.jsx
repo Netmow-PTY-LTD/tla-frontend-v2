@@ -29,7 +29,9 @@ import { showErrorToast } from '@/components/common/toasts';
 import LawyerWarningModal from './modal/LawyerWarningModal';
 import { checkValidity } from '@/helpers/validityCheck';
 import { useGetAllCategoriesQuery } from '@/store/features/public/catagorywiseServiceApiService';
-export default function HeroHome({ searchParam, cookieCountry }) {
+import { safeJsonParse } from '@/helpers/safeJsonParse';
+import Cookies from 'js-cookie';
+export default function HeroHome({ searchParam }) {
   const [selectedService, setSelectedService] = useState(null);
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -44,6 +46,7 @@ export default function HeroHome({ searchParam, cookieCountry }) {
   //const [filteredZipCodes, setFilteredZipCodes] = useState([]);
   const [shouldAutoFocus, setShouldAutoFocus] = useState(false);
 
+  const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
   const inputRef = useRef();
 
   useEffect(() => {
