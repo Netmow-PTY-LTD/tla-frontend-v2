@@ -15,7 +15,7 @@ export default function page() {
   const token = useSelector((state) => state.auth.token);
   //console.log('token', token);
   const currentUser = useSelector((state) => state.auth.user);
-  console.log('currentUser', currentUser);
+  //console.log('currentUser', currentUser);
 
   const params = useParams();
 

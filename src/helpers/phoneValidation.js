@@ -23,7 +23,7 @@ const DEFAULT_ALLOWED = [
  * @returns {object} { ok, e164?, country?, error? }
  */
 export function validateAndNormalizePhone(rawInput, options = {}) {
-  console.log('options', options?.defaultCountry);
+  console.log('options', options);
   const defaultCountry = options?.defaultCountry;
   const input = (rawInput || '').trim();
   const allowed = ([defaultCountry] || DEFAULT_ALLOWED).filter(

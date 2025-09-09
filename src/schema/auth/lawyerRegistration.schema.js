@@ -34,86 +34,161 @@ export const lawyerRegistrationStepTwoFormValidation = z
 export const lawyerRegistrationStepOneFormValidation = z.object({
   name: z
     .string()
-    .min(2, 'is requird and  at least 2 characters long')
+    .min(2, 'is required and at least 2 characters long')
     .max(50, 'must be less than 50 characters'),
 });
 
 // const bdPhoneRegex = /^(?:\+88|88)?01[3-9]\d{8}$/;
 //const auPhoneRegex = /^(?:\+?61|0)[2-478]\d{8}$/;
 
+console.log('Cookies', Cookies);
+
 const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
 const defaultCountry = cookieCountry?.code;
 
-console.log('cookieCountry name', cookieCountry?.name);
+console.log('cookieCountry', cookieCountry);
 console.log('defaultCountry in lawyerschema', defaultCountry);
 
-export const lawyerRegistrationStepThreeFormValidation = z
-  .object({
-    email: z.string().email('Invalid email address'),
-    phone: z
-      .string()
-      .min(1, 'is required')
-      .refine(
-        (val) => {
-          if (!val) return true; // allow empty
-          const { ok } = validateAndNormalizePhone(val, { defaultCountry });
-          return ok;
-        },
-        {
-          message: `Phone number must be a valid number for ${cookieCountry?.name}`,
+export const getLawyerRegistrationStepThreeFormValidation = (country) =>
+  z
+    .object({
+      email: z.string().email('Invalid email address'),
+      phone: z
+        .string()
+        .min(1, 'is required')
+        .refine(
+          (val) => {
+            if (!val) return true;
+            const { ok } = validateAndNormalizePhone(val, {
+              defaultCountry: country?.code,
+            });
+            return ok;
+          },
+          {
+            message: `Phone number must be a valid number for ${country?.name}`,
+          }
+        ),
+      password: z.string().min(6, 'Password must be at least 6 characters'),
+      gender: z.enum(['male', 'female', 'other'], {
+        required_error: 'is required',
+      }),
+      law_society_member_number: z.string().min(1, 'is Required'),
+      practising_certificate_number: z.string().min(1, 'is Required'),
+
+      soloPractitioner: z.boolean(),
+      companyTeam: z.boolean(),
+      company_name: z.string().optional(),
+      company_website: z.string().optional(),
+      company_size: z.string().optional(),
+      agreement: z.boolean().refine((val) => val === true, {
+        message: 'is Required',
+      }),
+    })
+    .superRefine((data, ctx) => {
+      if (data.companyTeam) {
+        if (!data.company_name || data.company_name.trim() === '') {
+          ctx.addIssue({
+            path: ['company_name'],
+            code: z.ZodIssueCode.custom,
+            message: 'is required',
+          });
         }
-      ),
 
-    password: z.string().min(6, 'Password must be at least 6 characters'),
-    gender: z.enum(['male', 'female', 'other'], {
-      required_error: 'is required',
-    }),
-    law_society_member_number: z.string().min(1, 'is Required'),
-    practising_certificate_number: z.string().min(1, 'is Required'),
-
-    soloPractitioner: z.boolean(),
-    companyTeam: z.boolean(),
-    company_name: z.string().optional(),
-    company_website: z.string().optional(),
-    company_size: z.string().optional(),
-    agreement: z.boolean().refine((val) => val === true, {
-      message: 'is Required',
-    }),
-  })
-  .superRefine((data, ctx) => {
-    if (data.companyTeam) {
-      if (!data.company_name || data.company_name.trim() === '') {
-        ctx.addIssue({
-          path: ['company_name'],
-          code: z.ZodIssueCode.custom,
-          message: 'is required',
-        });
-      }
-
-      if (!data.company_website || data.company_website.trim() === '') {
-        ctx.addIssue({
-          path: ['company_website'],
-          code: z.ZodIssueCode.custom,
-          message: 'is required',
-        });
-      } else {
-        // ✅ Validate the URL format
-        const urlPattern = /^https?:\/\/[^\s$.?#].[^\s]*$/;
-        if (!urlPattern.test(data.company_website)) {
+        if (!data.company_website || data.company_website.trim() === '') {
           ctx.addIssue({
             path: ['company_website'],
             code: z.ZodIssueCode.custom,
-            message: 'Company website must be a valid URL',
+            message: 'is required',
+          });
+        } else {
+          // ✅ Validate the URL format
+          const urlPattern = /^https?:\/\/[^\s$.?#].[^\s]*$/;
+          if (!urlPattern.test(data.company_website)) {
+            ctx.addIssue({
+              path: ['company_website'],
+              code: z.ZodIssueCode.custom,
+              message: 'Company website must be a valid URL',
+            });
+          }
+        }
+
+        if (!data.company_size || data.company_size.trim() === '') {
+          ctx.addIssue({
+            path: ['company_size'],
+            code: z.ZodIssueCode.custom,
+            message: 'is required',
           });
         }
       }
+    });
 
-      if (!data.company_size || data.company_size.trim() === '') {
-        ctx.addIssue({
-          path: ['company_size'],
-          code: z.ZodIssueCode.custom,
-          message: 'is required',
-        });
-      }
-    }
-  });
+// export const lawyerRegistrationStepThreeFormValidation = z
+//   .object({
+//     email: z.string().email('Invalid email address'),
+//     phone: z
+//       .string()
+//       .min(1, 'is required')
+//       .refine(
+//         (val) => {
+//           if (!val) return true; // allow empty
+//           const { ok } = validateAndNormalizePhone(val, { defaultCountry });
+//           return ok;
+//         },
+//         {
+//           message: `Phone number must be a valid number for ${cookieCountry?.name}`,
+//         }
+//       ),
+
+//     password: z.string().min(6, 'Password must be at least 6 characters'),
+//     gender: z.enum(['male', 'female', 'other'], {
+//       required_error: 'is required',
+//     }),
+//     law_society_member_number: z.string().min(1, 'is Required'),
+//     practising_certificate_number: z.string().min(1, 'is Required'),
+
+//     soloPractitioner: z.boolean(),
+//     companyTeam: z.boolean(),
+//     company_name: z.string().optional(),
+//     company_website: z.string().optional(),
+//     company_size: z.string().optional(),
+//     agreement: z.boolean().refine((val) => val === true, {
+//       message: 'is Required',
+//     }),
+//   })
+//   .superRefine((data, ctx) => {
+//     if (data.companyTeam) {
+//       if (!data.company_name || data.company_name.trim() === '') {
+//         ctx.addIssue({
+//           path: ['company_name'],
+//           code: z.ZodIssueCode.custom,
+//           message: 'is required',
+//         });
+//       }
+
+//       if (!data.company_website || data.company_website.trim() === '') {
+//         ctx.addIssue({
+//           path: ['company_website'],
+//           code: z.ZodIssueCode.custom,
+//           message: 'is required',
+//         });
+//       } else {
+//         // ✅ Validate the URL format
+//         const urlPattern = /^https?:\/\/[^\s$.?#].[^\s]*$/;
+//         if (!urlPattern.test(data.company_website)) {
+//           ctx.addIssue({
+//             path: ['company_website'],
+//             code: z.ZodIssueCode.custom,
+//             message: 'Company website must be a valid URL',
+//           });
+//         }
+//       }
+
+//       if (!data.company_size || data.company_size.trim() === '') {
+//         ctx.addIssue({
+//           path: ['company_size'],
+//           code: z.ZodIssueCode.custom,
+//           message: 'is required',
+//         });
+//       }
+//     }
+//   });
