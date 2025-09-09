@@ -26,6 +26,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { lawyerRegistrationStepOneFormValidation } from '@/schema/auth/lawyerRegistration.schema';
 import { safeJsonParse } from '@/helpers/safeJsonParse';
 import Cookies from 'js-cookie';
+import countries from '@/data/countries.json';
 
 export default function RegisterStepOne() {
   const dispatch = useDispatch();
@@ -47,14 +48,17 @@ export default function RegisterStepOne() {
   const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
 
   const { data: countryList } = useGetCountryListQuery();
-  const defaultCountry = countryList?.data?.find(
-    (country) => country._id === cookieCountry?.countryId
+  const defaultCountry = countries?.find(
+    (country) => country.slug === cookieCountry?.slug
   );
+
+  console.log('defaultCountry', defaultCountry);
+  console.log('selectedCountry', cookieCountry);
   // Default to Australia (AU) if available
   const { data: countryWiseServices } = useGetCountryWiseServicesQuery(
-    defaultCountry?._id,
+    defaultCountry?.countryId,
     {
-      skip: !defaultCountry?._id, // Skip
+      skip: !defaultCountry?.countryId, // Skip
     }
   );
 
@@ -64,18 +68,18 @@ export default function RegisterStepOne() {
         updateNestedField({
           section: 'lawyerServiceMap',
           field: 'country',
-          value: defaultCountry?._id || selectedCountry,
+          value: defaultCountry?.countryId || selectedCountry?.countryId,
         })
       );
       dispatch(
         updateNestedField({
           section: 'profile',
           field: 'country',
-          value: defaultCountry?._id || selectedCountry,
+          value: defaultCountry?.countryId || selectedCountry?.countryId,
         })
       );
     }
-  }, [selectedCountry, dispatch, defaultCountry?._id]);
+  }, [selectedCountry, dispatch, defaultCountry?.countryId]);
 
   const form = useForm({
     resolver: zodResolver(lawyerRegistrationStepOneFormValidation),
