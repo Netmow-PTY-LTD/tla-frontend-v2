@@ -42,6 +42,10 @@ export default function RegisterStepOne() {
     (state) => state.lawyerRegistration.lawyerServiceMap.services
   );
 
+  const lawyerServiceMap = useSelector(
+    (state) => state.lawyerRegistration.lawyerServiceMap
+  );
+
   const [inputValue, setInputValue] = useState('');
   const [hasServiceError, setHasServiceError] = useState(false);
 
@@ -53,7 +57,7 @@ export default function RegisterStepOne() {
   );
 
   console.log('defaultCountry', defaultCountry);
-  console.log('selectedCountry', cookieCountry);
+  // console.log('selectedCountry?.countryId', selectedCountry?.countryId);
   // Default to Australia (AU) if available
   const { data: countryWiseServices } = useGetCountryWiseServicesQuery(
     defaultCountry?.countryId,
@@ -63,23 +67,24 @@ export default function RegisterStepOne() {
   );
 
   useEffect(() => {
-    if (!selectedCountry) {
+    console.log('Updating country to', defaultCountry);
+    if (defaultCountry) {
       dispatch(
         updateNestedField({
           section: 'lawyerServiceMap',
           field: 'country',
-          value: defaultCountry?.countryId || selectedCountry?.countryId,
+          value: defaultCountry?.countryId,
         })
       );
       dispatch(
         updateNestedField({
           section: 'profile',
           field: 'country',
-          value: defaultCountry?.countryId || selectedCountry?.countryId,
+          value: defaultCountry?.countryId,
         })
       );
     }
-  }, [selectedCountry, dispatch, defaultCountry?.countryId]);
+  }, [dispatch, defaultCountry]);
 
   const form = useForm({
     resolver: zodResolver(lawyerRegistrationStepOneFormValidation),
@@ -87,6 +92,8 @@ export default function RegisterStepOne() {
       name: defaultName || '',
     },
   });
+
+  console.log('lawyerServiceMap', lawyerServiceMap);
 
   const { control, handleSubmit } = form;
 

@@ -11,14 +11,15 @@ export default function ShowCountriesListModal({
 }) {
   const router = useRouter();
   const handleSelect = (country) => {
+    console.log('country', country);
     // Cookies.set('countryObj', JSON.stringify(country), {
     //   expires: 3650,
     //   path: '/',
     // });
     setSelectedCountry(country);
     setIsModalOpen(false);
-    //window.location.reload();
-    router.push(`/${country?.slug}`);
+    //router.push(`/${country?.slug}`);
+    window.location.href = `/${country.slug}`; // window.location.reload();
   };
 
   return (
