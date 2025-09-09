@@ -44,6 +44,9 @@ export const lawyerRegistrationStepOneFormValidation = z.object({
 const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
 const defaultCountry = cookieCountry?.code;
 
+console.log('cookieCountry name', cookieCountry?.name);
+console.log('defaultCountry in lawyerschema', defaultCountry);
+
 export const lawyerRegistrationStepThreeFormValidation = z
   .object({
     email: z.string().email('Invalid email address'),

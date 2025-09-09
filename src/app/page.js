@@ -33,6 +33,8 @@ export default function Home() {
       } catch (e) {
         console.error('Invalid country cookie, falling back to code');
       }
+    } else {
+      router.push('/au');
     }
 
     // If no full object in cookie, fallback to basic code or default
