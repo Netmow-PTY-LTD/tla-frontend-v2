@@ -118,7 +118,7 @@ export default function LeadManagement() {
 
         return (
           <div>
-            {countryCode} {budgetAmount?.toLocaleString()}
+            {countryCode} {budgetAmount?.toLocaleString()||0}
           </div>
         );
       },
