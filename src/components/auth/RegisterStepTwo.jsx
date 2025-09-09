@@ -46,6 +46,7 @@ import { showErrorToast } from '../common/toasts';
 import { Input } from '../ui/input';
 import Cookies from 'js-cookie';
 import { safeJsonParse } from '@/helpers/safeJsonParse';
+import countries from '@/data/countries.json';
 
 export default function RegisterStepTwo() {
   const [zipcode, setZipcode] = useState('');
@@ -68,20 +69,20 @@ export default function RegisterStepTwo() {
 
   const { data: countryList } = useGetCountryListQuery();
 
-  const defaultCountry = countryList?.data?.find(
-    (country) => country?._id === cookieCountry?.countryId
+  const defaultCountry = countries?.find(
+    (country) => country?.slug === cookieCountry?.slug
   );
 
-  //console.log('defaultCountry', defaultCountry);
+  console.log('defaultCountry in step 2', defaultCountry);
 
   const paramsPayload = {
-    countryId: defaultCountry?._id,
+    countryId: defaultCountry?.countryId,
     search: query || '',
   };
 
   const { data: allZipCodes, isLoading: isZipCodeLoading } =
     useGetZipCodeListQuery(paramsPayload, {
-      skip: !defaultCountry?._id,
+      skip: !defaultCountry?.countryId,
     });
 
   // const selectedZipCode = allZipCodes?.data?.find(
@@ -90,7 +91,7 @@ export default function RegisterStepTwo() {
 
   //console.log('allZipCodes', allZipCodes);
 
-  console.log('paramsPayload', paramsPayload);
+  //console.log('paramsPayload', paramsPayload);
 
   const filteredZipCodes = allZipCodes?.data?.filter((z) =>
     z.zipcode?.toLowerCase()?.includes(query.toLowerCase())
@@ -124,7 +125,7 @@ export default function RegisterStepTwo() {
     postalCode,
   };
 
-  console.log('addressInfo', addressInfo);
+  //console.log('addressInfo', addressInfo);
 
   const onSubmit = (data) => {
     if (!practiceWithinWatch && (!data.AreaZipcode || !data.rangeInKm)) {
@@ -174,6 +175,8 @@ export default function RegisterStepTwo() {
 
     dispatch(nextStep());
   };
+
+  console.log('lawyerServiceMap in step 2', lawyerServiceMap);
 
   return (
     <div className="flex flex-wrap lg:flex-nowrap w-full">

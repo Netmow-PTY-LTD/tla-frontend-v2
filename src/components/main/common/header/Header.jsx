@@ -51,11 +51,15 @@ export default function Header() {
 
   const token = useSelector((state) => state.auth.token);
 
+  //console.log('token', token);
+
   const validToken = checkValidity(token);
 
   const { data: currentUser } = useAuthUserInfoQuery(undefined, {
     skip: !validToken,
   });
+
+  //console.log('currentUser', currentUser);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

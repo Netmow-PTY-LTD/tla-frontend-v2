@@ -25,11 +25,17 @@ import { showErrorToast, showSuccessToast } from '../common/toasts';
 import { verifyToken } from '@/utils/verifyToken';
 import { setUser } from '@/store/features/auth/authSlice';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { lawyerRegistrationStepThreeFormValidation } from '@/schema/auth/lawyerRegistration.schema';
+import {
+  getLawyerRegistrationStepThreeFormValidation,
+  lawyerRegistrationStepThreeFormValidation,
+} from '@/schema/auth/lawyerRegistration.schema';
 import Link from 'next/link';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Label } from '../ui/label';
 import { Loader } from 'lucide-react';
+import countries from '@/data/countries.json';
+import { safeJsonParse } from '@/helpers/safeJsonParse';
+import Cookies from 'js-cookie';
 
 const genderOptions = [
   { id: 1, label: 'Male', value: 'male' },
@@ -54,8 +60,25 @@ export default function RegisterStepThree() {
   const [localCompanySize, setLocalCompanySize] = useState(companySize || '');
   const [isCompany, setIsCompany] = useState(companyTeam || false);
 
+  const lawyerServiceMap = useSelector(
+    (state) => state.lawyerRegistration.lawyerServiceMap
+  );
+
+  //console.log('lawyerServiceMap in step 3', lawyerServiceMap);
+
+  const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
+
+  const defaultCountry = countries?.find(
+    (country) => country?.slug === cookieCountry?.slug
+  );
+
+  const schema = React.useMemo(
+    () => getLawyerRegistrationStepThreeFormValidation(defaultCountry),
+    [defaultCountry]
+  );
+
   const form = useForm({
-    resolver: zodResolver(lawyerRegistrationStepThreeFormValidation),
+    resolver: zodResolver(schema),
     defaultValues: {
       email,
       phone: profile?.phone,
@@ -73,32 +96,38 @@ export default function RegisterStepThree() {
   });
 
   useEffect(() => {
-    // Sync redux data to local form
-    form.reset({
-      email,
-      phone: profile?.phone,
-      password,
-      soloPractitioner: registration.lawyerServiceMap.isSoloPractitioner,
-      companyTeam,
-      company_name: companyName,
-      company_website: website,
-      company_size: companySize,
-      gender: profile.gender,
-      law_society_member_number: profile.law_society_member_number,
-      practising_certificate_number: profile.practising_certificate_number,
-    });
-  }, [
-    email,
-    profile?.phone,
-    password,
-    companyTeam,
-    companyName,
-    website,
-    companySize,
-    profile.gender, // ✅ include gender so reset reacts
-    profile.law_society_member_number,
-    profile.practising_certificate_number,
-  ]);
+    if (defaultCountry) {
+      form.reset(); // clears the form
+    }
+  }, [defaultCountry]);
+
+  // useEffect(() => {
+  //   // Sync redux data to local form
+  //   form.reset({
+  //     email,
+  //     phone: profile?.phone,
+  //     password,
+  //     soloPractitioner: registration.lawyerServiceMap.isSoloPractitioner,
+  //     companyTeam,
+  //     company_name: companyName,
+  //     company_website: website,
+  //     company_size: companySize,
+  //     gender: profile.gender,
+  //     law_society_member_number: profile.law_society_member_number,
+  //     practising_certificate_number: profile.practising_certificate_number,
+  //   });
+  // }, [
+  //   email,
+  //   profile?.phone,
+  //   password,
+  //   companyTeam,
+  //   companyName,
+  //   website,
+  //   companySize,
+  //   profile.gender, // ✅ include gender so reset reacts
+  //   profile.law_society_member_number,
+  //   profile.practising_certificate_number,
+  // ]);
 
   const handleGenderChange = (value) => {
     dispatch(updateNestedField({ section: 'profile', field: 'gender', value })); // Update Redux

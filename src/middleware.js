@@ -3,9 +3,15 @@ import { NextResponse } from 'next/server';
 import { verifyToken } from './utils/verifyToken';
 
 export async function middleware(request) {
+  const cookies = request.cookies.get('countryObj');
   const token = request.cookies.get('token')?.value;
   const url = request.nextUrl.clone();
   const pathname = url.pathname;
+
+  //console.log('cookieCountry', cookieCountry);
+  if (cookies) {
+    console.log('cookies', cookies.value);
+  }
 
   // ✅ Redirect logged-in users away from /login or /register
   const publicAuthPages = ['/login', '/register'];
@@ -51,8 +57,12 @@ export async function middleware(request) {
   const user = await verifyToken(token); // Should return something like { reqUserType: 'admin' }
 
   if (!user) {
+    console.log('❌ Token failed verification:', token);
+
     return NextResponse.redirect(new URL('/login', request.url));
   }
+
+  console.log('✅ Token passed verification:', user);
 
   const role = user.regUserType; // 'admin', 'client', or 'lawyer'
 
