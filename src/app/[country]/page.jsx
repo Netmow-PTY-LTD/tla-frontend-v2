@@ -15,7 +15,7 @@ export default function page() {
   const token = useSelector((state) => state.auth.token);
   //console.log('token', token);
   const currentUser = useSelector((state) => state.auth.user);
-  //console.log('currentUser', currentUser);
+  console.log('currentUser', currentUser);
 
   const params = useParams();
 
@@ -24,27 +24,33 @@ export default function page() {
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const value = searchParams.get('clientRegister');
-
     setSearchParam(value);
 
     if (currentUser !== null) {
       Cookies.remove('countryObj');
-      const selectedCountry = countries.find(
-        (c) => c.slug === currentUser?.country
+
+      // try to find match
+      let selectedCountry = countries.find(
+        (c) => c.slug === currentUser?.country?.toLowerCase()
       );
+
+      // fallback to AU if not found
+      if (!selectedCountry) {
+        selectedCountry = countries.find((c) => c.slug === 'au');
+      }
+
       Cookies.set('countryObj', JSON.stringify(selectedCountry), {
         expires: 3650,
         path: '/',
         sameSite: 'lax',
       });
-      router.push(`/${selectedCountry?.slug}`);
+
+      router.push(`/${selectedCountry.slug}`);
     } else {
       // check if cleanPath exists in country slugs
       const matchedCountry = countries.find(
         (c) => c.slug === params?.country?.toLowerCase()
       );
-
-      //console.log('matchedCountry', matchedCountry);
 
       if (matchedCountry) {
         Cookies.remove('countryObj');

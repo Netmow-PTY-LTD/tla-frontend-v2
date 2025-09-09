@@ -119,6 +119,7 @@ export default function RegisterStepThree() {
         showSuccessToast(result?.message || 'Registration successful');
         const token = result.token;
         const userPayload = verifyToken(token);
+        console.log('userPayload', userPayload);
         if (userPayload) {
           dispatch(
             setUser({
