@@ -113,12 +113,12 @@ export default function LeadManagement() {
       accessorKey: 'budgetAmount',
       header: 'Budget',
       cell: ({ row }) => {
-        const countryCode = row.original.countryCode || 'AUD';
-        const budgetAmount = row.getValue('budgetAmount');
+        const countryCode = row?.original?.countryCode || 'AUD';
+        const budgetAmount = row?.getValue('budgetAmount');
 
         return (
           <div>
-            {countryCode} {budgetAmount.toLocaleString()}
+            {countryCode} {budgetAmount?.toLocaleString()||0}
           </div>
         );
       },
