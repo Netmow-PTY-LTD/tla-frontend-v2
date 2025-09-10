@@ -8,6 +8,7 @@ import Preloader from '@/components/Preloader';
 import Script from 'next/script';
 import { Toaster } from 'sonner';
 import CookieGlobalInit from '@/components/CookieGlobalInit';
+import { getApproximateCountryInBrowser } from '@/utils/ipUtils';
 
 const inter = Inter({
   variable: '--font-inter',
