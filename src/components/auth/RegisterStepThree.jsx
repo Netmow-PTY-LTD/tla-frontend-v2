@@ -32,7 +32,7 @@ import {
 import Link from 'next/link';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Label } from '../ui/label';
-import { Loader } from 'lucide-react';
+import { Eye, EyeOff, Loader } from 'lucide-react';
 import countries from '@/data/countries.json';
 import { safeJsonParse } from '@/helpers/safeJsonParse';
 import Cookies from 'js-cookie';
@@ -229,28 +229,52 @@ export default function RegisterStepThree() {
                   <FormField
                     control={form.control}
                     name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Password*</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter your password"
-                            {...field}
-                            className="tla-form-control"
-                            onChange={(e) => {
-                              field.onChange(e);
-                              dispatch(
-                                updateField({
-                                  field: 'password',
-                                  value: e.target.value,
-                                })
-                              );
-                            }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    render={({ field }) => {
+                      const [showPassword, setShowPassword] = useState(false);
+
+                      const togglePasswordVisibility = () => {
+                        setShowPassword((prev) => !prev);
+                      };
+
+                      return (
+                        <FormItem>
+                          <FormLabel>Password*</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Input
+                                type={showPassword ? 'text' : 'password'}
+                                autoComplete="new-password"
+                                placeholder="Enter your password"
+                                {...field}
+                                className="tla-form-control pr-10" // space for the icon
+                                onChange={(e) => {
+                                  field.onChange(e);
+                                  dispatch(
+                                    updateField({
+                                      field: 'password',
+                                      value: e.target.value,
+                                    })
+                                  );
+                                }}
+                              />
+                              <button
+                                type="button"
+                                onClick={togglePasswordVisibility}
+                                className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                                tabIndex={-1}
+                              >
+                                {showPassword ? (
+                                  <EyeOff size={18} />
+                                ) : (
+                                  <Eye size={18} />
+                                )}
+                              </button>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      );
+                    }}
                   />
                 </div>
               </div>
