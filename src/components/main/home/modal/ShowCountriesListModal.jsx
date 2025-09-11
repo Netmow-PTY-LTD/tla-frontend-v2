@@ -11,7 +11,7 @@ export default function ShowCountriesListModal({
 }) {
   const router = useRouter();
   const handleSelect = (country) => {
-    console.log('country', country);
+    //console.log('country', country);
     // Cookies.set('countryObj', JSON.stringify(country), {
     //   expires: 3650,
     //   path: '/',
