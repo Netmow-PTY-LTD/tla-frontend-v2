@@ -41,8 +41,6 @@ export const lawyerRegistrationStepOneFormValidation = z.object({
 // const bdPhoneRegex = /^(?:\+88|88)?01[3-9]\d{8}$/;
 //const auPhoneRegex = /^(?:\+?61|0)[2-478]\d{8}$/;
 
-console.log('Cookies', Cookies);
-
 const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
 const defaultCountry = cookieCountry?.code;
 
