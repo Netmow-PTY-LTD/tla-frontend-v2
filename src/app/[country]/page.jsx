@@ -10,27 +10,15 @@ import HomeCategoryWiseServices from '@/components/main/home/HomeCategoryWiseSer
 import TestimonialSlider from '@/components/main/home/HomeTestimonials';
 
 export default function page() {
-  const [ip, setIp] = useState('');
-
   const [searchParam, setSearchParam] = useState('');
-  const [country, setCountry] = useState(null);
   const token = useSelector((state) => state.auth.token);
   //console.log('token', token);
   const currentUser = useSelector((state) => state.auth.user);
-  //console.log('currentUser', currentUser);
+  console.log('currentUser', currentUser);
 
   const params = useParams();
 
   const router = useRouter();
-
-  useEffect(() => {
-    fetch('/api/get-ip')
-      .then((res) => res.json())
-      .then((data) => setIp(data.ip))
-      .catch((err) => console.error(err));
-  }, []);
-
-  console.log('ip', ip);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
