@@ -63,7 +63,7 @@ export default function Footer() {
         <div className="footer-top mb-[60px]">
           <div className="container">
             <div className="footer-top-widgets flex flex-wrap justify-between">
-              <div className="max-w-full w-full pr-0 lg:pl-5 mt-4 lg:mt-0">
+              <div className="max-w-full w-full pr-0 mt-4 lg:mt-0">
                 <div className="flex flex-wrap justify-between gap-[30px] md:gap-10">
                   <div className="footer-widget w-[calc(50%-15px)] md:w-auto">
                     <h5>Navigate</h5>

@@ -1,0 +1,268 @@
+'use client';
+import React, { useEffect, useState } from 'react';
+import styles from '@/components/main/common/header/Header.module.css';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useSelector } from 'react-redux';
+import { checkValidity } from '@/helpers/validityCheck';
+import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import { Gavel } from 'lucide-react';
+
+export default function LawFirmHeader() {
+  const [isHeaderFixed, setIsHeaderFixed] = useState();
+
+  const token = useSelector((state) => state.auth.token);
+
+  //console.log('token', token);
+
+  const validToken = checkValidity(token);
+
+  const { data: currentUser } = useAuthUserInfoQuery(undefined, {
+    skip: !validToken,
+  });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const handleScroll = () => {
+        setIsHeaderFixed(window.scrollY > 50);
+      };
+
+      window.addEventListener('scroll', handleScroll);
+
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, []);
+
+  const dashboardPaths = {
+    admin: '/admin',
+    lawyer: '/lawyer/dashboard',
+    client: '/client/dashboard',
+  };
+
+  const dashboardUrl = dashboardPaths[currentUser?.data?.regUserType] || '';
+  return (
+    <header
+      className={`${styles.main_header} ${isHeaderFixed ? styles.sticky : ''}`}
+    >
+      <div className="container-lg">
+        <div className="flex items-center gap-4 md:gap-6">
+          <Link href="/" className={styles.logo}>
+            <Image
+              src={'/assets/img/logo.png'}
+              alt="TLA Logo"
+              width={166}
+              height={40}
+            />
+          </Link>
+          <nav className="relative">
+            <ul className="flex items-center gap-6">
+              {/* <li>
+                <Link
+                  href="#"
+                  className={styles.nav_link}
+                  onClick={handleOpenSubMenu}
+                >
+                  <span>Explore</span>
+                  <ChevronDown
+                    className={`w-4 h-4 ${
+                      showSubMenu ? 'rotate-180' : ''
+                    } transition-all duration-300 ease-in-out`}
+                  />
+                </Link>
+                {showSubMenu && (
+                  <div className="submenu flex flex-col" ref={subMenuRef}>
+                    <div className="flex justify-end md:hidden pt-2 px-4">
+                      <button
+                        className="text-gray-500"
+                        onClick={() => setShowSubMenu(false)}
+                      >
+                        <X />
+                      </button>
+                    </div>
+                    <div
+                      className={`submenu-content flex-1 ${
+                        selectedCategory ? 'show-services' : ''
+                      }`}
+                    >
+                      <div className="submenu-categories">
+                        <div className="flex justify-between items-center mb-2 border-b pb-2">
+                          <div className="font-semibold">Services</div>
+                          <Link
+                            href="/services"
+                            className="text-[13px] font-semibold underline"
+                          >
+                            View All
+                          </Link>
+                        </div>
+                        <ul>
+                          {allCategories?.data?.map((category, index) => (
+                            <li key={index}>
+                              <Link
+                                href={`#`}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  setSelectedCategory(category);
+                                }}
+                                className="cursor-pointer flex justify-between items-center font-medium"
+                              >
+                                <div className="flex items-center gap-3">
+                                  <img
+                                    src={category?.image}
+                                    alt={category?.name}
+                                    className="w-6 h-6"
+                                  />
+                                  <span>{category?.name}</span>
+                                </div>
+                                <ChevronRight className="w-4 h-4" />
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="submenu-services">
+                        <button
+                          onClick={() => setSelectedCategory(null)}
+                          className="mb-2 text-md font-semibold text-black hover:underline inline-flex items-center gap-2"
+                        >
+                          <ArrowLeft className="w-4 h-4" /> Back to categories
+                        </button>
+                        <ul className="border-t pt-2">
+                          {selectedCategory?.services?.map((service, i) => (
+                            <li key={i} className="mb-1">
+                              <Link
+                                href={`#`}
+                                className={styles.nav_link}
+                                onClick={(e) => {
+                                  e.preventDefault(); // Prevent default anchor behavior
+                                  setSelectedService(service);
+                                  handleModalOpen();
+                                }}
+                              >
+                                {service?.name}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                    {token && currentUser ? (
+                      <div className="flex items-center justify-center gap-4 p-4">
+                        <Link
+                          href={dashboardUrl}
+                          className={styles.btn_register}
+                        >
+                          <span>Dashboard</span>
+                        </Link>
+                      </div>
+                    ) : (
+                      <p className="text-[#34495E] text-[14px] text-center px-4 md:hidden py-4">
+                        Are you a legal professional?{' '}
+                        <Link
+                          href="/register"
+                          className="font-semibold text-sm underline text-[var(--secondary-color)]"
+                        >
+                          Join as a Lawyer
+                        </Link>
+                      </p>
+                    )}
+                  </div>
+                )}
+              </li> */}
+
+              {/* <li>
+                <Link href="/services" className={styles.nav_link}>
+                  <span>Find Clients</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="11"
+                    height="7"
+                    viewBox="0 0 11 7"
+                    fill="none"
+                  >
+                    <path
+                      d="M1.5 1L5.5 5L9.5 1"
+                      stroke="#0B1C2D"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </Link>
+              </li>
+              <li>
+                <Link href="/services" className={styles.nav_link}>
+                  <span>Find Lawyers</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="11"
+                    height="7"
+                    viewBox="0 0 11 7"
+                    fill="none"
+                  >
+                    <path
+                      d="M1.5 1L5.5 5L9.5 1"
+                      stroke="#0B1C2D"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </Link>
+              </li> */}
+
+              {/* <li>
+                <Link href="/" className={styles.nav_link}>
+                  <span>Home</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/services" className={styles.nav_link}>
+                  <span>Services</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/pricing" className={styles.nav_link}>
+                  <span>Pricing</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/about" className={styles.nav_link}>
+                  <span>About Us</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className={styles.nav_link}>
+                  <span>Contact</span>
+                </Link>
+              </li> */}
+            </ul>
+          </nav>
+          <div className="flex items-center gap-6 ml-auto">
+            {validToken ? (
+              <div className="flex items-center gap-4 flex-shrink-0">
+                <Link href={dashboardUrl} className={styles.btn_register}>
+                  <span>Dashboard</span>
+                </Link>
+              </div>
+            ) : (
+              <div className="flex items-center gap-4 flex-shrink-0">
+                <Link href="/law-firm/login" className={styles.nav_link}>
+                  <span>Log In</span>
+                </Link>
+                <Link
+                  href="/law-firm/register"
+                  className={`${styles.btn_register} ${styles.btn_register_mobile}`}
+                >
+                  <div className="icon w-6 h-6 bg-white flex items-center justify-center rounded-full">
+                    <Gavel className="w-4 h-4 text-black" />
+                  </div>
+                  <span>List Your Law Firm</span>
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}
