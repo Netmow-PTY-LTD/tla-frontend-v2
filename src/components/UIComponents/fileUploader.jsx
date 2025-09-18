@@ -2,7 +2,7 @@ import { useFormContext } from 'react-hook-form';
 
 export default function FileUploader({
   name,
-  label = 'Upload File',
+  label = '',
   onChange,
   accept = '*',
   multiple = false,
@@ -26,7 +26,7 @@ export default function FileUploader({
           {...register(name, { onChange })}
         />
       </label>
-      <p className="text-gray-700 font-medium text-center mt-2">{label}</p>
+      {label !== '' && <p className="mt-2 text-sm text-gray-500">{label}</p>}
     </div>
   );
 }
