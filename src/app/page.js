@@ -14,39 +14,46 @@ import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [searchParam, setSearchParam] = useState('');
-  const [country, setCountry] = useState(null);
 
   const router = useRouter();
+
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const value = searchParams.get('clientRegister');
-
     setSearchParam(value);
 
-    // Try to get full country object from cookie
-    let cookieCountryObj = Cookies.get('countryObj');
-    let selectedCountry;
+    let selectedCountry = null;
 
-    if (cookieCountryObj) {
-      try {
-        selectedCountry = JSON.parse(cookieCountryObj);
-      } catch (e) {
-        console.error('Invalid country cookie, falling back to code');
+    try {
+      const cookieValue = Cookies.get('countryObj');
+
+      // Check if cookie exists and is not the string "undefined"
+      if (cookieValue && cookieValue !== 'undefined') {
+        const parsed = JSON.parse(cookieValue);
+
+        // Check if it has a valid slug
+        if (parsed?.slug) {
+          selectedCountry = parsed;
+        } else {
+          console.warn('countryObj cookie missing slug. Deleting cookie.');
+          Cookies.remove('countryObj');
+        }
+      } else {
+        console.warn('countryObj cookie is undefined or not set. Cleaning up.');
+        Cookies.remove('countryObj');
       }
-    } else {
-      router.push('/au');
+    } catch (e) {
+      console.error(
+        'Failed to parse countryObj cookie. Removing corrupted cookie.'
+      );
+      Cookies.remove('countryObj');
     }
 
-    // If no full object in cookie, fallback to basic code or default
+    // If still not found, fallback to default (AU)
     if (!selectedCountry) {
-      let cookieCountryCode = countries[0].code.toLowerCase();
+      selectedCountry = countries.find((c) => c.slug === 'au') || countries[0];
 
-      selectedCountry =
-        countries.find(
-          (c) => c.code.toLowerCase() === cookieCountryCode.toLowerCase()
-        ) || countries.find((c) => c.name === 'Australia'); // fallback
-
-      // Save full country object in cookie (stringified)
+      // Set a clean cookie
       Cookies.set('countryObj', JSON.stringify(selectedCountry), {
         expires: 3650,
         path: '/',
@@ -54,9 +61,12 @@ export default function Home() {
       });
     }
 
-    setCountry(selectedCountry);
-
-    router.push(`/${selectedCountry.slug}`);
+    // Finally, redirect only if slug exists
+    if (selectedCountry?.slug) {
+      router.push(`/${selectedCountry.slug}`);
+    } else {
+      router.push('/au');
+    }
   }, []);
 
   return (
