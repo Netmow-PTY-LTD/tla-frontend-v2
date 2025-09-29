@@ -2,7 +2,6 @@
 
 import { DataTable } from '@/components/common/DataTable';
 import { Button } from '@/components/ui/button';
-import { dummySubscriptions } from '@/data/data';
 import React, { useState } from 'react';
 import {
   DropdownMenu,
@@ -12,24 +11,43 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Edit, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
-import AddSubscriptionModal from '../_components/AddSubscriptionModal';
-import EditSubscriptionModal from '../_components/EditSubscriptionModal';
-
-export default function SubscriptionList() {
+import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import AddNewPageModal from '../_components/AddNewPageModal';
+import { dummyPages } from '@/data/data';
+import EditPageModal from '../_components/EditPageModal';
+export default function ListOfPages() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pageId, setPageId] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [subscriptionId, setSubscriptionId] = useState(null);
 
-  const handleEditSubscriptionModalOpen = (id) => {
+  const handleEditPageModalOpen = (id) => {
     setIsEditModalOpen(true);
-    setSubscriptionId(id);
+    setPageId(id);
   };
 
-  const handleDeleteSubscription = (id) => {
-    alert(`Item with id ${id} has been deleted successfully.`);
-  };
   const columns = [
+    // {
+    //   id: 'select',
+    //   header: ({ table }) => (
+    //     <Checkbox
+    //       checked={
+    //         table.getIsAllPageRowsSelected() ||
+    //         (table.getIsSomePageRowsSelected() && 'indeterminate')
+    //       }
+    //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+    //       aria-label="Select all"
+    //     />
+    //   ),
+    //   cell: ({ row }) => (
+    //     <Checkbox
+    //       checked={row.getIsSelected()}
+    //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+    //       aria-label="Select row"
+    //     />
+    //   ),
+    //   enableSorting: false,
+    //   enableHiding: false,
+    // },
     {
       accessorKey: 'name',
       header: 'Name',
@@ -45,19 +63,9 @@ export default function SubscriptionList() {
       ),
     },
     {
-      accessorKey: 'price',
-      header: 'Price',
-      cell: ({ row }) => <div className="">{row.getValue('price')}</div>,
-    },
-    {
-      accessorKey: 'currency',
-      header: 'Currency',
-      cell: ({ row }) => <div className="">{row.getValue('currency')}</div>,
-    },
-    {
-      accessorKey: 'billingCycle',
-      header: 'Billing Cycle',
-      cell: ({ row }) => <div className="">{row.getValue('billingCycle')}</div>,
+      accessorKey: 'description',
+      header: 'Description',
+      cell: ({ row }) => <div className="">{row.getValue('description')}</div>,
     },
     {
       id: 'actions',
@@ -80,7 +88,7 @@ export default function SubscriptionList() {
               <DropdownMenuItem>
                 <button
                   onClick={() => {
-                    handleEditSubscriptionModalOpen(item?._id);
+                    handleEditPageModalOpen(item?._id);
                   }}
                   className="flex gap-2"
                 >
@@ -92,7 +100,7 @@ export default function SubscriptionList() {
               <DropdownMenuItem>
                 <div
                   className="flex gap-2 cursor-pointer"
-                  onClick={() => handleDeleteSubscription(item?._id)}
+                  onClick={() => handleDeleteCountry(item?._id)}
                 >
                   <Trash2 className="w-4 h-4" /> Delete
                 </div>
@@ -106,18 +114,18 @@ export default function SubscriptionList() {
   return (
     <div>
       <div className="flex justify-between items-center mb-2">
-        <h2 className="text-2xl font-bold">List of Subscriptions</h2>
-        <Button onClick={() => setIsModalOpen(true)}>Add Subscription</Button>
-        <AddSubscriptionModal open={isModalOpen} setOpen={setIsModalOpen} />
-        <EditSubscriptionModal
-          open={isEditModalOpen}
-          setOpen={setIsEditModalOpen}
-          subscriptionId={subscriptionId}
-        />
+        <h2 className="text-2xl font-bold">List of Pages</h2>
+        <Button onClick={() => setIsModalOpen(true)}>Add Page</Button>
       </div>
+      <AddNewPageModal open={isModalOpen} setOpen={setIsModalOpen} />
+      <EditPageModal
+        open={isEditModalOpen}
+        setOpen={setIsEditModalOpen}
+        pageId={pageId}
+      />
       <DataTable
+        data={dummyPages || []}
         columns={columns}
-        data={dummySubscriptions || []}
         searchColumn={'name'}
       />
     </div>
