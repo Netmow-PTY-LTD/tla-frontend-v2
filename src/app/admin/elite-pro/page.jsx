@@ -13,10 +13,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Edit, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
-import AddSubscriptionModal from '../_components/AddSubscriptionModal';
-import EditSubscriptionModal from '../_components/EditSubscriptionModal';
+import AddEliteProSubscriptionModal from './_components/AddEliteProSubscriptionModal';
+import EditEliteProSubscriptionModal from './_components/EditEliteProSubscriptionModal';
 
-export default function SubscriptionList() {
+export default function EliteProList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [subscriptionId, setSubscriptionId] = useState(null);
@@ -106,10 +106,15 @@ export default function SubscriptionList() {
   return (
     <div>
       <div className="flex justify-between items-center mb-2">
-        <h2 className="text-2xl font-bold">List of Subscriptions</h2>
-        <Button onClick={() => setIsModalOpen(true)}>Add Subscription</Button>
-        <AddSubscriptionModal open={isModalOpen} setOpen={setIsModalOpen} />
-        <EditSubscriptionModal
+        <h2 className="text-2xl font-bold">List of Elite Pro Subscriptions</h2>
+        <Button onClick={() => setIsModalOpen(true)}>
+          Add Elite Pro Subscription
+        </Button>
+        <AddEliteProSubscriptionModal
+          open={isModalOpen}
+          setOpen={setIsModalOpen}
+        />
+        <EditEliteProSubscriptionModal
           open={isEditModalOpen}
           setOpen={setIsEditModalOpen}
           subscriptionId={subscriptionId}
