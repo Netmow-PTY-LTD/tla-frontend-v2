@@ -1,0 +1,310 @@
+[
+  {
+    "_id": "64f1e2c2a2b5d12345678901",
+    "countryId": "682ecd01e6b730f229c8d3d3",
+    "type": "mandatory",
+    "certificationName": "Practising Certificates (Solicitors/Barristers)"
+  },
+  {
+    "_id": "64f1e2c2a2b5d12345678902",
+    "countryId": "682ecd01e6b730f229c8d3d3",
+    "type": "mandatory",
+    "certificationName": "Australian Legal Practice Course Completion"
+  },
+  {
+    "_id": "64f1e2c2a2b5d12345678903",
+    "countryId": "682ecd01e6b730f229c8d3d3",
+    "type": "mandatory",
+    "certificationName": "Australian Bar Association Membership"
+  },
+  {
+    "_id": "64f1e2c2a2b5d12345678904",
+    "countryId": "682ecd01e6b730f229c8d3d3",
+    "type": "mandatory",
+    "certificationName": "Solicitor Admission Board Registration"
+  },
+  {
+    "_id": "64f1e2c2a2b5d12345678905",
+    "countryId": "682ecd01e6b730f229c8d3d3",
+    "type": "mandatory",
+    "certificationName": "Legal Profession Uniform Law Compliance"
+  },
+
+  {
+    "_id": "64f1e2c2a2b5d22345678906",
+    "countryId": "68a6c60a551ac20293f25a98",
+    "type": "mandatory",
+    "certificationName": "Solicitors Regulation Authority (SRA) Practising Certificate"
+  },
+  {
+    "_id": "64f1e2c2a2b5d22345678907",
+    "countryId": "68a6c60a551ac20293f25a98",
+    "type": "mandatory",
+    "certificationName": "Bar Standards Board (BSB) Practising Certificate"
+  },
+  {
+    "_id": "64f1e2c2a2b5d22345678908",
+    "countryId": "68a6c60a551ac20293f25a98",
+    "type": "mandatory",
+    "certificationName": "Legal Practice Course (LPC) Completion"
+  },
+  {
+    "_id": "64f1e2c2a2b5d22345678909",
+    "countryId": "68a6c60a551ac20293f25a98",
+    "type": "mandatory",
+    "certificationName": "Chartered Institute of Legal Executives (CILEx) Certification"
+  },
+  {
+    "_id": "64f1e2c2a2b5d2234567890a",
+    "countryId": "68a6c60a551ac20293f25a98",
+    "type": "mandatory",
+    "certificationName": "Qualified Lawyer Transfer Scheme (QLTS) Certification"
+  },
+
+  {
+    "_id": "64f1e2c2a2b5d3234567890b",
+    "countryId": "68a6c616551ac20293f25ae5",
+    "type": "mandatory",
+    "certificationName": "State Bar Association License"
+  },
+  {
+    "_id": "64f1e2c2a2b5d3234567890c",
+    "countryId": "68a6c616551ac20293f25ae5",
+    "type": "mandatory",
+    "certificationName": "Multistate Bar Examination (MBE) Passing"
+  },
+  {
+    "_id": "64f1e2c2a2b5d3234567890d",
+    "countryId": "68a6c616551ac20293f25ae5",
+    "type": "mandatory",
+    "certificationName": "Multistate Professional Responsibility Examination (MPRE) Passing"
+  },
+  {
+    "_id": "64f1e2c2a2b5d3234567890e",
+    "countryId": "68a6c616551ac20293f25ae5",
+    "type": "mandatory",
+    "certificationName": "American Bar Association (ABA) Membership"
+  },
+  {
+    "_id": "64f1e2c2a2b5d3234567890f",
+    "countryId": "68a6c616551ac20293f25ae5",
+    "type": "mandatory",
+    "certificationName": "Continuing Legal Education (CLE) Compliance"
+  },
+
+  {
+    "_id": "64f1e2c2a2b5d42345678910",
+    "countryId": "68a6c6c2551ac20293f25f38",
+    "type": "mandatory",
+    "certificationName": "Law Society of Ontario License"
+  },
+  {
+    "_id": "64f1e2c2a2b5d42345678911",
+    "countryId": "68a6c6c2551ac20293f25f38",
+    "type": "mandatory",
+    "certificationName": "Canadian Bar Examination Passing"
+  },
+  {
+    "_id": "64f1e2c2a2b5d42345678912",
+    "countryId": "68a6c6c2551ac20293f25f38",
+    "type": "mandatory",
+    "certificationName": "Canadian Bar Association Membership"
+  },
+  {
+    "_id": "64f1e2c2a2b5d42345678913",
+    "countryId": "68a6c6c2551ac20293f25f38",
+    "type": "mandatory",
+    "certificationName": "National Committee on Accreditation (NCA) Certificate"
+  },
+  {
+    "_id": "64f1e2c2a2b5d42345678914",
+    "countryId": "68a6c6c2551ac20293f25f38",
+    "type": "mandatory",
+    "certificationName": "Continuing Professional Development (CPD) Compliance"
+  },
+
+  {
+    "_id": "64f1e2c2a2b5d52345678915",
+    "countryId": "68a6c6d2551ac20293f25fa5",
+    "type": "mandatory",
+    "certificationName": "Law Society of Ireland Practising Certificate"
+  },
+  {
+    "_id": "64f1e2c2a2b5d52345678916",
+    "countryId": "68a6c6d2551ac20293f25fa5",
+    "type": "mandatory",
+    "certificationName": "Barrister-at-Law Degree from King's Inns"
+  },
+  {
+    "_id": "64f1e2c2a2b5d52345678917",
+    "countryId": "68a6c6d2551ac20293f25fa5",
+    "type": "mandatory",
+    "certificationName": "Solicitors Qualifying Examination (SQE) Equivalent"
+  },
+  {
+    "_id": "64f1e2c2a2b5d52345678918",
+    "countryId": "68a6c6d2551ac20293f25fa5",
+    "type": "mandatory",
+    "certificationName": "Irish Bar Council Membership"
+  },
+  {
+    "_id": "64f1e2c2a2b5d52345678919",
+    "countryId": "68a6c6d2551ac20293f25fa5",
+    "type": "mandatory",
+    "certificationName": "Continuing Legal Education (CLE) Compliance"
+  },
+  {
+    "_id": "64f1e2c2a2b5d6234567891a",
+    "countryId": "68a6c6de551ac20293f25ff3",
+    "type": "mandatory",
+    "certificationName": "Legal Practice Council (LPC) Admission"
+  },
+  {
+    "_id": "64f1e2c2a2b5d6234567891b",
+    "countryId": "68a6c6de551ac20293f25ff3",
+    "type": "mandatory",
+    "certificationName": "South African Legal Practice Diploma"
+  },
+  {
+    "_id": "64f1e2c2a2b5d6234567891c",
+    "countryId": "68a6c6de551ac20293f25ff3",
+    "type": "mandatory",
+    "certificationName": "Attorney’s Fidelity Fund Certificate"
+  },
+  {
+    "_id": "64f1e2c2a2b5d6234567891d",
+    "countryId": "68a6c6de551ac20293f25ff3",
+    "type": "mandatory",
+    "certificationName": "South African Bar Association Membership"
+  },
+  {
+    "_id": "64f1e2c2a2b5d6234567891e",
+    "countryId": "68a6c6de551ac20293f25ff3",
+    "type": "mandatory",
+    "certificationName": "Continuing Professional Development (CPD) Compliance"
+  },
+
+  {
+    "_id": "64f1e2c2a2b5d7234567891f",
+    "countryId": "68a6c6f5551ac20293f26088",
+    "type": "mandatory",
+    "certificationName": "Singapore Bar Examination Certificate"
+  },
+  {
+    "_id": "64f1e2c2a2b5d72345678920",
+    "countryId": "68a6c6f5551ac20293f26088",
+    "type": "mandatory",
+    "certificationName": "Singapore Academy of Law Membership"
+  },
+  {
+    "_id": "64f1e2c2a2b5d72345678921",
+    "countryId": "68a6c6f5551ac20293f26088",
+    "type": "mandatory",
+    "certificationName": "Legal Profession (Qualified Persons) Certificate"
+  },
+  {
+    "_id": "64f1e2c2a2b5d72345678922",
+    "countryId": "68a6c6f5551ac20293f26088",
+    "type": "mandatory",
+    "certificationName": "Continuing Professional Development (CPD) Compliance"
+  },
+  {
+    "_id": "64f1e2c2a2b5d72345678923",
+    "countryId": "68a6c6f5551ac20293f26088",
+    "type": "mandatory",
+    "certificationName": "Singapore Law Society Practising Certificate"
+  },
+
+  {
+    "_id": "64f1e2c2a2b5d82345678924",
+    "countryId": "68a6c6eb551ac20293f26048",
+    "type": "mandatory",
+    "certificationName": "New Zealand Law Society Practising Certificate"
+  },
+  {
+    "_id": "64f1e2c2a2b5d82345678925",
+    "countryId": "68a6c6eb551ac20293f26048",
+    "type": "mandatory",
+    "certificationName": "New Zealand Barristers' and Solicitors Certificate"
+  },
+  {
+    "_id": "64f1e2c2a2b5d82345678926",
+    "countryId": "68a6c6eb551ac20293f26048",
+    "type": "mandatory",
+    "certificationName": "Law Degree Accredited by New Zealand Council of Legal Education"
+  },
+  {
+    "_id": "64f1e2c2a2b5d82345678927",
+    "countryId": "68a6c6eb551ac20293f26048",
+    "type": "mandatory",
+    "certificationName": "Continuing Professional Development (CPD) Compliance"
+  },
+  {
+    "_id": "64f1e2c2a2b5d82345678928",
+    "countryId": "68a6c6eb551ac20293f26048",
+    "type": "mandatory",
+    "certificationName": "Lawyers and Conveyancers Disciplinary Tribunal Registration"
+  },
+
+  {
+    "_id": "64f1e2c2a2b5d92345678929",
+    "countryId": "68a6c700551ac20293f260d0",
+    "type": "mandatory",
+    "certificationName": "Barreau de France Membership"
+  },
+  {
+    "_id": "64f1e2c2a2b5d9234567892a",
+    "countryId": "68a6c700551ac20293f260d0",
+    "type": "mandatory",
+    "certificationName": "CAPA (Certificat d'Aptitude à la Profession d'Avocat)"
+  },
+  {
+    "_id": "64f1e2c2a2b5d9234567892b",
+    "countryId": "68a6c700551ac20293f260d0",
+    "type": "mandatory",
+    "certificationName": "French National School for the Judiciary Certification"
+  },
+  {
+    "_id": "64f1e2c2a2b5d9234567892c",
+    "countryId": "68a6c700551ac20293f260d0",
+    "type": "mandatory",
+    "certificationName": "Continuing Legal Education (Formation Continue)"
+  },
+  {
+    "_id": "64f1e2c2a2b5d9234567892d",
+    "countryId": "68a6c700551ac20293f260d0",
+    "type": "mandatory",
+    "certificationName": "Licence en Droit (Law Degree)"
+  },
+
+  {
+    "_id": "64f1e2c2a2b5da234567892e",
+    "countryId": "68a6c70d551ac20293f26132",
+    "type": "mandatory",
+    "certificationName": "Zulassung als Rechtsanwalt (Admission as Lawyer)"
+  },
+  {
+    "_id": "64f1e2c2a2b5da234567892f",
+    "countryId": "68a6c70d551ac20293f26132",
+    "type": "mandatory",
+    "certificationName": "Erste Juristische Prüfung (First State Exam)"
+  },
+  {
+    "_id": "64f1e2c2a2b5da2345678930",
+    "countryId": "68a6c70d551ac20293f26132",
+    "type": "mandatory",
+    "certificationName": "Zweite Juristische Prüfung (Second State Exam)"
+  },
+  {
+    "_id": "64f1e2c2a2b5da2345678931",
+    "countryId": "68a6c70d551ac20293f26132",
+    "type": "mandatory",
+    "certificationName": "Mitgliedschaft der Rechtsanwaltskammer (Bar Association Membership)"
+  },
+  {
+    "_id": "64f1e2c2a2b5da2345678932",
+    "countryId": "68a6c70d551ac20293f26132",
+    "type": "mandatory",
+    "certificationName": "Fortbildungspflicht (Mandatory Continuing Education)"
+  }
+]

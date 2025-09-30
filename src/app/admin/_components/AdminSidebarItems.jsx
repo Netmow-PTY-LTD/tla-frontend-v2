@@ -5,6 +5,7 @@ import {
   ChartColumnStacked,
   CircleEllipsis,
   Earth,
+  FileKey2,
   FileQuestionMark,
   Kanban,
   LandPlot,
@@ -160,17 +161,17 @@ export const AdminSidebarItems = {
       isActive: true,
     },
     {
+      title: 'License Management',
+      url: '/admin/license-management',
+      icon: FileKey2,
+      isActive: true,
+    },
+    {
       title: 'Subscriptions',
       url: '#',
       icon: Podcast,
       isActive: true,
       items: [
-        {
-          title: 'Add Subscription',
-          url: '/admin/subscription/add',
-          icon: Plus,
-          isActive: true,
-        },
         {
           title: 'List of Subscriptions',
           url: '/admin/subscription/list',
