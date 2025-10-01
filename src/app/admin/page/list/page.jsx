@@ -15,44 +15,57 @@ import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import AddNewPageModal from '../_components/AddNewPageModal';
 import { dummyPages } from '@/data/data';
 import EditPageModal from '../_components/EditPageModal';
+import {
+  useDeletePageMutation,
+  useGetAllPagesQuery,
+} from '@/store/features/admin/pagesApiService';
+import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
+import { showSuccessToast } from '@/components/common/toasts';
 export default function ListOfPages() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pageId, setPageId] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [deleteModalId, setDeleteModalId] = useState(null);
 
   const handleEditPageModalOpen = (id) => {
     setIsEditModalOpen(true);
     setPageId(id);
   };
 
+  const {
+    data: pages,
+    isLoading: isLoadingPages,
+    refetch: refetchPages,
+  } = useGetAllPagesQuery({
+    page: 1,
+    limit: 10,
+  });
+
+  //console.log('pages', pages);
+
+  const [deletePage] = useDeletePageMutation();
+
+  const handleDeletePage = async (id) => {
+    try {
+      const res = await deletePage(id).unwrap();
+      console.log('res', res);
+      if (res?.success) {
+        showSuccessToast(res?.message || 'Page deleted successfully');
+        setDeleteModalId(null);
+        refetchPages();
+      }
+    } catch (error) {
+      console.error('Error deleting page:', error);
+      showErrorToast(error?.data?.message || 'Failed to delete page');
+    }
+  };
+
   const columns = [
-    // {
-    //   id: 'select',
-    //   header: ({ table }) => (
-    //     <Checkbox
-    //       checked={
-    //         table.getIsAllPageRowsSelected() ||
-    //         (table.getIsSomePageRowsSelected() && 'indeterminate')
-    //       }
-    //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-    //       aria-label="Select all"
-    //     />
-    //   ),
-    //   cell: ({ row }) => (
-    //     <Checkbox
-    //       checked={row.getIsSelected()}
-    //       onCheckedChange={(value) => row.toggleSelected(!!value)}
-    //       aria-label="Select row"
-    //     />
-    //   ),
-    //   enableSorting: false,
-    //   enableHiding: false,
-    // },
     {
-      accessorKey: 'name',
-      header: 'Name',
+      accessorKey: 'title',
+      header: 'Title',
       cell: ({ row }) => (
-        <div className="capitalize">{row.getValue('name')}</div>
+        <div className="capitalize">{row.getValue('title')}</div>
       ),
     },
     {
@@ -100,7 +113,7 @@ export default function ListOfPages() {
               <DropdownMenuItem>
                 <div
                   className="flex gap-2 cursor-pointer"
-                  onClick={() => handleDeleteCountry(item?._id)}
+                  onClick={() => setDeleteModalId(item?._id)}
                 >
                   <Trash2 className="w-4 h-4" /> Delete
                 </div>
@@ -117,16 +130,31 @@ export default function ListOfPages() {
         <h2 className="text-2xl font-bold">List of Pages</h2>
         <Button onClick={() => setIsModalOpen(true)}>Add Page</Button>
       </div>
-      <AddNewPageModal open={isModalOpen} setOpen={setIsModalOpen} />
+      {deleteModalId && (
+        <ConfirmationModal
+          open={!!deleteModalId}
+          onOpenChange={() => setDeleteModalId(null)}
+          onConfirm={() => handleDeletePage(deleteModalId)}
+          title="Are you sure you want to delete this page?"
+          description="This action cannot be undone. So please proceed with caution."
+          cancelText="No"
+        />
+      )}
+      <AddNewPageModal
+        open={isModalOpen}
+        setOpen={setIsModalOpen}
+        refetchPages={refetchPages}
+      />
       <EditPageModal
         open={isEditModalOpen}
         setOpen={setIsEditModalOpen}
         pageId={pageId}
+        refetchPages={refetchPages}
       />
       <DataTable
-        data={dummyPages || []}
+        data={pages?.data || []}
         columns={columns}
-        searchColumn={'name'}
+        searchColumn={'title'}
       />
     </div>
   );
