@@ -1,53 +1,70 @@
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import FormWrapper from '@/components/form/FromWrapper';
 import TextareaInput from '@/components/form/TextArea';
 import TextInput from '@/components/form/TextInput';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/UIComponents/Modal';
 import { dummyPages } from '@/data/data';
-import React, { useEffect } from 'react';
+import {
+  useGetPageByIdQuery,
+  useUpdatePageMutation,
+} from '@/store/features/admin/pagesApiService';
+import { Loader } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 import { z } from 'zod';
 
 const pagesSchema = z.object({
   title: z
     .string({ invalid_type_error: 'Title must be a string' })
     .min(1, { message: 'Title is required' }),
-  slug: z
-    .string({ invalid_type_error: 'Slug must be a string' })
-    .min(1, { message: 'Slug is required' }),
   description: z
     .string({ invalid_type_error: 'Description must be a string' })
     .min(1, { message: 'Description is required' }),
 });
 
-export default function EditPageModal({ open, setOpen, pageId }) {
-  const defaultValues = {
+export default function EditPageModal({ open, setOpen, pageId, refetchPages }) {
+  const [defaultValues, setDefaultValues] = useState({
     title: '',
-    slug: '',
     description: '',
-  };
+  });
 
-  const page = dummyPages.find((page) => page._id === pageId);
+  const { data: pageData } = useGetPageByIdQuery(pageId, { skip: !pageId });
+
+  const page = pageData?.data;
 
   useEffect(() => {
     if (page) {
-      defaultValues.title = page.name;
-      defaultValues.slug = page.slug;
-      defaultValues.description = page.description;
+      setDefaultValues({
+        title: page?.title,
+        description: page?.description,
+      });
     }
   }, [page]);
 
-  const handlePageEdit = (values) => {
-    console.log('values', values);
-
-    const { title, slug, description } = values;
+  const [updatePage, { isLoading: isPageUpdateLoading }] =
+    useUpdatePageMutation();
+  const handlePageEdit = async (values) => {
+    const { title, description } = values;
 
     const payload = {
       title,
-      slug,
       description,
     };
 
     console.log('payload', payload);
+
+    try {
+      const res = await updatePage({ pageId, body: payload }).unwrap();
+      console.log('res', res);
+      if (res?.success) {
+        showSuccessToast(res?.message || 'Page updated successfully');
+        refetchPages();
+        setOpen(false);
+      }
+    } catch (error) {
+      console.error('Error updating page:', error);
+      showErrorToast(error?.data?.message || 'Failed to update page');
+    }
   };
   return (
     <Modal open={open} onOpenChange={setOpen}>
@@ -59,11 +76,18 @@ export default function EditPageModal({ open, setOpen, pageId }) {
       >
         <div className="space-y-5">
           <TextInput name="title" label="Page Title" />
-          <TextInput name="slug" label="Page Slug" />
           <TextareaInput name="description" label="Page Description" />
         </div>
         <div className="text-center mt-10">
-          <Button type="submit">Update Page</Button>
+          <Button type="submit" disabled={isPageUpdateLoading}>
+            {isPageUpdateLoading ? (
+              <div className="flex items-center gap-2">
+                <Loader className="animate-spin w-4 h-4" /> Updating...
+              </div>
+            ) : (
+              'Update Page'
+            )}
+          </Button>
         </div>
       </FormWrapper>
     </Modal>

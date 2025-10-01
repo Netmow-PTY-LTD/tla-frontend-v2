@@ -13,21 +13,50 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Edit, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
-import AddSubscriptionModal from '../_components/AddSubscriptionModal';
-import EditSubscriptionModal from '../_components/EditSubscriptionModal';
+import AddSubscriptionModal from './_components/AddSubscriptionModal';
+import EditSubscriptionModal from './_components/EditSubscriptionModal';
+import {
+  useDeleteSubscriptionMutation,
+  useGetAllSubscriptionsQuery,
+} from '@/store/features/admin/subcriptionsApiService';
+import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
 export default function SubscriptionList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [subscriptionId, setSubscriptionId] = useState(null);
+  const [deleteModalId, setDeleteModalId] = useState(null);
 
   const handleEditSubscriptionModalOpen = (id) => {
     setIsEditModalOpen(true);
     setSubscriptionId(id);
   };
 
-  const handleDeleteSubscription = (id) => {
-    alert(`Item with id ${id} has been deleted successfully.`);
+  const {
+    data: subscriptions,
+    isLoading: isLoadingSubscriptions,
+    refetch: refetchSubscriptions,
+  } = useGetAllSubscriptionsQuery({
+    page: 1,
+    limit: 10,
+  });
+
+  console.log('subscriptions', subscriptions);
+  const [deleteSubscription] = useDeleteSubscriptionMutation();
+  const handleDeleteSubscription = async (id) => {
+    try {
+      // Call the delete subscription API
+      const res = await deleteSubscription(id).unwrap();
+      console.log('res', res);
+      if (res?.success) {
+        showSuccessToast('Subscription deleted successfully');
+        refetchSubscriptions();
+      }
+    } catch (error) {
+      console.error('Error deleting subscription:', error);
+      showErrorToast(error?.data?.message || 'Failed to delete subscription');
+    }
   };
   const columns = [
     {
@@ -45,19 +74,32 @@ export default function SubscriptionList() {
       ),
     },
     {
-      accessorKey: 'price',
+      id: 'price',
       header: 'Price',
-      cell: ({ row }) => <div className="">{row.getValue('price')}</div>,
+      accessorFn: (row) => row.price?.amount ?? '',
+      cell: ({ getValue }) => <div>{getValue()}</div>,
     },
+
     {
-      accessorKey: 'currency',
+      accessorKey: 'price.currency',
       header: 'Currency',
-      cell: ({ row }) => <div className="">{row.getValue('currency')}</div>,
+      accessorFn: (row) => row.price?.currency ?? '',
+      cell: ({ getValue }) => <div>{getValue()}</div>,
     },
     {
       accessorKey: 'billingCycle',
       header: 'Billing Cycle',
-      cell: ({ row }) => <div className="">{row.getValue('billingCycle')}</div>,
+      cell: ({ row }) => {
+        const value = row.getValue('billingCycle');
+        const labels = {
+          monthly: 'Monthly',
+          yearly: 'Yearly',
+          weekly: 'Weekly',
+          one_time: 'One Time',
+        };
+
+        return <div>{labels[value] || value}</div>;
+      },
     },
     {
       id: 'actions',
@@ -92,7 +134,7 @@ export default function SubscriptionList() {
               <DropdownMenuItem>
                 <div
                   className="flex gap-2 cursor-pointer"
-                  onClick={() => handleDeleteSubscription(item?._id)}
+                  onClick={() => setDeleteModalId(item?._id)}
                 >
                   <Trash2 className="w-4 h-4" /> Delete
                 </div>
@@ -108,16 +150,32 @@ export default function SubscriptionList() {
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-2xl font-bold">List of Subscriptions</h2>
         <Button onClick={() => setIsModalOpen(true)}>Add Subscription</Button>
-        <AddSubscriptionModal open={isModalOpen} setOpen={setIsModalOpen} />
+
+        {deleteModalId && (
+          <ConfirmationModal
+            open={!!deleteModalId}
+            onOpenChange={() => setDeleteModalId(null)}
+            onConfirm={() => handleDeleteSubscription(deleteModalId)}
+            title="Are you sure you want to delete this subscription?"
+            description="This action cannot be undone. So please proceed with caution."
+            cancelText="No"
+          />
+        )}
+        <AddSubscriptionModal
+          open={isModalOpen}
+          setOpen={setIsModalOpen}
+          refetchSubscriptions={refetchSubscriptions}
+        />
         <EditSubscriptionModal
           open={isEditModalOpen}
           setOpen={setIsEditModalOpen}
           subscriptionId={subscriptionId}
+          refetchSubscriptions={refetchSubscriptions}
         />
       </div>
       <DataTable
         columns={columns}
-        data={dummySubscriptions || []}
+        data={subscriptions?.data || []}
         searchColumn={'name'}
       />
     </div>

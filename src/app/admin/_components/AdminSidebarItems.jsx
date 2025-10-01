@@ -168,17 +168,9 @@ export const AdminSidebarItems = {
     },
     {
       title: 'Subscriptions',
-      url: '#',
+      url: '/admin/subscriptions',
       icon: Podcast,
       isActive: true,
-      items: [
-        {
-          title: 'List of Subscriptions',
-          url: '/admin/subscription/list',
-          icon: List,
-          isActive: true,
-        },
-      ],
     },
     {
       title: 'Elite Pro Subscriptions',
@@ -194,17 +186,9 @@ export const AdminSidebarItems = {
     },
     {
       title: 'Credit Packages',
-      url: '#',
+      url: '/admin/package/add',
       icon: Package,
       isActive: true,
-      items: [
-        {
-          title: 'Add Package',
-          url: '/admin/package/add',
-          icon: Plus,
-          isActive: true,
-        },
-      ],
     },
     {
       title: 'Transaction Management',

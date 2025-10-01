@@ -6,6 +6,9 @@ import React from 'react';
 import { z } from 'zod';
 import countries from '@/data/countries.json';
 import SelectInput from '@/components/form/SelectInput';
+import { useAddLawFirmCertificationMutation } from '@/store/features/admin/lawFirmCertificationApiService';
+import { showSuccessToast } from '@/components/common/toasts';
+import AvatarUploader from '@/components/UIComponents/AvaterUploader';
 
 const licenseSchema = z.object({
   country: z.string({ invalid_type_error: 'Country is required' }),
@@ -13,27 +16,50 @@ const licenseSchema = z.object({
     .string({ invalid_type_error: 'Certification Name is required' })
     .min(1, { message: 'Certification Name is required' }),
   type: z.string({ invalid_type_error: 'Type is required' }),
+  agencyLogo: z.any().optional(),
 });
 
-export default function AddLicenseModal({ open, setOpen }) {
+export default function AddLicenseModal({ open, setOpen, refetchLicenseData }) {
   const defaultValues = {
     country: '',
     certificationName: '',
     type: '',
+    agencyLogo: null,
   };
 
-  const handleAddLicense = (values) => {
+  const [addLawFirmCertification] = useAddLawFirmCertificationMutation();
+
+  const handleAddLicense = async (values) => {
     console.log('values', values);
 
-    const { country, certificationName, type } = values;
+    const { country, certificationName, type, agencyLogo } = values;
 
     const payload = {
-      country,
+      countryId: country,
       certificationName,
       type,
     };
 
     console.log('payload', payload);
+
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(payload));
+
+    if (agencyLogo instanceof File) {
+      formData.append('logo', agencyLogo);
+    }
+
+    try {
+      const res = await addLawFirmCertification(formData).unwrap();
+      console.log('res', res);
+      if (res?.success) {
+        showSuccessToast(res?.message || 'License added successfully');
+        refetchLicenseData();
+        setOpen(false);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
   };
   return (
     <Modal open={open} onOpenChange={setOpen}>
@@ -67,9 +93,15 @@ export default function AddLicenseModal({ open, setOpen }) {
               { value: 'optional', label: 'Optional' },
             ]}
           />
+          <div className="flex flex-col gap-3">
+            <label htmlFor="agencyLogo" className="label-text">
+              Upload Photo
+            </label>
+            <AvatarUploader name="agencyLogo" />
+          </div>
         </div>
 
-        <div className="text-center mt-10">
+        <div className="text-center">
           <Button type="submit">Add License</Button>
         </div>
       </FormWrapper>
