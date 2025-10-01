@@ -23,12 +23,19 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import countries from '@/data/countries';
+import {
+  useAllLawFirmCertificationsQuery,
+  useDeleteLawFirmCertificationMutation,
+} from '@/store/features/admin/lawFirmCertificationApiService';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 
 export default function LicenseManagement() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [licenseId, setLicenseId] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
+  const [deleteModalId, setDeleteModalId] = useState(null);
 
   const handleCountryWiseLicenseChange = (val) => {
     setSelectedCountry(val);
@@ -36,20 +43,50 @@ export default function LicenseManagement() {
 
   useEffect(() => {
     if (countries?.length > 0 && !selectedCountry) {
-      const aus = countries.find((c) => c.name.toLowerCase() === 'australia');
-      if (aus) {
-        setSelectedCountry(aus._id);
+      const defaultCountry = countries.find(
+        (c) => c.name.toLowerCase() === 'australia'
+      );
+      if (defaultCountry) {
+        setSelectedCountry(defaultCountry.countryId);
       }
     }
   }, [countries, selectedCountry]);
+
+  const {
+    data: licensesData,
+    isLoading: isLicenseDataLoading,
+    refetch: refetchLicenseData,
+  } = useAllLawFirmCertificationsQuery(
+    {
+      countryId: selectedCountry,
+      type: '',
+      search: '',
+      page: 1,
+      limit: 50,
+    },
+    { skip: !selectedCountry }
+  );
+
+  console.log('licensesData', licensesData);
 
   const handleEditLicenseModalOpen = (id) => {
     setIsEditModalOpen(true);
     setLicenseId(id);
   };
 
-  const handleDeleteLicense = (id) => {
-    alert(`Item with id ${id} has been deleted successfully.`);
+  const [deleteLicense] = useDeleteLawFirmCertificationMutation();
+  const handleDeleteLicense = async (id) => {
+    try {
+      const res = await deleteLicense(id).unwrap();
+      console.log('res', res);
+      if (res?.success) {
+        showSuccessToast(res?.message || 'License deleted successfully');
+        refetchLicenseData();
+      }
+    } catch (error) {
+      console.log('error', error);
+      showErrorToast(error?.data?.message || 'Failed to delete license');
+    }
   };
 
   const columns = [
@@ -98,7 +135,7 @@ export default function LicenseManagement() {
               <DropdownMenuItem>
                 <div
                   className="flex gap-2 cursor-pointer"
-                  onClick={() => handleDeleteLicense(item?._id)}
+                  onClick={() => setDeleteModalId(item?._id)}
                 >
                   <Trash2 className="w-4 h-4" /> Delete
                 </div>
@@ -110,9 +147,13 @@ export default function LicenseManagement() {
     },
   ];
 
-  const filteredLicenses = certificationsAndLicenses.filter(
+  const filteredLicenses = licensesData?.data?.filter(
     (item) => item.countryId === selectedCountry
   );
+  // console.log('selectedCountry', selectedCountry);
+  // console.log('filteredLicenses', filteredLicenses);
+
+  console.log('deleteModalId', deleteModalId);
 
   return (
     <>
@@ -144,11 +185,27 @@ export default function LicenseManagement() {
           <Button onClick={() => setIsModalOpen(true)}>Add License</Button>
         </div>
       </div>
-      <AddLicenseModal open={isModalOpen} setOpen={setIsModalOpen} />
+
+      {deleteModalId && (
+        <ConfirmationModal
+          open={!!deleteModalId}
+          onOpenChange={() => setDeleteModalId(null)}
+          onConfirm={() => handleDeleteLicense(deleteModalId)}
+          title="Are you sure you want to delete this license?"
+          description="This action cannot be undone. So please proceed with caution."
+          cancelText="No"
+        />
+      )}
+      <AddLicenseModal
+        open={isModalOpen}
+        setOpen={setIsModalOpen}
+        refetchLicenseData={refetchLicenseData}
+      />
       <EditLicenseModal
         open={isEditModalOpen}
         setOpen={setIsEditModalOpen}
         licenseId={licenseId}
+        refetchLicenseData={refetchLicenseData}
       />
       <DataTable
         columns={columns}
