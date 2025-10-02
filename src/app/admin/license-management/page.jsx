@@ -1,9 +1,7 @@
 'use client';
 
-import { DataTable } from '@/components/common/DataTable';
 import { Button } from '@/components/ui/button';
 import React, { useEffect, useState } from 'react';
-import certificationsAndLicenses from '@/data/certificationsAndLicenses';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,6 +27,7 @@ import {
 } from '@/store/features/admin/lawFirmCertificationApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
+import { DataTableWithPagination } from '../_components/DataTableWithPagination';
 
 export default function LicenseManagement() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,6 +35,11 @@ export default function LicenseManagement() {
   const [licenseId, setLicenseId] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [deleteModalId, setDeleteModalId] = useState(null);
+
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState('');
+
+  const limit = 10;
 
   const handleCountryWiseLicenseChange = (val) => {
     setSelectedCountry(val);
@@ -56,13 +60,14 @@ export default function LicenseManagement() {
     data: licensesData,
     isLoading: isLicenseDataLoading,
     refetch: refetchLicenseData,
+    isFetching,
   } = useAllLawFirmCertificationsQuery(
     {
       countryId: selectedCountry,
       type: '',
-      search: '',
-      page: 1,
-      limit: 50,
+      search,
+      page,
+      limit,
     },
     { skip: !selectedCountry }
   );
@@ -100,7 +105,9 @@ export default function LicenseManagement() {
     {
       accessorKey: 'type',
       header: 'Type',
-      cell: ({ row }) => <div className="">{row.getValue('type')}</div>,
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue('type')}</div>
+      ),
     },
     {
       id: 'actions',
@@ -152,8 +159,6 @@ export default function LicenseManagement() {
   );
   // console.log('selectedCountry', selectedCountry);
   // console.log('filteredLicenses', filteredLicenses);
-
-  console.log('deleteModalId', deleteModalId);
 
   return (
     <>
@@ -207,10 +212,20 @@ export default function LicenseManagement() {
         licenseId={licenseId}
         refetchLicenseData={refetchLicenseData}
       />
-      <DataTable
+      <DataTableWithPagination
         columns={columns}
         data={filteredLicenses || []}
-        searchColumn={'certificationName'}
+        pagination={licensesData?.pagination}
+        page={page}
+        limit={limit}
+        totalPage={licensesData?.pagination?.totalPage}
+        total={licensesData?.pagination?.total}
+        onPageChange={setPage}
+        onSearch={(val) => {
+          setSearch(val);
+          setPage(1); // reset to first page when searching
+        }}
+        isFetching={isFetching}
       />
     </>
   );

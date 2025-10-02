@@ -1,8 +1,6 @@
 'use client';
 
-import { DataTable } from '@/components/common/DataTable';
 import { Button } from '@/components/ui/button';
-import { dummySubscriptions } from '@/data/data';
 import React, { useState } from 'react';
 import {
   DropdownMenu,
@@ -21,12 +19,17 @@ import {
 } from '@/store/features/admin/subcriptionsApiService';
 import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import { DataTableWithPagination } from '../_components/DataTableWithPagination';
 
 export default function SubscriptionList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [subscriptionId, setSubscriptionId] = useState(null);
   const [deleteModalId, setDeleteModalId] = useState(null);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState('');
+
+  const LIMIT = 10;
 
   const handleEditSubscriptionModalOpen = (id) => {
     setIsEditModalOpen(true);
@@ -37,9 +40,11 @@ export default function SubscriptionList() {
     data: subscriptions,
     isLoading: isLoadingSubscriptions,
     refetch: refetchSubscriptions,
+    isFetching,
   } = useGetAllSubscriptionsQuery({
-    page: 1,
-    limit: 10,
+    page,
+    limit: LIMIT,
+    search,
   });
 
   console.log('subscriptions', subscriptions);
@@ -173,10 +178,21 @@ export default function SubscriptionList() {
           refetchSubscriptions={refetchSubscriptions}
         />
       </div>
-      <DataTable
+      <DataTableWithPagination
         columns={columns}
         data={subscriptions?.data || []}
         searchColumn={'name'}
+        pagination={subscriptions?.pagination}
+        page={page}
+        limit={LIMIT}
+        totalPage={subscriptions?.pagination?.totalPage}
+        total={subscriptions?.pagination?.total}
+        onPageChange={setPage}
+        onSearch={(val) => {
+          setSearch(val);
+          setPage(1);
+        }}
+        isFetching={isFetching}
       />
     </div>
   );
