@@ -1,6 +1,5 @@
 'use client';
 
-import { DataTable } from '@/components/common/DataTable';
 import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import {
@@ -13,7 +12,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import AddNewPageModal from '../_components/AddNewPageModal';
-import { dummyPages } from '@/data/data';
 import EditPageModal from '../_components/EditPageModal';
 import {
   useDeletePageMutation,
@@ -21,11 +19,17 @@ import {
 } from '@/store/features/admin/pagesApiService';
 import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 import { showSuccessToast } from '@/components/common/toasts';
+import { DataTableWithPagination } from '../../_components/DataTableWithPagination';
 export default function ListOfPages() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pageId, setPageId] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [deleteModalId, setDeleteModalId] = useState(null);
+
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState('');
+
+  const LIMIT = 10;
 
   const handleEditPageModalOpen = (id) => {
     setIsEditModalOpen(true);
@@ -36,9 +40,12 @@ export default function ListOfPages() {
     data: pages,
     isLoading: isLoadingPages,
     refetch: refetchPages,
+    isFetching,
   } = useGetAllPagesQuery({
-    page: 1,
-    limit: 10,
+    page,
+    limit: LIMIT,
+    search,
+    sort: 'desc',
   });
 
   //console.log('pages', pages);
@@ -151,10 +158,21 @@ export default function ListOfPages() {
         pageId={pageId}
         refetchPages={refetchPages}
       />
-      <DataTable
+      <DataTableWithPagination
         data={pages?.data || []}
         columns={columns}
         searchColumn={'title'}
+        pagination={pages?.pagination}
+        page={page}
+        limit={LIMIT}
+        totalPage={pages?.pagination?.totalPage}
+        total={pages?.pagination?.total}
+        onPageChange={setPage}
+        onSearch={(val) => {
+          setSearch(val);
+          setPage(1);
+        }}
+        isFetching={isFetching}
       />
     </div>
   );

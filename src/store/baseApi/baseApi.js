@@ -130,6 +130,7 @@ export const baseApi = createApi({
     'lawfirm-certification',
     'subscriptions',
     'pages',
+    'eliteProSubscriptions',
   ],
   endpoints: () => ({}),
 });
