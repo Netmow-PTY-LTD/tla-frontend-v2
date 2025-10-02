@@ -8,35 +8,41 @@ import { z } from 'zod';
 import countries from '@/data/countries.json';
 import SelectInput from '@/components/form/SelectInput';
 import MultipleTagsSelector from '@/components/MultipleTagsSelector';
+import { useAddEliteProSubscriptionMutation } from '@/store/features/admin/eliteProSubscriptionsApiService';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
-const subscriptionSchema = z.object({
+const eliteProSubscriptionSchema = z.object({
   name: z
     .string({ invalid_type_error: 'Title must be a string' })
     .min(1, { message: 'Title is required' }),
-  slug: z
-    .string({ invalid_type_error: 'Slug must be a string' })
-    .min(1, { message: 'Slug is required' }),
-  price: z
-    .string({ invalid_type_error: 'Price must be a string' })
-    .min(1, { message: 'Price is required' }),
-  //   currency: z
-  //     .string({ invalid_type_error: 'Currency must be a string' })
-  //     .min(1, { message: 'Currency is required' }),
+
+  price_amount: z.preprocess(
+    (val) => Number(val),
+    z
+      .number({ invalid_type_error: 'Price must be a number' })
+      .min(1, { message: 'Price is required' })
+  ),
+
   billingCycle: z
     .string({ invalid_type_error: 'Billing Cycle must be a string' })
     .min(1, { message: 'Billing Cycle is required' }),
+
   features: z.array(
     z.string({ invalid_type_error: 'Features must be an array of strings' })
   ),
+
   description: z
     .string({ invalid_type_error: 'Description must be a string' })
     .min(1, { message: 'Description is required' }),
 });
 
-export default function AddEliteProSubscriptionModal({ open, setOpen }) {
+export default function AddEliteProSubscriptionModal({
+  open,
+  setOpen,
+  refetchEliteProSubscriptions,
+}) {
   const defaultValues = {
     name: '',
-    slug: '',
     price: '',
     currency: '',
     billingCycle: '',
@@ -44,49 +50,68 @@ export default function AddEliteProSubscriptionModal({ open, setOpen }) {
     description: '',
   };
 
-  const handleAddSubscription = (values) => {
+  const [addEliteProSubscription, { isLoading, isSuccess, isError, error }] =
+    useAddEliteProSubscriptionMutation();
+  const handleAddEliteProSubscription = async (values) => {
     console.log('values', values);
 
-    const { name, slug, price, billingCycle, features, description } = values;
+    const { name, price_amount, billingCycle, features, description } = values;
 
     const payload = {
       name,
-      slug,
-      price,
+      price: { amount: Number(price_amount), currency: 'USD' },
       billingCycle,
       features,
       description,
     };
 
     console.log('payload', payload);
+
+    try {
+      const res = await addEliteProSubscription(payload).unwrap();
+      console.log('Subscription added successfully:', res);
+      if (res?.success) {
+        showSuccessToast(
+          res?.message || 'Elite Pro Subscription added successfully'
+        );
+        refetchEliteProSubscriptions();
+        setOpen(false);
+      }
+    } catch (err) {
+      console.error('Failed to add subscription:', err);
+      showErrorToast(
+        err?.data?.message || 'Failed to add Elite Pro Subscription'
+      );
+    }
   };
   return (
     <Modal open={open} onOpenChange={setOpen} width="max-w-[700px]">
-      <h3 className="text-lg font-semibold mb-6">Add Subscription</h3>
+      <h3 className="text-lg font-semibold mb-6">Add Elite Pro Subscription</h3>
       <FormWrapper
-        onSubmit={handleAddSubscription}
+        onSubmit={handleAddEliteProSubscription}
         defaultValues={defaultValues}
-        schema={subscriptionSchema}
+        schema={eliteProSubscriptionSchema}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <TextInput name="name" label="Name" placeholder="subscription name" />
-          <TextInput name="slug" label="Slug" placeholder="slug" />
-          <TextInput name="price" label="Price ($)" placeholder="price" />
-          {/* <SelectInput
-            name="currency"
-            label="Currency"
-            placeholder="currency"
-            options={options}
-          /> */}
-          <SelectInput
-            name="billingCycle"
-            label="Billing Cycle"
-            placeholder="billingCycle"
-            options={[
-              { value: 'monthly', label: 'Monthly' },
-              { value: 'yearly', label: 'Yearly' },
-            ]}
+          <TextInput
+            name="price_amount"
+            label="Price ($)"
+            placeholder="price"
           />
+          <div className="col-span-2">
+            <SelectInput
+              name="billingCycle"
+              label="Billing Cycle"
+              placeholder="billingCycle"
+              options={[
+                { value: 'monthly', label: 'Monthly' },
+                { value: 'yearly', label: 'Yearly' },
+                { value: 'weekly', label: 'Weekly' },
+                { value: 'one_time', label: 'One Time' },
+              ]}
+            />
+          </div>
           <div className="col-span-2">
             <MultipleTagsSelector
               name="features"

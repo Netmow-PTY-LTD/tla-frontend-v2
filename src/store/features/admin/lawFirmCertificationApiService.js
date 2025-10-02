@@ -11,10 +11,10 @@ const lawFirmCertificationApiService = baseApi.injectEndpoints({
       invalidatesTags: ['lawfirm-certification'],
     }),
     allLawFirmCertifications: builder.query({
-      query: ({ countryId, type, search, page, limit }) => ({
+      query: (params) => ({
         url: '/lawfirm-certification/list',
         method: 'GET',
-        params: { countryId, type, search, page, limit },
+        params,
       }),
       providesTags: ['lawfirm-certification'],
     }),
