@@ -127,6 +127,9 @@ export const baseApi = createApi({
     'all-client',
     'all-lawyer',
     'dashboard-stats',
+    'lawfirm-certification',
+    'subscriptions',
+    'pages',
   ],
   endpoints: () => ({}),
 });

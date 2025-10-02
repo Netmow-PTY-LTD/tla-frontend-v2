@@ -7,6 +7,7 @@ import { Badge } from './ui/badge';
 
 export default function MultipleTagsSelector({
   name,
+  label,
   placeholder = 'Add item...',
 }) {
   const { register, setValue, getValues } = useFormContext();
@@ -40,7 +41,11 @@ export default function MultipleTagsSelector({
     <div className="w-full">
       {/* hidden input to register value with react-hook-form */}
       <input type="hidden" {...register(name)} value={tags.join(',')} />
-
+      {label && (
+        <label htmlFor={name} className="mb-2 inline-block">
+          {label}
+        </label>
+      )}
       <div className="flex flex-wrap gap-2 border rounded-lg p-2 bg-[#F2F2F2] min-h-[44px]">
         {tags.map((tag, idx) => (
           <Badge

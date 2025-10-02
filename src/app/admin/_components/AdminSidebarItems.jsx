@@ -5,6 +5,7 @@ import {
   ChartColumnStacked,
   CircleEllipsis,
   Earth,
+  FileKey2,
   FileQuestionMark,
   Kanban,
   LandPlot,
@@ -159,45 +160,41 @@ export const AdminSidebarItems = {
       icon: CircleEllipsis,
       isActive: true,
     },
-    // {
-    //   title: 'Subscriptions',
-    //   url: '#',
-    //   icon: Podcast,
-    //   isActive: true,
-    //   items: [
-    //     {
-    //       title: 'Add Subscription',
-    //       url: '/admin/subscription/add',
-    //       icon: Plus,
-    //       isActive: true,
-    //     },
-    //     {
-    //       title: 'List of Subscriptions',
-    //       url: '/admin/subscription/list',
-    //       icon: List,
-    //       isActive: true,
-    //     },
-    //   ],
-    // },
+    {
+      title: 'License Management',
+      url: '/admin/license-management',
+      icon: FileKey2,
+      isActive: true,
+    },
+    {
+      title: 'Subscriptions',
+      url: '/admin/subscriptions',
+      icon: Podcast,
+      isActive: true,
+    },
+    {
+      title: 'Elite Pro Subscriptions',
+      url: '/admin/elite-pro',
+      icon: List,
+      isActive: true,
+    },
+    {
+      title: 'Pages',
+      url: '/admin/page/list',
+      icon: List,
+      isActive: true,
+    },
     {
       title: 'Credit Packages',
-      url: '#',
+      url: '/admin/package/add',
       icon: Package,
       isActive: true,
-      items: [
-        {
-          title: 'Add Package',
-          url: '/admin/package/add',
-          icon: Plus,
-          isActive: true,
-        },
-      ],
     },
     {
       title: 'Transaction Management',
       url: '/admin/transection-management',
       icon: ArrowLeftRight, // Set size if needed
-      isActive: true,  
+      isActive: true,
     },
 
     {
