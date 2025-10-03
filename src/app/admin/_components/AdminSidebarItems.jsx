@@ -7,6 +7,7 @@ import {
   Earth,
   FileKey2,
   FileQuestionMark,
+  CircleAlert,
   Kanban,
   LandPlot,
   LayoutDashboard,
@@ -36,7 +37,12 @@ export const AdminSidebarItems = {
       icon: Settings,
       isActive: true,
     },
-
+    {
+      title: 'Claim Account Requests',
+      url: '/admin/claim-account-requests',
+      icon: CircleAlert,
+      isActive: true,
+    },
     {
       title: 'Countries',
       url: '/admin/country/list',

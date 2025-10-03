@@ -107,6 +107,7 @@ export default function EditLicenseModal({
               value: country.countryId,
               label: country.name,
             }))}
+            disabled
           />
           <TextInput
             name="certificationName"
