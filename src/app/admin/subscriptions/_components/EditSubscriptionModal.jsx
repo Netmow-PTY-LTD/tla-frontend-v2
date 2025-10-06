@@ -54,10 +54,6 @@ export default function EditSubscriptionModal({
     description: '',
   });
 
-  // const subscription = dummySubscriptions.find(
-  //   (sub) => sub._id === subscriptionId
-  // );
-
   const {
     data: subscriptionData,
     isLoading: isLoadingSubscription,
@@ -86,14 +82,11 @@ export default function EditSubscriptionModal({
 
   const [updateSubscription] = useUpdateSubscriptionMutation();
   const handleEditSubscription = async (values) => {
-    console.log('values', values);
-
-    const { name, slug, price, billingCycle, features, description } = values;
+    const { name, price_amount, billingCycle, features, description } = values;
 
     const payload = {
       name,
-      slug,
-      price,
+      price: { amount: Number(price_amount), currency: 'USD' },
       billingCycle,
       features,
       description,
@@ -131,23 +124,16 @@ export default function EditSubscriptionModal({
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <TextInput name="name" label="Name" placeholder="subscription name" />
-          {/* <TextInput name="slug" label="Slug" placeholder="slug" /> */}
           <TextInput
             name="price_amount"
             label="Price ($)"
             placeholder="price"
           />
-          {/* <SelectInput
-            name="currency"
-            label="Currency"
-            placeholder="currency"
-            options={options}
-          /> */}
           <div className="col-span-2">
             <SelectInput
               name="billingCycle"
               label="Billing Cycle"
-              placeholder="billingCycle"
+              placeholder="Select a billing cycle"
               options={[
                 { value: 'monthly', label: 'Monthly' },
                 { value: 'yearly', label: 'Yearly' },
