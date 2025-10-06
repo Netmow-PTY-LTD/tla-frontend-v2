@@ -156,7 +156,7 @@ export default function RegisterStepThree() {
   console.log('registrationState', registrationState);
 
   const handleSubmit = async (data) => {
-    //console.log('data', data);
+    console.log('data', data);
     try {
       const result = await authRegister(registrationState).unwrap();
       if (result?.success && result?.token) {
@@ -517,8 +517,10 @@ export default function RegisterStepThree() {
 
                   <FormField
                     control={form.control}
-                    name="companyProfile"
-                    render={({ field }) => (
+                    name="company_name"
+                    render={({ field }) => {
+                      console.log('company_name field', field);
+                      return(
                       <FormItem>
                         <FormLabel>Select Company</FormLabel>
                         <Combobox
@@ -526,12 +528,12 @@ export default function RegisterStepThree() {
                           onChange={(val) => {
                             field.onChange(val);
                             const selectedCompany = allCompanies?.data?.find((c) => c._id === val);
-                           
+
 
                             dispatch(
                               updateNestedField({
-                                section: 'lawyerServiceMap',
-                                field: 'companyProfile',
+                                section: 'companyInfo',
+                                field: 'companyName',
                                 value: val,
                               })
                             );
@@ -549,9 +551,9 @@ export default function RegisterStepThree() {
                             <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
                               <ChevronDown className="h-4 w-4 text-gray-500" />
                             </ComboboxButton>
-                            {allCompanies?.data?.length > 0 && (
-                              <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                {allCompanies.data.slice(0, 10).map((company) => (
+                            <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                              {allCompanies?.data?.length > 0 ? (
+                                allCompanies.data.slice(0, 10).map((company) => (
                                   <ComboboxOption
                                     key={company._id}
                                     value={company._id}
@@ -580,14 +582,19 @@ export default function RegisterStepThree() {
                                       </>
                                     )}
                                   </ComboboxOption>
-                                ))}
-                              </ComboboxOptions>
-                            )}
+                                ))
+                              ) : (
+                                <div className="relative cursor-default select-none py-2 px-4 text-gray-500">
+                                  No company found
+                                </div>
+                              )}
+                            </ComboboxOptions>
                           </div>
                         </Combobox>
                         <FormMessage className="text-red-600" />
                       </FormItem>
-                    )}
+                    )
+                    }}
                   />
 
                   {/* <div className="flex flex-wrap">
