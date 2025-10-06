@@ -32,10 +32,13 @@ import {
 import Link from 'next/link';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Label } from '../ui/label';
-import { Eye, EyeOff, Loader } from 'lucide-react';
+import { Check, ChevronDown, Eye, EyeOff, Loader } from 'lucide-react';
 import countries from '@/data/countries.json';
 import { safeJsonParse } from '@/helpers/safeJsonParse';
 import Cookies from 'js-cookie';
+import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions } from '@headlessui/react';
+import { useGetCompanyListQuery } from '@/store/features/public/publicApiService';
+import { cn } from '@/lib/utils';
 
 const genderOptions = [
   { id: 1, label: 'Male', value: 'male' },
@@ -45,6 +48,7 @@ const genderOptions = [
 
 export default function RegisterStepThree() {
   const dispatch = useDispatch();
+  const [query, setQuery] = useState('');
   const registration = useSelector((state) => state.lawyerRegistration);
   const { email, password, profile } = registration;
   const {
@@ -76,6 +80,17 @@ export default function RegisterStepThree() {
     () => getLawyerRegistrationStepThreeFormValidation(defaultCountry),
     [defaultCountry]
   );
+
+  const paramsPayload = {
+    countryId: defaultCountry?.countryId,
+    search: query || '',
+  };
+
+
+  const { data: allCompanies, isLoading: isCompanyLoading } =
+    useGetCompanyListQuery(paramsPayload, {
+      skip: !defaultCountry?.countryId,
+    });
 
   const form = useForm({
     resolver: zodResolver(schema),
@@ -141,7 +156,7 @@ export default function RegisterStepThree() {
   console.log('registrationState', registrationState);
 
   const handleSubmit = async (data) => {
-    //console.log('data', data);
+    console.log('data', data);
     try {
       const result = await authRegister(registrationState).unwrap();
       if (result?.success && result?.token) {
@@ -394,11 +409,10 @@ export default function RegisterStepThree() {
                       />
                       <div
                         className={`w-4 h-4 rounded-full border-2 border-[var(--primary-color)] flex items-center justify-center transition-all
-            ${
-              gender === option.value
-                ? 'bg-[var(--primary-color)]'
-                : 'bg-transparent'
-            }`}
+            ${gender === option.value
+                            ? 'bg-[var(--primary-color)]'
+                            : 'bg-transparent'
+                          }`}
                       >
                         <div
                           className={`w-1.5 h-1.5 rounded-full transition
@@ -500,7 +514,90 @@ export default function RegisterStepThree() {
               {/* Company Info Section */}
               {isCompany && (
                 <>
-                  <div className="flex flex-wrap">
+
+                  <FormField
+                    control={form.control}
+                    name="company_name"
+                    render={({ field }) => {
+                      console.log('company_name field', field);
+                      return(
+                      <FormItem>
+                        <FormLabel>Select Company</FormLabel>
+                        <Combobox
+                          value={field.value}
+                          onChange={(val) => {
+                            field.onChange(val);
+                            const selectedCompany = allCompanies?.data?.find((c) => c._id === val);
+
+
+                            dispatch(
+                              updateNestedField({
+                                section: 'companyInfo',
+                                field: 'companyName',
+                                value: val,
+                              })
+                            );
+                          }}
+                        >
+                          <div className="relative">
+                            <ComboboxInput
+                              className="tla-form-control w-full"
+                              onChange={(event) => setQuery(event.target.value)}
+                              displayValue={(val) =>
+                                allCompanies?.data?.find((c) => c._id === val)?.firmName || ''
+                              }
+                              placeholder="Select a Company"
+                            />
+                            <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
+                              <ChevronDown className="h-4 w-4 text-gray-500" />
+                            </ComboboxButton>
+                            <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                              {allCompanies?.data?.length > 0 ? (
+                                allCompanies.data.slice(0, 10).map((company) => (
+                                  <ComboboxOption
+                                    key={company._id}
+                                    value={company._id}
+                                    className={({ active }) =>
+                                      cn(
+                                        'cursor-pointer select-none relative py-2 pl-10 pr-4',
+                                        active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'
+                                      )
+                                    }
+                                  >
+                                    {({ selected }) => (
+                                      <>
+                                        <span
+                                          className={cn('block truncate', {
+                                            'font-medium': selected,
+                                            'font-normal': !selected,
+                                          })}
+                                        >
+                                          {company.firmName}
+                                        </span>
+                                        {selected && (
+                                          <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
+                                            <Check className="h-4 w-4" />
+                                          </span>
+                                        )}
+                                      </>
+                                    )}
+                                  </ComboboxOption>
+                                ))
+                              ) : (
+                                <div className="relative cursor-default select-none py-2 px-4 text-gray-500">
+                                  No company found
+                                </div>
+                              )}
+                            </ComboboxOptions>
+                          </div>
+                        </Combobox>
+                        <FormMessage className="text-red-600" />
+                      </FormItem>
+                    )
+                    }}
+                  />
+
+                  {/* <div className="flex flex-wrap">
                     <div className="w-full md:w-1/2 md:pr-1">
                       <FormField
                         control={form.control}
@@ -559,10 +656,10 @@ export default function RegisterStepThree() {
                         )}
                       />
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* Company Size Buttons */}
-                  <div className="company-size">
+                  {/* <div className="company-size">
                     <label className="block mb-2">
                       Company Size, Team Members
                     </label>
@@ -594,7 +691,7 @@ export default function RegisterStepThree() {
                         </button>
                       ))}
                     </div>
-                  </div>
+                  </div> */}
                 </>
               )}
 

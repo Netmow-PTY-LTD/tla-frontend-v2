@@ -74,10 +74,10 @@ export const getLawyerRegistrationStepThreeFormValidation = (country) =>
       practising_certificate_number: z.string().min(1, 'is Required'),
 
       soloPractitioner: z.boolean(),
-      companyTeam: z.boolean(),
+      // companyTeam: z.boolean(),
       company_name: z.string().optional(),
-      company_website: z.string().optional(),
-      company_size: z.string().optional(),
+      // company_website: z.string().optional(),
+      // company_size: z.string().optional(),
       agreement: z.boolean().refine((val) => val === true, {
         message: 'is Required',
       }),

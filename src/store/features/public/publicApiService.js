@@ -164,6 +164,17 @@ const publicApiService = baseApi.injectEndpoints({
         'request',
       ],
     }),
+
+    getCompanyList: builder.query({
+      query: (params) => ({
+        url: `/public/firm/list`,
+        method: 'GET',
+        params,
+      }),
+     
+    }),
+
+
   }),
 });
 
@@ -188,4 +199,5 @@ export const {
   useGetAllRequestsFromClientQuery,
   useGetRequestFromClientByIdQuery,
   useCreateRatingMutation,
+  useGetCompanyListQuery,
 } = publicApiService;
