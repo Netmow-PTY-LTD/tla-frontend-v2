@@ -103,6 +103,25 @@ export default function LicenseManagement() {
       ),
     },
     {
+      accessorKey: 'logo',
+      header: 'Logo',
+      cell: ({ row }) => {
+        const logoUrl = row.getValue('logo'); // Assuming this is the logo URL or path
+
+        return logoUrl ? (
+          <img
+            src={logoUrl}
+            alt="Staff"
+            className="w-10 h-10 rounded-full object-cover border border-gray-300"
+          />
+        ) : (
+          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs">
+            N/A
+          </div>
+        );
+      },
+    },
+    {
       accessorKey: 'type',
       header: 'Type',
       cell: ({ row }) => (

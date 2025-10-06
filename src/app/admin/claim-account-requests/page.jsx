@@ -11,78 +11,42 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Edit, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { se } from 'date-fns/locale';
-
-const dummyLawFirms = [
-  {
-    _id: '1',
-    country: 'AU',
-    lawFirmName: 'Sydney Legal Partners',
-    lawFirmEmail: 'contact@sydneylegal.com',
-    lawFirmRegistrationNumber: 'NSW-REG-45872',
-    website: 'https://www.sydneylegal.com',
-    knownAdminEmails: ['admin@sydneylegal.com', 'hr@sydneylegal.com'],
-    claimerName: 'John Doe',
-    claimerEmail: 'john.doe@sydneylegal.com',
-  },
-  {
-    _id: '2',
-    country: 'US',
-    lawFirmName: 'New York Justice League',
-    lawFirmEmail: 'info@nyjustice.com',
-    lawFirmRegistrationNumber: 'NY-REG-99210',
-    website: 'https://www.nyjustice.com',
-    knownAdminEmails: ['admin@nyjustice.com', 'legal@nyjustice.com'],
-    claimerName: 'John Doe',
-    claimerEmail: 'john.doe@nyjustice.com',
-  },
-  {
-    _id: '3',
-    country: 'UK',
-    lawFirmName: 'London Barristers Group',
-    lawFirmEmail: 'contact@londonbarristers.co.uk',
-    lawFirmRegistrationNumber: 'UK-REG-77441',
-    website: 'https://www.londonbarristers.co.uk',
-    knownAdminEmails: ['barristers@londonbarristers.co.uk'],
-    claimerName: 'John Doe',
-    claimerEmail: 'john.doe@londonbarristers.co.uk',
-  },
-  {
-    _id: '4',
-    country: 'CA',
-    lawFirmName: 'Toronto Law Collective',
-    lawFirmEmail: 'hello@torontolaw.ca',
-    lawFirmRegistrationNumber: 'CA-REG-33456',
-    website: 'https://www.torontolaw.ca',
-    knownAdminEmails: ['admin@torontolaw.ca', 'contact@torontolaw.ca'],
-    claimerName: 'John Doe',
-    claimerEmail: 'john.doe@torontolaw.ca',
-  },
-  {
-    _id: '5',
-    country: 'IN',
-    lawFirmName: 'Delhi Legal Chambers',
-    lawFirmEmail: 'support@delhichambers.in',
-    lawFirmRegistrationNumber: 'IN-REG-18372',
-    website: 'https://www.delhichambers.in',
-    knownAdminEmails: ['admin@delhichambers.in'],
-    claimerName: 'John Doe',
-    claimerEmail: 'john.doe@delhichambers.in',
-  },
-];
+import { useGetClaimsRequestsQuery } from '@/store/features/admin/generalApiService';
+import countries from '@/data/countries';
 
 export default function ClaimAccountRequests() {
   const [page, setPage] = React.useState(1);
   const [search, setSearch] = React.useState('');
   const limit = 10;
 
+  const {
+    data: claimsRequests,
+    isLoading: isLoadingClaimsRequests,
+    isFetching,
+  } = useGetClaimsRequestsQuery({
+    page,
+    limit,
+    search,
+  });
+
+  console.log('claimsRequests', claimsRequests);
+
+  const countriesMap = React.useMemo(() => {
+    const map = {};
+    countries.forEach((country) => {
+      map[country.countryId] = country.name;
+    });
+    return map;
+  }, [countries]);
+
   const columns = [
     {
       accessorKey: 'country',
       header: 'Country',
-      cell: ({ row }) => (
-        <div className="uppercase">{row.getValue('country')}</div>
-      ),
+      cell: ({ row }) => {
+        const country = row?.getValue('country');
+        return <div className="">{country?.name}</div>;
+      },
     },
     {
       accessorKey: 'lawFirmName',
@@ -131,46 +95,46 @@ export default function ClaimAccountRequests() {
       header: 'Claimer Email',
       cell: ({ row }) => <div className="">{row.getValue('claimerEmail')}</div>,
     },
-    {
-      id: 'actions',
-      header: 'Actions',
-      enableHiding: false,
-      cell: ({ row }) => {
-        const item = row.original;
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <button
-                  onClick={() => handleEditLicenseModalOpen(item?._id)}
-                  className="flex gap-2"
-                >
-                  <Pencil className="w-4 h-4" />
-                  Edit
-                </button>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <div
-                  className="flex gap-2 cursor-pointer"
-                  onClick={() => setDeleteModalId(item?._id)}
-                >
-                  <Trash2 className="w-4 h-4" /> Delete
-                </div>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        );
-      },
-    },
+    // {
+    //   id: 'actions',
+    //   header: 'Actions',
+    //   enableHiding: false,
+    //   cell: ({ row }) => {
+    //     const item = row.original;
+    //     return (
+    //       <DropdownMenu>
+    //         <DropdownMenuTrigger asChild>
+    //           <Button variant="ghost" className="h-8 w-8 p-0">
+    //             <span className="sr-only">Open menu</span>
+    //             <MoreHorizontal />
+    //           </Button>
+    //         </DropdownMenuTrigger>
+    //         <DropdownMenuContent align="end">
+    //           <DropdownMenuLabel>Actions</DropdownMenuLabel>
+    //           <DropdownMenuSeparator />
+    //           <DropdownMenuItem>
+    //             <button
+    //               onClick={() => handleEditLicenseModalOpen(item?._id)}
+    //               className="flex gap-2"
+    //             >
+    //               <Pencil className="w-4 h-4" />
+    //               Edit
+    //             </button>
+    //           </DropdownMenuItem>
+    //           <DropdownMenuSeparator />
+    //           <DropdownMenuItem>
+    //             <div
+    //               className="flex gap-2 cursor-pointer"
+    //               onClick={() => setDeleteModalId(item?._id)}
+    //             >
+    //               <Trash2 className="w-4 h-4" /> Delete
+    //             </div>
+    //           </DropdownMenuItem>
+    //         </DropdownMenuContent>
+    //       </DropdownMenu>
+    //     );
+    //   },
+    // },
   ];
 
   return (
@@ -182,8 +146,11 @@ export default function ClaimAccountRequests() {
       </div>
       <DataTableWithPagination
         columns={columns}
-        data={dummyLawFirms || []}
-        total={dummyLawFirms.length}
+        data={claimsRequests?.data || []}
+        pagination={
+          claimsRequests?.pagination || { page: 1, limit: 10, total: 0 }
+        }
+        total={claimsRequests?.pagination?.total || 0}
         page={page}
         limit={limit}
         onPageChange={(page) => setPage(page)}
@@ -191,6 +158,7 @@ export default function ClaimAccountRequests() {
           setSearch(val);
           setPage(1); // reset to first page when searching
         }}
+        isFetching={isFetching}
       />
     </>
   );

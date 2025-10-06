@@ -2,7 +2,7 @@ import FormWrapper from '@/components/form/FromWrapper';
 import TextInput from '@/components/form/TextInput';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/UIComponents/Modal';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
 import countries from '@/data/countries.json';
 import SelectInput from '@/components/form/SelectInput';
@@ -36,24 +36,78 @@ export default function EditLicenseModal({
     agencyLogo: null,
   });
 
+  const formRef = useRef(null);
+
+  // When modal closes, reset form
+  useEffect(() => {
+    if (open && licenseId) {
+      formRef.current?.reset(defaultValues);
+    }
+  }, [open, licenseId, defaultValues]);
+
   const { data: licenseData } = useGetLawFirmCertificationByIdQuery(licenseId, {
     skip: !licenseId,
   });
 
   const license = licenseData?.data;
 
+  //console.log('license', license);
+
+  // useEffect(() => {
+  //   if (license) {
+  //     setDefaultValues({
+  //       country: license.countryId,
+  //       certificationName: license.certificationName,
+  //       type: license.type,
+  //       agencyLogo: license.logo || null,
+  //     });
+  //   }
+  // }, [license]);
+
   useEffect(() => {
     if (license) {
-      setDefaultValues({
-        country: license.countryId,
-        certificationName: license.certificationName,
-        type: license.type,
-        agencyLogo: license.logo || null,
-      });
-    }
-  }, [license]);
+      const dv = {
+        country: license.countryId ?? '',
+        certificationName: license.certificationName ?? '',
+        type: license.type ?? '',
+        agencyLogo: license.logo ?? null,
+      };
+      setDefaultValues(dv);
 
-  const [updateLicense] = useUpdateLawFirmCertificationMutation();
+      // If modal is already open, immediately reset the form to the new values
+      // (formRef.current.reset refers to the imperative method we exposed in FormWrapper)
+      if (open && formRef.current?.reset) {
+        formRef.current.reset(dv);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [license, open]);
+
+  useEffect(() => {
+    if (open) {
+      // if license already loaded, reset to license-derived defaults
+      if (license) {
+        formRef.current?.reset({
+          country: license.countryId ?? '',
+          certificationName: license.certificationName ?? '',
+          type: license.type ?? '',
+          agencyLogo: license.logo ?? null,
+        });
+      } else {
+        // license not loaded yet (still fetching) -> clear or keep previous values as you prefer
+        // I recommend clearing to avoid stale UI while fetching:
+        formRef.current?.reset({
+          country: '',
+          certificationName: '',
+          type: '',
+          agencyLogo: null,
+        });
+      }
+    }
+  }, [open, license]);
+
+  const [updateLicense, { isLoading: isUpdateLicenseLoading }] =
+    useUpdateLawFirmCertificationMutation();
 
   const handleUpdateLicense = async (values) => {
     const { country, certificationName, type, agencyLogo } = values;
@@ -91,12 +145,26 @@ export default function EditLicenseModal({
     }
   };
   return (
-    <Modal open={open} onOpenChange={setOpen}>
+    <Modal
+      open={open}
+      onOpenChange={(open) => {
+        setOpen(open);
+        setDefaultValues({
+          country: '',
+          certificationName: '',
+          type: '',
+          agencyLogo: null,
+        });
+      }}
+    >
       <h3 className="text-lg font-semibold mb-6">Edit License</h3>
       <FormWrapper
+        key={licenseId} // Reset form when licenseId changes
         onSubmit={handleUpdateLicense}
         defaultValues={defaultValues}
         schema={licenseSchema}
+        formRef={formRef}
+        ref={formRef}
       >
         <div className="grid grid-cols-1 gap-5">
           <SelectInput
@@ -132,7 +200,9 @@ export default function EditLicenseModal({
         </div>
 
         <div className="text-center mt-10">
-          <Button type="submit">Update License</Button>
+          <Button type="submit" disabled={isUpdateLicenseLoading}>
+            {isUpdateLicenseLoading ? 'Updating...' : 'Update License'}
+          </Button>
         </div>
       </FormWrapper>
     </Modal>
