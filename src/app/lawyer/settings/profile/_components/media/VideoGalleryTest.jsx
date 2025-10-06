@@ -13,6 +13,24 @@ import { CloudUpload, Trash2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useFormContext, useFieldArray } from 'react-hook-form';
 
+import { z } from 'zod';
+
+const videoSchema = z.object({
+  video_url: z.preprocess(
+    (val) => (typeof val === 'string' ? val.trim() : val),
+    z
+      .string({
+        required_error: 'Video URL is required',
+        invalid_type_error: 'Video URL must be a string',
+      })
+      .min(1, 'Video URL is required')
+      .url('Invalid video URL. Please enter a valid URL.')
+      .refine((url) => getEmbedUrl(url), {
+        message: 'This video link cannot be embedded.',
+      })
+  ),
+});
+
 export default function VideoGalleryTest({ userInfo, refetch }) {
   // const {
   //   control,
@@ -191,12 +209,15 @@ export default function VideoGalleryTest({ userInfo, refetch }) {
         <FormWrapper
           onSubmit={handlePhotoUpload}
           // schema={lawyerSettingsMediaFormSchema}
+          schema={videoSchema}
         >
-          <TextInput
-            label=""
-            name="video_url"
-            placeholder="https://www.youtube.com/watch?v=example"
-          />
+          <div className="mt-8">
+            <TextInput
+              label=""
+              name="video_url"
+              placeholder="https://www.youtube.com/watch?v=example"
+            />
+          </div>
           {/* {errors.videos && (
             <p className="text-sm text-red-500 mt-2">{errors.videos.message}</p>
           )} */}
