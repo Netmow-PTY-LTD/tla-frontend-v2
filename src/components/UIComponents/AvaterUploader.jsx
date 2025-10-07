@@ -12,6 +12,7 @@ export default function AvatarUploader({
   accept = 'image/*',
   multiple = false,
   icon = <CloudUpload className="w-6 h-6 text-[#00C3C0] mb-2" />,
+  disabled = false,
 }) {
   const { register, setValue, watch, getValues } = useFormContext();
   const file = watch(name);
@@ -55,7 +56,7 @@ export default function AvatarUploader({
           </Avatar>
 
           {/* Remove Button */}
-          {preview && (
+          {preview && !disabled && (
             <button
               type="button"
               onClick={handleRemove}

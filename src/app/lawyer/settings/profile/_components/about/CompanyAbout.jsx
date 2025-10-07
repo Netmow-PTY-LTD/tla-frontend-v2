@@ -48,6 +48,7 @@ export default function CompanyAbout() {
             placeholder="Select company size"
             defaultValue="Self-employed / Sole Trader"
             textColor="text-[#4b4949]"
+            disabled
           />
 
           <TextInput
@@ -55,6 +56,7 @@ export default function CompanyAbout() {
             name="yearsInBusiness"
             placeholder="Number of years"
             textColor="text-[#4b4949]"
+            disabled
           />
         </div>
         <TextareaInput
@@ -62,6 +64,7 @@ export default function CompanyAbout() {
           name="description"
           placeholder="What sets you apart from businesses?"
           textColor="text-[#4b4949]"
+          disabled
         />
       </div>
     </div>
