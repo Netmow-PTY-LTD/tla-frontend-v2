@@ -169,7 +169,7 @@ export default function RegisterStepOne() {
 
           <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="max-h-[400px] overflow-y-auto">
+              <div className="">
                 <div className="flex flex-wrap space-y-5">
                   <div className="w-full">
                     <FormField
