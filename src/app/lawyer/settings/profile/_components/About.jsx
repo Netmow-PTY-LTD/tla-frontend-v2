@@ -68,9 +68,47 @@ export default function About() {
 
   console.log('showCompanyProfile', showCompanyProfile);
 
+  // const defaultValues = useMemo(
+  //   () => ({
+  //     companyName: profile?.companyProfile?.companyName ?? '',
+  //     name: profile?.name ?? '',
+  //     designation: profile?.designation ?? '',
+  //     languages: profile?.languages ?? [],
+  //     address: profile?.address ?? '',
+  //     phone: profile?.phone ?? '',
+  //     gender: profile?.gender ?? '',
+  //     law_society_member_number: profile?.law_society_member_number ?? '',
+  //     practising_certificate_number:
+  //       profile?.practising_certificate_number ?? '',
+  //     bio: profile?.bio ?? '',
+  //     lawyerContactEmail: profile?.lawyerContactEmail ?? '',
+  //     contactEmail: profile?.companyProfile?.contactEmail ?? '',
+  //     phoneNumber: profile?.companyProfile?.phoneNumber ?? '',
+  //     website: profile?.companyProfile?.website ?? '',
+  //     companySize: profile?.companyProfile?.companySize ?? '',
+  //     description: profile?.companyProfile?.description ?? '',
+  //     yearsInBusiness: profile?.companyProfile?.yearsInBusiness ?? '',
+  //     companyLogo: profile?.companyProfile?.logoUrl ?? '', // URL string
+  //     userProfileLogo: profile?.profilePicture ?? '', // URL string
+  //     location: {
+  //       address: profile?.companyProfile?.location?.address ?? '',
+  //       hideFromProfile:
+  //         profile?.companyProfile?.location?.hideFromProfile ?? false,
+  //       locationReason: profile?.companyProfile?.location?.locationReason ?? '',
+  //       coordinates: {
+  //         lat: profile?.companyProfile?.location?.coordinates?.lat ?? 0,
+  //         lng: profile?.companyProfile?.location?.coordinates?.lng ?? 0,
+  //       },
+  //     },
+  //   }),
+  //   [profile]
+  // );
+
+
+
   const defaultValues = useMemo(
     () => ({
-      companyName: profile?.companyProfile?.companyName ?? '',
+      companyName: profile?.firmProfileId?.firmName ?? '',
       name: profile?.name ?? '',
       designation: profile?.designation ?? '',
       languages: profile?.languages ?? [],
@@ -82,27 +120,33 @@ export default function About() {
         profile?.practising_certificate_number ?? '',
       bio: profile?.bio ?? '',
       lawyerContactEmail: profile?.lawyerContactEmail ?? '',
-      contactEmail: profile?.companyProfile?.contactEmail ?? '',
-      phoneNumber: profile?.companyProfile?.phoneNumber ?? '',
-      website: profile?.companyProfile?.website ?? '',
-      companySize: profile?.companyProfile?.companySize ?? '',
-      description: profile?.companyProfile?.description ?? '',
-      yearsInBusiness: profile?.companyProfile?.yearsInBusiness ?? '',
-      companyLogo: profile?.companyProfile?.logoUrl ?? '', // URL string
-      userProfileLogo: profile?.profilePicture ?? '', // URL string
+
+      // ✅ moved to firmProfileId
+      contactEmail: profile?.firmProfileId?.contactInfo?.email ?? '',
+      phoneNumber: profile?.firmProfileId?.contactInfo?.phone ?? '',
+      website: profile?.firmProfileId?.contactInfo?.officialWebsite ?? '',
+      companySize: profile?.firmProfileId?.companySize ?? '',
+      description: profile?.firmProfileId?.description ?? '',
+      yearsInBusiness: profile?.firmProfileId?.yearsInBusiness ?? '',
+      companyLogo: profile?.firmProfileId?.logo ?? '', // firm logo
+      userProfileLogo: profile?.profilePicture ?? '', // user profile pic
+
       location: {
-        address: profile?.companyProfile?.location?.address ?? '',
+        address: profile?.firmProfileId?.contactInfo?.zipCode?.zipcode ?? '',
         hideFromProfile:
-          profile?.companyProfile?.location?.hideFromProfile ?? false,
-        locationReason: profile?.companyProfile?.location?.locationReason ?? '',
+          profile?.firmProfileId?.location?.hideFromProfile ?? false,
+        locationReason:
+          profile?.firmProfileId?.location?.locationReason ?? '',
         coordinates: {
-          lat: profile?.companyProfile?.location?.coordinates?.lat ?? 0,
-          lng: profile?.companyProfile?.location?.coordinates?.lng ?? 0,
+          lat: profile?.firmProfileId?.contactInfo?.zipCode?.lat ?? 0,
+          lng: profile?.firmProfileId?.contactInfo?.zipCode?.lng ?? 0,
         },
       },
     }),
     [profile]
   );
+
+
 
   const onSubmit = async (data) => {
     console.log('data', data);
@@ -124,32 +168,32 @@ export default function About() {
         ...rest
       } = data;
 
-      const companyInfo = {
-        companyName: rest.companyName,
-        contactEmail: rest.contactEmail,
-        phoneNumber: rest.phoneNumber,
-        website: rest.website,
-        companySize: rest.companySize,
-        description: rest.description,
-        yearsInBusiness: rest.yearsInBusiness,
-        location: {
-          address: rest.location.address,
-          hideFromProfile: rest.location.hideFromProfile,
-          locationReason: rest.location.locationReason,
-          coordinates: {
-            lat: rest.location?.coordinates?.lat,
-            lng: rest.location?.coordinates?.lng,
-          },
-        },
-        addressInfo: {
-          countryId: country.countryId,
-          zipcode: zipCode,
-          countryCode: country.code.toLowerCase(),
-          latitude: latitude?.toString() || '',
-          longitude: longitude?.toString() || '',
-          postalCode,
-        },
-      };
+      // const companyInfo = {
+      //   companyName: rest.companyName,
+      //   contactEmail: rest.contactEmail,
+      //   phoneNumber: rest.phoneNumber,
+      //   website: rest.website,
+      //   companySize: rest.companySize,
+      //   description: rest.description,
+      //   yearsInBusiness: rest.yearsInBusiness,
+      //   location: {
+      //     address: rest.location.address,
+      //     hideFromProfile: rest.location.hideFromProfile,
+      //     locationReason: rest.location.locationReason,
+      //     coordinates: {
+      //       lat: rest.location?.coordinates?.lat,
+      //       lng: rest.location?.coordinates?.lng,
+      //     },
+      //   },
+      //   addressInfo: {
+      //     countryId: country.countryId,
+      //     zipcode: zipCode,
+      //     countryCode: country.code.toLowerCase(),
+      //     latitude: latitude?.toString() || '',
+      //     longitude: longitude?.toString() || '',
+      //     postalCode,
+      //   },
+      // };
 
       const payload = {
         userProfile: {
@@ -164,7 +208,7 @@ export default function About() {
           bio,
           lawyerContactEmail,
         },
-        companyInfo: showCompanyProfile ? companyInfo : null,
+        // companyInfo: showCompanyProfile ? companyInfo : null,
       };
 
       console.log('payload', payload);
@@ -310,19 +354,12 @@ export default function About() {
           /> */}
           <SimpleEditor name="bio" />
         </div>
-        <div className="flex items-center gap-2 mb-4 cursor-pointer">
-          <input
-            type="checkbox"
-            id="showCompanyProfile"
-            checked={showCompanyProfile}
-            onChange={(e) => setShowCompanyProfile(e.target.checked)}
-          />
-          <label htmlFor="showCompanyProfile" className="text-sm">
-            Add company information
-          </label>
-        </div>
 
-        {showCompanyProfile && (
+
+        {
+
+
+          profile?.firmProfileId &&
           <>
             <div className="border-t border-white" />
             <CompanyProfile />
@@ -336,7 +373,9 @@ export default function About() {
             <div className="border-t border-white" />
             <CompanyAbout />
           </>
-        )}
+        }
+
+
 
         <div className="border-t border-white" />
         {/* Footer Buttons */}

@@ -19,7 +19,7 @@ export default function CompanyProfile() {
 
       <div className="flex flex-col md:flex-row justify-between items-start gap-6 mt-8">
         <div className="w-full md:w-1/2">
-          <AvatarUploader name="companyLogo" />
+          <AvatarUploader name="companyLogo"  disabled />
         </div>
 
         <div className="w-full md:w-1/2 flex flex-col gap-4">
@@ -28,12 +28,14 @@ export default function CompanyProfile() {
             label="Name"
             placeholder="Enter Your Company Name"
             textColor="text-[#4b4949]"
+            disabled
           />
           <TextInput
             name="contactEmail"
             label="Email Address"
             placeholder="example@example.com"
             textColor="text-[#4b4949]"
+            disabled
           />
         </div>
       </div>
@@ -44,12 +46,14 @@ export default function CompanyProfile() {
           label="Phone Number"
           placeholder="XXXXXXX"
           textColor="text-[#4b4949]"
+          disabled
         />
         <TextInput
           name="website"
           label="Website"
           placeholder="Company Website"
           textColor="text-[#4b4949]"
+          disabled
         />
       </div>
     </div>

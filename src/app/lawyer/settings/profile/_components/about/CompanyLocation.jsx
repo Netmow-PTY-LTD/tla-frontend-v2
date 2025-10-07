@@ -161,6 +161,7 @@ export default function CompanyLocation({
             placeholder="Enter the company address"
             textColor="text-[#4b4949]"
             id="address-input"
+            disabled
           />
 
           <div className="flex items-center justify-start space-x-3 pt-4">
@@ -169,6 +170,7 @@ export default function CompanyLocation({
               name="location.hideFromProfile"
               id="hideFromProfile"
               className="mt-1 h-4 w-4 text-[#00C3C0] border-gray-300 rounded focus:ring-[#00C3C0]"
+              disabled
             />
             <AlertCircle className="w-4 h-4 text-gray-500 cursor-pointer" />
           </div>
@@ -180,6 +182,7 @@ export default function CompanyLocation({
               options={options}
               placeholder="Select a reason"
               textColor="text-[#4b4949]"
+              disabled
             />
           </div>
         </div>
