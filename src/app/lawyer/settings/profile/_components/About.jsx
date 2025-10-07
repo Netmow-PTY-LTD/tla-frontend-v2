@@ -1,10 +1,8 @@
 'use client';
 
-import React, { use, useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import CompanyProfile from './about/CompanyProfile';
 import PersonalProfile from './about/PersonalProfile';
-import CompanyContactDetails from './about/CompanyContactDetails';
-import CompanyLocation from './about/CompanyLocation';
 import CompanyAbout from './about/CompanyAbout';
 import {
   useAuthUserInfoQuery,
@@ -15,35 +13,20 @@ import AboutFormActions from './about/AboutFormAction';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { lawyerSettingAboutSchema } from '@/schema/dashboard/lawyerSettings';
 import TextInput from '@/components/form/TextInput';
-import TextareaInput from '@/components/form/TextArea';
 import { Loader } from 'lucide-react';
 import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor';
-import { Button } from '@/components/ui/button';
 import ChangePassword from '@/app/client/_components/ChangePassword';
-import { Label } from '@/components/ui/label';
-import { useFormContext, useWatch } from 'react-hook-form';
 import GenderRadioField from '@/components/form/GenderRadioField';
 import MultiTagSelector from './MultiTagSelector';
-import country from '@/data/au.json';
 import AddressCombobox from '@/app/client/_components/profile/AddressCombobox';
 import ChangeEmail from '@/app/client/_components/ChangeEmail';
+import CompanyLocation from './about/CompanyLocation';
 
-const genderOptions = [
-  { id: 1, label: 'Male', value: 'male' },
-  { id: 2, label: 'Female', value: 'female' },
-  { id: 3, label: 'Other', value: 'other' },
-];
+
 
 export default function About() {
-  const [zipCode, setZipCode] = useState(null);
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
-  const [postalCode, setPostalCode] = useState('');
-
   const [open, setOpen] = useState(false);
   const [openEmail, setOpenEmail] = useState(false);
-  const [showCompanyProfile, setShowCompanyProfile] = useState(false);
-
   const {
     data: userInfo,
     isLoading,
@@ -54,23 +37,19 @@ export default function About() {
     refetchOnMountOrArgChange: true, // keep data fresh
   });
 
-  console.log('userInfo', userInfo);
+
 
   const [updateUserData, { isLoading: userIsLoading }] =
     useUpdateUserDataMutation();
   const profile = userInfo?.data?.profile;
 
-  useEffect(() => {
-    if (profile?.companyProfile) {
-      setShowCompanyProfile(!!profile?.companyProfile);
-    }
-  }, [profile?.companyProfile]);
 
-  console.log('showCompanyProfile', showCompanyProfile);
+
+
 
   const defaultValues = useMemo(
     () => ({
-      companyName: profile?.companyProfile?.companyName ?? '',
+      companyName: profile?.firmProfileId?.firmName ?? '',
       name: profile?.name ?? '',
       designation: profile?.designation ?? '',
       languages: profile?.languages ?? [],
@@ -82,27 +61,30 @@ export default function About() {
         profile?.practising_certificate_number ?? '',
       bio: profile?.bio ?? '',
       lawyerContactEmail: profile?.lawyerContactEmail ?? '',
-      contactEmail: profile?.companyProfile?.contactEmail ?? '',
-      phoneNumber: profile?.companyProfile?.phoneNumber ?? '',
-      website: profile?.companyProfile?.website ?? '',
-      companySize: profile?.companyProfile?.companySize ?? '',
-      description: profile?.companyProfile?.description ?? '',
-      yearsInBusiness: profile?.companyProfile?.yearsInBusiness ?? '',
-      companyLogo: profile?.companyProfile?.logoUrl ?? '', // URL string
-      userProfileLogo: profile?.profilePicture ?? '', // URL string
-      location: {
-        address: profile?.companyProfile?.location?.address ?? '',
-        hideFromProfile:
-          profile?.companyProfile?.location?.hideFromProfile ?? false,
-        locationReason: profile?.companyProfile?.location?.locationReason ?? '',
-        coordinates: {
-          lat: profile?.companyProfile?.location?.coordinates?.lat ?? 0,
-          lng: profile?.companyProfile?.location?.coordinates?.lng ?? 0,
-        },
-      },
+
+      // ✅ moved to firmProfileId
+      contactEmail: profile?.firmProfileId?.contactInfo?.email ?? '',
+      phoneNumber: profile?.firmProfileId?.contactInfo?.phone ?? '',
+      website: profile?.firmProfileId?.contactInfo?.officialWebsite ?? '',
+      companySize: profile?.firmProfileId?.companySize ?? '',
+      description: profile?.firmProfileId?.description ?? '',
+      yearsInBusiness: profile?.firmProfileId?.yearsInBusiness ?? '',
+      companyLogo: profile?.firmProfileId?.logo ?? '', // firm logo
+      userProfileLogo: profile?.profilePicture ?? '', // user profile pic
+
+      companyAddress: profile?.firmProfileId?.contactInfo?.zipCode
+        ? {
+          value: profile.firmProfileId.contactInfo.zipCode._id,
+          label: profile.firmProfileId.contactInfo.zipCode.zipcode,
+        }
+        : null,
+
+
     }),
     [profile]
   );
+
+
 
   const onSubmit = async (data) => {
     console.log('data', data);
@@ -124,32 +106,6 @@ export default function About() {
         ...rest
       } = data;
 
-      const companyInfo = {
-        companyName: rest.companyName,
-        contactEmail: rest.contactEmail,
-        phoneNumber: rest.phoneNumber,
-        website: rest.website,
-        companySize: rest.companySize,
-        description: rest.description,
-        yearsInBusiness: rest.yearsInBusiness,
-        location: {
-          address: rest.location.address,
-          hideFromProfile: rest.location.hideFromProfile,
-          locationReason: rest.location.locationReason,
-          coordinates: {
-            lat: rest.location?.coordinates?.lat,
-            lng: rest.location?.coordinates?.lng,
-          },
-        },
-        addressInfo: {
-          countryId: country.countryId,
-          zipcode: zipCode,
-          countryCode: country.code.toLowerCase(),
-          latitude: latitude?.toString() || '',
-          longitude: longitude?.toString() || '',
-          postalCode,
-        },
-      };
 
       const payload = {
         userProfile: {
@@ -164,10 +120,10 @@ export default function About() {
           bio,
           lawyerContactEmail,
         },
-        companyInfo: showCompanyProfile ? companyInfo : null,
+
       };
 
-      console.log('payload', payload);
+  
 
       // Append serialized JSON data
       formData.append('data', JSON.stringify(payload));
@@ -271,12 +227,7 @@ export default function About() {
               placeholder="+8801XXXXXXX"
               textColor="text-[#4b4949]"
             />
-            {/* <TextInput
-              label="Address"
-              name="address"
-              placeholder="Enter your personal address"
-              textColor="text-[#4b4949]"
-            /> */}
+
             <AddressCombobox />
             <TextInput
               label="Contact Email"
@@ -303,40 +254,24 @@ export default function About() {
           <label className="text-black label-text mb-3 inline-block">
             About You
           </label>
-          {/* <TextareaInput
-            label="About You"
-            name="bio"
-            placeholder="Tell us about your experience, what makes you stand out, or how you help your clients."
-          /> */}
+
           <SimpleEditor name="bio" />
         </div>
-        <div className="flex items-center gap-2 mb-4 cursor-pointer">
-          <input
-            type="checkbox"
-            id="showCompanyProfile"
-            checked={showCompanyProfile}
-            onChange={(e) => setShowCompanyProfile(e.target.checked)}
-          />
-          <label htmlFor="showCompanyProfile" className="text-sm">
-            Add company information
-          </label>
-        </div>
 
-        {showCompanyProfile && (
+
+        {
+
+
+          profile?.firmProfileId &&
           <>
             <div className="border-t border-white" />
             <CompanyProfile />
             <div className="border-t border-white" />
-            <CompanyLocation
-              setZipCode={setZipCode}
-              setLatitude={setLatitude}
-              setLongitude={setLongitude}
-              setPostalCode={setPostalCode}
-            />
+            <CompanyLocation companyInfo={profile?.firmProfileId} />
             <div className="border-t border-white" />
             <CompanyAbout />
           </>
-        )}
+        }
 
         <div className="border-t border-white" />
         {/* Footer Buttons */}
