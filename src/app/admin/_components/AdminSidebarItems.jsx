@@ -38,12 +38,6 @@ export const AdminSidebarItems = {
       isActive: true,
     },
     {
-      title: 'Claim Account Requests',
-      url: '/admin/claim-account-requests',
-      icon: CircleAlert,
-      isActive: true,
-    },
-    {
       title: 'Countries',
       url: '/admin/country/list',
       icon: Earth,
@@ -202,7 +196,12 @@ export const AdminSidebarItems = {
       icon: ArrowLeftRight, // Set size if needed
       isActive: true,
     },
-
+    {
+      title: 'Claim Account Requests',
+      url: '/admin/claim-account-requests',
+      icon: CircleAlert,
+      isActive: true,
+    },
     {
       title: 'Users',
       url: '#',
