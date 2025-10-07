@@ -36,7 +36,13 @@ import { Check, ChevronDown, Eye, EyeOff, Loader } from 'lucide-react';
 import countries from '@/data/countries.json';
 import { safeJsonParse } from '@/helpers/safeJsonParse';
 import Cookies from 'js-cookie';
-import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions } from '@headlessui/react';
+import {
+  Combobox,
+  ComboboxButton,
+  ComboboxInput,
+  ComboboxOption,
+  ComboboxOptions,
+} from '@headlessui/react';
 import { useGetCompanyListQuery } from '@/store/features/public/publicApiService';
 import { cn } from '@/lib/utils';
 
@@ -62,11 +68,15 @@ export default function RegisterStepThree() {
     registration.companyInfo;
 
   const [localCompanySize, setLocalCompanySize] = useState(companySize || '');
-  const [isCompany, setIsCompany] = useState(companyTeam || false);
+  const [isCompany, setIsCompany] = useState(false);
 
   const lawyerServiceMap = useSelector(
     (state) => state.lawyerRegistration.lawyerServiceMap
   );
+
+  // useEffect(() => {
+  //   setIsCompany(companyTeam); // This will always be false initially unless updated
+  // }, [companyTeam]);
 
   //console.log('lawyerServiceMap in step 3', lawyerServiceMap);
 
@@ -86,7 +96,6 @@ export default function RegisterStepThree() {
     search: query || '',
   };
 
-
   const { data: allCompanies, isLoading: isCompanyLoading } =
     useGetCompanyListQuery(paramsPayload, {
       skip: !defaultCountry?.countryId,
@@ -98,7 +107,7 @@ export default function RegisterStepThree() {
       email,
       phone: profile?.phone,
       soloPractitioner: registration.lawyerServiceMap.isSoloPractitioner,
-      companyTeam,
+      companyTeam: companyTeam,
       company_name: companyName,
       company_website: website,
       company_size: companySize,
@@ -115,6 +124,24 @@ export default function RegisterStepThree() {
       form.reset(); // clears the form
     }
   }, [defaultCountry]);
+
+  useEffect(() => {
+    dispatch(
+      updateNestedField({
+        section: 'lawyerServiceMap',
+        field: 'isSoloPractitioner',
+        value: false,
+      })
+    );
+
+    dispatch(
+      updateNestedField({
+        section: 'companyInfo',
+        field: 'companyTeam',
+        value: false,
+      })
+    );
+  }, []);
 
   // useEffect(() => {
   //   // Sync redux data to local form
@@ -143,6 +170,13 @@ export default function RegisterStepThree() {
   //   profile.law_society_member_number,
   //   profile.practising_certificate_number,
   // ]);
+
+  console.log('companyTeam from Redux:', companyTeam);
+  console.log(
+    'soloPractitioner from Redux:',
+    registration.lawyerServiceMap.isSoloPractitioner
+  );
+  console.log('Default values passed to form:', form.getValues());
 
   const handleGenderChange = (value) => {
     dispatch(updateNestedField({ section: 'profile', field: 'gender', value })); // Update Redux
@@ -409,10 +443,11 @@ export default function RegisterStepThree() {
                       />
                       <div
                         className={`w-4 h-4 rounded-full border-2 border-[var(--primary-color)] flex items-center justify-center transition-all
-            ${gender === option.value
-                            ? 'bg-[var(--primary-color)]'
-                            : 'bg-transparent'
-                          }`}
+            ${
+              gender === option.value
+                ? 'bg-[var(--primary-color)]'
+                : 'bg-transparent'
+            }`}
                       >
                         <div
                           className={`w-1.5 h-1.5 rounded-full transition
@@ -428,172 +463,205 @@ export default function RegisterStepThree() {
               </div>
 
               {/* Solo Practitioner */}
-              <FormField
-                control={form.control}
-                name="soloPractitioner"
-                render={({ field }) => (
-                  <FormItem className="flex items-center cursor-pointer">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={(checked) => {
-                          field.onChange(checked);
-                          dispatch(
-                            updateNestedField({
-                              section: 'lawyerServiceMap',
-                              field: 'isSoloPractitioner',
-                              value: checked,
-                            })
-                          );
-                        }}
-                      />
-                    </FormControl>
-                    <FormLabel
-                      className="ml-2 font-bold mt-0 cursor-pointer"
-                      style={{ marginTop: '0 !important' }}
-                    >
-                      I will work as solo practitioner
-                    </FormLabel>
-                  </FormItem>
-                )}
-              />
+              <div className="flex items-center mt-6">
+                <Label className="w-1/6">Work Type</Label>
+                <FormField
+                  control={form.control}
+                  name="soloPractitioner"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormControl>
+                        <div className="flex gap-4">
+                          {[
+                            {
+                              label: 'I will work as solo practitioner',
+                              value: true,
+                            },
+                            {
+                              label: 'I work with a company/team',
+                              value: false,
+                            },
+                          ].map((option) => (
+                            <label
+                              key={option.value.toString()}
+                              htmlFor={`solo-${option.value}`}
+                              className="flex items-center gap-2 cursor-pointer group"
+                            >
+                              <input
+                                type="radio"
+                                id={`solo-${option.value}`}
+                                name="soloPractitioner"
+                                value={option.value.toString()}
+                                checked={
+                                  (field.value ?? false) === option.value
+                                }
+                                onChange={() => {
+                                  field.onChange(option.value);
+                                  form.setValue('companyTeam', !option.value);
 
-              {/* Company/Team Checkbox */}
-              <FormField
-                control={form.control}
-                name="companyTeam"
-                render={({ field }) => (
-                  <FormItem className="flex items-center">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={(checked) => {
-                          field.onChange(checked);
-                          setIsCompany(checked);
-                          dispatch(
-                            updateNestedField({
-                              section: 'companyInfo',
-                              field: 'companyTeam',
-                              value: checked,
-                            })
-                          );
+                                  dispatch(
+                                    updateNestedField({
+                                      section: 'lawyerServiceMap',
+                                      field: 'isSoloPractitioner',
+                                      value: option.value,
+                                    })
+                                  );
 
-                          if (!checked) {
-                            dispatch(
-                              updateNestedField({
-                                section: 'companyInfo',
-                                field: 'companyName',
-                                value: '',
-                              })
-                            );
-                            dispatch(
-                              updateNestedField({
-                                section: 'companyInfo',
-                                field: 'website',
-                                value: '',
-                              })
-                            );
-                            dispatch(
-                              updateNestedField({
-                                section: 'companyInfo',
-                                field: 'companySize',
-                                value: '',
-                              })
-                            );
-                          }
-                        }}
-                      />
-                    </FormControl>
-                    <FormLabel className="ml-2 font-bold cursor-pointer">
-                      I work with a company/team
-                    </FormLabel>
-                  </FormItem>
-                )}
-              />
+                                  dispatch(
+                                    updateNestedField({
+                                      section: 'companyInfo',
+                                      field: 'companyTeam',
+                                      value: !option.value,
+                                    })
+                                  );
+
+                                  if (option.value === true) {
+                                    setIsCompany(false);
+                                    dispatch(
+                                      updateNestedField({
+                                        section: 'companyInfo',
+                                        field: 'companyName',
+                                        value: '',
+                                      })
+                                    );
+                                    dispatch(
+                                      updateNestedField({
+                                        section: 'companyInfo',
+                                        field: 'website',
+                                        value: '',
+                                      })
+                                    );
+                                    dispatch(
+                                      updateNestedField({
+                                        section: 'companyInfo',
+                                        field: 'companySize',
+                                        value: '',
+                                      })
+                                    );
+                                  } else {
+                                    setIsCompany(true);
+                                  }
+                                }}
+                                className="sr-only"
+                              />
+
+                              <div
+                                className={`w-4 h-4 rounded-full border-2 border-[var(--primary-color)] flex items-center justify-center transition-all ${
+                                  field.value === option.value
+                                    ? 'bg-[var(--primary-color)]'
+                                    : 'bg-transparent'
+                                }`}
+                              >
+                                <div
+                                  className={`w-1.5 h-1.5 rounded-full transition ${
+                                    field.value === option.value
+                                      ? 'bg-white'
+                                      : 'bg-transparent'
+                                  }`}
+                                />
+                              </div>
+                              <span className="text-sm text-gray-800">
+                                {option.label}
+                              </span>
+                            </label>
+                          ))}
+                        </div>
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               {/* Company Info Section */}
               {isCompany && (
                 <>
-
                   <FormField
                     control={form.control}
                     name="company_name"
                     render={({ field }) => {
                       console.log('company_name field', field);
-                      return(
-                      <FormItem>
-                        <FormLabel>Select Company</FormLabel>
-                        <Combobox
-                          value={field.value}
-                          onChange={(val) => {
-                            field.onChange(val);
-                            const selectedCompany = allCompanies?.data?.find((c) => c._id === val);
+                      return (
+                        <FormItem>
+                          <FormLabel>Select Company</FormLabel>
+                          <Combobox
+                            value={field.value}
+                            onChange={(val) => {
+                              field.onChange(val);
+                              const selectedCompany = allCompanies?.data?.find(
+                                (c) => c._id === val
+                              );
 
-
-                            dispatch(
-                              updateNestedField({
-                                section: 'companyInfo',
-                                field: 'companyName',
-                                value: val,
-                              })
-                            );
-                          }}
-                        >
-                          <div className="relative">
-                            <ComboboxInput
-                              className="tla-form-control w-full"
-                              onChange={(event) => setQuery(event.target.value)}
-                              displayValue={(val) =>
-                                allCompanies?.data?.find((c) => c._id === val)?.firmName || ''
-                              }
-                              placeholder="Select a Company"
-                            />
-                            <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
-                              <ChevronDown className="h-4 w-4 text-gray-500" />
-                            </ComboboxButton>
-                            <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                              {allCompanies?.data?.length > 0 ? (
-                                allCompanies.data.slice(0, 10).map((company) => (
-                                  <ComboboxOption
-                                    key={company._id}
-                                    value={company._id}
-                                    className={({ active }) =>
-                                      cn(
-                                        'cursor-pointer select-none relative py-2 pl-10 pr-4',
-                                        active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'
-                                      )
-                                    }
-                                  >
-                                    {({ selected }) => (
-                                      <>
-                                        <span
-                                          className={cn('block truncate', {
-                                            'font-medium': selected,
-                                            'font-normal': !selected,
-                                          })}
-                                        >
-                                          {company.firmName}
-                                        </span>
-                                        {selected && (
-                                          <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
-                                            <Check className="h-4 w-4" />
-                                          </span>
+                              dispatch(
+                                updateNestedField({
+                                  section: 'companyInfo',
+                                  field: 'companyName',
+                                  value: val,
+                                })
+                              );
+                            }}
+                          >
+                            <div className="relative">
+                              <ComboboxInput
+                                className="tla-form-control w-full"
+                                onChange={(event) =>
+                                  setQuery(event.target.value)
+                                }
+                                displayValue={(val) =>
+                                  allCompanies?.data?.find((c) => c._id === val)
+                                    ?.firmName || ''
+                                }
+                                placeholder="Select a Company"
+                              />
+                              <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
+                                <ChevronDown className="h-4 w-4 text-gray-500" />
+                              </ComboboxButton>
+                              <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                {allCompanies?.data?.length > 0 ? (
+                                  allCompanies.data
+                                    .slice(0, 10)
+                                    .map((company) => (
+                                      <ComboboxOption
+                                        key={company._id}
+                                        value={company._id}
+                                        className={({ active }) =>
+                                          cn(
+                                            'cursor-pointer select-none relative py-2 pl-10 pr-4',
+                                            active
+                                              ? 'bg-blue-100 text-blue-900'
+                                              : 'text-gray-900'
+                                          )
+                                        }
+                                      >
+                                        {({ selected }) => (
+                                          <>
+                                            <span
+                                              className={cn('block truncate', {
+                                                'font-medium': selected,
+                                                'font-normal': !selected,
+                                              })}
+                                            >
+                                              {company.firmName}
+                                            </span>
+                                            {selected && (
+                                              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
+                                                <Check className="h-4 w-4" />
+                                              </span>
+                                            )}
+                                          </>
                                         )}
-                                      </>
-                                    )}
-                                  </ComboboxOption>
-                                ))
-                              ) : (
-                                <div className="relative cursor-default select-none py-2 px-4 text-gray-500">
-                                  No company found
-                                </div>
-                              )}
-                            </ComboboxOptions>
-                          </div>
-                        </Combobox>
-                        <FormMessage className="text-red-600" />
-                      </FormItem>
-                    )
+                                      </ComboboxOption>
+                                    ))
+                                ) : (
+                                  <div className="relative cursor-default select-none py-2 px-4 text-gray-500">
+                                    No company found
+                                  </div>
+                                )}
+                              </ComboboxOptions>
+                            </div>
+                          </Combobox>
+                          <FormMessage className="text-red-600" />
+                        </FormItem>
+                      );
                     }}
                   />
 

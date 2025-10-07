@@ -9,10 +9,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Edit, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { Edit, Eye, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useGetClaimsRequestsQuery } from '@/store/features/admin/generalApiService';
 import countries from '@/data/countries';
+import Link from 'next/link';
 
 export default function ClaimAccountRequests() {
   const [page, setPage] = React.useState(1);
@@ -30,14 +31,6 @@ export default function ClaimAccountRequests() {
   });
 
   console.log('claimsRequests', claimsRequests);
-
-  const countriesMap = React.useMemo(() => {
-    const map = {};
-    countries.forEach((country) => {
-      map[country.countryId] = country.name;
-    });
-    return map;
-  }, [countries]);
 
   const columns = [
     {
@@ -70,22 +63,6 @@ export default function ClaimAccountRequests() {
       ),
     },
     {
-      accessorKey: 'knownAdminEmails',
-      header: 'Known Admin Emails',
-      cell: ({ row }) => {
-        const emails = row.getValue('knownAdminEmails') || [];
-        return (
-          <div className="flex flex-col">
-            {Array.isArray(emails) ? (
-              emails.map((email, idx) => <span key={idx}>{email}</span>)
-            ) : (
-              <span>-</span>
-            )}
-          </div>
-        );
-      },
-    },
-    {
       accessorKey: 'claimerName',
       header: 'Claimer Name',
       cell: ({ row }) => <div className="">{row.getValue('claimerName')}</div>,
@@ -95,46 +72,37 @@ export default function ClaimAccountRequests() {
       header: 'Claimer Email',
       cell: ({ row }) => <div className="">{row.getValue('claimerEmail')}</div>,
     },
-    // {
-    //   id: 'actions',
-    //   header: 'Actions',
-    //   enableHiding: false,
-    //   cell: ({ row }) => {
-    //     const item = row.original;
-    //     return (
-    //       <DropdownMenu>
-    //         <DropdownMenuTrigger asChild>
-    //           <Button variant="ghost" className="h-8 w-8 p-0">
-    //             <span className="sr-only">Open menu</span>
-    //             <MoreHorizontal />
-    //           </Button>
-    //         </DropdownMenuTrigger>
-    //         <DropdownMenuContent align="end">
-    //           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-    //           <DropdownMenuSeparator />
-    //           <DropdownMenuItem>
-    //             <button
-    //               onClick={() => handleEditLicenseModalOpen(item?._id)}
-    //               className="flex gap-2"
-    //             >
-    //               <Pencil className="w-4 h-4" />
-    //               Edit
-    //             </button>
-    //           </DropdownMenuItem>
-    //           <DropdownMenuSeparator />
-    //           <DropdownMenuItem>
-    //             <div
-    //               className="flex gap-2 cursor-pointer"
-    //               onClick={() => setDeleteModalId(item?._id)}
-    //             >
-    //               <Trash2 className="w-4 h-4" /> Delete
-    //             </div>
-    //           </DropdownMenuItem>
-    //         </DropdownMenuContent>
-    //       </DropdownMenu>
-    //     );
-    //   },
-    // },
+    {
+      id: 'actions',
+      header: 'Actions',
+      enableHiding: false,
+      cell: ({ row }) => {
+        const item = row.original;
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link
+                  href={`/admin/claim-account-requests/${item?._id}`}
+                  className="flex items-center gap-2 p-2"
+                >
+                  <Eye className="w-4 h-4" />
+                  View Details
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
   ];
 
   return (
