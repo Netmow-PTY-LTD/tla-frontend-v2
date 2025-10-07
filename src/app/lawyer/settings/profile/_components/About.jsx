@@ -168,33 +168,7 @@ export default function About() {
         ...rest
       } = data;
 
-      // const companyInfo = {
-      //   companyName: rest.companyName,
-      //   contactEmail: rest.contactEmail,
-      //   phoneNumber: rest.phoneNumber,
-      //   website: rest.website,
-      //   companySize: rest.companySize,
-      //   description: rest.description,
-      //   yearsInBusiness: rest.yearsInBusiness,
-      //   location: {
-      //     address: rest.location.address,
-      //     hideFromProfile: rest.location.hideFromProfile,
-      //     locationReason: rest.location.locationReason,
-      //     coordinates: {
-      //       lat: rest.location?.coordinates?.lat,
-      //       lng: rest.location?.coordinates?.lng,
-      //     },
-      //   },
-      //   addressInfo: {
-      //     countryId: country.countryId,
-      //     zipcode: zipCode,
-      //     countryCode: country.code.toLowerCase(),
-      //     latitude: latitude?.toString() || '',
-      //     longitude: longitude?.toString() || '',
-      //     postalCode,
-      //   },
-      // };
-
+   
       const payload = {
         userProfile: {
           name,
@@ -208,7 +182,7 @@ export default function About() {
           bio,
           lawyerContactEmail,
         },
-        // companyInfo: showCompanyProfile ? companyInfo : null,
+    
       };
 
       console.log('payload', payload);
