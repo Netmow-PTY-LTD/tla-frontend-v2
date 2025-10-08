@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import CompanyProfile from './about/CompanyProfile';
+import CompanyProfile from './about/company/CompanyProfile';
 import PersonalProfile from './about/PersonalProfile';
-import CompanyAbout from './about/CompanyAbout';
+import CompanyAbout from './about/company/CompanyAbout';
 import {
   useAuthUserInfoQuery,
   useUpdateUserDataMutation,
@@ -20,7 +20,8 @@ import GenderRadioField from '@/components/form/GenderRadioField';
 import MultiTagSelector from './MultiTagSelector';
 import AddressCombobox from '@/app/client/_components/profile/AddressCombobox';
 import ChangeEmail from '@/app/client/_components/ChangeEmail';
-import CompanyLocation from './about/CompanyLocation';
+import CompanyLocation from './about/company/CompanyLocation';
+import Company from './about/company/Company';
 
 
 
@@ -123,7 +124,7 @@ export default function About() {
 
       };
 
-  
+
 
       // Append serialized JSON data
       formData.append('data', JSON.stringify(payload));
@@ -258,19 +259,12 @@ export default function About() {
           <SimpleEditor name="bio" />
         </div>
 
-
+        <div className="border-t border-white" />
         {
 
 
           profile?.firmProfileId &&
-          <>
-            <div className="border-t border-white" />
-            <CompanyProfile />
-            <div className="border-t border-white" />
-            <CompanyLocation companyInfo={profile?.firmProfileId} />
-            <div className="border-t border-white" />
-            <CompanyAbout />
-          </>
+          <Company companyInfo={profile?.firmProfileId} />
         }
 
         <div className="border-t border-white" />
