@@ -26,8 +26,7 @@ export default function Page() {
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState(null);
 
-  const { data: countryList, refetch } = useGetCountryListQuery();
-
+  const { data: countryList, refetch, isFetching } = useGetCountryListQuery();
 
   const [countryDelete] = useDeleteCountryMutation();
 
@@ -160,6 +159,7 @@ export default function Page() {
         data={countryList?.data || []}
         columns={columns}
         searchColumn={'name'}
+        isFetching={isFetching}
       />
     </>
   );
