@@ -132,6 +132,8 @@ export const baseApi = createApi({
     'pages',
     'eliteProSubscriptions',
     'claims',
+    'testimonial',
+    'testimonial-list'
   ],
   endpoints: () => ({}),
 });

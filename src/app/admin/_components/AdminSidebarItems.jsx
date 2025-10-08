@@ -249,5 +249,12 @@ export const AdminSidebarItems = {
       //   },
       // ],
     },
+    {
+      title: 'Testimonials',
+      url: '/admin/testimonials',
+      icon: Kanban,
+      isActive: true,
+    
+    },
   ],
 };
