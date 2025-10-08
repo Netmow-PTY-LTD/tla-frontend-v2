@@ -20,6 +20,7 @@ import {
 import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 import { showSuccessToast } from '@/components/common/toasts';
 import { DataTableWithPagination } from '../../_components/DataTableWithPagination';
+import { DataTable } from '@/components/common/DataTable';
 export default function ListOfPages() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pageId, setPageId] = useState(null);
@@ -48,7 +49,7 @@ export default function ListOfPages() {
     sort: 'desc',
   });
 
-  //console.log('pages', pages);
+  console.log('pages', pages);
 
   const [deletePage] = useDeletePageMutation();
 
@@ -158,20 +159,11 @@ export default function ListOfPages() {
         pageId={pageId}
         refetchPages={refetchPages}
       />
-      <DataTableWithPagination
-        data={pages?.data || []}
+
+      <DataTable
         columns={columns}
-        searchColumn={'title'}
-        pagination={pages?.pagination}
-        page={page}
-        limit={LIMIT}
-        totalPage={pages?.pagination?.totalPage}
-        total={pages?.pagination?.total}
-        onPageChange={setPage}
-        onSearch={(val) => {
-          setSearch(val);
-          setPage(1);
-        }}
+        data={pages?.data || []}
+        searchColumn="title"
         isFetching={isFetching}
       />
     </div>

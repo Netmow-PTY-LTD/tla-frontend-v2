@@ -84,6 +84,7 @@ export default function Page() {
     data: allCreditPackages,
     isLoading: isLoadingCreditPackages,
     refetch: refetchCreditPackages,
+    isFetching,
   } = useGetAllCreditPackagesQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
@@ -93,8 +94,6 @@ export default function Page() {
   const [addCreditPackage, { isLoading }] = useAddCreditPackageMutation();
 
   const handleSubmit = async (data) => {
-    
-
     const {
       name,
       credit,
@@ -117,7 +116,6 @@ export default function Page() {
       isActive: isActive ? true : false,
     };
 
-  
     try {
       const res = await addCreditPackage(payload).unwrap();
       // Optionally reset form or show success toast
@@ -262,6 +260,7 @@ export default function Page() {
               data={allCreditPackages?.data || []}
               columns={columns}
               searchColumn="name"
+              isFetching={isFetching}
             />
           </CardContent>
           <EditCreditPackageModal

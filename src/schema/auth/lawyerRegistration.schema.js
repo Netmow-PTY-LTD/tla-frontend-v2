@@ -44,8 +44,8 @@ export const lawyerRegistrationStepOneFormValidation = z.object({
 const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
 const defaultCountry = cookieCountry?.code;
 
-console.log('cookieCountry', cookieCountry);
-console.log('defaultCountry in lawyerschema', defaultCountry);
+// console.log('cookieCountry', cookieCountry);
+// console.log('defaultCountry in lawyerschema', defaultCountry);
 
 export const getLawyerRegistrationStepThreeFormValidation = (country) =>
   z

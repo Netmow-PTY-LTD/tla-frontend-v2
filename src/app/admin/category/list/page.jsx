@@ -24,7 +24,7 @@ export default function ServicesList() {
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState(null);
 
-  const { data: categoryList, refetch } = useAllCategoriesQuery();
+  const { data: categoryList, refetch, isFetching } = useAllCategoriesQuery();
   const [deleteCategory] = useDeleteCategoryMutation();
 
   const handleDeleteCategory = async (id) => {
@@ -127,6 +127,7 @@ export default function ServicesList() {
         data={categoryList?.data || []}
         columns={columns}
         searchColumn={'name'}
+        isFetching={isFetching}
       />
       <AddCategoryModal
         open={isModalOpen}

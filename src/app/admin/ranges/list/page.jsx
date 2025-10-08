@@ -59,7 +59,6 @@ export default function Page() {
   };
 
   const handleModalSuccess = () => {
- 
     // e.g. refetch zip codes
   };
 
@@ -189,6 +188,7 @@ export default function Page() {
         data={allRanges?.data || []}
         columns={columns}
         searchColumn="name"
+        isFetching={isFetching}
       />
     </>
   );

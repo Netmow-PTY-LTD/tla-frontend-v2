@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { Search, Download, Filter, Calendar } from 'lucide-react';
+import { Search, Download, Filter, Calendar, Loader } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useTransactionHistoryListQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
@@ -14,6 +14,7 @@ export const AllTransactionHistory = () => {
     data: transactionData,
     isError,
     isLoading,
+    isFetching,
   } = useTransactionHistoryListQuery({
     page,
     limit: 10,
@@ -122,63 +123,75 @@ export const AllTransactionHistory = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {transactions.map((tx) => (
-                <tr key={tx._id} className="hover:bg-gray-50">
-                  <td className="py-4 px-6 text-sm font-mono text-gray-800">
-                    {tx.transactionId}
-                  </td>
-                  <td className="py-4 px-6 text-sm text-gray-900 font-medium">
-                    {tx.userId?.profile?.name || '-'}
-                  </td>
-                  <td className="py-4 px-6 text-sm text-gray-900 font-medium">
-                    {tx.userId?.email || '-'}
-                  </td>
-                  <td className="py-4 px-6 text-sm text-gray-900 font-medium">
-                    {tx.creditPackageId?.name || '-'}
-                  </td>
-                  <td className="py-4 px-6 text-sm font-semibold text-green-600">
-                    +{tx.creditPackageId?.credit || 0}
-                  </td>
-                  <td className="py-4 px-6 text-sm text-gray-800">
-                    ${tx.amountPaid}{' '}
-                    <span className="text-gray-500">
-                      ({tx.currency.toUpperCase()})
-                    </span>
-                  </td>
-                  <td className="py-4 px-6 text-sm">
-                    <span
-                      className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
-                        tx.status === 'completed'
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-yellow-100 text-yellow-700'
-                      }`}
-                    >
-                      {tx.status}
-                    </span>
-                  </td>
-                  <td className="py-4 px-6 text-sm text-gray-600">
-                    {formatDate(tx.createdAt)}
+              {isFetching ? (
+                <tr>
+                  <td colSpan={8} className="py-4 px-6 text-center">
+                    <div className="flex justify-center items-center space-x-2">
+                      <Loader className="w-4 h-4 animate-spin" />
+                      <span>Loading...</span>
+                    </div>
                   </td>
                 </tr>
-              ))}
+              ) : transactions.length > 0 ? (
+                <>
+                  {transactions.map((tx) => (
+                    <tr key={tx._id} className="hover:bg-gray-50">
+                      <td className="py-4 px-6 text-sm font-mono text-gray-800">
+                        {tx.transactionId}
+                      </td>
+                      <td className="py-4 px-6 text-sm text-gray-900 font-medium">
+                        {tx.userId?.profile?.name || '-'}
+                      </td>
+                      <td className="py-4 px-6 text-sm text-gray-900 font-medium">
+                        {tx.userId?.email || '-'}
+                      </td>
+                      <td className="py-4 px-6 text-sm text-gray-900 font-medium">
+                        {tx.creditPackageId?.name || '-'}
+                      </td>
+                      <td className="py-4 px-6 text-sm font-semibold text-green-600">
+                        +{tx.creditPackageId?.credit || 0}
+                      </td>
+                      <td className="py-4 px-6 text-sm text-gray-800">
+                        ${tx.amountPaid}{' '}
+                        <span className="text-gray-500">
+                          ({tx.currency.toUpperCase()})
+                        </span>
+                      </td>
+                      <td className="py-4 px-6 text-sm">
+                        <span
+                          className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
+                            tx.status === 'completed'
+                              ? 'bg-green-100 text-green-700'
+                              : 'bg-yellow-100 text-yellow-700'
+                          }`}
+                        >
+                          {tx.status}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6 text-sm text-gray-600">
+                        {formatDate(tx.createdAt)}
+                      </td>
+                    </tr>
+                  ))}
+                </>
+              ) : (
+                <tr>
+                  <td colSpan={8} className="py-12 text-center">
+                    <div className="text-gray-400 mb-4">
+                      <Search className="h-12 w-12 mx-auto" />
+                    </div>
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">
+                      No Transactions Found
+                    </h3>
+                    <p className="text-gray-600">
+                      Try adjusting your search terms or filters.
+                    </p>
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
-
-        {/* Empty State */}
-        {transactions.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-gray-400 mb-4">
-              <Search className="h-12 w-12 mx-auto" />
-            </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No Transactions Found
-            </h3>
-            <p className="text-gray-600">
-              Try adjusting your search terms or filters.
-            </p>
-          </div>
-        )}
       </div>
 
       {/* Pagination Footer */}
