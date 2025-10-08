@@ -57,6 +57,12 @@ const SettingsLayout = ({ children }) => {
       icon: <Podcast className="w-4 h-4" />,
 
     },
+    {
+      label: ' Elite Pro',
+      href: '/lawyer/settings/elite-pro-subscription',
+      icon: <Podcast className="w-4 h-4" />,
+
+    },
   ];
 
   return (

@@ -15,7 +15,7 @@ const stripePromise = loadStripe(
 export default function MyCreditsPage() {
   const [subscriptionProgress, setSubscriptionProgress] = useState(0);
 
- 
+
 
   return (
     <div>
@@ -30,6 +30,7 @@ export default function MyCreditsPage() {
             </div>
           }
         >
+         
           <MySubscription setSubscriptionProgress={setSubscriptionProgress} />,
         </Suspense>
       </Elements>
