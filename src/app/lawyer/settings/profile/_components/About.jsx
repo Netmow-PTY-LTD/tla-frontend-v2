@@ -275,39 +275,6 @@ export default function About() {
 
         <div className="border-t border-white" />
 
-        {/* Conditional rendering for firmProfileId */}
-        {/* {
-          !profile?.firmProfileId ? (
-            <div className="mt-5">
-              <label className="text-black label-text mb-3 inline-block">
-                Add Company Profile
-              </label>
-              <div className="flex items-center gap-4">
-                <input
-                  type="checkbox"
-                  id="addCompanyProfile"
-                  onChange={(e) => setShowCompanyFields(e.target.checked)}
-                  className="form-checkbox h-5 w-5 text-[#00C3C0]"
-                />
-                <label htmlFor="addCompanyProfile" className="text-[#4b4949]">
-                  Check to add company details
-                </label>
-              </div>
-              {showCompanyFields && (
-                <CompanySelectField
-                  name="firmProfileId"
-                  allCompanies={allCompanies}
-                  label="Select Company"
-                />
-              )}
-            </div>
-          ) : profile.isFirmMemberRequest ? (<div>
-            <p className="text-black">You are requesting to be a member of a firm.</p>
-          </div>) : <Company companyInfo={profile?.firmProfileId} />
-
-
-        } */}
-
         <div className="mt-6">
           {profile.isFirmMemberRequest ? (
             <div className="rounded-xl bg-yellow-50 border border-yellow-200 p-4 text-sm text-yellow-800 mt-4">
