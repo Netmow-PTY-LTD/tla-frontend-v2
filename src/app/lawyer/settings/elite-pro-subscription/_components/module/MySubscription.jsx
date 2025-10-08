@@ -4,14 +4,14 @@ import React, { useEffect } from 'react';
 import { Loader } from 'lucide-react';
 import SubscriptionPurchase from '../UI/subscriptionPurchase';
 import { SubscriptionTransactionDetails } from '../UI/SubscriptionTransactionDetails';
-import { useGetAllSubscriptionsQuery } from '@/store/features/admin/subcriptionsApiService';
+import { useGetAllEliteProSubscriptionsQuery } from '@/store/features/admin/eliteProSubscriptionsApiService';
 
 const EliteProSubscription = ({ setSubscriptionProgress }) => {
   const {
     data: subscriptionData,
     isError,
     isLoading,
-  } = useGetAllSubscriptionsQuery();
+  } = useGetAllEliteProSubscriptionsQuery();
 
 
 
