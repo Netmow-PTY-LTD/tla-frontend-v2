@@ -26,9 +26,7 @@ export default function ServicesList() {
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState(null);
 
-  
-
-  const { data: serviceList, refetch } = useAllServicesQuery();
+  const { data: serviceList, refetch, isFetching } = useAllServicesQuery();
   const [deleteService] = useDeleteServiceMutation();
 
   const handleDeleteService = async (id) => {
@@ -142,6 +140,7 @@ export default function ServicesList() {
         data={serviceList?.data || []}
         columns={columns}
         searchColumn={'name'}
+        isFetching={isFetching}
       />
       <AddServiceModal
         open={isModalOpen}

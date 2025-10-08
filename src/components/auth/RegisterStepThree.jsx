@@ -25,12 +25,8 @@ import { showErrorToast, showSuccessToast } from '../common/toasts';
 import { verifyToken } from '@/utils/verifyToken';
 import { setUser } from '@/store/features/auth/authSlice';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  getLawyerRegistrationStepThreeFormValidation,
-  lawyerRegistrationStepThreeFormValidation,
-} from '@/schema/auth/lawyerRegistration.schema';
+import { getLawyerRegistrationStepThreeFormValidation } from '@/schema/auth/lawyerRegistration.schema';
 import Link from 'next/link';
-import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Label } from '../ui/label';
 import { Check, ChevronDown, Eye, EyeOff, Loader } from 'lucide-react';
 import countries from '@/data/countries.json';
