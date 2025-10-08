@@ -4,20 +4,20 @@ import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/UIComponents/Modal';
 import React, { useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
-import countries from '@/data/countries.json';
-import SelectInput from '@/components/form/SelectInput';
 import AvatarUploader from '@/components/UIComponents/AvaterUploader';
 
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { useGetSingleTestimonialQuery, useUpdateTestimonialMutation } from '@/store/features/testimonials/testimonialsService';
+import TextArea from '@/components/form/TextArea';
 
 const testimonialSchema = z.object({
-  country: z.string({ invalid_type_error: 'Country is required' }),
-  testimonialName: z
-    .string({ invalid_type_error: 'Testimonial Name is required' })
-    .min(1, { message: 'Testimonial Name is required' }),
-  type: z.string({ invalid_type_error: 'Type is required' }),
-  photo: z.any().optional(),
+  name: z
+    .string({ invalid_type_error: 'Name is required' })
+    .min(1, { message: 'Name is required' }),
+  comment: z
+    .string({ invalid_type_error: 'Comment is required' })
+    .min(1, { message: 'Comment is required' }),
+  image: z.any().optional(),
 });
 
 export default function EditTestimonialModal({
@@ -27,10 +27,9 @@ export default function EditTestimonialModal({
   refetchTestimonialData,
 }) {
   const [defaultValues, setDefaultValues] = useState({
-    country: '',
-    testimonialName: '',
-    type: '',
-    photo: null,
+    name: '',
+    comment: '',
+    image: null,
   });
 
   const formRef = useRef(null);
@@ -48,26 +47,14 @@ export default function EditTestimonialModal({
 
   const testimonial = testimonialData?.data;
 
-  //console.log('testimonial', testimonial);
-
-  // useEffect(() => {
-  //   if (testimonial) {
-  //     setDefaultValues({
-  //       country: testimonial.countryId,
-  //       testimonialName: testimonial.testimonialName,
-  //       type: testimonial.type,
-  //       photo: testimonial.photo || null,
-  //     });
-  //   }
-  // }, [testimonial]);
+ 
 
   useEffect(() => {
     if (testimonial) {
       const dv = {
-        country: testimonial.countryId ?? '',
-        testimonialName: testimonial.testimonialName ?? '',
-        type: testimonial.type ?? '',
-        photo: testimonial.photo ?? null,
+        name: testimonial.name ?? '',
+        comment: testimonial.comment ?? '',
+        image: testimonial.image ?? null,
       };
       setDefaultValues(dv);
 
@@ -85,19 +72,17 @@ export default function EditTestimonialModal({
       // if testimonial already loaded, reset to testimonial-derived defaults
       if (testimonial) {
         formRef.current?.reset({
-          country: testimonial.countryId ?? '',
-          testimonialName: testimonial.testimonialName ?? '',
-          type: testimonial.type ?? '',
-          photo: testimonial.photo ?? null,
+          name: testimonial.name ?? '',
+          comment: testimonial.comment ?? '',
+          image: testimonial.image ?? null,
         });
       } else {
         // testimonial not loaded yet (still fetching) -> clear or keep previous values as you prefer
         // I recommend clearing to avoid stale UI while fetching:
         formRef.current?.reset({
-          country: '',
-          testimonialName: '',
-          type: '',
-          photo: null,
+          name: '',
+          comment: '',
+          image: null,
         });
       }
     }
@@ -107,37 +92,24 @@ export default function EditTestimonialModal({
     useUpdateTestimonialMutation();
 
   const handleUpdateTestimonial = async (values) => {
-    const { country, testimonialName, type, photo } = values;
-
-    const payload = {
-      country,
-      testimonialName,
-      type,
-    };
-
-    console.log('payload', payload);
+    const { name, comment, image } = values;
 
     const formData = new FormData();
-    formData.append('data', JSON.stringify(payload));
+    formData.append('name', name);
+    formData.append('comment', comment);
 
-    if (photo instanceof File) {
-      formData.append('photo', photo);
+    if (image instanceof File) {
+      formData.append('image', image);
     }
 
     try {
-      const res = await updateTestimonial({
-        testimonialId,
-        body: formData,
-      }).unwrap();
-      console.log('res', res);
+      const res = await updateTestimonial({ id: testimonial.id, data: formData }).unwrap();
       if (res?.success) {
         showSuccessToast(res?.message || 'Testimonial updated successfully');
         refetchTestimonialData();
         setOpen(false);
       }
-      setOpen(false);
     } catch (error) {
-      console.log('error', error);
       showErrorToast(error?.data?.message || 'Failed to update testimonial');
     }
   };
@@ -147,10 +119,9 @@ export default function EditTestimonialModal({
       onOpenChange={(open) => {
         setOpen(open);
         setDefaultValues({
-          country: '',
-          testimonialName: '',
-          type: '',
-          photo: null,
+          name: '',
+          comment: '',
+          image: null,
         });
       }}
     >
@@ -164,35 +135,21 @@ export default function EditTestimonialModal({
         ref={formRef}
       >
         <div className="grid grid-cols-1 gap-5">
-          <SelectInput
-            name="country"
-            label="Country"
-            placeholder="select a country"
-            options={countries.map((country) => ({
-              value: country.countryId,
-              label: country.name,
-            }))}
-            disabled
-          />
           <TextInput
-            name="testimonialName"
+            name="name"
             label="Name"
-            placeholder="testimonial name"
+            placeholder="Input name here"
           />
-          <SelectInput
-            name="type"
-            label="Type"
-            placeholder="select a type"
-            options={[
-              { value: 'positive', label: 'Positive' },
-              { value: 'negative', label: 'Negative' },
-            ]}
+          <TextArea
+            name="comment"
+            label="Comment"
+            placeholder="Write your comment here"
           />
           <div className="flex flex-col gap-3">
-            <label htmlFor="photo" className="label-text">
+            <label htmlFor="image" className="label-text">
               Upload Photo
             </label>
-            <AvatarUploader name="photo" />
+            <AvatarUploader name="image" />
           </div>
         </div>
 
