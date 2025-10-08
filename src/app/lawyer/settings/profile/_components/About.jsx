@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import CompanyProfile from './about/CompanyProfile';
+import CompanyProfile from './about/company/CompanyProfile';
 import PersonalProfile from './about/PersonalProfile';
-import CompanyAbout from './about/CompanyAbout';
+import CompanyAbout from './about/company/CompanyAbout';
 import {
   useAuthUserInfoQuery,
   useUpdateUserDataMutation,
@@ -20,13 +20,16 @@ import GenderRadioField from '@/components/form/GenderRadioField';
 import MultiTagSelector from './MultiTagSelector';
 import AddressCombobox from '@/app/client/_components/profile/AddressCombobox';
 import ChangeEmail from '@/app/client/_components/ChangeEmail';
-import CompanyLocation from './about/CompanyLocation';
-
-
+import CompanyLocation from './about/company/CompanyLocation';
+import Company from './about/company/Company';
+import { useGetCompanyListQuery } from '@/store/features/public/publicApiService';
+import CompanySelectField from './about/company/CompanySelectField';
 
 export default function About() {
   const [open, setOpen] = useState(false);
   const [openEmail, setOpenEmail] = useState(false);
+  const [showCompanyFields, setShowCompanyFields] = useState(false);
+  const [query, setQuery] = useState('');
   const {
     data: userInfo,
     isLoading,
@@ -37,13 +40,9 @@ export default function About() {
     refetchOnMountOrArgChange: true, // keep data fresh
   });
 
-
-
   const [updateUserData, { isLoading: userIsLoading }] =
     useUpdateUserDataMutation();
   const profile = userInfo?.data?.profile;
-
-
 
 
 
@@ -85,6 +84,14 @@ export default function About() {
   );
 
 
+  const { data: allCompanies, isLoading: isCompanyLoading } =
+    useGetCompanyListQuery({
+      countryId: profile?.country ?? '',
+      search: query || '',
+    }, {
+      skip: !profile?.country,
+    });
+
 
   const onSubmit = async (data) => {
     console.log('data', data);
@@ -107,6 +114,11 @@ export default function About() {
       } = data;
 
 
+      const companyInfo = showCompanyFields ? {
+        firmProfileId: data.firmProfileId ?? '',
+      } : {};
+
+
       const payload = {
         userProfile: {
           name,
@@ -119,11 +131,14 @@ export default function About() {
           practising_certificate_number,
           bio,
           lawyerContactEmail,
+
         },
+        companyInfo: companyInfo || undefined,
 
       };
 
-  
+      console.log('Payload before sending:', payload);
+
 
       // Append serialized JSON data
       formData.append('data', JSON.stringify(payload));
@@ -258,20 +273,57 @@ export default function About() {
           <SimpleEditor name="bio" />
         </div>
 
+        <div className="border-t border-white" />
 
-        {
+        <div className="mt-6">
+          {profile.isFirmMemberRequest ? (
+            <div className="rounded-xl bg-yellow-50 border border-yellow-200 p-4 text-sm text-yellow-800 mt-4">
+              <p>
+                🕓 Your request to join a firm as a member is currently{" "}
+                <span className="font-medium text-yellow-900">pending approval</span>.
+              </p>
+            </div>
+          ) : !profile?.firmProfileId ? (
+            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+              <label className="block text-base font-medium text-gray-900 mb-3">
+                Add Company Profile
+              </label>
+
+              <div className="flex items-center gap-3 mb-4">
+                <input
+                  type="checkbox"
+                  id="addCompanyProfile"
+                  onChange={(e) => setShowCompanyFields(e.target.checked)}
+                  className="h-5 w-5 cursor-pointer accent-[#00C3C0]"
+                />
+                <label
+                  htmlFor="addCompanyProfile"
+                  className="cursor-pointer text-gray-700"
+                >
+                  Check to add company details
+                </label>
+              </div>
+
+              {showCompanyFields && (
+                <div className="mt-3">
+                  <CompanySelectField
+                    name="firmProfileId"
+                    allCompanies={allCompanies}
+                    label="Select Company"
+                  />
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="mt-4">
+              <Company companyInfo={profile?.firmProfileId} />
+            </div>
+          )}
+        </div>
 
 
-          profile?.firmProfileId &&
-          <>
-            <div className="border-t border-white" />
-            <CompanyProfile />
-            <div className="border-t border-white" />
-            <CompanyLocation companyInfo={profile?.firmProfileId} />
-            <div className="border-t border-white" />
-            <CompanyAbout />
-          </>
-        }
+
+
 
         <div className="border-t border-white" />
         {/* Footer Buttons */}
