@@ -13,14 +13,6 @@ import {
 import { Edit, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import AddTestimonialModal from './_components/AddTestimonialModal';
 import EditTestimonialModal from './_components/EditTestimonialModal';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import countries from '@/data/countries';
 
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
@@ -31,7 +23,6 @@ export default function TestimonialManagement() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [testimonialId, setTestimonialId] = useState(null);
-  const [selectedCountry, setSelectedCountry] = useState(null);
   const [deleteModalId, setDeleteModalId] = useState(null);
 
   const [page, setPage] = useState(1);
@@ -39,20 +30,7 @@ export default function TestimonialManagement() {
 
   const limit = 10;
 
-  const handleCountryWiseTestimonialChange = (val) => {
-    setSelectedCountry(val);
-  };
 
-  useEffect(() => {
-    if (countries?.length > 0 && !selectedCountry) {
-      const defaultCountry = countries.find(
-        (c) => c.name.toLowerCase() === 'australia'
-      );
-      if (defaultCountry) {
-        setSelectedCountry(defaultCountry.countryId);
-      }
-    }
-  }, [countries, selectedCountry]);
 
   const {
     data: testimonialsData,
@@ -61,16 +39,14 @@ export default function TestimonialManagement() {
     isFetching,
   } = useGetAllTestimonialsQuery(
     {
-      countryId: selectedCountry,
-      type: '',
+  
       search,
       page,
       limit,
     },
-    { skip: !selectedCountry }
+    
   );
 
-  console.log('testimonialsData', testimonialsData);
 
   const handleEditTestimonialModalOpen = (id) => {
     setIsEditModalOpen(true);
