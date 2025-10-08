@@ -12,6 +12,7 @@ import {
 import {
   ArrowUpDown,
   ChevronDown,
+  Loader,
   MoreHorizontal,
   Pencil,
   Trash2,
@@ -138,7 +139,19 @@ export function DataTableWithPagination({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isFetching ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns?.length}
+                  className="h-24 text-center"
+                >
+                  <div className="flex justify-center items-center space-x-2">
+                    <Loader className="w-4 h-4 animate-spin" />
+                    <span>Loading...</span>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}

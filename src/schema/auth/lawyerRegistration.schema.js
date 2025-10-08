@@ -44,8 +44,8 @@ export const lawyerRegistrationStepOneFormValidation = z.object({
 const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
 const defaultCountry = cookieCountry?.code;
 
-console.log('cookieCountry', cookieCountry);
-console.log('defaultCountry in lawyerschema', defaultCountry);
+// console.log('cookieCountry', cookieCountry);
+// console.log('defaultCountry in lawyerschema', defaultCountry);
 
 export const getLawyerRegistrationStepThreeFormValidation = (country) =>
   z
@@ -74,45 +74,20 @@ export const getLawyerRegistrationStepThreeFormValidation = (country) =>
       practising_certificate_number: z.string().min(1, 'is Required'),
 
       soloPractitioner: z.boolean(),
-      // companyTeam: z.boolean(),
-      company_name: z.string().optional(),
-      // company_website: z.string().optional(),
-      // company_size: z.string().optional(),
+      company_name: z.string().optional(), // will be validated manually
+      company_website: z.string().optional(),
+      company_size: z.string().optional(),
+
       agreement: z.boolean().refine((val) => val === true, {
         message: 'is Required',
       }),
     })
     .superRefine((data, ctx) => {
-      if (data.companyTeam) {
+      if (!data.soloPractitioner) {
+        // ✅ Only require company_name
         if (!data.company_name || data.company_name.trim() === '') {
           ctx.addIssue({
             path: ['company_name'],
-            code: z.ZodIssueCode.custom,
-            message: 'is required',
-          });
-        }
-
-        if (!data.company_website || data.company_website.trim() === '') {
-          ctx.addIssue({
-            path: ['company_website'],
-            code: z.ZodIssueCode.custom,
-            message: 'is required',
-          });
-        } else {
-          // ✅ Validate the URL format
-          const urlPattern = /^https?:\/\/[^\s$.?#].[^\s]*$/;
-          if (!urlPattern.test(data.company_website)) {
-            ctx.addIssue({
-              path: ['company_website'],
-              code: z.ZodIssueCode.custom,
-              message: 'Company website must be a valid URL',
-            });
-          }
-        }
-
-        if (!data.company_size || data.company_size.trim() === '') {
-          ctx.addIssue({
-            path: ['company_size'],
             code: z.ZodIssueCode.custom,
             message: 'is required',
           });
