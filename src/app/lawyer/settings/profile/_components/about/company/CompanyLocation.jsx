@@ -2,7 +2,7 @@
 "use client";
 
 import React from "react";
-import ZipCodeComboboxMap from "./ZipCodeComboboxMap";
+import ZipCodeComboboxMap from "../ZipCodeComboboxMap";
 
 
 
