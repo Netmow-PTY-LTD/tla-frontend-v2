@@ -57,7 +57,11 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);
     }
+
   };
+
+
+
 
   return (
     <div>
@@ -72,28 +76,27 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
 
         <div className="mt-12">
           <div className="grid md:grid-cols-4 gap-6 items-start">
-            <div className="flex items-start space-x-4">
-              <p className="font-medium text-gray-900">{subscriptionPlan?.name}</p>
+            <div className="flex flex-col space-y-2">
+              <p className="font-medium text-gray-900 text-lg">{subscriptionPlan?.name}</p>
+              <p className="text-sm text-gray-600">{subscriptionPlan?.description}</p>
             </div>
 
             <div className="flex items-center space-x-2">
               <BrandIcon />
-              <p className="font-medium text-gray-900">
-                {subscriptionPlan?.duration} Months
+              <p className="font-medium text-gray-900 capitalize">
+                {subscriptionPlan?.billingCycle}
               </p>
             </div>
 
             <div>
-              <p className="font-medium text-gray-900">
-                $ {subscriptionPlan?.priceDisplay}{' '}
-                <span className="text-gray-500 text-sm font-normal">
-                  (ex GST)
-                </span>
+              <p className="font-medium text-gray-900 text-lg">
+                {subscriptionPlan?.priceFormatted}
               </p>
               <p className="text-gray-500 text-sm">
-                $ {subscriptionPlan?.pricePerMonth}/month
+                {subscriptionPlan?.price?.currency} {subscriptionPlan?.price?.amount}/month
               </p>
             </div>
+
             <div className="">
               <Button
                 variant="primary"
@@ -111,11 +114,20 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="w-full mt-6 ">
+          <div className="mt-6">
+            <h3 className="text-gray-900 font-medium text-md mb-2">Features:</h3>
+            <ul className="list-disc list-inside text-gray-700 text-sm">
+              {subscriptionPlan?.features?.map((feature, index) => (
+                <li key={index}>{feature}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="flex items-center justify-between mt-6">
+            <div className="w-full">
               <div className="flex items-center space-x-2 bg-[#f9f9fa] rounded-full">
                 <Image
-                  src="/assets/img/Subscriptions/guarantee.png"
+                  src="/assets/img/Credits/guarantee.png"
                   alt="Guarantee"
                   width={80}
                   height={80}
