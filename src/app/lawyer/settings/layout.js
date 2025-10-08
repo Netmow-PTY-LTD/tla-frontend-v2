@@ -8,6 +8,9 @@ import {
   SettingsIcon,
   CreditCardIcon,
   Bell,
+  Podcast,
+  CreditCard,
+  BanknoteArrowUp,
 } from 'lucide-react';
 import SettingsTabs from '@/components/dashboard/Settings/SettingTab';
 const SettingsLayout = ({ children }) => {
@@ -40,15 +43,34 @@ const SettingsLayout = ({ children }) => {
     //   icon: <SettingsIcon className="w-4 h-4" />,
     // },
     {
+      label: 'Card & Billing',
+      href: '/lawyer/settings/card-billing',
+      icon: <CreditCard className="w-4 h-4" />,
+    },
+    {
       label: 'Credits & Payments',
       href: '/lawyer/settings/credit-payment',
-      icon: <CreditCardIcon className="w-4 h-4" />,
+      icon: <BanknoteArrowUp className="w-4 h-4" />,
     },
+ 
     // {
     //   label: 'Notification',
     //   href: '/lawyer/settings/notifications',
     //   icon: <Bell className="w-4 h-4" />,
     // },
+
+    {
+      label: 'Subscription',
+      href: '/lawyer/settings/subscription',
+      icon: <Podcast className="w-4 h-4" />,
+
+    },
+    {
+      label: ' Elite Pro',
+      href: '/lawyer/settings/elite-pro-subscription',
+      icon: <Podcast className="w-4 h-4" />,
+
+    },
   ];
 
   return (
