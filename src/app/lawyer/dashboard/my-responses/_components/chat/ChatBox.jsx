@@ -170,7 +170,7 @@ export default function ChatBox({ response }) {
           </div>
         ) : liveMessages.length === 0 ? (
           <div className="text-center text-sm text-gray-500">
-            Currently there is no messages
+               There is no conversation yet. Say Hi! 👋
           </div>
         ) : (
           liveMessages.map((m, i) => {
