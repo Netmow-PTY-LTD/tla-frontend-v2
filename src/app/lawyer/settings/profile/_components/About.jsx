@@ -276,7 +276,7 @@ export default function About() {
         <div className="border-t border-white" />
 
         {/* Conditional rendering for firmProfileId */}
-        {
+        {/* {
           !profile?.firmProfileId ? (
             <div className="mt-5">
               <label className="text-black label-text mb-3 inline-block">
@@ -301,8 +301,62 @@ export default function About() {
                 />
               )}
             </div>
-          ) : <Company companyInfo={profile?.firmProfileId} />
-        }
+          ) : profile.isFirmMemberRequest ? (<div>
+            <p className="text-black">You are requesting to be a member of a firm.</p>
+          </div>) : <Company companyInfo={profile?.firmProfileId} />
+
+
+        } */}
+
+        <div className="mt-6">
+          {profile.isFirmMemberRequest ? (
+            <div className="rounded-xl bg-yellow-50 border border-yellow-200 p-4 text-sm text-yellow-800 mt-4">
+              <p>
+                🕓 Your request to join a firm as a member is currently{" "}
+                <span className="font-medium text-yellow-900">pending approval</span>.
+              </p>
+            </div>
+          ) : !profile?.firmProfileId ? (
+            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+              <label className="block text-base font-medium text-gray-900 mb-3">
+                Add Company Profile
+              </label>
+
+              <div className="flex items-center gap-3 mb-4">
+                <input
+                  type="checkbox"
+                  id="addCompanyProfile"
+                  onChange={(e) => setShowCompanyFields(e.target.checked)}
+                  className="h-5 w-5 cursor-pointer accent-[#00C3C0]"
+                />
+                <label
+                  htmlFor="addCompanyProfile"
+                  className="cursor-pointer text-gray-700"
+                >
+                  Check to add company details
+                </label>
+              </div>
+
+              {showCompanyFields && (
+                <div className="mt-3">
+                  <CompanySelectField
+                    name="firmProfileId"
+                    allCompanies={allCompanies}
+                    label="Select Company"
+                  />
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="mt-4">
+              <Company companyInfo={profile?.firmProfileId} />
+            </div>
+          )}
+        </div>
+
+
+
+
 
         <div className="border-t border-white" />
         {/* Footer Buttons */}
