@@ -22,12 +22,14 @@ import AddressCombobox from '@/app/client/_components/profile/AddressCombobox';
 import ChangeEmail from '@/app/client/_components/ChangeEmail';
 import CompanyLocation from './about/company/CompanyLocation';
 import Company from './about/company/Company';
-
-
+import { useGetCompanyListQuery } from '@/store/features/public/publicApiService';
+import CompanySelectField from './about/company/CompanySelectField';
 
 export default function About() {
   const [open, setOpen] = useState(false);
   const [openEmail, setOpenEmail] = useState(false);
+  const [showCompanyFields, setShowCompanyFields] = useState(false);
+  const [query, setQuery] = useState('');
   const {
     data: userInfo,
     isLoading,
@@ -38,13 +40,9 @@ export default function About() {
     refetchOnMountOrArgChange: true, // keep data fresh
   });
 
-
-
   const [updateUserData, { isLoading: userIsLoading }] =
     useUpdateUserDataMutation();
   const profile = userInfo?.data?.profile;
-
-
 
 
 
@@ -86,6 +84,14 @@ export default function About() {
   );
 
 
+  const { data: allCompanies, isLoading: isCompanyLoading } =
+    useGetCompanyListQuery({
+      countryId: profile?.country ?? '',
+      search: query || '',
+    }, {
+      skip: !profile?.country,
+    });
+
 
   const onSubmit = async (data) => {
     console.log('data', data);
@@ -108,6 +114,11 @@ export default function About() {
       } = data;
 
 
+      const companyInfo = showCompanyFields ? {
+        firmProfileId: data.firmProfileId ?? '',
+      } : {};
+
+
       const payload = {
         userProfile: {
           name,
@@ -120,10 +131,13 @@ export default function About() {
           practising_certificate_number,
           bio,
           lawyerContactEmail,
+
         },
+        companyInfo: companyInfo || undefined,
 
       };
 
+      console.log('Payload before sending:', payload);
 
 
       // Append serialized JSON data
@@ -260,11 +274,34 @@ export default function About() {
         </div>
 
         <div className="border-t border-white" />
+
+        {/* Conditional rendering for firmProfileId */}
         {
-
-
-          profile?.firmProfileId &&
-          <Company companyInfo={profile?.firmProfileId} />
+          !profile?.firmProfileId ? (
+            <div className="mt-5">
+              <label className="text-black label-text mb-3 inline-block">
+                Add Company Profile
+              </label>
+              <div className="flex items-center gap-4">
+                <input
+                  type="checkbox"
+                  id="addCompanyProfile"
+                  onChange={(e) => setShowCompanyFields(e.target.checked)}
+                  className="form-checkbox h-5 w-5 text-[#00C3C0]"
+                />
+                <label htmlFor="addCompanyProfile" className="text-[#4b4949]">
+                  Check to add company details
+                </label>
+              </div>
+              {showCompanyFields && (
+                <CompanySelectField
+                  name="firmProfileId"
+                  allCompanies={allCompanies}
+                  label="Select Company"
+                />
+              )}
+            </div>
+          ) : <Company companyInfo={profile?.firmProfileId} />
         }
 
         <div className="border-t border-white" />
