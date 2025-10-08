@@ -8,6 +8,7 @@ import {
   SettingsIcon,
   CreditCardIcon,
   Bell,
+  Podcast,
 } from 'lucide-react';
 import SettingsTabs from '@/components/dashboard/Settings/SettingTab';
 const SettingsLayout = ({ children }) => {
@@ -49,6 +50,13 @@ const SettingsLayout = ({ children }) => {
     //   href: '/lawyer/settings/notifications',
     //   icon: <Bell className="w-4 h-4" />,
     // },
+
+    {
+      label: 'Subscription',
+      href: '/lawyer/settings/subscription',
+      icon: <Podcast className="w-4 h-4" />,
+
+    },
   ];
 
   return (
