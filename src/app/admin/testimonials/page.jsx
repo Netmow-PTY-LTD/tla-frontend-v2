@@ -94,21 +94,28 @@ export default function TestimonialManagement() {
 
   const columns = [
     {
-      accessorKey: 'testimonialName',
+      accessorKey: 'name',
       header: 'Name',
       cell: ({ row }) => (
-        <div className="capitalize">{row.getValue('testimonialName')}</div>
+        <div className="capitalize">{row.getValue('name')}</div>
       ),
     },
     {
-      accessorKey: 'photo',
+      accessorKey: 'comment',
+      header: 'Comment',
+      cell: ({ row }) => (
+        <div className="text-sm text-gray-600">{row.getValue('comment')}</div>
+      ),
+    },
+    {
+      accessorKey: 'image',
       header: 'Photo',
       cell: ({ row }) => {
-        const photoUrl = row.getValue('photo');
+        const imageUrl = row.getValue('image');
 
-        return photoUrl ? (
+        return imageUrl ? (
           <img
-            src={photoUrl}
+            src={imageUrl}
             alt="Testimonial"
             className="w-10 h-10 rounded-full object-cover border border-gray-300"
           />
@@ -118,13 +125,6 @@ export default function TestimonialManagement() {
           </div>
         );
       },
-    },
-    {
-      accessorKey: 'type',
-      header: 'Type',
-      cell: ({ row }) => (
-        <div className="capitalize">{row.getValue('type')}</div>
-      ),
     },
     {
       id: 'actions',
@@ -171,35 +171,11 @@ export default function TestimonialManagement() {
     },
   ];
 
-  const filteredTestimonials = testimonialsData?.data?.filter(
-    (item) => item.countryId === selectedCountry
-  );
-
   return (
     <>
       <div className="mb-2">
         <h2 className="text-2xl font-bold mb-6">List of Testimonials</h2>
-        <div className="flex justify-between mb-4">
-          <div className="w-[300px]">
-            <Select
-              value={selectedCountry || ''}
-              onValueChange={handleCountryWiseTestimonialChange}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Show by Country" />
-              </SelectTrigger>
-              <SelectContent>
-                {countries?.map((country) => (
-                  <SelectItem
-                    key={country?.countryId}
-                    value={country?.countryId}
-                  >
-                    {country?.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+        <div className="flex justify-end mb-4">
           <Button onClick={() => setIsModalOpen(true)}>Add Testimonial</Button>
         </div>
       </div>
@@ -227,7 +203,7 @@ export default function TestimonialManagement() {
       />
       <DataTableWithPagination
         columns={columns}
-        data={filteredTestimonials || []}
+        data={testimonialsData?.data || []}
         pagination={testimonialsData?.pagination}
         page={page}
         limit={limit}

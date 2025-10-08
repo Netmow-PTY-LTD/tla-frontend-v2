@@ -103,7 +103,7 @@ export default function EditTestimonialModal({
     }
 
     try {
-      const res = await updateTestimonial({ id: testimonial.id, data: formData }).unwrap();
+      const res = await updateTestimonial({ id: testimonialId, data: formData }).unwrap();
       if (res?.success) {
         showSuccessToast(res?.message || 'Testimonial updated successfully');
         refetchTestimonialData();
