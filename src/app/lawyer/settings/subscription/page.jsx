@@ -1,35 +1,22 @@
 'use client';
 import { DynamicAccordion } from '@/components/UIComponents/AcordionComponent';
-import MyCredits from './_components/module/MyCredits';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import { Suspense, useState } from 'react';
 import { Loader } from 'lucide-react';
-import CreditSummary from './_components/module/CreditSummary';
+import MySubscription from './_components/module/MySubscription';
+
+
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
 
 export default function MyCreditsPage() {
-  const [mycreditsProgress,setMyCreditsProgress]=useState(0)
-  const [creditSummaryProgress,setCreditSummaryProgress]=useState(0)
-  const accordionItems = [
-    {
-      id: 'my-credits',
-      title: 'My Credits',
-      content: <MyCredits setMyCreditsProgress={setMyCreditsProgress} />,
-      progress: mycreditsProgress
-    },
-   
-    {
-      id: 'credit-summary',
-      title: 'Credit Summary',
-      content: <CreditSummary setCreditSummaryProgress={setCreditSummaryProgress} />,
-      progress: creditSummaryProgress
-    },
-    
-  ];
+  const [subscriptionProgress, setSubscriptionProgress] = useState(0);
+
+ 
+
   return (
     <div>
       <Elements stripe={stripePromise}>
@@ -43,7 +30,7 @@ export default function MyCreditsPage() {
             </div>
           }
         >
-          <DynamicAccordion items={accordionItems} />
+          <MySubscription setSubscriptionProgress={setSubscriptionProgress} />,
         </Suspense>
       </Elements>
     </div>

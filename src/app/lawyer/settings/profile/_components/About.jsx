@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import CompanyProfile from './about/CompanyProfile';
+import CompanyProfile from './about/company/CompanyProfile';
 import PersonalProfile from './about/PersonalProfile';
-import CompanyAbout from './about/CompanyAbout';
+import CompanyAbout from './about/company/CompanyAbout';
 import {
   useAuthUserInfoQuery,
   useUpdateUserDataMutation,
@@ -13,20 +13,27 @@ import AboutFormActions from './about/AboutFormAction';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { lawyerSettingAboutSchema } from '@/schema/dashboard/lawyerSettings';
 import TextInput from '@/components/form/TextInput';
-import { Loader } from 'lucide-react';
+import { AirVent, Loader } from 'lucide-react';
 import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor';
 import ChangePassword from '@/app/client/_components/ChangePassword';
 import GenderRadioField from '@/components/form/GenderRadioField';
 import MultiTagSelector from './MultiTagSelector';
 import AddressCombobox from '@/app/client/_components/profile/AddressCombobox';
 import ChangeEmail from '@/app/client/_components/ChangeEmail';
-import CompanyLocation from './about/CompanyLocation';
-
-
+import CompanyLocation from './about/company/CompanyLocation';
+import Company from './about/company/Company';
+import { useGetCompanyListQuery } from '@/store/features/public/publicApiService';
+import CompanySelectField from './about/company/CompanySelectField';
+import { Button } from '@/components/ui/button';
+import { useCancelLawyerMembershipMutation } from '@/store/features/lawyer/LeadsApiService';
+import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 
 export default function About() {
   const [open, setOpen] = useState(false);
   const [openEmail, setOpenEmail] = useState(false);
+  const [isOpenRew, setIsOpenRew] = useState(false);
+  const [showCompanyFields, setShowCompanyFields] = useState(false);
+  const [query, setQuery] = useState('');
   const {
     data: userInfo,
     isLoading,
@@ -37,15 +44,13 @@ export default function About() {
     refetchOnMountOrArgChange: true, // keep data fresh
   });
 
-
-
   const [updateUserData, { isLoading: userIsLoading }] =
     useUpdateUserDataMutation();
   const profile = userInfo?.data?.profile;
+  const [cancelLawyerMembership] = useCancelLawyerMembershipMutation();
 
 
-
-
+  console.log('profile', profile);
 
   const defaultValues = useMemo(
     () => ({
@@ -85,6 +90,14 @@ export default function About() {
   );
 
 
+  const { data: allCompanies, isLoading: isCompanyLoading } =
+    useGetCompanyListQuery({
+      countryId: profile?.country ?? '',
+      search: query || '',
+    }, {
+      skip: !profile?.country,
+    });
+
 
   const onSubmit = async (data) => {
     console.log('data', data);
@@ -107,6 +120,11 @@ export default function About() {
       } = data;
 
 
+      const companyInfo = showCompanyFields ? {
+        firmProfileId: data.firmProfileId ?? '',
+      } : {};
+
+
       const payload = {
         userProfile: {
           name,
@@ -119,11 +137,14 @@ export default function About() {
           practising_certificate_number,
           bio,
           lawyerContactEmail,
+
         },
+        companyInfo: companyInfo || undefined,
 
       };
 
-  
+
+
 
       // Append serialized JSON data
       formData.append('data', JSON.stringify(payload));
@@ -174,6 +195,28 @@ export default function About() {
       </div>
     );
   }
+
+
+
+  // Add a function to handle the cancel request logic
+  const handleCancelRequest = async (firmProfileId) => {
+    try {
+      // Assuming there's an API endpoint to cancel the request
+      const response = await cancelLawyerMembership({ firmProfileId }).unwrap();
+
+      if (response?.success) {
+        showSuccessToast(response?.message || 'Request cancelled successfully');
+        refetch(); // Refresh the data to reflect the changes
+      } else {
+        throw new Error(response?.message || 'Failed to cancel the request');
+      }
+    } catch (error) {
+      showErrorToast(error.message || 'An error occurred while cancelling the request');
+    }
+  };
+
+
+
   return (
     <div className="max-w-[900px] mx-auto">
       <FormWrapper
@@ -258,20 +301,69 @@ export default function About() {
           <SimpleEditor name="bio" />
         </div>
 
+        <div className="border-t border-white" />
 
-        {
+        <div className="mt-6">
+          {profile.isFirmMemberRequest ? (
+            <div className="rounded-xl bg-yellow-50 border border-yellow-200 p-6 text-sm text-yellow-800 mt-6 shadow-lg">
+              <div className="flex flex-col gap-4">
+                <h3 className="text-lg font-bold text-yellow-900">
+                  Firm Requested: {profile?.activeFirmRequestId?.firmProfileId?.firmName}
+                </h3>
+                <p className="flex items-center gap-2 text-base leading-relaxed">
+                  <span className="text-2xl">🕓</span>
+                  Your request to join this firm is currently
+                  <span className="font-medium">pending approval</span>.
+                </p>
+                <Button
+                  className="self-start bg-[#00C3C0] text-white px-5 py-2 text-sm font-medium rounded-md hover:bg-[#009a98] transition-all duration-300 shadow-md"
+                  onClick={() => setIsOpenRew(true)}
+                >
+                  Cancel Request
+                </Button>
+              </div>
+            </div>
+          ) : !profile?.firmProfileId ? (
+            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-md">
+              <label className="block text-lg font-semibold text-gray-900 mb-4">
+                Add Company Profile
+              </label>
+
+              <div className="flex items-center gap-3 mb-5">
+                <input
+                  type="checkbox"
+                  id="addCompanyProfile"
+                  onChange={(e) => setShowCompanyFields(e.target.checked)}
+                  className="h-5 w-5 cursor-pointer accent-[#00C3C0]"
+                />
+                <label
+                  htmlFor="addCompanyProfile"
+                  className="cursor-pointer text-gray-700 text-sm"
+                >
+                  Check to add company details
+                </label>
+              </div>
+
+              {showCompanyFields && (
+                <div className="mt-4">
+                  <CompanySelectField
+                    name="firmProfileId"
+                    allCompanies={allCompanies}
+                    label="Select Company"
+                  />
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="mt-6">
+              <Company companyInfo={profile?.firmProfileId} />
+            </div>
+          )}
+        </div>
 
 
-          profile?.firmProfileId &&
-          <>
-            <div className="border-t border-white" />
-            <CompanyProfile />
-            <div className="border-t border-white" />
-            <CompanyLocation companyInfo={profile?.firmProfileId} />
-            <div className="border-t border-white" />
-            <CompanyAbout />
-          </>
-        }
+
+
 
         <div className="border-t border-white" />
         {/* Footer Buttons */}
@@ -283,6 +375,15 @@ export default function About() {
       <>
         <ChangePassword setOpen={setOpen} open={open} />
         <ChangeEmail setOpen={setOpenEmail} open={openEmail} />
+
+        <ConfirmationModal
+          onConfirm={() =>
+           handleCancelRequest(profile?.activeFirmRequestId?.firmProfileId?._id)
+          }
+          open={isOpenRew}
+          onOpenChange={setIsOpenRew}
+          description="Are you sure you want to cancel your request to join this firm?"
+        />
       </>
     </div>
   );
