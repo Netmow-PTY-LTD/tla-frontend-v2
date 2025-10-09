@@ -24,6 +24,7 @@ import CompanyLocation from './about/company/CompanyLocation';
 import Company from './about/company/Company';
 import { useGetCompanyListQuery } from '@/store/features/public/publicApiService';
 import CompanySelectField from './about/company/CompanySelectField';
+import { Button } from '@/components/ui/button';
 
 export default function About() {
   const [open, setOpen] = useState(false);
@@ -189,6 +190,32 @@ export default function About() {
       </div>
     );
   }
+
+  // Add a function to handle the cancel request logic
+  const handleCancelRequest = async () => {
+    try {
+      // Assuming there's an API endpoint to cancel the request
+      const response = await fetch('/api/cancel-request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: profile?.id }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        showSuccessToast(result.message || 'Request cancelled successfully');
+        refetch(); // Refresh the data to reflect the changes
+      } else {
+        throw new Error(result.message || 'Failed to cancel the request');
+      }
+    } catch (error) {
+      showErrorToast(error.message || 'An error occurred while cancelling the request');
+    }
+  };
+
   return (
     <div className="max-w-[900px] mx-auto">
       <FormWrapper
@@ -277,11 +304,21 @@ export default function About() {
 
         <div className="mt-6">
           {profile.isFirmMemberRequest ? (
-            <div className="rounded-xl bg-yellow-50 border border-yellow-200 p-4 text-sm text-yellow-800 mt-4">
-              <p>
-                🕓 Your request to join a firm as a member is currently{" "}
-                <span className="font-medium text-yellow-900">pending approval</span>.
-              </p>
+            <div className="rounded-xl bg-yellow-50 border border-yellow-200 p-6 text-sm text-yellow-800 mt-6 shadow-md">
+              <div className="flex items-center justify-between">
+                <p className="flex items-center gap-2">
+                  <span className="text-lg">🕓</span>
+                  Your request to join a firm as a member is currently
+                  <span className="font-medium text-yellow-900">pending approval</span>.
+                </p>
+                <Button
+                 
+                  className="bg-[#00C3C0] text-white px-4 py-2 text-sm rounded-md hover:bg-[#009a98] transition-all duration-300"
+                  onClick={handleCancelRequest}
+                >
+                  Cancel Request
+                </Button>
+              </div>
             </div>
           ) : !profile?.firmProfileId ? (
             <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
