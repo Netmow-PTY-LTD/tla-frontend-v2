@@ -38,7 +38,7 @@ const ServiceCard = ({
     setServiceLocations(locations);
   }, [locations]);
 
-  console.log('serviceLocations', serviceLocations);
+  //console.log('serviceLocations', serviceLocations);
   useEffect(() => {
     if (!questions || questions.length === 0) return;
 

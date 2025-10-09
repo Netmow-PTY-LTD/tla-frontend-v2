@@ -9,9 +9,9 @@ export async function middleware(request) {
   const pathname = url.pathname;
 
   //console.log('cookieCountry', cookieCountry);
-  if (cookies) {
-    console.log('cookies', cookies.value);
-  }
+  // if (cookies) {
+  //   console.log('cookies', cookies.value);
+  // }
 
   // ✅ Redirect logged-in users away from /login or /register
   const publicAuthPages = ['/login', '/register'];
