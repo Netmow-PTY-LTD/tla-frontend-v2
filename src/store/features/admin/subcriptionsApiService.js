@@ -4,7 +4,7 @@ const subscriptionsApiService = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     addSubscription: builder.mutation({
       query: (body) => ({
-        url: '/subscriptions/add',
+        url: '/subscriptions-packages/add',
         method: 'POST',
         body,
       }),
@@ -12,7 +12,7 @@ const subscriptionsApiService = baseApi.injectEndpoints({
     }),
     getAllSubscriptions: builder.query({
       query: (params) => ({
-        url: '/subscriptions/list',
+        url: '/subscriptions-packages/list',
         method: 'GET',
         params,
       }),
@@ -20,14 +20,14 @@ const subscriptionsApiService = baseApi.injectEndpoints({
     }),
     getSubscriptionById: builder.query({
       query: (subscriptionId) => ({
-        url: `/subscriptions/${subscriptionId}`,
+        url: `/subscriptions-packages/${subscriptionId}`,
         method: 'GET',
       }),
       providesTags: ['subscriptions'],
     }),
     updateSubscription: builder.mutation({
       query: ({ subscriptionId, body }) => ({
-        url: `/subscriptions/${subscriptionId}/update`,
+        url: `/subscriptions-packages/${subscriptionId}/update`,
         method: 'PATCH',
         body,
       }),
@@ -35,7 +35,7 @@ const subscriptionsApiService = baseApi.injectEndpoints({
     }),
     deleteSubscription: builder.mutation({
       query: (subscriptionId) => ({
-        url: `/subscriptions/${subscriptionId}/delete`,
+        url: `/subscriptions-packages/${subscriptionId}/delete`,
         method: 'DELETE',
       }),
       invalidatesTags: ['subscriptions'],
