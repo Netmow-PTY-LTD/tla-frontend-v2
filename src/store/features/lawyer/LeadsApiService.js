@@ -69,6 +69,16 @@ const leadsApiService = baseApi.injectEndpoints({
     }),
 
 
+    //   cancel Lawyer membership request from Firm
+
+    cancelLawyerMembership: builder.mutation({
+      query: (data) => ({
+        url: `/lawyer/cancel-membership-request`,
+        method: 'POST',
+        body: data,
+      }),
+      providesTags: ['userInfo'],
+    }),
 
   }),
 });
@@ -81,7 +91,8 @@ export const {
   useUpdateLeadMutation,
   useGetAllLeadsForAdminQuery,
   useCloseLeadMutation,
-  useRepostLeadMutation
+  useRepostLeadMutation,
+  useCancelLawyerMembershipMutation
 } = leadsApiService;
 
 
