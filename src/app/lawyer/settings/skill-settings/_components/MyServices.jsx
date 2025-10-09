@@ -19,9 +19,12 @@ const ServicesList = () => {
     isLoading,
     isError,
     error,
+    refetch: refetchLeadServicesAndLocations,
   } = useGetLeadServiceListQuery();
-  const leadServices = leadServicesData?.data.service || [];
+  const leadServices = leadServicesData?.data?.service || [];
   const locations = leadServicesData?.data.locations || [];
+
+  //console.log('leadServicesData', leadServices);
 
   const handleModalOpen = () => {
     setOpen(true);
@@ -85,12 +88,12 @@ const ServicesList = () => {
             <h2 className="text-xl font-semibold text-gray-800">
               Your Locations
             </h2>
-            {/* <Button
+            <Button
               className="bg-[#12C7C4CC] hover:bg-teal-300 px-4 py-3 text-sm rounded-lg text-white mt-5"
               onClick={handleModalOpen}
             >
               + Add a location
-            </Button> */}
+            </Button>
           </div>
           <p className="text-gray-500 mb-6">
             Choose where you want to find new customers.
@@ -151,7 +154,13 @@ const ServicesList = () => {
             </Link>
           </div>
         </section> */}
-        <AddLocationModal open={open} setOpen={setOpen} />
+        <AddLocationModal
+          open={open}
+          setOpen={setOpen}
+          services={leadServices}
+          locations={locations}
+          refetchLeadServicesAndLocations={refetchLeadServicesAndLocations}
+        />
       </div>
     </div>
   );
