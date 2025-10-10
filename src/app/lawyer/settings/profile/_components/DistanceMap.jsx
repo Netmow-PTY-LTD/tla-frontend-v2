@@ -29,7 +29,8 @@ const milesToMeters = (miles) => miles * 1609.34;
 export default function DistanceMap({
   distanceLocation,
   setDistanceLocation,
-  setDistance,
+  radius,
+  setRadius,
 }) {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
@@ -52,7 +53,7 @@ export default function DistanceMap({
   )?.default_location;
 
   //const [location, setLocation] = useState(countryName);
-  const [radius, setRadius] = useState(100); // miles
+  // const [radius, setRadius] = useState(100); // miles
   const [center, setCenter] = useState({ lat: 40.7128, lng: -74.006 });
   const [zoom, setZoom] = useState(6); // 👈 zoom state
   const [map, setMap] = useState(null); // store map instance
@@ -60,14 +61,18 @@ export default function DistanceMap({
 
   useEffect(() => {
     if (radius) {
-      setDistance(radius);
+      setRadius(radius);
     }
   }, [radius]);
 
   const location = distanceLocation?.zipcode || defaultLocation?.zipcode;
+
+  // console.log('distanceLocation in DistanceMap', distanceLocation);
+  // console.log('location in DistanceMap', location);
   // Geocode on demand
   const geocodeLocation = useCallback(
     async (location, map) => {
+      console.log('Geocoding location:', location);
       try {
         const res = await fetch(
           `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
@@ -156,6 +161,7 @@ export default function DistanceMap({
           className="mt-1 block w-full border rounded-lg px-3 py-2"
         /> */}
           <LocationCombobox
+            location={distanceLocation}
             setLocation={setDistanceLocation}
             defaultLocation={defaultLocation}
           />
