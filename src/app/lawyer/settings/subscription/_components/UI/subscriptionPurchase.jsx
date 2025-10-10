@@ -54,8 +54,9 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
 
   const handleSubscription = async ({ subscriptionPackageId }) => {
     const subscriptionDetails = {
-      subscriptionPackageId,
+      packageId: subscriptionPackageId,
       autoRenew,
+      type: 'subscription'
     };
 
 
