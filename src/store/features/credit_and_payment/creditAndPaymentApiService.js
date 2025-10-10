@@ -150,6 +150,18 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
           body: data,
         };
       },
+       invalidatesTags: ['subscriptions-packages','subscriptions-package','userInfo'],
+    }),
+  cancelSubscription: builder.mutation({
+      query: () => {
+        return {
+          url: '/settings/credit-payment/cancel-subscription',
+          method: 'DELETE',
+       
+        };
+        
+      },
+        invalidatesTags: ['subscriptions-packages','subscriptions-package','userInfo'],
     }),
 
 
@@ -178,6 +190,7 @@ export const {
   useTransactionHistoryListQuery,
   useUserCreditTransactionHistoryQuery,
   useUserTransactionHistoryQuery,
-  useCreateSubscriptionMutation
+  useCreateSubscriptionMutation,
+  useCancelSubscriptionMutation
 
 } = creditAndPaymentApiService;

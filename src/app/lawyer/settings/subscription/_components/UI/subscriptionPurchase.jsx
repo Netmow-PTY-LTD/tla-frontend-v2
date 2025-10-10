@@ -130,7 +130,28 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
             </div>
 
 
-         
+            {/* <div>
+              {isSubscribedToThisPlan ? (
+                <Button
+                  variant="destructive"
+                  className="bg-red-500 hover:bg-red-600 text-white px-4"
+                  onClick={() => setCancelOpen(true)}
+                >
+                  Cancel Subscription
+                </Button>
+              ) : (
+                <Button
+                  variant="primary"
+                  className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-4"
+                  onClick={() => {
+                    if (!card) setOpen(true);
+                    else setIsOpen(true);
+                  }}
+                >
+                  Subscribe Now
+                </Button>
+              )}
+            </div> */}
 
             <div>
               {isSubscribedToThisPlan ? (
