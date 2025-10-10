@@ -176,6 +176,7 @@ export default function Page() {
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
           onSuccess={handleModalSuccess}
+          refetchRange={refetchRange}
         />
         <EditRangeModal
           open={editModalOpen}
