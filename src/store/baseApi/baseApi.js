@@ -135,6 +135,8 @@ export const baseApi = createApi({
     'location',
     'testimonial',
     'testimonial-list',
+    'subscriptions-packages',
+    'subscriptions-package',
   ],
   endpoints: () => ({}),
 });
