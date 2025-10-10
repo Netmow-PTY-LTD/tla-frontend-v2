@@ -4,7 +4,7 @@ const eliteProSubscriptionsApiService = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     addEliteProSubscription: builder.mutation({
       query: (body) => ({
-        url: '/elite-pro-subscriptions/add',
+        url: '/elite-pro-package/add',
         method: 'POST',
         body,
       }),
@@ -12,7 +12,7 @@ const eliteProSubscriptionsApiService = baseApi.injectEndpoints({
     }),
     getAllEliteProSubscriptions: builder.query({
       query: (params) => ({
-        url: '/elite-pro-subscriptions/list',
+        url: '/elite-pro-package/list',
         method: 'GET',
         params,
       }),
@@ -20,14 +20,14 @@ const eliteProSubscriptionsApiService = baseApi.injectEndpoints({
     }),
     getEliteProSubscriptionById: builder.query({
       query: (subscriptionId) => ({
-        url: `/elite-pro-subscriptions/${subscriptionId}`,
+        url: `/elite-pro-package/${subscriptionId}`,
         method: 'GET',
       }),
       providesTags: ['eliteProSubscriptions'],
     }),
     updateEliteProSubscription: builder.mutation({
       query: ({ subscriptionId, body }) => ({
-        url: `/elite-pro-subscriptions/${subscriptionId}/update`,
+        url: `/elite-pro-package/${subscriptionId}/update`,
         method: 'PATCH',
         body,
       }),
@@ -35,7 +35,7 @@ const eliteProSubscriptionsApiService = baseApi.injectEndpoints({
     }),
     deleteEliteProSubscription: builder.mutation({
       query: (subscriptionId) => ({
-        url: `/elite-pro-subscriptions/${subscriptionId}/delete`,
+        url: `/elite-pro-package/${subscriptionId}/delete`,
         method: 'DELETE',
       }),
       invalidatesTags: ['eliteProSubscriptions'],
