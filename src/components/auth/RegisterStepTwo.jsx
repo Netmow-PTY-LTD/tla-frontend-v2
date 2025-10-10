@@ -108,7 +108,7 @@ export default function RegisterStepTwo() {
     defaultValues: {
       practiceWithin: true,
       practiceInternational: practiceInternationally || false,
-      AreaZipcode: '',
+      AreaZipcode: zipCode || '',
       rangeInKm: rangeInKm || '',
     },
   });
