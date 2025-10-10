@@ -72,7 +72,6 @@ export const registrationSlice = createSlice({
     prevStep: (state) => {
       if (state.step > 1) state.step -= 1;
     },
-
     // Reset everything
     resetRegistration: () => initialState,
 
