@@ -304,7 +304,7 @@ export default function About() {
         <div className="border-t border-white" />
 
         <div className="mt-6">
-          {profile.isFirmMemberRequest ? (
+          {profile?.isFirmMemberRequest ? (
             <div className="rounded-xl bg-yellow-50 border border-yellow-200 p-6 text-sm text-yellow-800 mt-6 shadow-lg">
               <div className="flex flex-col gap-4">
                 <h3 className="text-lg font-bold text-yellow-900">

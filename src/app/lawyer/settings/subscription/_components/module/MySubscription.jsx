@@ -5,6 +5,8 @@ import { Loader } from 'lucide-react';
 import SubscriptionPurchase from '../UI/subscriptionPurchase';
 import { SubscriptionTransactionDetails } from '../UI/SubscriptionTransactionDetails';
 import { useGetAllSubscriptionsQuery } from '@/store/features/admin/subcriptionsApiService';
+import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import SubscriptionCard from '../UI/SubscriptionCard';
 
 
 
@@ -15,8 +17,22 @@ const MySubscription = ({ setSubscriptionProgress }) => {
     isLoading,
   } = useGetAllSubscriptionsQuery();
 
+  const {
+    data: userInfo,
+    isLoading: userLoading,
+    isError: userError,
+    error: userErrorMessage,
+    refetch: userRefetch,
+  } = useAuthUserInfoQuery(undefined, {
+    refetchOnMountOrArgChange: true, // keep data fresh
+  });
 
-  console.log('Subscription Data:', subscriptionData);
+  const mySubscription = userInfo?.data?.profile?.subscriptionId || null;
+
+  console.log('My Subscription ID:', mySubscription);
+
+
+
 
   return (
     <div className="w-full border-none bg-[#F3F3F3] p-[10px] rounded-[5px] ">
@@ -32,6 +48,18 @@ const MySubscription = ({ setSubscriptionProgress }) => {
         </div>
 
         <div>
+
+          <div className="mb-4">
+            {mySubscription ? (
+              <SubscriptionCard subscription={mySubscription} />
+            ) : (
+              <p className="text-gray-500 text-center py-4">
+                You do not have an active subscription.
+              </p>
+            )}
+          </div>
+
+
           {isLoading ? (
             <div className=" text-sm flex justify-center items-center ">
               <Loader /> Loading...
@@ -60,7 +88,7 @@ const MySubscription = ({ setSubscriptionProgress }) => {
           )}
         </div>
         <div className="mt-8">
-          <SubscriptionTransactionDetails 
+          <SubscriptionTransactionDetails
             setSubscriptionProgress={setSubscriptionProgress}
           />
         </div>

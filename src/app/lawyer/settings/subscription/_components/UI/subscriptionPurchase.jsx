@@ -16,9 +16,12 @@ import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 const SubscriptionPurchase = ({ subscriptionPlan }) => {
   const [open, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [autoRenew, setAutoRenew] = useState(false);
+  const [autoRenew, setAutoRenew] = useState(true);
   const [addPaymentMethod] = useAddPaymentMethodMutation();
   const [subscriptionSubscription] = useCreateSubscriptionMutation();
+    const [cancelSubscription] = useCancelSubscriptionMutation();
+  const { data: userInfo } = useAuthUserInfoQuery();
+
   const { data, isError, isLoading } = useGetPaymentMethodQuery();
 
   const card = data?.data || null;
@@ -43,6 +46,8 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
       autoRenew,
     };
 
+
+
     try {
       const result = await subscriptionSubscription(subscriptionDetails).unwrap();
       console.log('Subscription result:', result);
@@ -56,6 +61,22 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
       showErrorToast(errorMessage);
     }
 
+  };
+
+
+  //  Cancel subscription handler
+  const handleCancelSubscription = async () => {
+    try {
+      const result = await cancelSubscription(activeSubscription._id).unwrap();
+      if (result.success) {
+        showSuccessToast(result?.message || 'Subscription cancelled successfully');
+      } else {
+        showErrorToast(result?.message || 'Failed to cancel subscription');
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+    }
   };
 
 
@@ -95,7 +116,7 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
               </p>
             </div>
 
-            <div className="">
+            {/* <div className="">
               <Button
                 variant="primary"
                 className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-4"
@@ -109,6 +130,28 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
               >
                 Subscribe Now
               </Button>
+            </div> */}
+            <div>
+              {isSubscribedToThisPlan ? (
+                <Button
+                  variant="destructive"
+                  className="bg-red-500 hover:bg-red-600 text-white px-4"
+                  onClick={() => setCancelOpen(true)}
+                >
+                  Cancel Subscription
+                </Button>
+              ) : (
+                <Button
+                  variant="primary"
+                  className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-4"
+                  onClick={() => {
+                    if (!card) setOpen(true);
+                    else setIsOpen(true);
+                  }}
+                >
+                  Subscribe Now
+                </Button>
+              )}
             </div>
           </div>
 
