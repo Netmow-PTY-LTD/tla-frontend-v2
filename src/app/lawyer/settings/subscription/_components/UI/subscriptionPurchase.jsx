@@ -7,9 +7,10 @@ import Image from 'next/image';
 import { BrandIcon } from '@/assets/icon';
 import {
   useAddPaymentMethodMutation,
- 
+
   useGetPaymentMethodQuery,
   usePurchaseCreditPackageMutation,
+  useSetupSubscriptionMutation,
 } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 import AddCardModal from '../modal/AddCardModal';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
@@ -20,7 +21,7 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [autoRenew, setAutoRenew] = useState(false);
   const [addPaymentMethod] = useAddPaymentMethodMutation();
-  const [purchaseSubscription] = usePurchaseCreditPackageMutation();
+  const [subscriptionSubscription] = useSetupSubscriptionMutation();
   const { data, isError, isLoading } = useGetPaymentMethodQuery();
 
   const card = data?.data || null;
@@ -39,14 +40,14 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
     }
   };
 
-  const handlePurchase = async (subscriptionPlanId, subscriptionPrice) => {
-    const purchaseDetails = {
-      planId: subscriptionPlanId,
+  const handleSubscription = async ({ subscriptionPackageId }) => {
+    const subscriptionDetails = {
+      subscriptionPackageId,
       autoRenew,
-      couponCode: null,
     };
+
     try {
-      const result = await purchaseSubscription(purchaseDetails).unwrap();
+      const result = await subscriptionSubscription(subscriptionDetails).unwrap();
       console.log('Purchase result:', result);
       if (result.success) {
         showSuccessToast(result?.message);
@@ -147,7 +148,7 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
       />
       <ConfirmationModal
         onConfirm={() =>
-          handlePurchase(subscriptionPlan?._id, subscriptionPlan?.price)
+          handleSubscription({ subscriptionPackageId: subscriptionPlan?._id })
         }
         open={isOpen}
         onOpenChange={setIsOpen}
