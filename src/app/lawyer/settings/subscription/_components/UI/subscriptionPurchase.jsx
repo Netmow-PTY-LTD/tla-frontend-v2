@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { BrandIcon } from '@/assets/icon';
 import {
   useAddPaymentMethodMutation,
+  useCreateSubscriptionMutation,
   useGetPaymentMethodQuery,
   useSetupSubscriptionMutation,
 } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
@@ -17,7 +18,7 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [autoRenew, setAutoRenew] = useState(false);
   const [addPaymentMethod] = useAddPaymentMethodMutation();
-  const [subscriptionSubscription] = useSetupSubscriptionMutation();
+  const [subscriptionSubscription] = useCreateSubscriptionMutation();
   const { data, isError, isLoading } = useGetPaymentMethodQuery();
 
   const card = data?.data || null;
