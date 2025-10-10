@@ -1,15 +1,11 @@
 'use client';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Info } from 'lucide-react';
 import Image from 'next/image';
 import { BrandIcon } from '@/assets/icon';
 import {
   useAddPaymentMethodMutation,
-
   useGetPaymentMethodQuery,
-  usePurchaseCreditPackageMutation,
   useSetupSubscriptionMutation,
 } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 import AddCardModal from '../modal/AddCardModal';
@@ -48,7 +44,7 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
 
     try {
       const result = await subscriptionSubscription(subscriptionDetails).unwrap();
-      console.log('Purchase result:', result);
+      console.log('Subscription result:', result);
       if (result.success) {
         showSuccessToast(result?.message);
       } else {
