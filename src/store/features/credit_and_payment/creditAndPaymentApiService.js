@@ -141,7 +141,22 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
       }),
       providesTags: ['user-credit-stats'],
     }),
+
+   createSubscription: builder.mutation({
+      query: (data) => {
+        return {
+          url: '/settings/credit-payment/create-subscription',
+          method: 'POST',
+          body: data,
+        };
+      },
+    }),
+
+
+
   }),
+
+  // subscription
 
   // credit transaction / spend credit
 });
@@ -163,4 +178,6 @@ export const {
   useTransactionHistoryListQuery,
   useUserCreditTransactionHistoryQuery,
   useUserTransactionHistoryQuery,
+  useCreateSubscriptionMutation
+
 } = creditAndPaymentApiService;
