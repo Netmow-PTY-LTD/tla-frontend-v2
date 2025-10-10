@@ -23,7 +23,11 @@ import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import countries from '@/data/countries.json';
 
-export default function LocationCombobox({ setLocation, defaultLocation }) {
+export default function LocationCombobox({
+  location,
+  setLocation,
+  defaultLocation,
+}) {
   const [query, setQuery] = useState('');
   const [selectedZipcodeId, setSelectedZipcodeId] = useState(null);
   const [debouncedSearch, setDebouncedSearch] = useState('');
@@ -67,7 +71,12 @@ export default function LocationCombobox({ setLocation, defaultLocation }) {
 
   return (
     <Combobox
-      value={selectedZipCode?.zipcode || defaultLocation?.zipcode || ''}
+      value={
+        selectedZipCode?.zipcode ||
+        location?.zipcode ||
+        defaultLocation?.zipcode ||
+        ''
+      }
       onChange={(val) => {
         setSelectedZipcodeId(
           allZipCodes?.data?.find((z) => z.zipcode === val)?._id

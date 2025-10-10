@@ -19,16 +19,22 @@ const AddLocationModal = ({
   setOpen,
   services,
   locations,
-  refetchLeadServicesAndLocations,
+  refetchLocations,
 }) => {
   const [step, setStep] = useState('initial'); // 'initial' | 'distance' | 'travelTime' | 'draw'
   const [distanceLocation, setDistanceLocation] = useState('');
-  const [distance, setDistance] = useState(10);
+  const [radius, setRadius] = useState(10);
   const [travelTimeLocation, setTravelTimeLocation] = useState('');
   const [travelTime, setTravelTime] = useState(15);
   const [travelMode, setTravelMode] = useState('driving');
   const [selectedServices, setSelectedServices] = useState(
     services?.map((s) => s?.service?._id) || []
+  );
+  const [travelTimeSelectedServices, setTravelTimeSelectedServices] = useState(
+    []
+  );
+  const [nationwideSelectedServices, setNationwideSelectedServices] = useState(
+    []
   );
 
   //console.log('locations in modal:', locations);
@@ -50,7 +56,7 @@ const AddLocationModal = ({
 
     const payload = {
       locationGroupId: distanceLocation?._id,
-      rangInKm: distance,
+      rangeInKm: radius,
       serviceIds: selectedServices,
       locationType: 'distance_wise',
     };
@@ -58,14 +64,13 @@ const AddLocationModal = ({
     console.log('Submitting distance location...', payload);
 
     try {
-      // Assuming you have a mutation hook for adding location
       const res = await addLocation(payload).unwrap();
       console.log('Location response:', res);
       if (res) {
         showSuccessToast(
           res?.message || 'Distance location added successfully!'
         );
-        refetchLeadServicesAndLocations();
+        refetchLocations();
         resetModal();
       }
     } catch (error) {
@@ -74,38 +79,85 @@ const AddLocationModal = ({
     }
   };
 
-  const travelTimeLocationSubmit = async (e, data) => {
+  const handleTravelTimeServiceChange = (id) => {
+    setTravelTimeSelectedServices((prev) =>
+      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
+    );
+  };
+
+  const travelTimeLocationSubmit = async (e) => {
     e.preventDefault();
-    console.log('Travel time location data:', data);
-    console.log('Submitting travel time location...');
 
     const payload = {
-      locationGroupId: travelTimeLocation,
+      locationGroupId: travelTimeLocation?._id,
       travelTime,
       travelMode,
-      serviceIds: selectedServices,
+      serviceIds: travelTimeSelectedServices,
       locationType: 'travel_time',
     };
+
+    console.log('Travel time payload:', payload);
     // Handle travel time location submission logic here
     // showSuccessToast('Travel time location added successfully!');
     // resetModal();
+    try {
+      const res = await addLocation(payload).unwrap();
+      console.log('Location based on travel time response:', res);
+      if (res) {
+        showSuccessToast(
+          res?.message || 'Location based on travel time added successfully!'
+        );
+        refetchLocations();
+        resetModal();
+      }
+    } catch (error) {
+      console.error(error);
+      showErrorToast(
+        error?.message || 'Failed to add location based on travel time.'
+      );
+    }
   };
-  const nationwideLocationSubmit = async (e, data) => {
+
+  const handleNationWideServiceChange = (id) => {
+    setNationwideSelectedServices((prev) =>
+      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
+    );
+  };
+  const nationwideLocationSubmit = async (e) => {
     e.preventDefault();
-    console.log('Nationwide location data:', data);
     console.log('Submitting nationwide location...');
+
     const payload = {
-      serviceIds: selectedServices,
+      serviceIds: nationwideSelectedServices,
       locationType: 'nation_wide',
     };
+    console.log('Nationwide payload:', payload);
     // Handle nationwide location submission logic here
     // showSuccessToast('Nationwide location added successfully!');
     // resetModal();
+
+    try {
+      const res = await addLocation(payload).unwrap();
+      console.log('Location based on nationwide selection response:', res);
+      if (res) {
+        showSuccessToast(
+          res?.message ||
+            'Location based on nationwide selection added successfully!'
+        );
+        refetchLocations();
+        resetModal();
+      }
+    } catch (error) {
+      console.error(error);
+      showErrorToast(
+        error?.message || 'Failed to add location based on travel time.'
+      );
+    }
   };
 
-  console.log('distanceLocation', distanceLocation);
-  console.log('Distance', distance);
-  console.log('Selected Services', selectedServices);
+  // console.log('distanceLocation', distanceLocation);
+  // console.log('Distance', distance);
+  // console.log('Selected Services', selectedServices);
 
   return (
     <div>
@@ -132,7 +184,7 @@ const AddLocationModal = ({
 
               <div className="space-y-4">
                 <div
-                  className="flex gap-4 bg-[#f9f9fa] p-4 rounded-lg cursor-pointer"
+                  className="flex gap-4 bg-[#f9f9fa] p-4 rounded-lg cursor-pointer hover:bg-[#f1f1f1] transition-all duration-300 ease-in-out"
                   onClick={() => setStep('distance')}
                 >
                   <MapPin />
@@ -147,7 +199,7 @@ const AddLocationModal = ({
                   </div>
                 </div>
                 <div
-                  className="flex gap-4 bg-[#f9f9fa] p-4 rounded-lg cursor-pointer"
+                  className="flex gap-4 bg-[#f9f9fa] p-4 rounded-lg cursor-pointer hover:bg-[#f1f1f1] transition-all duration-300 ease-in-out"
                   onClick={() => setStep('travelTime')}
                 >
                   <Clock />
@@ -212,7 +264,8 @@ const AddLocationModal = ({
                   <DistanceMap
                     distanceLocation={distanceLocation}
                     setDistanceLocation={setDistanceLocation}
-                    setDistance={setDistance}
+                    radius={radius}
+                    setRadius={setRadius}
                   />
                 </div>
                 <div className="mt-8 flex justify-between">
@@ -282,146 +335,180 @@ const AddLocationModal = ({
                     type="submit"
                     className="px-4 py-2 bg-[var(--secondary-color)] text-white rounded hover:bg-[var(--primary-color)] transition-all duration-300 ease-in-out"
                   >
-                    Save
+                    {isAddingLocation ? (
+                      <div className="flex items-center gap-2">
+                        <Loader className="animate-spin h-4 w-4" />
+                        Saving...
+                      </div>
+                    ) : (
+                      'Save'
+                    )}
                   </button>
                 </div>
               </div>
             )}
           </form>
-          {step === 'travelTime' && (
-            <div>
-              <h3 className="text-2xl font-semibold text-center mb-2">
-                Travel Time
-              </h3>
-              <p className="text-sm text-gray-500 text-center mb-8">
-                Enter your max travel time.
-              </p>
-              <div className="">
-                <TravelTimeSelector />
-              </div>
-              <div className="mt-8 flex justify-between">
-                <button
-                  onClick={() => setStep('initial')}
-                  className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={() => setStep('travelTimeNext')}
-                  className="px-4 py-2 bg-[var(--secondary-color)] text-white rounded hover:bg-[var(--primary-color)] transition-all duration-300 ease-in-out"
-                >
-                  Next
-                </button>
-              </div>
-            </div>
-          )}
-
-          {step === 'travelTimeNext' && (
-            <div>
-              <h3 className="text-2xl font-semibold text-center mb-2">
-                Travel Time Wise Services
-              </h3>
-              <p className="text-sm text-gray-500 text-center mb-8">
-                Review your travel time settings.
-              </p>
-              {services?.length > 0 ? (
-                services?.map((service, index) => (
-                  <div
-                    className="border border-gray-200 h-[48px] px-4 rounded flex items-center justify-between gap-4"
-                    key={index}
-                  >
-                    <label className="text-gray-500">
-                      {service?.service?.name}
-                    </label>
-                    <input
-                      type="checkbox"
-                      value={service?.service?._id}
-                      onChange={(e) => console.log(e.target.value)}
-                      className="cursor-pointer"
-                      checked
-                    />
-                  </div>
-                ))
-              ) : (
-                <div className="text-center p-4">
-                  <h2 className="text-lg font-semibold">
-                    No services available
-                  </h2>
-                  <p className="text-sm text-muted-foreground">
-                    Click above to add your first service.
-                  </p>
+          <form onSubmit={travelTimeLocationSubmit}>
+            {step === 'travelTime' && (
+              <div>
+                <h3 className="text-2xl font-semibold text-center mb-2">
+                  Travel Time
+                </h3>
+                <p className="text-sm text-gray-500 text-center mb-8">
+                  Enter your max travel time.
+                </p>
+                <div className="">
+                  <TravelTimeSelector
+                    travelTimeLocation={travelTimeLocation}
+                    setTravelTimeLocation={setTravelTimeLocation}
+                  />
                 </div>
-              )}
-              <div className="mt-8 flex justify-between">
-                <button
-                  onClick={() => setStep('travelTime')}
-                  className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={resetModal}
-                  className="px-4 py-2 bg-[var(--secondary-color)] text-white rounded hover:bg-[var(--primary-color)] transition-all duration-300 ease-in-out"
-                >
-                  Save
-                </button>
-              </div>
-            </div>
-          )}
-
-          {step === 'nationwide' && (
-            <div>
-              <h3 className="text-2xl font-semibold text-center mb-8">
-                Nationwide Services
-              </h3>
-
-              {services?.length > 0 ? (
-                services?.map((service, index) => (
-                  <div
-                    className="border border-gray-200 h-[48px] px-4 rounded flex items-center justify-between gap-4"
-                    key={index}
+                <div className="mt-8 flex justify-between">
+                  <button
+                    onClick={() => setStep('initial')}
+                    className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
                   >
-                    <label className="text-gray-500">
-                      {service?.service?.name}
-                    </label>
-                    <input
-                      type="checkbox"
-                      value={service?.service?._id}
-                      onChange={(e) => {
-                        console.log(e.target.value);
-                      }}
-                      className="cursor-pointer"
-                      checked
-                    />
-                  </div>
-                ))
-              ) : (
-                <div className="text-center p-4">
-                  <h2 className="text-lg font-semibold">
-                    No services available
-                  </h2>
-                  <p className="text-sm text-muted-foreground">
-                    Click above to add your first service.
-                  </p>
+                    Back
+                  </button>
+                  <button
+                    onClick={() => setStep('travelTimeNext')}
+                    className="px-4 py-2 bg-[var(--secondary-color)] text-white rounded hover:bg-[var(--primary-color)] transition-all duration-300 ease-in-out"
+                  >
+                    Next
+                  </button>
                 </div>
-              )}
-
-              <div className="mt-8 flex justify-between">
-                <button
-                  onClick={() => setStep('initial')}
-                  className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={resetModal}
-                  className="px-4 py-2 bg-[var(--secondary-color)] text-white rounded hover:bg-[var(--primary-color)] transition-all duration-300 ease-in-out"
-                >
-                  Save
-                </button>
               </div>
-            </div>
-          )}
+            )}
+
+            {step === 'travelTimeNext' && (
+              <div>
+                <h3 className="text-2xl font-semibold text-center mb-2">
+                  Travel Time Wise Services
+                </h3>
+                <p className="text-sm text-gray-500 text-center mb-8">
+                  Select what services you provide in this location
+                </p>
+                {services?.length > 0 ? (
+                  services?.map((service, index) => (
+                    <div
+                      className="border border-gray-200 h-[48px] px-4 rounded flex items-center justify-between gap-4"
+                      key={index}
+                    >
+                      <label className="text-gray-500">
+                        {service?.service?.name}
+                      </label>
+                      <input
+                        type="checkbox"
+                        value={service?.service?._id}
+                        onChange={() =>
+                          handleTravelTimeServiceChange(service?.service?._id)
+                        }
+                        className="cursor-pointer"
+                        checked={travelTimeSelectedServices.includes(
+                          service?.service?._id
+                        )}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center p-4">
+                    <h2 className="text-lg font-semibold">
+                      No services available
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      Click above to add your first service.
+                    </p>
+                  </div>
+                )}
+                <div className="mt-8 flex justify-between">
+                  <button
+                    onClick={() => setStep('travelTime')}
+                    className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-[var(--secondary-color)] text-white rounded hover:bg-[var(--primary-color)] transition-all duration-300 ease-in-out"
+                  >
+                    {isAddingLocation ? (
+                      <div className="flex items-center gap-2">
+                        <Loader className="animate-spin h-4 w-4" />
+                        Saving...
+                      </div>
+                    ) : (
+                      'Save'
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+          </form>
+
+          <form onSubmit={nationwideLocationSubmit}>
+            {step === 'nationwide' && (
+              <div>
+                <h3 className="text-2xl font-semibold text-center mb-8">
+                  Nationwide Services
+                </h3>
+
+                {services?.length > 0 ? (
+                  services?.map((service, index) => (
+                    <div
+                      className="border border-gray-200 h-[48px] px-4 rounded flex items-center justify-between gap-4"
+                      key={index}
+                    >
+                      <label className="text-gray-500">
+                        {service?.service?.name}
+                      </label>
+                      <input
+                        type="checkbox"
+                        value={service?.service?._id}
+                        onChange={() =>
+                          handleNationWideServiceChange(service?.service?._id)
+                        }
+                        className="cursor-pointer"
+                        checked={nationwideSelectedServices.includes(
+                          service?.service?._id
+                        )}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center p-4">
+                    <h2 className="text-lg font-semibold">
+                      No services available
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      Click above to add your first service.
+                    </p>
+                  </div>
+                )}
+
+                <div className="mt-8 flex justify-between">
+                  <button
+                    onClick={() => setStep('initial')}
+                    className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                  >
+                    Back
+                  </button>
+                  <button
+                    onClick={resetModal}
+                    className="px-4 py-2 bg-[var(--secondary-color)] text-white rounded hover:bg-[var(--primary-color)] transition-all duration-300 ease-in-out"
+                  >
+                    {isAddingLocation ? (
+                      <div className="flex items-center gap-2">
+                        <Loader className="animate-spin h-4 w-4" />
+                        Saving...
+                      </div>
+                    ) : (
+                      'Save'
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+          </form>
 
           {/* {step === 'draw' && (
             <div>
