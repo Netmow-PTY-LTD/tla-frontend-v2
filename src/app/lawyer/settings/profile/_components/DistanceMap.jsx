@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef, use } from 'react';
 import {
   GoogleMap,
   useJsApiLoader,
@@ -8,6 +8,14 @@ import {
   Circle,
 } from '@react-google-maps/api';
 import { useGetRangeListQuery } from '@/store/features/public/publicApiService';
+import ZipCodeComboboxMap from './about/ZipCodeComboboxMap';
+import ZipCodeCombobox from '@/components/UIComponents/ZipCodeCombobox';
+import AddressCombobox from '@/app/client/_components/profile/AddressCombobox';
+import FormWrapper from '@/components/form/FromWrapper';
+import LocationCombobox from '../../skill-settings/_components/LocationCombobox';
+import { safeJsonParse } from '@/helpers/safeJsonParse';
+import Cookies from 'js-cookie';
+import countries from '@/data/countries.json';
 
 const libraries = ['places']; // needed for autocomplete
 
@@ -18,7 +26,11 @@ const containerStyle = {
 
 const milesToMeters = (miles) => miles * 1609.34;
 
-export default function DistanceMap() {
+export default function DistanceMap({
+  distanceLocation,
+  setDistanceLocation,
+  setDistance,
+}) {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
     libraries,
@@ -26,40 +38,62 @@ export default function DistanceMap() {
 
   const { data: rangeData } = useGetRangeListQuery();
 
-  console.log('rangeData', rangeData);
+  const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
 
-  const [location, setLocation] = useState('New York, NY');
+  //const countryName = cookieCountry?.name || 'Australia';
+
+  //console.log('cookieCountry', cookieCountry);
+  // useEffect(() => {
+  //   setDistanceLocation(countryName);
+  // }, [countryName]);
+
+  const defaultLocation = countries?.find(
+    (c) => c.countryId === cookieCountry?.countryId
+  )?.default_location;
+
+  //const [location, setLocation] = useState(countryName);
   const [radius, setRadius] = useState(100); // miles
   const [center, setCenter] = useState({ lat: 40.7128, lng: -74.006 });
   const [zoom, setZoom] = useState(6); // 👈 zoom state
   const [map, setMap] = useState(null); // store map instance
-
-  // Geocode on demand
-  const geocodeLocation = useCallback(async () => {
-    try {
-      const res = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-          location
-        )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
-      );
-      const data = await res.json();
-      if (data.status === 'OK') {
-        const { lat, lng } = data.results[0].geometry.location;
-        setCenter({ lat, lng });
-        if (map) {
-          map.panTo({ lat, lng });
-        }
-      } else {
-        alert('Location not found');
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, [location, map]);
+  const currentCircle = useRef(null); // Track current circle instance
 
   useEffect(() => {
-    geocodeLocation();
-  }, []);
+    if (radius) {
+      setDistance(radius);
+    }
+  }, [radius]);
+
+  const location = distanceLocation?.zipcode || defaultLocation?.zipcode;
+  // Geocode on demand
+  const geocodeLocation = useCallback(
+    async (location, map) => {
+      try {
+        const res = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+            location
+          )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
+        );
+        const data = await res.json();
+        if (data.status === 'OK') {
+          const { lat, lng } = data.results[0].geometry.location;
+          setCenter({ lat, lng });
+          if (map) {
+            map.panTo({ lat, lng });
+          }
+        } else {
+          alert('Location not found');
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    [location, map]
+  );
+
+  useEffect(() => {
+    geocodeLocation(location, map);
+  }, [location, map]);
 
   // 👇 Whenever zoom changes, update map directly
   useEffect(() => {
@@ -68,34 +102,81 @@ export default function DistanceMap() {
     }
   }, [zoom, map]);
 
+  // Function to clear existing circle and create new one
+  const updateCircle = useCallback(() => {
+    if (!map) return;
+
+    // Remove existing circle if it exists
+    if (currentCircle.current) {
+      currentCircle.current.setMap(null);
+      currentCircle.current = null;
+    }
+
+    // Create new circle
+    const circle = new window.google.maps.Circle({
+      strokeColor: '#4285F4',
+      strokeOpacity: 0.7,
+      strokeWeight: 2,
+      fillColor: '#4285F4',
+      fillOpacity: 0.3,
+      map: map,
+      center: center,
+      radius: milesToMeters(radius),
+    });
+
+    currentCircle.current = circle;
+  }, [map, center, radius]);
+
+  // Update circle when radius or center changes
+  useEffect(() => {
+    updateCircle();
+  }, [updateCircle]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (currentCircle.current) {
+        currentCircle.current.setMap(null);
+      }
+    };
+  }, []);
+
   if (!isLoaded) return <div>Loading Map...</div>;
 
   return (
-    <div className="max-w-2xl mx-auto p-4 space-y-4">
-      <div>
-        <label className="block text-sm font-medium">Postcode / City</label>
-        <input
+    <div className="max-w-2xl mx-auto py-4 space-y-4">
+      <div className="flex w-full">
+        <div className="w-full md:w-2/3 md:pr-2">
+          <label className="block text-sm font-medium mb-2">Location</label>
+          {/* <input
           type="text"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
           onBlur={geocodeLocation}
           className="mt-1 block w-full border rounded-lg px-3 py-2"
-        />
-      </div>
+        /> */}
+          <LocationCombobox
+            setLocation={setDistanceLocation}
+            defaultLocation={defaultLocation}
+          />
+        </div>
 
-      <div>
-        <label className="block text-sm font-medium">Distance</label>
-        <select
-          value={radius}
-          onChange={(e) => setRadius(parseInt(e.target.value, 10))}
-          className="mt-1 block w-full border rounded-lg px-3 py-2"
-        >
-          {rangeData?.data?.map((m) => (
-            <option key={m?._id} value={m?.value}>
-              {m?.name}
-            </option>
-          ))}
-        </select>
+        <div className="w-full md:w-1/3 md:pl-2 md:mt-0">
+          <label className="block text-sm font-medium mb-2">Distance</label>
+          <select
+            value={radius}
+            onChange={(e) => {
+              setRadius(parseInt(e.target.value, 10));
+            }}
+            className="block w-full border rounded-lg px-3 py-2 h-[44px]"
+          >
+            {rangeData?.data?.map((m) => (
+              <option key={m?._id} value={m?.value}>
+                {m?.name}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Zoom selector */}
@@ -121,18 +202,7 @@ export default function DistanceMap() {
         onLoad={(mapInstance) => setMap(mapInstance)} // 👈 store instance
       >
         <Marker position={center} />
-        <Circle
-          key={radius} // 👈 reset whenever miles (radius) changes
-          center={center}
-          radius={milesToMeters(radius)}
-          options={{
-            fillColor: '#4285F4',
-            fillOpacity: 0.3,
-            strokeColor: '#4285F4',
-            strokeOpacity: 0.7,
-            strokeWeight: 2,
-          }}
-        />
+        {/* Circle is now managed manually via Google Maps API */}
       </GoogleMap>
     </div>
   );

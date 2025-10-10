@@ -7,7 +7,13 @@
     "currency": "AUD",
     "currencySymbol": "$",
     "country_calling_code": "+61",
-    "flag": "/assets/img/flags/au-flag.png"
+    "flag": "/assets/img/flags/au-flag.png",
+    "default_location": {
+      "_id": "689da4ad3b97ad606303f508",
+      "zipcode": "Canberra Bc ACT 2610, Australia",
+      "lat": -35.2809,
+      "lng": 149.1300
+    }
   },
   {
     "countryId": "68a6c60a551ac20293f25a98",
