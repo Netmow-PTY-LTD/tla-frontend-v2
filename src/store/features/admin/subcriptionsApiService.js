@@ -8,7 +8,7 @@ const subscriptionsApiService = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['subscriptions'],
+      invalidatesTags: ['subscriptions-packages','subscriptions-package'],
     }),
     getAllSubscriptions: builder.query({
       query: (params) => ({
@@ -16,14 +16,14 @@ const subscriptionsApiService = baseApi.injectEndpoints({
         method: 'GET',
         params,
       }),
-      providesTags: ['subscriptions'],
+      providesTags: ['subscriptions-packages'],
     }),
     getSubscriptionById: builder.query({
       query: (subscriptionId) => ({
         url: `/subscriptions-packages/${subscriptionId}`,
         method: 'GET',
       }),
-      providesTags: ['subscriptions'],
+      providesTags: ['subscriptions-package'],
     }),
     updateSubscription: builder.mutation({
       query: ({ subscriptionId, body }) => ({
@@ -31,15 +31,26 @@ const subscriptionsApiService = baseApi.injectEndpoints({
         method: 'PATCH',
         body,
       }),
-      invalidatesTags: ['subscriptions'],
+      invalidatesTags: ['subscriptions-packages','subscriptions-package'],
     }),
     deleteSubscription: builder.mutation({
       query: (subscriptionId) => ({
         url: `/subscriptions-packages/${subscriptionId}/delete`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['subscriptions'],
+      invalidatesTags: ['subscriptions-packages','subscriptions-package'],
     }),
+
+
+
+
+
+
+
+
+
+
+
   }),
 });
 

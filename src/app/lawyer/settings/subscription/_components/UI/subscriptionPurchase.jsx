@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { BrandIcon } from '@/assets/icon';
 import {
   useAddPaymentMethodMutation,
+  useCancelSubscriptionMutation,
   useCreateSubscriptionMutation,
   useGetPaymentMethodQuery,
   useSetupSubscriptionMutation,
@@ -12,16 +13,30 @@ import {
 import AddCardModal from '../modal/AddCardModal';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
+import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import { Loader } from 'lucide-react';
 
 const SubscriptionPurchase = ({ subscriptionPlan }) => {
   const [open, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [autoRenew, setAutoRenew] = useState(false);
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const [autoRenew, setAutoRenew] = useState(true);
   const [addPaymentMethod] = useAddPaymentMethodMutation();
-  const [subscriptionSubscription] = useCreateSubscriptionMutation();
+  const [subscriptionSubscription, { isLoading: subscribeLoading }] = useCreateSubscriptionMutation();
+  const [cancelSubscription, { isLoading: cancelSubscriptionLoading }] = useCancelSubscriptionMutation();
+  const { data: userInfo } = useAuthUserInfoQuery();
+
   const { data, isError, isLoading } = useGetPaymentMethodQuery();
 
   const card = data?.data || null;
+
+
+  const activeSubscription = userInfo?.data?.profile?.subscriptionId || null;
+
+  const isSubscribedToThisPlan =
+    activeSubscription &&
+    activeSubscription.subscriptionPackageId?._id === subscriptionPlan?._id &&
+    activeSubscription.status === 'active';
 
   const handleCardAdded = async (paymentMethodId) => {
     const result = await addPaymentMethod({ paymentMethodId }).unwrap();
@@ -43,6 +58,8 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
       autoRenew,
     };
 
+
+
     try {
       const result = await subscriptionSubscription(subscriptionDetails).unwrap();
       console.log('Subscription result:', result);
@@ -56,6 +73,23 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
       showErrorToast(errorMessage);
     }
 
+  };
+
+
+
+  //  Cancel subscription handler
+  const handleCancelSubscription = async () => {
+    try {
+      const result = await cancelSubscription().unwrap();
+      if (result.success) {
+        showSuccessToast(result?.message || 'Subscription cancelled successfully');
+      } else {
+        showErrorToast(result?.message || 'Failed to cancel subscription');
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+    }
   };
 
 
@@ -95,21 +129,69 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
               </p>
             </div>
 
-            <div className="">
-              <Button
-                variant="primary"
-                className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-4"
-                onClick={() => {
-                  if (!card) {
-                    setOpen(true);
-                  } else {
-                    setIsOpen(true);
-                  }
-                }}
-              >
-                Subscribe Now
-              </Button>
+
+            {/* <div>
+              {isSubscribedToThisPlan ? (
+                <Button
+                  variant="destructive"
+                  className="bg-red-500 hover:bg-red-600 text-white px-4"
+                  onClick={() => setCancelOpen(true)}
+                >
+                  Cancel Subscription
+                </Button>
+              ) : (
+                <Button
+                  variant="primary"
+                  className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-4"
+                  onClick={() => {
+                    if (!card) setOpen(true);
+                    else setIsOpen(true);
+                  }}
+                >
+                  Subscribe Now
+                </Button>
+              )}
+            </div> */}
+
+            <div>
+              {isSubscribedToThisPlan ? (
+                <Button
+                  variant="destructive"
+                  className="bg-red-500 hover:bg-red-600 text-white px-4 flex items-center justify-center"
+                  onClick={() => setCancelOpen(true)}
+                  disabled={cancelSubscriptionLoading}
+                >
+                  {cancelSubscriptionLoading ? (
+                    <>
+                      <Loader size="sm" className="mr-2" />
+                      Cancelling...
+                    </>
+                  ) : (
+                    'Cancel Subscription'
+                  )}
+                </Button>
+              ) : (
+                <Button
+                  variant="primary"
+                  className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-4 flex items-center justify-center"
+                  onClick={() => {
+                    if (!card) setOpen(true);
+                    else setIsOpen(true);
+                  }}
+                  disabled={subscribeLoading}
+                >
+                  {subscribeLoading ? (
+                    <>
+                      <Loader size="sm" className="mr-2" />
+                      Subscribing...
+                    </>
+                  ) : (
+                    'Subscribe Now'
+                  )}
+                </Button>
+              )}
             </div>
+
           </div>
 
           <div className="mt-6">
@@ -151,6 +233,15 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
         onOpenChange={setIsOpen}
         description="Are you sure you want to subscribe to this plan?"
       />
+
+      {/* ✅ Confirm Cancel Modal */}
+      <ConfirmationModal
+        onConfirm={handleCancelSubscription}
+        open={cancelOpen}
+        onOpenChange={setCancelOpen}
+        description="Are you sure you want to cancel your subscription?"
+      />
+
     </div>
   );
 };
