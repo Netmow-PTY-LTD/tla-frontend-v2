@@ -8,7 +8,7 @@ import InvoiceModal from '../modal/InvoiceMoadal';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import InvoiceDocument from '@/components/dashboard/lawyer/invoice/InvoiceDocument';
 
-export const SubscriptionTransactionDetails = ({ setSubscriptionProgress }) => {
+export const SubscriptionTransactionDetails = () => {
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [open, setOpen] = useState(false);
@@ -23,11 +23,7 @@ export const SubscriptionTransactionDetails = ({ setSubscriptionProgress }) => {
     isLoading,
   } = useUserTransactionHistoryQuery();
 
-  useEffect(() => {
-    if (transactionData?.data?.length > 0) {
-      setSubscriptionProgress(100);
-    }
-  }, [transactionData?.data]);
+
 
   useEffect(() => {
     if (!transactionData?.data) return;
