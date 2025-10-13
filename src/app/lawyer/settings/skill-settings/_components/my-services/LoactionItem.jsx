@@ -83,7 +83,8 @@ const LocationItem = ({ location, onEdit, refetchLocations }) => {
             <span className="mx-2 w-2 h-2 rounded-full bg-slate-500 inline-block"></span>
             <span className="font-normal">
               <span className="font-normal">
-                {location?.serviceIds?.length || 0} services
+                {location?.serviceIds?.length || 0}{' '}
+                {location?.serviceIds?.length === 1 ? 'service' : 'services'}
               </span>
             </span>
           </div>

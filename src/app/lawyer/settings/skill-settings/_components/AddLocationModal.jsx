@@ -23,6 +23,7 @@ const AddLocationModal = ({
   services,
   locations,
   refetchLocations,
+  refetchLeadServicesAndLocations,
 }) => {
   const [step, setStep] = useState('initial'); // 'initial' | 'distance' | 'travelTime' | 'draw'
   const [distanceLocation, setDistanceLocation] = useState('');
@@ -88,6 +89,7 @@ const AddLocationModal = ({
           res?.message || 'Distance location added successfully!'
         );
         refetchLocations();
+        refetchLeadServicesAndLocations();
         resetModal();
       }
     } catch (error) {
@@ -125,6 +127,7 @@ const AddLocationModal = ({
           res?.message || 'Location based on travel time added successfully!'
         );
         refetchLocations();
+        refetchLeadServicesAndLocations();
         resetModal();
       }
     } catch (error) {
@@ -162,6 +165,7 @@ const AddLocationModal = ({
             'Location based on nationwide selection added successfully!'
         );
         refetchLocations();
+        refetchLeadServicesAndLocations();
         resetModal();
       }
     } catch (error) {
