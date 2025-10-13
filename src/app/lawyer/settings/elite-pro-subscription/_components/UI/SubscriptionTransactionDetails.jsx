@@ -7,6 +7,7 @@ import { useUserTransactionHistoryQuery } from '@/store/features/credit_and_paym
 import InvoiceModal from '../modal/InvoiceMoadal';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import InvoiceDocument from '@/components/dashboard/lawyer/invoice/InvoiceDocument';
+import EliteProInvoiceDocument from '../module/InvoiceElitePro';
 
 export const SubscriptionTransactionDetails = () => {
   const [selectedTransaction, setSelectedTransaction] = useState(null);
@@ -30,7 +31,9 @@ export const SubscriptionTransactionDetails = () => {
 
     const term = searchTerm.toLowerCase();
 
-    const filtered = transactionData.data.filter((transaction) => {
+    const filtered = transactionData.data
+         .filter((transaction) => transaction.subscriptionType === 'elitePro') 
+    .filter((transaction) => {
       const flatValues = [];
 
       Object.values(transaction).forEach((val) => {
@@ -122,7 +125,7 @@ export const SubscriptionTransactionDetails = () => {
                         {tx._id.slice(0, 8)}...
                       </td>
                       <td className="py-4 px-6 text-sm text-gray-900 font-medium">
-                        {tx.planName || '-'}
+                        {tx?.subscriptionId?.eliteProPackageId?.name|| '-'}
                       </td>
                       <td className="py-4 px-6 text-sm text-gray-800">
                         ${tx.amountPaid}{' '}
@@ -156,7 +159,7 @@ export const SubscriptionTransactionDetails = () => {
                             view
                           </button>
                           <PDFDownloadLink
-                            document={<InvoiceDocument transaction={tx} />}
+                            document={<EliteProInvoiceDocument transaction={tx} />}
                             fileName={`invoice_${tx._id}.pdf`}
                             className="px-4 py-1.5 bg-gray-100 text-gray-800 text-sm font-medium rounded-md hover:bg-gray-200 transition"
                           >
