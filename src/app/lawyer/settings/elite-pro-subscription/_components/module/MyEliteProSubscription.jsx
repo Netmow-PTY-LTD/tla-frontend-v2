@@ -2,11 +2,15 @@
 
 import React, { useEffect } from 'react';
 import { Loader } from 'lucide-react';
-import SubscriptionPurchase from '../UI/subscriptionPurchase';
+
 import { SubscriptionTransactionDetails } from '../UI/SubscriptionTransactionDetails';
 import { useGetAllEliteProSubscriptionsQuery } from '@/store/features/admin/eliteProSubscriptionsApiService';
+import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import EliteProSubscriptionPurchase from '../UI/EliteProSubscriptionPurchase';
+import SubscriptionCard from '../../../subscription/_components/UI/SubscriptionCard';
+import EliteProSubscriptionCard from '../UI/EliteProSubscriptionCard';
 
-const EliteProSubscription = ({ setSubscriptionProgress }) => {
+const EliteProSubscription = () => {
   const {
     data: subscriptionData,
     isError,
@@ -14,6 +18,20 @@ const EliteProSubscription = ({ setSubscriptionProgress }) => {
   } = useGetAllEliteProSubscriptionsQuery();
 
 
+
+  const {
+    data: userInfo,
+    isLoading: userLoading,
+    isError: userError,
+    error: userErrorMessage,
+    refetch: userRefetch,
+  } = useAuthUserInfoQuery(undefined, {
+    refetchOnMountOrArgChange: true, // keep data fresh
+  });
+
+  const MyElitePro = userInfo?.data?.profile?.eliteProSubscriptionId || null;
+
+  console.log('My Elite Pro Subscription:', MyElitePro);
 
   return (
     <div className="w-full border-none bg-[#F3F3F3] p-[10px] rounded-[5px] ">
@@ -29,6 +47,17 @@ const EliteProSubscription = ({ setSubscriptionProgress }) => {
         </div>
 
         <div>
+
+          <div className="mb-4">
+            {MyElitePro ? (
+              <EliteProSubscriptionCard subscription={MyElitePro} />
+            ) : (
+              <p className="text-gray-500 text-center py-4">
+                You do not have an active elite pro subscription.
+              </p>
+            )}
+          </div>
+
           {isLoading ? (
             <div className=" text-sm flex justify-center items-center ">
               <Loader /> Loading...
@@ -40,7 +69,7 @@ const EliteProSubscription = ({ setSubscriptionProgress }) => {
           ) : subscriptionData?.data?.length > 0 ? (
             <div className="grid grid-cols-1 gap-6">
               {subscriptionData?.data?.map((subscription) => (
-                <SubscriptionPurchase
+                <EliteProSubscriptionPurchase
                   key={subscription?._id}
                   subscriptionPlan={subscription}
                 />
@@ -57,8 +86,8 @@ const EliteProSubscription = ({ setSubscriptionProgress }) => {
           )}
         </div>
         <div className="mt-8">
-          <SubscriptionTransactionDetails 
-            setSubscriptionProgress={setSubscriptionProgress}
+          <SubscriptionTransactionDetails
+
           />
         </div>
       </div>

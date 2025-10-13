@@ -14,7 +14,7 @@ import AddCardModal from '../modal/AddCardModal';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 
-const SubscriptionPurchase = ({ subscriptionPlan }) => {
+const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
   const [open, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [autoRenew, setAutoRenew] = useState(false);
@@ -156,4 +156,4 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
   );
 };
 
-export default SubscriptionPurchase;
+export default EliteProSubscriptionPurchase;
