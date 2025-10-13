@@ -28,7 +28,14 @@ const minutesToMeters = (minutes, mode) => {
 export default function TravelTimeSelector({
   travelTimeLocation,
   setTravelTimeLocation,
+  radius,
+  setRadius,
+  mode,
+  setMode,
 }) {
+  console.log('mode in TravelTimeSelector', mode);
+  console.log('radius in TravelTimeSelector', radius);
+
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
     libraries,
@@ -39,8 +46,8 @@ export default function TravelTimeSelector({
   const countryName = cookieCountry?.name || 'Australia';
 
   //const [location, setLocation] = useState(countryName);
-  const [radius, setRadius] = useState(15); // miles or minutes
-  const [mode, setMode] = useState('driving'); // driving, walking, transit
+  //const [radius, setRadius] = useState(15); // miles or minutes
+  //const [mode, setMode] = useState('driving'); // driving, walking, transit
   const [center, setCenter] = useState({ lat: 40.7128, lng: -74.006 });
   const [zoom, setZoom] = useState(8);
   const [map, setMap] = useState(null);
@@ -50,7 +57,9 @@ export default function TravelTimeSelector({
     (c) => c.countryId === cookieCountry?.countryId
   )?.default_location;
 
-  const location = travelTimeLocation?.zipcode || defaultLocation.zipcode;
+  const location = travelTimeLocation && travelTimeLocation.zipcode;
+
+  console.log('location in TravelTimeSelector', location);
   // Geocode selected location
   const geocodeLocation = useCallback(async (location, map) => {
     try {
@@ -71,8 +80,10 @@ export default function TravelTimeSelector({
   }, []);
 
   useEffect(() => {
-    geocodeLocation(location, map);
-  }, [location, map]);
+    if (location && map) {
+      geocodeLocation(location, map);
+    }
+  }, [location, map, geocodeLocation]);
 
   // Update circle each time radius/center/mode changes
   const updateCircle = useCallback(() => {
@@ -145,8 +156,9 @@ export default function TravelTimeSelector({
         <div className="flex-1">
           <label className="block text-sm font-medium mb-2">Location</label>
           <LocationCombobox
-            location={location}
+            location={travelTimeLocation}
             setLocation={setTravelTimeLocation}
+            // defaultLocation={defaultLocation}
           />
         </div>
 

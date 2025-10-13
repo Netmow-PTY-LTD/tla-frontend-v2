@@ -8,11 +8,14 @@ import { Modal } from '@/components/UIComponents/Modal';
 import { useAllServicesQuery } from '@/store/features/admin/servicesApiService';
 import { useAddLeadServiceMutation } from '@/store/features/leadService/leadServiceApiService';
 import { Clock, Globe, Loader, MapPin, SquarePen, X } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DistanceMap from '../../profile/_components/DistanceMap';
 import TravelTimeSelector from './TravelTimeSelector';
 import { useCreateLocationMutation } from '@/store/features/lawyer/locationApiService';
 import { useSelector } from 'react-redux';
+import { safeJsonParse } from '@/helpers/safeJsonParse';
+import Cookies from 'js-cookie';
+import countries from '@/data/countries.json';
 
 const AddLocationModal = ({
   open,
@@ -20,13 +23,14 @@ const AddLocationModal = ({
   services,
   locations,
   refetchLocations,
+  refetchLeadServicesAndLocations,
 }) => {
   const [step, setStep] = useState('initial'); // 'initial' | 'distance' | 'travelTime' | 'draw'
   const [distanceLocation, setDistanceLocation] = useState('');
   const [radius, setRadius] = useState(10);
   const [travelTimeLocation, setTravelTimeLocation] = useState('');
-  const [travelTime, setTravelTime] = useState(15);
-  const [travelMode, setTravelMode] = useState('driving');
+  const [traveltime, setTraveltime] = useState(5);
+  const [travelmode, setTravelmode] = useState('driving');
   const [selectedServices, setSelectedServices] = useState(
     services?.map((s) => s?.service?._id) || []
   );
@@ -42,6 +46,20 @@ const AddLocationModal = ({
     setStep('initial');
     setOpen(false);
   };
+  const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
+
+  const defaultLocation = countries?.find(
+    (c) => c.countryId === cookieCountry?.countryId
+  )?.default_location;
+
+  useEffect(() => {
+    if (defaultLocation && !distanceLocation) {
+      setDistanceLocation(defaultLocation);
+    }
+    if (defaultLocation && !travelTimeLocation) {
+      setTravelTimeLocation(defaultLocation);
+    }
+  }, [defaultLocation]);
 
   const handleServiceChange = (id) => {
     setSelectedServices((prev) =>
@@ -71,6 +89,7 @@ const AddLocationModal = ({
           res?.message || 'Distance location added successfully!'
         );
         refetchLocations();
+        refetchLeadServicesAndLocations();
         resetModal();
       }
     } catch (error) {
@@ -90,8 +109,8 @@ const AddLocationModal = ({
 
     const payload = {
       locationGroupId: travelTimeLocation?._id,
-      travelTime,
-      travelMode,
+      traveltime,
+      travelmode,
       serviceIds: travelTimeSelectedServices,
       locationType: 'travel_time',
     };
@@ -108,6 +127,7 @@ const AddLocationModal = ({
           res?.message || 'Location based on travel time added successfully!'
         );
         refetchLocations();
+        refetchLeadServicesAndLocations();
         resetModal();
       }
     } catch (error) {
@@ -125,9 +145,9 @@ const AddLocationModal = ({
   };
   const nationwideLocationSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submitting nationwide location...');
 
     const payload = {
+      locationGroupId: '68a16a283bd44efc1aef651c',
       serviceIds: nationwideSelectedServices,
       locationType: 'nation_wide',
     };
@@ -145,6 +165,7 @@ const AddLocationModal = ({
             'Location based on nationwide selection added successfully!'
         );
         refetchLocations();
+        refetchLeadServicesAndLocations();
         resetModal();
       }
     } catch (error) {
@@ -291,38 +312,45 @@ const AddLocationModal = ({
                   Distance Wise Services
                 </h3>
 
-                {services?.length > 0 ? (
-                  services?.map((service, index) => (
-                    <div
-                      className="border border-gray-200 h-[48px] px-4 rounded flex items-center justify-between gap-4"
-                      key={index}
-                    >
-                      <label className="text-gray-500">
-                        {service?.service?.name}
-                      </label>
-                      <input
-                        type="checkbox"
-                        value={service?.service?._id}
-                        onChange={() =>
-                          handleServiceChange(service?.service?._id)
-                        }
-                        className="cursor-pointer"
-                        checked={selectedServices.includes(
-                          service?.service?._id
-                        )}
-                      />
+                <div className="space-y-4">
+                  {services?.length > 0 ? (
+                    services?.map((service, index) => (
+                      <div
+                        className="border border-gray-200 h-[48px] px-4 rounded flex flex-col justify-center gap-4"
+                        key={index}
+                      >
+                        <label
+                          htmlFor={`service-${index}`}
+                          className="text-gray-500 flex items-center justify-between gap-4 cursor-pointer h-full"
+                        >
+                          {service?.service?.name}
+
+                          <input
+                            type="checkbox"
+                            id={`service-${index}`}
+                            value={service?.service?._id}
+                            onChange={() =>
+                              handleServiceChange(service?.service?._id)
+                            }
+                            className="cursor-pointer"
+                            checked={selectedServices.includes(
+                              service?.service?._id
+                            )}
+                          />
+                        </label>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center p-4">
+                      <h2 className="text-lg font-semibold">
+                        No services available
+                      </h2>
+                      <p className="text-sm text-muted-foreground">
+                        Click above to add your first service.
+                      </p>
                     </div>
-                  ))
-                ) : (
-                  <div className="text-center p-4">
-                    <h2 className="text-lg font-semibold">
-                      No services available
-                    </h2>
-                    <p className="text-sm text-muted-foreground">
-                      Click above to add your first service.
-                    </p>
-                  </div>
-                )}
+                  )}
+                </div>
 
                 <div className="mt-8 flex justify-between">
                   <button
@@ -361,6 +389,10 @@ const AddLocationModal = ({
                   <TravelTimeSelector
                     travelTimeLocation={travelTimeLocation}
                     setTravelTimeLocation={setTravelTimeLocation}
+                    radius={traveltime}
+                    setRadius={setTraveltime}
+                    mode={travelmode}
+                    setMode={setTravelmode}
                   />
                 </div>
                 <div className="mt-8 flex justify-between">
@@ -388,38 +420,47 @@ const AddLocationModal = ({
                 <p className="text-sm text-gray-500 text-center mb-8">
                   Select what services you provide in this location
                 </p>
-                {services?.length > 0 ? (
-                  services?.map((service, index) => (
-                    <div
-                      className="border border-gray-200 h-[48px] px-4 rounded flex items-center justify-between gap-4"
-                      key={index}
-                    >
-                      <label className="text-gray-500">
-                        {service?.service?.name}
-                      </label>
-                      <input
-                        type="checkbox"
-                        value={service?.service?._id}
-                        onChange={() =>
-                          handleTravelTimeServiceChange(service?.service?._id)
-                        }
-                        className="cursor-pointer"
-                        checked={travelTimeSelectedServices.includes(
-                          service?.service?._id
-                        )}
-                      />
+                <div className="space-y-4">
+                  {services?.length > 0 ? (
+                    services?.map((service, index) => (
+                      <div
+                        className="border border-gray-200 h-[48px] px-4 rounded flex flex-col justify-center gap-4"
+                        key={index}
+                      >
+                        <label
+                          htmlFor={`service-${index}`}
+                          className="text-gray-500 flex items-center justify-between gap-4 cursor-pointer h-full"
+                        >
+                          {service?.service?.name}
+
+                          <input
+                            type="checkbox"
+                            id={`service-${index}`}
+                            value={service?.service?._id}
+                            onChange={() =>
+                              handleTravelTimeServiceChange(
+                                service?.service?._id
+                              )
+                            }
+                            className="cursor-pointer"
+                            checked={travelTimeSelectedServices.includes(
+                              service?.service?._id
+                            )}
+                          />
+                        </label>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center p-4">
+                      <h2 className="text-lg font-semibold">
+                        No services available
+                      </h2>
+                      <p className="text-sm text-muted-foreground">
+                        Click above to add your first service.
+                      </p>
                     </div>
-                  ))
-                ) : (
-                  <div className="text-center p-4">
-                    <h2 className="text-lg font-semibold">
-                      No services available
-                    </h2>
-                    <p className="text-sm text-muted-foreground">
-                      Click above to add your first service.
-                    </p>
-                  </div>
-                )}
+                  )}
+                </div>
                 <div className="mt-8 flex justify-between">
                   <button
                     onClick={() => setStep('travelTime')}
@@ -452,38 +493,46 @@ const AddLocationModal = ({
                   Nationwide Services
                 </h3>
 
-                {services?.length > 0 ? (
-                  services?.map((service, index) => (
-                    <div
-                      className="border border-gray-200 h-[48px] px-4 rounded flex items-center justify-between gap-4"
-                      key={index}
-                    >
-                      <label className="text-gray-500">
-                        {service?.service?.name}
-                      </label>
-                      <input
-                        type="checkbox"
-                        value={service?.service?._id}
-                        onChange={() =>
-                          handleNationWideServiceChange(service?.service?._id)
-                        }
-                        className="cursor-pointer"
-                        checked={nationwideSelectedServices.includes(
-                          service?.service?._id
-                        )}
-                      />
+                <div className="space-y-4">
+                  {services?.length > 0 ? (
+                    services?.map((service, index) => (
+                      <div
+                        className="border border-gray-200 h-[48px] px-4 rounded flex flex-col justify-center"
+                        key={index}
+                      >
+                        <label
+                          htmlFor={`service-${index}`}
+                          className="text-gray-500 flex items-center justify-between gap-4 cursor-pointer h-full"
+                        >
+                          {service?.service?.name}
+                          <input
+                            type="checkbox"
+                            id={`service-${index}`}
+                            value={service?.service?._id}
+                            onChange={() =>
+                              handleNationWideServiceChange(
+                                service?.service?._id
+                              )
+                            }
+                            checked={nationwideSelectedServices.includes(
+                              service?.service?._id
+                            )}
+                            className="cursor-pointer"
+                          />
+                        </label>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center p-4">
+                      <h2 className="text-lg font-semibold">
+                        No services available
+                      </h2>
+                      <p className="text-sm text-muted-foreground">
+                        Click above to add your first service.
+                      </p>
                     </div>
-                  ))
-                ) : (
-                  <div className="text-center p-4">
-                    <h2 className="text-lg font-semibold">
-                      No services available
-                    </h2>
-                    <p className="text-sm text-muted-foreground">
-                      Click above to add your first service.
-                    </p>
-                  </div>
-                )}
+                  )}
+                </div>
 
                 <div className="mt-8 flex justify-between">
                   <button
@@ -493,7 +542,7 @@ const AddLocationModal = ({
                     Back
                   </button>
                   <button
-                    onClick={resetModal}
+                    type="submit"
                     className="px-4 py-2 bg-[var(--secondary-color)] text-white rounded hover:bg-[var(--primary-color)] transition-all duration-300 ease-in-out"
                   >
                     {isAddingLocation ? (
