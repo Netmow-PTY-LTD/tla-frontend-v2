@@ -113,7 +113,7 @@ const InvoiceModal = ({ open, setOpen, transaction }) => {
         </div>
 
         {/* Invoice PDF */}
-        {invoice_pdf_url && (
+        {/* {invoice_pdf_url && (
           <div className="mt-4">
             <a
               href={invoice_pdf_url}
@@ -124,7 +124,7 @@ const InvoiceModal = ({ open, setOpen, transaction }) => {
               Download Invoice PDF
             </a>
           </div>
-        )}
+        )} */}
       </div>
     </Modal>
   );
