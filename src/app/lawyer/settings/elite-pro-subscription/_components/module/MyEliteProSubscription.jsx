@@ -16,8 +16,6 @@ const EliteProSubscription = () => {
     isLoading,
   } = useGetAllEliteProSubscriptionsQuery();
 
-
-
   const {
     data: userInfo,
     isLoading: userLoading,
@@ -33,7 +31,7 @@ const EliteProSubscription = () => {
   console.log('My Elite Pro Subscription:', MyElitePro);
 
   return (
-    <div className="w-full border-none bg-[#F3F3F3] p-[10px] rounded-[5px] ">
+    <div className="w-full border-none bg-[#F3F3F3] py-8 px-[15px] rounded-[5px] ">
       <div className="max-w-[900px] mx-auto">
         <div className="mb-6">
           <h2 className="heading-lg font-bold text-gray-900 mb-2">
@@ -46,7 +44,6 @@ const EliteProSubscription = () => {
         </div>
 
         <div>
-
           <div className="mb-4">
             {MyElitePro ? (
               <EliteProSubscriptionCard subscription={MyElitePro} />
@@ -85,9 +82,7 @@ const EliteProSubscription = () => {
           )}
         </div>
         <div className="mt-8">
-          <SubscriptionTransactionDetails
-
-          />
+          <SubscriptionTransactionDetails />
         </div>
       </div>
     </div>
