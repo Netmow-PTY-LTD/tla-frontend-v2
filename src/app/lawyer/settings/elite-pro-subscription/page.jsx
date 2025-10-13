@@ -1,10 +1,10 @@
 'use client';
-import { DynamicAccordion } from '@/components/UIComponents/AcordionComponent';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import { Suspense, useState } from 'react';
 import { Loader } from 'lucide-react';
-import MySubscription from './_components/module/MySubscription';
+import EliteProSubscription from './_components/module/MyEliteProSubscription';
+
 
 
 
@@ -13,7 +13,7 @@ const stripePromise = loadStripe(
 );
 
 export default function MyCreditsPage() {
-  const [subscriptionProgress, setSubscriptionProgress] = useState(0);
+
 
 
 
@@ -31,7 +31,7 @@ export default function MyCreditsPage() {
           }
         >
          
-          <MySubscription setSubscriptionProgress={setSubscriptionProgress} />,
+          <EliteProSubscription />,
         </Suspense>
       </Elements>
     </div>

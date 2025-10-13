@@ -153,10 +153,11 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
        invalidatesTags: ['subscriptions-packages','subscriptions-package','userInfo'],
     }),
   cancelSubscription: builder.mutation({
-      query: () => {
+      query: (body) => {
         return {
           url: '/settings/credit-payment/cancel-subscription',
           method: 'DELETE',
+          body: body
        
         };
         
