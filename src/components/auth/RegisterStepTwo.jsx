@@ -108,7 +108,7 @@ export default function RegisterStepTwo() {
     defaultValues: {
       practiceWithin: true,
       practiceInternational: practiceInternationally || false,
-      AreaZipcode: '',
+      AreaZipcode: zipCode || '',
       rangeInKm: rangeInKm || '',
     },
   });
@@ -116,16 +116,53 @@ export default function RegisterStepTwo() {
   const practiceWithinWatch = form.watch('practiceWithin');
   //const practiceInternationalWatch = form.watch('practiceInternational');
 
-  const addressInfo = {
-    countryId: cookieCountry?.countryId,
-    countryCode: cookieCountry?.code?.toLowerCase(),
-    zipcode: address,
-    latitude: latitude?.toString(),
-    longitude: longitude?.toString(),
-    postalCode,
-  };
+  // Ensure AreaZipcode persists when coming back from next step
+  useEffect(() => {
+    // Rehydrate AreaZipcode from Redux
+    if (zipCode && form.getValues('AreaZipcode') !== zipCode) {
+      form.setValue('AreaZipcode', zipCode);
+    }
 
-  //console.log('addressInfo', addressInfo);
+    // Rehydrate rangeInKm from Redux
+    if (rangeInKm && form.getValues('rangeInKm') !== rangeInKm) {
+      form.setValue('rangeInKm', rangeInKm);
+    }
+
+    // Sync local state for addressInfo if zipCode exists in Redux
+    if (zipCode && allZipCodes?.data) {
+      const selectedZipcode = allZipCodes.data.find((z) => z._id === zipCode);
+      if (selectedZipcode) {
+        setLatitude(selectedZipcode.latitude);
+        setLongitude(selectedZipcode.longitude);
+        setPostalCode(selectedZipcode.postalCode);
+        setAddress(selectedZipcode.zipcode);
+        setZipcode(selectedZipcode._id); // store the id as well
+      }
+    }
+  }, [zipCode, rangeInKm, allZipCodes?.data, form]);
+
+  const addressInfo = useMemo(
+    () => ({
+      countryId: cookieCountry?.countryId,
+      countryCode: cookieCountry?.code?.toLowerCase(),
+      zipcode: address || lawyerServiceMap?.addressInfo?.zipcode || '',
+      latitude:
+        latitude?.toString() || lawyerServiceMap?.addressInfo?.latitude || '',
+      longitude:
+        longitude?.toString() || lawyerServiceMap?.addressInfo?.longitude || '',
+      postalCode: postalCode || lawyerServiceMap?.addressInfo?.postalCode || '',
+    }),
+    [
+      cookieCountry,
+      address,
+      latitude,
+      longitude,
+      postalCode,
+      lawyerServiceMap?.addressInfo,
+    ]
+  );
+
+  console.log('addressInfo', addressInfo);
 
   const onSubmit = (data) => {
     if (!practiceWithinWatch && (!data.AreaZipcode || !data.rangeInKm)) {
@@ -219,7 +256,7 @@ export default function RegisterStepTwo() {
                 name="AreaZipcode"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Area Zipcode</FormLabel>
+                    <FormLabel>Practicing Area</FormLabel>
                     <Combobox
                       value={field.value}
                       onChange={(val) => {
@@ -356,7 +393,6 @@ export default function RegisterStepTwo() {
                   <FormItem>
                     <FormLabel>Range of Area</FormLabel>
                     <Select
-                      //disabled={!practiceWithinWatch || !zipCode} // disable if no zipcode selected
                       onValueChange={(val) => {
                         const parsedValue = Number(val); // convert from string to number
                         field.onChange(parsedValue); // update form

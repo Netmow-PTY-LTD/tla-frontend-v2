@@ -17,7 +17,7 @@ import FormWrapper from '@/components/form/FromWrapper';
 import TextInput from '@/components/form/TextInput';
 import z from 'zod';
 
-export default function CreateRangeModal({ isOpen, onClose }) {
+export default function CreateRangeModal({ isOpen, onClose, refetchRange }) {
   const defaultValues = {
     name: '',
     value: null,
@@ -48,6 +48,7 @@ export default function CreateRangeModal({ isOpen, onClose }) {
       if (result) {
         showSuccessToast(result?.message || 'Range added successfully');
         onClose();
+        refetchRange();
       }
     } catch (error) {
       const message = error?.data?.message || 'An unexpected error occurred.';

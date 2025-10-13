@@ -18,6 +18,7 @@ import {
   updateNestedField,
   prevStep,
   bulkUpdate,
+  resetRegistration,
 } from '@/store/features/auth/lawyerRegistrationSlice';
 import { useAuthRegisterMutation } from '@/store/features/auth/authApiService';
 import { useRouter } from 'next/navigation';
@@ -64,15 +65,11 @@ export default function RegisterStepThree() {
     registration.companyInfo;
 
   const [localCompanySize, setLocalCompanySize] = useState(companySize || '');
-  const [isCompany, setIsCompany] = useState(false);
+  // const [isCompany, setIsCompany] = useState(false);
 
   const lawyerServiceMap = useSelector(
     (state) => state.lawyerRegistration.lawyerServiceMap
   );
-
-  // useEffect(() => {
-  //   setIsCompany(companyTeam); // This will always be false initially unless updated
-  // }, [companyTeam]);
 
   //console.log('lawyerServiceMap in step 3', lawyerServiceMap);
 
@@ -102,8 +99,9 @@ export default function RegisterStepThree() {
     defaultValues: {
       email,
       phone: profile?.phone,
-      soloPractitioner: registration.lawyerServiceMap.isSoloPractitioner,
-      companyTeam: companyTeam,
+      soloPractitioner:
+        registration.lawyerServiceMap.isSoloPractitioner ?? true,
+      companyTeam: false, // Set to false since solo practitioner should be true by default
       company_name: companyName,
       company_website: website,
       company_size: companySize,
@@ -117,16 +115,46 @@ export default function RegisterStepThree() {
 
   useEffect(() => {
     if (defaultCountry) {
-      form.reset(); // clears the form
+      // Determine if should be company mode based on existing company name
+      const hasCompanyName = companyName && companyName.trim() !== '';
+
+      form.reset({
+        email,
+        phone: profile?.phone,
+        soloPractitioner: hasCompanyName
+          ? false
+          : registration.lawyerServiceMap.isSoloPractitioner ?? true,
+        companyTeam: hasCompanyName ? true : false,
+        company_name: companyName,
+        company_website: website,
+        company_size: companySize,
+        password,
+        gender: profile.gender,
+        law_society_member_number: profile.law_society_member_number,
+        practising_certificate_number: profile.practising_certificate_number,
+        agreement: false,
+      });
     }
-  }, [defaultCountry]);
+  }, [
+    defaultCountry,
+    email,
+    profile?.phone,
+    companyName,
+    website,
+    companySize,
+    password,
+    profile.gender,
+    profile.law_society_member_number,
+    profile.practising_certificate_number,
+    registration.lawyerServiceMap.isSoloPractitioner,
+  ]);
 
   useEffect(() => {
     dispatch(
       updateNestedField({
         section: 'lawyerServiceMap',
         field: 'isSoloPractitioner',
-        value: false,
+        value: true,
       })
     );
 
@@ -167,13 +195,6 @@ export default function RegisterStepThree() {
   //   profile.practising_certificate_number,
   // ]);
 
-  console.log('companyTeam from Redux:', companyTeam);
-  console.log(
-    'soloPractitioner from Redux:',
-    registration.lawyerServiceMap.isSoloPractitioner
-  );
-  console.log('Default values passed to form:', form.getValues());
-
   const handleGenderChange = (value) => {
     dispatch(updateNestedField({ section: 'profile', field: 'gender', value })); // Update Redux
     form.setValue('gender', value, { shouldValidate: true }); // Sync to RHF
@@ -191,9 +212,10 @@ export default function RegisterStepThree() {
       const result = await authRegister(registrationState).unwrap();
       if (result?.success && result?.token) {
         showSuccessToast(result?.message || 'Registration successful');
+        form.reset();
         const token = result.token;
         const userPayload = verifyToken(token);
-        console.log('userPayload', userPayload);
+        //console.log('userPayload', userPayload);
         if (userPayload) {
           dispatch(
             setUser({
@@ -205,6 +227,7 @@ export default function RegisterStepThree() {
           if (userType === 'lawyer') router.push('/lawyer/dashboard');
           else if (userType === 'client') router.push('/client/dashboard');
           else router.push('/');
+          dispatch(resetRegistration());
         }
       } else {
         const errorMessage =
@@ -488,12 +511,24 @@ export default function RegisterStepThree() {
                                 id={`solo-${option.value}`}
                                 name="soloPractitioner"
                                 value={option.value.toString()}
-                                checked={
-                                  (field.value ?? false) === option.value
-                                }
+                                checked={(field.value ?? true) === option.value}
                                 onChange={() => {
                                   field.onChange(option.value);
                                   form.setValue('companyTeam', !option.value);
+
+                                  // Force form re-render
+                                  form.trigger('soloPractitioner');
+
+                                  console.log(
+                                    'Radio button clicked:',
+                                    option.label,
+                                    'value:',
+                                    option.value
+                                  );
+                                  console.log(
+                                    'Form will show company section:',
+                                    !option.value
+                                  );
 
                                   dispatch(
                                     updateNestedField({
@@ -512,7 +547,6 @@ export default function RegisterStepThree() {
                                   );
 
                                   if (option.value === true) {
-                                    setIsCompany(false);
                                     dispatch(
                                       updateNestedField({
                                         section: 'companyInfo',
@@ -534,8 +568,6 @@ export default function RegisterStepThree() {
                                         value: '',
                                       })
                                     );
-                                  } else {
-                                    setIsCompany(true);
                                   }
                                 }}
                                 className="sr-only"
@@ -569,7 +601,7 @@ export default function RegisterStepThree() {
               </div>
 
               {/* Company Info Section */}
-              {isCompany && (
+              {!form.watch('soloPractitioner') && (
                 <>
                   <FormField
                     control={form.control}
@@ -587,6 +619,7 @@ export default function RegisterStepThree() {
                                 (c) => c._id === val
                               );
 
+                              // Update company info in Redux
                               dispatch(
                                 updateNestedField({
                                   section: 'companyInfo',
@@ -594,6 +627,30 @@ export default function RegisterStepThree() {
                                   value: val,
                                 })
                               );
+
+                              // If a company is selected, automatically set work type to company/team
+                              if (val) {
+                                form.setValue('soloPractitioner', false);
+                                form.setValue('companyTeam', true);
+
+                                dispatch(
+                                  updateNestedField({
+                                    section: 'lawyerServiceMap',
+                                    field: 'isSoloPractitioner',
+                                    value: false,
+                                  })
+                                );
+
+                                dispatch(
+                                  updateNestedField({
+                                    section: 'companyInfo',
+                                    field: 'companyTeam',
+                                    value: true,
+                                  })
+                                );
+
+                                // setIsCompany(true);
+                              }
                             }}
                           >
                             <div className="relative">

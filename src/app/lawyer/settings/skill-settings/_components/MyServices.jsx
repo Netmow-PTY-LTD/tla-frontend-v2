@@ -10,10 +10,14 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import AddLocationModal from './AddLocationModal';
+import EditLocationModal from './EditLocationModal';
+import { useGetAllLocationsQuery } from '@/store/features/lawyer/locationApiService';
 
 const ServicesList = () => {
   const [open, setOpen] = useState(false);
-
+  const [editOpen, setEditOpen] = useState(false);
+  const [selectedLocationId, setSelectedLocationId] = useState(null);
+  const [selectedLocationType, setSelectedLocationType] = useState(null);
   const {
     data: leadServicesData,
     isLoading,
@@ -22,12 +26,22 @@ const ServicesList = () => {
     refetch: refetchLeadServicesAndLocations,
   } = useGetLeadServiceListQuery();
   const leadServices = leadServicesData?.data?.service || [];
-  const locations = leadServicesData?.data.locations || [];
+  //const locations = leadServicesData?.data.locations || [];
+
+  const { data: locationsData, refetch: refetchLocations } =
+    useGetAllLocationsQuery();
+  const locations = locationsData?.data || [];
 
   //console.log('leadServicesData', leadServices);
 
   const handleModalOpen = () => {
     setOpen(true);
+  };
+
+  const handleEditModalOpen = (locationId, locationType) => {
+    setSelectedLocationId(locationId);
+    setEditOpen(true);
+    setSelectedLocationType(locationType);
   };
 
   return (
@@ -116,7 +130,14 @@ const ServicesList = () => {
             ) : locations?.length > 0 ? (
               <div className="space-y-1">
                 {locations.map((loc) => (
-                  <LocationItem key={loc._id} location={loc} />
+                  <LocationItem
+                    key={loc._id}
+                    location={loc}
+                    onEdit={() =>
+                      handleEditModalOpen(loc?._id, loc?.locationType)
+                    }
+                    refetchLocations={refetchLeadServicesAndLocations}
+                  />
                 ))}
               </div>
             ) : (
@@ -159,7 +180,16 @@ const ServicesList = () => {
           setOpen={setOpen}
           services={leadServices}
           locations={locations}
-          refetchLeadServicesAndLocations={refetchLeadServicesAndLocations}
+          refetchLocations={refetchLocations}
+        />
+
+        <EditLocationModal
+          open={editOpen}
+          setOpen={setEditOpen}
+          locationId={selectedLocationId}
+          locationType={selectedLocationType}
+          services={leadServices}
+          refetchLocations={refetchLocations}
         />
       </div>
     </div>

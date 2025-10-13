@@ -7,6 +7,7 @@ import LocationCombobox from '../../skill-settings/_components/LocationCombobox'
 import { safeJsonParse } from '@/helpers/safeJsonParse';
 import Cookies from 'js-cookie';
 import { Bus, Car, PersonStanding } from 'lucide-react';
+import countries from '@/data/countries.json';
 
 const libraries = ['places'];
 const containerStyle = { width: '100%', height: '400px' };
@@ -24,7 +25,10 @@ const minutesToMeters = (minutes, mode) => {
   return distanceKm * 1000; // Convert to meters
 };
 
-export default function TravelTimeSelector() {
+export default function TravelTimeSelector({
+  travelTimeLocation,
+  setTravelTimeLocation,
+}) {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
     libraries,
@@ -34,7 +38,7 @@ export default function TravelTimeSelector() {
   const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
   const countryName = cookieCountry?.name || 'Australia';
 
-  const [location, setLocation] = useState(countryName);
+  //const [location, setLocation] = useState(countryName);
   const [radius, setRadius] = useState(15); // miles or minutes
   const [mode, setMode] = useState('driving'); // driving, walking, transit
   const [center, setCenter] = useState({ lat: 40.7128, lng: -74.006 });
@@ -42,6 +46,11 @@ export default function TravelTimeSelector() {
   const [map, setMap] = useState(null);
   const currentCircle = useRef(null);
 
+  const defaultLocation = countries?.find(
+    (c) => c.countryId === cookieCountry?.countryId
+  )?.default_location;
+
+  const location = travelTimeLocation?.zipcode || defaultLocation.zipcode;
   // Geocode selected location
   const geocodeLocation = useCallback(async (location, map) => {
     try {
@@ -135,7 +144,10 @@ export default function TravelTimeSelector() {
         {/* Location */}
         <div className="flex-1">
           <label className="block text-sm font-medium mb-2">Location</label>
-          <LocationCombobox location={location} setLocation={setLocation} />
+          <LocationCombobox
+            location={location}
+            setLocation={setTravelTimeLocation}
+          />
         </div>
 
         {/* Distance/Time */}
