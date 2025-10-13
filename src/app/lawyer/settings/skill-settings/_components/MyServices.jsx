@@ -179,6 +179,7 @@ const ServicesList = () => {
           services={leadServices}
           locations={locations}
           refetchLocations={refetchLocations}
+          refetchLeadServicesAndLocations={refetchLeadServicesAndLocations}
         />
 
         <EditLocationModal
@@ -188,6 +189,7 @@ const ServicesList = () => {
           locationType={selectedLocationType}
           services={leadServices}
           refetchLocations={refetchLocations}
+          refetchLeadServicesAndLocations={refetchLeadServicesAndLocations}
         />
       </div>
     </div>
