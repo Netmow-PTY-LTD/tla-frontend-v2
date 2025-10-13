@@ -5,9 +5,7 @@ import { z } from 'zod';
 
 export const lawyerRegistrationStepTwoFormValidation = z
   .object({
-    practiceWithin: z.boolean().refine((val) => val === true, {
-      message: 'This checkbox must be checked before proceeding.',
-    }),
+    practiceWithin: z.boolean().optional(),
     AreaZipcode: z.string().min(1, 'Address is required'),
     rangeInKm: z.any().optional(),
     practiceInternational: z.boolean().optional(),

@@ -17,7 +17,9 @@ import {
   useUpdateLocationMutation,
 } from '@/store/features/lawyer/locationApiService';
 import { useSelector } from 'react-redux';
-import { id } from 'date-fns/locale';
+import countries from '@/data/countries.json';
+import { safeJsonParse } from '@/helpers/safeJsonParse';
+import Cookies from 'js-cookie';
 
 const EditLocationModal = ({
   open,
@@ -31,8 +33,8 @@ const EditLocationModal = ({
   const [distanceLocation, setDistanceLocation] = useState('');
   const [radius, setRadius] = useState(0);
   const [travelTimeLocation, setTravelTimeLocation] = useState('');
-  const [travelTime, setTravelTime] = useState(15);
-  const [travelMode, setTravelMode] = useState('driving');
+  const [traveltime, setTraveltime] = useState('');
+  const [travelmode, setTravelmode] = useState('');
   const [selectedServices, setSelectedServices] = useState(
     services?.map((s) => s?.service?._id) || []
   );
@@ -49,6 +51,8 @@ const EditLocationModal = ({
     setOpen(false);
   };
 
+  console.log('locationId in edit modal:', locationId);
+
   const { data: singleLocationData, isLoading: isLoadingSingleLocation } =
     useGetSingleLocationQuery(locationId, {
       skip: !locationId,
@@ -56,20 +60,58 @@ const EditLocationModal = ({
 
   console.log('singleLocationData', singleLocationData);
 
-  useEffect(() => {
-    if (singleLocationData?.data) {
-      const loc = singleLocationData?.data;
-      setDistanceLocation(loc?.locationGroupId || {});
-      setRadius(loc?.rangeInKm || 0);
-      setSelectedServices(
-        (loc?.serviceIds || []).map((s) => s?._id.toString())
-      );
-    }
-  }, [singleLocationData]);
+  const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
 
-  //   console.log('distanceLocation', distanceLocation);
-  //   console.log('distance', distance);
-  //   console.log('selectedServices', selectedServices);
+  const defaultLocation = countries?.find(
+    (c) => c.countryId === cookieCountry?.countryId
+  )?.default_location;
+
+  useEffect(() => {
+    const loc = singleLocationData?.data;
+
+    if (loc) {
+      // Editing existing location
+      if (loc?.locationType === 'distance_wise') {
+        if (loc?.locationGroupId) {
+          setDistanceLocation(loc.locationGroupId);
+        }
+        setRadius(loc.rangeInKm || 0);
+        setSelectedServices(
+          (loc.serviceIds || []).map((s) => s._id.toString())
+        );
+      }
+
+      if (loc?.locationType === 'travel_time') {
+        if (loc?.locationGroupId) {
+          setTravelTimeLocation(loc.locationGroupId);
+        }
+        setTraveltime(loc.traveltime);
+        setTravelmode(loc.travelmode);
+        setTravelTimeSelectedServices(
+          (loc.serviceIds || []).map((s) => s._id.toString())
+        );
+      }
+
+      if (loc?.locationType === 'nation_wide') {
+        setNationwideSelectedServices(
+          (loc.serviceIds || []).map((s) => s._id.toString())
+        );
+      }
+    } else {
+      // Creating new location
+      if (!distanceLocation) {
+        setDistanceLocation(defaultLocation);
+      }
+      if (!travelTimeLocation) {
+        setTravelTimeLocation(defaultLocation);
+      }
+    }
+  }, [locationId, singleLocationData?.data]);
+
+  console.log('travelTimeLocation', travelTimeLocation);
+  console.log('travelTime', traveltime);
+  console.log('travelMode', travelmode);
+  console.log('travelTimeSelectedServices', travelTimeSelectedServices);
 
   const handleServiceChange = (id) => {
     setSelectedServices((prev) =>
@@ -78,8 +120,9 @@ const EditLocationModal = ({
   };
 
   console.log('radius in modal:', radius);
+  console.log('distanceLocation in edit modal:', distanceLocation);
 
-  const [updateDistanceLocation, { isLoading: isUpdatingLocation }] =
+  const [updateLocation, { isLoading: isUpdatingLocation }] =
     useUpdateLocationMutation();
   const distanceLocationSubmit = async (e) => {
     e.preventDefault();
@@ -94,7 +137,7 @@ const EditLocationModal = ({
     console.log('Submitting distance location payload...', payload);
 
     try {
-      const res = await updateDistanceLocation({
+      const res = await updateLocation({
         id: locationId,
         body: payload,
       }).unwrap();
@@ -123,8 +166,8 @@ const EditLocationModal = ({
 
     const payload = {
       locationGroupId: travelTimeLocation?._id,
-      travelTime,
-      travelMode,
+      traveltime,
+      travelmode,
       serviceIds: travelTimeSelectedServices,
       locationType: 'travel_time',
     };
@@ -134,7 +177,10 @@ const EditLocationModal = ({
     // showSuccessToast('Travel time location added successfully!');
     // resetModal();
     try {
-      const res = await addLocation(payload).unwrap();
+      const res = await updateLocation({
+        id: locationId,
+        body: payload,
+      }).unwrap();
       console.log('Location based on travel time response:', res);
       if (res) {
         showSuccessToast(
@@ -170,7 +216,10 @@ const EditLocationModal = ({
     // resetModal();
 
     try {
-      const res = await addLocation(payload).unwrap();
+      const res = await updateLocation({
+        id: locationId,
+        body: payload,
+      }).unwrap();
       console.log('Location based on nationwide selection response:', res);
       if (res) {
         showSuccessToast(
@@ -225,6 +274,7 @@ const EditLocationModal = ({
                   </div>
                   <div className="mt-8 flex justify-between">
                     <button
+                      type="button"
                       onClick={resetModal}
                       className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
                     >
@@ -246,38 +296,44 @@ const EditLocationModal = ({
                     Distance Wise Services
                   </h3>
 
-                  {services?.length > 0 ? (
-                    services?.map((service, index) => (
-                      <div
-                        className="border border-gray-200 h-[48px] px-4 rounded flex items-center justify-between gap-4"
-                        key={index}
-                      >
-                        <label className="text-gray-500">
-                          {service?.service?.name}
-                        </label>
-                        <input
-                          type="checkbox"
-                          value={service?.service?._id}
-                          onChange={() =>
-                            handleServiceChange(service?.service?._id)
-                          }
-                          className="cursor-pointer"
-                          checked={selectedServices.includes(
-                            service?.service?._id
-                          )}
-                        />
+                  <div className="space-y-4">
+                    {services?.length > 0 ? (
+                      services?.map((service, index) => (
+                        <div
+                          className="border border-gray-200 h-[48px] px-4 rounded flex flex-col justify-center gap-4"
+                          key={index}
+                        >
+                          <label
+                            htmlFor={`service-${index}`}
+                            className="text-gray-500 flex items-center justify-between gap-4 cursor-pointer h-full"
+                          >
+                            {service?.service?.name}
+                            <input
+                              type="checkbox"
+                              id={`service-${index}`}
+                              value={service?.service?._id}
+                              onChange={() =>
+                                handleServiceChange(service?.service?._id)
+                              }
+                              className="cursor-pointer"
+                              checked={selectedServices.includes(
+                                service?.service?._id
+                              )}
+                            />
+                          </label>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center p-4">
+                        <h2 className="text-lg font-semibold">
+                          No services available
+                        </h2>
+                        <p className="text-sm text-muted-foreground">
+                          Click above to add your first service.
+                        </p>
                       </div>
-                    ))
-                  ) : (
-                    <div className="text-center p-4">
-                      <h2 className="text-lg font-semibold">
-                        No services available
-                      </h2>
-                      <p className="text-sm text-muted-foreground">
-                        Click above to add your first service.
-                      </p>
-                    </div>
-                  )}
+                    )}
+                  </div>
 
                   <div className="mt-8 flex justify-between">
                     <button
@@ -320,10 +376,15 @@ const EditLocationModal = ({
                     <TravelTimeSelector
                       travelTimeLocation={travelTimeLocation}
                       setTravelTimeLocation={setTravelTimeLocation}
+                      radius={traveltime}
+                      setRadius={setTraveltime}
+                      mode={travelmode}
+                      setMode={setTravelmode}
                     />
                   </div>
                   <div className="mt-8 flex justify-between">
                     <button
+                      type="button"
                       onClick={resetModal}
                       className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
                     >
@@ -347,38 +408,46 @@ const EditLocationModal = ({
                   <p className="text-sm text-gray-500 text-center mb-8">
                     Select what services you provide in this location
                   </p>
-                  {services?.length > 0 ? (
-                    services?.map((service, index) => (
-                      <div
-                        className="border border-gray-200 h-[48px] px-4 rounded flex items-center justify-between gap-4"
-                        key={index}
-                      >
-                        <label className="text-gray-500">
-                          {service?.service?.name}
-                        </label>
-                        <input
-                          type="checkbox"
-                          value={service?.service?._id}
-                          onChange={() =>
-                            handleTravelTimeServiceChange(service?.service?._id)
-                          }
-                          className="cursor-pointer"
-                          checked={travelTimeSelectedServices.includes(
-                            service?.service?._id
-                          )}
-                        />
+                  <div className="space-y-4">
+                    {services?.length > 0 ? (
+                      services?.map((service, index) => (
+                        <div
+                          className="border border-gray-200 h-[48px] px-4 rounded flex flex-col justify-center gap-4"
+                          key={index}
+                        >
+                          <label
+                            htmlFor={`service-${index}`}
+                            className="text-gray-500 flex items-center justify-between gap-4 cursor-pointer h-full"
+                          >
+                            {service?.service?.name}
+                            <input
+                              type="checkbox"
+                              id={`service-${index}`}
+                              value={service?.service?._id}
+                              onChange={() =>
+                                handleTravelTimeServiceChange(
+                                  service?.service?._id
+                                )
+                              }
+                              className="cursor-pointer"
+                              checked={travelTimeSelectedServices.includes(
+                                service?.service?._id
+                              )}
+                            />
+                          </label>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center p-4">
+                        <h2 className="text-lg font-semibold">
+                          No services available
+                        </h2>
+                        <p className="text-sm text-muted-foreground">
+                          Click above to add your first service.
+                        </p>
                       </div>
-                    ))
-                  ) : (
-                    <div className="text-center p-4">
-                      <h2 className="text-lg font-semibold">
-                        No services available
-                      </h2>
-                      <p className="text-sm text-muted-foreground">
-                        Click above to add your first service.
-                      </p>
-                    </div>
-                  )}
+                    )}
+                  </div>
                   <div className="mt-8 flex justify-between">
                     <button
                       onClick={() => setStep('initial')}
@@ -390,7 +459,7 @@ const EditLocationModal = ({
                       type="submit"
                       className="px-4 py-2 bg-[var(--secondary-color)] text-white rounded hover:bg-[var(--primary-color)] transition-all duration-300 ease-in-out"
                     >
-                      {isAddingLocation ? (
+                      {isUpdatingLocation ? (
                         <div className="flex items-center gap-2">
                           <Loader className="animate-spin h-4 w-4" />
                           Saving...
@@ -409,68 +478,67 @@ const EditLocationModal = ({
 
           {locationType === 'nation_wide' && (
             <form onSubmit={nationwideLocationSubmit}>
-              {step === 'nationwide' && (
-                <div>
-                  <h3 className="text-2xl font-semibold text-center mb-8">
-                    Nationwide Services
-                  </h3>
+              <div>
+                <h3 className="text-2xl font-semibold text-center mb-8">
+                  Nationwide Services
+                </h3>
 
-                  {services?.length > 0 ? (
-                    services?.map((service, index) => (
-                      <div
-                        className="border border-gray-200 h-[48px] px-4 rounded flex items-center justify-between gap-4"
-                        key={index}
-                      >
-                        <label className="text-gray-500">
-                          {service?.service?.name}
-                        </label>
-                        <input
-                          type="checkbox"
-                          value={service?.service?._id}
-                          onChange={() =>
-                            handleNationWideServiceChange(service?.service?._id)
-                          }
-                          className="cursor-pointer"
-                          checked={nationwideSelectedServices.includes(
-                            service?.service?._id
-                          )}
-                        />
-                      </div>
-                    ))
-                  ) : (
-                    <div className="text-center p-4">
-                      <h2 className="text-lg font-semibold">
-                        No services available
-                      </h2>
-                      <p className="text-sm text-muted-foreground">
-                        Click above to add your first service.
-                      </p>
+                {services?.length > 0 ? (
+                  services?.map((service, index) => (
+                    <div
+                      className="border border-gray-200 h-[48px] px-4 rounded flex items-center justify-between gap-4"
+                      key={index}
+                    >
+                      <label className="text-gray-500">
+                        {service?.service?.name}
+                      </label>
+                      <input
+                        type="checkbox"
+                        value={service?.service?._id}
+                        onChange={() =>
+                          handleNationWideServiceChange(service?.service?._id)
+                        }
+                        className="cursor-pointer"
+                        checked={nationwideSelectedServices.includes(
+                          service?.service?._id
+                        )}
+                      />
                     </div>
-                  )}
-
-                  <div className="mt-8 flex justify-between">
-                    <button
-                      onClick={() => setStep('initial')}
-                      className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-                    >
-                      Back
-                    </button>
-                    <button
-                      onClick={resetModal}
-                      className="px-4 py-2 bg-[var(--secondary-color)] text-white rounded hover:bg-[var(--primary-color)] transition-all duration-300 ease-in-out"
-                    >
-                      {isAddingLocation ? (
-                        <div className="flex items-center gap-2">
-                          <Loader className="animate-spin h-4 w-4" />
-                          Saving...
-                        </div>
-                      ) : (
-                        'Save'
-                      )}
-                    </button>
+                  ))
+                ) : (
+                  <div className="text-center p-4">
+                    <h2 className="text-lg font-semibold">
+                      No services available
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      Click above to add your first service.
+                    </p>
                   </div>
+                )}
+
+                <div className="mt-8 flex justify-between">
+                  <button
+                    type="button"
+                    onClick={resetModal}
+                    className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={resetModal}
+                    className="px-4 py-2 bg-[var(--secondary-color)] text-white rounded hover:bg-[var(--primary-color)] transition-all duration-300 ease-in-out"
+                  >
+                    {isUpdatingLocation ? (
+                      <div className="flex items-center gap-2">
+                        <Loader className="animate-spin h-4 w-4" />
+                        Saving...
+                      </div>
+                    ) : (
+                      'Save'
+                    )}
+                  </button>
                 </div>
-              )}
+              </div>
             </form>
           )}
 
