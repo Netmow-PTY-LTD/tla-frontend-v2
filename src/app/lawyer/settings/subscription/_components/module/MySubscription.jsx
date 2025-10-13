@@ -10,7 +10,7 @@ import SubscriptionCard from '../UI/SubscriptionCard';
 
 
 
-const MySubscription = ({ setSubscriptionProgress }) => {
+const MySubscription = () => {
   const {
     data: subscriptionData,
     isError,
@@ -89,7 +89,7 @@ const MySubscription = ({ setSubscriptionProgress }) => {
         </div>
         <div className="mt-8">
           <SubscriptionTransactionDetails
-            setSubscriptionProgress={setSubscriptionProgress}
+           
           />
         </div>
       </div>
