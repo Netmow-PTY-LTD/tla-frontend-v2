@@ -85,7 +85,7 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
   //  Cancel subscription handler
   const handleCancelSubscription = async () => {
     try {
-      const result = await cancelSubscription().unwrap();
+      const result = await cancelSubscription({ type: 'elitePro' }).unwrap();
       if (result.success) {
         showSuccessToast(result?.message || 'Subscription cancelled successfully');
       } else {
