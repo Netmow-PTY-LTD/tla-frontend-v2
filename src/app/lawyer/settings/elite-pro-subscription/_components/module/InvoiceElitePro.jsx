@@ -119,11 +119,11 @@ const EliteProInvoiceDocument = ({ transaction }) => {
         </View>
 
         {/* Optional Invoice PDF */}
-        {invoice_pdf_url && (
+        {/* {invoice_pdf_url && (
           <View style={[styles.section, { marginTop: 10 }]}>
             <Text>Invoice PDF: {invoice_pdf_url}</Text>
           </View>
-        )}
+        )} */}
       </Page>
     </Document>
   );
