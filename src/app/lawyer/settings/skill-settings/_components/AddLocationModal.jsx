@@ -142,9 +142,9 @@ const AddLocationModal = ({
   };
   const nationwideLocationSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submitting nationwide location...');
 
     const payload = {
+      locationGroupId: '68a16a283bd44efc1aef651c',
       serviceIds: nationwideSelectedServices,
       locationType: 'nation_wide',
     };
@@ -538,7 +538,7 @@ const AddLocationModal = ({
                     Back
                   </button>
                   <button
-                    onClick={resetModal}
+                    type="submit"
                     className="px-4 py-2 bg-[var(--secondary-color)] text-white rounded hover:bg-[var(--primary-color)] transition-all duration-300 ease-in-out"
                   >
                     {isAddingLocation ? (
