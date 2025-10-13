@@ -32,8 +32,6 @@ const ServicesList = () => {
     useGetAllLocationsQuery();
   const locations = locationsData?.data || [];
 
-  //console.log('leadServicesData', leadServices);
-
   const handleModalOpen = () => {
     setOpen(true);
   };

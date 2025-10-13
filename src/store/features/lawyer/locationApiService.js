@@ -32,7 +32,7 @@ export const locationApiService = baseApi.injectEndpoints({
         return {
           url: `/user-location-service-map/${body.id}/update`,
           method: 'PUT',
-          body: body.data,
+          body: body.body,
         };
       },
       invalidatesTags: ['location'],
