@@ -22,14 +22,15 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
   const [cancelOpen, setCancelOpen] = useState(false);
   const [autoRenew, setAutoRenew] = useState(true);
   const [addPaymentMethod] = useAddPaymentMethodMutation();
-  const [subscriptionSubscription, { isLoading: subscribeLoading }] = useCreateSubscriptionMutation();
-  const [cancelSubscription, { isLoading: cancelSubscriptionLoading }] = useCancelSubscriptionMutation();
+  const [subscriptionSubscription, { isLoading: subscribeLoading }] =
+    useCreateSubscriptionMutation();
+  const [cancelSubscription, { isLoading: cancelSubscriptionLoading }] =
+    useCancelSubscriptionMutation();
   const { data: userInfo } = useAuthUserInfoQuery();
 
   const { data, isError, isLoading } = useGetPaymentMethodQuery();
 
   const card = data?.data || null;
-
 
   const activeSubscription = userInfo?.data?.profile?.subscriptionId || null;
 
@@ -56,13 +57,13 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
     const subscriptionDetails = {
       packageId: subscriptionPackageId,
       autoRenew,
-      type: 'subscription'
+      type: 'subscription',
     };
 
-
-
     try {
-      const result = await subscriptionSubscription(subscriptionDetails).unwrap();
+      const result = await subscriptionSubscription(
+        subscriptionDetails
+      ).unwrap();
       console.log('Subscription result:', result);
       if (result.success) {
         showSuccessToast(result?.message);
@@ -73,17 +74,18 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);
     }
-
   };
-
-
 
   //  Cancel subscription handler
   const handleCancelSubscription = async () => {
     try {
-      const result = await cancelSubscription({ type: 'subscription' }).unwrap();
+      const result = await cancelSubscription({
+        type: 'subscription',
+      }).unwrap();
       if (result.success) {
-        showSuccessToast(result?.message || 'Subscription cancelled successfully');
+        showSuccessToast(
+          result?.message || 'Subscription cancelled successfully'
+        );
       } else {
         showErrorToast(result?.message || 'Failed to cancel subscription');
       }
@@ -93,12 +95,9 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
     }
   };
 
-
-
-
   return (
     <div>
-      <div className="border-0 bg-white rounded-lg shadow-sm pt-4 pb-6 px-[17px] relative">
+      <div className="border-0 bg-white rounded-lg shadow-sm p-8 relative">
         {subscriptionPlan.discountPercentage > 0 && (
           <div className="bg-[#00C3C0] absolute text-white p-[10px] rounded-tl-md rounded-br-md text-sm font-medium top-0 left-0">
             <h2 className="text-sm font-medium text-white whitespace-nowrap">
@@ -107,11 +106,15 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
           </div>
         )}
 
-        <div className="mt-12">
+        <div className="">
           <div className="grid md:grid-cols-4 gap-6 items-start">
             <div className="flex flex-col space-y-2">
-              <p className="font-medium text-gray-900 text-lg">{subscriptionPlan?.name}</p>
-              <p className="text-sm text-gray-600">{subscriptionPlan?.description}</p>
+              <p className="font-medium text-gray-900 text-lg">
+                {subscriptionPlan?.name}
+              </p>
+              <p className="text-sm text-gray-600">
+                {subscriptionPlan?.description}
+              </p>
             </div>
 
             <div className="flex items-center space-x-2">
@@ -126,11 +129,10 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
                 {subscriptionPlan?.priceFormatted}
               </p>
               <p className="text-gray-500 text-sm">
-                {subscriptionPlan?.price?.currency} {subscriptionPlan?.price?.amount}/month
+                {subscriptionPlan?.price?.currency}{' '}
+                {subscriptionPlan?.price?.amount}/month
               </p>
             </div>
-
-
 
             <div>
               {isSubscribedToThisPlan ? (
@@ -170,11 +172,12 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
                 </Button>
               )}
             </div>
-
           </div>
 
           <div className="mt-6">
-            <h3 className="text-gray-900 font-medium text-md mb-2">Features:</h3>
+            <h3 className="text-gray-900 font-medium text-md mb-2">
+              Features:
+            </h3>
             <ul className="list-disc list-inside text-gray-700 text-sm">
               {subscriptionPlan?.features?.map((feature, index) => (
                 <li key={index}>{feature}</li>
@@ -192,7 +195,8 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
                   height={80}
                 />
                 <p className="text-sm text-gray-700">
-                  Enjoy uninterrupted access to premium features with our subscription plans.
+                  Enjoy uninterrupted access to premium features with our
+                  subscription plans.
                 </p>
               </div>
             </div>
@@ -220,7 +224,6 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
         onOpenChange={setCancelOpen}
         description="Are you sure you want to cancel your subscription?"
       />
-
     </div>
   );
 };
