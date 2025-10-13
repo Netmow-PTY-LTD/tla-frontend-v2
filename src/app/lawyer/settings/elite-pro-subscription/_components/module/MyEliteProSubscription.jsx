@@ -7,12 +7,11 @@ import { SubscriptionTransactionDetails } from '../UI/SubscriptionTransactionDet
 import { useGetAllEliteProSubscriptionsQuery } from '@/store/features/admin/eliteProSubscriptionsApiService';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import EliteProSubscriptionPurchase from '../UI/EliteProSubscriptionPurchase';
-import SubscriptionCard from '../../../subscription/_components/UI/SubscriptionCard';
 import EliteProSubscriptionCard from '../UI/EliteProSubscriptionCard';
 
 const EliteProSubscription = () => {
   const {
-    data: subscriptionData,
+    data: elliteProSubscriptionData,
     isError,
     isLoading,
   } = useGetAllEliteProSubscriptionsQuery();
@@ -66,12 +65,12 @@ const EliteProSubscription = () => {
             <div className="text-red-500 text-sm">
               Failed to load subscription data. Please try again.
             </div>
-          ) : subscriptionData?.data?.length > 0 ? (
+          ) : elliteProSubscriptionData?.data?.length > 0 ? (
             <div className="grid grid-cols-1 gap-6">
-              {subscriptionData?.data?.map((subscription) => (
+              {elliteProSubscriptionData?.data?.map((elitePro) => (
                 <EliteProSubscriptionPurchase
-                  key={subscription?._id}
-                  subscriptionPlan={subscription}
+                  key={elitePro?._id}
+                  subscriptionPlan={elitePro}
                 />
               ))}
             </div>

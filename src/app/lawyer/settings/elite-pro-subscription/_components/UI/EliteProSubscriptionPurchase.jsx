@@ -6,23 +6,41 @@ import Image from 'next/image';
 import { BrandIcon } from '@/assets/icon';
 import {
   useAddPaymentMethodMutation,
- 
+
+  useCancelSubscriptionMutation,
+
+  useCreateSubscriptionMutation,
+
   useGetPaymentMethodQuery,
   usePurchaseCreditPackageMutation,
 } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 import AddCardModal from '../modal/AddCardModal';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
+import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import { Loader } from 'lucide-react';
 
 const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
   const [open, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [autoRenew, setAutoRenew] = useState(false);
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const [autoRenew, setAutoRenew] = useState(true);
   const [addPaymentMethod] = useAddPaymentMethodMutation();
-  const [purchaseSubscription] = usePurchaseCreditPackageMutation();
+  const [subscriptionSubscription, { isLoading: subscribeLoading }] = useCreateSubscriptionMutation();
+  const [cancelSubscription, { isLoading: cancelSubscriptionLoading }] = useCancelSubscriptionMutation();
+  const { data: userInfo } = useAuthUserInfoQuery();
+
   const { data, isError, isLoading } = useGetPaymentMethodQuery();
 
   const card = data?.data || null;
+
+
+  const activeSubscription = userInfo?.data?.profile?.eliteProSubscriptionId || null;
+
+  const isSubscribedToThisPlan =
+    activeSubscription &&
+    activeSubscription.eliteProPackageId?._id === subscriptionPlan?._id &&
+    activeSubscription.status === 'active';
 
   const handleCardAdded = async (paymentMethodId) => {
     const result = await addPaymentMethod({ paymentMethodId }).unwrap();
@@ -38,15 +56,19 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
     }
   };
 
-  const handlePurchase = async (subscriptionPlanId, subscriptionPrice) => {
-    const purchaseDetails = {
-      planId: subscriptionPlanId,
+  const handleEliteProSubscription = async ({ subscriptionPackageId }) => {
+    const subscriptionDetails = {
+      packageId: subscriptionPackageId,
       autoRenew,
-      couponCode: null,
+      type: 'elitePro'
     };
+
+    console.log('Subscription Details:', subscriptionDetails);
+
+
     try {
-      const result = await purchaseSubscription(purchaseDetails).unwrap();
-      console.log('Purchase result:', result);
+      const result = await subscriptionSubscription(subscriptionDetails).unwrap();
+      console.log('Subscription result:', result);
       if (result.success) {
         showSuccessToast(result?.message);
       } else {
@@ -59,6 +81,21 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
 
   };
 
+
+  //  Cancel subscription handler
+  const handleCancelSubscription = async () => {
+    try {
+      const result = await cancelSubscription().unwrap();
+      if (result.success) {
+        showSuccessToast(result?.message || 'Subscription cancelled successfully');
+      } else {
+        showErrorToast(result?.message || 'Failed to cancel subscription');
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+    }
+  };
 
 
 
@@ -96,20 +133,43 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
               </p>
             </div>
 
-            <div className="">
-              <Button
-                variant="primary"
-                className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-4"
-                onClick={() => {
-                  if (!card) {
-                    setOpen(true);
-                  } else {
-                    setIsOpen(true);
-                  }
-                }}
-              >
-                Subscribe to Elite Pro
-              </Button>
+            <div>
+              {isSubscribedToThisPlan ? (
+                <Button
+                  variant="destructive"
+                  className="bg-red-500 hover:bg-red-600 text-white px-4 flex items-center justify-center"
+                  onClick={() => setCancelOpen(true)}
+                  disabled={cancelSubscriptionLoading}
+                >
+                  {cancelSubscriptionLoading ? (
+                    <>
+                      <Loader size="sm" className="mr-2" />
+                      Cancelling...
+                    </>
+                  ) : (
+                    'Cancel Subscription'
+                  )}
+                </Button>
+              ) : (
+                <Button
+                  variant="primary"
+                  className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-4 flex items-center justify-center"
+                  onClick={() => {
+                    if (!card) setOpen(true);
+                    else setIsOpen(true);
+                  }}
+                  disabled={subscribeLoading}
+                >
+                  {subscribeLoading ? (
+                    <>
+                      <Loader size="sm" className="mr-2" />
+                      Subscribing...
+                    </>
+                  ) : (
+                    'Subscribe Now'
+                  )}
+                </Button>
+              )}
             </div>
           </div>
 
@@ -146,12 +206,22 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
       />
       <ConfirmationModal
         onConfirm={() =>
-          handlePurchase(subscriptionPlan?._id, subscriptionPlan?.price)
+          handleEliteProSubscription({ subscriptionPackageId: subscriptionPlan?._id })
         }
         open={isOpen}
         onOpenChange={setIsOpen}
         description="Are you sure you want to subscribe to the Elite Pro plan?"
       />
+
+
+      {/* ✅ Confirm Cancel Modal */}
+      <ConfirmationModal
+        onConfirm={handleCancelSubscription}
+        open={cancelOpen}
+        onOpenChange={setCancelOpen}
+        description="Are you sure you want to cancel your elite pro subscription?"
+      />
+
     </div>
   );
 };
