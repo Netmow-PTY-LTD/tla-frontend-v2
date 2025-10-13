@@ -8,7 +8,7 @@ import { useGetAllSubscriptionsQuery } from '@/store/features/admin/subcriptions
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import SubscriptionCard from '../UI/SubscriptionCard';
 
-const MySubscription = ({ setSubscriptionProgress }) => {
+const MySubscription = () => {
   const {
     data: subscriptionData,
     isError,
@@ -81,9 +81,7 @@ const MySubscription = ({ setSubscriptionProgress }) => {
           )}
         </div>
         <div className="mt-8">
-          <SubscriptionTransactionDetails
-            setSubscriptionProgress={setSubscriptionProgress}
-          />
+          <SubscriptionTransactionDetails />
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 'use client';
-import { DynamicAccordion } from '@/components/UIComponents/AcordionComponent';
+
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import { Suspense, useState } from 'react';
@@ -13,7 +13,7 @@ const stripePromise = loadStripe(
 );
 
 export default function MyCreditsPage() {
-  const [subscriptionProgress, setSubscriptionProgress] = useState(0);
+  
 
  
 
@@ -30,7 +30,7 @@ export default function MyCreditsPage() {
             </div>
           }
         >
-          <MySubscription setSubscriptionProgress={setSubscriptionProgress} />,
+          <MySubscription  />,
         </Suspense>
       </Elements>
     </div>
