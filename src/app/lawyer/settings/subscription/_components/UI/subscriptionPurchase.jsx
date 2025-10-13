@@ -97,7 +97,7 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
 
   return (
     <div>
-      <div className="border-0 bg-white rounded-lg shadow-sm p-8 relative">
+      <div className="border-0 bg-white rounded-lg p-8 relative">
         {subscriptionPlan.discountPercentage > 0 && (
           <div className="bg-[#00C3C0] absolute text-white p-[10px] rounded-tl-md rounded-br-md text-sm font-medium top-0 left-0">
             <h2 className="text-sm font-medium text-white whitespace-nowrap">
