@@ -106,7 +106,7 @@ export default function RegisterStepTwo() {
   const form = useForm({
     resolver: zodResolver(lawyerRegistrationStepTwoFormValidation),
     defaultValues: {
-      practiceWithin: true,
+      practiceWithin: practiceWithin || true,
       practiceInternational: practiceInternationally || false,
       AreaZipcode: zipCode || '',
       rangeInKm: rangeInKm || '',
@@ -165,11 +165,6 @@ export default function RegisterStepTwo() {
   console.log('addressInfo', addressInfo);
 
   const onSubmit = (data) => {
-    if (!practiceWithinWatch && (!data.AreaZipcode || !data.rangeInKm)) {
-      showErrorToast('Please select at least one practice option.');
-      return;
-    }
-
     dispatch(
       updateNestedField({
         section: 'lawyerServiceMap',
@@ -213,8 +208,6 @@ export default function RegisterStepTwo() {
     dispatch(nextStep());
   };
 
-  console.log('lawyerServiceMap in step 2', lawyerServiceMap);
-
   return (
     <div className="flex flex-wrap lg:flex-nowrap w-full">
       <div className="w-full">
@@ -235,7 +228,7 @@ export default function RegisterStepTwo() {
                 control={form.control}
                 name="practiceWithin"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="cursor-pointer">
                     <FormControl>
                       <Checkbox
                         {...field}
@@ -244,7 +237,7 @@ export default function RegisterStepTwo() {
                       />
                     </FormControl>
                     <FormLabel className="ml-2 font-bold">
-                      I will practice within {cookieCountry?.name}
+                      I will practice all over {cookieCountry?.name}
                     </FormLabel>
                     <FormMessage className="text-red-600" />
                   </FormItem>
@@ -280,7 +273,6 @@ export default function RegisterStepTwo() {
                           })
                         );
                       }}
-                      disabled={!practiceWithinWatch}
                     >
                       <div className="relative">
                         <ComboboxInput

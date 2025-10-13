@@ -13,10 +13,6 @@ import ZipCodeCombobox from '@/components/UIComponents/ZipCodeCombobox';
 import AddressCombobox from '@/app/client/_components/profile/AddressCombobox';
 import FormWrapper from '@/components/form/FromWrapper';
 import LocationCombobox from '../../skill-settings/_components/LocationCombobox';
-import { safeJsonParse } from '@/helpers/safeJsonParse';
-import Cookies from 'js-cookie';
-import countries from '@/data/countries.json';
-
 const libraries = ['places']; // needed for autocomplete
 
 const containerStyle = {
@@ -39,19 +35,6 @@ export default function DistanceMap({
 
   const { data: rangeData } = useGetRangeListQuery();
 
-  const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
-
-  //const countryName = cookieCountry?.name || 'Australia';
-
-  //console.log('cookieCountry', cookieCountry);
-  // useEffect(() => {
-  //   setDistanceLocation(countryName);
-  // }, [countryName]);
-
-  const defaultLocation = countries?.find(
-    (c) => c.countryId === cookieCountry?.countryId
-  )?.default_location;
-
   //const [location, setLocation] = useState(countryName);
   // const [radius, setRadius] = useState(100); // miles
   const [center, setCenter] = useState({ lat: 40.7128, lng: -74.006 });
@@ -65,7 +48,7 @@ export default function DistanceMap({
     }
   }, [radius]);
 
-  const location = distanceLocation?.zipcode || defaultLocation?.zipcode;
+  const location = distanceLocation?.zipcode;
 
   // console.log('distanceLocation in DistanceMap', distanceLocation);
   // console.log('location in DistanceMap', location);
@@ -163,7 +146,6 @@ export default function DistanceMap({
           <LocationCombobox
             location={distanceLocation}
             setLocation={setDistanceLocation}
-            defaultLocation={defaultLocation}
           />
         </div>
 
