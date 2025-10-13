@@ -30,7 +30,9 @@ export const SubscriptionTransactionDetails = () => {
 
     const term = searchTerm.toLowerCase();
 
-    const filtered = transactionData.data.filter((transaction) => {
+    const filtered = transactionData.data
+         .filter((transaction) => transaction.subscriptionType === 'elitePro') 
+    .filter((transaction) => {
       const flatValues = [];
 
       Object.values(transaction).forEach((val) => {

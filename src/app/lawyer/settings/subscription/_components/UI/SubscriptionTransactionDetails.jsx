@@ -8,7 +8,7 @@ import InvoiceModal from '../modal/InvoiceMoadal';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import InvoiceDocument from '@/components/dashboard/lawyer/invoice/InvoiceDocument';
 
-export const SubscriptionTransactionDetails = ({ setSubscriptionProgress }) => {
+export const SubscriptionTransactionDetails = () => {
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [open, setOpen] = useState(false);
@@ -23,33 +23,32 @@ export const SubscriptionTransactionDetails = ({ setSubscriptionProgress }) => {
     isLoading,
   } = useUserTransactionHistoryQuery();
 
-  useEffect(() => {
-    if (transactionData?.data?.length > 0) {
-      setSubscriptionProgress(100);
-    }
-  }, [transactionData?.data]);
+
+
 
   useEffect(() => {
     if (!transactionData?.data) return;
 
     const term = searchTerm.toLowerCase();
 
-    const filtered = transactionData.data.filter((transaction) => {
-      const flatValues = [];
+    const filtered = transactionData.data
+      .filter((transaction) => transaction.subscriptionType === 'subscription') 
+      .filter((transaction) => {
+        const flatValues = [];
 
-      Object.values(transaction).forEach((val) => {
-        if (typeof val === 'object' && val !== null) {
-          flatValues.push(...Object.values(val));
-        } else {
-          flatValues.push(val);
-        }
-      });
+        Object.values(transaction).forEach((val) => {
+          if (typeof val === 'object' && val !== null) {
+            flatValues.push(...Object.values(val));
+          } else {
+            flatValues.push(val);
+          }
+        });
 
-      return flatValues.some((value) => {
-        if (!value) return false;
-        return value.toString().toLowerCase().includes(term);
+        return flatValues.some((value) => {
+          if (!value) return false;
+          return value.toString().toLowerCase().includes(term);
+        });
       });
-    });
 
     setFilteredTransactions(filtered);
     setCurrentPage(1);
@@ -136,11 +135,10 @@ export const SubscriptionTransactionDetails = ({ setSubscriptionProgress }) => {
                       </td>
                       <td className="py-4 px-6 text-sm">
                         <span
-                          className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
-                            tx.status === 'active'
+                          className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${tx.status === 'active'
                               ? 'bg-green-100 text-green-700'
                               : 'bg-yellow-100 text-yellow-700'
-                          }`}
+                            }`}
                         >
                           {tx.status}
                         </span>
@@ -223,7 +221,7 @@ export const SubscriptionTransactionDetails = ({ setSubscriptionProgress }) => {
             const maxVisiblePages = 5;
             const startPage =
               Math.floor((currentPage - 1) / maxVisiblePages) *
-                maxVisiblePages +
+              maxVisiblePages +
               1;
             const endPage = Math.min(
               startPage + maxVisiblePages - 1,
