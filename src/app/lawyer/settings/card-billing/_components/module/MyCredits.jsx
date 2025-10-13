@@ -18,7 +18,7 @@ const MyCredits = ({ setMyCreditsProgress }) => {
       <div className="max-w-[900px] mx-auto">
         <div className="mb-6">
           <h2 className="heading-lg font-bold text-gray-900 mb-2">
-            My credits
+            My Credits
           </h2>
           <p className="text-gray-600 mb-2">
             Credits are used to contact customers on The Law App. A small fee,

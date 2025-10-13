@@ -9,11 +9,22 @@ import { BadgeCent, PanelLeft } from 'lucide-react';
 import { useGetNotificationsQuery } from '@/store/features/notification/notificationApiService';
 import NotificationDropdown from './NotificationDropdown';
 import { useGetUserCreditStatsQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
+import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 
 export default function DashboardHeader({ onToggleSidebar }) {
   const userInfo = useSelector(selectCurrentUser);
   const { data } = useGetNotificationsQuery({ read: false });
-  const { data: credits } = useGetUserCreditStatsQuery();
+  //const { data: credits } = useGetUserCreditStatsQuery();
+
+  const { data: currentUser } = useAuthUserInfoQuery();
+
+  // console.log('userInfo', userInfo);
+  //console.log('currentUser', currentUser);
+
+  const isElitePro = currentUser?.data?.profile?.isElitePro;
+  const eliteProId = currentUser?.data?.profile?.eliteProSubscriptionId;
+  const subscriptionId = currentUser?.data?.profile?.subscriptionId;
+  const credits = currentUser?.data?.profile?.credits;
 
   return (
     <header className="db-header">
@@ -34,12 +45,23 @@ export default function DashboardHeader({ onToggleSidebar }) {
           <PanelLeft />
         </button>
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
+        {/* Elite Pro */}
+        {isElitePro === true && eliteProId && eliteProId !== null && (
+          <span className="text-sm font-medium text-white bg-[var(--primary-color)] px-3 py-1 rounded-full w-8 h-8 flex items-center justify-center">
+            E
+          </span>
+        )}
+        {subscriptionId && subscriptionId !== null && (
+          <span className="text-sm font-medium text-white bg-[var(--secondary-color)] px-3 py-1 rounded-full w-8 h-8 flex items-center justify-center">
+            S
+          </span>
+        )}
         {/* Remaining Credits */}
-        <div className="flex items-center gap-1 bg-gray-50 border border-gray-200 rounded-full px-3 py-1 shadow-sm">
-          <BadgeCent className="w-5 h-5 text-primary" />
+        <div className="flex items-center gap-1 bg-gray-50 border border-gray-200 rounded-full px-2 py-1 shadow-sm h-8">
+          <BadgeCent className="w-6 h-6 text-primary" />
           <span className="text-sm font-semibold text-gray-800">
-            {credits?.data?.remainingCredits ?? 0}
+            {credits ?? 0}
           </span>
         </div>
 

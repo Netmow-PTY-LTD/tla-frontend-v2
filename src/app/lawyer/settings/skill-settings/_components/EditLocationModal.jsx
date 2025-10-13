@@ -27,6 +27,7 @@ const EditLocationModal = ({
   services,
   locationId,
   locationType,
+  refetchLocations,
   refetchLeadServicesAndLocations,
 }) => {
   const [step, setStep] = useState('initial'); // 'initial' | 'distance' | 'travelTime' | 'draw'
@@ -51,14 +52,10 @@ const EditLocationModal = ({
     setOpen(false);
   };
 
-  console.log('locationId in edit modal:', locationId);
-
   const { data: singleLocationData, isLoading: isLoadingSingleLocation } =
     useGetSingleLocationQuery(locationId, {
       skip: !locationId,
     });
-
-  console.log('singleLocationData', singleLocationData);
 
   const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
 
@@ -108,19 +105,11 @@ const EditLocationModal = ({
     }
   }, [locationId, singleLocationData?.data]);
 
-  console.log('travelTimeLocation', travelTimeLocation);
-  console.log('travelTime', traveltime);
-  console.log('travelMode', travelmode);
-  console.log('travelTimeSelectedServices', travelTimeSelectedServices);
-
   const handleServiceChange = (id) => {
     setSelectedServices((prev) =>
       prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
     );
   };
-
-  console.log('radius in modal:', radius);
-  console.log('distanceLocation in edit modal:', distanceLocation);
 
   const [updateLocation, { isLoading: isUpdatingLocation }] =
     useUpdateLocationMutation();
@@ -146,7 +135,8 @@ const EditLocationModal = ({
         showSuccessToast(
           res?.message || 'Distance location updated successfully!'
         );
-        // refetchLeadServicesAndLocations();
+        refetchLocations();
+        refetchLeadServicesAndLocations();
         resetModal();
       }
     } catch (error) {
@@ -186,7 +176,8 @@ const EditLocationModal = ({
         showSuccessToast(
           res?.message || 'Location based on travel time added successfully!'
         );
-        // refetchLeadServicesAndLocations();
+        refetchLocations();
+        refetchLeadServicesAndLocations();
         resetModal();
       }
     } catch (error) {
@@ -197,49 +188,46 @@ const EditLocationModal = ({
     }
   };
 
-  const handleNationWideServiceChange = (id) => {
-    setNationwideSelectedServices((prev) =>
-      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
-    );
-  };
-  const nationwideLocationSubmit = async (e) => {
-    e.preventDefault();
-    console.log('Submitting nationwide location...');
+  // const handleNationWideServiceChange = (id) => {
+  //   setNationwideSelectedServices((prev) =>
+  //     prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
+  //   );
+  // };
+  // const nationwideLocationSubmit = async (e) => {
+  //   e.preventDefault();
+  //   console.log('Submitting nationwide location...');
 
-    const payload = {
-      serviceIds: nationwideSelectedServices,
-      locationType: 'nation_wide',
-    };
-    console.log('Nationwide payload:', payload);
-    // Handle nationwide location submission logic here
-    // showSuccessToast('Nationwide location added successfully!');
-    // resetModal();
+  //   const payload = {
+  //     serviceIds: nationwideSelectedServices,
+  //     locationType: 'nation_wide',
+  //   };
+  //   console.log('Nationwide payload:', payload);
 
-    try {
-      const res = await updateLocation({
-        id: locationId,
-        body: payload,
-      }).unwrap();
-      console.log('Location based on nationwide selection response:', res);
-      if (res) {
-        showSuccessToast(
-          res?.message ||
-            'Location based on nationwide selection added successfully!'
-        );
-        // refetchLeadServicesAndLocations();
-        resetModal();
-      }
-    } catch (error) {
-      console.error(error);
-      showErrorToast(
-        error?.message || 'Failed to add location based on travel time.'
-      );
-    }
-  };
+  //   try {
+  //     const res = await updateLocation({
+  //       id: locationId,
+  //       body: payload,
+  //     }).unwrap();
+  //     console.log('Location based on nationwide selection response:', res);
+  //     if (res) {
+  //       showSuccessToast(
+  //         res?.message ||
+  //           'Location based on nationwide selection added successfully!'
+  //       );
+  //       // refetchLeadServicesAndLocations();
+  //       resetModal();
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     showErrorToast(
+  //       error?.message || 'Failed to add location based on travel time.'
+  //     );
+  //   }
+  // };
 
   //   console.log('distanceLocation', distanceLocation);
   //   console.log('Distance', distance);
-  console.log('Selected Services', selectedServices);
+  //console.log('Selected Services', selectedServices);
 
   return (
     <div>
