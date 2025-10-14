@@ -17,6 +17,8 @@ import { SlidersVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import { showSuccessToast } from '@/components/common/toasts';
+import { useGetAllLocationsQuery } from '@/store/features/lawyer/locationApiService';
+import LocationAccordionItem from './LocationAccordionItem';
 
 const creditTiers = [
   { id: 1, range: 'Free' },
@@ -35,6 +37,7 @@ export default function FilterSidebar({
   setLeads,
   page,
   setPage,
+  locationdata
 }) {
   const [isOpen, setIsOpen] = useState(false); // <-- Control sidebar visibility
   const { register, handleSubmit, reset, watch, setValue, getValues } = useForm(
@@ -82,7 +85,10 @@ export default function FilterSidebar({
       location: values.location,
       services: values.service, // array of checked
       credits: values.credit, // array of checked
+      locations: values.location,
     };
+
+    console.log('vales', values);
 
     setSearchKeyword(payload);
     // Now you can call API or update state
@@ -391,13 +397,13 @@ export default function FilterSidebar({
 
             {/* Location */}
 
-            <AccordionItem value="item-7">
+            {/* <AccordionItem value="item-7">
               <AccordionTrigger className="hover:no-underline">
                 Locations
               </AccordionTrigger>
               <AccordionContent className="overflow-hidden">
                 <div className="flex flex-col gap-4 text-balance">
-                  {locations.map((loc) => (
+                  {locationdata?.data?.map((loc) => (
                     <label
                       key={loc.id}
                       htmlFor={loc.id}
@@ -414,8 +420,12 @@ export default function FilterSidebar({
                   ))}
                 </div>
               </AccordionContent>
-            </AccordionItem>
+            </AccordionItem> */}
 
+            <LocationAccordionItem
+              register={register}
+              locationdata={locationdata}
+            />
 
             {/* Credits */}
             <AccordionItem value="item-8">
