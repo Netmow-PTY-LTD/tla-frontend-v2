@@ -49,7 +49,6 @@ export default function About() {
   const profile = userInfo?.data?.profile;
   const [cancelLawyerMembership] = useCancelLawyerMembershipMutation();
 
-
   console.log('profile', profile);
 
   const defaultValues = useMemo(
@@ -79,25 +78,37 @@ export default function About() {
 
       companyAddress: profile?.firmProfileId?.contactInfo?.zipCode
         ? {
-          value: profile.firmProfileId.contactInfo.zipCode._id,
-          label: profile.firmProfileId.contactInfo.zipCode.zipcode,
-        }
+            value: profile.firmProfileId.contactInfo.zipCode._id,
+            label: profile.firmProfileId.contactInfo.zipCode.zipcode,
+          }
         : null,
-
-
     }),
     [profile]
   );
 
-
   const { data: allCompanies, isLoading: isCompanyLoading } =
-    useGetCompanyListQuery({
-      countryId: profile?.country ?? '',
-      search: query || '',
-    }, {
-      skip: !profile?.country,
-    });
+    useGetCompanyListQuery(
+      {
+        countryId: profile?.country ?? '',
+        search: query || '',
+      },
+      {
+        skip: !profile?.country,
+      }
+    );
 
+  console.log('All Companies Data:', allCompanies);
+
+  const filteredCompanies = useMemo(() => {
+    if (!allCompanies?.data) return [];
+    if (query.length < 3) return [];
+    const q = query.toLowerCase();
+    return allCompanies.data.filter((company) =>
+      company?.firmName?.toLowerCase()?.includes(q)
+    );
+  }, [query, allCompanies]);
+
+  console.log('filteredCompanies', filteredCompanies);
 
   const onSubmit = async (data) => {
     console.log('data', data);
@@ -119,11 +130,11 @@ export default function About() {
         ...rest
       } = data;
 
-
-      const companyInfo = showCompanyFields ? {
-        firmProfileId: data.firmProfileId ?? '',
-      } : {};
-
+      const companyInfo = showCompanyFields
+        ? {
+            firmProfileId: data.firmProfileId ?? '',
+          }
+        : {};
 
       const payload = {
         userProfile: {
@@ -137,14 +148,9 @@ export default function About() {
           practising_certificate_number,
           bio,
           lawyerContactEmail,
-
         },
         companyInfo: companyInfo || undefined,
-
       };
-
-
-
 
       // Append serialized JSON data
       formData.append('data', JSON.stringify(payload));
@@ -196,8 +202,6 @@ export default function About() {
     );
   }
 
-
-
   // Add a function to handle the cancel request logic
   const handleCancelRequest = async (firmProfileId) => {
     try {
@@ -211,11 +215,11 @@ export default function About() {
         throw new Error(response?.message || 'Failed to cancel the request');
       }
     } catch (error) {
-      showErrorToast(error.message || 'An error occurred while cancelling the request');
+      showErrorToast(
+        error.message || 'An error occurred while cancelling the request'
+      );
     }
   };
-
-
 
   return (
     <div className="max-w-[900px] mx-auto">
@@ -308,7 +312,8 @@ export default function About() {
             <div className="rounded-xl bg-yellow-50 border border-yellow-200 p-6 text-sm text-yellow-800 mt-6 shadow-lg">
               <div className="flex flex-col gap-4">
                 <h3 className="text-lg font-bold text-yellow-900">
-                  Firm Requested: {profile?.activeFirmRequestId?.firmProfileId?.firmName}
+                  Firm Requested:{' '}
+                  {profile?.activeFirmRequestId?.firmProfileId?.firmName}
                 </h3>
                 <p className="flex items-center gap-2 text-base leading-relaxed">
                   <span className="text-2xl">🕓</span>
@@ -324,7 +329,7 @@ export default function About() {
               </div>
             </div>
           ) : !profile?.firmProfileId ? (
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-md">
+            <div className="rounded-lg border border-gray-200 bg-white p-6">
               <label className="block text-lg font-semibold text-gray-900 mb-4">
                 Add Company Profile
               </label>
@@ -348,7 +353,10 @@ export default function About() {
                 <div className="mt-4">
                   <CompanySelectField
                     name="firmProfileId"
-                    allCompanies={allCompanies}
+                    allCompanies={filteredCompanies}
+                    query={query}
+                    isLoading={isCompanyLoading}
+                    setQuery={setQuery}
                     label="Select Company"
                   />
                 </div>
@@ -360,10 +368,6 @@ export default function About() {
             </div>
           )}
         </div>
-
-
-
-
 
         <div className="border-t border-white" />
         {/* Footer Buttons */}
@@ -378,7 +382,9 @@ export default function About() {
 
         <ConfirmationModal
           onConfirm={() =>
-           handleCancelRequest(profile?.activeFirmRequestId?.firmProfileId?._id)
+            handleCancelRequest(
+              profile?.activeFirmRequestId?.firmProfileId?._id
+            )
           }
           open={isOpenRew}
           onOpenChange={setIsOpenRew}
