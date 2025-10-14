@@ -8,8 +8,6 @@ import { useGetAllSubscriptionsQuery } from '@/store/features/admin/subcriptions
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import SubscriptionCard from '../UI/SubscriptionCard';
 
-
-
 const MySubscription = () => {
   const {
     data: subscriptionData,
@@ -31,11 +29,8 @@ const MySubscription = () => {
 
   console.log('My Subscription ID:', mySubscription);
 
-
-
-
   return (
-    <div className="w-full border-none bg-[#F3F3F3] p-[10px] rounded-[5px] ">
+    <div className="w-full border-none bg-[#F3F3F3] py-8 px-[15px] rounded-[5px] ">
       <div className="max-w-[900px] mx-auto">
         <div className="mb-6">
           <h2 className="heading-lg font-bold text-gray-900 mb-2">
@@ -48,7 +43,6 @@ const MySubscription = () => {
         </div>
 
         <div>
-
           <div className="mb-4">
             {mySubscription ? (
               <SubscriptionCard subscription={mySubscription} />
@@ -58,7 +52,6 @@ const MySubscription = () => {
               </p>
             )}
           </div>
-
 
           {isLoading ? (
             <div className=" text-sm flex justify-center items-center ">
@@ -88,9 +81,7 @@ const MySubscription = () => {
           )}
         </div>
         <div className="mt-8">
-          <SubscriptionTransactionDetails
-           
-          />
+          <SubscriptionTransactionDetails />
         </div>
       </div>
     </div>
