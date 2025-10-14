@@ -145,19 +145,29 @@ export default function Footer() {
                     <h5>Other Pages</h5>
                     <ul>
                       <li>
-                        <Link href="/faq">FAQs</Link>
+                        <Link href="/faq" target="_blank">
+                          FAQs
+                        </Link>
                       </li>
                       <li>
-                        <Link href="/disclaimer">Disclaimer</Link>
+                        <Link href="/disclaimer" target="_blank">
+                          Disclaimer
+                        </Link>
                       </li>
                       <li>
-                        <Link href="/privacy-policy">Privacy Policy</Link>
+                        <Link href="/privacy-policy" target="_blank">
+                          Privacy Policy
+                        </Link>
                       </li>
                       <li>
-                        <Link href="/terms">Terms of Use</Link>
+                        <Link href="/terms" target="_blank">
+                          Terms of Use
+                        </Link>
                       </li>
                       <li>
-                        <Link href="/trust-and-quality">Trust and Quality</Link>
+                        <Link href="/trust-and-quality" target="_blank">
+                          Trust and Quality
+                        </Link>
                       </li>
                     </ul>
                   </div>
@@ -245,13 +255,19 @@ export default function Footer() {
                     <div className="footer-bottom-menu">
                       <ul className="flex items-center gap-3">
                         <li>
-                          <Link href="/">Disclaimer</Link>
+                          <Link href="/disclaimer" target="_blank">
+                            Disclaimer
+                          </Link>
                         </li>
                         <li>
-                          <Link href="/">Privacy Policy</Link>
+                          <Link href="/privacy-policy" target="_blank">
+                            Privacy Policy
+                          </Link>
                         </li>
                         <li>
-                          <Link href="/">Terms & Use</Link>
+                          <Link href="/terms" target="_blank">
+                            Terms & Use
+                          </Link>
                         </li>
                       </ul>
                     </div>

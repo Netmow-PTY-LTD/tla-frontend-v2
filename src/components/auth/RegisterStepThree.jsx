@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
@@ -93,6 +93,15 @@ export default function RegisterStepThree() {
     useGetCompanyListQuery(paramsPayload, {
       skip: !defaultCountry?.countryId,
     });
+
+  const filteredCompanies = useMemo(() => {
+    if (!allCompanies?.data) return [];
+    if (query.length < 3) return [];
+    const q = query.toLowerCase();
+    return allCompanies.data.filter((company) =>
+      company.firmName?.toLowerCase().includes(q)
+    );
+  }, [query, allCompanies]);
 
   const form = useForm({
     resolver: zodResolver(schema),
@@ -668,48 +677,53 @@ export default function RegisterStepThree() {
                               <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">
                                 <ChevronDown className="h-4 w-4 text-gray-500" />
                               </ComboboxButton>
-                              <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                {allCompanies?.data?.length > 0 ? (
-                                  allCompanies.data
-                                    .slice(0, 10)
-                                    .map((company) => (
-                                      <ComboboxOption
-                                        key={company._id}
-                                        value={company._id}
-                                        className={({ active }) =>
-                                          cn(
-                                            'cursor-pointer select-none relative py-2 pl-10 pr-4',
-                                            active
-                                              ? 'bg-blue-100 text-blue-900'
-                                              : 'text-gray-900'
-                                          )
-                                        }
-                                      >
-                                        {({ selected }) => (
-                                          <>
-                                            <span
-                                              className={cn('block truncate', {
-                                                'font-medium': selected,
-                                                'font-normal': !selected,
-                                              })}
-                                            >
-                                              {company.firmName}
-                                            </span>
-                                            {selected && (
-                                              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
-                                                <Check className="h-4 w-4" />
+                              {query.length >= 3 ? (
+                                <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                  {filteredCompanies?.length > 0 ? (
+                                    filteredCompanies
+                                      .slice(0, 10)
+                                      .map((company) => (
+                                        <ComboboxOption
+                                          key={company._id}
+                                          value={company._id}
+                                          className={({ active }) =>
+                                            cn(
+                                              'cursor-pointer select-none relative py-2 pl-10 pr-4',
+                                              active
+                                                ? 'bg-blue-100 text-blue-900'
+                                                : 'text-gray-900'
+                                            )
+                                          }
+                                        >
+                                          {({ selected }) => (
+                                            <>
+                                              <span
+                                                className={cn(
+                                                  'block truncate',
+                                                  {
+                                                    'font-medium': selected,
+                                                    'font-normal': !selected,
+                                                  }
+                                                )}
+                                              >
+                                                {company.firmName}
                                               </span>
-                                            )}
-                                          </>
-                                        )}
-                                      </ComboboxOption>
-                                    ))
-                                ) : (
-                                  <div className="relative cursor-default select-none py-2 px-4 text-gray-500">
-                                    No company found
-                                  </div>
-                                )}
-                              </ComboboxOptions>
+                                              {selected && (
+                                                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
+                                                  <Check className="h-4 w-4" />
+                                                </span>
+                                              )}
+                                            </>
+                                          )}
+                                        </ComboboxOption>
+                                      ))
+                                  ) : (
+                                    <div className="relative text-center cursor-default select-none py-2 px-4 text-gray-500">
+                                      No company found
+                                    </div>
+                                  )}
+                                </ComboboxOptions>
+                              ) : null}
                             </div>
                           </Combobox>
                           <FormMessage className="text-red-600" />
