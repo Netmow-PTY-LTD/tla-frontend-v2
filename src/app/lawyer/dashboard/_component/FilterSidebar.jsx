@@ -85,7 +85,7 @@ export default function FilterSidebar({
       location: values.location,
       services: values.service, // array of checked
       credits: values.credit, // array of checked
-      locations: values.location,
+     
     };
 
     console.log('vales', values);
