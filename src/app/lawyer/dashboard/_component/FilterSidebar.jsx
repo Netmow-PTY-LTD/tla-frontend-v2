@@ -45,13 +45,8 @@ const transformLocationToCoordinates = (value) => {
   }
 
   if (loc.locationType === 'nation_wide') {
-    // Nationwide doesn't have a specific coordinate
-    return {
-      coord: null,          // no specific point
-      maxMinutes: null,     // not applicable
-      mode: null,           // not applicable
-      sortByDistance: false,
-    };
+ 
+    return null;
   }
 
   return {
