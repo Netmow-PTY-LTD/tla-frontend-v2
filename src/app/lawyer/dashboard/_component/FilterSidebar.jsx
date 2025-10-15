@@ -31,6 +31,45 @@ const creditTiers = [
   { id: 8, range: '50-100 credits' },
 ];
 
+
+const transformLocationToCoordinates = (value) => {
+  if (!value) return null;
+
+  // Parse the stringified JSON from the radio input
+  let loc;
+  try {
+    loc = JSON.parse(value);
+  } catch (error) {
+    console.error('Invalid location value:', value);
+    return null;
+  }
+
+  if (loc.locationType === 'nation_wide') {
+    // Nationwide doesn't have a specific coordinate
+    return {
+      coord: null,          // no specific point
+      maxMinutes: null,     // not applicable
+      mode: null,           // not applicable
+      sortByDistance: false,
+    };
+  }
+
+  return {
+    coord: loc.coord || [0, 0], // [longitude, latitude]
+    maxMinutes: loc.traveltime ? Number(loc.traveltime) : loc.rangeInKm || 0,
+    mode: loc.travelmode || 'driving',
+    sortByDistance: true, // optional, sort nearest first
+  };
+};
+
+
+
+
+
+
+
+
+
 export default function FilterSidebar({
   data,
   setSearchKeyword,
@@ -51,6 +90,7 @@ export default function FilterSidebar({
         location: '',
         service: [],
         credit: [],
+        coordinates: null,
       },
     }
   );
@@ -82,13 +122,23 @@ export default function FilterSidebar({
       view: values.view,
       spotlight: values.spotlight,
       leadSubmission: values['lead-submission'],
-      location: values.location,
+      // location: values.location,
       services: values.service, // array of checked
       credits: values.credit, // array of checked
-     
+      coordinates: transformLocationToCoordinates(values?.location),
+
     };
 
-    console.log('vales', values);
+
+    // const coordinates= {
+    //     coord: [151.2093, -33.8688], // [longitude, latitude]
+    //     maxMinutes: 15,
+    //     mode: 'driving',
+    //     sortByDistance: true, // optional, sort by nearest first
+    //   }
+
+
+console.log('payload', payload);
 
     setSearchKeyword(payload);
     // Now you can call API or update state
