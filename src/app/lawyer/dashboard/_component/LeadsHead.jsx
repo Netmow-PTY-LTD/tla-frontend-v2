@@ -8,6 +8,7 @@ import FilterSidebar from './FilterSidebar';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { toast } from 'sonner';
 import { set } from 'zod';
+import { useGetAllLocationsQuery } from '@/store/features/lawyer/locationApiService';
 
 export default function LeadsHead({
   isExpanded,
@@ -23,6 +24,9 @@ export default function LeadsHead({
 }) {
   const { data: currentUser } = useAuthUserInfoQuery();
 
+  const {data:locationdata}= useGetAllLocationsQuery();
+
+  console.log('data', locationdata);
   // console.log('currentUser', currentUser);
   // const stored = localStorage.getItem('lead-filters');
   const clearFilters = () => {
@@ -39,6 +43,10 @@ export default function LeadsHead({
       },
     });
   };
+
+
+
+
 
   return (
     <section className={`pr-2 shadow-custom ${isExpanded ? '' : 'pl-4'}`}>
@@ -58,12 +66,14 @@ export default function LeadsHead({
                 {currentUser?.data?.profile?.serviceIds?.length || 0} Services
               </span>
             </div>
-            {/* <div className="flex items-center gap-1">
+
+            {/*  LOCATION RELATED */}
+            <div className="flex items-center gap-1">
               <MapPin className="w-4 h-4" />
               <span className={`${isExpanded ? 'text-[14px]' : 'text-[11px]'}`}>
-                4 Locations
+                {locationdata?.data?.length} Locations
               </span>
-            </div> */}
+            </div>
           </div>
         </div>
         <Link
@@ -116,6 +126,7 @@ export default function LeadsHead({
           setLeads={setLeads}
           page={page}
           setPage={setPage}
+          locationdata={locationdata}
         />
       </div>
 

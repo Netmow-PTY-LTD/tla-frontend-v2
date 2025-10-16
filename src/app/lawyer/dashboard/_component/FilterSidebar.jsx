@@ -17,7 +17,8 @@ import { SlidersVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import { showSuccessToast } from '@/components/common/toasts';
-import { set } from 'zod';
+import { useGetAllLocationsQuery } from '@/store/features/lawyer/locationApiService';
+import LocationAccordionItem from './LocationAccordionItem';
 
 const creditTiers = [
   { id: 1, range: 'Free' },
@@ -30,12 +31,47 @@ const creditTiers = [
   { id: 8, range: '50-100 credits' },
 ];
 
+
+const transformLocationToCoordinates = (value) => {
+  if (!value) return null;
+
+  // Parse the stringified JSON from the radio input
+  let loc;
+  try {
+    loc = JSON.parse(value);
+  } catch (error) {
+    console.error('Invalid location value:', value);
+    return null;
+  }
+
+  if (loc.locationType === 'nation_wide') {
+ 
+    return null;
+  }
+
+  return {
+    coord: loc.coord || [0, 0], // [longitude, latitude]
+    maxMinutes: loc.traveltime ? Number(loc.traveltime) : loc.rangeInKm || 0,
+    mode: loc.travelmode || 'driving',
+    sortByDistance: true, // optional, sort nearest first
+  };
+};
+
+
+
+
+
+
+
+
+
 export default function FilterSidebar({
   data,
   setSearchKeyword,
   setLeads,
   page,
   setPage,
+  locationdata
 }) {
   const [isOpen, setIsOpen] = useState(false); // <-- Control sidebar visibility
   const { register, handleSubmit, reset, watch, setValue, getValues } = useForm(
@@ -49,6 +85,7 @@ export default function FilterSidebar({
         location: '',
         service: [],
         credit: [],
+        coordinates: null,
       },
     }
   );
@@ -80,10 +117,23 @@ export default function FilterSidebar({
       view: values.view,
       spotlight: values.spotlight,
       leadSubmission: values['lead-submission'],
-      location: values.location,
+      // location: values.location,
       services: values.service, // array of checked
       credits: values.credit, // array of checked
+      coordinates: transformLocationToCoordinates(values?.location),
+
     };
+
+
+    // const coordinates= {
+    //     coord: [151.2093, -33.8688], // [longitude, latitude]
+    //     maxMinutes: 15,
+    //     mode: 'driving',
+    //     sortByDistance: true, // optional, sort by nearest first
+    //   }
+
+
+console.log('payload', payload);
 
     setSearchKeyword(payload);
     // Now you can call API or update state
@@ -94,6 +144,28 @@ export default function FilterSidebar({
     setIsOpen(false);
     //setLeads([]);
   };
+
+
+
+
+  const locations = [
+    { id: 'all', label: 'All', value: 'all' },
+    { id: 'nationwide', label: 'Nationwide', value: 'nationwide' },
+    { id: 'dhaka-50', label: 'Within 50 Miles of Dhaka', value: 'dhaka-50' },
+    { id: 'chattogram-30', label: 'Within 30 Miles of Chattogram', value: 'chattogram-30' },
+    { id: 'sylhet-25', label: 'Within 25 Miles of Sylhet', value: 'sylhet-25' },
+    { id: 'rajshahi-40', label: 'Within 40 Miles of Rajshahi', value: 'rajshahi-40' },
+    { id: 'khulna-35', label: 'Within 35 Miles of Khulna', value: 'khulna-35' },
+    { id: 'rangpur-20', label: 'Within 20 Miles of Rangpur', value: 'rangpur-20' },
+    { id: 'barishal-30', label: 'Within 30 Miles of Barishal', value: 'barishal-30' },
+    { id: 'mymensingh-25', label: 'Within 25 Miles of Mymensingh', value: 'mymensingh-25' },
+  ];
+
+
+
+
+
+
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen} className="z-[9999]">
@@ -369,51 +441,36 @@ export default function FilterSidebar({
             </AccordionItem>
 
             {/* Location */}
+
             {/* <AccordionItem value="item-7">
               <AccordionTrigger className="hover:no-underline">
                 Locations
               </AccordionTrigger>
               <AccordionContent className="overflow-hidden">
                 <div className="flex flex-col gap-4 text-balance">
-                  <label
-                    htmlFor="all"
-                    className="flex items-center gap-2 cursor-pointer"
-                  >
-                    <input
-                      type="radio"
-                      id="all"
-                      value="all"
-                      {...register('location')}
-                    />
-                    All
-                  </label>
-                  <label
-                    htmlFor="nationwide"
-                    className="flex items-center gap-2 cursor-pointer"
-                  >
-                    <input
-                      type="radio"
-                      id="nationwide"
-                      value="nationwide"
-                      {...register('location')}
-                    />
-                    Nationwide
-                  </label>
-                  <label
-                    htmlFor="location-4217"
-                    className="flex items-center gap-2 cursor-pointer"
-                  >
-                    <input
-                      type="radio"
-                      id="location-4217"
-                      value="location-4217"
-                      {...register('location')}
-                    />
-                    Within 50 Miles of 4217
-                  </label>
+                  {locationdata?.data?.map((loc) => (
+                    <label
+                      key={loc.id}
+                      htmlFor={loc.id}
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
+                      <input
+                        type="radio"
+                        id={loc.id}
+                        value={loc.value}
+                        {...register('location')}
+                      />
+                      {loc.label}
+                    </label>
+                  ))}
                 </div>
               </AccordionContent>
             </AccordionItem> */}
+
+            <LocationAccordionItem
+              register={register}
+              locationdata={locationdata}
+            />
 
             {/* Credits */}
             <AccordionItem value="item-8">
