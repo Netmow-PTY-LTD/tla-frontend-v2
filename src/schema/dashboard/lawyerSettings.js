@@ -7,7 +7,6 @@ import Cookies from 'js-cookie';
 const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
 const defaultCountry = cookieCountry?.code; //
 
-
 //  previoust schema for about section
 // export const lawyerSettingAboutSchema = z.object({
 //   name: z
@@ -86,7 +85,6 @@ const defaultCountry = cookieCountry?.code; //
 //   }),
 // });
 
-
 export const lawyerSettingAboutSchema = z.object({
   name: z
     .string({ invalid_type_error: 'Name must be a string' })
@@ -94,9 +92,7 @@ export const lawyerSettingAboutSchema = z.object({
 
   designation: z.string().optional(),
 
-  languages: z
-    .array(z.string())
-    .min(1, 'Please select at least one language'),
+  languages: z.array(z.string()).min(1, 'Please select at least one language'),
 
   phone: z
     .string({ invalid_type_error: 'Phone must be a string' })
@@ -111,7 +107,7 @@ export const lawyerSettingAboutSchema = z.object({
   law_society_member_number: z.string().min(1, ' * required'),
 
   practising_certificate_number: z.string().min(1, '* required'),
-  firmProfileId: z.string(),
+  firmProfileId: z.string().optional(),
 
   lawyerContactEmail: z
     .string()
@@ -131,11 +127,6 @@ export const lawyerSettingAboutSchema = z.object({
   //   locationReason: z.string().optional(),
   // }),
 });
-
-
-
-
-
 
 export const videoUrlRegex = new RegExp(
   [

@@ -62,12 +62,14 @@ export default function RegisterStepTwo() {
     (state) => state.lawyerRegistration.lawyerServiceMap
   );
 
+  console.log('lawyerServiceMap in step 2', lawyerServiceMap);
+
   const { zipCode, rangeInKm, practiceWithin, practiceInternationally } =
     lawyerServiceMap;
 
   const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
 
-  const { data: countryList } = useGetCountryListQuery();
+  // const { data: countryList } = useGetCountryListQuery();
 
   const defaultCountry = countries?.find(
     (country) => country?.slug === cookieCountry?.slug
@@ -108,7 +110,7 @@ export default function RegisterStepTwo() {
     defaultValues: {
       practiceWithin: practiceWithin || true,
       practiceInternational: practiceInternationally || false,
-      AreaZipcode: zipCode || '',
+      AreaZipcode: zipCode?.zipcode || '',
       rangeInKm: rangeInKm || '',
     },
   });
@@ -208,6 +210,8 @@ export default function RegisterStepTwo() {
     dispatch(nextStep());
   };
 
+  console.log('practiceWithin', practiceWithin);
+
   return (
     <div className="flex flex-wrap lg:flex-nowrap w-full">
       <div className="w-full">
@@ -233,7 +237,17 @@ export default function RegisterStepTwo() {
                       <Checkbox
                         {...field}
                         checked={field.value}
-                        onCheckedChange={field.onChange}
+                        onCheckedChange={(val) => {
+                          field.onChange(val);
+                          // If checked, uncheck practiceInternational
+                          dispatch(
+                            updateNestedField({
+                              section: 'lawyerServiceMap',
+                              field: 'practiceWithin',
+                              value: false,
+                            })
+                          );
+                        }}
                       />
                     </FormControl>
                     <FormLabel className="ml-2 font-bold">
@@ -278,10 +292,12 @@ export default function RegisterStepTwo() {
                         <ComboboxInput
                           className="tla-form-control w-full"
                           onChange={(event) => setQuery(event.target.value)}
-                          displayValue={(val) =>
-                            allZipCodes?.data?.find((z) => z._id === val)
-                              ?.zipcode || ''
-                          }
+                          displayValue={(val) => {
+                            const found = allZipCodes?.data?.find(
+                              (z) => z._id === val
+                            );
+                            return found?.zipcode || address || '';
+                          }}
                           placeholder="Select a Zipcode"
                         />
                         <ComboboxButton className="absolute top-0 bottom-0 right-0 flex items-center pr-2">

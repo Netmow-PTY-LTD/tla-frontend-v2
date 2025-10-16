@@ -6,11 +6,8 @@ import Image from 'next/image';
 import { BrandIcon } from '@/assets/icon';
 import {
   useAddPaymentMethodMutation,
-
   useCancelSubscriptionMutation,
-
   useCreateSubscriptionMutation,
-
   useGetPaymentMethodQuery,
   usePurchaseCreditPackageMutation,
 } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
@@ -26,16 +23,18 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
   const [cancelOpen, setCancelOpen] = useState(false);
   const [autoRenew, setAutoRenew] = useState(true);
   const [addPaymentMethod] = useAddPaymentMethodMutation();
-  const [subscriptionSubscription, { isLoading: subscribeLoading }] = useCreateSubscriptionMutation();
-  const [cancelSubscription, { isLoading: cancelSubscriptionLoading }] = useCancelSubscriptionMutation();
+  const [subscriptionSubscription, { isLoading: subscribeLoading }] =
+    useCreateSubscriptionMutation();
+  const [cancelSubscription, { isLoading: cancelSubscriptionLoading }] =
+    useCancelSubscriptionMutation();
   const { data: userInfo } = useAuthUserInfoQuery();
 
   const { data, isError, isLoading } = useGetPaymentMethodQuery();
 
   const card = data?.data || null;
 
-
-  const activeSubscription = userInfo?.data?.profile?.eliteProSubscriptionId || null;
+  const activeSubscription =
+    userInfo?.data?.profile?.eliteProSubscriptionId || null;
 
   const isSubscribedToThisPlan =
     activeSubscription &&
@@ -60,14 +59,15 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
     const subscriptionDetails = {
       packageId: subscriptionPackageId,
       autoRenew,
-      type: 'elitePro'
+      type: 'elitePro',
     };
 
     console.log('Subscription Details:', subscriptionDetails);
 
-
     try {
-      const result = await subscriptionSubscription(subscriptionDetails).unwrap();
+      const result = await subscriptionSubscription(
+        subscriptionDetails
+      ).unwrap();
       console.log('Subscription result:', result);
       if (result.success) {
         showSuccessToast(result?.message);
@@ -78,16 +78,16 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);
     }
-
   };
-
 
   //  Cancel subscription handler
   const handleCancelSubscription = async () => {
     try {
       const result = await cancelSubscription({ type: 'elitePro' }).unwrap();
       if (result.success) {
-        showSuccessToast(result?.message || 'Subscription cancelled successfully');
+        showSuccessToast(
+          result?.message || 'Subscription cancelled successfully'
+        );
       } else {
         showErrorToast(result?.message || 'Failed to cancel subscription');
       }
@@ -97,11 +97,9 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
     }
   };
 
-
-
   return (
     <div>
-      <div className="border-0 bg-white rounded-lg shadow-sm pt-4 pb-6 px-[17px] relative">
+      <div className="border-0 bg-white rounded-lg pt-4 pb-6 px-[17px] relative">
         {subscriptionPlan.discountPercentage > 0 && (
           <div className="bg-[#00C3C0] absolute text-white p-[10px] rounded-tl-md rounded-br-md text-sm font-medium top-0 left-0">
             <h2 className="text-sm font-medium text-white whitespace-nowrap">
@@ -113,8 +111,12 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
         <div className="mt-12">
           <div className="grid md:grid-cols-4 gap-6 items-start">
             <div className="flex flex-col space-y-2">
-              <p className="font-medium text-gray-900 text-lg">Elite Pro: {subscriptionPlan?.name}</p>
-              <p className="text-sm text-gray-600">{subscriptionPlan?.description}</p>
+              <p className="font-medium text-gray-900 text-lg">
+                Elite Pro: {subscriptionPlan?.name}
+              </p>
+              <p className="text-sm text-gray-600">
+                {subscriptionPlan?.description}
+              </p>
             </div>
 
             <div className="flex items-center space-x-2">
@@ -129,7 +131,8 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
                 {subscriptionPlan?.priceFormatted}
               </p>
               <p className="text-gray-500 text-sm">
-                {subscriptionPlan?.price?.currency} {subscriptionPlan?.price?.amount}/month
+                {subscriptionPlan?.price?.currency}{' '}
+                {subscriptionPlan?.price?.amount}/month
               </p>
             </div>
 
@@ -174,7 +177,9 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
           </div>
 
           <div className="mt-6">
-            <h3 className="text-gray-900 font-medium text-md mb-2">Elite Pro Features:</h3>
+            <h3 className="text-gray-900 font-medium text-md mb-2">
+              Elite Pro Features:
+            </h3>
             <ul className="list-disc list-inside text-gray-700 text-sm">
               {subscriptionPlan?.features?.map((feature, index) => (
                 <li key={index}>{feature}</li>
@@ -192,7 +197,8 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
                   height={80}
                 />
                 <p className="text-sm text-gray-700">
-                  Unlock premium benefits and uninterrupted access with Elite Pro subscription plans.
+                  Unlock premium benefits and uninterrupted access with Elite
+                  Pro subscription plans.
                 </p>
               </div>
             </div>
@@ -206,13 +212,14 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
       />
       <ConfirmationModal
         onConfirm={() =>
-          handleEliteProSubscription({ subscriptionPackageId: subscriptionPlan?._id })
+          handleEliteProSubscription({
+            subscriptionPackageId: subscriptionPlan?._id,
+          })
         }
         open={isOpen}
         onOpenChange={setIsOpen}
         description="Are you sure you want to subscribe to the Elite Pro plan?"
       />
-
 
       {/* ✅ Confirm Cancel Modal */}
       <ConfirmationModal
@@ -221,7 +228,6 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
         onOpenChange={setCancelOpen}
         description="Are you sure you want to cancel your elite pro subscription?"
       />
-
     </div>
   );
 };

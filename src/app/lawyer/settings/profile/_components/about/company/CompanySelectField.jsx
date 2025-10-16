@@ -24,9 +24,6 @@ const CompanySelectField = ({
 }) => {
   const dispatch = useDispatch();
   const { control } = useFormContext();
-  // const [query, setQuery] = useState('');
-
-  console.log('All Companies:', allCompanies);
 
   return (
     <Controller
