@@ -10,6 +10,7 @@ import SelectInput from '@/components/form/SelectInput';
 import MultipleTagsSelector from '@/components/MultipleTagsSelector';
 import { useAddSubscriptionMutation } from '@/store/features/admin/subcriptionsApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import { Loader } from 'lucide-react';
 
 const subscriptionSchema = z.object({
   name: z
@@ -26,6 +27,11 @@ const subscriptionSchema = z.object({
   billingCycle: z
     .string({ invalid_type_error: 'Billing Cycle must be a string' })
     .min(1, { message: 'Billing Cycle is required' }),
+
+  monthlyCaseContacts: z.preprocess(
+    (val) => Number(val),
+    z.number({ invalid_type_error: 'Monthly Case Contacts must be a number' })
+  ),
 
   features: z.array(
     z.string({ invalid_type_error: 'Features must be an array of strings' })
@@ -45,21 +51,31 @@ export default function AddSubscriptionModal({
     name: '',
     price_amount: '',
     billingCycle: '',
+    monthlyCaseContacts: '',
     features: [],
     description: '',
   };
 
-  const [addSubscription] = useAddSubscriptionMutation();
+  const [addSubscription, { isLoading: isAddSubscriptionLoading }] =
+    useAddSubscriptionMutation();
 
   const handleAddSubscription = async (values) => {
     console.log('values', values);
 
-    const { name, price_amount, billingCycle, features, description } = values;
+    const {
+      name,
+      price_amount,
+      billingCycle,
+      monthlyCaseContacts,
+      features,
+      description,
+    } = values;
 
     const payload = {
       name,
       price: { amount: Number(price_amount), currency: 'USD' },
       billingCycle,
+      monthlyCaseContacts: Number(monthlyCaseContacts),
       features,
       description,
     };
@@ -103,19 +119,23 @@ export default function AddSubscriptionModal({
             placeholder="currency"
             options={options}
           /> */}
-          <div className="col-span-2">
-            <SelectInput
-              name="billingCycle"
-              label="Billing Cycle"
-              placeholder="billingCycle"
-              options={[
-                { value: 'monthly', label: 'Monthly' },
-                { value: 'yearly', label: 'Yearly' },
-                { value: 'weekly', label: 'Weekly' },
-                { value: 'one_time', label: 'One Time' },
-              ]}
-            />
-          </div>
+          <SelectInput
+            name="billingCycle"
+            label="Billing Cycle"
+            labelClassName="text-base"
+            placeholder="billingCycle"
+            options={[
+              { value: 'monthly', label: 'Monthly' },
+              { value: 'yearly', label: 'Yearly' },
+              { value: 'weekly', label: 'Weekly' },
+              { value: 'one_time', label: 'One Time' },
+            ]}
+          />
+          <TextInput
+            name="monthlyCaseContacts"
+            label="Monthly Case Contacts"
+            placeholder="monthly case contacts"
+          />
           <div className="col-span-2">
             <MultipleTagsSelector
               name="features"
@@ -134,7 +154,16 @@ export default function AddSubscriptionModal({
         </div>
 
         <div className="text-center mt-10">
-          <Button type="submit">Add Subscription</Button>
+          <Button type="submit" loading={isAddSubscriptionLoading}>
+            {isAddSubscriptionLoading ? (
+              <span className="flex items-center gap-2">
+                <Loader className="w-4 h-4 animate-spin" />
+                <span>Adding Subscription...</span>
+              </span>
+            ) : (
+              'Add Subscription'
+            )}
+          </Button>
         </div>
       </FormWrapper>
     </Modal>

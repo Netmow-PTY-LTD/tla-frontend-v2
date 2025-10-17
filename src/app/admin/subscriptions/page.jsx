@@ -107,6 +107,12 @@ export default function SubscriptionList() {
       },
     },
     {
+      id: 'monthlyCaseContacts',
+      header: 'Monthly Case Contacts',
+      accessorFn: (row) => row.monthlyCaseContacts ?? '',
+      cell: ({ getValue }) => <div>{getValue()}</div>,
+    },
+    {
       id: 'actions',
       header: 'Actions',
       enableHiding: false,
