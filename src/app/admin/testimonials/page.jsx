@@ -17,7 +17,10 @@ import EditTestimonialModal from './_components/EditTestimonialModal';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 import { DataTableWithPagination } from '../_components/DataTableWithPagination';
-import { useDeleteTestimonialMutation, useGetAllTestimonialsQuery } from '@/store/features/testimonials/testimonialsService';
+import {
+  useDeleteTestimonialMutation,
+  useGetAllTestimonialsQuery,
+} from '@/store/features/testimonials/testimonialsService';
 
 export default function TestimonialManagement() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,23 +33,16 @@ export default function TestimonialManagement() {
 
   const limit = 10;
 
-
-
   const {
     data: testimonialsData,
     isLoading: isTestimonialDataLoading,
     refetch: refetchTestimonialData,
     isFetching,
-  } = useGetAllTestimonialsQuery(
-    {
-  
-      search,
-      page,
-      limit,
-    },
-    
-  );
-
+  } = useGetAllTestimonialsQuery({
+    search,
+    page,
+    limit,
+  });
 
   const handleEditTestimonialModalOpen = (id) => {
     setIsEditModalOpen(true);
@@ -149,9 +145,9 @@ export default function TestimonialManagement() {
 
   return (
     <>
-      <div className="mb-2">
-        <h2 className="text-2xl font-bold mb-6">List of Testimonials</h2>
-        <div className="flex justify-end mb-4">
+      <div className="mb-2 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <h2 className="text-2xl font-bold">List of Testimonials</h2>
+        <div className="flex justify-end">
           <Button onClick={() => setIsModalOpen(true)}>Add Testimonial</Button>
         </div>
       </div>
