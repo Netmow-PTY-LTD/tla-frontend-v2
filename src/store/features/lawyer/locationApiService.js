@@ -8,7 +8,7 @@ export const locationApiService = baseApi.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['location'],
+      invalidatesTags: ['location','lead-list'],
     }),
 
     getAllLocations: builder.query({
@@ -35,7 +35,7 @@ export const locationApiService = baseApi.injectEndpoints({
           body: body.body,
         };
       },
-      invalidatesTags: ['location'],
+      invalidatesTags: ['location','lead-list'],
     }),
 
     deleteLocation: builder.mutation({
@@ -55,3 +55,4 @@ export const {
   useUpdateLocationMutation,
   useDeleteLocationMutation,
 } = locationApiService;
+
