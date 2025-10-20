@@ -21,6 +21,7 @@ import {
   SquareKanban,
   SquareTerminal,
   Users,
+  Building2,
 } from 'lucide-react';
 
 export const AdminSidebarItems = {
@@ -203,6 +204,12 @@ export const AdminSidebarItems = {
       isActive: true,
     },
     {
+      title: 'Firms List',
+      url: '/admin/firm/list',
+      icon: Building2,
+      isActive: true,
+    },
+    {
       title: 'Users',
       url: '#',
       icon: Users,
@@ -253,7 +260,6 @@ export const AdminSidebarItems = {
       url: '/admin/testimonials',
       icon: Kanban,
       isActive: true,
-    
     },
   ],
 };
