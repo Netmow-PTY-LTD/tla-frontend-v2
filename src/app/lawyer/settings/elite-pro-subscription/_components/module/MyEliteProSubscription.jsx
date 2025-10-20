@@ -72,7 +72,7 @@ const EliteProSubscription = () => {
               ))}
             </div>
           ) : (
-            <div className="text-gray-600 bg-gray-50 rounded-lg shadow-sm p-5">
+            <div className="text-gray-600 bg-gray-50 rounded-lg p-5">
               No Elite Pro subscription plans available at the moment.
               <br />
               <span className="text-[#00C3C0] hover:underline cursor-pointer inline-block mt-2">

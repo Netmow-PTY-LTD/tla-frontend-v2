@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { Badge } from './ui/badge';
 
 export default function MultipleTagsSelector({
@@ -10,9 +10,17 @@ export default function MultipleTagsSelector({
   label,
   placeholder = 'Add item...',
 }) {
-  const { register, setValue, getValues } = useFormContext();
+  const { register, setValue, control } = useFormContext();
+  const watchedTags = useWatch({ name, control }); // <-- watches form state
   const [inputValue, setInputValue] = useState('');
-  const [tags, setTags] = useState(getValues(name) || []);
+  const [tags, setTags] = useState(watchedTags || []);
+
+  // Keep local `tags` in sync with form state
+  useEffect(() => {
+    if (Array.isArray(watchedTags)) {
+      setTags(watchedTags);
+    }
+  }, [watchedTags]);
 
   const addTag = () => {
     const trimmed = inputValue.trim();
@@ -39,7 +47,6 @@ export default function MultipleTagsSelector({
 
   return (
     <div className="w-full">
-      {/* hidden input to register value with react-hook-form */}
       <input type="hidden" {...register(name)} value={tags.join(',')} />
       {label && (
         <label htmlFor={name} className="mb-2 inline-block">

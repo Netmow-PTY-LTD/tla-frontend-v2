@@ -97,8 +97,6 @@ export default function About() {
       }
     );
 
-  console.log('All Companies Data:', allCompanies);
-
   const filteredCompanies = useMemo(() => {
     if (!allCompanies?.data) return [];
     if (query.length < 3) return [];
@@ -107,8 +105,6 @@ export default function About() {
       company?.firmName?.toLowerCase()?.includes(q)
     );
   }, [query, allCompanies]);
-
-  console.log('filteredCompanies', filteredCompanies);
 
   const onSubmit = async (data) => {
     console.log('data', data);
@@ -204,6 +200,7 @@ export default function About() {
 
   // Add a function to handle the cancel request logic
   const handleCancelRequest = async (firmProfileId) => {
+    console.log('Cancelling request for firmProfileId:', firmProfileId);
     try {
       // Assuming there's an API endpoint to cancel the request
       const response = await cancelLawyerMembership({ firmProfileId }).unwrap();
@@ -308,8 +305,9 @@ export default function About() {
         <div className="border-t border-white" />
 
         <div className="mt-6">
-          {profile?.isFirmMemberRequest ? (
-            <div className="rounded-xl bg-yellow-50 border border-yellow-200 p-6 text-sm text-yellow-800 mt-6 shadow-lg">
+          {profile?.isFirmMemberRequest &&
+          profile?.activeFirmRequestId?.firmProfileId !== null ? (
+            <div className="rounded-xl bg-yellow-50 border border-yellow-200 p-6 text-sm text-yellow-800 mt-6">
               <div className="flex flex-col gap-4">
                 <h3 className="text-lg font-bold text-yellow-900">
                   Firm Requested:{' '}
@@ -328,7 +326,7 @@ export default function About() {
                 </Button>
               </div>
             </div>
-          ) : !profile?.firmProfileId ? (
+          ) : !profile?.firmProfileId || profile?.firmProfileId === null ? (
             <div className="rounded-lg border border-gray-200 bg-white p-6">
               <label className="block text-lg font-semibold text-gray-900 mb-4">
                 Add Company Profile

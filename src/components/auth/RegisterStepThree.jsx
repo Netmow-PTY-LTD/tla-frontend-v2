@@ -233,7 +233,8 @@ export default function RegisterStepThree() {
             })
           );
           const userType = result?.data?.regUserType;
-          if (userType === 'lawyer') router.push('/lawyer/dashboard');
+          if (userType === 'lawyer')
+            router.push('/lawyer/settings/profile?section=about');
           else if (userType === 'client') router.push('/client/dashboard');
           else router.push('/');
           dispatch(resetRegistration());

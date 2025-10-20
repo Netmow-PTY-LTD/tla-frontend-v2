@@ -103,7 +103,7 @@ const LeadCard = ({
                   isExpanded ? 'text-[13px]' : 'text-[10px]'
                 } text-gray-500`}
               >
-                {user?.userProfileId?.address ?? ''}
+                {user?.locationId?.zipcode ?? ''}
               </div>
               <div className="flex items-center gap-1 text-xs ">
                 <span

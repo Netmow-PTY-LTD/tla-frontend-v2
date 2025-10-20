@@ -5,15 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/UIComponents/Modal';
 import React, { useEffect, useState } from 'react';
 import { z } from 'zod';
-import countries from '@/data/countries.json';
 import SelectInput from '@/components/form/SelectInput';
 import MultipleTagsSelector from '@/components/MultipleTagsSelector';
-import { dummySubscriptions } from '@/data/data';
 import {
   useGetSubscriptionByIdQuery,
   useUpdateSubscriptionMutation,
 } from '@/store/features/admin/subcriptionsApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import { Loader } from 'lucide-react';
 
 const subscriptionSchema = z.object({
   name: z
@@ -30,6 +29,11 @@ const subscriptionSchema = z.object({
   billingCycle: z
     .string({ invalid_type_error: 'Billing Cycle must be a string' })
     .min(1, { message: 'Billing Cycle is required' }),
+
+  monthlyCaseContacts: z.preprocess(
+    (val) => Number(val),
+    z.number({ invalid_type_error: 'Monthly Case Contacts must be a number' })
+  ),
 
   features: z.array(
     z.string({ invalid_type_error: 'Features must be an array of strings' })
@@ -50,6 +54,7 @@ export default function EditSubscriptionModal({
     name: '',
     price_amount: '',
     billingCycle: '',
+    monthlyCaseContacts: '',
     features: [],
     description: '',
   });
@@ -74,20 +79,30 @@ export default function EditSubscriptionModal({
         name: subscription.name,
         price_amount: subscription.price.amount,
         billingCycle: subscription.billingCycle,
+        monthlyCaseContacts: subscription.monthlyCaseContacts,
         features: subscription.features,
         description: subscription.description,
       });
     }
   }, [subscription]);
 
-  const [updateSubscription] = useUpdateSubscriptionMutation();
+  const [updateSubscription, { isLoading: isUpdateSubscriptionLoading }] =
+    useUpdateSubscriptionMutation();
   const handleEditSubscription = async (values) => {
-    const { name, price_amount, billingCycle, features, description } = values;
+    const {
+      name,
+      price_amount,
+      billingCycle,
+      monthlyCaseContacts,
+      features,
+      description,
+    } = values;
 
     const payload = {
       name,
       price: { amount: Number(price_amount), currency: 'USD' },
       billingCycle,
+      monthlyCaseContacts: Number(monthlyCaseContacts),
       features,
       description,
     };
@@ -129,19 +144,22 @@ export default function EditSubscriptionModal({
             label="Price ($)"
             placeholder="price"
           />
-          <div className="col-span-2">
-            <SelectInput
-              name="billingCycle"
-              label="Billing Cycle"
-              placeholder="Select a billing cycle"
-              options={[
-                { value: 'monthly', label: 'Monthly' },
-                { value: 'yearly', label: 'Yearly' },
-                { value: 'weekly', label: 'Weekly' },
-                { value: 'one_time', label: 'One Time' },
-              ]}
-            />
-          </div>
+          <SelectInput
+            name="billingCycle"
+            label="Billing Cycle"
+            placeholder="Select a billing cycle"
+            options={[
+              { value: 'monthly', label: 'Monthly' },
+              { value: 'yearly', label: 'Yearly' },
+              { value: 'weekly', label: 'Weekly' },
+              { value: 'one_time', label: 'One Time' },
+            ]}
+          />
+          <TextInput
+            name="monthlyCaseContacts"
+            label="Monthly Case Contacts"
+            placeholder="monthly case contacts"
+          />
           <div className="col-span-2">
             <MultipleTagsSelector
               name="features"
@@ -160,7 +178,16 @@ export default function EditSubscriptionModal({
         </div>
 
         <div className="text-center mt-10">
-          <Button type="submit">Update Subscription</Button>
+          <Button type="submit" disabled={isUpdateSubscriptionLoading}>
+            {isUpdateSubscriptionLoading ? (
+              <div className="flex items-center gap-2">
+                <Loader className="w-4 h-4 animate-spin" />
+                <span>Updating Subscription...</span>
+              </div>
+            ) : (
+              'Update Subscription'
+            )}
+          </Button>
         </div>
       </FormWrapper>
     </Modal>

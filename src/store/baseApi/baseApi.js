@@ -137,6 +137,8 @@ export const baseApi = createApi({
     'testimonial-list',
     'subscriptions-packages',
     'subscriptions-package',
+    'companies',
+    'firms',
   ],
   endpoints: () => ({}),
 });
