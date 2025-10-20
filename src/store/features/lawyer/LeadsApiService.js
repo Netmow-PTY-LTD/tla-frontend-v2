@@ -14,7 +14,7 @@ const leadsApiService = baseApi.injectEndpoints({
       query: (params) => ({
         url: '/lead/list/admin',
         method: 'GET',
-        params
+        params,
       }),
       providesTags: ['lead-list-admin'],
     }),
@@ -37,7 +37,7 @@ const leadsApiService = baseApi.injectEndpoints({
       query: (data) => ({
         url: `/lead/edit/${data.id}`,
         method: 'PATCH',
-        body: data?.data
+        body: data?.data,
       }),
       providesTags: ['lead', 'lead-list-admin', 'lead-list', 'lead-my'],
     }),
@@ -47,14 +47,22 @@ const leadsApiService = baseApi.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['lead', 'response', 'notification', 'lead-list-admin', 'lead-list', 'response-my', 'response-list'],
+      invalidatesTags: [
+        'lead',
+        'response',
+        'notification',
+        'lead-list-admin',
+        'lead-list',
+        'response-my',
+        'response-list',
+      ],
     }),
 
     closeLead: builder.mutation({
       query: (data) => ({
         url: `/lead/${data.id}/close`,
         method: 'PATCH',
-        body: data?.data
+        body: data?.data,
       }),
       providesTags: ['lead', 'lead-list-admin', 'lead-list', 'lead-my'],
     }),
@@ -63,15 +71,14 @@ const leadsApiService = baseApi.injectEndpoints({
       query: (data) => ({
         url: `/lead/repost`,
         method: 'POST',
-        body:data
+        body: data,
       }),
       providesTags: ['lead', 'lead-list-admin', 'lead-list', 'lead-my'],
     }),
 
-
     //   cancel Lawyer membership request from Firm
 
-    cancelLawyerMembership: builder.mutation({
+    cancelLawyerMembershipRequest: builder.mutation({
       query: (data) => ({
         url: `/lawyer/cancel-membership-request`,
         method: 'POST',
@@ -79,7 +86,14 @@ const leadsApiService = baseApi.injectEndpoints({
       }),
       providesTags: ['userInfo'],
     }),
-
+    cancelLawyerMembership: builder.mutation({
+      query: (data) => ({
+        url: `/lawyer/cancel-membership`,
+        method: 'POST',
+        body: data,
+      }),
+      providesTags: ['userInfo'],
+    }),
   }),
 });
 
@@ -92,7 +106,6 @@ export const {
   useGetAllLeadsForAdminQuery,
   useCloseLeadMutation,
   useRepostLeadMutation,
-  useCancelLawyerMembershipMutation
+  useCancelLawyerMembershipRequestMutation,
+  useCancelLawyerMembershipMutation,
 } = leadsApiService;
-
-
