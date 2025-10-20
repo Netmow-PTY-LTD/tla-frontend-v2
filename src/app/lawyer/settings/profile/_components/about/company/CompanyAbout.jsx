@@ -5,7 +5,8 @@ import TextInput from '@/components/form/TextInput';
 
 import React from 'react';
 
-export default function CompanyAbout() {
+export default function CompanyAbout({ companyInfo }) {
+  console.log('companyInfo in CompanyAbout:', companyInfo);
   const options = [
     {
       label: 'Self-employed / sole trader',
@@ -59,13 +60,23 @@ export default function CompanyAbout() {
             disabled
           />
         </div>
-        <TextareaInput
+        <div>
+          <label htmlFor="" className="label-text text-sm">
+            Company Description
+          </label>
+          {/* <TextareaInput
           label="Describe your company "
           name="description"
           placeholder="What sets you apart from businesses?"
           textColor="text-[#4b4949]"
+          rows="8"
           disabled
-        />
+        /> */}
+          <div
+            className="text-[#4b4949] text-sm mt-2"
+            dangerouslySetInnerHTML={{ __html: companyInfo?.description }}
+          ></div>
+        </div>
       </div>
     </div>
   );
