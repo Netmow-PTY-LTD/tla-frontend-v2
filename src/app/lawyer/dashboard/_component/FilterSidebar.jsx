@@ -50,8 +50,10 @@ const transformLocationToCoordinates = (value) => {
   }
 
   return {
+    locationType: loc.locationType,
     coord: loc.coord || [0, 0], // [longitude, latitude]
-    maxMinutes: loc.traveltime ? Number(loc.traveltime) : loc.rangeInKm || 0,
+    traveltime: loc.traveltime ? Number(loc.traveltime) : null,
+    rangeInKm: loc.rangeInKm ? Number(loc.rangeInKm) : null,
     mode: loc.travelmode || 'driving',
     sortByDistance: true, // optional, sort nearest first
   };
@@ -121,8 +123,9 @@ export default function FilterSidebar({
       services: values.service, // array of checked
       credits: values.credit, // array of checked
       coordinates: transformLocationToCoordinates(values?.location),
-
     };
+
+    // console.log('payload filtering coord', payload);
 
 
     // const coordinates= {
