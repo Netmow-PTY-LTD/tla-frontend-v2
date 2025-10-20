@@ -1,16 +1,13 @@
+'use client';
 
-"use client";
-
-import React from "react";
-import ZipCodeComboboxMap from "../ZipCodeComboboxMap";
-
-
+import React from 'react';
+import ZipCodeComboboxMap from '../ZipCodeComboboxMap';
 
 export default function CompanyLocation({ companyInfo }) {
   const country = companyInfo?.contactInfo?.country;
 
   return (
-    <div className="">
+    <div className="pt-5">
       <h3 className="text-black font-semibold heading-lg">Company Location</h3>
       <p className="mt-[10px] text-[#8E8E8E] mb-7">
         Add a clear business address to boost visibility in local searches. This
@@ -19,12 +16,10 @@ export default function CompanyLocation({ companyInfo }) {
       </p>
 
       <ZipCodeComboboxMap
-        name={"companyAddress"}
+        name={'companyAddress'}
         countryId={country?._id}
         disabled
       />
     </div>
   );
 }
-
-
