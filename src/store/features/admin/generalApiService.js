@@ -10,7 +10,16 @@ const generalApiService = baseApi.injectEndpoints({
       }),
       providesTags: ['claims'],
     }),
+    getCompaniesList: builder.query({
+      query: (params) => ({
+        url: `/firms/list`,
+        method: 'GET',
+        params,
+      }),
+      providesTags: ['companies'],
+    }),
   }),
 });
 
-export const { useGetClaimsRequestsQuery } = generalApiService;
+export const { useGetClaimsRequestsQuery, useGetCompaniesListQuery } =
+  generalApiService;
