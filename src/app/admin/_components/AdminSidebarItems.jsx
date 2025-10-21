@@ -45,6 +45,12 @@ export const AdminSidebarItems = {
       isActive: true,
     },
     {
+      title: 'Cities',
+      url: '/admin/cities',
+      icon: Earth,
+      isActive: true,
+    },
+    {
       title: 'Zip Codes',
       url: '/admin/zip-code/list',
       icon: MapPinHouse,
