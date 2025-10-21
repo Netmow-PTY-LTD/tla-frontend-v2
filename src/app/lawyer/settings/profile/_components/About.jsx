@@ -394,15 +394,17 @@ export default function About() {
               <Company companyInfo={profile?.firmProfileId} />
             </div>
           )}
-          <button
-            type="button"
-            className="btn-default btn-secondary"
-            onClick={() => {
-              handleCancelMembership(profile?.firmProfileId?._id);
-            }}
-          >
-            Cancel Company Membership?
-          </button>
+          {profile?.firmProfileId && profile?.firmProfileId !== null && (
+            <button
+              type="button"
+              className="btn-default btn-secondary"
+              onClick={() => {
+                handleCancelMembership(profile?.firmProfileId?._id);
+              }}
+            >
+              Cancel Company Membership?
+            </button>
+          )}
         </div>
 
         <div className="border-t border-white" />

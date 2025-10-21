@@ -139,6 +139,7 @@ export const baseApi = createApi({
     'subscriptions-package',
     'companies',
     'firms',
+    'city',
   ],
   endpoints: () => ({}),
 });

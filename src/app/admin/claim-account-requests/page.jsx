@@ -119,6 +119,7 @@ export default function ClaimAccountRequests() {
           claimsRequests?.pagination || { page: 1, limit: 10, total: 0 }
         }
         total={claimsRequests?.pagination?.total || 0}
+        totalPage={claimsRequests?.pagination?.totalPage || 0}
         page={page}
         limit={limit}
         onPageChange={(page) => setPage(page)}
