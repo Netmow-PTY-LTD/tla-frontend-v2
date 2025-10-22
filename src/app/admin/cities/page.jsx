@@ -116,10 +116,10 @@ export default function Page() {
           />
         ),
         cell: ({ row }) => {
+          const item = row.original;
+
           const handleRowCheck = async (checked) => {
             row.toggleSelected(checked); // update selection state
-
-            const item = row.original;
 
             try {
               // Call API to update the row
@@ -127,7 +127,7 @@ export default function Page() {
               const res = await updateZipCode({
                 _id: item._id,
                 countryId: selectedCountry,
-                isCity: true,
+                isCity: checked,
               }).unwrap();
 
               console.log('updateZipCode res', res);
@@ -136,9 +136,7 @@ export default function Page() {
                 showSuccessToast('Zip code updated successfully.');
 
                 // Pass updated row to parent if needed
-                handleCheckedRow?.([
-                  res.data || { ...item, status: newStatus },
-                ]);
+                handleCheckedRow?.([res.data || { ...item, isCity: checked }]);
               }
             } catch (err) {
               console.error('Error updating status:', err);
@@ -150,7 +148,7 @@ export default function Page() {
 
           return (
             <Checkbox
-              checked={row.getIsSelected()}
+              checked={!!item.isCity}
               onCheckedChange={(value) => handleRowCheck(!!value)}
               aria-label="Select row"
             />
@@ -179,21 +177,6 @@ export default function Page() {
         accessorKey: 'postalCode',
         header: 'Post Code',
         cell: ({ row }) => <div>{row.getValue('postalCode')}</div>,
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-        cell: ({ row }) => (
-          <span
-            className={`px-2 py-1 rounded text-xs font-medium ${
-              row.original.status === 'active'
-                ? 'bg-green-100 text-green-700'
-                : 'bg-gray-100 text-gray-600'
-            }`}
-          >
-            {row.original.status}
-          </span>
-        ),
       },
     ];
   };
