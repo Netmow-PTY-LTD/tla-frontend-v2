@@ -51,6 +51,7 @@ export default function LocationCombobox({
   const paramsPayload = {
     countryId: defaultCountry?._id,
     search: debouncedSearch || '',
+    isCity: true,
   };
 
   const { data: allZipCodes, isLoading: isZipCodeLoading } =
