@@ -99,7 +99,7 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
 
   return (
     <div>
-      <div className="border-0 bg-white rounded-lg pt-4 pb-6 px-[17px] relative">
+      <div className="border-0 bg-white rounded-lg p-6 relative">
         {subscriptionPlan.discountPercentage > 0 && (
           <div className="bg-[#00C3C0] absolute text-white p-[10px] rounded-tl-md rounded-br-md text-sm font-medium top-0 left-0">
             <h2 className="text-sm font-medium text-white whitespace-nowrap">
@@ -108,14 +108,15 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
           </div>
         )}
 
-        <div className="mt-12">
+        <div
+          className={`${
+            subscriptionPlan.discountPercentage > 0 ? 'mt-12' : ''
+          }`}
+        >
           <div className="grid md:grid-cols-4 gap-6 items-start">
             <div className="flex flex-col space-y-2">
               <p className="font-medium text-gray-900 text-lg">
-                Elite Pro: {subscriptionPlan?.name}
-              </p>
-              <p className="text-sm text-gray-600">
-                {subscriptionPlan?.description}
+                {subscriptionPlan?.name}
               </p>
             </div>
 
@@ -176,8 +177,8 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
             </div>
           </div>
 
-          <div className="mt-6">
-            <h3 className="text-gray-900 font-medium text-md mb-2">
+          <div className="mt-5">
+            <h3 className="text-gray-900 font-medium text-md mb-2 text-base">
               Elite Pro Features:
             </h3>
             <ul className="list-disc list-inside text-gray-700 text-sm">
@@ -185,6 +186,9 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
                 <li key={index}>{feature}</li>
               ))}
             </ul>
+            <p className="text-sm text-gray-600 mt-5 p-3 bg-[#f9f9fa] rounded-md">
+              {subscriptionPlan?.description}
+            </p>
           </div>
 
           <div className="flex items-center justify-between mt-6">

@@ -37,7 +37,7 @@ const EliteProSubscription = () => {
           <h2 className="heading-lg font-bold text-gray-900 mb-2">
             Elite Pro Subscription
           </h2>
-          <p className="text-gray-600 mb-2">
+          <p className="text-gray-600 mb-2 text-sm">
             Explore and manage your Elite Pro subscription plans. Stay updated
             with the latest features and benefits tailored for you.
           </p>
