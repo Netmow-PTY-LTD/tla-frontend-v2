@@ -10,6 +10,21 @@ const generalApiService = baseApi.injectEndpoints({
       }),
       providesTags: ['claims'],
     }),
+    getSingleRequest: builder.query({
+      query: (id) => ({
+        url: `/claims/${id}`,
+        method: 'GET',
+      }),
+      providesTags: ['claims'],
+    }),
+    updateRequestStatus: builder.mutation({
+      query: ({ claimId, status }) => ({
+        url: `/claims/${claimId}/status`,
+        method: 'PUT',
+        body: { status },
+      }),
+      providesTags: ['claims'],
+    }),
     getCompaniesList: builder.query({
       query: (params) => ({
         url: `/firms/list`,
@@ -21,5 +36,9 @@ const generalApiService = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetClaimsRequestsQuery, useGetCompaniesListQuery } =
-  generalApiService;
+export const {
+  useGetClaimsRequestsQuery,
+  useGetSingleRequestQuery,
+  useUpdateRequestStatusMutation,
+  useGetCompaniesListQuery,
+} = generalApiService;
