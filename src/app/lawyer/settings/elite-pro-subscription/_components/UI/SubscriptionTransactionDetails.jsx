@@ -24,31 +24,29 @@ export const SubscriptionTransactionDetails = () => {
     isLoading,
   } = useUserTransactionHistoryQuery();
 
-
-
   useEffect(() => {
     if (!transactionData?.data) return;
 
     const term = searchTerm.toLowerCase();
 
     const filtered = transactionData.data
-         .filter((transaction) => transaction.subscriptionType === 'elitePro') 
-    .filter((transaction) => {
-      const flatValues = [];
+      .filter((transaction) => transaction.subscriptionType === 'elitePro')
+      .filter((transaction) => {
+        const flatValues = [];
 
-      Object.values(transaction).forEach((val) => {
-        if (typeof val === 'object' && val !== null) {
-          flatValues.push(...Object.values(val));
-        } else {
-          flatValues.push(val);
-        }
-      });
+        Object.values(transaction).forEach((val) => {
+          if (typeof val === 'object' && val !== null) {
+            flatValues.push(...Object.values(val));
+          } else {
+            flatValues.push(val);
+          }
+        });
 
-      return flatValues.some((value) => {
-        if (!value) return false;
-        return value.toString().toLowerCase().includes(term);
+        return flatValues.some((value) => {
+          if (!value) return false;
+          return value.toString().toLowerCase().includes(term);
+        });
       });
-    });
 
     setFilteredTransactions(filtered);
     setCurrentPage(1);
@@ -98,7 +96,7 @@ export const SubscriptionTransactionDetails = () => {
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
                   <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
-                    ID
+                    SL
                   </th>
                   <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
                     Plan
@@ -118,14 +116,15 @@ export const SubscriptionTransactionDetails = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {paginatedTransactions.map((tx) => {
+                {paginatedTransactions.map((tx, index) => {
                   return (
                     <tr key={tx._id} className="hover:bg-gray-50">
                       <td className="py-4 px-6 text-sm font-mono text-gray-800">
-                        {tx._id.slice(0, 8)}...
+                        {/* {tx._id.slice(0, 8)}... */}
+                        {index + 1 + startIndex}
                       </td>
                       <td className="py-4 px-6 text-sm text-gray-900 font-medium">
-                        {tx?.subscriptionId?.eliteProPackageId?.name|| '-'}
+                        {tx?.subscriptionId?.eliteProPackageId?.name || '-'}
                       </td>
                       <td className="py-4 px-6 text-sm text-gray-800">
                         ${tx.amountPaid}{' '}
@@ -159,7 +158,9 @@ export const SubscriptionTransactionDetails = () => {
                             view
                           </button>
                           <PDFDownloadLink
-                            document={<EliteProInvoiceDocument transaction={tx} />}
+                            document={
+                              <EliteProInvoiceDocument transaction={tx} />
+                            }
                             fileName={`invoice_${tx._id}.pdf`}
                             className="px-4 py-1.5 bg-gray-100 text-gray-800 text-sm font-medium rounded-md hover:bg-gray-200 transition"
                           >

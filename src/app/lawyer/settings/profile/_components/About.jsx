@@ -25,7 +25,10 @@ import Company from './about/company/Company';
 import { useGetCompanyListQuery } from '@/store/features/public/publicApiService';
 import CompanySelectField from './about/company/CompanySelectField';
 import { Button } from '@/components/ui/button';
-import { useCancelLawyerMembershipMutation } from '@/store/features/lawyer/LeadsApiService';
+import {
+  useCancelLawyerMembershipMutation,
+  useCancelLawyerMembershipRequestMutation,
+} from '@/store/features/lawyer/LeadsApiService';
 import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 
 export default function About() {
@@ -47,7 +50,8 @@ export default function About() {
   const [updateUserData, { isLoading: userIsLoading }] =
     useUpdateUserDataMutation();
   const profile = userInfo?.data?.profile;
-  const [cancelLawyerMembership] = useCancelLawyerMembershipMutation();
+  const [cancelLawyerMembershipRequest] =
+    useCancelLawyerMembershipRequestMutation();
 
   console.log('profile', profile);
 
@@ -105,6 +109,29 @@ export default function About() {
       company?.firmName?.toLowerCase()?.includes(q)
     );
   }, [query, allCompanies]);
+
+  const [cancelLawyerMembership] = useCancelLawyerMembershipMutation();
+
+  const handleCancelMembership = async (firmProfileId) => {
+    console.log('Cancelling membership for firmProfileId:', firmProfileId);
+    try {
+      const response = await cancelLawyerMembership({ firmProfileId }).unwrap();
+      console.log('Cancel membership response:', response);
+      if (response?.success) {
+        showSuccessToast(
+          response?.message || 'Membership cancelled successfully'
+        );
+        refetch(); // Refresh the data to reflect the changes
+      } else {
+        throw new Error(response?.message || 'Failed to cancel the membership');
+      }
+    } catch (error) {
+      console.error('error', error);
+      showErrorToast(
+        error.message || 'An error occurred while cancelling the membership'
+      );
+    }
+  };
 
   const onSubmit = async (data) => {
     console.log('data', data);
@@ -172,6 +199,7 @@ export default function About() {
       console.error('Error submitting form:', error);
     }
   };
+
   if (isLoading)
     return (
       <div>
@@ -200,10 +228,11 @@ export default function About() {
 
   // Add a function to handle the cancel request logic
   const handleCancelRequest = async (firmProfileId) => {
-    console.log('Cancelling request for firmProfileId:', firmProfileId);
     try {
       // Assuming there's an API endpoint to cancel the request
-      const response = await cancelLawyerMembership({ firmProfileId }).unwrap();
+      const response = await cancelLawyerMembershipRequest({
+        firmProfileId,
+      }).unwrap();
 
       if (response?.success) {
         showSuccessToast(response?.message || 'Request cancelled successfully');
@@ -364,6 +393,17 @@ export default function About() {
             <div className="mt-6">
               <Company companyInfo={profile?.firmProfileId} />
             </div>
+          )}
+          {profile?.firmProfileId && profile?.firmProfileId !== null && (
+            <button
+              type="button"
+              className="btn-default btn-secondary"
+              onClick={() => {
+                handleCancelMembership(profile?.firmProfileId?._id);
+              }}
+            >
+              Cancel Company Membership?
+            </button>
           )}
         </div>
 

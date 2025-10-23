@@ -20,6 +20,10 @@ export default function AvatarUploader({
 
   // Handle preview generation
   useEffect(() => {
+    if (!file) {
+      setPreview(null);
+      return;
+    }
     if (file instanceof File) {
       const objectUrl = URL.createObjectURL(file);
       setPreview(objectUrl);
@@ -32,9 +36,9 @@ export default function AvatarUploader({
   }, [file]);
 
   // Handle file input
-  const handleChange =async (e) => {
+  const handleChange = async (e) => {
     const uploaded = e.target.files?.[0];
-        const webpFile = await resizeAndConvertToWebP(uploaded, 500, 0.8);
+    const webpFile = await resizeAndConvertToWebP(uploaded, 500, 0.8);
     if (webpFile) {
       setValue(name, webpFile, { shouldValidate: true });
     }

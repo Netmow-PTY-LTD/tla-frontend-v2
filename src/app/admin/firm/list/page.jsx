@@ -99,7 +99,7 @@ export default function Page() {
   const handleUpdateFirmStatus = async (firmId, status) => {
     const payload = { firmId, data: { status } };
 
-    console.log('payload', payload);
+    //console.log('payload', payload);
 
     try {
       const res = await updateFirmStatus(payload).unwrap();
