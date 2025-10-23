@@ -5,31 +5,8 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import {
-  ArrowUpDown,
-  ChevronDown,
-  Loader,
-  MoreHorizontal,
-  Pencil,
-  Trash2,
-} from 'lucide-react';
-
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -38,9 +15,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { ChevronDown, Loader } from 'lucide-react';
 
-export function DataTableWithPagination({
+// 🟢 Props: pass data, pagination, totalPage, onPageChange, onSearch
+export function ZipCodeDataTableWithChecked({
   data,
   columns,
   pagination,
@@ -51,9 +37,9 @@ export function DataTableWithPagination({
   onPageChange,
   onSearch,
   isFetching,
+  isZipCodeListLoading,
 }) {
   const [sorting, setSorting] = React.useState([]);
-  const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [globalFilter, setGlobalFilter] = React.useState('');
@@ -61,28 +47,25 @@ export function DataTableWithPagination({
   const table = useReactTable({
     data,
     columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getRowId: (row) => row._id,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    enableRowSelection: true,
     state: {
       sorting,
-      columnFilters,
       columnVisibility,
       rowSelection,
+      globalFilter, // 👈 add this
     },
+    onSortingChange: setSorting,
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    onGlobalFilterChange: setGlobalFilter, // 👈 add this
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(), // 👈 enable filtering
+    enableRowSelection: true,
+    globalFilterFn: 'includesString', // default fuzzy filter
   });
-
-  console.log('totalPage in datatable', totalPage);
 
   return (
     <div className="w-full">
+      {/* 🔍 Search */}
       <div className="flex items-center py-4">
         <Input
           placeholder="Search..."
@@ -93,6 +76,8 @@ export function DataTableWithPagination({
           }}
           className="max-w-sm"
         />
+
+        {/* Column visibility toggle */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -103,57 +88,56 @@ export function DataTableWithPagination({
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
+              .map((column) => (
+                <DropdownMenuCheckboxItem
+                  key={column.id}
+                  className="capitalize"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                >
+                  {column.id}
+                </DropdownMenuCheckboxItem>
+              ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      {/* Table */}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
+
           <TableBody>
-            {isFetching ? (
+            {isFetching && (!data || data.length === 0) ? (
+              // Loading only if no data yet
               <TableRow>
                 <TableCell
                   colSpan={columns?.length}
                   className="h-24 text-center"
                 >
-                  <div className="flex justify-center items-center space-x-2">
-                    <Loader className="w-4 h-4 animate-spin" />
+                  <div className="flex items-center justify-center gap-2">
+                    <Loader className="animate-spin w-4 h-4" />
                     <span>Loading...</span>
                   </div>
                 </TableCell>
               </TableRow>
-            ) : table.getRowModel().rows?.length ? (
+            ) : data && data.length > 0 ? (
+              // Render rows
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -170,6 +154,7 @@ export function DataTableWithPagination({
                 </TableRow>
               ))
             ) : (
+              // Show No results only if fetch finished and data is empty
               <TableRow>
                 <TableCell
                   colSpan={columns?.length}
@@ -182,11 +167,12 @@ export function DataTableWithPagination({
           </TableBody>
         </Table>
       </div>
+
       {/* Pagination */}
       <div className="flex items-center justify-between py-4">
         <div className="text-sm">
           Showing {(page - 1) * limit + 1}–{Math.min(page * limit, total)} of{' '}
-          {total} results
+          {total} zip codes
         </div>
         <div className="space-x-2 flex items-center">
           <Button
