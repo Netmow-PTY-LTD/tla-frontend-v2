@@ -51,7 +51,7 @@ export default function EditLicenseModal({
 
   const license = licenseData?.data;
 
-  //console.log('license', license);
+  console.log('license', license);
 
   // useEffect(() => {
   //   if (license) {
@@ -144,17 +144,27 @@ export default function EditLicenseModal({
       showErrorToast(error?.data?.message || 'Failed to update license');
     }
   };
+
+  console.log('agencyLogo', defaultValues?.agencyLogo);
   return (
     <Modal
       open={open}
       onOpenChange={(open) => {
         setOpen(open);
-        setDefaultValues({
-          country: '',
-          certificationName: '',
-          type: '',
-          agencyLogo: null,
-        });
+        if (!open) {
+          setDefaultValues({
+            country: '',
+            certificationName: '',
+            type: '',
+            agencyLogo: null,
+          });
+          formRef.current?.reset({
+            country: '',
+            certificationName: '',
+            type: '',
+            agencyLogo: null,
+          });
+        }
       }}
     >
       <h3 className="text-lg font-semibold mb-6">Edit License</h3>
@@ -195,7 +205,7 @@ export default function EditLicenseModal({
             <label htmlFor="agencyLogo" className="label-text">
               Upload Photo
             </label>
-            <AvatarUploader name="agencyLogo" />
+            <AvatarUploader key={licenseId} name="agencyLogo" />
           </div>
         </div>
 
