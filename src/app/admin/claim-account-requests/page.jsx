@@ -9,11 +9,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Edit, Eye, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import {
+  Check,
+  Edit,
+  Eye,
+  MoreHorizontal,
+  Pencil,
+  Trash2,
+  X,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useGetClaimsRequestsQuery } from '@/store/features/admin/generalApiService';
+import {
+  useGetClaimsRequestsQuery,
+  useUpdateRequestStatusMutation,
+} from '@/store/features/admin/generalApiService';
 import countries from '@/data/countries';
 import Link from 'next/link';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
 export default function ClaimAccountRequests() {
   const [page, setPage] = React.useState(1);
@@ -23,6 +35,7 @@ export default function ClaimAccountRequests() {
   const {
     data: claimsRequests,
     isLoading: isLoadingClaimsRequests,
+    refetch: claimsRequestsRefetch,
     isFetching,
   } = useGetClaimsRequestsQuery({
     page,
@@ -31,6 +44,35 @@ export default function ClaimAccountRequests() {
   });
 
   console.log('claimsRequests', claimsRequests);
+
+  const [updateClaimRequestStatus] = useUpdateRequestStatusMutation();
+
+  const handleUpdateClaimRequestStatus = async (id, status) => {
+    const payload = {
+      claimId: id,
+      status,
+      matchedLawFirmId: null,
+      reviewerNote: 'Verified firm documents and approved claim.',
+    };
+
+    console.log('payload', payload);
+
+    try {
+      const res = await updateClaimRequestStatus(payload).unwrap();
+      console.log('Status update response', res);
+      if (res) {
+        showSuccessToast(
+          res?.message || 'Claim request status updated successfully.'
+        );
+        claimsRequestsRefetch();
+      }
+    } catch (error) {
+      console.error(error);
+      showErrorToast(
+        error?.message || 'Failed to update claim request status.'
+      );
+    }
+  };
 
   const columns = [
     {
@@ -73,6 +115,37 @@ export default function ClaimAccountRequests() {
       cell: ({ row }) => <div className="">{row.getValue('claimerEmail')}</div>,
     },
     {
+      accessorKey: 'status',
+      header: 'Status',
+      cell: ({ row }) => {
+        const status = row.getValue('status');
+
+        let badgeClasses =
+          'px-3 py-1 rounded-full text-xs font-semibold capitalize';
+        let colorClasses = '';
+
+        switch (status) {
+          case 'approved':
+            colorClasses = 'bg-green-100 text-green-800';
+            break;
+          case 'rejected':
+            colorClasses = 'bg-red-100 text-red-800';
+            break;
+          case 'pending':
+            colorClasses = 'bg-blue-100 text-blue-800';
+            break;
+          default:
+            colorClasses = 'bg-gray-100 text-gray-800';
+        }
+
+        return (
+          <div className={`${badgeClasses} ${colorClasses} inline-block`}>
+            {status}
+          </div>
+        );
+      },
+    },
+    {
       id: 'actions',
       header: 'Actions',
       enableHiding: false,
@@ -92,11 +165,35 @@ export default function ClaimAccountRequests() {
               <DropdownMenuItem>
                 <Link
                   href={`/admin/claim-account-requests/${item?._id}`}
-                  className="flex items-center gap-2 p-2"
+                  className="flex items-center gap-2 p-1"
                 >
                   <Eye className="w-4 h-4" />
                   View Details
                 </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <button
+                  onClick={() => {
+                    handleUpdateClaimRequestStatus(item?._id, 'approved');
+                    // setOpen(true);
+                  }}
+                  className="flex gap-2 w-full p-1"
+                >
+                  <Check className="w-4 h-4" />
+                  Approve
+                </button>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <button
+                  className="flex gap-2 cursor-pointer w-full p-1"
+                  onClick={() =>
+                    handleUpdateClaimRequestStatus(item?._id, 'rejected')
+                  }
+                >
+                  <X className="w-4 h-4" /> Reject
+                </button>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
