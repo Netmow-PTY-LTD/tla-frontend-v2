@@ -45,7 +45,7 @@ const transformLocationToCoordinates = (value) => {
   }
 
   if (loc.locationType === 'nation_wide') {
- 
+
     return null;
   }
 
@@ -54,12 +54,11 @@ const transformLocationToCoordinates = (value) => {
     coord: loc.coord || [0, 0], // [longitude, latitude]
     traveltime: loc.traveltime ? Number(loc.traveltime) : null,
     rangeInKm: loc.rangeInKm ? Number(loc.rangeInKm) : null,
-    mode: loc.travelmode || 'driving',
+    travelmode: loc.travelmode || 'driving',
+    serviceIds: loc.serviceIds || [],
     sortByDistance: true, // optional, sort nearest first
   };
 };
-
-
 
 
 
@@ -136,7 +135,7 @@ export default function FilterSidebar({
     //   }
 
 
-console.log('payload', payload);
+    console.log('payload', payload);
 
     setSearchKeyword(payload);
     // Now you can call API or update state
