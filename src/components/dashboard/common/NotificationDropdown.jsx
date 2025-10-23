@@ -1,7 +1,19 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Bell, BellRing } from 'lucide-react';
+import {
+  BadgeCheck,
+  Bell,
+  BellRing,
+  CalendarCheck,
+  Edit,
+  LogIn,
+  Mail,
+  PhoneCall,
+  PlusCircle,
+  Send,
+  Trash2,
+} from 'lucide-react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import Link from 'next/link';
@@ -14,6 +26,26 @@ import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import { useSelector } from 'react-redux';
 
 dayjs.extend(relativeTime);
+
+const iconStyles = {
+  login: { Icon: LogIn, fill: '#3B82F6' }, // Blue
+  update: { Icon: Edit, fill: '#F59E0B' }, // Amber/Yellow
+  delete: { Icon: Trash2, fill: '#EF4444' }, // Red
+  create: { Icon: PlusCircle, fill: '#10B981' }, // Green
+  schedule: { Icon: CalendarCheck, fill: '#6366F1' }, // Indigo
+  sendsms: { Icon: Send, fill: '#0EA5E9' }, // Sky blue
+  contact: { Icon: PhoneCall, fill: '#8B5CF6' }, // Violet
+  sendemail: { Icon: Mail, fill: '#2563EB' }, // Blue
+  whatsapp: { Icon: Bell, fill: '#25D366' }, // WhatsApp green
+  status: { Icon: BadgeCheck, fill: '#22C55E' }, // Success green
+  other: { Icon: Bell, fill: '#6B7280' }, // Gray
+};
+
+const generateActivityIcon = (type) => {
+  const { Icon, fill } = iconStyles[type] || iconStyles.other;
+
+  return <Icon className="w-5 h-5 inline" stroke={'#fff'} />;
+};
 
 export default function NotificationDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -77,23 +109,39 @@ export default function NotificationDropdown() {
       </div>
 
       {isOpen && (
-        <div className="absolute right-0 bg-white shadow-[0_6px_16px_#0006] rounded w-72 mt-2 z-[99]">
+        <div className="absolute right-0 bg-white shadow-[0_6px_16px_#0006] rounded-lg w-80 mt-2 z-[99]">
+          <h4 className="font-semibold text-gray-800 py-3 px-4 text-left border-b">
+            Notifications
+          </h4>
           <ul className="max-h-96 overflow-y-auto">
             {isLoading ? (
-              <li className="px-3 py-2 text-sm text-gray-500">Loading...</li>
+              <li className="p-4 text-sm text-gray-500">Loading...</li>
             ) : notifications.length > 0 ? (
               <>
                 {notifications.slice(0, 10).map((n) => (
                   <li
                     key={n._id}
                     onClick={() => handleNotificationClick(n)}
-                    className="border-b px-3 py-2 hover:bg-gray-100 cursor-pointer text-left"
+                    className="flex items-start gap-3 border-b p-4 hover:bg-gray-100 cursor-pointer text-left"
                   >
-                    <div className="text-sm font-medium">{n.title}</div>
-                    <p className="text-xs text-gray-500">{n.message}</p>
-                    <p className="text-[10px] text-gray-400">
-                      {dayjs(n.createdAt).fromNow()}
-                    </p>
+                    {(() => {
+                      const iconStyle = iconStyles[n?.type] || iconStyles.other;
+                      return (
+                        <div
+                          className="icon w-[32px] h-[32px] rounded-full flex justify-center items-center flex-shrink-0"
+                          style={{ backgroundColor: iconStyle.fill }}
+                        >
+                          {n?.type && generateActivityIcon(n?.type)}
+                        </div>
+                      );
+                    })()}
+                    <div className="space-y-1">
+                      <div className="text-sm font-medium">{n.title}</div>
+                      <p className="text-xs text-gray-500">{n.message}</p>
+                      <p className="text-[10px] text-gray-400">
+                        {dayjs(n.createdAt).fromNow()}
+                      </p>
+                    </div>
                   </li>
                 ))}
               </>
