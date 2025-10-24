@@ -15,7 +15,7 @@ import { Inbox, Loader } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 
-const LIMIT = '10';
+const LIMIT = '100';
 
 const LeadsBoardPage = () => {
   const [showLeadDetails, setShowLeadDetails] = useState(true);
