@@ -15,7 +15,7 @@ import { Inbox, Loader } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 
-const LIMIT = '10';
+const LIMIT = '100';
 
 const LeadsBoardPage = () => {
   const [showLeadDetails, setShowLeadDetails] = useState(true);
@@ -110,19 +110,19 @@ const LeadsBoardPage = () => {
       return newLeads;
     }
 
-    // ✅ If no new leads on next pages, just keep old ones
+    //  If no new leads on next pages, just keep old ones
     if (newLeads.length === 0) {
       return prev;
     }
 
-    // ✅ Remove duplicates based on `_id`
+    //  Remove duplicates based on `_id`
     const existingIds = new Set(prev.map((lead) => lead._id));
     const uniqueNew = newLeads.filter((lead) => !existingIds.has(lead._id));
 
     return [...prev, ...uniqueNew];
   });
 
-  // ✅ Always update pagination & total counts
+  //  Always update pagination & total counts
   setTotalPages(data?.pagination?.totalPage || 1);
   setTotalLeadsCount(data?.pagination?.total || 0);
 }, [data]);
