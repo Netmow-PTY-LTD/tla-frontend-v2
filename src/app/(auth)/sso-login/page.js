@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { useSsoLoginMutation } from '@/store/features/auth/authApiService';
 import { setUser } from '@/store/features/auth/authSlice';
@@ -11,14 +11,17 @@ import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
 export default function SsoLoginPage() {
     const router = useRouter();
+      const searchParams = useSearchParams();
     const dispatch = useDispatch();
     const [status, setStatus] = useState('loading');
 
 
     const [ssoLogin] = useSsoLoginMutation();
 
+    console.log('query token', searchParams.get('token'));
+
     useEffect(() => {
-        const token = router?.query?.token;
+        const token = searchParams.get('token'); //  Get token from URL
         if (!token) {
             setStatus('error');
             return;
@@ -27,6 +30,8 @@ export default function SsoLoginPage() {
         const handleSsoLogin = async () => {
             try {
                 const res = await ssoLogin({ token }).unwrap();
+
+                console.log('SSO Login Response:', res);
 
                 if (res?.success === true) {
                     showSuccessToast(res?.message || 'Login successful');
