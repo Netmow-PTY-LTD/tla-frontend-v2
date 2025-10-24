@@ -19,13 +19,13 @@ export default function SingleClaimRequestPage() {
 
   const {
     data: singleClaimRequest,
-    isLoading,
+    isLoading: isLoadingSingleRequest,
     isError,
   } = useGetSingleRequestQuery(id, {
     skip: !id,
   });
 
-  console.log('singleClaimRequest', singleClaimRequest);
+  //console.log('singleClaimRequest', singleClaimRequest);
 
   const {
     claimerName,
@@ -50,6 +50,12 @@ export default function SingleClaimRequestPage() {
       ? 'text-red-600 bg-red-100'
       : 'text-yellow-600 bg-yellow-100';
 
+  if (isLoadingSingleRequest) {
+    return <div>Loading...</div>;
+  }
+  if (isError) {
+    return <div>Error loading claim request.</div>;
+  }
   return (
     <div className="max-w-5xl mx-auto bg-white p-8">
       {/* Header */}
@@ -63,7 +69,7 @@ export default function SingleClaimRequestPage() {
           </p>
         </div>
         <span
-          className={`px-4 py-2 rounded-full text-sm font-medium ${statusColor}`}
+          className={`px-4 py-1 rounded-full text-sm font-medium ${statusColor}`}
         >
           {status?.charAt(0).toUpperCase() + status?.slice(1)}
         </span>
