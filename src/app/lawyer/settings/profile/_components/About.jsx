@@ -13,7 +13,7 @@ import AboutFormActions from './about/AboutFormAction';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { lawyerSettingAboutSchema } from '@/schema/dashboard/lawyerSettings';
 import TextInput from '@/components/form/TextInput';
-import { AirVent, Loader } from 'lucide-react';
+import { AirVent, Loader, UserPlusIcon } from 'lucide-react';
 import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor';
 import ChangePassword from '@/app/client/_components/ChangePassword';
 import GenderRadioField from '@/components/form/GenderRadioField';
@@ -30,6 +30,7 @@ import {
   useCancelLawyerMembershipRequestMutation,
 } from '@/store/features/lawyer/LeadsApiService';
 import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
+import { useRouter } from 'next/navigation';
 
 export default function About() {
   const [open, setOpen] = useState(false);
@@ -37,6 +38,18 @@ export default function About() {
   const [isOpenRew, setIsOpenRew] = useState(false);
   const [showCompanyFields, setShowCompanyFields] = useState(false);
   const [query, setQuery] = useState('');
+  const [openCancelMembershipModal, setOpenCancelMembershipModal] =
+    useState(false);
+  const [allowStaff, setAllowStaff] = useState(false);
+
+  const handleToggle = (e) => {
+    const checked = e.target.checked;
+    setAllowStaff(checked);
+
+    // 👉 You can call your API here to update the lawyer's settings
+    console.log('Staff access allowed:', checked);
+  };
+
   const {
     data: userInfo,
     isLoading,
@@ -392,19 +405,27 @@ export default function About() {
           ) : (
             <div className="mt-6">
               <Company companyInfo={profile?.firmProfileId} />
+              <button
+                type="button"
+                className="btn-default btn-secondary"
+                onClick={() => {
+                  setOpenCancelMembershipModal(true);
+                }}
+              >
+                Cancel Company Membership?
+              </button>
             </div>
           )}
-          {profile?.firmProfileId && profile?.firmProfileId !== null && (
-            <button
-              type="button"
-              className="btn-default btn-secondary"
-              onClick={() => {
-                handleCancelMembership(profile?.firmProfileId?._id);
-              }}
-            >
-              Cancel Company Membership?
-            </button>
-          )}
+          <ConfirmationModal
+            open={openCancelMembershipModal}
+            onOpenChange={() => setOpenCancelMembershipModal(false)}
+            onConfirm={() => {
+              handleCancelMembership(profile?.firmProfileId?._id);
+            }}
+            title="Are you sure you want to cancel company membership?"
+            description="This action cannot be undone. So please proceed with caution."
+            cancelText="No"
+          />
         </div>
 
         <div className="border-t border-white" />
@@ -414,6 +435,21 @@ export default function About() {
           initialValues={defaultValues}
         />
       </FormWrapper>
+      <div className="w-full bg-white rounded-lg border border-gray-200 shadow-sm p-5 sm:p-6 flex items-start gap-3 mt-10">
+        <input
+          type="checkbox"
+          id="staffAccess"
+          checked={allowStaff}
+          onChange={handleToggle}
+          className="mt-1 h-5 w-5 text-teal-600 border-gray-300 rounded focus:ring-teal-500 cursor-pointer"
+        />
+        <label
+          htmlFor="staffAccess"
+          className="text-gray-700 text-sm sm:text-base leading-snug cursor-pointer select-none"
+        >
+          Allow your staff to access your firm’s dashboard securely.
+        </label>
+      </div>
       <>
         <ChangePassword setOpen={setOpen} open={open} />
         <ChangeEmail setOpen={setOpenEmail} open={openEmail} />
