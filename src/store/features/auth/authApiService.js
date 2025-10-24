@@ -133,6 +133,16 @@ const authApi = baseApi.injectEndpoints({
       invalidatesTags: ['lead-list-admin'],
     }),
 
+     ssoLogin: builder.mutation({
+      query: (data) => ({
+        url: '/auth/sso-login',
+        method: 'POST',
+        body: data,
+      }),
+
+    }),
+
+
 
   }),
 });
@@ -155,5 +165,6 @@ export const {
   useChangeEmailMutation,
   useVerifyOtpMutation,
   useSendOtpMutation,
-  useUpdateUserDefalultPicMutation
+  useUpdateUserDefalultPicMutation,
+  useSsoLoginMutation,
 } = authApi;
