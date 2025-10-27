@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ProfileCard from './_component/home/ProfileCard';
 import LeadSettingsCard from './_component/home/LeadSettingsCard';
 import LeadsCountCard from './_component/home/LeadsCountCard';
@@ -11,6 +11,9 @@ import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { useGetLeadServiceListQuery } from '@/store/features/leadService/leadServiceApiService';
 import ResponseStatsCard from './_component/home/ResponseStatsCard';
 import CreditsStatsCard from '@/components/dashboard/lawyer/module/MyStats/CreditsStatsCard';
+import { useGetAllLeadsQuery } from '@/store/features/lawyer/LeadsApiService';
+import { usePathname } from 'next/navigation';
+import { usePreviousPath } from '@/utils/pathHistory';
 
 export default function SellerDashboard() {
   const currentUser = useSelector((state) => state.auth.user);
@@ -33,6 +36,45 @@ export default function SellerDashboard() {
 
   const profileData = userInfo?.data ?? {};
   const locations = leadServicesData?.data?.locations ?? [];
+
+
+
+
+
+  // // --------------------- RANDOM PAGE STATE ---------------------
+  // const [page, setPage] = useState(() => Math.floor(Math.random() * 10) + 1);
+  // const limit = 100;
+
+  // // --------------------- LEADS QUERY ---------------------
+  // const {
+  //   data,
+  //   isLoading: isAllLeadsLoading,
+  //   isFetching,
+  //   refetch: refetchAllLeads,
+  // } = useGetAllLeadsQuery({
+  //   page,
+  //   limit,
+  //   searchKeyword: JSON.stringify({}),
+  // });
+
+  // // --------------------- AUTO REFRESH EVERY 2 SECONDS ---------------------
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     const randomPage = Math.floor(Math.random() * 10) + 1;
+  //     setPage(randomPage);
+  //   }, 2000);
+
+  //   return () => clearInterval(interval);
+  // }, []);
+
+  // // --------------------- OPTIONAL: REFETCH WHEN PAGE CHANGES ---------------------
+  // useEffect(() => {
+  //   refetchAllLeads();
+  // }, [page, refetchAllLeads]);
+
+
+
+
 
   return (
     <div className=" max-w-[1100px] mx-auto relative z-0">

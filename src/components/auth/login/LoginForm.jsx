@@ -4,19 +4,18 @@ import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import FormWrapper from '@/components/form/FromWrapper';
 import TextInput from '@/components/form/TextInput';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Form } from '@/components/ui/form';
 import { loginValidationSchema } from '@/schema/auth/authValidation.schema';
-import { useAuthLoginMutation } from '@/store/features/auth/authApiService';
+import { useAuthLoginMutation, useAuthUserInfoQuery, useCachedUserDataMutation } from '@/store/features/auth/authApiService';
 import { setUser } from '@/store/features/auth/authSlice';
 import { verifyToken } from '@/utils/verifyToken';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Cookies from 'js-cookie';
 import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
+
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
@@ -26,6 +25,10 @@ const LoginForm = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
+  const [cachedUserData] = useCachedUserDataMutation();
+
+
+
   const form = useForm({
     resolver: zodResolver(loginValidationSchema),
     defaultValues: {
@@ -33,6 +36,9 @@ const LoginForm = () => {
       password: '',
     },
   });
+
+
+
 
   const onSubmit = async (data) => {
     try {
@@ -54,7 +60,7 @@ const LoginForm = () => {
             })
           );
 
-          // ✅ Save to localStorage if rememberMe is checked
+          //  Save to localStorage if rememberMe is checked
           if (rememberMe) {
             localStorage.setItem('rememberMe', 'true');
             localStorage.setItem('userEmail', data.email);
@@ -67,10 +73,21 @@ const LoginForm = () => {
           if (dispatchUser?.payload?.token) {
             if (res?.data?.regUserType === 'lawyer') {
               router.push(`/lawyer/dashboard`);
+              const cachedRes = await cachedUserData().unwrap();
+              console.log('cachedRes', cachedRes);
+
             } else if (res?.data?.regUserType === 'client') {
               router.push(`/client/dashboard`);
+              const cachedRes = await cachedUserData().unwrap();
+              console.log('cachedRes', cachedRes);
+
+
             } else if (res?.data?.regUserType === 'admin') {
               router.push(`/admin`);
+              const cachedRes = await cachedUserData().unwrap();
+              console.log('cachedRes', cachedRes);
+
+
             }
           }
         }
