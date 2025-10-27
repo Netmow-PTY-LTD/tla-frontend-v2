@@ -24,6 +24,9 @@ const LeadsBoardPage = () => {
   const [parsed, setParsed] = useState(null);
   const [searchKeyword, setSearchKeyword] = useState(parsed || {});
   const [totalLeadsCount, setTotalLeadsCount] = useState(0);
+  // --- Skeleton loader control ---
+  const [forceSkeleton, setForceSkeleton] = useState(true);
+  const skeletonTimerRef = useRef(null);
 
   // workable code
   const [page, setPage] = useState(1);
@@ -99,33 +102,33 @@ const LeadsBoardPage = () => {
   // }, [data]);
 
   useEffect(() => {
-  if (!data) return;
+    if (!data) return;
 
-  const currentPage = data?.pagination?.page ?? 1;
-  const newLeads = Array.isArray(data?.data) ? data.data : [];
+    const currentPage = data?.pagination?.page ?? 1;
+    const newLeads = Array.isArray(data?.data) ? data.data : [];
 
-  setLeads((prev) => {
-    // Always reset leads when on first page
-    if (currentPage === 1) {
-      return newLeads;
-    }
+    setLeads((prev) => {
+      // Always reset leads when on first page
+      if (currentPage === 1) {
+        return newLeads;
+      }
 
-    //  If no new leads on next pages, just keep old ones
-    if (newLeads.length === 0) {
-      return prev;
-    }
+      //  If no new leads on next pages, just keep old ones
+      if (newLeads.length === 0) {
+        return prev;
+      }
 
-    //  Remove duplicates based on `_id`
-    const existingIds = new Set(prev.map((lead) => lead._id));
-    const uniqueNew = newLeads.filter((lead) => !existingIds.has(lead._id));
+      //  Remove duplicates based on `_id`
+      const existingIds = new Set(prev.map((lead) => lead._id));
+      const uniqueNew = newLeads.filter((lead) => !existingIds.has(lead._id));
 
-    return [...prev, ...uniqueNew];
-  });
+      return [...prev, ...uniqueNew];
+    });
 
-  //  Always update pagination & total counts
-  setTotalPages(data?.pagination?.totalPage || 1);
-  setTotalLeadsCount(data?.pagination?.total || 0);
-}, [data]);
+    //  Always update pagination & total counts
+    setTotalPages(data?.pagination?.totalPage || 1);
+    setTotalLeadsCount(data?.pagination?.total || 0);
+  }, [data]);
 
 
   // Infinite scroll intersection observer
@@ -220,9 +223,7 @@ const LeadsBoardPage = () => {
           <div className="lead-board-container">
             {showLeadDetails && selectedLead && (
               <div className="left-column-8">
-                {isSingleLeadLoading ? (
-                  <ResponseSkeleton />
-                ) : (
+                {
                   <div className="column-wrap-left bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
                     <LeadDetailsPage
                       lead={selectedLead}
@@ -230,15 +231,24 @@ const LeadsBoardPage = () => {
                       singleLead={selectedLeadData?.data}
                       isSingleLeadLoading={isSingleLeadLoading}
                       data={leads}
+                      forceSkeleton={forceSkeleton}
+                      onSkeletonFinish={() => {
+                        // Always show skeleton for at least 3 seconds, reset timer on every click
+                        if (skeletonTimerRef.current) {
+                          clearTimeout(skeletonTimerRef.current);
+                        }
+                        skeletonTimerRef.current = setTimeout(() => {
+                          setForceSkeleton(false);
+                        }, 1200);
+                      }}
                     />
                   </div>
-                )}
+                }
               </div>
             )}
             <div
-              className={`${
-                showLeadDetails ? 'right-column-4 ' : 'right-column-full'
-              }`}
+              className={`${showLeadDetails ? 'right-column-4 ' : 'right-column-full'
+                }`}
             >
               <div className="column-wrap-right" id="scroll-target-for-data">
                 <div className="leads-top-row">

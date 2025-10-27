@@ -14,7 +14,7 @@ const SubscriptionCard = ({ subscription }) => {
     <div className=" bg-white rounded-xl overflow-hidden border border-gray-200 p-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">
-          {subscriptionPackageId.name}
+          {subscriptionPackageId?.name}
         </h2>
         <span
           className={`px-3 py-1 text-sm font-medium rounded-full ${
@@ -30,14 +30,14 @@ const SubscriptionCard = ({ subscription }) => {
       <div className="mb-4">
         <p className="text-gray-600">
           <span className="font-medium">Price:</span>{' '}
-          {subscriptionPackageId.price.amount / 100}{' '}
-          {subscriptionPackageId.price.currency.toUpperCase()} /{' '}
-          {subscriptionPackageId.billingCycle}
+          {subscriptionPackageId?.price?.amount / 100}{' '}
+          {subscriptionPackageId?.price?.currency.toUpperCase()} /{' '}
+          {subscriptionPackageId?.billingCycle}
         </p>
         <p className="text-gray-600">
           <span className="font-medium">Period:</span>{' '}
-          {dayjs(subscriptionPeriodStart).format('DD MMM YYYY')} -{' '}
-          {dayjs(subscriptionPeriodEnd).format('DD MMM YYYY')}
+          {dayjs(subscriptionPeriodStart)?.format('DD MMM YYYY')} -{' '}
+          {dayjs(subscriptionPeriodEnd)?.format('DD MMM YYYY')}
         </p>
         <p className="text-gray-600">
           <span className="font-medium">Auto Renew:</span>{' '}

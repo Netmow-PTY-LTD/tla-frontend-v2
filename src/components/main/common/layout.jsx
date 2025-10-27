@@ -6,20 +6,20 @@ import '@/styles/main.css';
 import Preloader from '@/components/Preloader';
 
 export default function MainLayout({ children }) {
-  const [isLoading, setIsLoading] = useState(true); // <- loading state
+  // const [isLoading, setIsLoading] = useState(true); // <- loading state
 
-  useEffect(() => {
-    // Preloader simulation
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 3000); // <- Adjust duration as needed
+  // useEffect(() => {
+  //   // Preloader simulation
+  //   const timer = setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 3000); // <- Adjust duration as needed
 
-    return () => clearTimeout(timer);
-  }, []);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
-  if (isLoading) {
-    return <Preloader />;
-  }
+  // // if (isLoading) {
+  // //   return <Preloader />;
+  // // }
   return (
     <>
       <Header />

@@ -368,6 +368,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useRealTimeStatus } from '@/hooks/useSocketListener';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
+import LeadDetailsSkeleton from './LeadDetailsSkeleton';
 
 export default function LeadDetailsPage({
   onBack,
@@ -375,6 +376,8 @@ export default function LeadDetailsPage({
   singleLead,
   isSingleLeadLoading,
   data,
+  forceSkeleton = false,
+  onSkeletonFinish = () => { },
 }) {
   const fullText =
     singleLead?.additionalDetails === ''
@@ -424,9 +427,8 @@ export default function LeadDetailsPage({
     const bars = Array.from({ length: total }, (_, index) => (
       <div
         key={index}
-        className={`w-[10px] h-[20px] ${
-          index < responded ? 'bg-green-400' : 'bg-gray-300'
-        }`}
+        className={`w-[10px] h-[20px] ${index < responded ? 'bg-green-400' : 'bg-gray-300'
+          }`}
       ></div>
     ));
 
@@ -442,11 +444,25 @@ export default function LeadDetailsPage({
     );
   };
 
+
+  useEffect(() => {
+    if (!isSingleLeadLoading && forceSkeleton) {
+      onSkeletonFinish();
+    }
+  }, [isSingleLeadLoading, forceSkeleton, onSkeletonFinish]);
+
+  const showSkeleton = forceSkeleton || (isSingleLeadLoading && lead);
+
+console.log('showSkeleton:', showSkeleton);
+console.log('forceSkeleton:', forceSkeleton);
+
+
+
   return (
     <div className="bg-white">
-      {isSingleLeadLoading ? (
-        <ResponseSkeleton />
-      ) : lead ? (
+     {showSkeleton ? (
+             <LeadDetailsSkeleton />
+           )  : lead ? (
         <div className="max-w-[900px]">
           <div className="flex items-center justify-between">
             <button className="flex py-2 items-center gap-2" onClick={onBack}>
@@ -459,9 +475,8 @@ export default function LeadDetailsPage({
               <div className="flex flex-col items-start gap-4 z-0 ">
                 <Avatar className="w-20 h-20 z-10">
                   <AvatarImage
-                    src={`${
-                      lead?.userProfileId?.profilePicture ?? userDummyImage
-                    }`}
+                    src={`${lead?.userProfileId?.profilePicture ?? userDummyImage
+                      }`}
                     alt={lead?.userProfileId?.name ?? 'John Doe'}
                   />
                   <AvatarFallback>User</AvatarFallback>
@@ -474,11 +489,10 @@ export default function LeadDetailsPage({
                     <span className="text-xs">
                       <div className="flex items-center gap-2 text-sm">
                         <span
-                          className={`ml-2 w-2 h-2 rounded-full ${
-                            onlineMap[lead?.userProfileId?.user?._id]
+                          className={`ml-2 w-2 h-2 rounded-full ${onlineMap[lead?.userProfileId?.user?._id]
                               ? 'bg-green-500'
                               : 'bg-gray-400'
-                          }`}
+                            }`}
                         ></span>
                         <span className="text-gray-700">
                           {onlineMap[lead?.userProfileId?.user?._id]
@@ -507,8 +521,8 @@ export default function LeadDetailsPage({
                     const phone = lead?.userProfileId?.phone;
                     return phone
                       ? `${phone.slice(0, 3)}${'*'.repeat(
-                          Math.max(0, phone.length - 3)
-                        )}`
+                        Math.max(0, phone.length - 3)
+                      )}`
                       : '480*******';
                   })()}
                 </span>{' '}
@@ -577,8 +591,8 @@ export default function LeadDetailsPage({
             </div>
             {(singleLead?.additionalDetails &&
               singleLead.additionalDetails !== '') ||
-            singleLead?.leadPriority?.toLowerCase() === 'urgent' ||
-            singleLead?.userProfileId?.phone ? (
+              singleLead?.leadPriority?.toLowerCase() === 'urgent' ||
+              singleLead?.userProfileId?.phone ? (
               <div className="mt-5">
                 <div className="flex flex-wrap gap-2">
                   {singleLead?.additionalDetails &&
@@ -592,12 +606,12 @@ export default function LeadDetailsPage({
 
                   {singleLead?.userProfileId?.user?.isPhoneVerified ===
                     true && (
-                    <TagButton
-                      text="Verified Phone"
-                      bgColor="#00C3C01A"
-                      icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
-                    />
-                  )}
+                      <TagButton
+                        text="Verified Phone"
+                        bgColor="#00C3C01A"
+                        icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+                      />
+                    )}
 
                   {singleLead?.leadPriority?.toLowerCase() === 'urgent' && (
                     <TagButton
