@@ -141,6 +141,13 @@ const authApi = baseApi.injectEndpoints({
       }),
 
     }),
+     cachedUserData: builder.mutation({
+      query: () => ({
+        url: '/auth/cache-user-data',
+        method: 'POST',
+      }),
+
+    }),
 
 
 
@@ -167,4 +174,5 @@ export const {
   useSendOtpMutation,
   useUpdateUserDefalultPicMutation,
   useSsoLoginMutation,
+  useCachedUserDataMutation,
 } = authApi;
