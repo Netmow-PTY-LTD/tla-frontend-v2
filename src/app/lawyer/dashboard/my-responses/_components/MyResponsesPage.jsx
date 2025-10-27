@@ -298,7 +298,7 @@ export default function MyResponsesPage() {
                     }
                     skeletonTimerRef.current = setTimeout(() => {
                       setForceSkeleton(false);
-                    }, 3000);
+                    }, 200);
                   }}
                 />
               </div>
