@@ -21,7 +21,6 @@ export default function ResponseCard({
   searchParams,
 }) {
   const router = useRouter();
-  const { data: singleLead, isLoading } = useGetSingleLeadQuery(user?._id);
 
   const leadUser = user?.leadId?.userProfileId?.user?._id;
 
