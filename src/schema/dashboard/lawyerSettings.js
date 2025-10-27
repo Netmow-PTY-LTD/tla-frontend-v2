@@ -120,6 +120,7 @@ export const lawyerSettingAboutSchema = z.object({
   address: z.string({ invalid_type_error: 'Address must be a string' }),
 
   userProfileLogo: z.any().optional(),
+  isAccessibleByOtherUsers: z.boolean().optional(),
 
   // location: z.object({
   //   address: z.string().optional(),
