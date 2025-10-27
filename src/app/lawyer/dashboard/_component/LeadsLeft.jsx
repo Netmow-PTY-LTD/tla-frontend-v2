@@ -368,6 +368,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useRealTimeStatus } from '@/hooks/useSocketListener';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
+import LeadDetailsSkeleton from './LeadDetailsSkeleton';
 
 export default function LeadDetailsPage({
   onBack,
@@ -460,7 +461,7 @@ console.log('forceSkeleton:', forceSkeleton);
   return (
     <div className="bg-white">
      {showSkeleton ? (
-             <ResponseSkeleton />
+             <LeadDetailsSkeleton />
            )  : lead ? (
         <div className="max-w-[900px]">
           <div className="flex items-center justify-between">
