@@ -28,6 +28,8 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
     useCancelSubscriptionMutation();
   const { data: userInfo } = useAuthUserInfoQuery();
 
+  console.log('subscriptionPlan:', subscriptionPlan);
+
   const { data, isError, isLoading } = useGetPaymentMethodQuery();
 
   const card = data?.data || null;
@@ -107,13 +109,10 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
         )}
 
         <div className="">
-          <div className="grid md:grid-cols-4 gap-6 items-start">
+          <div className="grid md:grid-cols-4 gap-6 items-start justify-between">
             <div className="flex flex-col space-y-2">
               <p className="font-medium text-gray-900 text-lg">
                 {subscriptionPlan?.name}
-              </p>
-              <p className="text-sm text-gray-600">
-                {subscriptionPlan?.description}
               </p>
             </div>
 
@@ -174,7 +173,7 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
             </div>
           </div>
 
-          <div className="mt-6">
+          {/* <div className="mt-6">
             <h3 className="text-gray-900 font-medium text-md mb-2">
               Features:
             </h3>
@@ -183,6 +182,20 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
                 <li key={index}>{feature}</li>
               ))}
             </ul>
+          </div> */}
+
+          <div className="mt-5">
+            <h3 className="text-gray-900 font-medium text-md mb-2 text-base">
+              Features:
+            </h3>
+            <ul className="list-disc list-inside text-gray-700 text-sm">
+              {subscriptionPlan?.features?.map((feature, index) => (
+                <li key={index}>{feature}</li>
+              ))}
+            </ul>
+            <p className="text-sm text-gray-600 mt-5 p-3 bg-[#f9f9fa] rounded-md">
+              {subscriptionPlan?.description}
+            </p>
           </div>
 
           <div className="flex items-center justify-between mt-6">
