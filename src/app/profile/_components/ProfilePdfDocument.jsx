@@ -133,6 +133,26 @@ export default function ProfilePdfDocument({ data }) {
           </View>
         )}
 
+        {/* --- Languages --- */}
+        {data?.languages?.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.header}>Languages</Text>
+            <Text>{data?.languages?.join(', ')}</Text>
+          </View>
+        )}
+
+        {/* --- Services --- */}
+        {data?.services?.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.header}>Areas of Expertise</Text>
+            {data.services.map((service, i) => (
+              <React.Fragment key={i}>
+                <Text style={styles.bold}>• {service}</Text>
+              </React.Fragment>
+            ))}
+          </View>
+        )}
+
         {/* --- Services --- */}
         {data?.customService?.length > 0 && (
           <View style={styles.section}>

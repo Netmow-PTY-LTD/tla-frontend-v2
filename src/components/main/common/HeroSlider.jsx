@@ -226,7 +226,7 @@ export default function HeroSlider() {
               selectedService={selectedService}
               countryId={defaultCountry?._id}
               serviceId={selectedService?._id}
-              locationId={location}
+              // locationId={location}
               isQuestionsLoading={isQuestionsLoading}
             />
           )}
@@ -240,7 +240,7 @@ export default function HeroSlider() {
           selectedService={selectedService}
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
-          locationId={location}
+          // locationId={location}
           isQuestionsLoading={isQuestionsLoading}
         />
       )}

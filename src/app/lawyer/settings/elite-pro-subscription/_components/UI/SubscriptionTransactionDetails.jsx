@@ -92,7 +92,7 @@ export const SubscriptionTransactionDetails = () => {
 
         <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full whitespace-nowrap">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
                   <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
