@@ -312,7 +312,7 @@ END:VCARD`;
 
   return (
     <section
-      className="pt-[50px] md:pt-[100px] pb-[40px] lg:pb-0"
+      className="pt-[50px] lg:pt-[100px] pb-[40px] lg:pb-0"
       style={{
         backgroundImage: 'url("/assets/img/Bg-hero1.webp")',
         backgroundSize: 'cover',
@@ -336,7 +336,9 @@ END:VCARD`;
             />
           </div>
           <div className="lg:pl-[100px]">
-            <h2 className="text-[48px] font-medium text-white">{data?.name}</h2>
+            <h2 className="text-[48px] font-medium text-white leading-none">
+              {data?.name}
+            </h2>
             <div className="text-[18px] font-medium text-white mt-4">
               {data?.designation || 'Lawyer'}
             </div>
