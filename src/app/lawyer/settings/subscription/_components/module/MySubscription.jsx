@@ -46,6 +46,50 @@ const MySubscription = () => {
             Manage your subscription plans and view details about your current
             subscription status.
           </p>
+          <Accordion
+            type="single"
+            collapsible
+            className="w-full"
+            // defaultValue="item-1"
+          >
+            <AccordionItem value="item-1">
+              <AccordionTrigger>
+                What is the Subscription Plan?
+              </AccordionTrigger>
+              <AccordionContent className="flex flex-col gap-4 text-balance">
+                <p>
+                  The Subscription Plan gives you access to contact up to 10
+                  clients per month. It’s perfect for professionals who want
+                  consistent opportunities to connect with new clients and
+                  manage active cases regularly.
+                </p>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+              <AccordionTrigger>
+                How many contacts can I make with the Subscription Plan?
+              </AccordionTrigger>
+              <AccordionContent className="flex flex-col gap-4 text-balance">
+                <p>
+                  You can contact up to 10 clients every month. Once you reach
+                  your monthly limit, you can renew or upgrade to continue
+                  connecting with more clients.
+                </p>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-3">
+              <AccordionTrigger>
+                Who should choose the Subscription Plan?
+              </AccordionTrigger>
+              <AccordionContent className="flex flex-col gap-4 text-balance">
+                <p>
+                  This plan is ideal for lawyers, consultants, or professionals
+                  who are starting out or managing a steady number of client
+                  cases each month.
+                </p>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
 
         <div>
