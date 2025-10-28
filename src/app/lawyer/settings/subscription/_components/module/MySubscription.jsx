@@ -7,6 +7,12 @@ import { SubscriptionTransactionDetails } from '../UI/SubscriptionTransactionDet
 import { useGetAllSubscriptionsQuery } from '@/store/features/admin/subcriptionsApiService';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import SubscriptionCard from '../UI/SubscriptionCard';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 
 const MySubscription = () => {
   const {

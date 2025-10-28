@@ -11,7 +11,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React, { useCallback, useState } from 'react';
 import PrintProfile from './PrintProfile';
-import { PDFDownloadLink } from '@react-pdf/renderer';
+import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import ProfilePdfDocument from './ProfilePdfDocument';
 
 export default function ProfileBanner({ data, token, currentUser }) {
@@ -513,42 +513,28 @@ END:VCARD`;
                   </defs>
                 </svg>
               </Link>
-              <PDFDownloadLink
-                document={
-                  <ProfilePdfDocument
-                    data={data}
-                    profilePicture={data?.profilePicture}
-                  />
-                }
-                fileName={`${data?.name || 'profile'}.pdf`}
+              <button
+                onClick={handleOpenPreview}
                 className="text-white text-base font-medium flex items-center gap-2 border border-1 border-[#FF8602] rounded-[6px] py-[12px] px-[63px] hover:bg-[#e07502] transition-all duration-300"
               >
-                {({ loading }) =>
-                  loading ? (
-                    <span>Preparing PDF...</span>
-                  ) : (
-                    <>
-                      <span>Download PDF</span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="21"
-                        height="20"
-                        viewBox="0 0 21 20"
-                        fill="none"
-                      >
-                        <path
-                          d="M15.9305 5.8431H5.9305V2.50977H15.9305V5.8431ZM15.9305 10.4264C16.1666 10.4264 16.3647 10.3464 16.5247 10.1864C16.6847 10.0264 16.7644 9.82865 16.7638 9.5931C16.7633 9.35754 16.6833 9.15977 16.5238 8.99977C16.3644 8.83977 16.1666 8.75977 15.9305 8.75977C15.6944 8.75977 15.4966 8.83977 15.3372 8.99977C15.1777 9.15977 15.0977 9.35754 15.0972 9.5931C15.0966 9.82865 15.1766 10.0267 15.3372 10.1873C15.4977 10.3478 15.6955 10.4275 15.9305 10.4264ZM14.2638 15.8431V12.5098H7.59717V15.8431H14.2638ZM15.9305 17.5098H5.9305V14.1764H2.59717V9.17643C2.59717 8.4681 2.84022 7.87449 3.32633 7.3956C3.81245 6.91671 4.40272 6.67699 5.09717 6.67643H16.7638C17.4722 6.67643 18.0661 6.91615 18.5455 7.3956C19.0249 7.87504 19.2644 8.46865 19.2638 9.17643V14.1764H15.9305V17.5098Z"
-                          fill="white"
-                        />
-                      </svg>
-                    </>
-                  )
-                }
-              </PDFDownloadLink>
+                <span>Print</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="21"
+                  height="20"
+                  viewBox="0 0 21 20"
+                  fill="none"
+                >
+                  <path
+                    d="M15.9305 5.8431H5.9305V2.50977H15.9305V5.8431ZM15.9305 10.4264C16.1666 10.4264 16.3647 10.3464 16.5247 10.1864C16.6847 10.0264 16.7644 9.82865 16.7638 9.5931C16.7633 9.35754 16.6833 9.15977 16.5238 8.99977C16.3644 8.83977 16.1666 8.75977 15.9305 8.75977C15.6944 8.75977 15.4966 8.83977 15.3372 8.99977C15.1777 9.15977 15.0977 9.35754 15.0972 9.5931C15.0966 9.82865 15.1766 10.0267 15.3372 10.1873C15.4977 10.3478 15.6955 10.4275 15.9305 10.4264ZM14.2638 15.8431V12.5098H7.59717V15.8431H14.2638ZM15.9305 17.5098H5.9305V14.1764H2.59717V9.17643C2.59717 8.4681 2.84022 7.87449 3.32633 7.3956C3.81245 6.91671 4.40272 6.67699 5.09717 6.67643H16.7638C17.4722 6.67643 18.0661 6.91615 18.5455 7.3956C19.0249 7.87504 19.2644 8.46865 19.2638 9.17643V14.1764H15.9305V17.5098Z"
+                    fill="white"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
-        <PrintProfile data={data} profilePicture={data?.profilePicture} />
+        {/* <PrintProfile data={data} profilePicture={data?.profilePicture} /> */}
       </div>
       {showPreview && (
         <div
@@ -579,9 +565,54 @@ END:VCARD`;
               <PDFViewer width="100%" height="100%">
                 <ProfilePdfDocument
                   data={data}
-                  profilePicture={profilePicture}
+                  profilePicture={data?.profilePicture}
                 />
               </PDFViewer>
+            </div>
+            {/* Actions */}
+            <div
+              style={{
+                padding: '12px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                backgroundColor: '#f9f9f9',
+                borderTop: '1px solid #ddd',
+              }}
+            >
+              <PDFDownloadLink
+                document={
+                  <ProfilePdfDocument
+                    data={data}
+                    profilePicture={data?.profilePicture}
+                  />
+                }
+                fileName={`${data?.name || 'profile'}.pdf`}
+                style={{
+                  backgroundColor: '#111',
+                  color: '#fff',
+                  padding: '10px 20px',
+                  borderRadius: 6,
+                  textDecoration: 'none',
+                  fontWeight: 'bold',
+                }}
+              >
+                {({ loading }) => (loading ? 'Preparing...' : 'Download PDF')}
+              </PDFDownloadLink>
+
+              <button
+                onClick={handleClosePreview}
+                style={{
+                  backgroundColor: '#ccc',
+                  color: '#111',
+                  padding: '10px 20px',
+                  borderRadius: 6,
+                  border: 'none',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                }}
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>
