@@ -98,6 +98,61 @@ const PricingPage = () => {
           </div>
         </div>
       </section>
+      <section className="section">
+        <div className="container">
+          <div className="flex flex-wrap items-center">
+            <div className="w-full md:w-7/12">
+              <h2 className="section-title">
+                Elite Pro
+                <span className="line-sm mr-1 ml-5" />{' '}
+                <span className="line-lg" />
+              </h2>
+              <div className="text-[var(--color-black)] mt-4">
+                Boost your visibility and credibility with the Elite Pro plan.
+                Enjoy exclusive discounts, SEO benefits, faster support, and a
+                Gold Badge that helps attract more clients.
+              </div>
+            </div>
+            <div className="w-full md:w-5/12 mt-10 md:mt-0">
+              <div className="image-container flex justify-center md:justify-end">
+                <Image
+                  src="/assets/img/elite-pro.webp"
+                  width={320}
+                  height={287}
+                  alt="elite pro"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="section">
+        <div className="container">
+          <div className="max-w-[1025px] mx-auto flex flex-wrap items-center">
+            <div className="w-full md:w-5/12">
+              <div className="image-container">
+                <Image
+                  src="/assets/img/subscription.webp"
+                  width={265}
+                  height={295}
+                  alt="subscription"
+                  className=""
+                />
+              </div>
+            </div>
+            <div className="w-full md:w-7/12 mt-10 md:mt-0">
+              <h2 className="section-title">
+                Why You Need a Subscription <br />
+                <span className="line-sm mr-1" /> <span className="line-lg" />
+              </h2>
+              <div className="text-[var(--color-black)] mt-4">
+                Gain more client enquiries, boost visibility, and grow your
+                business with exclusive plan benefits.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       <HomeCTA />
     </MainLayout>
   );
