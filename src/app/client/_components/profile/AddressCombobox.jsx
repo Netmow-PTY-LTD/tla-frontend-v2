@@ -67,7 +67,7 @@ export default function AddressCombobox() {
         <FormItem>
           <FormLabel>Address</FormLabel>
           <Combobox
-            value={selectedZipcodeId || field.value}
+            value={selectedZipcodeId || field.value || ''}
             onChange={(val) => {
               setSelectedZipcodeId(val);
               field.onChange(val);

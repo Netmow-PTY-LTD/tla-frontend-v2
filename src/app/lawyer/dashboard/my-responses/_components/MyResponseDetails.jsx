@@ -351,7 +351,7 @@ export default function MyResponseDetails({
                   </span>{' '}
                 </div>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 {/* <Button className="bg-[#00C3C0]">
               <Phone />
               Show Number

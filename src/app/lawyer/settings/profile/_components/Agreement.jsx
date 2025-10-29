@@ -100,7 +100,7 @@ export default function Agreement() {
       <p className="text-sm text-[#8E8E8E] mt-2">
         please upload your LSA or download our example document here
       </p>
-      <div className="flex justify-between items-center gap-4 mt-5">
+      <div className="flex flex-wrap justify-between items-center gap-4 mt-5">
         <div className="flex gap-2">
           <File className="w-4 h-4" />
           <span>Legal Services Agreement Template</span>

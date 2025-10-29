@@ -12,7 +12,7 @@ export default function CreditsStatsCard() {
   return (
     <Card className="w-full bg-white shadow-sm rounded-2xl">
       <div className="flex justify-between items-center gap-4 p-4">
-        <div className="w-full text-center md:text-left">
+        <div className="w-full text-left">
           <h3 className="heading-md font-semibold text-black mb-1">
             My Credits Overview
           </h3>

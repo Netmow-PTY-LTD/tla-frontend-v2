@@ -42,7 +42,7 @@ const LocationItem = ({ location, onEdit, refetchLocations }) => {
     }
   };
   return (
-    <div className="flex items-start justify-between p-4 border-b bg-white border-gray-200">
+    <div className="flex items-start justify-between py-4 border-b bg-white border-gray-200">
       <div className="flex items-start gap-3">
         <MapPin className="h-5 w-5 text-gray-500 mt-0.5" />
         <div>
