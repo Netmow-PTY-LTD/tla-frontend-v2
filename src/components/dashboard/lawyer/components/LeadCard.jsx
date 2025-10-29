@@ -7,7 +7,6 @@ import { BadgeCent, BadgeCheck, CircleAlert, List, Zap } from 'lucide-react';
 import { formatRelativeTime } from '@/helpers/formatTime';
 import { userDummyImage } from '@/data/data';
 
-
 const LeadCard = ({
   onViewDetails,
   user,
@@ -16,13 +15,8 @@ const LeadCard = ({
   onlineMap,
   index,
 }) => {
-
-
-
   const profileType = user?.userProfileId?.profileType;
   const responders = user?.responders || [];
-
-
 
   const badge = profileType
     ?.replace(/[^a-zA-Z0-9]+/g, ' ')
@@ -34,8 +28,9 @@ const LeadCard = ({
     const sticks = Array.from({ length: total }, (_, index) => (
       <div
         key={index}
-        className={`w-[3px] h-[14px] ${index < count ? 'bg-green-300' : 'bg-gray-300'
-          }`}
+        className={`w-[3px] h-[14px] ${
+          index < count ? 'bg-green-300' : 'bg-gray-300'
+        }`}
       ></div>
     ));
 
@@ -66,10 +61,11 @@ const LeadCard = ({
 
   return (
     <Card
-      className={`w-full max-w-full mx-auto flex flex-col cursor-pointer ${!isExpanded && isSelected
+      className={`w-full max-w-full mx-auto flex flex-col cursor-pointer ${
+        !isExpanded && isSelected
           ? 'border-l-[3px] border-l-[var(--secondary-color)] rounded-tl-none rounded-bl-none'
           : 'border-transparent'
-        }`}
+      }`}
       onClick={() => onViewDetails(user)}
     >
       {/* Header Section */}
@@ -89,23 +85,26 @@ const LeadCard = ({
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
             <div>
               <div
-                className={`font-medium mb-1 text-[var(--primary-color)] ${isExpanded ? 'heading-base' : 'text-[13px]'
-                  }`}
+                className={`font-medium mb-1 text-[var(--primary-color)] ${
+                  isExpanded ? 'heading-base' : 'text-[13px]'
+                }`}
               >
                 {user?.userProfileId?.name}
               </div>
               <div
-                className={`${isExpanded ? 'text-[13px]' : 'text-[10px]'
-                  } text-gray-500`}
+                className={`${
+                  isExpanded ? 'text-[13px]' : 'text-[10px]'
+                } text-gray-500`}
               >
                 {user?.locationId?.zipcode ?? ''}
               </div>
               <div className="flex items-center gap-1 text-xs ">
                 <span
-                  className={`w-2 h-2 rounded-full ${onlineMap[user?.userProfileId?.user?._id]
+                  className={`w-2 h-2 rounded-full ${
+                    onlineMap[user?.userProfileId?.user?._id]
                       ? 'bg-green-500'
                       : 'bg-gray-400'
-                    }`}
+                  }`}
                 ></span>
                 <span className="text-gray-700">
                   {onlineMap[user?.userProfileId?.user?._id]
@@ -123,9 +122,9 @@ const LeadCard = ({
 
       <hr className="border-[#F3F3F3] border" />
       {(user?.additionalDetails && user.additionalDetails !== '') ||
-        user?.leadPriority?.toLowerCase() === 'urgent' ||
-        user?.userProfileId?.phone ||
-        badge ? (
+      user?.leadPriority?.toLowerCase() === 'urgent' ||
+      user?.userProfileId?.phone ||
+      badge ? (
         <div className="px-3 pt-3 pb-2">
           <div className="flex flex-wrap gap-2">
             {user?.additionalDetails && user.additionalDetails !== '' && (
@@ -159,8 +158,9 @@ const LeadCard = ({
       <div className="p-3 flex-1">
         {user?.serviceId?.name && (
           <h3
-            className={`font-medium mb-2 ${isExpanded ? 'text-[14px]' : 'text-[13px]'
-              }`}
+            className={`font-medium mb-2 ${
+              isExpanded ? 'text-[14px]' : 'text-[13px]'
+            }`}
           >
             Looking for a {user?.serviceId?.name} consultation
           </h3>
@@ -176,14 +176,16 @@ const LeadCard = ({
 
         <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
           <h4
-            className={`font-medium mb-2 italic ${isExpanded ? 'text-sm' : 'text-[14px]'
-              }`}
+            className={`font-medium mb-2 italic ${
+              isExpanded ? 'text-sm' : 'text-[14px]'
+            }`}
           >
             {user?.serviceId?.name}
           </h4>
           <p
-            className={`text-[#34495E] ${isExpanded ? 'text-[13px]' : 'text-[11px]'
-              }`}
+            className={`text-[#34495E] ${
+              isExpanded ? 'text-[13px]' : 'text-[11px]'
+            }`}
           >
             {user?.additionalDetails === ''
               ? `If you're facing a divorce, it's crucial to seek professional legal
@@ -197,11 +199,12 @@ const LeadCard = ({
       </div>
       {/* {index} */}
       {/* Footer Section */}
-      <div className="flex flex-col sm:flex-row justify-between items-center p-3 gap-3 sm:gap-0">
+      <div className="flex flex-row justify-between items-center p-3 gap-3 sm:gap-0">
         {user?.credit != null && (
           <p
-            className={`text-[#34495E] ${isExpanded ? 'heading-base' : 'text-[12px]'
-              } flex items-center gap-2`}
+            className={`text-[#34495E] ${
+              isExpanded ? 'heading-base' : 'text-[12px]'
+            } flex items-center gap-2`}
           >
             <BadgeCent className="w-5 h-5" />
             <span className="font-semibold">
