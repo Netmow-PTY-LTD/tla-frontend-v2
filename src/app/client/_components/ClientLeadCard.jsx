@@ -293,7 +293,7 @@ const ClientLeadCard = ({ user, isExpanded }) => {
 
         <div className="flex flex-col sm:flex-row justify-center items-center p-3 gap-3 sm:gap-0">
           <Link
-            className={`px-4 py-2.5 w-full sm:w-auto rounded-lg ${
+            className={`px-4 py-2.5 w-full sm:w-auto rounded-lg text-center ${
               isExpanded ? 'heading-base' : 'text-[12px] '
             } font-medium bg-[var(--color-special)] text-white hover:bg-gray-950 transition`}
             href={`/client/dashboard/my-cases/${user?._id}`}

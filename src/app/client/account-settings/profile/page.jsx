@@ -91,7 +91,7 @@ const page = () => {
   };
 
   return (
-    <div className="max-w-[900px] mx-auto my-8 bg-white border border-gray-300 rounded-lg px-10 py-12">
+    <div className="max-w-[900px] mx-auto my-8 bg-white border border-gray-300 rounded-lg px-5 md:px-10 py-5 md:py-12">
       <div className=" ">
         <h2 className="text-lg font-semibold mb-1 flex items-center gap-2">
           <BookOpenText className="text-[#00C3C0] w-6 h-6" />{' '}
@@ -103,14 +103,14 @@ const page = () => {
         </p>
 
         <FormWrapper onSubmit={handleSubmit} defaultValues={defaultValues}>
-          <div className="flex flex-wrap gap-10 items-start">
+          <div className="flex flex-wrap gap-4 md:gap-10 items-start">
             {/* Avatar + Upload */}
-            <div className="flex items-center gap-2 mb-6">
+            <div className="flex items-center gap-2">
               <AvatarUploader name="userProfileLogo" />
             </div>
 
             {/* Inputs */}
-            <div className="grid grid-cols-1 gap-4 flex-1 w-full md:w-1/2">
+            <div className="grid grid-cols-1 gap-4 md:flex-1 w-full md:w-1/2">
               <TextInput
                 name="name"
                 label="Name"
@@ -131,11 +131,11 @@ const page = () => {
               /> */}
 
               <AddressCombobox />
-              <div className="flex  items-center gap-5 w-full  ">
+              <div className="flex items-center gap-5 w-full  ">
                 <TextInput
                   type="text"
                   name="email"
-                  label="Email Adress"
+                  label="Email Address"
                   placeholder="Email Address"
                   itemClassName="w-1/2"
                   disabled

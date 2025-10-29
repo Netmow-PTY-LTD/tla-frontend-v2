@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import {
+  BadgeCent,
   ChevronDown,
   LogOut,
   SendToBack,
@@ -37,6 +38,9 @@ export default function ProfileDropDown() {
   const dispatch = useDispatch();
 
   const { data: currentUser, isLoading } = useAuthUserInfoQuery();
+  const isElitePro = currentUser?.data?.profile?.isElitePro;
+  const eliteProId = currentUser?.data?.profile?.eliteProSubscriptionId;
+  const subscriptionId = currentUser?.data?.profile?.subscriptionId;
 
   const { data } = useGetUserCreditStatsQuery();
   const creditStats = data?.data || {};
@@ -104,6 +108,21 @@ export default function ProfileDropDown() {
         >
           <DropdownMenuLabel>User Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
+          <div className="flex items-center gap-2 p-2 md:hidden">
+            {/* Elite Pro */}
+            {isElitePro === true && eliteProId && eliteProId !== null && (
+              <span className="text-sm font-medium text-white bg-[var(--primary-color)] px-3 py-1 rounded-full w-8 h-8 flex items-center justify-center">
+                E
+              </span>
+            )}
+            {subscriptionId && subscriptionId !== null && (
+              <span className="text-sm font-medium text-white bg-[var(--secondary-color)] px-3 py-1 rounded-full w-8 h-8 flex items-center justify-center">
+                S
+              </span>
+            )}
+          </div>
+          <DropdownMenuSeparator className="block md:hidden" />
+
           <div className="p-2 w-full">
             <div className="flex items-center justify-between mb-1">
               <b>
@@ -125,8 +144,12 @@ export default function ProfileDropDown() {
                 }}
               ></div>
             </div>
-            <div className="mt-2 text-sm">
-              Available Credits: <b>{creditStats?.remainingCredits}</b>
+            <div className="mt-2 text-sm flex items-center gap-2">
+              Available Credits:{' '}
+              <b className="flex items-center gap-0.5">
+                <BadgeCent className="w-4 h-4" />
+                {creditStats?.remainingCredits}
+              </b>
             </div>
           </div>
 

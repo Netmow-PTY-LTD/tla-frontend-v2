@@ -29,8 +29,8 @@ export default function SocialMediaLink({ profile }) {
       </p>
 
       {/* Facebook Field */}
-      <div className="flex items-center justify-between gap-4 mt-3">
-        <div className="w-2/4">
+      <div className="flex flex-wrap items-center justify-between gap-4 mt-3">
+        <div className="w-full md:w-1/2">
           <TextInput
             label="Facebook"
             name="facebook"
@@ -38,7 +38,7 @@ export default function SocialMediaLink({ profile }) {
             textColor="text-[#4b4949]"
           />
         </div>
-        <div className="flex items-center gap-2 max-w-sm p-2 rounded-md text-gray-700 text-sm">
+        <div className="hidden md:flex items-center gap-2 max-w-sm p-2 rounded-md text-gray-700 text-sm">
           <CircleAlert className="w-4 h-4" />
           <span>Optional</span>
         </div>
@@ -46,7 +46,7 @@ export default function SocialMediaLink({ profile }) {
 
       {/* Twitter Field */}
       <div className="flex items-center justify-between gap-4 mt-3">
-        <div className="w-2/4">
+        <div className="w-full md:w-2/4">
           <TextInput
             label="Twitter"
             name="twitter"
@@ -54,7 +54,7 @@ export default function SocialMediaLink({ profile }) {
             textColor="text-[#4b4949]"
           />
         </div>
-        <div className="flex items-center gap-2 max-w-sm p-2 rounded-md text-gray-700 text-sm">
+        <div className="hidden md:flex items-center gap-2 max-w-sm p-2 rounded-md text-gray-700 text-sm">
           <CircleAlert className="w-4 h-4" />
           <span>Optional</span>
         </div>
@@ -62,7 +62,7 @@ export default function SocialMediaLink({ profile }) {
 
       {/* Website Links Section */}
       <div className="mt-6">
-        <div className="flex items-center justify-between gap-5">
+        <div className="flex flex-wrap items-center justify-between gap-5">
           <div>
             <h2 className="text-base font-semibold text-black">Links</h2>
             <p className="text-sm text-[#6e6e6e] mt-2">
@@ -70,7 +70,7 @@ export default function SocialMediaLink({ profile }) {
               other content that will help promote your business.
             </p>
           </div>
-          <div className="flex items-center gap-2 max-w-sm p-2 rounded-md text-gray-700 text-sm">
+          <div className="hidden md:flex items-center gap-2 max-w-sm p-2 rounded-md text-gray-700 text-sm">
             <CircleAlert className="w-4 h-4" />
             <span>Optional</span>
           </div>
