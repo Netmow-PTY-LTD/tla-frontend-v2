@@ -46,16 +46,19 @@ const ServicesList = () => {
     <div className=" max-[900px] mx-auto">
       <div className="space-y-6">
         {/* Services Section */}
-        <section className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">Your Skills</h2>
-
+        <section className="px-2">
+          <div className="flex flex-wrap items-center justify-between mb-4">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800">
+                Your Skills
+              </h2>
+              <p className="text-gray-500">
+                Tell us what services you provide so we can send you the most
+                relevant cases
+              </p>
+            </div>
             <AddLeadServiceModal />
           </div>
-          <p className="text-gray-500 mb-6">
-            Tell us what services you provide so we can send you the most
-            relevant cases
-          </p>
 
           <Accordion type="single" collapsible="true">
             {isLoading ? (
@@ -95,11 +98,16 @@ const ServicesList = () => {
         </section>
 
         {/* Locations Section */}
-        <section className="p-6 ">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">
-              Your Locations
-            </h2>
+        <section className="px-2">
+          <div className="flex flex-wrap items-center justify-between mb-4">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800">
+                Your Locations
+              </h2>
+              <p className="text-gray-500">
+                Choose where you want to find new customers.
+              </p>
+            </div>
             <Button
               className="bg-[#12C7C4CC] hover:bg-teal-300 px-4 py-3 text-sm rounded-lg text-white mt-5"
               onClick={handleModalOpen}
@@ -107,9 +115,6 @@ const ServicesList = () => {
               + Add a location
             </Button>
           </div>
-          <p className="text-gray-500 mb-6">
-            Choose where you want to find new customers.
-          </p>
 
           <div className="space-y-1">
             {isLoading ? (

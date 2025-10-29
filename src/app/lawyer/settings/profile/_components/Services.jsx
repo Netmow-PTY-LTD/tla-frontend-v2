@@ -42,7 +42,7 @@ export default function Services() {
   const profile = userInfo?.data?.profile;
   return (
     <div className="max-w-[900px] mx-auto">
-      <div className="flex justify-between items-center gap-5">
+      <div className="flex flex-wrap justify-between items-center lg:gap-5">
         <div>
           <h3 className="text-black font-semibold heading-lg">Your Services</h3>
 

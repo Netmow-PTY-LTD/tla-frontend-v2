@@ -95,7 +95,7 @@ export default function QuestionsAndAnswers() {
       >
         {/* Links Section */}
         <div>
-          <div className="flex items-center justify-between gap-5">
+          <div className="flex flex-wrap items-center justify-between gap-5">
             <div>
               <h3 className="heading-lg font-semibold text-black">
                 Question & Answer
@@ -106,7 +106,7 @@ export default function QuestionsAndAnswers() {
                 closer to making an informed hiring decision.
               </p>
             </div>
-            <div className="flex items-center gap-2 max-w-sm p-2 rounded-md text-gray-700 text-sm">
+            <div className="hidden md:flex items-center gap-2 max-w-sm p-2 rounded-md text-gray-700 text-sm">
               <CircleAlert className="w-4 h-4" />
               <span>Optional</span>
               {/* <ToggleSwitch onToggle={handleToggle} /> */}

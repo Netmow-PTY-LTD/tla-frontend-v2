@@ -377,7 +377,7 @@ export default function LeadDetailsPage({
   isSingleLeadLoading,
   data,
   forceSkeleton = false,
-  onSkeletonFinish = () => { },
+  onSkeletonFinish = () => {},
 }) {
   const fullText =
     singleLead?.additionalDetails === ''
@@ -427,15 +427,16 @@ export default function LeadDetailsPage({
     const bars = Array.from({ length: total }, (_, index) => (
       <div
         key={index}
-        className={`w-[10px] h-[20px] ${index < responded ? 'bg-green-400' : 'bg-gray-300'
-          }`}
+        className={`w-[10px] h-[20px] ${
+          index < responded ? 'bg-green-400' : 'bg-gray-300'
+        }`}
       ></div>
     ));
 
     return (
       <div className="border border-gray-300 rounded-lg p-4 inline-flex gap-2 mt-2 mb-5">
         <div className="flex gap-1">{bars}</div>
-        <div className="text-black text-[14px] font-semibold">
+        <div className="text-black text-xs sm:text-[14px] font-semibold">
           {responded > total
             ? `${total}+ professionals have responded.`
             : `${responded}/${total} professionals have responded.`}
@@ -443,7 +444,6 @@ export default function LeadDetailsPage({
       </div>
     );
   };
-
 
   useEffect(() => {
     if (!isSingleLeadLoading && forceSkeleton) {
@@ -453,16 +453,14 @@ export default function LeadDetailsPage({
 
   const showSkeleton = forceSkeleton || (isSingleLeadLoading && lead);
 
-console.log('showSkeleton:', showSkeleton);
-console.log('forceSkeleton:', forceSkeleton);
-
-
+  console.log('showSkeleton:', showSkeleton);
+  console.log('forceSkeleton:', forceSkeleton);
 
   return (
     <div className="bg-white">
-     {showSkeleton ? (
-             <LeadDetailsSkeleton />
-           )  : lead ? (
+      {showSkeleton ? (
+        <LeadDetailsSkeleton />
+      ) : lead ? (
         <div className="max-w-[900px]">
           <div className="flex items-center justify-between">
             <button className="flex py-2 items-center gap-2" onClick={onBack}>
@@ -475,24 +473,26 @@ console.log('forceSkeleton:', forceSkeleton);
               <div className="flex flex-col items-start gap-4 z-0 ">
                 <Avatar className="w-20 h-20 z-10">
                   <AvatarImage
-                    src={`${lead?.userProfileId?.profilePicture ?? userDummyImage
-                      }`}
+                    src={`${
+                      lead?.userProfileId?.profilePicture ?? userDummyImage
+                    }`}
                     alt={lead?.userProfileId?.name ?? 'John Doe'}
                   />
                   <AvatarFallback>User</AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="flex items-center gap-3">
-                    <h2 className="font-medium heading-lg">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <h2 className="font-medium heading-lg whitespace-nowrap">
                       {lead?.userProfileId?.name ?? ''}
                     </h2>
                     <span className="text-xs">
                       <div className="flex items-center gap-2 text-sm">
                         <span
-                          className={`ml-2 w-2 h-2 rounded-full ${onlineMap[lead?.userProfileId?.user?._id]
+                          className={`ml-2 w-2 h-2 rounded-full ${
+                            onlineMap[lead?.userProfileId?.user?._id]
                               ? 'bg-green-500'
                               : 'bg-gray-400'
-                            }`}
+                          }`}
                         ></span>
                         <span className="text-gray-700">
                           {onlineMap[lead?.userProfileId?.user?._id]
@@ -521,15 +521,15 @@ console.log('forceSkeleton:', forceSkeleton);
                     const phone = lead?.userProfileId?.phone;
                     return phone
                       ? `${phone.slice(0, 3)}${'*'.repeat(
-                        Math.max(0, phone.length - 3)
-                      )}`
+                          Math.max(0, phone.length - 3)
+                        )}`
                       : '480*******';
                   })()}
                 </span>{' '}
               </div>
               <div className=" flex items-center gap-2 mt-2 admin-text font-medium">
-                <AtSign className="w-4 h-4" />{' '}
-                <span>
+                <AtSign className="w-4 h-4 shrink-0" />{' '}
+                <span className="whitespace-pre-wrap break-words break-all">
                   Email:{' '}
                   {(() => {
                     const email = singleLead?.userProfileId?.user?.email;
@@ -552,17 +552,17 @@ console.log('forceSkeleton:', forceSkeleton);
               responded={singleLead?.responders?.length || 0}
             />
             {singleLead?.credit != null && singleLead?.credit > 0 && (
-              <div className="flex flex-wrap items-center gap-4 bg-[#ff86021A] px-4 py-3 mt-4 mb-8 rounded-md w-max">
-                <div className="flex items-center gap-2 pr-5 border-r border-yellow-300">
+              <div className="flex items-center gap-4 bg-[#ff86021A] px-3 md:px-4 py-3 mt-4 mb-8 rounded-md sm:w-max">
+                <div className="flex items-center gap-1 sm:gap-2 pr-2 md:pr-5 border-r border-yellow-300 shrink-0">
                   <BadgeCent className="w-5 h-5" />
-                  <span className="font-semibold">
+                  <span className="text-xs sm:text-sm font-semibold">
                     {' '}
                     {singleLead?.credit}{' '}
                     {singleLead?.credit > 1 ? 'credits' : 'credit'}
                   </span>
                 </div>
-                <div className="flex items-center gap-10">
-                  <p className="text-[14px] font-medium text-gray-600">
+                <div className="flex items-center justify-between gap-5 md:gap-10 w-full">
+                  <p className="text-xs sm:text-[14px] font-medium text-gray-600">
                     Covered by our hiring policy
                   </p>
                   <Image
@@ -591,8 +591,8 @@ console.log('forceSkeleton:', forceSkeleton);
             </div>
             {(singleLead?.additionalDetails &&
               singleLead.additionalDetails !== '') ||
-              singleLead?.leadPriority?.toLowerCase() === 'urgent' ||
-              singleLead?.userProfileId?.phone ? (
+            singleLead?.leadPriority?.toLowerCase() === 'urgent' ||
+            singleLead?.userProfileId?.phone ? (
               <div className="mt-5">
                 <div className="flex flex-wrap gap-2">
                   {singleLead?.additionalDetails &&
@@ -606,12 +606,12 @@ console.log('forceSkeleton:', forceSkeleton);
 
                   {singleLead?.userProfileId?.user?.isPhoneVerified ===
                     true && (
-                      <TagButton
-                        text="Verified Phone"
-                        bgColor="#00C3C01A"
-                        icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
-                      />
-                    )}
+                    <TagButton
+                      text="Verified Phone"
+                      bgColor="#00C3C01A"
+                      icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+                    />
+                  )}
 
                   {singleLead?.leadPriority?.toLowerCase() === 'urgent' && (
                     <TagButton

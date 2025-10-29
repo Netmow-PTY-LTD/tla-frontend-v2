@@ -88,7 +88,7 @@ const LawyerCard = ({
   return (
     <>
       <Card className={`w-full max-w-full mx-auto flex flex-col p-5`}>
-        <div className="flex justify-between gap-5">
+        <div className="flex flex-wrap justify-between gap-5">
           <div className="flex-shrink-0">
             <figure className="w-[180px] h-[180px] overflow-hidden flex-shrink-0 border rounded-lg">
               <Image
@@ -101,7 +101,7 @@ const LawyerCard = ({
               />
             </figure>
           </div>
-          <div className="flex-1 border-r border-[#F3F3F3] border-opacity-65 pr-4">
+          <div className="md:flex-1 md:border-r border-[#F3F3F3] border-opacity-65 pr-4">
             <div className="w-full">
               <div className="flex flex-wrap sm:flex-nowrap justify-between items-center gap-2 ">
                 <div className="flex w-full">
@@ -198,8 +198,23 @@ const LawyerCard = ({
               <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
-          <div className="flex flex-col justify-end items-center">
-            <div className="flex flex-col p-3 gap-3 sm:gap-0">
+          <div
+            className={`w-full md:w-auto flex flex-row md:flex-col items-center gap-4 justify-between ${
+              lawyer?.profile?.isElitePro
+                ? 'md:justify-between'
+                : 'md:justify-end'
+            }`}
+          >
+            {lawyer?.profile?.isElitePro && (
+              <div className="flex flex-col items-center flex-shrink-0">
+                <img
+                  src="/assets/img/elite-pro.webp"
+                  alt="Elite Pro Badge"
+                  className="w-12 h-12"
+                />
+              </div>
+            )}
+            <div className="flex flex-col">
               <Button
                 className={`px-4 py-2 w-full sm:w-auto rounded-lg ${
                   isExpanded ? 'text-[14px]' : 'text-[12px]'

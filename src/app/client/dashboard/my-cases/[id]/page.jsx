@@ -146,12 +146,11 @@ export default function LeadDetailsPage() {
     isSuccess,
     refetch,
   } = useGetAllServiceWiseLawyersSuggestionsQuery(
-    { page, LIMIT, serviceId, leadId, minRating ,sortOrder},
+    { page, LIMIT, serviceId, leadId, minRating, sortOrder },
     {
       skip: !serviceId || !leadId,
     }
   );
-
 
   console.log('sortOrder', sortOrder);
 
@@ -283,7 +282,7 @@ export default function LeadDetailsPage() {
     <div className="lead-board-wraps">
       <div className="lead-board-containers">
         <div className={`w-full`}>
-          <div className="rounded-lg p-5 sticky top-[100px]">
+          <div className="rounded-lg md:p-5 sticky top-[100px]">
             <div className="max-w-full">
               <div className="flex items-center justify-between">
                 <Link
@@ -305,7 +304,7 @@ export default function LeadDetailsPage() {
           </div>
         </div>
         <div className={`w-full`}>
-          <div className="px-4 max-w-[1000px] mx-auto">
+          <div className="max-w-[1000px] mx-auto">
             <div className="flex w-full flex-col gap-6">
               <Tabs
                 //defaultValue="matched-lawyers"
@@ -367,16 +366,16 @@ export default function LeadDetailsPage() {
                 </TabsContent>
                 <TabsContent value="matched-lawyers">
                   <div className="my-3">
-                    <div className="flex justify-between mb-5 gap-4 border-b border-gray-400 pt-2 pb-5">
-                      <div className="flex gap-2 items-center">
+                    <div className="flex flex-wrap justify-between mb-5 gap-4 border-b border-gray-400 pt-2 pb-5">
+                      <div className="flex flex-wrap gap-2 items-center">
                         <Select
                           value={
                             minRating === null || minRating === undefined
-                              ? "all" // ✅ Default to "All Ratings"
+                              ? 'all' // ✅ Default to "All Ratings"
                               : String(minRating) // ✅ Safely convert number to string
                           }
                           onValueChange={(value) => {
-                            if (value === "all") {
+                            if (value === 'all') {
                               setMinRating(null); // ✅ No rating filter applied
                             } else {
                               setMinRating(Number(value)); // ✅ Set numeric rating
@@ -399,20 +398,26 @@ export default function LeadDetailsPage() {
                           </SelectContent>
                         </Select>
 
-
                         <h4 className="font-medium heading-md text-center">
                           Total {totalLawyersCount}{' '}
                           {totalLawyersCount === 1 ? 'match' : 'matches'}
                         </h4>
                       </div>
-                      <Select value={sortOrder} onValueChange={(value) => setSortOrder(value)} >
+                      <Select
+                        value={sortOrder}
+                        onValueChange={(value) => setSortOrder(value)}
+                      >
                         <SelectTrigger className="w-[200px] bg-white">
                           <SelectValue placeholder="Sort By" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            <SelectItem value="asc">Sort By: Ascending</SelectItem>
-                            <SelectItem value="desc">Sort By: Descending</SelectItem>
+                            <SelectItem value="asc">
+                              Sort By: Ascending
+                            </SelectItem>
+                            <SelectItem value="desc">
+                              Sort By: Descending
+                            </SelectItem>
                           </SelectGroup>
                         </SelectContent>
                       </Select>
