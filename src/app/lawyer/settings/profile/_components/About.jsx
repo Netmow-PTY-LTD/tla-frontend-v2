@@ -413,6 +413,7 @@ export default function About() {
               >
                 Cancel Company Membership?
               </button>
+              <AllowStaffsAccess />
             </div>
           )}
           <ConfirmationModal
@@ -426,8 +427,6 @@ export default function About() {
             cancelText="No"
           />
         </div>
-
-        <AllowStaffsAccess />
 
         <div className="border-t border-white" />
         {/* Footer Buttons */}
