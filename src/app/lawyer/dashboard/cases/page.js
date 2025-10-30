@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -91,10 +89,7 @@ const LeadsBoardPage = () => {
   //       );
   //       return [...prev, ...uniqueNew];
 
-
   //     });
-
-
 
   //     setTotalPages(data?.pagination?.totalPage);
   //     setTotalLeadsCount(data?.pagination?.total);
@@ -130,7 +125,6 @@ const LeadsBoardPage = () => {
     setTotalLeadsCount(data?.pagination?.total || 0);
   }, [data]);
 
-
   // Infinite scroll intersection observer
   useEffect(() => {
     const scrollTarget = document.getElementById('scroll-target-for-data');
@@ -161,7 +155,8 @@ const LeadsBoardPage = () => {
   useEffect(() => {
     if (leads?.length > 0) {
       // If selectedLead is not in the new leads list, select the first one
-      const stillExists = selectedLead && leads.some(l => l._id === selectedLead._id);
+      const stillExists =
+        selectedLead && leads.some((l) => l._id === selectedLead._id);
       if (!stillExists) {
         setSelectedLead(leads[0]);
       }
@@ -178,48 +173,81 @@ const LeadsBoardPage = () => {
 
   //console.log('leads', leads);
 
-  if (isAllLeadsLoading) {
-    return (
-      <div className="p-6 space-y-8 animate-pulse">
-        {/* Header section */}
-        <div className="space-y-3">
-          <Skeleton className="h-8 w-1/2" />
-          <Skeleton className="h-4 w-1/3" />
-        </div>
+  // if (isAllLeadsLoading) {
+  //   return (
+  //     <div className="p-6 space-y-8 animate-pulse">
+  //       {/* Header section */}
+  //       <div className="space-y-3">
+  //         <Skeleton className="h-8 w-1/2" />
+  //         <Skeleton className="h-4 w-1/3" />
+  //       </div>
 
-        {/* Content blocks */}
-        {Array.from({ length: 5 }).map((_, idx) => (
-          <div key={idx} className="flex gap-4">
-            {/* Avatar skeleton */}
-            <Skeleton className="h-14 w-14 rounded-full flex-shrink-0" />
-            {/* Text block */}
-            <div className="flex-1 space-y-2">
-              <Skeleton className="h-4 w-3/4" />
-              <Skeleton className="h-4 w-2/3" />
-              <Skeleton className="h-4 w-1/2" />
-            </div>
-          </div>
-        ))}
+  //       {/* Content blocks */}
+  //       {Array.from({ length: 5 }).map((_, idx) => (
+  //         <div key={idx} className="flex gap-4">
+  //           {/* Avatar skeleton */}
+  //           <Skeleton className="h-14 w-14 rounded-full flex-shrink-0" />
+  //           {/* Text block */}
+  //           <div className="flex-1 space-y-2">
+  //             <Skeleton className="h-4 w-3/4" />
+  //             <Skeleton className="h-4 w-2/3" />
+  //             <Skeleton className="h-4 w-1/2" />
+  //           </div>
+  //         </div>
+  //       ))}
 
-        {/* Table or card-like block */}
-        <div className="space-y-4 mt-8">
-          <Skeleton className="h-6 w-1/3" />
-          {Array.from({ length: 4 }).map((_, idx) => (
-            <div key={idx} className="flex gap-4 items-center">
-              <Skeleton className="h-4 w-1/6" />
-              <Skeleton className="h-4 w-1/4" />
-              <Skeleton className="h-4 w-1/2" />
-              <Skeleton className="h-4 w-1/5" />
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
+  //       {/* Table or card-like block */}
+  //       <div className="space-y-4 mt-8">
+  //         <Skeleton className="h-6 w-1/3" />
+  //         {Array.from({ length: 4 }).map((_, idx) => (
+  //           <div key={idx} className="flex gap-4 items-center">
+  //             <Skeleton className="h-4 w-1/6" />
+  //             <Skeleton className="h-4 w-1/4" />
+  //             <Skeleton className="h-4 w-1/2" />
+  //             <Skeleton className="h-4 w-1/5" />
+  //           </div>
+  //         ))}
+  //       </div>
+  //     </div>
+  //   );
+  // }
   return (
     <>
       <div className="lead-board-wrap">
-        {leads?.length > 0 ? (
+        {isFetching || isAllLeadsLoading ? (
+          <div className="p-6 space-y-8 animate-pulse">
+            {/* Header section */}
+            <div className="space-y-3">
+              <Skeleton className="h-8 w-1/2" />
+              <Skeleton className="h-4 w-1/3" />
+            </div>
+
+            {/* Content blocks */}
+            {Array.from({ length: 5 }).map((_, idx) => (
+              <div key={idx} className="flex gap-4">
+                <Skeleton className="h-14 w-14 rounded-full flex-shrink-0" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-2/3" />
+                  <Skeleton className="h-4 w-1/2" />
+                </div>
+              </div>
+            ))}
+
+            {/* Table or card-like block */}
+            <div className="space-y-4 mt-8">
+              <Skeleton className="h-6 w-1/3" />
+              {Array.from({ length: 4 }).map((_, idx) => (
+                <div key={idx} className="flex gap-4 items-center">
+                  <Skeleton className="h-4 w-1/6" />
+                  <Skeleton className="h-4 w-1/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                  <Skeleton className="h-4 w-1/5" />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : leads?.length > 0 ? (
           <div className="lead-board-container">
             {showLeadDetails && selectedLead && (
               <div className="left-column-8">
@@ -247,8 +275,9 @@ const LeadsBoardPage = () => {
               </div>
             )}
             <div
-              className={`${showLeadDetails ? 'right-column-4 ' : 'right-column-full'
-                }`}
+              className={`${
+                showLeadDetails ? 'right-column-4 ' : 'right-column-full'
+              }`}
             >
               <div className="column-wrap-right" id="scroll-target-for-data">
                 <div className="leads-top-row">
@@ -284,39 +313,6 @@ const LeadsBoardPage = () => {
               </div>
             </div>
           </div>
-        ) : isFetching ? (
-          <div className="p-6 space-y-8 animate-pulse">
-            {/* Header section */}
-            <div className="space-y-3">
-              <Skeleton className="h-8 w-1/2" />
-              <Skeleton className="h-4 w-1/3" />
-            </div>
-
-            {/* Content blocks */}
-            {Array.from({ length: 5 }).map((_, idx) => (
-              <div key={idx} className="flex gap-4">
-                <Skeleton className="h-14 w-14 rounded-full flex-shrink-0" />
-                <div className="flex-1 space-y-2">
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-4 w-2/3" />
-                  <Skeleton className="h-4 w-1/2" />
-                </div>
-              </div>
-            ))}
-
-            {/* Table or card-like block */}
-            <div className="space-y-4 mt-8">
-              <Skeleton className="h-6 w-1/3" />
-              {Array.from({ length: 4 }).map((_, idx) => (
-                <div key={idx} className="flex gap-4 items-center">
-                  <Skeleton className="h-4 w-1/6" />
-                  <Skeleton className="h-4 w-1/4" />
-                  <Skeleton className="h-4 w-1/2" />
-                  <Skeleton className="h-4 w-1/5" />
-                </div>
-              ))}
-            </div>
-          </div>
         ) : (
           <div className="flex flex-col justify-center items-center h-full">
             <Inbox className="w-12 h-12 mb-4 text-gray-400" />
@@ -330,7 +326,7 @@ const LeadsBoardPage = () => {
                 window.location.href = '/lawyer/dashboard/cases';
               }}
             >
-              Clear Search
+              Reload
             </Button>
           </div>
         )}
@@ -340,23 +336,6 @@ const LeadsBoardPage = () => {
 };
 
 export default LeadsBoardPage;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //  mb-code
 // 'use client';

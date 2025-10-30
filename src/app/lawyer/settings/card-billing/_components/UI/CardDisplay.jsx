@@ -10,7 +10,7 @@ const CardDisplay = ({
   const formattedYear = expiryYear.toString().slice(-2);
   return (
     <div className="relative">
-      <div className="w-80 h-48 bg-gradient-to-br bg-[#26365F] rounded-2xl p-6 text-white shadow-xl">
+      <div className="max-w-80 max-h-48 bg-gradient-to-br bg-[#26365F] rounded-2xl p-6 text-white shadow-xl">
         {/* Card Header */}
         <div className="mb-8">
           <h2 className="text-xl font-medium">My Card</h2>
