@@ -32,6 +32,7 @@ import {
 import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 import { useRouter } from 'next/navigation';
 import AllowStaffsAccess from './about/AllowStaffsAccess';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export default function About() {
   const [open, setOpen] = useState(false);
@@ -374,12 +375,18 @@ export default function About() {
               </label>
 
               <div className="flex items-center gap-3 mb-5">
-                <input
+                {/* <input
                   type="checkbox"
                   id="addCompanyProfile"
                   onChange={(e) => setShowCompanyFields(e.target.checked)}
-                  className="h-5 w-5 cursor-pointer accent-[#00C3C0]"
+                  className="h-4 w-4 cursor-pointer border-gray-300 rounded"
+                /> */}
+                <Checkbox
+                  id="addCompanyProfile"
+                  className="data-[state=checked]:bg-[#00C3C0] data-[state=checked]:text-white"
+                  onCheckedChange={(checked) => setShowCompanyFields(checked)}
                 />
+
                 <label
                   htmlFor="addCompanyProfile"
                   className="cursor-pointer text-gray-700 text-sm"

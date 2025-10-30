@@ -19,10 +19,9 @@ const MyPayments = ({ setMyPayments }) => {
 
   useEffect(() => {
     if (card?.paymentMethodId) {
-      setMyPayments(100)
+      setMyPayments(100);
     }
-
-  }, [card])
+  }, [card]);
 
   const handleCardAdded = async (paymentMethodId) => {
     try {
@@ -38,7 +37,7 @@ const MyPayments = ({ setMyPayments }) => {
     }
   };
   return (
-    <div className="max-w-[900px] mx-auto p-4">
+    <div className="max-w-[900px] mx-auto">
       <div>
         {isLoading ? (
           <p className="text-gray-600 flex justify-center items-center">
