@@ -43,7 +43,7 @@ export const locationApiService = baseApi.injectEndpoints({
         url: `/user-location-service-map/${id}/delete`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['location'],
+      invalidatesTags: ['location','lead-list'],
     }),
   }),
 });
