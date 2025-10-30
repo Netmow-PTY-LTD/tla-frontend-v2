@@ -141,7 +141,7 @@ export const DynamicAccordion = ({ items }) => {
             <AccordionTrigger className="h-[44px] px-2">
               <div className="flex items-center gap-[16px]">
                 <CircularProgress progress={progress ?? 27} size={30} />
-                <span className="text-sm font-medium text-gray-700 leading-none">
+                <span className="text-sm font-medium text-gray-700 leading-[1.2]">
                   {title}
                 </span>
               </div>

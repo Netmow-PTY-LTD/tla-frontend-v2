@@ -24,16 +24,13 @@ export const SubscriptionTransactionDetails = () => {
     isLoading,
   } = useUserTransactionHistoryQuery();
 
-
-
-
   useEffect(() => {
     if (!transactionData?.data) return;
 
     const term = searchTerm.toLowerCase();
 
     const filtered = transactionData.data
-      .filter((transaction) => transaction.subscriptionType === 'subscription') 
+      .filter((transaction) => transaction.subscriptionType === 'subscription')
       .filter((transaction) => {
         const flatValues = [];
 
@@ -95,11 +92,11 @@ export const SubscriptionTransactionDetails = () => {
 
         <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full whitespace-nowrap">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
                   <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
-                    ID
+                    SL
                   </th>
                   <th className="py-4 px-6 text-sm font-medium text-gray-600 uppercase tracking-wider text-left">
                     Plan
@@ -119,11 +116,12 @@ export const SubscriptionTransactionDetails = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {paginatedTransactions.map((tx) => {
+                {paginatedTransactions.map((tx, index) => {
                   return (
                     <tr key={tx._id} className="hover:bg-gray-50">
                       <td className="py-4 px-6 text-sm font-mono text-gray-800">
-                        {tx._id.slice(0, 8)}...
+                        {/* {tx._id.slice(0, 8)}... */}
+                        {index + 1 + startIndex}
                       </td>
                       <td className="py-4 px-6 text-sm text-gray-900 font-medium">
                         {tx?.subscriptionId?.subscriptionPackageId?.name || '-'}
@@ -136,10 +134,11 @@ export const SubscriptionTransactionDetails = () => {
                       </td>
                       <td className="py-4 px-6 text-sm">
                         <span
-                          className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${tx.status === 'active'
+                          className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
+                            tx.status === 'active'
                               ? 'bg-green-100 text-green-700'
                               : 'bg-yellow-100 text-yellow-700'
-                            }`}
+                          }`}
                         >
                           {tx.status}
                         </span>
@@ -159,7 +158,9 @@ export const SubscriptionTransactionDetails = () => {
                             view
                           </button>
                           <PDFDownloadLink
-                            document={<SubscriptionInvoiceDocument transaction={tx} />}
+                            document={
+                              <SubscriptionInvoiceDocument transaction={tx} />
+                            }
                             fileName={`invoice_${tx._id}.pdf`}
                             className="px-4 py-1.5 bg-gray-100 text-gray-800 text-sm font-medium rounded-md hover:bg-gray-200 transition"
                           >
@@ -222,7 +223,7 @@ export const SubscriptionTransactionDetails = () => {
             const maxVisiblePages = 5;
             const startPage =
               Math.floor((currentPage - 1) / maxVisiblePages) *
-              maxVisiblePages +
+                maxVisiblePages +
               1;
             const endPage = Math.min(
               startPage + maxVisiblePages - 1,

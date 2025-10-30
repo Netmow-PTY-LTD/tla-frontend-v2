@@ -185,7 +185,7 @@ const DynamicProfilePage = () => {
               )}
               {/* Videos Start */}
             </div>
-            <div className="w-full lg:w-1/3 pl-8 flex gap-10 items-start">
+            <div className="w-full lg:w-1/3 lg:pl-8 flex gap-10 items-start">
               <div className="related-areas relative">
                 {userInfo?.data?.languages?.length > 0 && (
                   <>
@@ -288,6 +288,15 @@ const DynamicProfilePage = () => {
 
               .profile-experience p{
                 margin: 0 !important;
+              }
+
+              @media (max-width: 1024px) {
+                .related-areas::after{
+                  display: none;
+                }
+                .related-areas {
+                  padding-left: 0;
+                }
               }
 
             `}

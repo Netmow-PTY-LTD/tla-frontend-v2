@@ -31,6 +31,7 @@ import {
 } from '@/store/features/lawyer/LeadsApiService';
 import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 import { useRouter } from 'next/navigation';
+import AllowStaffsAccess from './about/AllowStaffsAccess';
 
 export default function About() {
   const [open, setOpen] = useState(false);
@@ -40,15 +41,6 @@ export default function About() {
   const [query, setQuery] = useState('');
   const [openCancelMembershipModal, setOpenCancelMembershipModal] =
     useState(false);
-  const [allowStaff, setAllowStaff] = useState(false);
-
-  const handleToggle = (e) => {
-    const checked = e.target.checked;
-    setAllowStaff(checked);
-
-    // 👉 You can call your API here to update the lawyer's settings
-    console.log('Staff access allowed:', checked);
-  };
 
   const {
     data: userInfo,
@@ -82,6 +74,8 @@ export default function About() {
         profile?.practising_certificate_number ?? '',
       bio: profile?.bio ?? '',
       lawyerContactEmail: profile?.lawyerContactEmail ?? '',
+      isAccessibleByOtherUsers:
+        Boolean(profile?.isAccessibleByOtherUsers) || false,
 
       // ✅ moved to firmProfileId
       contactEmail: profile?.firmProfileId?.contactInfo?.email ?? '',
@@ -148,6 +142,7 @@ export default function About() {
 
   const onSubmit = async (data) => {
     console.log('data', data);
+    console.log('isAccessibleByOtherUsers:', data.isAccessibleByOtherUsers);
     try {
       const formData = new FormData();
       const {
@@ -163,6 +158,7 @@ export default function About() {
         lawyerContactEmail,
         companyLogo,
         userProfileLogo,
+        isAccessibleByOtherUsers,
         ...rest
       } = data;
 
@@ -184,9 +180,12 @@ export default function About() {
           practising_certificate_number,
           bio,
           lawyerContactEmail,
+          isAccessibleByOtherUsers: isAccessibleByOtherUsers || false,
         },
         companyInfo: companyInfo || undefined,
       };
+
+      console.log('Payload to be sent:', payload);
 
       // Append serialized JSON data
       formData.append('data', JSON.stringify(payload));
@@ -414,6 +413,7 @@ export default function About() {
               >
                 Cancel Company Membership?
               </button>
+              <AllowStaffsAccess />
             </div>
           )}
           <ConfirmationModal
@@ -435,21 +435,6 @@ export default function About() {
           initialValues={defaultValues}
         />
       </FormWrapper>
-      <div className="w-full bg-white rounded-lg border border-gray-200 shadow-sm p-5 sm:p-6 flex items-start gap-3 mt-10">
-        <input
-          type="checkbox"
-          id="staffAccess"
-          checked={allowStaff}
-          onChange={handleToggle}
-          className="mt-1 h-5 w-5 text-teal-600 border-gray-300 rounded focus:ring-teal-500 cursor-pointer"
-        />
-        <label
-          htmlFor="staffAccess"
-          className="text-gray-700 text-sm sm:text-base leading-snug cursor-pointer select-none"
-        >
-          Allow your staff to access your firm’s dashboard securely.
-        </label>
-      </div>
       <>
         <ChangePassword setOpen={setOpen} open={open} />
         <ChangeEmail setOpen={setOpenEmail} open={openEmail} />

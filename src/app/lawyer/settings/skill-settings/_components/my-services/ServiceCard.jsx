@@ -146,7 +146,7 @@ const ServiceCard = ({
       value={`service-${leadServiceId}`}
       className="border-b bg-white border-gray-200"
     >
-      <AccordionTrigger className="py-4 px-4 hover:no-underline">
+      <AccordionTrigger className="py-4 hover:no-underline">
         <div className="flex flex-col items-start text-left">
           <h3 className="text-base font-medium text-gray-800">{title}</h3>
           <div className="text-sm text-gray-500 mt-2">

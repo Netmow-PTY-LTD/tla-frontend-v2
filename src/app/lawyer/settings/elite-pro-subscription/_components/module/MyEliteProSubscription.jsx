@@ -8,6 +8,12 @@ import { useGetAllEliteProSubscriptionsQuery } from '@/store/features/admin/elit
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import EliteProSubscriptionPurchase from '../UI/EliteProSubscriptionPurchase';
 import EliteProSubscriptionCard from '../UI/EliteProSubscriptionCard';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 
 const EliteProSubscription = () => {
   const {
@@ -41,6 +47,48 @@ const EliteProSubscription = () => {
             Explore and manage your Elite Pro subscription plans. Stay updated
             with the latest features and benefits tailored for you.
           </p>
+          <Accordion
+            type="single"
+            collapsible
+            className="w-full"
+            // defaultValue="item-1"
+          >
+            <AccordionItem value="item-1">
+              <AccordionTrigger>What is the Elite Pro Plan?</AccordionTrigger>
+              <AccordionContent className="flex flex-col gap-4 text-balance">
+                <p>
+                  The Elite Pro Plan boosts your search visibility, placing your
+                  profile at the top of listings when clients post new cases. It
+                  helps you stand out and attract more client inquiries faster.
+                </p>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+              <AccordionTrigger>
+                Does the Elite Pro Plan increase my client contact limit?
+              </AccordionTrigger>
+              <AccordionContent className="flex flex-col gap-4 text-balance">
+                <p>
+                  The Elite Pro Plan focuses on visibility and ranking, not
+                  contact limits. You’ll still have the same contact limit as
+                  your active subscription, but you’ll appear higher in search
+                  results to get more inquiries.
+                </p>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-3">
+              <AccordionTrigger>
+                Who should choose the Elite Pro Plan?
+              </AccordionTrigger>
+              <AccordionContent className="flex flex-col gap-4 text-balance">
+                <p>
+                  This plan is ideal for experienced professionals or firms who
+                  want to maximize exposure, gain more visibility, and be seen
+                  first by clients looking for legal services.
+                </p>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
 
         <div>

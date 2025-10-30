@@ -248,14 +248,14 @@ export default function MyLeads() {
 
   return (
     <>
-      <div className="rounded-xl p-4">
-        <div className="flex items-center justify-between gap-4">
+      <div className="rounded-xl md:p-4">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <h2 className="text-xl font-semibold">
             My Cases ({totalLeadsCount || 0})
           </h2>
           <form className="w-full md:w-1/2" onSubmit={handleSubmit}>
-            <div className="hero-search-area flex flex-wrap md:flex-nowrap gap-2 items-center w-full justify-end">
-              <div className="tla-form-group w-full max-w-[300px]">
+            <div className="hero-search-area flex flex-wrap md:flex-nowrap gap-2 items-center w-full md:justify-end">
+              <div className="tla-form-group w-full sm:max-w-[300px]">
                 <Combobox value={service} onChange={(val) => setService(val)}>
                   <div className="relative">
                     <ComboboxInput

@@ -4,12 +4,10 @@ import React from 'react';
 
 export default function GetStartedCard() {
   const { data, isLoading } = useGetNextOfferQuery();
-  const creditPackage = data?.data || {}
+  const creditPackage = data?.data || {};
   return (
-
-
     <div className="flex justify-center items-center mt-5 w-full">
-      <div className="relative border-t shadow-md shadow-black/10 rounded-[10px] bg-white w-full max-w-[70%]">
+      <div className="relative border-t shadow-md shadow-black/10 rounded-[10px] bg-white w-full max-w-full md:max-w-[70%]">
         {isLoading ? (
           <div className="p-4 space-y-4 animate-pulse">
             {/* Skeleton Badge */}

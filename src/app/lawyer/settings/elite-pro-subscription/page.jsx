@@ -5,18 +5,11 @@ import { Suspense, useState } from 'react';
 import { Loader } from 'lucide-react';
 import EliteProSubscription from './_components/module/MyEliteProSubscription';
 
-
-
-
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
 
 export default function MyCreditsPage() {
-
-
-
-
   return (
     <div>
       <Elements stripe={stripePromise}>
@@ -30,8 +23,7 @@ export default function MyCreditsPage() {
             </div>
           }
         >
-         
-          <EliteProSubscription />,
+          <EliteProSubscription />
         </Suspense>
       </Elements>
     </div>

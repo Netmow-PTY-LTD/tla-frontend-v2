@@ -6,17 +6,11 @@ import { Suspense, useState } from 'react';
 import { Loader } from 'lucide-react';
 import MySubscription from './_components/module/MySubscription';
 
-
-
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
 
 export default function MyCreditsPage() {
-  
-
- 
-
   return (
     <div>
       <Elements stripe={stripePromise}>
@@ -30,7 +24,7 @@ export default function MyCreditsPage() {
             </div>
           }
         >
-          <MySubscription  />,
+          <MySubscription />,
         </Suspense>
       </Elements>
     </div>
