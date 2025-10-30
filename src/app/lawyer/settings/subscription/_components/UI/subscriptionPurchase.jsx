@@ -99,7 +99,7 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
 
   return (
     <div>
-      <div className="border-0 bg-white rounded-lg p-8 relative">
+      <div className="border-0 bg-white rounded-lg p-4 md:p-8 relative">
         {subscriptionPlan.discountPercentage > 0 && (
           <div className="bg-[#00C3C0] absolute text-white p-[10px] rounded-tl-md rounded-br-md text-sm font-medium top-0 left-0">
             <h2 className="text-sm font-medium text-white whitespace-nowrap">
@@ -198,9 +198,9 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
             </p>
           </div>
 
-          <div className="flex items-center justify-between mt-6">
+          <div className="flex items-center justify-between mt-6 py-2 px-4 bg-[#f9f9fa] rounded-lg md:rounded-full">
             <div className="w-full">
-              <div className="flex items-center space-x-2 bg-[#f9f9fa] rounded-full">
+              <div className="flex flex-wrap items-center space-x-2 space-y-2">
                 <Image
                   src="/assets/img/Credits/guarantee.png"
                   alt="Guarantee"

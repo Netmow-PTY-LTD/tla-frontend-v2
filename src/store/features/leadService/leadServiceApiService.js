@@ -8,7 +8,7 @@ const leadServiceApiService = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['leadService','lead'],
+      invalidatesTags: ['leadService','lead','lead-list'],
     }),
     getLeadServiceList: builder.query({
       query: () => ({
@@ -23,7 +23,7 @@ const leadServiceApiService = baseApi.injectEndpoints({
         url: `/settings/lead-service/delete/${leadServiceId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['leadService','lead'],
+      invalidatesTags: ['leadService','lead','lead-list'],
     }),
     leadServiceSelectedOptionsUpdate: builder.mutation({
       query: ({ leadServiceId, answers }) => {
@@ -33,7 +33,7 @@ const leadServiceApiService = baseApi.injectEndpoints({
           body: answers,
         };
       },
-      invalidatesTags: ['leadService'],
+      invalidatesTags: ['leadService','lead-list'],
     }),
     leadServiceLocationUpdate: builder.mutation({
       query: (body) => {
@@ -43,7 +43,7 @@ const leadServiceApiService = baseApi.injectEndpoints({
           body: body,
         };
       },
-      invalidatesTags: ['leadService'],
+      invalidatesTags: ['leadService','lead-list'],
     }),
   }),
 });
