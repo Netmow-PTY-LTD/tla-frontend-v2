@@ -87,14 +87,14 @@ export default function InvoicingForm({ setInvoicesBillingsProgress }) {
     <FormProvider {...methods}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="max-w-[900px] mx-auto p-6 space-y-6"
+        className="max-w-[900px] mx-auto space-y-5"
       >
         <h2 className="heading-lg font-bold text-gray-900">
           Invoices and billing details
         </h2>
 
-        <div className="flex items-center gap-3 p-4 rounded-md bg-gray-100">
-          <InfoIcon className="h-6 w-6 text-[#00C3C0]" />
+        <div className="flex items-center gap-2 rounded-md bg-gray-100">
+          <InfoIcon className="h-5 w-5 text-[#00C3C0] shrink-0" />
           <p className="text-sm text-gray-700">
             We use these billing details to contact you but don’t share them
             with customers.

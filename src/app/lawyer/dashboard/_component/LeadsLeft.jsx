@@ -389,6 +389,8 @@ export default function LeadDetailsPage({
     return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
   };
 
+  console.log('single lead data ===>', lead);
+
   //console.log('single lead data ===>', lead);
   const currentUserId = useSelector(selectCurrentUser)?._id;
   const [onlineMap, setOnlineMap] = useState({});
@@ -407,7 +409,7 @@ export default function LeadDetailsPage({
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, []);
 
-  const mapUrl = getStaticMapUrl(lead?.userProfileId?.address);
+  const mapUrl = getStaticMapUrl(lead?.locationId?.zipcode);
 
   const userIds = data?.map((lead) => lead?.userProfileId?.user?._id) || [];
 
