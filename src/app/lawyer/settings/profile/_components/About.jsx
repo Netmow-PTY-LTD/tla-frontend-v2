@@ -361,6 +361,7 @@ export default function About() {
                   <span className="font-medium">pending approval</span>.
                 </p>
                 <Button
+                  type="button"
                   className="self-start bg-[#00C3C0] text-white px-5 py-2 text-sm font-medium rounded-md hover:bg-[#009a98] transition-all duration-300 shadow-md"
                   onClick={() => setIsOpenRew(true)}
                 >

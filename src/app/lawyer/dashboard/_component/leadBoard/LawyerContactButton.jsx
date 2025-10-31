@@ -50,7 +50,7 @@ const LawyerContactButton = ({ leadDetail }) => {
           position: 'top-right',
           style: {
             background: '#f44336', // red background
-            color: '#ffffff',       // white text
+            color: '#ffffff', // white text
             fontWeight: 'bold',
             padding: '12px 16px',
             borderRadius: '8px',
@@ -60,11 +60,14 @@ const LawyerContactButton = ({ leadDetail }) => {
     } catch (err) {
       toast.error(
         err?.data?.message ||
-        'Something went wrong while contacting the lawyer',
+          'Something went wrong while contacting the lawyer',
         { position: 'top-right' }
       );
     }
   };
+
+  console.log('showCreditModal', showCreditModal);
+  console.log('needAddCard', needAddCard);
 
   const handleAfterPayment = async () => {
     setShowCreditModal(false);
@@ -103,7 +106,7 @@ const LawyerContactButton = ({ leadDetail }) => {
         </span>
         {isLoading && (
           <span className="absolute inset-0 flex justify-center items-center">
-            <Loader className="w-[46px]" />
+            <Loader className="w-[46px] animate-spin" />
           </span>
         )}
       </Button>
