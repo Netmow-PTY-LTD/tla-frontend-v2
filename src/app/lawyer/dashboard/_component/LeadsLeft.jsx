@@ -375,6 +375,7 @@ export default function LeadDetailsPage({
   lead,
   singleLead,
   isSingleLeadLoading,
+  isSingleLeadFetching,
   data,
   forceSkeleton = false,
   onSkeletonFinish = () => {},
@@ -453,7 +454,8 @@ export default function LeadDetailsPage({
     }
   }, [isSingleLeadLoading, forceSkeleton, onSkeletonFinish]);
 
-  const showSkeleton = forceSkeleton || (isSingleLeadLoading && lead);
+  const showSkeleton =
+    isSingleLeadFetching || (isSingleLeadLoading && lead) || forceSkeleton;
 
   console.log('showSkeleton:', showSkeleton);
   console.log('forceSkeleton:', forceSkeleton);
