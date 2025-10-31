@@ -300,6 +300,7 @@ const LeadsBoardPage = () => {
                     onViewDetails={(lead) => {
                       setSelectedLead(lead);
                       setShowLeadDetails(true);
+                      setForceSkeleton(true);
                     }}
                     data={leads ?? []}
                     selectedLead={selectedLead}
