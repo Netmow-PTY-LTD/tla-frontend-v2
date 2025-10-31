@@ -9,7 +9,7 @@ const SubscriptionCard = ({ subscription }) => {
     subscriptionPeriodStart,
     subscriptionPeriodEnd,
     autoRenew,
-    monthlyCaseContacts
+    monthlyCaseContacts,
   } = subscription;
 
 
