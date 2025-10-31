@@ -168,8 +168,11 @@ const LeadsBoardPage = () => {
   }, [leads, searchKeyword]);
 
   // Fetch detailed data for selected lead
-  const { data: selectedLeadData, isLoading: isSingleLeadLoading } =
-    useGetSingleLeadQuery(selectedLead?._id, { skip: !selectedLead?._id });
+  const {
+    data: selectedLeadData,
+    isLoading: isSingleLeadLoading,
+    isFetching: isSingleLeadFetching,
+  } = useGetSingleLeadQuery(selectedLead?._id, { skip: !selectedLead?._id });
 
   //console.log('leads', leads);
 
@@ -258,6 +261,7 @@ const LeadsBoardPage = () => {
                       onBack={() => setShowLeadDetails(false)}
                       singleLead={selectedLeadData?.data}
                       isSingleLeadLoading={isSingleLeadLoading}
+                      isSingleLeadFetching={isSingleLeadFetching}
                       data={leads}
                       forceSkeleton={forceSkeleton}
                       onSkeletonFinish={() => {
@@ -300,6 +304,7 @@ const LeadsBoardPage = () => {
                     onViewDetails={(lead) => {
                       setSelectedLead(lead);
                       setShowLeadDetails(true);
+                      setForceSkeleton(true);
                     }}
                     data={leads ?? []}
                     selectedLead={selectedLead}
