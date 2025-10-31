@@ -45,6 +45,7 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
     const result = await addPaymentMethod({ paymentMethodId }).unwrap();
     if (result.success) {
       showSuccessToast(result?.message);
+      handleEliteProSubscription({ subscriptionPackageId: subscriptionPlan?._id });
     } else {
       showErrorToast(result?.message);
     }
@@ -109,9 +110,8 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
         )}
 
         <div
-          className={`${
-            subscriptionPlan.discountPercentage > 0 ? 'mt-12' : ''
-          }`}
+          className={`${subscriptionPlan.discountPercentage > 0 ? 'mt-12' : ''
+            }`}
         >
           <div className="grid md:grid-cols-4 gap-6 items-start">
             <div className="flex flex-col space-y-2">
