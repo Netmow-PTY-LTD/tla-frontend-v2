@@ -45,6 +45,7 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
     const result = await addPaymentMethod({ paymentMethodId }).unwrap();
     if (result.success) {
       showSuccessToast(result?.message);
+      handleSubscription({ subscriptionPackageId: subscriptionPlan?._id });
     } else {
       showErrorToast(result?.message);
     }
@@ -230,7 +231,7 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
         description="Are you sure you want to subscribe to this plan?"
       />
 
-      {/* ✅ Confirm Cancel Modal */}
+      {/*  Confirm Cancel Modal */}
       <ConfirmationModal
         onConfirm={handleCancelSubscription}
         open={cancelOpen}
