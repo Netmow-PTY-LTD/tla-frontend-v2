@@ -2,13 +2,17 @@ import React from 'react';
 import dayjs from 'dayjs';
 
 const SubscriptionCard = ({ subscription }) => {
+
   const {
     subscriptionPackageId,
     status,
     subscriptionPeriodStart,
     subscriptionPeriodEnd,
     autoRenew,
+    monthlyCaseContacts
   } = subscription;
+
+
 
   return (
     <div className=" bg-white rounded-xl overflow-hidden border border-gray-200 p-4 md:p-6">
@@ -17,11 +21,10 @@ const SubscriptionCard = ({ subscription }) => {
           {subscriptionPackageId?.name}
         </h2>
         <span
-          className={`px-3 py-1 text-sm font-medium rounded-full ${
-            status === 'active'
+          className={`px-3 py-1 text-sm font-medium rounded-full ${status === 'active'
               ? 'bg-green-100 text-green-800'
               : 'bg-red-100 text-red-800'
-          }`}
+            }`}
         >
           {status.toUpperCase()}
         </span>
@@ -38,6 +41,10 @@ const SubscriptionCard = ({ subscription }) => {
           <span className="font-medium">Period:</span>{' '}
           {dayjs(subscriptionPeriodStart)?.format('DD MMM YYYY')} -{' '}
           {dayjs(subscriptionPeriodEnd)?.format('DD MMM YYYY')}
+        </p>
+        <p className="text-sm text-gray-700">
+          <span className="font-semibold text-gray-900">Total contacts this month:</span>{' '}
+          <span >{monthlyCaseContacts}</span>
         </p>
         <p className="text-gray-600">
           <span className="font-medium">Auto Renew:</span>{' '}
