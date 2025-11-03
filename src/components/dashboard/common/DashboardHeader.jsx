@@ -48,14 +48,26 @@ export default function DashboardHeader({ onToggleSidebar }) {
       <div className="flex items-center gap-2">
         {/* Elite Pro */}
         {isElitePro === true && eliteProId && eliteProId !== null && (
-          <span className="text-sm font-medium text-white bg-[var(--primary-color)] px-3 py-1 rounded-full w-8 h-8 items-center justify-center hidden md:flex">
-            E
-          </span>
+          <div className="border border-gray-300 rounded-full w-8 h-8 flex items-center justify-center">
+            <Image
+              src={'/assets/img/elite-pro-badge.svg'}
+              alt="Elite Pro"
+              width={40}
+              height={40}
+              className="w-5 h-5 object-cover"
+            />
+          </div>
         )}
         {subscriptionId && subscriptionId !== null && (
-          <span className="text-sm font-medium text-white bg-[var(--secondary-color)] px-3 py-1 rounded-full w-8 h-8 hidden md:flex items-center justify-center">
-            S
-          </span>
+          <div className="border border-gray-300 rounded-full w-8 h-8 flex items-center justify-center">
+            <Image
+              src={'/assets/img/subscription-badge.svg'}
+              alt="Subscription"
+              width={40}
+              height={40}
+              className="w-5 h-5 object-cover"
+            />
+          </div>
         )}
         {/* Remaining Credits */}
         <div className="hidden sm:flex items-center gap-1 bg-gray-50 border border-gray-200 rounded-full px-2 py-1 shadow-sm h-8">
