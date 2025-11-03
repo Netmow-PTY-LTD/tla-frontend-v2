@@ -582,7 +582,7 @@ export default function LeadDetailsPage({
               {/*  need to credit purchase modal */}
               {!lead?.isContact || !singleLead?.isHired ? (
                 <>
-                  <LawyerContactButton leadDetail={singleLead} />
+                  <LawyerContactButton leadDetail={lead} />
                 </>
               ) : (
                 <>

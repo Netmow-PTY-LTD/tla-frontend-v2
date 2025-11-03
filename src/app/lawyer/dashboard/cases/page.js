@@ -217,7 +217,7 @@ const LeadsBoardPage = () => {
   return (
     <>
       <div className="lead-board-wrap">
-        {isAllLeadsLoading || leads?.length === 0 ? (
+        {isAllLeadsLoading ? (
           <div className="p-6 space-y-8 animate-pulse">
             {/* Header section */}
             <div className="space-y-3">
