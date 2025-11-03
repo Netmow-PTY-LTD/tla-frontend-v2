@@ -14,6 +14,17 @@ export async function middleware(request) {
   // }
 
   // ✅ Redirect logged-in users away from /login or /register
+
+
+  // Function to set cache prevention headers
+  const noCacheResponse = (response) => {
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+    return response;
+  };
+
+
   const publicAuthPages = ['/login', '/register'];
   if (publicAuthPages.includes(pathname)) {
     if (token) {
@@ -29,12 +40,16 @@ export async function middleware(request) {
         const redirectPath = dashboardRoutes[role] || '/';
 
         // ✅ Return early — stop further execution
-        return NextResponse.redirect(new URL(redirectPath, request.url));
+        const response = NextResponse.redirect(new URL(redirectPath, request.url));
+
+        return noCacheResponse(response);
+
       }
     }
 
     // Allow unauthenticated access to login/register
-    return NextResponse.next();
+    const response = NextResponse.next();
+    return noCacheResponse(response);
   }
 
   //Role based route protection
@@ -43,14 +58,16 @@ export async function middleware(request) {
     pathname.startsWith(route)
   );
 
+
   // If route is not protected, allow
   if (!isProtected) {
-    return NextResponse.next();
+    const response = NextResponse.next();
+    return noCacheResponse(response);
   }
 
   // If no token, redirect to login
   if (!token) {
-    return NextResponse.redirect(new URL('/login', request.url));
+    const response = NextResponse.redirect(new URL('/login', request.url));
   }
 
   // Verify and decode token
@@ -59,7 +76,7 @@ export async function middleware(request) {
   if (!user) {
     console.log('❌ Token failed verification:', token);
 
-    return NextResponse.redirect(new URL('/login', request.url));
+    return noCacheResponse(response);
   }
 
   console.log('✅ Token passed verification:', user);
@@ -77,32 +94,43 @@ export async function middleware(request) {
     Array.isArray(routeAccess[role]) &&
     routeAccess[role].some((route) => pathname.startsWith(route));
 
+  // if (!isAllowed) {
+  //   // Role-specific redirection
+  //   if (pathname.startsWith('/admin')) {
+  //     if (role === 'lawyer') {
+  //       return NextResponse.redirect(new URL('/lawyer/dashboard', request.url));
+  //     }
+  //     if (role === 'client') {
+  //       return NextResponse.redirect(new URL('/client/dashboard', request.url));
+  //     }
+  //   }
+
+  //   // Lawyer trying to access client routes
+  //   if (pathname.startsWith('/client') && role === 'lawyer') {
+  //     return NextResponse.redirect(new URL('/lawyer/dashboard', request.url));
+  //   }
+
+  //   // Client trying to access lawyer routes
+  //   if (pathname.startsWith('/lawyer') && role === 'client') {
+  //     return NextResponse.redirect(new URL('/client/dashboard', request.url));
+  //   }
+
+  //   // Default fallback
+  //   return NextResponse.redirect(new URL(`/${role}`, request.url));
+  // }
+
+
   if (!isAllowed) {
-    // Role-specific redirection
-    if (pathname.startsWith('/admin')) {
-      if (role === 'lawyer') {
-        return NextResponse.redirect(new URL('/lawyer/dashboard', request.url));
-      }
-      if (role === 'client') {
-        return NextResponse.redirect(new URL('/client/dashboard', request.url));
-      }
-    }
-
-    // Lawyer trying to access client routes
-    if (pathname.startsWith('/client') && role === 'lawyer') {
-      return NextResponse.redirect(new URL('/lawyer/dashboard', request.url));
-    }
-
-    // Client trying to access lawyer routes
-    if (pathname.startsWith('/lawyer') && role === 'client') {
-      return NextResponse.redirect(new URL('/client/dashboard', request.url));
-    }
-
-    // Default fallback
-    return NextResponse.redirect(new URL(`/${role}`, request.url));
+    let redirectPath = `/${role}`;
+    if (role === 'lawyer') redirectPath = '/lawyer/dashboard';
+    if (role === 'client') redirectPath = '/client/dashboard';
+    const response = NextResponse.redirect(new URL(redirectPath, request.url));
+    return noCacheResponse(response);
   }
 
-  return NextResponse.next();
+
+  const response = NextResponse.next();
+  return noCacheResponse(response);
 }
 
 export const config = {
