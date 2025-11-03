@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { logOut } from '@/store/features/auth/authSlice';
 import Cookies from 'js-cookie';
+import { baseApi } from '@/store/baseApi/baseApi';
 
 const ChangePassword = ({ open, setOpen }) => {
   const [showOldPassword, setShowOldPassword] = useState(false);
@@ -34,7 +35,8 @@ const ChangePassword = ({ open, setOpen }) => {
         showSuccessToast(res?.message || 'Change Password  Successful');
         localStorage.removeItem('accessToken'); // or cookies
         dispatch(logOut());
-          authLogout();
+        authLogout();
+        dispatch(baseApi.util.resetApiState());
         router.push('/login');
         setOpen(false);
       }
