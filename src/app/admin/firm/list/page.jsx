@@ -15,7 +15,7 @@ import {
   useDeleteCountryMutation,
   useGetCountryListQuery,
 } from '@/store/features/public/publicApiService';
-import { Check, MoreHorizontal, Pencil, Trash2, X } from 'lucide-react';
+import { Check, MoreHorizontal, Pencil, Trash2, View, X } from 'lucide-react';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import AddCountryModal from '../../_components/modal/AddCountryModal';
@@ -230,6 +230,18 @@ export default function Page() {
                 >
                   <X className="w-4 h-4" /> Reject
                 </button>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+              <Link href={`/admin/firm/${item?._id}`}>
+          
+                <button
+                  className="flex gap-2 cursor-pointer w-full"
+             
+                >
+                  <View className="w-4 h-4" />View
+                </button>
+              </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
