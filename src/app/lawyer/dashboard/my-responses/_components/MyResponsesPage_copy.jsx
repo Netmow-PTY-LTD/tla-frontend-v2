@@ -377,7 +377,7 @@ export default function MyResponsesPage() {
               window.location.href = '/lawyer/dashboard/my-responses';
             }}
           >
-            Clear Search
+            Reload
           </Button>
         </div>
       )}
