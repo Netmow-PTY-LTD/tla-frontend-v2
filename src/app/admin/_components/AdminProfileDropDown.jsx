@@ -21,6 +21,7 @@ import { useAuthLogOutMutation } from '@/store/features/auth/authApiService';
 import { logOut } from '@/store/features/auth/authSlice';
 import { disconnectSocket } from '@/lib/socket';
 import { Skeleton } from '@/components/ui/skeleton';
+import { baseApi } from '@/store/baseApi/baseApi';
 
 export default function AdminProfileDropDown({ data, isCurrentUserLoading }) {
   const dispatch = useDispatch();
@@ -47,6 +48,7 @@ export default function AdminProfileDropDown({ data, isCurrentUserLoading }) {
     disconnectSocket();
     authLogout();
     dispatch(logOut());
+      dispatch(baseApi.util.resetApiState());
     router.push('/login');
   };
 

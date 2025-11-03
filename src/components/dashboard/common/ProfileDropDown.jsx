@@ -33,6 +33,7 @@ import { useGetUserCreditStatsQuery } from '@/store/features/credit_and_payment/
 import { disconnectSocket } from '@/lib/socket';
 import { Skeleton } from '@/components/ui/skeleton';
 import { persistor } from '@/store/store';
+import { baseApi } from '@/store/baseApi/baseApi';
 
 export default function ProfileDropDown() {
   const dispatch = useDispatch();
@@ -66,6 +67,7 @@ export default function ProfileDropDown() {
 
     localStorage.clear();
 
+    dispatch(baseApi.util.resetApiState());
     router.push('/login');
   };
 
@@ -134,13 +136,12 @@ export default function ProfileDropDown() {
               <div
                 className="bg-green-400 h-2.5 rounded-full transition-all duration-300"
                 style={{
-                  width: `${
-                    creditStats?.totalUsedCredits
+                  width: `${creditStats?.totalUsedCredits
                       ? (creditStats.totalUsedCredits /
-                          creditStats.totalPurchasedCredits) *
-                        100
+                        creditStats.totalPurchasedCredits) *
+                      100
                       : 0
-                  }%`,
+                    }%`,
                 }}
               ></div>
             </div>

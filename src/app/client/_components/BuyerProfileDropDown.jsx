@@ -25,6 +25,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import Cookies from 'js-cookie';
 import { persistor } from '@/store/store';
+import { baseApi } from '@/store/baseApi/baseApi';
 
 export default function BuyerProfileDropDown({ data }) {
   const dispatch = useDispatch();
@@ -55,6 +56,10 @@ export default function BuyerProfileDropDown({ data }) {
     await persistor.purge();
 
     localStorage.clear();
+
+    dispatch(baseApi.util.resetApiState());
+
+
 
     router.push('/login');
   };
