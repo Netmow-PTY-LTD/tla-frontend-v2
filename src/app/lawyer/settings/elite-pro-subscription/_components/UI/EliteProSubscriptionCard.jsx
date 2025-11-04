@@ -30,7 +30,7 @@ const EliteProSubscriptionCard = ({ subscription }) => {
       <div className="mb-4">
         <p className="text-gray-600">
           <span className="font-medium">Price:</span>{' '}
-          {eliteProPackageId?.price.amount / 100}{' '}
+          {eliteProPackageId?.price.amount}{' '}
           {eliteProPackageId?.price.currency.toUpperCase()} /{' '}
           {eliteProPackageId?.billingCycle}
         </p>
