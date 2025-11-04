@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Modal } from '@/components/UIComponents/Modal';
 import { useAllServicesQuery } from '@/store/features/admin/servicesApiService';
+import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { useAddLeadServiceMutation } from '@/store/features/leadService/leadServiceApiService';
 import { Loader, X } from 'lucide-react';
 import React, { useState } from 'react';
@@ -15,8 +16,31 @@ const AddLeadServiceModal = () => {
   const [inputValue, setInputValue] = useState('');
   const [selectedServices, setSelectedServices] = useState([]);
   const [addLedService, { isLoading, isSuccess }] = useAddLeadServiceMutation();
+  const {
+    data: userInfo,
+    isLoading: isLoadingUserInfo,
+    isError: isErrorUserInfo,
+    error: errorUserInfo,
+  } = useAuthUserInfoQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+
+
+  const servicesUserIds = userInfo?.data?.profile?.serviceIds || [];
+
+
   const { data } = useAllServicesQuery();
-  const suggestions = data?.data || [];
+
+  const allServices = data?.data ?? [];
+
+  // 3. Filter out services that the user already has
+  const suggestions = allServices.filter(
+    (service) => !servicesUserIds?.some((userService) => userService._id === service._id)
+  );
+
+
+
+
 
   const addService = (service) => {
     if (!selectedServices.find((s) => s._id === service._id)) {
@@ -55,11 +79,19 @@ const AddLeadServiceModal = () => {
     }
   };
 
-  const filteredSuggestions = suggestions.filter(
-    (s) =>
-      s.name.toLowerCase().includes(inputValue.toLowerCase()) &&
-      !selectedServices.some((selected) => selected._id === s._id)
+
+
+
+  const filteredSuggestions = suggestions?.filter((s) =>
+    s.name.toLowerCase().includes(inputValue.toLowerCase()) &&
+    !selectedServices.some((selected) => selected._id === s._id) &&
+    !servicesUserIds.some((ser) => ser._id === s._id)
   );
+
+
+
+
+
 
   return (
     <div>
@@ -115,7 +147,7 @@ const AddLeadServiceModal = () => {
         <div>
           <p className="text-sm font-medium mt-4 mb-2">Suggestions</p>
           <div className="flex flex-wrap gap-2">
-            {suggestions.map((service) => (
+            {suggestions?.filter((s) => !selectedServices.some((selected) => selected._id === s._id)).map((service) => (
               <Button
                 key={service._id}
                 variant="outline"
