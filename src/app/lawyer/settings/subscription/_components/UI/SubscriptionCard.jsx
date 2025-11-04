@@ -33,7 +33,7 @@ const SubscriptionCard = ({ subscription }) => {
       <div className="mb-4">
         <p className="text-gray-600">
           <span className="font-medium">Price:</span>{' '}
-          {subscriptionPackageId?.price?.amount / 100}{' '}
+          {subscriptionPackageId?.price?.amount}{' '}
           {subscriptionPackageId?.price?.currency.toUpperCase()} /{' '}
           {subscriptionPackageId?.billingCycle}
         </p>
