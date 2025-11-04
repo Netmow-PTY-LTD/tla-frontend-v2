@@ -8,7 +8,7 @@ const leadServiceApiService = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['leadService','lead','lead-list'],
+      invalidatesTags: ['leadService','lead','lead-list','userInfo'],
     }),
     getLeadServiceList: builder.query({
       query: () => ({
