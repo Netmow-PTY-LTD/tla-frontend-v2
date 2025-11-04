@@ -398,7 +398,7 @@ export default function ManageServices() {
                           <img
                             src={thumbPreviewUrl}
                             alt="Preview"
-                            className="max-w-[80px] rounded border border-gray-300"
+                            className="max-w-[300px] rounded border border-gray-300"
                           />
                           <button
                             type="button"
@@ -441,7 +441,7 @@ export default function ManageServices() {
                           <img
                             src={bannerPreviewUrl}
                             alt="Preview"
-                            className="max-w-[80px] rounded border border-gray-300"
+                            className="max-w-[300px] rounded border border-gray-300"
                           />
                           <button
                             type="button"
