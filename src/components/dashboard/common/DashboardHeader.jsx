@@ -10,6 +10,9 @@ import { useGetNotificationsQuery } from '@/store/features/notification/notifica
 import NotificationDropdown from './NotificationDropdown';
 import { useGetUserCreditStatsQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import EliteProBadge from '@/components/icon/EliteProBadge';
+import { Sub } from '@radix-ui/react-dropdown-menu';
+import SubscriptionBadge from '@/components/icon/SubscriptionBadge';
 
 export default function DashboardHeader({ onToggleSidebar }) {
   const userInfo = useSelector(selectCurrentUser);
@@ -49,24 +52,26 @@ export default function DashboardHeader({ onToggleSidebar }) {
         {/* Elite Pro */}
         {isElitePro === true && eliteProId && eliteProId !== null && (
           <div className="border border-gray-300 rounded-full w-8 h-8 flex items-center justify-center">
-            <Image
+            {/* <Image
               src={'/assets/img/elite-pro-badge.svg'}
               alt="Elite Pro"
               width={40}
               height={40}
               className="w-5 h-5 object-cover"
-            />
+            /> */}
+            <EliteProBadge className="w-5 h-5" />
           </div>
         )}
         {subscriptionId && subscriptionId !== null && (
           <div className="border border-gray-300 rounded-full w-8 h-8 flex items-center justify-center">
-            <Image
+            {/* <Image
               src={'/assets/img/subscription-badge.svg'}
               alt="Subscription"
               width={40}
               height={40}
               className="w-5 h-5 object-cover"
-            />
+            /> */}
+            <SubscriptionBadge className="w-5 h-5" />
           </div>
         )}
         {/* Remaining Credits */}
