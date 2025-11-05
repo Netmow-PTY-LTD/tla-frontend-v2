@@ -23,6 +23,7 @@ import {
   Users,
   Building2,
   Newspaper,
+  BookImage,
 } from 'lucide-react';
 
 export const AdminSidebarItems = {
@@ -190,6 +191,12 @@ export const AdminSidebarItems = {
       title: 'Pages for Access Control',
       url: '/admin/page/list',
       icon: List,
+      isActive: true,
+    },
+    {
+      title: 'Gallery',
+      url: '/admin/gallery',
+      icon: BookImage,
       isActive: true,
     },
     {
