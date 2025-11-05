@@ -198,7 +198,12 @@ export const AdminSidebarItems = {
       icon: BookImage,
       isActive: true,
     },
-
+    {
+      title: 'SEO Pages',
+      url: '/admin/seo/pages',
+      icon: List,
+      isActive: true,
+    },
     {
       title: 'Credit Packages',
       url: '/admin/package/add',

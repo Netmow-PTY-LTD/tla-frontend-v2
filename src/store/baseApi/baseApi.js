@@ -21,8 +21,8 @@ const baseQuery = fetchBaseQuery({
 const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
   let result = await baseQuery(arg, api, extraOptions);
 
-  console.log("base url called:", ` ${process.env.NEXT_PUBLIC_BASE_URL}${arg}`);
-  console.log("base url called:", arg);
+  console.log('base url called:', ` ${process.env.NEXT_PUBLIC_BASE_URL}${arg}`);
+  console.log('base url called:', arg);
 
   if (result.error?.status === 404 || result.error?.status === 403) {
     const errorData = result.error.data;
@@ -144,7 +144,9 @@ export const baseApi = createApi({
     'firms',
     'city',
     'galleries', 
-    'gallery'
+    'gallery',
+    'seo',
+    'meta',
   ],
   endpoints: () => ({}),
 });
