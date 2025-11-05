@@ -22,6 +22,7 @@ import {
   SquareTerminal,
   Users,
   Building2,
+  BookImage,
 } from 'lucide-react';
 
 export const AdminSidebarItems = {
@@ -191,6 +192,13 @@ export const AdminSidebarItems = {
       icon: List,
       isActive: true,
     },
+    {
+      title: 'Gallery',
+      url: '/admin/gallery',
+      icon: BookImage,
+      isActive: true,
+    },
+
     {
       title: 'Credit Packages',
       url: '/admin/package/add',
