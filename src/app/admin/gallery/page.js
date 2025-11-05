@@ -22,6 +22,39 @@ import GalleryImageInput from '@/components/form/GalleryImageInput';
 
 
 import { useCreateGalleryMutation, useDeleteGalleryMutation, useGetAllGalleriesQuery, useUpdateGalleryMutation } from '@/store/features/admin/galleryApiService';
+import { zodResolver } from '@hookform/resolvers/zod';
+import z from 'zod';
+
+
+
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB in bytes
+
+const gallerySchema = z.object({
+  title: z.string().min(1, 'Title is required'),
+  file: z
+    .any()
+    .refine((file) => {
+      // Allow no file if editing existing image
+      if (!file) return true;
+
+      // Check instance
+      if (!(file instanceof File)) return false;
+
+      // Check type
+      const isValidType = ['image/jpeg', 'image/png'].includes(file.type);
+      if (!isValidType) return false;
+
+      // Check size
+      const isValidSize = file.size <= MAX_FILE_SIZE;
+      return isValidSize;
+    }, {
+      message: 'File must be JPG or PNG and max size 2 MB',
+    }),
+});
+
+
+
+
 
 export default function Gallery() {
     const [search, setSearch] = useState('');
@@ -34,13 +67,14 @@ export default function Gallery() {
     const [updateImage] = useUpdateGalleryMutation();
     const [deleteImage] = useDeleteGalleryMutation();
 
-  
+
     // React Hook Form
     const methods = useForm({
+        resolver: zodResolver(gallerySchema),
         defaultValues: { file: undefined, title: '', },
     });
     const { reset, handleSubmit, watch } = methods;
-    const fileValue = watch('file');
+
 
     // Submit handler
     const onSubmit = async (data) => {
@@ -55,7 +89,7 @@ export default function Gallery() {
             formData.append('title', data.title || '');
 
             if (editingImage) {
-               
+
                 const res = await updateImage({ galleryId: editingImage._id, formData }).unwrap();
                 if (res.success) {
 
@@ -70,7 +104,7 @@ export default function Gallery() {
             } else {
                 const res = await addImage(formData).unwrap();
                 if (res.success) {
-                  
+
                     toast.success(res.message || 'Image added successfully!');
                     setIsModalOpen(false);
                 } else {
