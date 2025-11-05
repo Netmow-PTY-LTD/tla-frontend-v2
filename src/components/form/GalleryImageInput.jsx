@@ -144,23 +144,31 @@ export default function GalleryImageInput({
 }) {
     const { control, setValue, watch } = useFormContext();
     const watchedFile = watch(name);
-    const [previewFile, setPreviewFile] = useState(null);
    
+    const [previewFile, setPreviewFile] = useState(defaultPreview || null);
+    const [isRemoved, setIsRemoved] = useState(false);
 
     useEffect(() => {
         if (watchedFile) {
             // If the value is a File, create a URL for preview
             if (watchedFile instanceof File) {
                 setPreviewFile(URL.createObjectURL(watchedFile));
+                setIsRemoved(false); // user added a new file
             } else if (typeof watchedFile === 'string') {
                 setPreviewFile(watchedFile);
+                setIsRemoved(false); // existing URL
             }
-        } else if (defaultPreview) {
-            setPreviewFile(defaultPreview)
-        } else {
+        } else if (!watchedFile && !isRemoved) {
+            // Only use defaultPreview if user hasn't removed manually
+            setPreviewFile(defaultPreview || null);
+        } else if (isRemoved) {
             setPreviewFile(null);
         }
-    }, [watchedFile]);
+    }, [watchedFile, defaultPreview, isRemoved]);
+
+
+
+
 
     const handleCopyUrl = (url) => {
         navigator.clipboard.writeText(url);
@@ -170,6 +178,7 @@ export default function GalleryImageInput({
     const handleRemove = () => {
         setValue(name, null, { shouldValidate: true });
         setPreviewFile(null);
+        setIsRemoved(true); // prevent defaultPreview from reappearing
     };
 
     return (
