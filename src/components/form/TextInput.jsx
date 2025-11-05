@@ -56,7 +56,7 @@ export default function TextInput({
                 onBlur={onBlur}
                 value={value ?? ''}
                 className={clsx(
-                  'bg-white border-[#DCE2EA] text-black placeholder:text-[#a6a8ab] h-[44px]',
+                  'bg-white border-[#DCE2EA] text-black placeholder:text-[#a6a8ab] h-[44px] focus:ring-inset shadow-none',
                   textColor,
                   inputClassName
                 )}
