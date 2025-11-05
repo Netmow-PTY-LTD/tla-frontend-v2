@@ -34,6 +34,7 @@ export default function Gallery() {
     const [updateImage] = useUpdateGalleryMutation();
     const [deleteImage] = useDeleteGalleryMutation();
 
+  
     // React Hook Form
     const methods = useForm({
         defaultValues: { file: undefined, title: '', },
@@ -54,7 +55,8 @@ export default function Gallery() {
             formData.append('title', data.title || '');
 
             if (editingImage) {
-                const res = await updateImage({ id: editingImage.id, formData }).unwrap();
+               
+                const res = await updateImage({ galleryId: editingImage._id, formData }).unwrap();
                 if (res.success) {
 
 
@@ -68,7 +70,7 @@ export default function Gallery() {
             } else {
                 const res = await addImage(formData).unwrap();
                 if (res.success) {
-                    console.log('result ', res)
+                  
                     toast.success(res.message || 'Image added successfully!');
                     setIsModalOpen(false);
                 } else {
@@ -193,7 +195,6 @@ export default function Gallery() {
                                             setEditingImage(img);
                                             reset({
                                                 title: img.title,
-                                                description: img.description,
                                                 file: undefined,
                                             });
                                         }}
