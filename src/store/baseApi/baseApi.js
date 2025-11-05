@@ -143,6 +143,8 @@ export const baseApi = createApi({
     'companies',
     'firms',
     'city',
+    'galleries', 
+    'gallery',
     'seo',
     'meta',
   ],
