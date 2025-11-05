@@ -343,6 +343,7 @@
 .content-wrapper {
   background: #fff;
   border-radius: 5px;
+  border: 1px solid #efefef;
 }
 
 .simple-editor-content {
