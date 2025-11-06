@@ -1,0 +1,57 @@
+ [
+    {
+      "_id": "6909a49544a4926978778884",
+      "pageKey": "home",
+      "slug": "home",
+      "metaTitle": "Find a Lawyer | Hire a Lawyer | The Law App Online | The Law App",
+      "metaDescription": "Hire trusted and verified lawyers for your legal needs.",
+      "metaKeywords": ["lawyer", "legal", "Bangladesh"],
+      "metaImage": "https://thelawapp.syd1.digitaloceanspaces.com/thelawapp/seo/metaimages/home.webp"
+    },
+    {
+      "_id": "6909a49544a4926978778885",
+      "pageKey": "about",
+      "slug": "about",
+      "metaTitle": "About TheLawApp | Our Mission and Vision",
+      "metaDescription": "Learn about TheLawApp — connecting clients and lawyers through a transparent legal marketplace.",
+      "metaKeywords": ["about", "TheLawApp", "mission"],
+      "metaImage": "https://thelawapp.syd1.digitaloceanspaces.com/thelawapp/seo/metaimages/about.webp"
+    },
+    {
+      "_id": "6909a49544a4926978778886",
+      "pageKey": "How It Works",
+      "slug": "how-it-works",
+      "metaTitle": "How It Works for Clients | Hire a Lawyer Easily | LawConnect",
+      "metaDescription": "Discover how clients can find and hire lawyers easily through LawConnect’s transparent bidding process.",
+      "metaKeywords": ["client", "how it works", "hire lawyer"],
+      "metaImage": "https://thelawapp.syd1.digitaloceanspaces.com/thelawapp/seo/metaimages/client.webp"
+    },
+    {
+      "_id": "6909a49544a4926978778887",
+      "pageKey": "how-it-works-lawyer",
+      "slug": "how-it-works/lawyer",
+      "metaTitle": "How It Works for Lawyers | Grow Your Legal Practice | LawConnect",
+      "metaDescription": "Lawyers can build an online presence, connect with clients, and grow their legal practice easily with LawConnect.",
+      "metaKeywords": ["lawyer", "how it works", "grow practice"],
+      "metaImage": "https://thelawapp.syd1.digitaloceanspaces.com/thelawapp/seo/metaimages/lawyer.webp"
+    },
+    {
+      "_id": "6909a49544a4926978778888",
+      "pageKey": "contact",
+      "slug": "contact",
+      "metaTitle": "Contact Us | Get in Touch with LawConnect",
+      "metaDescription": "Need legal support or have a question? Contact the LawConnect team today.",
+      "metaKeywords": ["contact", "support", "TheLawApp"],
+      "metaImage": "https://thelawapp.syd1.digitaloceanspaces.com/thelawapp/seo/metaimages/contact.webp"
+    },
+      {
+      "_id": "6909a49544a4926978778888",
+      "pageKey": "pricing",
+      "slug": "pricing",
+      "metaTitle": "Affordable Legal Services Pricing | TheLawApp",
+      "metaDescription": "Compare legal service pricing on TheLawApp Marketplace. Find lawyers that fit your budget and hire affordably without hidden fees.",
+      "metaKeywords": ["contact", "support", "lawconnect"],
+      "metaImage": "https://thelawapp.syd1.digitaloceanspaces.com/thelawapp/seo/metaimages/contact.webp"
+    }
+  ]
+
