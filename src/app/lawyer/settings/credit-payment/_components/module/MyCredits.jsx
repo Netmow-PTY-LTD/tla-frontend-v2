@@ -39,7 +39,7 @@ const MyCredits = ({ setMyCreditsProgress }) => {
             type="single"
             collapsible
             className="w-full"
-            // defaultValue="item-1"
+          // defaultValue="item-1"
           >
             <AccordionItem value="item-1">
               <AccordionTrigger>What are credits?</AccordionTrigger>
@@ -100,7 +100,7 @@ const MyCredits = ({ setMyCreditsProgress }) => {
             </div>
           ) : packageData?.data?.length > 0 ? (
             <div className="grid grid-cols-1 gap-6">
-              {packageData?.data?.map((creditPackage) => (
+              {packageData?.data.filter((pkg) => pkg.price != 0)?.map((creditPackage) => (
                 <CreditsPurchase
                   key={creditPackage?._id}
                   creditPackage={creditPackage}
