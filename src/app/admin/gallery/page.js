@@ -13,7 +13,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Copy, Edit, Eye, Search, Trash, Upload, X } from 'lucide-react';
+import { Copy, Edit, Eye, Loader, Loader2, Search, Trash, Upload, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { useForm, FormProvider } from 'react-hook-form';
 
@@ -24,32 +24,33 @@ import GalleryImageInput from '@/components/form/GalleryImageInput';
 import { useCreateGalleryMutation, useDeleteGalleryMutation, useGetAllGalleriesQuery, useUpdateGalleryMutation } from '@/store/features/admin/galleryApiService';
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
+import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 
 
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB in bytes
 
 const gallerySchema = z.object({
-  title: z.string().min(1, 'Title is required'),
-  file: z
-    .any()
-    .refine((file) => {
-      // Allow no file if editing existing image
-      if (!file) return true;
+    title: z.string().min(1, 'Title is required'),
+    file: z
+        .any()
+        .refine((file) => {
+            // Allow no file if editing existing image
+            if (!file) return true;
 
-      // Check instance
-      if (!(file instanceof File)) return false;
+            // Check instance
+            if (!(file instanceof File)) return false;
 
-      // Check type
-      const isValidType = ['image/jpeg', 'image/png'].includes(file.type);
-      if (!isValidType) return false;
+            // Check type
+            const isValidType = ['image/jpeg', 'image/png'].includes(file.type);
+            if (!isValidType) return false;
 
-      // Check size
-      const isValidSize = file.size <= MAX_FILE_SIZE;
-      return isValidSize;
-    }, {
-      message: 'File must be JPG or PNG and max size 2 MB',
-    }),
+            // Check size
+            const isValidSize = file.size <= MAX_FILE_SIZE;
+            return isValidSize;
+        }, {
+            message: 'File must be JPG or PNG and max size 2 MB',
+        }),
 });
 
 
@@ -60,12 +61,13 @@ export default function Gallery() {
     const [search, setSearch] = useState('');
     const [editingImage, setEditingImage] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [deleteModalId, setDeleteModalId] = useState(null);
 
     // RTK Query hooks
     const { data: images = [], isLoading } = useGetAllGalleriesQuery();
-    const [addImage] = useCreateGalleryMutation();
+    const [addImage, { isLoading: addLoading }] = useCreateGalleryMutation();
     const [updateImage] = useUpdateGalleryMutation();
-    const [deleteImage] = useDeleteGalleryMutation();
+    const [deleteImage, { isLoading: deleteLoading }] = useDeleteGalleryMutation();
 
 
     // React Hook Form
@@ -121,13 +123,24 @@ export default function Gallery() {
 
     // Delete handler
     const handleDelete = async (id) => {
+
         try {
-            await deleteImage(id).unwrap();
-            toast.success('Image removed.');
+            const res = await deleteImage(id).unwrap();
+
+            if (res.success) {
+                toast.success(res.message || 'Image removed.');
+                setDeleteModalId(null);
+
+            }
+
         } catch (err) {
             toast.error('Failed to delete image.');
         }
     };
+
+
+
+
 
     // Copy URL
     const handleCopyLink = async (url) => {
@@ -143,7 +156,7 @@ export default function Gallery() {
     return (
         <div className="p-6 space-y-6">
             <div className="flex items-center justify-between gap-3 flex-wrap">
-                <h2 className="text-2xl font-semibold">🖼️ Image Gallery</h2>
+                <h2 className="text-2xl font-semibold"> Image Gallery</h2>
 
                 <div className="relative">
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
@@ -200,7 +213,12 @@ export default function Gallery() {
             </div>
 
             {isLoading ? (
-                <p>Loading...</p>
+                <div className="flex items-center justify-center h-64">
+                    <div className="flex flex-col items-center gap-2 text-gray-600">
+                        <Loader className="animate-spin h-6 w-6" />
+                        <p>Loading...</p>
+                    </div>
+                </div>
             ) : filteredImages.length === 0 ? (
                 <p className="text-gray-500 text-center">No images found.</p>
             ) : (
@@ -222,7 +240,7 @@ export default function Gallery() {
                                     >
                                         <Eye size={16} />
                                     </Button>
-                                    <Button
+                                    {/* <Button
                                         size="icon"
                                         variant="secondary"
                                         onClick={() => {
@@ -234,7 +252,7 @@ export default function Gallery() {
                                         }}
                                     >
                                         <Edit size={16} />
-                                    </Button>
+                                    </Button> */}
                                     <Button
                                         size="icon"
                                         variant="secondary"
@@ -245,7 +263,8 @@ export default function Gallery() {
                                     <Button
                                         size="icon"
                                         variant="destructive"
-                                        onClick={() => handleDelete(img._id)}
+                                        // onClick={() => handleDelete(img._id)}
+                                        onClick={() => setDeleteModalId(img._id)}
                                     >
                                         <Trash size={16} />
                                     </Button>
@@ -257,7 +276,8 @@ export default function Gallery() {
                                     size="icon"
                                     variant="ghost"
                                     className="hover:bg-transparent"
-                                    onClick={() => handleDelete(img._id)}
+                                    // onClick={() => handleDelete(img._id)}
+                                    onClick={() => setDeleteModalId(img._id)}
                                 >
                                     <X size={16} />
                                 </Button>
@@ -266,6 +286,21 @@ export default function Gallery() {
                     ))}
                 </div>
             )}
+
+
+            {deleteModalId && (
+                <ConfirmationModal
+                    open={!!deleteModalId}
+                    onOpenChange={() => setDeleteModalId(null)}
+                    onConfirm={() => handleDelete(deleteModalId)}
+                    title="Are you sure you want to delete this image?"
+                    description="This action cannot be undone. Please proceed with caution."
+                    cancelText="Cancel"
+                    confirmText={deleteLoading ? 'Deleting...' : 'Delete'}
+                    confirmVariant="destructive"
+                />
+            )}
+
         </div>
     );
 }
