@@ -49,27 +49,32 @@ export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
 
     const term = searchTerm.toLowerCase();
 
-    const filtered = transactionData.data.filter((transaction) => {
-      const flatValues = [];
+    const filtered = transactionData.data.filter((transaction) => transaction.creditPackageId)
+      .filter((transaction) => {
+        const flatValues = [];
 
-      Object.values(transaction).forEach((val) => {
-        if (typeof val === 'object' && val !== null) {
-          // Flatten one level of nested fields (e.g., creditPackageId.name)
-          flatValues.push(...Object.values(val));
-        } else {
-          flatValues.push(val);
-        }
-      });
+        Object.values(transaction).forEach((val) => {
+          if (typeof val === 'object' && val !== null) {
+            // Flatten one level of nested fields (e.g., creditPackageId.name)
+            flatValues.push(...Object.values(val));
+          } else {
+            flatValues.push(val);
+          }
+        });
 
-      return flatValues.some((value) => {
-        if (!value) return false;
-        return value.toString().toLowerCase().includes(term);
+        return flatValues.some((value) => {
+          if (!value) return false;
+          return value.toString().toLowerCase().includes(term);
+        });
       });
-    });
 
     setFilteredTransactions(filtered);
     setCurrentPage(1);
   }, [transactionData?.data, searchTerm]);
+
+
+
+
 
   const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -185,11 +190,10 @@ export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
                       </td>
                       <td className="py-4 px-6 text-sm">
                         <span
-                          className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
-                            tx.status === 'completed'
-                              ? 'bg-green-100 text-green-700'
-                              : 'bg-yellow-100 text-yellow-700'
-                          }`}
+                          className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${tx.status === 'completed'
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-yellow-100 text-yellow-700'
+                            }`}
                         >
                           {tx.status}
                         </span>
@@ -280,7 +284,7 @@ export const BillingTransactionDetails = ({ setMyCreditsProgress }) => {
             const maxVisiblePages = 5;
             const startPage =
               Math.floor((currentPage - 1) / maxVisiblePages) *
-                maxVisiblePages +
+              maxVisiblePages +
               1;
             const endPage = Math.min(
               startPage + maxVisiblePages - 1,
