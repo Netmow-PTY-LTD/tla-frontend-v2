@@ -105,6 +105,7 @@ import {
 } from '@/store/features/admin/appSettings';
 import { Button } from '@/components/ui/button';
 import { X, UploadCloud } from 'lucide-react';
+import { toast } from 'sonner';
 
 const defaultValues = {
   siteName: '',
@@ -154,7 +155,12 @@ export default function SettingsForm({ appSettings, isLoading }) {
       if (data.favicon?.[0]) formData.append('favicon', data.favicon[0]);
 
       const res = await changeAppSettings(formData).unwrap();
-      alert('✅ Settings updated successfully');
+      if(res.success){
+        toast.success(res.message)
+      }else{
+        toast.error(res.message)
+      }
+     
     } catch (err) {
       console.error(err);
       alert('❌ Failed to update settings');
