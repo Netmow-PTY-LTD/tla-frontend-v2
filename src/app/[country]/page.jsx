@@ -8,6 +8,7 @@ import MainLayout from '@/components/main/common/layout';
 import HeroHome from '@/components/main/home/HeroHome';
 import HomeCategoryWiseServices from '@/components/main/home/HomeCategoryWiseServices';
 import TestimonialSlider from '@/components/main/home/HomeTestimonials';
+import { useGetMetadataBySlugQuery } from '@/store/features/admin/SEOMetaApiService';
 
 export default function page() {
   const [searchParam, setSearchParam] = useState('');

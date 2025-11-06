@@ -143,10 +143,11 @@ export const baseApi = createApi({
     'companies',
     'firms',
     'city',
-    'galleries', 
+    'galleries',
     'gallery',
     'seo',
     'meta',
+    'blog',
   ],
   endpoints: () => ({}),
 });
