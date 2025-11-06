@@ -1,5 +1,6 @@
-import PricingPageComponent from './components/PricingPageComponent';
 import seoData from '@/data/seoData.json';
+import PricingPageComponent from './_components/PricingPageComponent';
+
 export async function generateMetadata() {
   const slug =
     seoData.find((item) => item.pageKey.toLowerCase() === 'pricing')?.slug ||
