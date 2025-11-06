@@ -141,7 +141,7 @@ export default function SettingsForm({ appSettings, isLoading }) {
   }, [appSettings, reset]);
 
   const onSubmit = async (data) => {
-  
+
     try {
       const formData = new FormData();
       Object.keys(data).forEach((key) => {
@@ -165,8 +165,9 @@ export default function SettingsForm({ appSettings, isLoading }) {
   const appLogoFile = watch('appLogo');
   const faviconFile = watch('favicon');
 
+  
   useEffect(() => {
-    if (appLogoFile?.[0]) {
+    if (appLogoFile?.[0] && appLogoFile[0] instanceof File) {
       const url = URL.createObjectURL(appLogoFile[0]);
       setLogoPreview(url);
       return () => URL.revokeObjectURL(url);
@@ -174,7 +175,7 @@ export default function SettingsForm({ appSettings, isLoading }) {
   }, [appLogoFile]);
 
   useEffect(() => {
-    if (faviconFile?.[0]) {
+    if (faviconFile?.[0] && faviconFile[0] instanceof File) {
       const url = URL.createObjectURL(faviconFile[0]);
       setFaviconPreview(url);
       return () => URL.revokeObjectURL(url);
