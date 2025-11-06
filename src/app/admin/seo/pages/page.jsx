@@ -19,18 +19,17 @@ import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 import { showSuccessToast } from '@/components/common/toasts';
 import { DataTableWithPagination } from '../../_components/DataTableWithPagination';
 import { DataTable } from '@/components/common/DataTable';
-import { useGetAllMetaInfoQuery } from '@/store/features/admin/SEOMetaApiService';
+import {
+  useDeleteMetaInfoMutation,
+  useGetAllMetaInfoQuery,
+} from '@/store/features/admin/SEOMetaApiService';
 import AddNewMetaInfoModal from '../_components/AddNewMetaPageModal';
+import EditSEOMetaPageModal from '../_components/EditSEOMetaPageModal';
 export default function SEOPages() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pageId, setPageId] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [deleteModalId, setDeleteModalId] = useState(null);
-
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState('');
-
-  const LIMIT = 10;
 
   const handleEditPageModalOpen = (id) => {
     setIsEditModalOpen(true);
@@ -46,12 +45,12 @@ export default function SEOPages() {
 
   console.log('metaInfo', metaInfo);
 
-  const [deletePage] = useDeletePageMutation();
+  const [deleteMetaInfo, { isLoading: isDeleteInfoLoading }] =
+    useDeleteMetaInfoMutation();
 
-  const handleDeletePage = async (id) => {
+  const handleDeleteMetaInfo = async (id) => {
     try {
-      const res = await deletePage(id).unwrap();
-      console.log('res', res);
+      const res = await deleteMetaInfo(id).unwrap();
       if (res?.success) {
         showSuccessToast(res?.message || 'Page deleted successfully');
         setDeleteModalId(null);
@@ -91,13 +90,36 @@ export default function SEOPages() {
       ),
     },
     {
+      accessorKey: 'metaKeywords',
+      header: 'Meta Keywords',
+      cell: ({ row }) => {
+        const keywords = row.getValue('metaKeywords');
+
+        // Handle both array and fallback cases
+        const keywordList = Array.isArray(keywords) ? keywords.join(', ') : '';
+
+        return (
+          <div
+            className="whitespace-normal break-words max-w-[250px]" // 👈 forces wrapping
+            title={keywordList} // optional: tooltip on hover
+          >
+            {keywordList || '-'}
+          </div>
+        );
+      },
+    },
+    {
       accessorKey: 'metaImage',
       header: 'Meta Image',
       cell: ({ row }) => {
         const imageUrl = row.getValue('metaImage');
         return (
           <div>
-            <img src={imageUrl} alt="" />
+            <img
+              src={imageUrl}
+              alt=""
+              className="w-12 object-cover rounded-full"
+            />
           </div>
         );
       },
@@ -156,8 +178,8 @@ export default function SEOPages() {
         <ConfirmationModal
           open={!!deleteModalId}
           onOpenChange={() => setDeleteModalId(null)}
-          onConfirm={() => handleDeletePage(deleteModalId)}
-          title="Are you sure you want to delete this page?"
+          onConfirm={() => handleDeleteMetaInfo(deleteModalId)}
+          title="Are you sure you want to delete this item?"
           description="This action cannot be undone. So please proceed with caution."
           cancelText="No"
         />
@@ -167,6 +189,13 @@ export default function SEOPages() {
         open={isModalOpen}
         setOpen={setIsModalOpen}
         refetchMetaInfo={refetchMetaInfo}
+      />
+
+      <EditSEOMetaPageModal
+        open={isEditModalOpen}
+        setOpen={setIsEditModalOpen}
+        refetchMetaInfo={refetchMetaInfo}
+        pageId={pageId}
       />
 
       <DataTable

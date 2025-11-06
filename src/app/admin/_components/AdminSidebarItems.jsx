@@ -22,6 +22,7 @@ import {
   SquareTerminal,
   Users,
   Building2,
+  Newspaper,
   BookImage,
 } from 'lucide-react';
 
@@ -187,7 +188,7 @@ export const AdminSidebarItems = {
       isActive: true,
     },
     {
-      title: 'Pages',
+      title: 'Pages for Access Control',
       url: '/admin/page/list',
       icon: List,
       isActive: true,
@@ -203,6 +204,26 @@ export const AdminSidebarItems = {
       url: '/admin/seo/pages',
       icon: List,
       isActive: true,
+    },
+    {
+      title: 'Blog',
+      url: '#',
+      icon: Newspaper,
+      isActive: true,
+      items: [
+        {
+          title: 'List of Blogs',
+          url: '/admin/blog/list',
+          icon: List,
+          isActive: true,
+        },
+        {
+          title: 'Add New Blog',
+          url: '/admin/blog/add',
+          icon: Logs,
+          isActive: true,
+        },
+      ],
     },
     {
       title: 'Credit Packages',

@@ -28,7 +28,7 @@ const seoMetaApiService = baseApi.injectEndpoints({
       query: (body) => ({
         url: `/seo/${body?.seoId}/update`,
         method: 'PATCH',
-        body,
+        body: body.body,
       }),
       invalidatesTags: ['seo', 'meta'],
     }),
