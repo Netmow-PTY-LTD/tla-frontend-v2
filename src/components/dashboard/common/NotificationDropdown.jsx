@@ -110,9 +110,9 @@ export default function NotificationDropdown() {
 
       {isOpen && (
         <div className="absolute right-0 bg-white shadow-[0_6px_16px_#0006] rounded-lg w-80 mt-2 z-[99]">
-          <h4 className="font-semibold text-gray-800 py-3 px-4 text-left border-b">
+          <div className="text-lg font-semibold text-gray-800 py-3 px-4 text-left border-b">
             Notifications
-          </h4>
+          </div>
           <ul className="max-h-96 overflow-y-auto">
             {isLoading ? (
               <li className="p-4 text-sm text-gray-500">Loading...</li>
