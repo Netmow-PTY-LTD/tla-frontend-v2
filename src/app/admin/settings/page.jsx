@@ -10,7 +10,7 @@ export default function Settings() {
 
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4  mx-auto max-w-[900px] ">
 
 
       <div className="p-6 space-y-5">
