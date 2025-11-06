@@ -8,6 +8,12 @@ const nextConfig = {
         port: '',
         search: '',
       },
+      {
+        protocol: 'https',
+        hostname: 'files.thelawapp.com.au',
+        port: '',
+        search: '',
+      },
     ],
   },
 };
