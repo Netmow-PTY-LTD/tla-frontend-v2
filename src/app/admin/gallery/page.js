@@ -66,7 +66,7 @@ export default function Gallery() {
     // RTK Query hooks
     const { data: images = [], isLoading } = useGetAllGalleriesQuery();
     const [addImage, { isLoading: addLoading }] = useCreateGalleryMutation();
-    const [updateImage] = useUpdateGalleryMutation();
+    const [updateImage, { isLoading: updateLoading }] = useUpdateGalleryMutation();
     const [deleteImage, { isLoading: deleteLoading }] = useDeleteGalleryMutation();
 
 
@@ -155,7 +155,7 @@ export default function Gallery() {
 
     return (
         <div className="p-6 space-y-6">
-            <div className="flex items-center justify-between gap-3 flex-wrap">
+            <div className=" sticky top-0 z-20 bg-white pb-3 pt-2 flex items-center justify-between gap-3 flex-wrap border-b border-gray-200">
                 <h2 className="text-2xl font-semibold"> Image Gallery</h2>
 
                 <div className="relative">
@@ -203,9 +203,18 @@ export default function Gallery() {
                                     placeholder="Enter title"
                                 />
 
-                                <Button type="submit" className="w-full">
-                                    {editingImage ? 'Update Image' : 'Add Image'}
+                                <Button type="submit" className="w-full" disabled={addLoading || updateLoading}>
+                                    {(addLoading || updateLoading) ? (
+                                        <>
+                                            <Loader className="animate-spin h-4 w-4 mr-2" /> Saving...
+                                        </>
+                                    ) : editingImage ? (
+                                        'Update Image'
+                                    ) : (
+                                        'Add Image'
+                                    )}
                                 </Button>
+
                             </form>
                         </FormProvider>
                     </DialogContent>
@@ -263,7 +272,7 @@ export default function Gallery() {
                                     <Button
                                         size="icon"
                                         variant="destructive"
-                                        // onClick={() => handleDelete(img._id)}
+
                                         onClick={() => setDeleteModalId(img._id)}
                                     >
                                         <Trash size={16} />
@@ -276,7 +285,7 @@ export default function Gallery() {
                                     size="icon"
                                     variant="ghost"
                                     className="hover:bg-transparent"
-                                    // onClick={() => handleDelete(img._id)}
+
                                     onClick={() => setDeleteModalId(img._id)}
                                 >
                                     <X size={16} />
