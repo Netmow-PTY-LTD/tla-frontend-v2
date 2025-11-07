@@ -30,6 +30,7 @@ import { useGetCountryListQuery } from '@/store/features/public/publicApiService
 import { checkValidity } from '@/helpers/validityCheck';
 import LawyerWarningModal from '../../home/modal/LawyerWarningModal';
 import { safeJsonParse } from '@/helpers/safeJsonParse';
+import { useGetSettingsQuery } from '@/store/features/admin/appSettings';
 
 export default function Header() {
   const [isHeaderFixed, setIsHeaderFixed] = useState();
@@ -48,6 +49,10 @@ export default function Header() {
 
   const pathname = usePathname();
   const router = useRouter();
+
+  const { data: appSettings } = useGetSettingsQuery();
+
+  const appData = appSettings?.data || {};
 
   const token = useSelector((state) => state.auth.token);
 
@@ -167,8 +172,8 @@ export default function Header() {
         <div className="flex items-center gap-4 md:gap-6">
           <Link href="/" className={styles.logo}>
             <Image
-              src={'/assets/img/logo.png'}
-              alt="TLA Logo"
+              src={appData?.appLogo || '/assets/img/logo.png'}
+              alt={appData?.siteName || 'TLA Logo'}
               width={166}
               height={40}
             />

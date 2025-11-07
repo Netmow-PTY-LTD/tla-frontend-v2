@@ -1,5 +1,7 @@
+import { getSeoData } from '@/helpers/getSeoData';
 import ContactPageComponent from './_components/ContactPageComponent';
 import seoData from '@/data/seoData';
+import { generateSchemaBySlug } from '@/helpers/generateSchemaBySlug';
 
 export async function generateMetadata() {
   const slug =
@@ -37,9 +39,16 @@ export async function generateMetadata() {
     },
   };
 }
-export default function ContactPage() {
+export default async function ContactPage() {
+  const seo = await getSeoData(seoData, 'contact');
+  const schema = await generateSchemaBySlug('contact', seo);
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
       <ContactPageComponent />
     </>
   );

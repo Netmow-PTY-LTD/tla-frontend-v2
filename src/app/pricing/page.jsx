@@ -1,5 +1,7 @@
 import seoData from '@/data/seoData.json';
 import PricingPageComponent from './_components/PricingPageComponent';
+import { getSeoData } from '@/helpers/getSeoData';
+import { generateSchemaBySlug } from '@/helpers/generateSchemaBySlug';
 
 export async function generateMetadata() {
   const slug =
@@ -41,8 +43,21 @@ export async function generateMetadata() {
   };
 }
 
-const PricingPage = () => {
-  return <PricingPageComponent />;
+const PricingPage = async () => {
+  const seo = await getSeoData(seoData, 'pricing');
+  const schema = await generateSchemaBySlug('pricing', seo);
+  return (
+    <>
+      {' '}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(schema),
+        }}
+      />{' '}
+      <PricingPageComponent />
+    </>
+  );
 };
 
 export default PricingPage;
