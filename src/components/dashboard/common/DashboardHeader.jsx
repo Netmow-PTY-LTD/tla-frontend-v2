@@ -13,11 +13,16 @@ import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import EliteProBadge from '@/components/icon/EliteProBadge';
 import { Sub } from '@radix-ui/react-dropdown-menu';
 import SubscriptionBadge from '@/components/icon/SubscriptionBadge';
+import { useGetSettingsQuery } from '@/store/features/admin/appSettings';
 
 export default function DashboardHeader({ onToggleSidebar }) {
   const userInfo = useSelector(selectCurrentUser);
   const { data } = useGetNotificationsQuery({ read: false });
   //const { data: credits } = useGetUserCreditStatsQuery();
+
+  const { data: appSettings } = useGetSettingsQuery();
+
+  const appData = appSettings?.data || {};
 
   const { data: currentUser } = useAuthUserInfoQuery();
 
@@ -34,8 +39,8 @@ export default function DashboardHeader({ onToggleSidebar }) {
       <div className="db-header-container flex gap-4">
         <Link href="/lawyer/dashboard" className="db-logo">
           <Image
-            src={'/assets/img/logo.png'}
-            alt="TLA Logo"
+            src={appData?.appLogo || '/assets/img/logo.png'}
+            alt={appData?.siteName || 'TLA Logo'}
             width={150}
             height={40}
           />

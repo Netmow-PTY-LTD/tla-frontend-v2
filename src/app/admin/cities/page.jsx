@@ -41,8 +41,11 @@ export default function Page() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [searchString, setSearchString] = useState('');
+  const [cityPage, setCityPage] = useState(1);
 
   const LIMIT = 10;
+
+  const cityLimit = 10;
 
   const { data: countryList, refetch: refetchCountry } =
     useGetCountryListQuery();
@@ -78,8 +81,8 @@ export default function Page() {
     isLoading: isCityZipCodeListLoading,
     isFetching: isCityZipCodeListFetching,
   } = useGetZipCodeListQuery({
-    page,
-    limit: LIMIT,
+    page: cityPage,
+    limit: cityLimit,
     countryId: selectedCountry,
     isCity: true, // extra param to differentiate
   });
@@ -261,19 +264,18 @@ export default function Page() {
           columns={selectedColumns}
           total={cityZipCodeList?.pagination?.total || 0}
           totalPage={cityZipCodeList?.pagination?.totalPage || 1}
-          page={page}
-          onPageChange={setPage}
-          limit={LIMIT}
+          page={cityPage}
+          onPageChange={setCityPage}
+          limit={cityLimit}
           isFetching={isCityZipCodeListFetching}
           onSearch={(val) => {
             setSearchString(val);
-            setPage(1); // reset to first page when searching
+            setCityPage(1); // reset to first page when searching
           }}
         />
         <ZipCodeDataTableWithChecked
           data={ZipCodeList?.data || []}
           columns={columns(handleCheckedRow)}
-          pagination={ZipCodeList?.pagination || { page: 1, totalPage: 1 }}
           totalPage={ZipCodeList?.pagination?.totalPage || 1}
           total={ZipCodeList?.pagination?.total || 0}
           page={page}
