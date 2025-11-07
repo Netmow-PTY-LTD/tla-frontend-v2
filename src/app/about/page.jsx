@@ -1,5 +1,7 @@
+import { getSeoData } from '@/helpers/getSeoData';
 import AboutPageComponent from './AboutComponent';
 import seoData from '@/data/seoData';
+import { generateSchemaBySlug } from '@/helpers/generateSchemaBySlug';
 
 export async function generateMetadata() {
   const slug =
@@ -37,8 +39,18 @@ export async function generateMetadata() {
   };
 }
 
-const AboutPage = () => {
-  return <AboutPageComponent />;
+const AboutPage = async () => {
+  const seo = await getSeoData(seoData, 'about');
+  const schema = await generateSchemaBySlug('about', seo);
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
+      <AboutPageComponent />
+    </>
+  );
 };
 
 export default AboutPage;
