@@ -119,6 +119,8 @@ const defaultValues = {
   autoRefundIfLeadInactive: true,
   appLogo: '',
   favicon: '',
+  robots: 'noindex, nofollow',
+
 };
 
 export default function SettingsForm({ appSettings, isLoading }) {
@@ -143,6 +145,7 @@ export default function SettingsForm({ appSettings, isLoading }) {
 
   const onSubmit = async (data) => {
 
+
     try {
       const formData = new FormData();
       Object.keys(data).forEach((key) => {
@@ -151,16 +154,26 @@ export default function SettingsForm({ appSettings, isLoading }) {
         }
       });
 
-      if (data.appLogo?.[0]) formData.append('appLogo', data.appLogo[0]);
-      if (data.favicon?.[0]) formData.append('favicon', data.favicon[0]);
+
+      if (data.appLogo?.[0]) {
+        formData.append('appLogo', data.appLogo[0]);
+      } else {
+        formData.append('appLogo', null);
+      }
+
+      if (data.favicon?.[0]) {
+        formData.append('favicon', data.favicon[0]);
+      } else {
+        formData.append('favicon', null);
+      }
 
       const res = await changeAppSettings(formData).unwrap();
-      if(res.success){
+      if (res.success) {
         toast.success(res.message)
-      }else{
+      } else {
         toast.error(res.message)
       }
-     
+
     } catch (err) {
       console.error(err);
       alert('❌ Failed to update settings');
@@ -171,7 +184,7 @@ export default function SettingsForm({ appSettings, isLoading }) {
   const appLogoFile = watch('appLogo');
   const faviconFile = watch('favicon');
 
-  
+
   useEffect(() => {
     if (appLogoFile?.[0] && appLogoFile[0] instanceof File) {
       const url = URL.createObjectURL(appLogoFile[0]);
@@ -329,6 +342,21 @@ export default function SettingsForm({ appSettings, isLoading }) {
           />
         </div>
       ))}
+
+      {/* Robots Index Control */}
+      <div className="flex items-center justify-between border-b pb-2">
+        <label className="font-medium text-gray-700">Search Engine Visibility</label>
+        <select
+          disabled={isLoading}
+          {...register('robots')}
+          className="border rounded-md p-1 text-gray-700"
+        >
+          <option value="index, follow">Index & Follow</option>
+          <option value="noindex, follow">No Index, Follow</option>
+          <option value="index, nofollow">Index, No Follow</option>
+          <option value="noindex, nofollow">No Index & No Follow</option>
+        </select>
+      </div>
 
       {/* Submit */}
       <Button
