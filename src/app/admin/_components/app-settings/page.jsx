@@ -145,6 +145,7 @@ export default function SettingsForm({ appSettings, isLoading }) {
 
   const onSubmit = async (data) => {
 
+
     try {
       const formData = new FormData();
       Object.keys(data).forEach((key) => {
@@ -153,8 +154,18 @@ export default function SettingsForm({ appSettings, isLoading }) {
         }
       });
 
-      if (data.appLogo?.[0]) formData.append('appLogo', data.appLogo[0]);
-      if (data.favicon?.[0]) formData.append('favicon', data.favicon[0]);
+
+      if (data.appLogo?.[0]) {
+        formData.append('appLogo', data.appLogo[0]);
+      } else {
+        formData.append('appLogo', null);
+      }
+
+      if (data.favicon?.[0]) {
+        formData.append('favicon', data.favicon[0]);
+      } else {
+        formData.append('favicon', null);
+      }
 
       const res = await changeAppSettings(formData).unwrap();
       if (res.success) {
