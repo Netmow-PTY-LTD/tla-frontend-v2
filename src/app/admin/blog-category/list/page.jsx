@@ -17,6 +17,7 @@ import AddBlogCategoryModal from '../_components/AddBlogCategoryModal';
 import EditBlogCategoryModal from '../_components/EditBlogCategoryModal';
 import { useDeleteBlogCategoryMutation, useGetBlogCategoryListQuery } from '@/store/features/admin/blogApiService';
 import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
+import { DataTableWithPagination } from '../../_components/DataTableWithPagination';
 
 export default function Page() {
   const [addOpen, setAddOpen] = useState(false);
@@ -28,12 +29,21 @@ export default function Page() {
   const [isOpen, setIsOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
-  const { data: categoryList, refetch, isFetching } = useGetBlogCategoryListQuery();
+  const [page, setPage] = useState(1);
+  const [limit] = useState(5);
+  const [search, setSearch] = useState('');
+
+  // Fetch blog categories with pagination and search
+  const { data: categoryList, refetch, isFetching } = useGetBlogCategoryListQuery({
+    page,
+    limit,
+    search,
+  });
 
   const [categoryDelete] = useDeleteBlogCategoryMutation();
 
   const handleDeleteCategory = async () => {
-  
+
     if (!deleteId) return;
 
     try {
@@ -128,6 +138,22 @@ export default function Page() {
     },
   ];
 
+  // Handle page change
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
+
+  // Handle search input
+  const handleSearch = (value) => {
+    setSearch(value);
+    setPage(1); // reset to first page on new search
+  };
+
+
+
+
+
+
   return (
     <>
       <div className="flex justify-between items-center mb-2">
@@ -144,10 +170,15 @@ export default function Page() {
         }}
       />
 
-      <DataTable
+      <DataTableWithPagination
         data={categoryList?.data || []}
         columns={columns}
-        searchColumn={'name'}
+        page={page}
+        limit={limit}
+        totalPage={categoryList?.pagination?.totalPage || 1}
+        total={categoryList?.pagination?.total || 0}
+        onPageChange={handlePageChange}
+        onSearch={handleSearch}
         isFetching={isFetching}
       />
 
