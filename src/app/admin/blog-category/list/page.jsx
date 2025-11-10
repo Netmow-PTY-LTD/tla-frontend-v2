@@ -16,25 +16,38 @@ import React, { useState } from 'react';
 import AddBlogCategoryModal from '../_components/AddBlogCategoryModal';
 import EditBlogCategoryModal from '../_components/EditBlogCategoryModal';
 import { useDeleteBlogCategoryMutation, useGetBlogCategoryListQuery } from '@/store/features/admin/blogApiService';
+import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
+import { DataTableWithPagination } from '../../_components/DataTableWithPagination';
 
 export default function Page() {
   const [addOpen, setAddOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState(null);
 
-  const { data: categoryList, refetch, isFetching } = useGetBlogCategoryListQuery();
+
+  // For confirmation modal
+  const [isOpen, setIsOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+
+  const [page, setPage] = useState(1);
+  const [limit] = useState(5);
+  const [search, setSearch] = useState('');
+
+  // Fetch blog categories with pagination and search
+  const { data: categoryList, refetch, isFetching } = useGetBlogCategoryListQuery({
+    page,
+    limit,
+    search,
+  });
 
   const [categoryDelete] = useDeleteBlogCategoryMutation();
 
-  const handleDeleteCategory = async (id) => {
-    const confirmDelete = window.confirm(
-      'Are you sure you want to delete this category?'
-    );
+  const handleDeleteCategory = async () => {
 
-    if (!confirmDelete) return;
+    if (!deleteId) return;
 
     try {
-      const res = await categoryDelete(id).unwrap();
+      const res = await categoryDelete(deleteId).unwrap();
       if (res) {
         showSuccessToast(res?.message);
         refetch();
@@ -110,7 +123,10 @@ export default function Page() {
               <DropdownMenuItem>
                 <div
                   className="flex gap-2 cursor-pointer"
-                  onClick={() => handleDeleteCategory(category?._id)}
+                  onClick={() => {
+                    setDeleteId(category?._id);
+                    setIsOpen(true);
+                  }}
                 >
                   <Trash2 className="w-4 h-4" /> Delete
                 </div>
@@ -121,6 +137,22 @@ export default function Page() {
       },
     },
   ];
+
+  // Handle page change
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
+
+  // Handle search input
+  const handleSearch = (value) => {
+    setSearch(value);
+    setPage(1); // reset to first page on new search
+  };
+
+
+
+
+
 
   return (
     <>
@@ -138,12 +170,27 @@ export default function Page() {
         }}
       />
 
-      <DataTable
+      <DataTableWithPagination
         data={categoryList?.data || []}
         columns={columns}
-        searchColumn={'name'}
+        page={page}
+        limit={limit}
+        totalPage={categoryList?.pagination?.totalPage || 1}
+        total={categoryList?.pagination?.total || 0}
+        onPageChange={handlePageChange}
+        onSearch={handleSearch}
         isFetching={isFetching}
       />
+
+
+      <ConfirmationModal
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        onConfirm={handleDeleteCategory}
+        title="Delete Category"
+        description="Are you sure you want to delete this blog category? This action cannot be undone."
+      />
+
     </>
   );
 }
