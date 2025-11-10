@@ -212,6 +212,12 @@ export const AdminSidebarItems = {
       isActive: true,
       items: [
         {
+          title: 'List of Blog Category',
+          url: '/admin/blog-category/list',
+          icon: List,
+          isActive: true,
+        },
+        {
           title: 'List of Blogs',
           url: '/admin/blog/list',
           icon: List,

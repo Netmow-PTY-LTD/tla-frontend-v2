@@ -171,8 +171,8 @@ const publicApiService = baseApi.injectEndpoints({
         method: 'GET',
         params,
       }),
-     
     }),
+
 
 
   }),
@@ -200,4 +200,5 @@ export const {
   useGetRequestFromClientByIdQuery,
   useCreateRatingMutation,
   useGetCompanyListQuery,
+ 
 } = publicApiService;
