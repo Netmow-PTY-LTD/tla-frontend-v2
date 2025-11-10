@@ -51,9 +51,10 @@ const blogApiService = baseApi.injectEndpoints({
       invalidatesTags: ['BlogCategory', 'BlogCategory-list'],
     }),
     getBlogCategoryList: builder.query({
-      query: () => ({
+      query: (params) => ({
         url: `/blog-category/list`,
         method: 'GET',
+        params
       }),
       providesTags: ['BlogCategory-list'],
     }),
