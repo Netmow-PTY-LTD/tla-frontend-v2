@@ -148,6 +148,8 @@ export const baseApi = createApi({
     'seo',
     'meta',
     'blog',
+    'BlogCategory',
+    'BlogCategory-list',
   ],
   endpoints: () => ({}),
 });
