@@ -211,10 +211,6 @@ export default function EditBlog() {
     }
   };
 
-  console.log('thumbPreviewUrl ', thumbPreviewUrl);
-  console.log('bannerImagePreviewUrl ', bannerImagePreviewUrl);
-  console.log('keywords ', keywords);
-
   return (
     <div className="max-w-[900px] mx-auto py-10">
       <FormProvider {...methods}>
@@ -222,7 +218,7 @@ export default function EditBlog() {
           <Card>
             <CardHeader className="border-b border-gray-300">
               <CardTitle>
-                <h4>Add New Blog</h4>
+                <h4>Update Blog</h4>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6 pt-4">

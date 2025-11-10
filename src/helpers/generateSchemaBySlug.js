@@ -1,5 +1,3 @@
-import { set } from 'date-fns';
-
 export async function generateSchemaBySlug(slug, seo = {}, articleData = {}) {
   const siteUrl = `${process.env.NEXT_PUBLIC_SITE_URL}`;
   const result = await fetch(
@@ -8,7 +6,6 @@ export async function generateSchemaBySlug(slug, seo = {}, articleData = {}) {
 
   const setting = await result.json();
   const logo = setting?.data?.appLogo || `/assets/img/logo.png`;
-  console.log('logo', logo);
 
   const organization = {
     '@type': 'Organization',
@@ -183,6 +180,36 @@ export async function generateSchemaBySlug(slug, seo = {}, articleData = {}) {
                 },
               ],
             },
+          },
+        ],
+      };
+
+    case 'login':
+      return {
+        '@context': 'https://schema.org',
+        '@graph': [
+          organization,
+          {
+            '@type': 'WebPage',
+            name: seo.metaTitle,
+            url: `${siteUrl}/${slug}`,
+            description: seo.metaDescription,
+            publisher: organization,
+          },
+        ],
+      };
+
+    case 'register':
+      return {
+        '@context': 'https://schema.org',
+        '@graph': [
+          organization,
+          {
+            '@type': 'WebPage',
+            name: seo.metaTitle,
+            url: `${siteUrl}/${slug}`,
+            description: seo.metaDescription,
+            publisher: organization,
           },
         ],
       };
