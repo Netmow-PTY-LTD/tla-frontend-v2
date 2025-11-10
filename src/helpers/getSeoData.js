@@ -1,9 +1,11 @@
 export async function getSeoData(seoData, pageKey) {
+  console.log('seoData', seoData);
+  console.log('pageKey', pageKey);
   const slug = seoData.find(
-    (item) => item.pageKey.toLowerCase() === pageKey
+    (item) => item.pageKey.toLowerCase() === pageKey.toLowerCase()
   )?.slug;
-  // Convert pathname (e.g. /about or /contact) to slug (e.g. "about", "contact")
-  //const slug = pathname.replace('/', '') || 'home';
+
+  console.log('slug', slug);
 
   try {
     const res = await fetch(

@@ -1,27 +1,68 @@
-'use client';
-import React from 'react';
-import { useSelector } from 'react-redux';
-import RegisterStepOne from '@/components/auth/RegisterStepOne';
-import RegisterStepTwo from '@/components/auth/RegisterStepTwo';
-import RegisterStepThree from '@/components/auth/RegisterStepThree';
+import RegisterMain from '@/components/auth/RegisterMain';
+import { getSeoData } from '@/helpers/getSeoData';
+import { generateSchemaBySlug } from '@/helpers/generateSchemaBySlug';
+import seoData from '@/data/seoData';
 
-export default function Register() {
-  const step = useSelector((state) => state.lawyerRegistration.step);
+export async function generateMetadata() {
+  const slug = seoData.find(
+    (item) => item.pageKey.toLowerCase() === 'register'
+  )?.slug;
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/seo/by-slug/${slug}`,
+    { cache: 'no-store' }
+  );
+  const seoMetadata = await res.json();
+  const seo = seoMetadata?.data || {};
+
+  const metaTitle = seo.metaTitle || 'Register | TheLawApp';
+  const metaDescription =
+    seo.metaDescription ||
+    'Join TheLawApp and connect with clients in a transparent legal marketplace.';
+  const metaKeywords = seo.metaKeywords || ['register', 'TheLawApp'];
+  const metaImage =
+    seo.metaImage ||
+    'https://thelawapp.syd1.digitaloceanspaces.com/thelawapp/seo/metaimages/about.webp';
+
+  const result = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/admin/settings`
+  );
+  const setting = await result.json();
+  const favicon = setting?.data?.favicon || '/assets/img/favicon.ico';
+
+  return {
+    title: metaTitle,
+    description: metaDescription,
+    keywords: metaKeywords,
+    icons: {
+      icon: favicon,
+    },
+    openGraph: {
+      title: metaTitle,
+      description: metaDescription,
+      images: [{ url: metaImage }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: metaTitle,
+      description: metaDescription,
+      images: [metaImage],
+    },
+  };
+}
+
+export default async function Register() {
+  const seo = await getSeoData(seoData, 'register');
+  const schema = await generateSchemaBySlug('register', seo);
 
   return (
-    <section
-      className="tla-auth-section"
-      // style={{ backgroundImage: `url('/assets/img/hero_bg.png')` }}
-    >
-      <div className="container">
-        <div className="tla-auth-wrapper flex justify-center items-center">
-          <div className="tla-auth-box max-w-[900px] w-full">
-            {step === 1 && <RegisterStepOne />}
-            {step === 2 && <RegisterStepTwo />}
-            {step === 3 && <RegisterStepThree />}
-          </div>
-        </div>
-      </div>
-    </section>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(schema),
+        }}
+      />
+      <RegisterMain />
+    </>
   );
 }
