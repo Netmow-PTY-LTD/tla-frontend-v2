@@ -200,10 +200,24 @@ export const AdminSidebarItems = {
       isActive: true,
     },
     {
-      title: 'SEO Pages',
-      url: '/admin/seo/pages',
+      title: 'SEO',
+      url: '#',
       icon: List,
       isActive: true,
+      items: [
+        {
+          title: 'SEO Pages',
+          url: '/admin/seo/pages',
+          icon: List,
+          isActive: true,
+        },
+        {
+          title: 'Header&Footer',
+          url: '/admin/seo/header-footer-code',
+          icon: List,
+          isActive: true,
+        }
+      ]
     },
     {
       title: 'Blog',
