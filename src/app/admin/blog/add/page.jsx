@@ -20,30 +20,23 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import MultiTagSelector from '@/app/lawyer/settings/profile/_components/MultiTagSelector';
 import MultipleTagsSelector from '@/components/MultipleTagsSelector';
 import SelectInput from '@/components/form/SelectInput';
 import TextareaInput from '@/components/form/TextArea';
 import EditorField from '@/components/inleads-editor/EditorField';
-import { de } from 'date-fns/locale';
-import { useAddBlogMutation } from '@/store/features/admin/blogApiService';
+import {
+  useAddBlogMutation,
+  useGetBlogCategoryListQuery,
+} from '@/store/features/admin/blogApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-
-const skillOptions = [
-  { label: 'JavaScript', value: 'js' },
-  { label: 'TypeScript', value: 'ts' },
-  { label: 'Python', value: 'py' },
-  { label: 'Go', value: 'go' },
-  { label: 'Rust', value: 'rust' },
-];
+import { useRouter } from 'next/navigation';
 
 const blogSchema = z.object({
   title: z.string().min(1, { message: 'Title is required' }),
   slug: z.string().min(1, { message: 'Slug is required' }),
-  //description: z.string().min(1, { message: 'Description is required' }),
-  // bannerImage: z.any(),
+  bannerImage: z.any().optional(),
   categories: z.array(z.string()),
   tags: z.array(z.string()),
   status: z.enum(['published', 'draft']),
@@ -53,11 +46,12 @@ const blogSchema = z.object({
   metaDescription: z
     .string()
     .min(3, { message: 'Meta description must be within 160 characters' }),
-  //metaKeywords: z.array(z.string()),
-  // metaImage: z.any(),
+  metaKeywords: z.array(z.string()).optional(),
+  metaImage: z.any().optional(),
 });
 
 export default function AddBlog() {
+  const router = useRouter();
   const methods = useForm({
     resolver: zodResolver(blogSchema),
     defaultValues: {
@@ -90,6 +84,11 @@ export default function AddBlog() {
   const [keywords, setKeywords] = useState([]);
   const editorRef = useRef(null);
   const [html, setHtml] = useState('');
+
+  const { data: allBlogCategories } = useGetBlogCategoryListQuery();
+  console.log('blogCategories', allBlogCategories);
+
+  const blogCategories = allBlogCategories?.data || [];
 
   const handleAddKeyword = (e) => {
     if (e.key === 'Enter' && keyword.trim() !== '') {
@@ -130,7 +129,7 @@ export default function AddBlog() {
       title,
       slug,
       content: html,
-      categories,
+      category: categories,
       tags,
       status,
       seo: {
@@ -158,6 +157,7 @@ export default function AddBlog() {
       console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'Blog added successfully.');
+        router.push('/admin/blog/list');
         reset();
         setThumbPreviewUrl(null);
         setThumbImageFile(null);
@@ -275,7 +275,10 @@ export default function AddBlog() {
                     <FormLabel>Categories</FormLabel>
                     <FormControl>
                       <MultiSelect
-                        options={skillOptions}
+                        options={blogCategories?.map((category) => ({
+                          label: category?.name,
+                          value: category?._id,
+                        }))}
                         value={field.value}
                         onChange={field.onChange}
                         placeholder="Select categories"

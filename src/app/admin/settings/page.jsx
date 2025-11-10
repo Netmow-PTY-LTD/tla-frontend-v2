@@ -67,10 +67,7 @@ export default function Settings() {
           </span>
         </p>
 
-        <p className="text-gray-700">
-          📌 Maximum Responses Per Lead:{" "}
-          <span className="font-bold">{appSettings?.data?.responseLimitPerLead}</span>
-        </p>
+
       </div>
       <div>
         <SettingsForm appSettings={appSettings} isLoading={isLoading} />

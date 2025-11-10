@@ -40,6 +40,45 @@ const blogApiService = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['blog'],
     }),
+
+    // Blog Category endpoints
+    addBlogCategory: builder.mutation({
+      query: (body) => ({
+        url: '/blog-category/add',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['BlogCategory', 'BlogCategory-list'],
+    }),
+    getBlogCategoryList: builder.query({
+      query: () => ({
+        url: `/blog-category/list`,
+        method: 'GET',
+      }),
+      providesTags: ['BlogCategory-list'],
+    }),
+    getSingleBlogCategory: builder.query({
+      query: (id) => ({
+        url: `/blog-category/${id}`,
+        method: 'GET',
+      }),
+      providesTags: ['BlogCategory'],
+    }),
+    editBlogCategory: builder.mutation({
+      query: (body) => ({
+        url: `/blog-category/edit/${body?.id}`,
+        method: 'PATCH',
+        body,
+      }),
+      invalidatesTags: ['BlogCategory', 'BlogCategory-list'],
+    }),
+    deleteBlogCategory: builder.mutation({
+      query: (id) => ({
+        url: `/blog-category/${id}/delete`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['BlogCategory', 'BlogCategory-list'],
+    }),
   }),
 });
 
@@ -49,4 +88,9 @@ export const {
   useGetSingleBlogByIdQuery,
   useUpdateBlogMutation,
   useDeleteBlogMutation,
+  useAddBlogCategoryMutation,
+  useGetBlogCategoryListQuery,
+  useGetSingleBlogCategoryQuery,
+  useEditBlogCategoryMutation,
+  useDeleteBlogCategoryMutation,
 } = blogApiService;
