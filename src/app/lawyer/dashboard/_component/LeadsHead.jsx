@@ -24,7 +24,7 @@ export default function LeadsHead({
 }) {
   const { data: currentUser } = useAuthUserInfoQuery();
 
-  const {data:locationdata}= useGetAllLocationsQuery();
+  const { data: locationdata } = useGetAllLocationsQuery();
 
   console.log('data', locationdata);
   // console.log('currentUser', currentUser);
@@ -44,17 +44,13 @@ export default function LeadsHead({
     });
   };
 
-
-
-
-
   return (
     <section className={`pr-2 shadow-custom ${isExpanded ? '' : 'pl-4'}`}>
       <div className="flex justify-between items-start gap-4">
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-3">
           <h2
             className={`font-bold ${
-              isExpanded ? 'heading' : 'heading-base'
+              isExpanded ? 'heading' : 'text-[15px]'
             } text-[#0B1C2D] text-left`}
           >
             {total} Matches

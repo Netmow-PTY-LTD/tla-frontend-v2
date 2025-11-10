@@ -26,6 +26,10 @@ import SelectInput from '@/components/form/SelectInput';
 import TextareaInput from '@/components/form/TextArea';
 import EditorField from '@/components/inleads-editor/EditorField';
 import { de } from 'date-fns/locale';
+import { useAddBlogMutation } from '@/store/features/admin/blogApiService';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const skillOptions = [
   { label: 'JavaScript', value: 'js' },
@@ -35,8 +39,27 @@ const skillOptions = [
   { label: 'Rust', value: 'rust' },
 ];
 
+const blogSchema = z.object({
+  title: z.string().min(1, { message: 'Title is required' }),
+  slug: z.string().min(1, { message: 'Slug is required' }),
+  //description: z.string().min(1, { message: 'Description is required' }),
+  // bannerImage: z.any(),
+  categories: z.array(z.string()),
+  tags: z.array(z.string()),
+  status: z.enum(['published', 'draft']),
+  metaTitle: z
+    .string()
+    .max(60, { message: 'Meta title must be within 60 characters' }),
+  metaDescription: z
+    .string()
+    .min(3, { message: 'Meta description must be within 160 characters' }),
+  //metaKeywords: z.array(z.string()),
+  // metaImage: z.any(),
+});
+
 export default function AddBlog() {
   const methods = useForm({
+    resolver: zodResolver(blogSchema),
     defaultValues: {
       title: '',
       slug: '',
@@ -86,11 +109,14 @@ export default function AddBlog() {
     methods.setValue('metaKeywords', newKeywords);
   };
 
+  const [addBlog, { isLoading: isAddBlogLoading }] = useAddBlogMutation();
+
   const onSubmit = async (data) => {
     console.log('Submitted blog data', data);
     const {
       title,
       slug,
+      bannerImage,
       categories,
       tags,
       status,
@@ -103,17 +129,18 @@ export default function AddBlog() {
     const payload = {
       title,
       slug,
-      description: html,
+      content: html,
       categories,
       tags,
       status,
-      metaTitle,
-      metaDescription,
-      metaKeywords,
-      metaImage,
+      seo: {
+        metaTitle,
+        metaDescription,
+        metaKeywords,
+      },
     };
 
-    console.log('payload', payload);
+    console.log('payload to be sent', payload);
 
     const formData = new FormData();
     formData.append('data', JSON.stringify(payload));
@@ -124,6 +151,24 @@ export default function AddBlog() {
 
     if (metaImage instanceof File) {
       formData.append('metaImage', metaImage);
+    }
+
+    try {
+      const res = await addBlog(formData).unwrap();
+      console.log('res', res);
+      if (res?.success) {
+        showSuccessToast(res?.message || 'Blog added successfully.');
+        reset();
+        setThumbPreviewUrl(null);
+        setThumbImageFile(null);
+        setBannerImagePreviewUrl(null);
+        setBannerImageFile(null);
+        setKeywords([]); // Reset keywords
+        setHtml('');
+      }
+    } catch (error) {
+      console.log('error', error);
+      showErrorToast(error?.data?.message || 'Failed to add blog.');
     }
   };
 
@@ -282,6 +327,7 @@ export default function AddBlog() {
                 name="metaDescription"
                 placeholder="Enter meta description"
               />
+
               <div className="space-y-2">
                 <Label>Meta Keywords (max 200 characters)</Label>
                 <Input
@@ -370,11 +416,11 @@ export default function AddBlog() {
 
           {/* Submit Button */}
           <div className="pt-4 text-center">
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? (
+            <Button type="submit" disabled={isAddBlogLoading}>
+              {isAddBlogLoading ? (
                 <div className="flex items-center justify-center gap-2">
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Updating...</span>
+                  <span>Adding...</span>
                 </div>
               ) : (
                 'Add Blog'

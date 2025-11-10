@@ -44,9 +44,9 @@ const blogApiService = baseApi.injectEndpoints({
 });
 
 export const {
-  useAddCategoryMutation,
-  useAllCategoriesQuery,
-  useGetCategoryByIdQuery,
-  useEditCategoryMutation,
-  useDeleteCategoryMutation,
+  useAddBlogMutation,
+  useGetAllBlogsQuery,
+  useGetSingleBlogByIdQuery,
+  useUpdateBlogMutation,
+  useDeleteBlogMutation,
 } = blogApiService;
