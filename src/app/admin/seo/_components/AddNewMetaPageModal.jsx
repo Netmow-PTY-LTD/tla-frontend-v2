@@ -140,113 +140,115 @@ export default function AddNewMetaInfoModal({
   return (
     <Modal open={open} onOpenChange={setOpen}>
       <h3 className="text-lg font-semibold mb-6">Add New Page</h3>
-      <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(handleMetaInfoAdd)}>
-          <div className="space-y-5">
-            <TextInput
-              name="pageKey"
-              label="Page Name"
-              placeholder="Enter page name"
-            />
-            <TextInput name="slug" label="Slug" placeholder="Enter slug" />
-            <TextInput
-              name="metaTitle"
-              label="Meta Title (Max 60 characters)"
-              placeholder="Enter meta title"
-            />
-            <TextareaInput
-              name="metaDescription"
-              label="Meta Description (Max 160 characters)"
-              placeholder="Enter meta description"
-            />
+      <div className="max-h-[calc(100vh-200px)] overflow-y-auto">
+        <FormProvider {...methods}>
+          <form onSubmit={handleSubmit(handleMetaInfoAdd)}>
+            <div className="space-y-5">
+              <TextInput
+                name="pageKey"
+                label="Page Name"
+                placeholder="Enter page name"
+              />
+              <TextInput name="slug" label="Slug" placeholder="Enter slug" />
+              <TextInput
+                name="metaTitle"
+                label="Meta Title (Max 60 characters)"
+                placeholder="Enter meta title"
+              />
+              <TextareaInput
+                name="metaDescription"
+                label="Meta Description (Max 160 characters)"
+                placeholder="Enter meta description"
+              />
 
-            <MultipleTagsSelector
-              name="metaKeywords"
-              placeholder="Type and press enter to add keyword"
-              label="Meta Keywords (max 200 characters)"
-            />
-            <FormField
-              name="metaImage"
-              render={({ field, fieldState }) => (
-                <div>
-                  <label className="text-[var(--color-black)] font-medium block mb-2">
-                    Meta Image <span className="text-red-500">*</span>
-                  </label>
+              <MultipleTagsSelector
+                name="metaKeywords"
+                placeholder="Type and press enter to add keyword"
+                label="Meta Keywords (max 200 characters)"
+              />
+              <FormField
+                name="metaImage"
+                render={({ field, fieldState }) => (
+                  <div>
+                    <label className="text-[var(--color-black)] font-medium block mb-2">
+                      Meta Image <span className="text-red-500">*</span>
+                    </label>
 
-                  {thumbPreviewUrl ? (
-                    <div className="relative inline-block mb-3">
-                      <p className="text-sm font-medium text-gray-700 mb-1">
-                        Preview:
-                      </p>
-                      <div className="relative inline-block">
-                        <img
-                          src={thumbPreviewUrl}
-                          alt="Preview"
-                          className="max-w-[300px] rounded border border-gray-300"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setThumbPreviewUrl(null);
-                            setThumbImageFile(null);
-                            field.onChange(null); // reset RHF field
-                          }}
-                          className="absolute top-1 right-1 bg-white border border-gray-300 text-gray-600 rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-gray-100"
-                          title="Remove"
-                        >
-                          ✕
-                        </button>
+                    {thumbPreviewUrl ? (
+                      <div className="relative inline-block mb-3">
+                        <p className="text-sm font-medium text-gray-700 mb-1">
+                          Preview:
+                        </p>
+                        <div className="relative inline-block">
+                          <img
+                            src={thumbPreviewUrl}
+                            alt="Preview"
+                            className="max-w-[300px] rounded border border-gray-300"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setThumbPreviewUrl(null);
+                              setThumbImageFile(null);
+                              field.onChange(null); // reset RHF field
+                            }}
+                            className="absolute top-1 right-1 bg-white border border-gray-300 text-gray-600 rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-gray-100"
+                            title="Remove"
+                          >
+                            ✕
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  ) : (
-                    <FileUploader
-                      name={field.name}
-                      accept="image/*"
-                      multiple={false}
-                      icon={
-                        <CloudUpload className="w-6 h-6 text-[#00C3C0] mb-2" />
-                      }
-                      width="w-full"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0] || null;
-
-                        // Only update RHF if the file is different
-                        if (file !== field.value) {
-                          field.onChange(file);
+                    ) : (
+                      <FileUploader
+                        name={field.name}
+                        accept="image/*"
+                        multiple={false}
+                        icon={
+                          <CloudUpload className="w-6 h-6 text-[#00C3C0] mb-2" />
                         }
+                        width="w-full"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0] || null;
 
-                        // Local preview state
-                        setThumbImageFile(file);
-                        setThumbPreviewUrl(
-                          file ? URL.createObjectURL(file) : null
-                        );
-                      }}
-                    />
-                  )}
+                          // Only update RHF if the file is different
+                          if (file !== field.value) {
+                            field.onChange(file);
+                          }
 
-                  {fieldState.error && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {fieldState.error.message}
-                    </p>
-                  )}
-                </div>
-              )}
-            />
-          </div>
-          <div className="text-center mt-10">
-            <Button type="submit" disabled={isMetaInfoLoading}>
-              {isMetaInfoLoading ? (
-                <div className="flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Adding...</span>
-                </div>
-              ) : (
-                'Add Meta Info'
-              )}
-            </Button>
-          </div>
-        </form>
-      </FormProvider>
+                          // Local preview state
+                          setThumbImageFile(file);
+                          setThumbPreviewUrl(
+                            file ? URL.createObjectURL(file) : null
+                          );
+                        }}
+                      />
+                    )}
+
+                    {fieldState.error && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {fieldState.error.message}
+                      </p>
+                    )}
+                  </div>
+                )}
+              />
+            </div>
+            <div className="text-center mt-10">
+              <Button type="submit" disabled={isMetaInfoLoading}>
+                {isMetaInfoLoading ? (
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Adding...</span>
+                  </div>
+                ) : (
+                  'Add Meta Info'
+                )}
+              </Button>
+            </div>
+          </form>
+        </FormProvider>
+      </div>
     </Modal>
   );
 }

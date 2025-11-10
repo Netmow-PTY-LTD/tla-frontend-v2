@@ -39,6 +39,14 @@ const seoMetaApiService = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['seo', 'meta'],
     }),
+
+    getMetadataBySlug: builder.query({
+      query: (slug) => ({
+        url: `/seo/by-slug/${slug}`,
+        method: 'GET',
+      }),
+      providesTags: ['seo', 'meta'],
+    }),
   }),
 });
 
@@ -48,4 +56,5 @@ export const {
   useGetSingleMetaInfoQuery,
   useEditMetaInfoMutation,
   useDeleteMetaInfoMutation,
+  useGetMetadataBySlugQuery,
 } = seoMetaApiService;
