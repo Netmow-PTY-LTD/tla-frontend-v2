@@ -79,6 +79,13 @@ export default function Page() {
             ),
         },
         {
+            accessorKey: 'notes',
+            header: 'Notes',
+            cell: ({ row }) => (
+                <div className="max-w-[300px] truncate font-mono">{row.getValue('notes')}</div>
+            ),
+        },
+        {
             accessorKey: 'isActive',
             header: 'Status',
             cell: ({ row }) => (
@@ -146,6 +153,7 @@ export default function Page() {
         },
     ];
 
+
     // Handle page change
     const handlePageChange = (newPage) => {
         setPage(newPage);
@@ -162,7 +170,7 @@ export default function Page() {
             <div className="flex justify-between items-center mb-2">
                 <h2 className="text-2xl font-bold">Header/Footer Codes</h2>
                 {/* <Button onClick={() => setAddOpen(true)}>Add Code</Button> */}
-               <Link href={'/admin/seo/header-footer-code/add'}> <Button>Add Code</Button></Link>
+                <Link href={'/admin/seo/header-footer-code/add'}> <Button>Add Code</Button></Link>
             </div>
             <AddCodeModal open={addOpen} onClose={() => setAddOpen(false)} />
             <EditCodeModal

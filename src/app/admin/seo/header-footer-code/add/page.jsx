@@ -17,6 +17,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { showSuccessToast, showErrorToast } from '@/components/common/toasts';
 import { useCreateHeaderFooterCodeMutation } from '@/store/features/seo/seoApi';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
     title: z.string().min(2, {
@@ -31,6 +32,7 @@ const formSchema = z.object({
 });
 
 export default function AddCodePage() {
+    const router = useRouter();
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -47,8 +49,11 @@ export default function AddCodePage() {
     async function onSubmit(values) {
         try {
             const result = await addCode(values).unwrap();
-            showSuccessToast(result?.message || 'Code added successfully!');
-            form.reset();
+            if (result.success) {
+                showSuccessToast(result?.message || 'Code added successfully!');
+                form.reset();
+                router.push('/admin/seo/header-footer-code')
+            }
         } catch (error) {
             const fallbackMessage = 'An unexpected error occurred.';
             const message =
@@ -112,7 +117,7 @@ export default function AddCodePage() {
                                 const textarea = e.target;
                                 textarea.style.height = 'auto'; // reset height
                                 textarea.style.height = textarea.scrollHeight + 'px'; // adjust to new content
-                                field.onChange(e); 
+                                field.onChange(e);
                             };
 
                             // Optional: auto-adjust height when default value is loaded

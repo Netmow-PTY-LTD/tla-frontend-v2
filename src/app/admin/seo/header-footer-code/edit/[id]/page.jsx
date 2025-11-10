@@ -40,8 +40,6 @@ export default function EditCodePage() {
   const params = useParams();
   const id = params?.id;
 
-
-
   const [localLoading, setLocalLoading] = useState(true);
 
   const form = useForm({
@@ -49,6 +47,7 @@ export default function EditCodePage() {
     defaultValues: {
       title: '',
       code: '',
+      notes: '',
       position: 'header',
       isActive: true,
     },
@@ -77,6 +76,7 @@ export default function EditCodePage() {
       form.reset({
         title: singleCode?.data?.title || '',
         code: singleCode?.data?.code || '',
+        notes: singleCode?.data?.notes || '',
         position: singleCode?.data?.position || 'header',
         isActive: singleCode?.data?.isActive,
       });
@@ -102,7 +102,7 @@ export default function EditCodePage() {
     <div className="max-w-2xl mx-auto p-8 bg-white rounded-lg shadow">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
-          <Link href="/dashboard/seo">
+          <Link href="/admin/seo/header-footer-code">
             <Button variant="ghost" size="icon">
               <ArrowLeft className="w-5 h-5" />
             </Button>

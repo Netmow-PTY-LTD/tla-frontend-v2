@@ -1,56 +1,62 @@
+
 import { baseApi } from '../../baseApi/baseApi';
 
-const seoApi = baseApi.injectEndpoints({
-  endpoints: (builder) => ({
-    getHeaderFooterCodes: builder.query({
-      query: ({ page = 1, limit = 10, search = '' }) => ({
-        url: '/seo/header-footer-codes',
-        method: 'GET',
-        params: {
-          page,
-          limit,
-          search,
-        },
-      }),
-      providesTags: ['seo'],
+const headerFooterApi = baseApi.injectEndpoints({
+    endpoints: (builder) => ({
+        //  Get all header/footer codes
+        getHeaderFooterCodes: builder.query({
+            query: ({ page = 1, limit = 10, search = '' }) => ({
+                url: '/header-footer-codes/list',
+                method: 'GET',
+                params: { page, limit, search },
+            }),
+            providesTags: ['headerFooterCodes'],
+        }),
+
+        //  Get single header/footer code by ID
+        getHeaderFooterCodeById: builder.query({
+            query: (id) => ({
+                url: `/header-footer-codes/${id}`,
+                method: 'GET',
+            }),
+            providesTags: ['headerFooterCodes'],
+        }),
+
+        //  Create new header/footer code
+        createHeaderFooterCode: builder.mutation({
+            query: (data) => ({
+                url: '/header-footer-codes/add',
+                method: 'POST',
+                body: data,
+            }),
+            invalidatesTags: ['headerFooterCodes'],
+        }),
+
+        //  Update header/footer code
+        updateHeaderFooterCode: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `/header-footer-codes/${id}/update`,
+                method: 'PATCH',
+                body: data,
+            }),
+            invalidatesTags: ['headerFooterCodes'],
+        }),
+
+        //  Delete header/footer code
+        deleteHeaderFooterCode: builder.mutation({
+            query: (id) => ({
+                url: `/header-footer-codes/${id}/delete`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['headerFooterCodes'],
+        }),
     }),
-    getHeaderFooterCodeById: builder.query({
-      query: (id) => ({
-        url: `/seo/header-footer-codes/${id}`,
-        method: 'GET',
-      }),
-      providesTags: ['seo'],
-    }),
-    createHeaderFooterCode: builder.mutation({
-      query: (data) => ({
-        url: '/seo/header-footer-codes',
-        method: 'POST',
-        body: data,
-      }),
-      invalidatesTags: ['seo'],
-    }),
-    updateHeaderFooterCode: builder.mutation({
-      query: ({ id, data }) => ({
-        url: `/seo/header-footer-codes/${id}`,
-        method: 'PUT',
-        body: data,
-      }),
-      invalidatesTags: ['seo'],
-    }),
-    deleteHeaderFooterCode: builder.mutation({
-      query: (id) => ({
-        url: `/seo/header-footer-codes/${id}`,
-        method: 'DELETE',
-      }),
-      invalidatesTags: ['seo'],
-    }),
-  }),
 });
 
 export const {
-  useGetHeaderFooterCodesQuery,
-  useGetHeaderFooterCodeByIdQuery,
-  useCreateHeaderFooterCodeMutation,
-  useUpdateHeaderFooterCodeMutation,
-  useDeleteHeaderFooterCodeMutation,
-} = seoApi;
+    useGetHeaderFooterCodesQuery,
+    useGetHeaderFooterCodeByIdQuery,
+    useCreateHeaderFooterCodeMutation,
+    useUpdateHeaderFooterCodeMutation,
+    useDeleteHeaderFooterCodeMutation,
+} = headerFooterApi;
