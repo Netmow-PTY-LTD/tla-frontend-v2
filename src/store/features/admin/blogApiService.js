@@ -80,26 +80,15 @@ const blogApiService = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['BlogCategory', 'BlogCategory-list'],
     }),
-
-
-
-
-
-
-
-
-
-
-
   }),
 });
 
 export const {
-  useAddCategoryMutation,
-  useAllCategoriesQuery,
-  useGetCategoryByIdQuery,
-  useEditCategoryMutation,
-  useDeleteCategoryMutation,
+  useAddBlogMutation,
+  useGetAllBlogsQuery,
+  useGetSingleBlogByIdQuery,
+  useUpdateBlogMutation,
+  useDeleteBlogMutation,
   useAddBlogCategoryMutation,
   useGetBlogCategoryListQuery,
   useGetSingleBlogCategoryQuery,
