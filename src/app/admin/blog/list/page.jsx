@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
+import { truncateText } from '@/helpers/truncateText';
 
 export default function BlogList() {
   const [page, setPage] = useState(1);
@@ -70,12 +71,18 @@ export default function BlogList() {
       ),
     },
     {
-      accessorKey: 'content',
+      accessorKey: 'shortDescription',
       header: 'Description',
       cell: ({ row }) => (
-        <div className="max-w-[300px] truncate">{row.getValue('content')}</div>
+        <div
+          className="max-w-[300px] truncate"
+          dangerouslySetInnerHTML={{
+            __html: truncateText(row.getValue('shortDescription'), 1000),
+          }}
+        ></div>
       ),
     },
+
     {
       accessorKey: 'bannerImage',
       header: 'Banner Image',
