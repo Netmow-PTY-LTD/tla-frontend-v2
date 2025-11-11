@@ -144,12 +144,12 @@ export default function Page() {
         const profile = row.original.profile;
         const [uploadProfilePicture, { isLoading }] =
           useUpdateUserDefalultPicMutation();
-        console.log('profile.profilePicture', profile);
+        // console.log('profile.profilePicture', profile);
         const handleUpload = async (e) => {
           const file = e.target.files?.[0];
           if (file) {
             const webpFile = await resizeAndConvertToWebP(file, 500, 0.8);
-            console.log('Upload image for:', profile, file);
+            // console.log('Upload image for:', profile, file);
             try {
               const formData = new FormData();
               // Append the image file
@@ -165,9 +165,9 @@ export default function Page() {
               if (res.success) {
                 refetch()
 
-                console.log('Upload successful');
+                // console.log('Upload successful');
               }
-              console.log('Upload successful');
+              // console.log('Upload successful');
               // Optionally, update row locally or refetch table
             } catch (err) {
               console.error('Upload failed', err);

@@ -63,13 +63,13 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
       type: 'elitePro',
     };
 
-    console.log('Subscription Details:', subscriptionDetails);
+    // console.log('Subscription Details:', subscriptionDetails);
 
     try {
       const result = await subscriptionSubscription(
         subscriptionDetails
       ).unwrap();
-      console.log('Subscription result:', result);
+      // console.log('Subscription result:', result);
       if (result.success) {
         showSuccessToast(result?.message);
       } else {

@@ -216,7 +216,7 @@ export default function RegisterStepThree() {
   console.log('registrationState', registrationState);
 
   const handleSubmit = async (data) => {
-    console.log('data', data);
+    // console.log('data', data);
     try {
       const result = await authRegister(registrationState).unwrap();
       if (result?.success && result?.token) {
@@ -244,11 +244,11 @@ export default function RegisterStepThree() {
           result?.errorSources?.[0]?.message ||
           result?.message ||
           'Registration failed.';
-        console.log('Registration error:', result);
+        // console.log('Registration error:', result);
         showErrorToast(errorMessage || 'Something went wrong');
       }
     } catch (error) {
-      console.log('Registration error:', error);
+      // console.log('Registration error:', error);
       console.error('❌ Registration API Error:', error);
       showErrorToast(error?.data?.message || 'Server error');
     }
@@ -529,16 +529,6 @@ export default function RegisterStepThree() {
                                   // Force form re-render
                                   form.trigger('soloPractitioner');
 
-                                  console.log(
-                                    'Radio button clicked:',
-                                    option.label,
-                                    'value:',
-                                    option.value
-                                  );
-                                  console.log(
-                                    'Form will show company section:',
-                                    !option.value
-                                  );
 
                                   dispatch(
                                     updateNestedField({
@@ -617,7 +607,7 @@ export default function RegisterStepThree() {
                     control={form.control}
                     name="company_name"
                     render={({ field }) => {
-                      console.log('company_name field', field);
+                    
                       return (
                         <FormItem>
                           <FormLabel>Select Company</FormLabel>

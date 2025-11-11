@@ -28,7 +28,7 @@ export default function Photos() {
   const [updatePhotosData, { isLoading: photosIsLoading }] =
     useUpdateUserDataMutation();
 
-    console.log('test data loading ==>',userInfo)
+    // console.log('test data loading ==>',userInfo)
 
   const profile = userInfo?.data?.profile;
   if (isLoading)
@@ -67,7 +67,7 @@ export default function Photos() {
       const formData = new FormData();
       const { photos, videos } = data;
 
-      console.log('Form data:', data);
+      // console.log('Form data:', data);
 
       const payload = {
         photos: {
@@ -92,7 +92,7 @@ export default function Photos() {
       // ✅ Log files correctly
 
       const res = await updatePhotosData(formData).unwrap();
-      console.log('response ==>',res)
+      // console.log('response ==>',res)
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Update successful');
       }

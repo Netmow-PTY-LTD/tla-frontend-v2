@@ -52,7 +52,7 @@ export default function PublicProfile() {
   };
 
   const handleSubmit = async (values) => {
-    console.log('Submitting values:', values);
+    // console.log('Submitting values:', values);
     const { years, months, experience, experienceHighlight } = values;
 
     const payload = {
@@ -75,7 +75,7 @@ export default function PublicProfile() {
         showSuccessToast(res?.message || 'Service updated successfully');
         refetch();
       }
-      console.log('Update response:', res);
+      // console.log('Update response:', res);
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);

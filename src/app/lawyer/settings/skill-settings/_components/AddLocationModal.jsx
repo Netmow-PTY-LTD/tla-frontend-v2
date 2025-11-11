@@ -79,11 +79,11 @@ const AddLocationModal = ({
       locationType: 'distance_wise',
     };
 
-    console.log('Submitting distance location...', payload);
+    // console.log('Submitting distance location...', payload);
 
     try {
       const res = await addLocation(payload).unwrap();
-      console.log('Location response:', res);
+      // console.log('Location response:', res);
       if (res) {
         showSuccessToast(
           res?.message || 'Distance location added successfully!'
@@ -115,13 +115,13 @@ const AddLocationModal = ({
       locationType: 'travel_time',
     };
 
-    console.log('Travel time payload:', payload);
+    // console.log('Travel time payload:', payload);
     // Handle travel time location submission logic here
     // showSuccessToast('Travel time location added successfully!');
     // resetModal();
     try {
       const res = await addLocation(payload).unwrap();
-      console.log('Location based on travel time response:', res);
+      // console.log('Location based on travel time response:', res);
       if (res) {
         showSuccessToast(
           res?.message || 'Location based on travel time added successfully!'
@@ -151,14 +151,14 @@ const AddLocationModal = ({
       serviceIds: nationwideSelectedServices,
       locationType: 'nation_wide',
     };
-    console.log('Nationwide payload:', payload);
+    // console.log('Nationwide payload:', payload);
     // Handle nationwide location submission logic here
     // showSuccessToast('Nationwide location added successfully!');
     // resetModal();
 
     try {
       const res = await addLocation(payload).unwrap();
-      console.log('Location based on nationwide selection response:', res);
+      // console.log('Location based on nationwide selection response:', res);
       if (res) {
         showSuccessToast(
           res?.message ||

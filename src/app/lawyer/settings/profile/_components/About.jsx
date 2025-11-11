@@ -121,10 +121,10 @@ export default function About() {
   const [cancelLawyerMembership] = useCancelLawyerMembershipMutation();
 
   const handleCancelMembership = async (firmProfileId) => {
-    console.log('Cancelling membership for firmProfileId:', firmProfileId);
+    // console.log('Cancelling membership for firmProfileId:', firmProfileId);
     try {
       const response = await cancelLawyerMembership({ firmProfileId }).unwrap();
-      console.log('Cancel membership response:', response);
+      // console.log('Cancel membership response:', response);
       if (response?.success) {
         showSuccessToast(
           response?.message || 'Membership cancelled successfully'
@@ -142,8 +142,8 @@ export default function About() {
   };
 
   const onSubmit = async (data) => {
-    console.log('data', data);
-    console.log('isAccessibleByOtherUsers:', data.isAccessibleByOtherUsers);
+    // console.log('data', data);
+    // console.log('isAccessibleByOtherUsers:', data.isAccessibleByOtherUsers);
     try {
       const formData = new FormData();
       const {
@@ -186,7 +186,7 @@ export default function About() {
         companyInfo: companyInfo || undefined,
       };
 
-      console.log('Payload to be sent:', payload);
+      // console.log('Payload to be sent:', payload);
 
       // Append serialized JSON data
       formData.append('data', JSON.stringify(payload));
@@ -200,12 +200,12 @@ export default function About() {
         formData.append('userProfileLogo', userProfileLogo);
       }
 
-      console.log(JSON.parse(formData.get('data')));
+      // console.log(JSON.parse(formData.get('data')));
       const res = await updateUserData(formData).unwrap();
       if (res?.success === true) {
         showSuccessToast(res?.message || 'update successful');
       }
-      console.log('Update response:', res);
+      // console.log('Update response:', res);
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);

@@ -50,12 +50,11 @@ export default function MultipleFileUploaderTest({
         formData.append('photos', files[i]); // field name should match backend
       }
 
-      console.log('check photos data==>', formData.get('photos'));
 
       // ✅ Log files correctly
 
       const res = await updatePhotosData(formData).unwrap();
-      console.log('res', res);
+  
 
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Update successful');
@@ -73,12 +72,12 @@ export default function MultipleFileUploaderTest({
     useDeleteProfileVideoUrlMutation();
 
   const handleDeleteProfilePhoto = async (url) => {
-    console.log('url', url);
+
     const payload = { type: 'photos', url };
-    console.log('payload', payload);
+  
     try {
       const res = await deleteProfilePhoto(payload).unwrap();
-      console.log('res', res);
+   
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Deleted successfully');
         setPreviews(res?.data?.photos);

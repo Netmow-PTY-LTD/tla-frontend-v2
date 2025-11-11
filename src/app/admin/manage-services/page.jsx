@@ -235,7 +235,7 @@ export default function ManageServices() {
       formData.append('bannerImage', bannerImageFile);
     }
 
-    console.log('formdata', formData);
+    // console.log('formdata', formData);
     try {
       const res = await manageService(formData).unwrap();
       if (res) {

@@ -55,7 +55,7 @@ export default function DistanceMap({
   // Geocode on demand
   const geocodeLocation = useCallback(
     async (location, map) => {
-      console.log('Geocoding location:', location);
+      // console.log('Geocoding location:', location);
       try {
         const res = await fetch(
           `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(

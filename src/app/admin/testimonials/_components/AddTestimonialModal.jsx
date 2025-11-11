@@ -29,7 +29,7 @@ export default function AddTestimonialModal({ open, setOpen, refetchTestimonialD
   const [addTestimonial] = useCreateTestimonialMutation();
 
   const handleAddTestimonial = async (values) => {
-    console.log('values', values);
+    // console.log('values', values);
 
     const { name, comment, image } = values;
 
@@ -43,14 +43,14 @@ export default function AddTestimonialModal({ open, setOpen, refetchTestimonialD
 
     try {
       const res = await addTestimonial(formData).unwrap();
-      console.log('res', res);
+      // console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'Testimonial added successfully');
         refetchTestimonialData();
         setOpen(false);
       }
     } catch (error) {
-      console.log('error', error);
+      // console.log('error', error);
     }
   };
 

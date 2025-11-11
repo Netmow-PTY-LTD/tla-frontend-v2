@@ -92,7 +92,7 @@ export default function AddNewMetaInfoModal({
   const [addMetaInfo, { isLoading: isMetaInfoLoading }] =
     useAddMetaInfoMutation();
   const handleMetaInfoAdd = async (values) => {
-    console.log('values', values);
+    // console.log('values', values);
     const {
       pageKey,
       slug,
@@ -114,7 +114,7 @@ export default function AddNewMetaInfoModal({
       metaKeywords,
     };
 
-    console.log('payload to send', payload);
+    // console.log('payload to send', payload);
 
     formData.append('data', JSON.stringify(payload));
 
@@ -125,7 +125,7 @@ export default function AddNewMetaInfoModal({
 
     try {
       const res = await addMetaInfo(formData).unwrap();
-      console.log('Meta info response', res);
+      // console.log('Meta info response', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'Meta info added successfully');
         refetchMetaInfo();

@@ -8,7 +8,7 @@ export default function AllowStaffsAccess() {
 
   const handleToggle = (e) => {
     // Handle the toggle logic here
-    console.log('Checkbox toggled:', e.target.checked);
+    // console.log('Checkbox toggled:', e.target.checked);
   };
   return (
     <div className="w-full bg-white rounded-lg border border-gray-200 shadow-sm p-5 sm:p-6 flex items-start gap-3 mt-10">

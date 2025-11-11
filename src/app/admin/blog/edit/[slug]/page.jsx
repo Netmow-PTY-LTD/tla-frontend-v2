@@ -143,7 +143,7 @@ export default function EditBlog() {
     useUpdateBlogMutation();
 
   const onSubmit = async (data) => {
-    console.log('Submitted blog data', data);
+    // console.log('Submitted blog data', data);
     const {
       title,
       slug,
@@ -178,7 +178,7 @@ export default function EditBlog() {
       },
     };
 
-    console.log('payload to be sent', payload);
+    // console.log('payload to be sent', payload);
 
     const formData = new FormData();
     formData.append('data', JSON.stringify(payload));
@@ -200,13 +200,13 @@ export default function EditBlog() {
         blogId: blog?._id,
         data: formData,
       }).unwrap();
-      console.log('res', res);
+      // console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'Blog Updated successfully.');
         router.push('/admin/blog/list');
       }
     } catch (error) {
-      console.log('error', error);
+      // console.log('error', error);
       showErrorToast(error?.data?.message || 'Failed to update blog.');
     }
   };

@@ -67,7 +67,7 @@ export default function RegisterStepOne() {
   );
 
   useEffect(() => {
-    console.log('Updating country to', defaultCountry);
+    // console.log('Updating country to', defaultCountry);
     if (defaultCountry) {
       dispatch(
         updateNestedField({
@@ -98,7 +98,7 @@ export default function RegisterStepOne() {
   const { control, handleSubmit } = form;
 
   const onSubmit = (data) => {
-    console.log('data', data);
+    // console.log('data', data);
     if (!selectedServiceIds.length) {
       setHasServiceError(true);
       return;

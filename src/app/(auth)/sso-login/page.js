@@ -18,7 +18,7 @@ export default function SsoLoginPage() {
 
     const [ssoLogin] = useSsoLoginMutation();
 
-    console.log('query token', searchParams.get('token'));
+    // console.log('query token', searchParams.get('token'));
 
     useEffect(() => {
         const token = searchParams.get('token'); //  Get token from URL
@@ -31,7 +31,7 @@ export default function SsoLoginPage() {
             try {
                 const res = await ssoLogin({ token }).unwrap();
 
-                console.log('SSO Login Response:', res);
+                // console.log('SSO Login Response:', res);
 
                 if (res?.success === true) {
                     showSuccessToast(res?.message || 'Login successful');

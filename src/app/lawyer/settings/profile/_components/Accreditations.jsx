@@ -17,7 +17,7 @@ export default function Accreditations() {
   const [open, setOpen] = useState(false);
 
   const handleEditClick = (accreditation) => () => {
-    console.log('accreditation', accreditation);
+    // console.log('accreditation', accreditation);
     setSelectedAccreditation(accreditation);
     setIsEditModalOpen(true);
   };
@@ -54,7 +54,7 @@ export default function Accreditations() {
   };
 
   const handleSubmit = async (values) => {
-    console.log('Form values:', values);
+    // console.log('Form values:', values);
     const { institution, address, certificate_title, attachment } = values;
 
     const payload = {
@@ -65,7 +65,7 @@ export default function Accreditations() {
       },
     };
 
-    console.log('payload', payload);
+    // console.log('payload', payload);
 
     const formData = new FormData();
     formData.append('data', JSON.stringify(payload));
@@ -74,7 +74,7 @@ export default function Accreditations() {
       formData.append('attachment', attachment[0]);
     }
 
-    console.log('data', JSON.parse(formData?.get('data')));
+    // console.log('data', JSON.parse(formData?.get('data')));
 
     try {
       const res = await updateUserData(formData).unwrap();
@@ -85,7 +85,7 @@ export default function Accreditations() {
         refetch();
         setOpen(false);
       }
-      console.log('Update response:', res);
+      // console.log('Update response:', res);
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);
@@ -94,7 +94,7 @@ export default function Accreditations() {
   };
 
   const handleUpdate = async (values) => {
-    console.log('Form values:', values);
+    // console.log('Form values:', values);
     const { institution, address, certificate_title, attachment } = values;
 
     const payload = {
@@ -106,7 +106,7 @@ export default function Accreditations() {
       },
     };
 
-    console.log('payload', payload);
+    // console.log('payload', payload);
 
     const formData = new FormData();
     formData.append('data', JSON.stringify(payload));
@@ -121,7 +121,7 @@ export default function Accreditations() {
       formData.set('data', JSON.stringify(payload));
     }
 
-    console.log('data', JSON.parse(formData?.get('data')));
+    // console.log('data', JSON.parse(formData?.get('data')));
 
     try {
       const res = await updateUserData(formData).unwrap();
@@ -130,11 +130,11 @@ export default function Accreditations() {
         refetch();
         setIsEditModalOpen(false);
       }
-      console.log('Update response:', res);
+      // console.log('Update response:', res);
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);
-      console.error('Error submitting form:', error);
+      // console.error('Error submitting form:', error);
     }
   };
 

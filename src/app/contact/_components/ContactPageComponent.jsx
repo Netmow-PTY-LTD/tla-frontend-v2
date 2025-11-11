@@ -43,7 +43,7 @@ export default function ContactPageComponent() {
         showSuccessToast(res?.message || 'Message sent successfully');
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       showErrorToast(error?.data?.message || 'Failed to send message');
     }
   };

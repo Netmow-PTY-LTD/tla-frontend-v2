@@ -56,7 +56,7 @@ export default function ListOfPages() {
   const handleDeletePage = async (id) => {
     try {
       const res = await deletePage(id).unwrap();
-      console.log('res', res);
+      // console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'Page deleted successfully');
         setDeleteModalId(null);

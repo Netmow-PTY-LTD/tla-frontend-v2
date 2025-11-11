@@ -117,13 +117,13 @@ export default function VideoGalleryTest({ userInfo, refetch }) {
         },
       };
 
-      console.log('payload', payload);
+      // console.log('payload', payload);
 
       const formData = new FormData();
       formData.append('data', JSON.stringify(payload));
 
       const res = await updatePhotosData(formData).unwrap();
-      console.log('res', res);
+      // console.log('res', res);
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Update successful');
         refetch();
@@ -140,12 +140,12 @@ export default function VideoGalleryTest({ userInfo, refetch }) {
     useDeleteProfileVideoUrlMutation();
 
   const handleDeleteProfileVideo = async (url) => {
-    console.log('url', url);
+    // console.log('url', url);
     const payload = { type: 'videos', url };
-    console.log('payload', payload);
+    // console.log('payload', payload);
     try {
       const res = await deleteProfileVideo(payload).unwrap();
-      console.log('res', res);
+      // console.log('res', res);
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Deleted successfully');
         refetch();
