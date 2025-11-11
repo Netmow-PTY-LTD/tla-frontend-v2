@@ -15,15 +15,16 @@ export async function middleware(request) {
 
   // ✅ Redirect logged-in users away from /login or /register
 
-
   // Function to set cache prevention headers
   const noCacheResponse = (response) => {
-    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    response.headers.set(
+      'Cache-Control',
+      'no-store, no-cache, must-revalidate, proxy-revalidate'
+    );
     response.headers.set('Pragma', 'no-cache');
     response.headers.set('Expires', '0');
     return response;
   };
-
 
   const publicAuthPages = ['/login', '/register'];
   if (publicAuthPages.includes(pathname)) {
@@ -40,10 +41,11 @@ export async function middleware(request) {
         const redirectPath = dashboardRoutes[role] || '/';
 
         // ✅ Return early — stop further execution
-        const response = NextResponse.redirect(new URL(redirectPath, request.url));
+        const response = NextResponse.redirect(
+          new URL(redirectPath, request.url)
+        );
 
         return noCacheResponse(response);
-
       }
     }
 
@@ -57,7 +59,6 @@ export async function middleware(request) {
   const isProtected = protectedRoutes.some((route) =>
     pathname.startsWith(route)
   );
-
 
   // If route is not protected, allow
   if (!isProtected) {
@@ -75,6 +76,7 @@ export async function middleware(request) {
 
   if (!user) {
     // console.log('❌ Token failed verification:', token);
+    //console.log('❌ Token failed verification:', token);
 
     return noCacheResponse(response);
   }
@@ -119,7 +121,6 @@ export async function middleware(request) {
   //   return NextResponse.redirect(new URL(`/${role}`, request.url));
   // }
 
-
   if (!isAllowed) {
     let redirectPath = `/${role}`;
     if (role === 'lawyer') redirectPath = '/lawyer/dashboard';
@@ -127,7 +128,6 @@ export async function middleware(request) {
     const response = NextResponse.redirect(new URL(redirectPath, request.url));
     return noCacheResponse(response);
   }
-
 
   const response = NextResponse.next();
   return noCacheResponse(response);

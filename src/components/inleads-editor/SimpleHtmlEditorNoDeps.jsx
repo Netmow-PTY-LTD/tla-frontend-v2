@@ -14,6 +14,7 @@ import Table from './editor/Table';
 import TableContextMenu from './editor/TableContextMenu';
 import TextColorGroup from './editor/TextColorGroup';
 import BackgroundColorGroup from './editor/BackgroundColorGroup';
+import CleanGroup from './editor/CleanGroup';
 
 export default function SimpleHtmlEditorNoDeps({
   initialHTML = '<p></p>',
@@ -355,8 +356,9 @@ export default function SimpleHtmlEditorNoDeps({
     },
     toolbar: {
       display: 'flex',
+      flexWrap: 'wrap',
       alignItems: 'center',
-      gap: 18,
+      gap: 15,
       padding: '12px 18px',
       background: '#fff',
     },
@@ -406,6 +408,7 @@ export default function SimpleHtmlEditorNoDeps({
             <Table />
 
             <TableContextMenu />
+            <CleanGroup />
           </div>
         </div>
       </EditorProvider>

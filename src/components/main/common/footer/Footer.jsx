@@ -75,11 +75,8 @@ export default function Footer() {
                         <Link href="/contact">Contact</Link>
                       </li>
                       <li>
-                        <Link
-                          href="https://press.thelawapp.com.au/"
-                          target="_blank"
-                        >
-                          Press
+                        <Link href="/blog" target="_blank">
+                          Blog
                         </Link>
                       </li>
                       {/* <li>
