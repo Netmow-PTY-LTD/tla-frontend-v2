@@ -54,22 +54,28 @@ export default function ProfileDropDown() {
    * - Redirects the user to the login page using the Next.js router.
    */
   const [authLogout] = useAuthLogOutMutation();
+
   const handleLogout = async () => {
     try {
-      await authLogout().unwrap();
+      disconnectSocket();
+      await authLogout().unwrap(); // wait until the logout API finishes
     } catch (error) {
-      console.log(error);
+      console.error("Logout API failed:", error);
     }
-    disconnectSocket();
+
     dispatch(logOut());
-
-    await persistor.purge();
-
-    localStorage.clear();
-
     dispatch(baseApi.util.resetApiState());
     router.push('/login');
   };
+
+
+
+
+
+
+
+
+
 
   return (
     <div className="flex items-center">
