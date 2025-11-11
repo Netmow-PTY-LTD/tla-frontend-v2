@@ -1,72 +1,48 @@
+// /app/components/EditorField.jsx
 'use client';
-import React, {
-  useId,
-  useState,
-  useEffect,
-  forwardRef,
-  useImperativeHandle,
-} from 'react';
+import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import SimpleHtmlEditorNoDeps from './SimpleHtmlEditorNoDeps';
 
 const EditorField = forwardRef(function EditorField(
-  {
-    name = 'content',
-    value,
-    defaultValue = '<p></p>',
-    onChange,
-    label,
-    placeholder = 'Type here…',
-    height = 420,
-    required = false,
-    disabled = false,
-  },
+  { name, label, value, onChange, placeholder = ' ', height = 420, required },
   ref
 ) {
-  const htmlId = useId();
-  const controlled = value !== undefined;
-  const [localHtml, setLocalHtml] = useState(controlled ? value : defaultValue);
+  const hiddenRef = useRef(null);
 
-  useEffect(() => {
-    if (controlled) setLocalHtml(value);
-  }, [controlled, value]);
-
-  const handleChange = (next) => {
-    if (!controlled) setLocalHtml(next);
-    onChange?.(next);
-  };
-
+  // expose a couple of helpers if you like
   useImperativeHandle(ref, () => ({
-    getHTML: () => (controlled ? value : localHtml),
-    setHTML: (h) => (controlled ? onChange?.(h) : setLocalHtml(h)),
-    clear: () => (controlled ? onChange?.('<p></p>') : setLocalHtml('<p></p>')),
+    clear: () => onChange && onChange(''),
+    focus: () => document.querySelector('[contenteditable="true"]')?.focus(),
+    // forward the hidden input node (RHF attaches its ref here)
+    input: hiddenRef.current,
   }));
 
   return (
-    <div style={{ display: 'grid', gap: 8 }}>
+    <div style={{ display: 'grid', gap: 6 }}>
       {label && (
-        <label
-          htmlFor={htmlId}
-          style={{ fontSize: 14, color: '#374151', fontWeight: 600 }}
-        >
-          {label}{' '}
-          {required ? <span style={{ color: '#ef4444' }}>*</span> : null}
+        <label style={{ fontSize: 14, fontWeight: 600 }}>
+          {label} {required && <span style={{ color: '#ef4444' }}>*</span>}
         </label>
       )}
 
-      <SimpleHtmlEditorNoDeps
-        initialHTML={localHtml}
-        onChange={handleChange}
-        placeholder={placeholder}
-        height={height}
-        readOnly={disabled}
-      />
+      {/* Your editor (controlled) */}
+      <div className="rte">
+        <SimpleHtmlEditorNoDeps
+          initialHTML={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          height={height}
+        />
+      </div>
 
+      {/* Hidden input that RHF will control/validate/submit */}
       <input
-        id={htmlId}
+        ref={hiddenRef} // RHF will attach its ref via Controller's field.ref
         type="hidden"
         name={name}
-        value={controlled ? value : localHtml}
+        value={value || ''}
         readOnly
+        required={required}
       />
     </div>
   );

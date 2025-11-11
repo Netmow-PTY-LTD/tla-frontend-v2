@@ -1,5 +1,5 @@
-import MainLayout from '@/components/main/common/layout';
 import React from 'react';
+import BlogPosts from './_components/BlogPosts';
 
 export const metadata = {
   title: 'Blog Page || The Law App',
@@ -10,14 +10,10 @@ export const metadata = {
   },
 };
 
-export default function Blog() {
+export default function BlogPage() {
   return (
-    <MainLayout>
-      <section className="py-20">
-        <div className="container">
-          <h1>Blog</h1>
-        </div>
-      </section>
-    </MainLayout>
+    <>
+      <BlogPosts />
+    </>
   );
 }

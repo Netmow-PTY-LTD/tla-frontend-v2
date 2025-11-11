@@ -1,18 +1,11 @@
-'use client';
-import MainLayout from '@/components/main/common/layout';
-import { useParams } from 'next/navigation';
 import React from 'react';
+import BlogPostDetails from '../_components/BlogDetails';
 
-export default function BlogDetailsPage() {
-  const params = useParams();
-  const { slug } = params;
+export default async function BlogDetailsPage({ params }) {
+  const { slug } = await params;
   return (
-    <MainLayout>
-      <section className="py-20">
-        <div className="container">
-          <h1>Blog Details Page - {slug}</h1>
-        </div>
-      </section>
-    </MainLayout>
+    <>
+      <BlogPostDetails slug={slug} />
+    </>
   );
 }

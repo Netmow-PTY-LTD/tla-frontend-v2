@@ -35,17 +35,17 @@ export default function Home() {
         if (parsed?.slug) {
           selectedCountry = parsed;
         } else {
-          console.warn('countryObj cookie missing slug. Deleting cookie.');
+          //console.warn('countryObj cookie missing slug. Deleting cookie.');
           Cookies.remove('countryObj');
         }
       } else {
-        console.warn('countryObj cookie is undefined or not set. Cleaning up.');
+        //console.warn('countryObj cookie is undefined or not set. Cleaning up.');
         Cookies.remove('countryObj');
       }
     } catch (e) {
-      console.error(
-        'Failed to parse countryObj cookie. Removing corrupted cookie.'
-      );
+      // console.error(
+      //   'Failed to parse countryObj cookie. Removing corrupted cookie.'
+      // );
       Cookies.remove('countryObj');
     }
 
