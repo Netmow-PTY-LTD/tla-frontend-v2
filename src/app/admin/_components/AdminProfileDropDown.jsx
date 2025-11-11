@@ -44,13 +44,20 @@ export default function AdminProfileDropDown({ data, isCurrentUserLoading }) {
    * - Redirects the user to the login page using the Next.js router.
    */
   const [authLogout] = useAuthLogOutMutation();
-  const handleLogout = () => {
-    disconnectSocket();
-    authLogout();
+
+  const handleLogout = async () => {
+    try {
+      disconnectSocket();
+      await authLogout().unwrap(); // wait until the logout API finishes
+    } catch (error) {
+      console.error("Logout API failed:", error);
+    }
+
     dispatch(logOut());
-      dispatch(baseApi.util.resetApiState());
+    dispatch(baseApi.util.resetApiState());
     router.push('/login');
   };
+
 
   if (!isClient) {
     return null; // or a skeleton/loading fallback
