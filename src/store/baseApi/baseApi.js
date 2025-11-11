@@ -21,9 +21,6 @@ const baseQuery = fetchBaseQuery({
 const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
   let result = await baseQuery(arg, api, extraOptions);
 
-  // console.log('base url called:', ` ${process.env.NEXT_PUBLIC_BASE_URL}${arg}`);
-  // console.log('base url called:', arg);
-
   if (result.error?.status === 404 || result.error?.status === 403) {
     const errorData = result.error.data;
     const url = typeof arg === 'string' ? arg : arg.url || '';
@@ -54,20 +51,10 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
         result = await baseQuery(arg, api, extraOptions);
       } else {
         api.dispatch(logOut());
-        //  await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/logout`, {
-        //     credentials: 'include',
-        //     method: 'POST',
-        //   }).catch(console.error);
-
         await api.dispatch(baseApi.endpoints.authLogOut.initiate()).unwrap();
       }
     } catch (err) {
       api.dispatch(logOut());
-      //  await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/logout`, {
-      //     credentials: 'include',
-      //     method: 'POST',
-      //   }).catch(console.error);
-
       await api.dispatch(baseApi.endpoints.authLogOut.initiate()).unwrap();
     }
   }
