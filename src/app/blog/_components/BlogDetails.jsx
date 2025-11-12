@@ -9,7 +9,7 @@ import {
   useGetSingleBlogBySlugQuery,
 } from '@/store/features/admin/blogApiService';
 import { Arrow } from '@radix-ui/react-dropdown-menu';
-import { ArrowRight, Instagram, Linkedin, Loader } from 'lucide-react';
+import { ArrowRight, Instagram, Linkedin, Loader, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import { useState } from 'react';
@@ -26,13 +26,21 @@ export default function BlogPostDetails({ slug }) {
 
   const {
     data: singleBlogData,
-    isLoading: singleBlogDataLoading,
+    isLoading: isSingleBlogDataLoading,
     isFetching: isBlogPostsFetching,
   } = useGetSingleBlogBySlugQuery(slug);
 
   const post = singleBlogData?.data;
 
-  const { data: recentBlogs } = useGetRecentBlogsQuery({ limit: 3 });
+  const { data: recentBlogs } = useGetRecentBlogsQuery({ limit: 5 });
+
+  if (isSingleBlogDataLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader2 className="w-8 h-8 animate-spin text-[var(--secondary-color)]" />
+      </div>
+    );
+  }
 
   return (
     <MainLayout>
@@ -133,7 +141,7 @@ export default function BlogPostDetails({ slug }) {
                   </div>
 
                   <div
-                    className="text-gray-600 mb-4 flex-1"
+                    className="text-gray-600 mb-4 flex-1 blog-description"
                     dangerouslySetInnerHTML={{
                       __html: post?.content,
                     }}
@@ -282,6 +290,16 @@ export default function BlogPostDetails({ slug }) {
           </div>
         </div>
       </section>
+      <style>
+        {`
+          .blog-description :is(h2, h3, h4, h5, h6) {
+              margin-block: 1.5rem;
+            }
+          .blog-description p {
+            margin-block: 1rem;
+          }
+        `}
+      </style>
     </MainLayout>
   );
 }
