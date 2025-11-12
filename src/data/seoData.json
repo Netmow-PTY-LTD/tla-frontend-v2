@@ -78,7 +78,29 @@
                 "auth"
             ],
             "metaImage": "https://files.thelawapp.com.au/thelawapp/seo/metaimages/register.webp"
-        }
+    },
+    {
+      "pageKey": "blog",
+      "slug": "blog",
+      "metaTitle": "Blog Page | TheLawApp",
+      "metaDescription": "The LawApp Online connects clients and lawyers with secure, cloud-based tools for case management and legal services anytime, anywhere.",
+      "metaKeywords": [
+          "TheLawApp",
+          "blog"
+      ],
+      "metaImage": "https://files.thelawapp.com.au/thelawapp/seo/metaimages/login.png"
+    },
+    {
+      "pageKey": "faq",
+      "slug": "faq",
+      "metaTitle": "Faq | TheLawApp",
+      "metaDescription": "The LawApp Online connects clients and lawyers with secure, cloud-based tools for case management and legal services anytime, anywhere.",
+      "metaKeywords": [
+          "TheLawApp",
+          "faq"
+      ],
+      "metaImage": "https://files.thelawapp.com.au/thelawapp/seo/metaimages/register.webp"
+    }
     
   ]
 
