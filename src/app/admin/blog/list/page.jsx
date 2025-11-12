@@ -196,7 +196,12 @@ export default function BlogList() {
   ];
   return (
     <div>
-      <h2 className="text-2xl font-semibold">Blog List</h2>
+      <div className="flex flex-wrap justify-between gap-5">
+        <h2 className="text-2xl font-semibold">Blog List</h2>
+        <Link href="/admin/blog/add">
+          <Button>Add Blog</Button>
+        </Link>
+      </div>
       <DataTableWithPagination
         data={blogList?.data || []}
         columns={columns}

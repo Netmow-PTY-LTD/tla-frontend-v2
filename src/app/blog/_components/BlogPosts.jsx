@@ -1,6 +1,5 @@
 'use client';
 import Facebook from '@/components/icon/Facebook';
-import LinkedIn from '@/components/icon/LinkedIn';
 import Twitter from '@/components/icon/Twiiter';
 import MainLayout from '@/components/main/common/layout';
 import { truncateText } from '@/helpers/truncateText';
@@ -8,8 +7,7 @@ import {
   useGetAllBlogsQuery,
   useGetRecentBlogsQuery,
 } from '@/store/features/admin/blogApiService';
-import { Arrow } from '@radix-ui/react-dropdown-menu';
-import { ArrowRight, Instagram, Linkedin, Loader } from 'lucide-react';
+import { ArrowRight, Instagram, Linkedin, Loader, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import { useState } from 'react';
@@ -48,7 +46,15 @@ export default function BlogPosts() {
     }
   };
 
-  const { data: recentBlogs } = useGetRecentBlogsQuery({ limit: 3 });
+  const { data: recentBlogs } = useGetRecentBlogsQuery({ limit: 5 });
+
+  if (isBlogPostsLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader2 className="w-8 h-8 animate-spin text-[var(--secondary-color)]" />
+      </div>
+    );
+  }
 
   return (
     <MainLayout>

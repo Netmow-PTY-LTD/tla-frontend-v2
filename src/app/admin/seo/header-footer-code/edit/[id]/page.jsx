@@ -86,7 +86,8 @@ export default function EditCodePage() {
 
   async function onSubmit(values) {
     try {
-      const res = await editCode({ id, ...values }).unwrap();
+      const res = await editCode({ id, data: values }).unwrap();
+      console.log('res', res);
       showSuccessToast(res?.message || 'Code updated successfully!');
     } catch (error) {
       const backendMessage =
@@ -222,7 +223,10 @@ export default function EditCodePage() {
                     <FormLabel className="text-base">Active Status</FormLabel>
                   </div>
                   <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
                 </FormItem>
               )}
