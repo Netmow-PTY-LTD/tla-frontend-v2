@@ -1,4 +1,4 @@
-export async function generateSchemaBySlug(slug, seo = {}, articleData = {}) {
+export async function generateSchemaBySlug(slug, seo = {}) {
   const siteUrl = `${process.env.NEXT_PUBLIC_SITE_URL}`;
   const result = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/admin/settings`
@@ -20,62 +20,6 @@ export async function generateSchemaBySlug(slug, seo = {}, articleData = {}) {
       'https://www.instagram.com/thelawapp',
     ],
   };
-
-  const breadcrumb = {
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      {
-        '@type': 'ListItem',
-        position: 1,
-        name: 'Home',
-        item: siteUrl,
-      },
-      {
-        '@type': 'ListItem',
-        position: 2,
-        name: seo.metaTitle || slug,
-        item: `${siteUrl}/${slug}`,
-      },
-    ],
-  };
-
-  // ✅ Blog Post Schema
-  if (slug === 'blogPost') {
-    const {
-      title,
-      description,
-      image,
-      author,
-      datePublished,
-      dateModified,
-      slug: postSlug,
-    } = articleData;
-
-    return {
-      '@context': 'https://schema.org',
-      '@graph': [
-        organization,
-        {
-          '@type': 'BlogPosting',
-          headline: title || seo.metaTitle,
-          description: description || seo.metaDescription,
-          image: image ? [image] : [seo.metaImage],
-          author: {
-            '@type': 'Person',
-            name: author || 'TheLawApp Editorial Team',
-          },
-          publisher: organization,
-          mainEntityOfPage: {
-            '@type': 'WebPage',
-            '@id': `${siteUrl}/blog/${postSlug}`,
-          },
-          datePublished: datePublished || new Date().toISOString(),
-          dateModified: dateModified || new Date().toISOString(),
-          url: `${siteUrl}/blog/${postSlug}`,
-        },
-      ],
-    };
-  }
 
   // ✅ Default fallback (same as before)
   switch (slug) {
@@ -214,6 +158,62 @@ export async function generateSchemaBySlug(slug, seo = {}, articleData = {}) {
         ],
       };
 
+    case 'blog':
+      return {
+        '@context': 'https://schema.org',
+        '@graph': [
+          organization,
+          {
+            '@type': 'WebPage',
+            name: seo.metaTitle,
+            url: `${siteUrl}/${slug}`,
+            description: seo.metaDescription,
+            publisher: organization,
+          },
+        ],
+      };
+
+    case 'blogPost':
+      return {
+        '@context': 'https://schema.org',
+        '@graph': [
+          organization,
+          {
+            '@type': 'BlogPosting',
+            headline: seo?.seo?.metaTitle,
+            description: seo?.seo?.metaDescription,
+            image: [seo?.seo?.metaImage],
+            author: {
+              '@type': 'Person',
+              name: 'TheLawApp Online',
+            },
+            publisher: organization,
+            mainEntityOfPage: {
+              '@type': 'WebPage',
+              '@id': `${siteUrl}/blog/${seo?.slug}`,
+            },
+            datePublished:
+              seo?.publishedAt || seo?.createdAt || new Date().toISOString(),
+            dateModified: seo?.updatedAt || new Date().toISOString(),
+            url: `${siteUrl}/blog/${seo?.slug}`,
+          },
+        ],
+      };
+
+    case 'faq':
+      return {
+        '@context': 'https://schema.org',
+        '@graph': [
+          organization,
+          {
+            '@type': 'WebPage',
+            name: seo.metaTitle,
+            url: `${siteUrl}/${slug}`,
+            description: seo.metaDescription,
+            publisher: organization,
+          },
+        ],
+      };
     case 'home':
     default:
       return {

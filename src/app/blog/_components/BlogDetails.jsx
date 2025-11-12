@@ -298,6 +298,13 @@ export default function BlogPostDetails({ slug }) {
           .blog-description p {
             margin-block: 1rem;
           }
+
+          .blog-description img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-block: 1rem;
+          }
         `}
       </style>
     </MainLayout>

@@ -31,6 +31,8 @@ import { checkValidity } from '@/helpers/validityCheck';
 import LawyerWarningModal from '../../home/modal/LawyerWarningModal';
 import { safeJsonParse } from '@/helpers/safeJsonParse';
 import { useGetSettingsQuery } from '@/store/features/admin/appSettings';
+import { useGetPublicHeaderFooterCodesQuery } from '@/store/features/seo/seoApi';
+import Head from 'next/head';
 
 export default function Header() {
   const [isHeaderFixed, setIsHeaderFixed] = useState();
@@ -53,6 +55,60 @@ export default function Header() {
   const { data: appSettings } = useGetSettingsQuery();
 
   const appData = appSettings?.data || {};
+
+  useEffect(() => {
+    if (!appData) return;
+
+    const metaTag = document.createElement('meta');
+    metaTag.name = 'robots';
+    metaTag.content = appData?.robots || 'noindex, follow';
+
+    // Remove any existing robots tag to prevent duplicates
+    const existing = document.querySelector('meta[name="robots"]');
+    if (existing) {
+      existing.remove();
+    }
+
+    document.head.appendChild(metaTag);
+
+    // Cleanup on unmount
+    return () => {
+      if (document.head.contains(metaTag)) {
+        document.head.removeChild(metaTag);
+      }
+    };
+  }, [appData?.robots]);
+
+  const { data: headerFooterCodes } = useGetPublicHeaderFooterCodesQuery();
+
+  useEffect(() => {
+    if (!headerFooterCodes?.data?.length) return;
+
+    const headerScripts = headerFooterCodes.data.filter(
+      (item) => item?.position?.toLowerCase() === 'header' && item.isActive
+    );
+
+    const insertedElements = [];
+
+    headerScripts.forEach((item) => {
+      // Parse the code string safely
+      const tempContainer = document.createElement('div');
+      tempContainer.innerHTML = item.code.trim();
+
+      // Move all child elements (<script>, <meta>, <link>, etc.) to <head>
+      Array.from(tempContainer.children).forEach((child) => {
+        document.head.appendChild(child);
+        insertedElements.push(child);
+      });
+    });
+
+    // Cleanup on unmount
+    return () => {
+      insertedElements.forEach((el) => {
+        if (document.head.contains(el)) document.head.removeChild(el);
+      });
+    };
+  }, [headerFooterCodes]);
 
   const token = useSelector((state) => state.auth.token);
 
