@@ -29,7 +29,7 @@ const DynamicProfilePage = () => {
     refetch,
   } = useGetUserProfileBySlugQuery(params?.slug);
 
-  console.log('userInfo ===>', userInfo?.data?.userId);
+
 
   function extractYouTubeVideoId(url) {
     const regex =
