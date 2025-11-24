@@ -51,11 +51,11 @@ export default function EditPageModal({ open, setOpen, pageId, refetchPages }) {
       description,
     };
 
-    console.log('payload', payload);
+    // console.log('payload', payload);
 
     try {
       const res = await updatePage({ pageId, body: payload }).unwrap();
-      console.log('res', res);
+      // console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'Page updated successfully');
         refetchPages();

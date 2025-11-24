@@ -26,7 +26,6 @@ export function useSetCountryFromIP() {
           path: '/',
         });
 
-        console.log('Country set from IP:', country);
       } catch (err) {
         console.error('Failed to detect country from IP:', err);
       }

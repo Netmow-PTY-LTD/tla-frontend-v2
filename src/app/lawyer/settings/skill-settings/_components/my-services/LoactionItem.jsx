@@ -28,7 +28,7 @@ const LocationItem = ({ location, onEdit, refetchLocations }) => {
       try {
         const res = await deleteLocation(locationId).unwrap();
         // Optionally, you can show a success message or refetch the list
-        console.log('Location deleted successfully', res);
+        // console.log('Location deleted successfully', res);
         if (res?.success) {
           showSuccessToast(res?.message || 'Location deleted successfully');
           refetchLocations();

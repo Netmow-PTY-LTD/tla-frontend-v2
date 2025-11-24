@@ -137,6 +137,8 @@ export const baseApi = createApi({
     'blog',
     'BlogCategory',
     'BlogCategory-list',
+    'headerFooterCodes',
+    'recent-blogs',
   ],
   endpoints: () => ({}),
 });

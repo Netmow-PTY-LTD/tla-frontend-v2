@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useForm, FormProvider, Controller } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -32,6 +32,7 @@ import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
+import { slugify } from '@/helpers/generateSlug';
 
 const blogSchema = z.object({
   title: z.string().min(1, { message: 'Title is required' }),
@@ -57,7 +58,9 @@ export default function AddBlog() {
     defaultValues: {
       title: '',
       slug: '',
+      shortDescription: '',
       description: '',
+      bannerImage: null,
       categories: [],
       tags: [],
       status: 'published',
@@ -71,6 +74,8 @@ export default function AddBlog() {
   const {
     handleSubmit,
     control,
+    watch,
+    setValue,
     register,
     reset,
     formState: { isSubmitting },
@@ -84,11 +89,20 @@ export default function AddBlog() {
   const [keywords, setKeywords] = useState([]);
   const editorRef = useRef(null);
   const [html, setHtml] = useState('');
+  const [shortDescription, setShortDescription] = useState('');
 
   const { data: allBlogCategories } = useGetBlogCategoryListQuery();
-  console.log('blogCategories', allBlogCategories);
 
   const blogCategories = allBlogCategories?.data || [];
+
+  const title = watch('title');
+
+  useEffect(() => {
+    if (title) {
+      const generatedSlug = slugify(title);
+      setValue('slug', generatedSlug, { shouldValidate: true });
+    }
+  }, [title, setValue]);
 
   const handleAddKeyword = (e) => {
     if (e.key === 'Enter' && keyword.trim() !== '') {
@@ -111,7 +125,7 @@ export default function AddBlog() {
   const [addBlog, { isLoading: isAddBlogLoading }] = useAddBlogMutation();
 
   const onSubmit = async (data) => {
-    console.log('Submitted blog data', data);
+    // console.log('Submitted blog data', data);
     const {
       title,
       slug,
@@ -128,6 +142,7 @@ export default function AddBlog() {
     const payload = {
       title,
       slug,
+      shortDescription,
       content: html,
       category: categories,
       tags,
@@ -139,7 +154,7 @@ export default function AddBlog() {
       },
     };
 
-    console.log('payload to be sent', payload);
+    // console.log('payload to be sent', payload);
 
     const formData = new FormData();
     formData.append('data', JSON.stringify(payload));
@@ -154,7 +169,7 @@ export default function AddBlog() {
 
     try {
       const res = await addBlog(formData).unwrap();
-      console.log('res', res);
+      // console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'Blog added successfully.');
         router.push('/admin/blog/list');
@@ -167,13 +182,13 @@ export default function AddBlog() {
         setHtml('');
       }
     } catch (error) {
-      console.log('error', error);
+      // console.log('error', error);
       showErrorToast(error?.data?.message || 'Failed to add blog.');
     }
   };
 
   return (
-    <div className="max-w-[900px] mx-auto py-10">
+    <div className="max-w-[1000px] mx-auto py-10">
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <Card>
@@ -195,6 +210,16 @@ export default function AddBlog() {
                 </label>
                 <SimpleEditor name="description" />
               </div> */}
+              <EditorField
+                ref={editorRef}
+                name="shortDescription" // key: the hidden input name
+                label="Short Description"
+                value={shortDescription} // controlled
+                onChange={setShortDescription}
+                placeholder=" "
+                height={180}
+                required
+              />
               <EditorField
                 ref={editorRef}
                 name="description" // key: the hidden input name
@@ -312,6 +337,10 @@ export default function AddBlog() {
                   {
                     label: 'Draft',
                     value: 'draft',
+                  },
+                  {
+                    label: 'Archived',
+                    value: 'archived',
                   },
                 ]}
               />

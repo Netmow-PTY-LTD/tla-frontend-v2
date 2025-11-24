@@ -17,8 +17,8 @@ import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
-import { set } from 'date-fns';
 import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
+import { truncateText } from '@/helpers/truncateText';
 
 export default function BlogList() {
   const [page, setPage] = useState(1);
@@ -36,15 +36,13 @@ export default function BlogList() {
     search,
   });
 
-  console.log('blogList', blogList);
-
   const [deleteBlog] = useDeleteBlogMutation();
 
   const handleDeleteBlog = async (id) => {
-    console.log('Deleting blog with ID:', id);
+    // console.log('Deleting blog with ID:', id);
     try {
       const res = await deleteBlog(id).unwrap();
-      console.log('res', res);
+      // console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'Blog deleted successfully');
         refetchBlogs();
@@ -71,12 +69,18 @@ export default function BlogList() {
       ),
     },
     {
-      accessorKey: 'content',
+      accessorKey: 'shortDescription',
       header: 'Description',
       cell: ({ row }) => (
-        <div className="max-w-[300px] truncate">{row.getValue('content')}</div>
+        <div
+          className="max-w-[300px] truncate"
+          dangerouslySetInnerHTML={{
+            __html: truncateText(row.getValue('shortDescription'), 1000),
+          }}
+        ></div>
       ),
     },
+
     {
       accessorKey: 'bannerImage',
       header: 'Banner Image',
@@ -190,7 +194,12 @@ export default function BlogList() {
   ];
   return (
     <div>
-      <h2 className="text-2xl font-semibold">Blog List</h2>
+      <div className="flex flex-wrap justify-between gap-5">
+        <h2 className="text-2xl font-semibold">Blog List</h2>
+        <Link href="/admin/blog/add">
+          <Button>Add Blog</Button>
+        </Link>
+      </div>
       <DataTableWithPagination
         data={blogList?.data || []}
         columns={columns}

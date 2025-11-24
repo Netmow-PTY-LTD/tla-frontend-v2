@@ -46,7 +46,7 @@ export default function RatingForm({ response }) {
   const rating = watch("rating");
 
   const onSubmit = async (data) => {
-    console.log("Rating submitted:", data);
+    // console.log("Rating submitted:", data);
 
     const payloadRating = {
       lawyerId: response?.responseBy?.user?._id,

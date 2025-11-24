@@ -17,6 +17,8 @@ import Cookies from 'js-cookie';
 import countries from '@/data/countries.json';
 import { safeJsonParse } from '@/helpers/safeJsonParse';
 import { checkValidity } from '@/helpers/validityCheck';
+import { useGetPublicHeaderFooterCodesQuery } from '@/store/features/seo/seoApi';
+import { useGetSettingsQuery } from '@/store/features/admin/appSettings';
 
 export default function Footer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -29,6 +31,37 @@ export default function Footer() {
       setSelectedCountry(cookieCountry);
     }
   }, [countries]);
+
+  const { data: headerFooterCodes } = useGetPublicHeaderFooterCodesQuery();
+
+  useEffect(() => {
+    if (!headerFooterCodes?.data?.length) return;
+
+    const headerScripts = headerFooterCodes.data.filter(
+      (item) => item?.position?.toLowerCase() === 'footer' && item.isActive
+    );
+
+    const insertedElements = [];
+
+    headerScripts.forEach((item) => {
+      // Parse the code string safely
+      const tempContainer = document.createElement('div');
+      tempContainer.innerHTML = item.code.trim();
+
+      // Move all child elements (<script>, <meta>, <link>, etc.) to <head>
+      Array.from(tempContainer.children).forEach((child) => {
+        document.head.appendChild(child);
+        insertedElements.push(child);
+      });
+    });
+
+    // Cleanup on unmount
+    return () => {
+      insertedElements.forEach((el) => {
+        if (document.head.contains(el)) document.head.removeChild(el);
+      });
+    };
+  }, [headerFooterCodes]);
 
   //console.log('selectedCountry', selectedCountry);
 
@@ -75,11 +108,8 @@ export default function Footer() {
                         <Link href="/contact">Contact</Link>
                       </li>
                       <li>
-                        <Link
-                          href="https://press.thelawapp.com.au/"
-                          target="_blank"
-                        >
-                          Press
+                        <Link href="/blog" target="_blank">
+                          Blog
                         </Link>
                       </li>
                       {/* <li>

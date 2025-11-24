@@ -366,11 +366,11 @@ export default function CreateLeadWithAuthModal({
       addressInfo,
     };
 
-    console.log('🚀 Submitting payload:', payload);
+ 
 
     try {
       const res = await createLead(payload).unwrap();
-      console.log('✅ Register response:', res);
+   
 
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Case registered successfully');

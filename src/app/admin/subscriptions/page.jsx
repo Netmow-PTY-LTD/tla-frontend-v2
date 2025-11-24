@@ -53,7 +53,7 @@ export default function SubscriptionList() {
     try {
       // Call the delete subscription API
       const res = await deleteSubscription(id).unwrap();
-      console.log('res', res);
+      // console.log('res', res);
       if (res?.success) {
         showSuccessToast('Subscription deleted successfully');
         refetchSubscriptions();

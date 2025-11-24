@@ -212,12 +212,12 @@ export const AdminSidebarItems = {
           isActive: true,
         },
         {
-          title: 'Header&Footer',
+          title: 'Header & Footer Codes',
           url: '/admin/seo/header-footer-code',
           icon: List,
           isActive: true,
-        }
-      ]
+        },
+      ],
     },
     {
       title: 'Blog',

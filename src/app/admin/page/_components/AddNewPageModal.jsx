@@ -25,7 +25,7 @@ export default function AddNewPageModal({ open, setOpen, refetchPages }) {
 
   const [addPage] = useAddPageMutation();
   const handlePageAdd = async (values) => {
-    console.log('values', values);
+    // console.log('values', values);
 
     const { title, description } = values;
 
@@ -34,11 +34,11 @@ export default function AddNewPageModal({ open, setOpen, refetchPages }) {
       description,
     };
 
-    console.log('payload', payload);
+    // console.log('payload', payload);
 
     try {
       const res = await addPage(payload).unwrap();
-      console.log('res', res);
+      // console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'Page added successfully');
         refetchPages();

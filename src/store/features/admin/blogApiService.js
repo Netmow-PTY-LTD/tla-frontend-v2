@@ -18,9 +18,9 @@ const blogApiService = baseApi.injectEndpoints({
       }),
       providesTags: ['blog'],
     }),
-    getSingleBlogById: builder.query({
-      query: (blogId) => ({
-        url: `/blog/${blogId}`,
+    getSingleBlogBySlug: builder.query({
+      query: (slug) => ({
+        url: `/blog/${slug}`,
         method: 'GET',
       }),
       providesTags: ['blog'],
@@ -41,6 +41,15 @@ const blogApiService = baseApi.injectEndpoints({
       invalidatesTags: ['blog'],
     }),
 
+    //Recent blogs
+    getRecentBlogs: builder.query({
+      query: (params) => ({
+        url: '/blog/recent',
+        method: 'GET',
+        params,
+      }),
+      providesTags: ['recent-blogs'],
+    }),
     // Blog Category endpoints
     addBlogCategory: builder.mutation({
       query: (body) => ({
@@ -54,7 +63,7 @@ const blogApiService = baseApi.injectEndpoints({
       query: (params) => ({
         url: `/blog-category/list`,
         method: 'GET',
-        params
+        params,
       }),
       providesTags: ['BlogCategory-list'],
     }),
@@ -86,9 +95,10 @@ const blogApiService = baseApi.injectEndpoints({
 export const {
   useAddBlogMutation,
   useGetAllBlogsQuery,
-  useGetSingleBlogByIdQuery,
+  useGetSingleBlogBySlugQuery,
   useUpdateBlogMutation,
   useDeleteBlogMutation,
+  useGetRecentBlogsQuery,
   useAddBlogCategoryMutation,
   useGetBlogCategoryListQuery,
   useGetSingleBlogCategoryQuery,

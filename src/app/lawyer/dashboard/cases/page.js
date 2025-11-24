@@ -9,7 +9,7 @@ import ResponseSkeleton from '../my-responses/_components/ResponseSkeleton';
 import LeadDetailsPage from '../_component/LeadsLeft';
 import LeadsHead from '../_component/LeadsHead';
 import LeadsRight from '../_component/LeadsRight';
-import { Inbox, Loader } from 'lucide-react';
+import { FilterX, Inbox, Loader } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -214,6 +214,63 @@ const LeadsBoardPage = () => {
   //     </div>
   //   );
   // }
+
+  function EmptyState() {
+    const filters = JSON.parse(localStorage.getItem('lead-filters') || '{}');
+
+    const hasActiveFilters =
+      (filters.keyword && filters.keyword.trim() !== '') ||
+      (filters.services && filters.services.length > 0) ||
+      (filters.credits && filters.credits.length > 0) ||
+      filters.sort ||
+      filters.spotlight ||
+      filters.leadSubmission;
+
+    if (hasActiveFilters) {
+      // Filtered empty state
+      return (
+        <div className="flex flex-col justify-center items-center h-full text-center">
+          <FilterX className="w-12 h-12 mb-4 text-blue-400" />
+          <h4 className="text-[18px] text-gray-600 font-medium">
+            No cases match your filters.
+          </h4>
+          <p className="text-sm text-gray-500 mt-1">
+            Try adjusting or clearing your filters to see more results.
+          </p>
+          <Button
+            className="mt-4"
+            variant="outline"
+            onClick={() => {
+              localStorage.removeItem('lead-filters');
+              window.location.href = '/lawyer/dashboard/cases';
+            }}
+          >
+            Clear Filters & Reload
+          </Button>
+        </div>
+      );
+    }
+
+    // Default empty state
+    return (
+      <div className="flex flex-col justify-center items-center h-full text-center">
+        <Inbox className="w-12 h-12 mb-4 text-gray-400" />
+        <h4 className="italic text-[18px] text-gray-500">
+          Currently there are no cases.
+        </h4>
+        <Button
+          className="mt-4"
+          onClick={() => {
+            localStorage.removeItem('lead-filters');
+            window.location.href = '/lawyer/dashboard/cases';
+          }}
+        >
+          Reload
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="lead-board-wrap">
@@ -319,21 +376,7 @@ const LeadsBoardPage = () => {
             </div>
           </div>
         ) : (
-          <div className="flex flex-col justify-center items-center h-full">
-            <Inbox className="w-12 h-12 mb-4 text-gray-400" />
-            <h4 className="italic text-[18px] text-gray-500">
-              Currently there are no cases.
-            </h4>
-            <Button
-              className="mt-4"
-              onClick={() => {
-                localStorage.removeItem('lead-filters');
-                window.location.href = '/lawyer/dashboard/cases';
-              }}
-            >
-              Reload
-            </Button>
-          </div>
+          EmptyState()
         )}
       </div>
     </>

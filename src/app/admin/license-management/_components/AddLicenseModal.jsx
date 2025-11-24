@@ -7,7 +7,7 @@ import { z } from 'zod';
 import countries from '@/data/countries.json';
 import SelectInput from '@/components/form/SelectInput';
 import { useAddLawFirmCertificationMutation } from '@/store/features/admin/lawFirmCertificationApiService';
-import { showSuccessToast } from '@/components/common/toasts';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import AvatarUploader from '@/components/UIComponents/AvaterUploader';
 
 const licenseSchema = z.object({
@@ -30,7 +30,7 @@ export default function AddLicenseModal({ open, setOpen, refetchLicenseData }) {
   const [addLawFirmCertification] = useAddLawFirmCertificationMutation();
 
   const handleAddLicense = async (values) => {
-    console.log('values', values);
+    // console.log('values', values);
 
     const { country, certificationName, type, agencyLogo } = values;
 
@@ -40,7 +40,7 @@ export default function AddLicenseModal({ open, setOpen, refetchLicenseData }) {
       type,
     };
 
-    console.log('payload', payload);
+    // console.log('payload', payload);
 
     const formData = new FormData();
     formData.append('data', JSON.stringify(payload));
@@ -51,7 +51,7 @@ export default function AddLicenseModal({ open, setOpen, refetchLicenseData }) {
 
     try {
       const res = await addLawFirmCertification(formData).unwrap();
-      console.log('res', res);
+      // console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'License added successfully');
         refetchLicenseData();
@@ -59,6 +59,7 @@ export default function AddLicenseModal({ open, setOpen, refetchLicenseData }) {
       }
     } catch (error) {
       console.log('error', error);
+      showErrorToast(error?.data?.message || 'Failed to add license');
     }
   };
   return (

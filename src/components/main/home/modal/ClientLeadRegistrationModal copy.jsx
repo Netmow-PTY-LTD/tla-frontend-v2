@@ -339,11 +339,11 @@ export default function ClientLeadRegistrationModal({
       addressInfo,
     };
 
-    console.log('🚀 Submitting payload:', payload);
+
 
     try {
       const res = await clientRegister(payload).unwrap();
-      console.log('✅ Register response:', res);
+  
 
       if (!res?.success || !res?.token) {
         showErrorToast(res?.message || 'Case registration failed.');

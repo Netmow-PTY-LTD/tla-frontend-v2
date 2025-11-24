@@ -135,7 +135,7 @@ export default function FilterSidebar({
     //   }
 
 
-    console.log('payload', payload);
+    // console.log('payload', payload);
 
     setSearchKeyword(payload);
     // Now you can call API or update state

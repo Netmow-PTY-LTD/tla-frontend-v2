@@ -67,7 +67,7 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
       const result = await subscriptionSubscription(
         subscriptionDetails
       ).unwrap();
-      console.log('Subscription result:', result);
+      // console.log('Subscription result:', result);
       if (result.success) {
         showSuccessToast(result?.message);
       } else {

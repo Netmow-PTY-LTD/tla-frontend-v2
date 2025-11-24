@@ -51,8 +51,6 @@ export default function EditLicenseModal({
 
   const license = licenseData?.data;
 
-  console.log('license', license);
-
   // useEffect(() => {
   //   if (license) {
   //     setDefaultValues({
@@ -118,7 +116,7 @@ export default function EditLicenseModal({
       type,
     };
 
-    console.log('payload', payload);
+    // console.log('payload', payload);
 
     const formData = new FormData();
     formData.append('data', JSON.stringify(payload));
@@ -132,7 +130,7 @@ export default function EditLicenseModal({
         certificationId: licenseId,
         body: formData,
       }).unwrap();
-      console.log('res', res);
+      // console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'License updated successfully');
         refetchLicenseData();
@@ -140,7 +138,7 @@ export default function EditLicenseModal({
       }
       setOpen(false);
     } catch (error) {
-      console.log('error', error);
+      // console.log('error', error);
       showErrorToast(error?.data?.message || 'Failed to update license');
     }
   };

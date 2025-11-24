@@ -36,8 +36,8 @@ import {
 } from '@/store/features/auth/authApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { UserDataTable } from '../_components/UserDataTable';
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import resizeAndConvertToWebP from '@/components/UIComponents/resizeAndConvertToWebP';
 
 // Enable relative time support
@@ -62,7 +62,11 @@ export default function Page() {
   const [sortBy, setSortBy] = useState('createdAt');
   const [sortOrder, setSortOrder] = useState('desc');
 
-  const { data: userList, isFetching, refetch } = useAllUsersQuery({
+  const {
+    data: userList,
+    isFetching,
+    refetch,
+  } = useAllUsersQuery({
     page,
     limit,
     search: debouncedSearch,
@@ -75,6 +79,7 @@ export default function Page() {
     sortOrder,
   });
 
+  //console.log('userList', userList);
   // Debounce effect
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -148,14 +153,14 @@ export default function Page() {
         const profile = row.original.profile;
         const [uploadProfilePicture, { isLoading }] =
           useUpdateUserDefalultPicMutation();
-        console.log('profile.profilePicture', profile);
+        // console.log('profile.profilePicture', profile);
         const handleUpload = async (e) => {
           const file = e.target.files?.[0];
           if (file) {
-            console.log('Upload image for:', profile, file);
+            // console.log('Upload image for:', profile, file);
             // Resize to max 500px width AND compress to WebP (quality 0.8)
             const webpFile = await resizeAndConvertToWebP(file, 500, 0.8);
-            console.log('webpFile ===>',webpFile)
+            // console.log('webpFile ===>',webpFile)
             try {
               const formData = new FormData();
               // Append the image file
@@ -166,11 +171,11 @@ export default function Page() {
               };
 
               // Call RTK Query mutation
-           const res=   await uploadProfilePicture(payload).unwrap();
-           if(res.success){
-            refetch()
+              const res = await uploadProfilePicture(payload).unwrap();
+              if (res.success) {
+                refetch();
 
-            console.log('Upload successful');
+            // console.log('Upload successful');
            }
               // Optionally, update row locally or refetch table
             } catch (err) {
@@ -323,7 +328,8 @@ export default function Page() {
       enableHiding: false,
       cell: ({ row }) => {
         const user = row.original;
-        const userId = user._id; // Make sure _id exists in your data
+        const userId = user?._id; // Make sure _id exists in your data
+        const slug = user?.profile?.slug;
 
         return (
           <DropdownMenu>
@@ -339,7 +345,7 @@ export default function Page() {
               <DropdownMenuItem asChild>
                 <Link
                   href={`/admin/user/edit/${userId}`}
-                  className="flex gap-2 items-center cursor-pointer"
+                  className="flex gap-2 items-center cursor-pointer px-2 py-0.5"
                 >
                   <Pencil />
                   Edit
@@ -349,17 +355,18 @@ export default function Page() {
               <DropdownMenuItem asChild>
                 <Link
                   href={`/admin/user/delete/${userId}`}
-                  className="flex gap-2 items-center cursor-pointer"
+                  className="flex gap-2 items-center cursor-pointer px-2 py-0.5"
                 >
                   <Trash2 />
                   Delete
                 </Link>
               </DropdownMenuItem>
+              <DropdownMenuSeparator />
               {/* Details Page */}
               <DropdownMenuItem asChild>
                 <Link
                   href={`/admin/user/${userId}`}
-                  className="flex items-center gap-2 cursor-pointer"
+                  className="flex items-center gap-2 cursor-pointer px-2 py-0.5"
                 >
                   <View className="w-4 h-4" />
                   <span>View</span>
@@ -367,8 +374,21 @@ export default function Page() {
               </DropdownMenuItem>
 
               <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link
+                  href={`/profile/${slug}`}
+                  target="_blank"
+                  className="flex items-center gap-2 cursor-pointer px-2 py-0.5"
+                >
+                  <View className="w-4 h-4" />
+                  <span>View Public Profile</span>
+                </Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
 
               <DropdownMenuLabel>Change Status</DropdownMenuLabel>
+              <DropdownMenuSeparator />
 
               {[
                 {
@@ -378,17 +398,21 @@ export default function Page() {
                 { status: 'pending', icon: <Clock className="w-4 h-4" /> },
                 { status: 'suspended', icon: <Slash className="w-4 h-4" /> },
                 { status: 'archived', icon: <Archive className="w-4 h-4" /> },
-              ].map(({ status, icon }) => (
-                <DropdownMenuItem
-                  key={status}
-                  onClick={() => handleChangeStatus(userId, status)}
-                  className="cursor-pointer capitalize"
-                >
-                  <div className="flex items-center gap-2">
-                    {icon}
-                    <span>{status}</span>
-                  </div>
-                </DropdownMenuItem>
+              ].map(({ status, icon }, index, arr) => (
+                <React.Fragment key={status}>
+                  <DropdownMenuItem
+                    onClick={() => handleChangeStatus(userId, status)}
+                    className="cursor-pointer capitalize"
+                  >
+                    <div className="flex items-center gap-2 px-2 py-0.5">
+                      {icon}
+                      <span>{status}</span>
+                    </div>
+                  </DropdownMenuItem>
+
+                  {/* Only render separator if NOT the last item */}
+                  {index < arr.length - 1 && <DropdownMenuSeparator />}
+                </React.Fragment>
               ))}
             </DropdownMenuContent>
           </DropdownMenu>

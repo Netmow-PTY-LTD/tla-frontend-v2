@@ -11,7 +11,7 @@ export function RequestMessageModal({ open, onOpenChange, handleRequest }) {
     const [requestCall, setRequestCall] = useState(false);
 
     const handleSend = () => {
-        console.log({ message, requestCall });
+        // console.log({ message, requestCall });
         // Add API call here
         handleRequest(message)
         // onOpenChange(false);

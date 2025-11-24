@@ -422,11 +422,11 @@ export default function ClientLeadRegistrationModal({
       addressInfo,
     };
 
-    console.log('🚀 Submitting payload:', payload);
+ 
 
     try {
       const res = await clientRegister(payload).unwrap();
-      console.log('✅ Register response:', res);
+     
 
       if (!res?.success || !res?.token) {
         showErrorToast(res?.message || 'Case registration failed.');
@@ -871,7 +871,7 @@ export default function ClientLeadRegistrationModal({
             <Combobox
               value={zipCode ?? ''}
               onChange={(selectedId) => {
-                console.log('selectedId', selectedId);
+                
                 setZipCode(selectedId);
 
                 const selectedZip = newZipCodeList?.find(

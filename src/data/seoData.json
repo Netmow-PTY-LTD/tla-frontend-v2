@@ -52,6 +52,55 @@
       "metaDescription": "Compare legal service pricing on TheLawApp Marketplace. Find lawyers that fit your budget and hire affordably without hidden fees.",
       "metaKeywords": ["contact", "support", "lawconnect"],
       "metaImage": "https://thelawapp.syd1.digitaloceanspaces.com/thelawapp/seo/metaimages/contact.webp"
+    },
+      {
+            "_id": "6911c8baf05957079addf2cc",
+            "pageKey": "login",
+            "slug": "login",
+            "metaTitle": "Login | TheLawApp",
+            "metaDescription": "The LawApp Online connects clients and lawyers with secure, cloud-based tools for case management and legal services anytime, anywhere.",
+            "metaKeywords": [
+                "TheLawApp",
+                "login"
+            ],
+            "metaImage": "https://files.thelawapp.com.au/thelawapp/seo/metaimages/login.png"
+        },
+
+     {
+            "_id": "6911c8e6f05957079addf2d2",
+            "pageKey": "register",
+            "slug": "register",
+            "metaTitle": "Register | TheLawApp",
+            "metaDescription": "The LawApp Online connects clients and lawyers with secure, cloud-based tools for case management and legal services anytime, anywhere.",
+            "metaKeywords": [
+                "TheLawApp",
+                "register",
+                "auth"
+            ],
+            "metaImage": "https://files.thelawapp.com.au/thelawapp/seo/metaimages/register.webp"
+    },
+    {
+      "pageKey": "blog",
+      "slug": "blog",
+      "metaTitle": "Blog Page | TheLawApp",
+      "metaDescription": "The LawApp Online connects clients and lawyers with secure, cloud-based tools for case management and legal services anytime, anywhere.",
+      "metaKeywords": [
+          "TheLawApp",
+          "blog"
+      ],
+      "metaImage": "https://files.thelawapp.com.au/thelawapp/seo/metaimages/login.png"
+    },
+    {
+      "pageKey": "faq",
+      "slug": "faq",
+      "metaTitle": "Faq | TheLawApp",
+      "metaDescription": "The LawApp Online connects clients and lawyers with secure, cloud-based tools for case management and legal services anytime, anywhere.",
+      "metaKeywords": [
+          "TheLawApp",
+          "faq"
+      ],
+      "metaImage": "https://files.thelawapp.com.au/thelawapp/seo/metaimages/register.webp"
     }
+    
   ]
 

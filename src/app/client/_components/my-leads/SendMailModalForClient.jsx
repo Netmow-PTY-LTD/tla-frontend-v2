@@ -48,7 +48,7 @@ export default function SendMailModalForClient({ openMail, setOpenMail, info }) 
             const result = await sendemail(emailPayload).unwrap();
             if (result?.success) {
 
-                console.log('result data ==>', result)
+                // console.log('result data ==>', result)
                 toast.success(result.message || 'Email sent successfully');
                 setOpenMail(false)
             } else {

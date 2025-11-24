@@ -123,14 +123,14 @@ const EditLocationModal = ({
       locationType: 'distance_wise',
     };
 
-    console.log('Submitting distance location payload...', payload);
+    // console.log('Submitting distance location payload...', payload);
 
     try {
       const res = await updateLocation({
         id: locationId,
         body: payload,
       }).unwrap();
-      console.log('Location response:', res);
+      // console.log('Location response:', res);
       if (res) {
         showSuccessToast(
           res?.message || 'Distance location updated successfully!'
@@ -162,7 +162,7 @@ const EditLocationModal = ({
       locationType: 'travel_time',
     };
 
-    console.log('Travel time payload:', payload);
+    // console.log('Travel time payload:', payload);
     // Handle travel time location submission logic here
     // showSuccessToast('Travel time location added successfully!');
     // resetModal();
@@ -171,7 +171,7 @@ const EditLocationModal = ({
         id: locationId,
         body: payload,
       }).unwrap();
-      console.log('Location based on travel time response:', res);
+      // console.log('Location based on travel time response:', res);
       if (res) {
         showSuccessToast(
           res?.message || 'Location based on travel time added successfully!'

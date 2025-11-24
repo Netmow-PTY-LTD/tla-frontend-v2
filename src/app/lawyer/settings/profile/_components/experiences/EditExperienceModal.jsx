@@ -41,7 +41,7 @@ const EditExperienceModal = ({
         showSuccessToast(res?.message || 'Service updated successfully');
         refetch();
       }
-      console.log('Update response:', res);
+      // console.log('Update response:', res);
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);

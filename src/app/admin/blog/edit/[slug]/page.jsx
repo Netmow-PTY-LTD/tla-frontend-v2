@@ -23,16 +23,18 @@ import {
 import MultipleTagsSelector from '@/components/MultipleTagsSelector';
 import SelectInput from '@/components/form/SelectInput';
 import TextareaInput from '@/components/form/TextArea';
-import EditorField from '@/components/inleads-editor/EditorField';
 import {
   useGetBlogCategoryListQuery,
   useGetSingleBlogByIdQuery,
+  useGetSingleBlogBySlugQuery,
   useUpdateBlogMutation,
 } from '@/store/features/admin/blogApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useParams, useRouter } from 'next/navigation';
+import EditorField from '@/components/inleads-editor/EditorField';
+import { slugify } from '@/helpers/generateSlug';
 
 const blogSchema = z.object({
   title: z.string().min(1, { message: 'Title is required' }),
@@ -60,24 +62,25 @@ export default function EditBlog() {
   const [keywords, setKeywords] = useState([]);
   const editorRef = useRef(null);
   const [html, setHtml] = useState('');
+  const [shortDescription, setShortDescription] = useState('');
 
   const router = useRouter();
   const params = useParams();
-  const { data: singleBlogData } = useGetSingleBlogByIdQuery(params.slug, {
+  const { data: singleBlogData } = useGetSingleBlogBySlugQuery(params.slug, {
     skip: !params.slug,
   });
 
   console.log('singleBlogData', singleBlogData);
   const blog = singleBlogData?.data;
 
-  console.log('blog', blog);
-
   const methods = useForm({
     resolver: zodResolver(blogSchema),
     defaultValues: {
       title: '',
       slug: '',
+      shortDescription: '',
       description: '',
+      bannerImage: null,
       categories: [],
       tags: [],
       status: 'published',
@@ -91,6 +94,8 @@ export default function EditBlog() {
   const {
     handleSubmit,
     control,
+    watch,
+    setValue,
     register,
     reset,
     formState: { isSubmitting },
@@ -109,6 +114,7 @@ export default function EditBlog() {
         metaTitle: blog?.seo?.metaTitle || '',
         metaDescription: blog?.seo?.metaDescription || '',
       });
+      setShortDescription(blog?.shortDescription || '');
       setHtml(blog?.content || '');
       setKeywords(blog?.seo?.metaKeywords || []);
       setThumbPreviewUrl(blog?.seo?.metaImage || '');
@@ -120,6 +126,15 @@ export default function EditBlog() {
   //console.log('blogCategories', allBlogCategories);
 
   const blogCategories = allBlogCategories?.data || [];
+
+  const title = watch('title');
+
+  useEffect(() => {
+    if (title) {
+      const generatedSlug = slugify(title);
+      setValue('slug', generatedSlug, { shouldValidate: true });
+    }
+  }, [title, setValue]);
 
   const handleAddKeyword = (e) => {
     if (e.key === 'Enter' && keyword.trim() !== '') {
@@ -143,7 +158,7 @@ export default function EditBlog() {
     useUpdateBlogMutation();
 
   const onSubmit = async (data) => {
-    console.log('Submitted blog data', data);
+    // console.log('Submitted blog data', data);
     const {
       title,
       slug,
@@ -167,6 +182,7 @@ export default function EditBlog() {
     const payload = {
       title,
       slug,
+      shortDescription,
       content: html,
       category: categories,
       tags,
@@ -178,7 +194,7 @@ export default function EditBlog() {
       },
     };
 
-    console.log('payload to be sent', payload);
+    // console.log('payload to be sent', payload);
 
     const formData = new FormData();
     formData.append('data', JSON.stringify(payload));
@@ -200,29 +216,25 @@ export default function EditBlog() {
         blogId: blog?._id,
         data: formData,
       }).unwrap();
-      console.log('res', res);
+      // console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'Blog Updated successfully.');
         router.push('/admin/blog/list');
       }
     } catch (error) {
-      console.log('error', error);
+      // console.log('error', error);
       showErrorToast(error?.data?.message || 'Failed to update blog.');
     }
   };
 
-  console.log('thumbPreviewUrl ', thumbPreviewUrl);
-  console.log('bannerImagePreviewUrl ', bannerImagePreviewUrl);
-  console.log('keywords ', keywords);
-
   return (
-    <div className="max-w-[900px] mx-auto py-10">
+    <div className="max-w-[1000px] mx-auto py-10">
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <Card>
             <CardHeader className="border-b border-gray-300">
               <CardTitle>
-                <h4>Add New Blog</h4>
+                <h4>Update Blog</h4>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6 pt-4">
@@ -238,6 +250,16 @@ export default function EditBlog() {
                 </label>
                 <SimpleEditor name="description" />
               </div> */}
+              <EditorField
+                ref={editorRef}
+                name="shortDescription" // key: the hidden input name
+                label="Short Description"
+                value={shortDescription} // controlled
+                onChange={setShortDescription}
+                placeholder=" "
+                height={180}
+                required
+              />
               <EditorField
                 ref={editorRef}
                 name="description" // key: the hidden input name
@@ -356,6 +378,10 @@ export default function EditBlog() {
                   {
                     label: 'Draft',
                     value: 'draft',
+                  },
+                  {
+                    label: 'Archived',
+                    value: 'archived',
                   },
                 ]}
               />
