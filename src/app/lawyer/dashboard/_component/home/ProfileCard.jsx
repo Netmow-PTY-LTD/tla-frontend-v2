@@ -55,7 +55,7 @@ export default function ProfileCard() {
 
           {/* Right section: Edit button */}
           <Link
-            href="/lawyer/settings/profile"
+            href="/lawyer/settings/profile?section=about"
             className="text-gray-600 text-sm font-medium px-4 py-2 rounded-md transition border border-gray-300 hover:bg-gray-100 hover:text-gray-800"
           >
             Edit
