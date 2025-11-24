@@ -12,6 +12,7 @@ import LeadSettings from '@/components/dashboard/lawyer/components/LeadSettings'
 import LeadStatsCard from '@/components/dashboard/lawyer/module/MyStats/LeadStatsCard';
 import ResponseSkeleton from '@/app/lawyer/dashboard/my-responses/_components/ResponseSkeleton';
 import { Skeleton } from '@/components/ui/skeleton';
+import ProfileCardForClient from '../_components/profile/ProfileCardForClient';
 
 export default function BuyerDashboard() {
   const menuLinks = [
@@ -76,7 +77,7 @@ export default function BuyerDashboard() {
         <div className="my-5 grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
           {/* Left Column */}
           <div className="flex flex-col h-full">
-            <ProfileCard
+            <ProfileCardForClient
               profile={profileData}
               isLoading={isLoadingUserInfo}
               isError={isErrorUserInfo}

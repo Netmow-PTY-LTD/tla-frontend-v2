@@ -8,7 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
-const ProfileCard = ({ profile, isLoading, isError, error }) => {
+const ProfileCardForClient = ({ profile, isLoading, isError, error }) => {
   // console.log('profile', profile);
   return (
     // figma base
@@ -44,7 +44,7 @@ const ProfileCard = ({ profile, isLoading, isError, error }) => {
             profile?.profile?.name
           )}{' '}
           <Link
-            href={'/lawyer/settings/profile?section=about'}
+            href={'/client/account-settings/profile'}
             aria-label="Edit Name"
             className="ml-3 rounded "
           >
@@ -76,4 +76,4 @@ const ProfileCard = ({ profile, isLoading, isError, error }) => {
   );
 };
 
-export default ProfileCard;
+export default ProfileCardForClient;
