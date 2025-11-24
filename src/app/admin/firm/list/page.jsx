@@ -198,7 +198,7 @@ export default function Page() {
       enableHiding: false,
       cell: ({ row }) => {
         const item = row.original;
-
+        const slug = item?.slug;
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -216,7 +216,7 @@ export default function Page() {
                     handleUpdateFirmStatus(item?._id, 'approved');
                     setOpen(true);
                   }}
-                  className="flex gap-2 w-full"
+                  className="flex gap-2 w-full px-2 py-0.5"
                 >
                   <Check className="w-4 h-4" />
                   Approve
@@ -225,7 +225,7 @@ export default function Page() {
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <button
-                  className="flex gap-2 cursor-pointer w-full"
+                  className="flex gap-2 cursor-pointer w-full px-2 py-0.5"
                   onClick={() => handleUpdateFirmStatus(item?._id, 'rejected')}
                 >
                   <X className="w-4 h-4" /> Reject
@@ -233,15 +233,24 @@ export default function Page() {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-              <Link href={`/admin/firm/${item?._id}`}>
-          
-                <button
-                  className="flex gap-2 cursor-pointer w-full"
-             
+                <Link href={`/admin/firm/${item?._id}`}>
+                  <button className="flex gap-2 cursor-pointer w-full px-2 py-0.5">
+                    <View className="w-4 h-4" />
+                    View
+                  </button>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link
+                  href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/company-profile/${item?.slug}`}
+                  target="_blank"
                 >
-                  <View className="w-4 h-4" />View
-                </button>
-              </Link>
+                  <button className="flex gap-2 cursor-pointer w-full px-2 py-0.5">
+                    <View className="w-4 h-4" />
+                    View Company Profile
+                  </button>
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

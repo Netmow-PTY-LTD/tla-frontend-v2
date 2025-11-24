@@ -72,8 +72,6 @@ export default function LicenseManagement() {
     { skip: !selectedCountry }
   );
 
-  console.log('licensesData', licensesData);
-
   const handleEditLicenseModalOpen = (id) => {
     setIsEditModalOpen(true);
     setLicenseId(id);
@@ -83,7 +81,6 @@ export default function LicenseManagement() {
   const handleDeleteLicense = async (id) => {
     try {
       const res = await deleteLicense(id).unwrap();
-      console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'License deleted successfully');
         refetchLicenseData();
@@ -176,8 +173,6 @@ export default function LicenseManagement() {
   const filteredLicenses = licensesData?.data?.filter(
     (item) => item.countryId === selectedCountry
   );
-  // console.log('selectedCountry', selectedCountry);
-  // console.log('filteredLicenses', filteredLicenses);
 
   return (
     <>

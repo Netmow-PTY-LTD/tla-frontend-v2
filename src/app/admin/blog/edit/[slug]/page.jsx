@@ -73,8 +73,6 @@ export default function EditBlog() {
   console.log('singleBlogData', singleBlogData);
   const blog = singleBlogData?.data;
 
-  console.log('blog', blog);
-
   const methods = useForm({
     resolver: zodResolver(blogSchema),
     defaultValues: {
@@ -196,8 +194,6 @@ export default function EditBlog() {
       },
     };
 
-    console.log('payload to be sent', payload);
-
     const formData = new FormData();
     formData.append('data', JSON.stringify(payload));
 
@@ -218,7 +214,6 @@ export default function EditBlog() {
         blogId: blog?._id,
         data: formData,
       }).unwrap();
-      console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'Blog Updated successfully.');
         router.push('/admin/blog/list');
