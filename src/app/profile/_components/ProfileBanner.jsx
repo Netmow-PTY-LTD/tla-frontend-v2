@@ -464,7 +464,7 @@ END:VCARD`;
                     alt={"founder_Batch"}
                   />
                 </div>
-                <span className="badge-name">Founding Members</span>
+                <span className="badge-name">Founding Member</span>
 
               </div>
             )}
