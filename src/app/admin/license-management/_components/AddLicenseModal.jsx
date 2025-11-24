@@ -7,7 +7,7 @@ import { z } from 'zod';
 import countries from '@/data/countries.json';
 import SelectInput from '@/components/form/SelectInput';
 import { useAddLawFirmCertificationMutation } from '@/store/features/admin/lawFirmCertificationApiService';
-import { showSuccessToast } from '@/components/common/toasts';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import AvatarUploader from '@/components/UIComponents/AvaterUploader';
 
 const licenseSchema = z.object({
@@ -58,7 +58,8 @@ export default function AddLicenseModal({ open, setOpen, refetchLicenseData }) {
         setOpen(false);
       }
     } catch (error) {
-      // console.log('error', error);
+      console.log('error', error);
+      showErrorToast(error?.data?.message || 'Failed to add license');
     }
   };
   return (

@@ -34,8 +34,6 @@ export default function Footer() {
 
   const { data: headerFooterCodes } = useGetPublicHeaderFooterCodesQuery();
 
-  console.log('headerFooterCodes', headerFooterCodes);
-
   useEffect(() => {
     if (!headerFooterCodes?.data?.length) return;
 

@@ -43,8 +43,6 @@ export default function ClaimAccountRequests() {
     search,
   });
 
-  console.log('claimsRequests', claimsRequests);
-
   const [updateClaimRequestStatus] = useUpdateRequestStatusMutation();
 
   const handleUpdateClaimRequestStatus = async (id, status) => {

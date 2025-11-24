@@ -52,8 +52,6 @@ export function ChartBarMonthly() {
     month,
   });
 
-  console.log('barChartData in ChartBarMonthly', barChartData);
-
   const allDays = generateMonthDays(year, month);
 
   const chartData = allDays.map((day) => {

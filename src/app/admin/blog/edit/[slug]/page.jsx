@@ -73,8 +73,6 @@ export default function EditBlog() {
   console.log('singleBlogData', singleBlogData);
   const blog = singleBlogData?.data;
 
-  console.log('blog', blog);
-
   const methods = useForm({
     resolver: zodResolver(blogSchema),
     defaultValues: {

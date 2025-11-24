@@ -87,8 +87,6 @@ export default function Page() {
     isCity: true, // extra param to differentiate
   });
 
-  console.log('cityZipCodeList', cityZipCodeList);
-
   const handleCheckedRow = async (selectedRows) => {
     // console.log('selectedRows', selectedRows);
     // You can do anything here: update parent state, call API, etc.

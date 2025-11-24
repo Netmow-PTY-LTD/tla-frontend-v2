@@ -36,8 +36,6 @@ export default function BlogList() {
     search,
   });
 
-  console.log('blogList', blogList);
-
   const [deleteBlog] = useDeleteBlogMutation();
 
   const handleDeleteBlog = async (id) => {

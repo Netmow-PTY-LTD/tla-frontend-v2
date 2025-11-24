@@ -29,7 +29,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-
 export function DataTableWithPagination({
   data,
   columns,
@@ -68,8 +67,6 @@ export function DataTableWithPagination({
       rowSelection,
     },
   });
-
-  console.log('totalPage in datatable', totalPage);
 
   return (
     <div className="w-full">
@@ -121,9 +118,9 @@ export function DataTableWithPagination({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
                   );
                 })}

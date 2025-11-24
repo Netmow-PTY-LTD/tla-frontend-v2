@@ -72,8 +72,6 @@ export default function LicenseManagement() {
     { skip: !selectedCountry }
   );
 
-  console.log('licensesData', licensesData);
-
   const handleEditLicenseModalOpen = (id) => {
     setIsEditModalOpen(true);
     setLicenseId(id);
@@ -176,8 +174,6 @@ export default function LicenseManagement() {
   const filteredLicenses = licensesData?.data?.filter(
     (item) => item.countryId === selectedCountry
   );
-  // console.log('selectedCountry', selectedCountry);
-  // console.log('filteredLicenses', filteredLicenses);
 
   return (
     <>

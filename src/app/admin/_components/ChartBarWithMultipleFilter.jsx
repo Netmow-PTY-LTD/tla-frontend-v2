@@ -63,8 +63,6 @@ export default function InteractiveBarChart() {
     FilterType[filter]
   );
 
-  // console.log('barChartData in ChartBarMonthly', barChartData);
-
   // Get today
   const today = new Date();
 

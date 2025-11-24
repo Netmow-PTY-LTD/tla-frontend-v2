@@ -51,8 +51,6 @@ export default function EditLicenseModal({
 
   const license = licenseData?.data;
 
-  console.log('license', license);
-
   // useEffect(() => {
   //   if (license) {
   //     setDefaultValues({
