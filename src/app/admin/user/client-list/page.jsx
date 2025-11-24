@@ -297,7 +297,7 @@ export default function Page() {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
+              {/* <DropdownMenuItem asChild>
                 <Link
                   href={`/admin/user/edit/${userId}`}
                   className="flex gap-2 items-center cursor-pointer"
@@ -315,7 +315,7 @@ export default function Page() {
                   <Trash2 />
                   Delete
                 </Link>
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               {/* Details Page */}
               <DropdownMenuItem asChild>
                 <Link
