@@ -92,7 +92,7 @@ export default function Page() {
     isFetching: isFirmsListFetching,
   } = useGetAllFirmsQuery({ page, limit, search });
 
-  console.log('firmsList', firmsList);
+  //console.log('firmsList', firmsList);
 
   const [updateFirmStatus] = useUpdateFirmStatusMutation();
 
