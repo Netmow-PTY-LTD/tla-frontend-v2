@@ -43,8 +43,6 @@ export default function ClaimAccountRequests() {
     search,
   });
 
-  console.log('claimsRequests', claimsRequests);
-
   const [updateClaimRequestStatus] = useUpdateRequestStatusMutation();
 
   const handleUpdateClaimRequestStatus = async (id, status) => {
@@ -54,8 +52,6 @@ export default function ClaimAccountRequests() {
       matchedLawFirmId: null,
       reviewerNote: 'Verified firm documents and approved claim.',
     };
-
-    console.log('payload', payload);
 
     try {
       const res = await updateClaimRequestStatus(payload).unwrap();

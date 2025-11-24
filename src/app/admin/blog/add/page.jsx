@@ -125,7 +125,6 @@ export default function AddBlog() {
   const [addBlog, { isLoading: isAddBlogLoading }] = useAddBlogMutation();
 
   const onSubmit = async (data) => {
-    console.log('Submitted blog data', data);
     const {
       title,
       slug,
@@ -154,8 +153,6 @@ export default function AddBlog() {
       },
     };
 
-    console.log('payload to be sent', payload);
-
     const formData = new FormData();
     formData.append('data', JSON.stringify(payload));
 
@@ -169,7 +166,6 @@ export default function AddBlog() {
 
     try {
       const res = await addBlog(formData).unwrap();
-      console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'Blog added successfully.');
         router.push('/admin/blog/list');
