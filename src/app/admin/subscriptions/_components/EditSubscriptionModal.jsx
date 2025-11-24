@@ -107,14 +107,14 @@ export default function EditSubscriptionModal({
       description,
     };
 
-    console.log('payload', payload);
+    // console.log('payload', payload);
 
     try {
       const res = await updateSubscription({
         subscriptionId,
         body: payload,
       }).unwrap();
-      console.log('res', res);
+      // console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'Subscription updated successfully');
         refetchSubscriptions();

@@ -46,7 +46,7 @@ const CreditsPurchase = ({ creditPackage }) => {
     };
     try {
       const result = await purchasePackage(purchaseDetails).unwrap();
-      console.log('Purchase result:', result);
+      // console.log('Purchase result:', result);
       if (result.success) {
         showSuccessToast(result?.message);
       } else {

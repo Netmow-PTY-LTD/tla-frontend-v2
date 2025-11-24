@@ -304,7 +304,7 @@ export default function AddOptionPage() {
         await singleServicewiseQuestionsRefetch();
       }
     } catch (err) {
-      console.log('Error in deleting option', err);
+      // console.log('Error in deleting option', err);
       showErrorToast(err?.data?.message || 'Failed to delete option.');
     }
   };

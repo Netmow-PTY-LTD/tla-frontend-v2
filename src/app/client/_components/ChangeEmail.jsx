@@ -31,18 +31,18 @@ export default function ChangeEmail({ open, setOpen }) {
 
 
 
-    console.log('currentUser1',userinfo)
+    // console.log('currentUser1',userinfo)
     // Keep email state in sync if Redux updates (like after login)
     useEffect(() => {
-        console.log('currentUser2',userinfo)
+        // console.log('currentUser2',userinfo)
         if(userinfo){
 
             setEmail(userinfo?.email || "");
         }
     }, [userinfo]);
 
-     console.log('userinfo?.email ',userinfo?.email )
-     console.log('currentUser2',userinfo)
+    //  console.log('userinfo?.email ',userinfo?.email )
+    //  console.log('currentUser2',userinfo)
 
 
 

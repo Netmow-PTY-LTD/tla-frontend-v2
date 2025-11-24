@@ -63,7 +63,7 @@ export default function NotificationDropdownClient() {
     currentUser?._id,
     useCallback(
       (data) => {
-        console.log('🔔 Notification Lawyer Dashboard:', data);
+
         if (data?.userId) {
           refetch();
         }

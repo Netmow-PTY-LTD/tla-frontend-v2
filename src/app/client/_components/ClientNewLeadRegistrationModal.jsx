@@ -376,7 +376,7 @@ export default function ClientNewLeadRegistrationModal({
       addressInfo,
     };
 
-    console.log('payload', payload);
+    // console.log('payload', payload);
 
     try {
       const res = await addLead(payload).unwrap();

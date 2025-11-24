@@ -88,11 +88,14 @@ export default function EditEliteProSubscriptionModal({
       description,
     };
 
+    // console.log('payload', payload);
+
     try {
       const res = await updateEliteProSubscription({
         subscriptionId,
         body: payload,
       }).unwrap();
+      // console.log('res', res);
       if (res?.success) {
         showSuccessToast(
           res?.message || 'Elite Pro Subscription updated successfully'

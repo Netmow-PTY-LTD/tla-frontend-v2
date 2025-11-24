@@ -50,7 +50,7 @@ export default function SocialMediaLinks() {
   };
 
   const handleSubmit = async (data) => {
-    console.log('social media', data);
+    // console.log('social media', data);
     try {
       const formData = new FormData();
       const { facebook, twitter, website } = data;
@@ -67,7 +67,7 @@ export default function SocialMediaLinks() {
       // Append serialized JSON data
       formData.append('data', JSON.stringify(payload));
 
-      console.log(JSON.parse(formData.get('data')));
+      // console.log(JSON.parse(formData.get('data')));
       const res = await updateUserData(formData).unwrap();
       if (res?.success === true) {
         showSuccessToast(
@@ -75,7 +75,7 @@ export default function SocialMediaLinks() {
         );
         refetch();
       }
-      console.log('Update response:', res);
+      // console.log('Update response:', res);
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);

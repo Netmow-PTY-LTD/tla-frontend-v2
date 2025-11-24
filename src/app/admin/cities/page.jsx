@@ -88,7 +88,7 @@ export default function Page() {
   });
 
   const handleCheckedRow = async (selectedRows) => {
-    console.log('selectedRows', selectedRows);
+    // console.log('selectedRows', selectedRows);
     // You can do anything here: update parent state, call API, etc.
   };
 
@@ -130,6 +130,8 @@ export default function Page() {
                 countryId: selectedCountry,
                 isCity: checked,
               }).unwrap();
+
+              // console.log('updateZipCode res', res);
 
               if (res?.success) {
                 showSuccessToast('Zip code updated successfully.');

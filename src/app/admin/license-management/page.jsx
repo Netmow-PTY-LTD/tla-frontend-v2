@@ -81,12 +81,13 @@ export default function LicenseManagement() {
   const handleDeleteLicense = async (id) => {
     try {
       const res = await deleteLicense(id).unwrap();
+      // console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'License deleted successfully');
         refetchLicenseData();
       }
     } catch (error) {
-      console.log('error', error);
+      // console.log('error', error);
       showErrorToast(error?.data?.message || 'Failed to delete license');
     }
   };

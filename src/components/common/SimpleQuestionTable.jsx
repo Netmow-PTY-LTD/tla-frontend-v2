@@ -107,14 +107,14 @@ export function SimpleQuestionTable({
     }));
 
     // You can now use orderArray to update backend or internal state
-    console.log('New order:', orderArray);
+  
     setVisibleRows(updatedRows); // Update visibleRows for visual movement
     setDraggedIndex(null);
 
     // 🔥 Call the API
     try {
       const response = await updateQuestionOrder(orderArray).unwrap();
-      console.log('Order updated successfully:', response);
+ 
       showSuccessToast(response?.message || 'Order updated successfully:');
     } catch (error) {
       console.error('Failed to update question order:', error);

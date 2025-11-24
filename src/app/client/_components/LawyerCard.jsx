@@ -70,7 +70,7 @@ const LawyerCard = ({
 
     try {
       const response = await requestLawyer(payload).unwrap();
-      console.log('Response:', response);
+      // console.log('Response:', response);
       if (response?.success) {
         refetch();
         showSuccessToast(response?.message || 'Request sent successfully');

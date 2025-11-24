@@ -265,7 +265,7 @@ export default function AddQuestionPage() {
         showSuccessToast(res?.message);
       }
     } catch (err) {
-      console.log('Error in deleting question', err);
+      // console.log('Error in deleting question', err);
       showErrorToast(err?.data?.message || 'Failed to delete question.');
     }
   };

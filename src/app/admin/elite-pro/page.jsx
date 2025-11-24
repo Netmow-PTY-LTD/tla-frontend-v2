@@ -53,7 +53,7 @@ export default function EliteProSubscriptionsList() {
     try {
       // Call the delete subscription API
       const res = await deleteEliteProSubscription(id).unwrap();
-      console.log('res', res);
+      // console.log('res', res);
       if (res?.success) {
         showSuccessToast('Elite Pro Subscription deleted successfully');
         refetchEliteProSubscriptions();

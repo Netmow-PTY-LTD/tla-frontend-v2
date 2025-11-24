@@ -30,6 +30,8 @@ export default function AddLicenseModal({ open, setOpen, refetchLicenseData }) {
   const [addLawFirmCertification] = useAddLawFirmCertificationMutation();
 
   const handleAddLicense = async (values) => {
+    // console.log('values', values);
+
     const { country, certificationName, type, agencyLogo } = values;
 
     const payload = {
@@ -37,6 +39,8 @@ export default function AddLicenseModal({ open, setOpen, refetchLicenseData }) {
       certificationName,
       type,
     };
+
+    // console.log('payload', payload);
 
     const formData = new FormData();
     formData.append('data', JSON.stringify(payload));
@@ -47,6 +51,7 @@ export default function AddLicenseModal({ open, setOpen, refetchLicenseData }) {
 
     try {
       const res = await addLawFirmCertification(formData).unwrap();
+      // console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'License added successfully');
         refetchLicenseData();

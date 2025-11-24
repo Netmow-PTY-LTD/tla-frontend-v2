@@ -60,7 +60,7 @@ export default function AddSubscriptionModal({
     useAddSubscriptionMutation();
 
   const handleAddSubscription = async (values) => {
-    console.log('values', values);
+    // console.log('values', values);
 
     const {
       name,
@@ -80,11 +80,11 @@ export default function AddSubscriptionModal({
       description,
     };
 
-    console.log('payload', payload);
+    // console.log('payload', payload);
 
     try {
       const res = await addSubscription(payload).unwrap();
-      console.log('res', res);
+      // console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'Subscription added successfully');
         refetchSubscriptions();

@@ -129,7 +129,7 @@ export default function EditSEOMetaPageModal({
   const [updateMetaInfo, { isLoading: isMetaInfoLoading }] =
     useEditMetaInfoMutation();
   const handleMetaInfoAdd = async (values) => {
-    console.log('values', values);
+    // console.log('values', values);
     const {
       pageKey,
       slug,
@@ -151,7 +151,7 @@ export default function EditSEOMetaPageModal({
       metaKeywords,
     };
 
-    console.log('payload to send', payload);
+    // console.log('payload to send', payload);
 
     formData.append('data', JSON.stringify(payload));
 
@@ -165,7 +165,7 @@ export default function EditSEOMetaPageModal({
         seoId: pageId,
         body: formData,
       }).unwrap();
-      console.log('Meta info response', res);
+      // console.log('Meta info response', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'Meta info updated successfully');
         refetchMetaInfo();
@@ -244,7 +244,7 @@ export default function EditSEOMetaPageModal({
                           <button
                             type="button"
                             onClick={() => {
-                              console.log('clicked');
+                              // console.log('clicked');
                               setThumbPreviewUrl(null);
                               setThumbImageFile(null);
                               field.onChange(null); // reset RHF field

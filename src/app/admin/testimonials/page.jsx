@@ -53,13 +53,13 @@ export default function TestimonialManagement() {
   const handleDeleteTestimonial = async (id) => {
     try {
       const res = await deleteTestimonial(id).unwrap();
-      console.log('res', res);
+      // console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'Testimonial deleted successfully');
         refetchTestimonialData();
       }
     } catch (error) {
-      console.log('error', error);
+      // console.log('error', error);
       showErrorToast(error?.data?.message || 'Failed to delete testimonial');
     }
   };

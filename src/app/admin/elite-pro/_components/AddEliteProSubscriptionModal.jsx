@@ -53,7 +53,7 @@ export default function AddEliteProSubscriptionModal({
   const [addEliteProSubscription, { isLoading, isSuccess, isError, error }] =
     useAddEliteProSubscriptionMutation();
   const handleAddEliteProSubscription = async (values) => {
-    //console.log('values', values);
+    // console.log('values', values);
 
     const { name, price_amount, billingCycle, features, description } = values;
 
@@ -65,10 +65,11 @@ export default function AddEliteProSubscriptionModal({
       description,
     };
 
-    //console.log('payload', payload);
+    // console.log('payload', payload);
 
     try {
       const res = await addEliteProSubscription(payload).unwrap();
+      // console.log('Subscription added successfully:', res);
       if (res?.success) {
         showSuccessToast(
           res?.message || 'Elite Pro Subscription added successfully'

@@ -72,11 +72,11 @@ const page = () => {
       formData.append('userProfileLogo', userProfileLogo);
     }
 
-    console.log(JSON.parse(formData.get('data')));
+    // console.log(JSON.parse(formData.get('data')));
 
     try {
       const res = await updateUserData(formData).unwrap();
-      console.log('res', res);
+      // console.log('res', res);
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Update successful');
         refetchUserInfo();

@@ -69,7 +69,7 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
 
   const toUser = singleResponse?.data?.responseBy?.user?._id;
   useNotifications(currentUser?._id, (data) => {
-    console.log('🔔 Notification:', data);
+    // console.log('🔔 Notification:', data);
     if (data?.userId) {
       refetch();
     }
@@ -86,15 +86,15 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
         data: { hireMessage },
       };
 
-      console.log('hireMessageData', hireMessageData);
+      // console.log('hireMessageData', hireMessageData);
       const result = await hireRequest(hireMessageData).unwrap();
-      console.log('result  ==>', result);
+      // console.log('result  ==>', result);
       if (result.success) {
         showSuccessToast(result.message);
       }
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
-      console.log('error  ==>', error);
+      // console.log('error  ==>', error);
       showErrorToast(errorMessage);
     }
   };

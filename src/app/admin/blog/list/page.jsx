@@ -39,8 +39,10 @@ export default function BlogList() {
   const [deleteBlog] = useDeleteBlogMutation();
 
   const handleDeleteBlog = async (id) => {
+    // console.log('Deleting blog with ID:', id);
     try {
       const res = await deleteBlog(id).unwrap();
+      // console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'Blog deleted successfully');
         refetchBlogs();

@@ -75,6 +75,7 @@ export async function middleware(request) {
   const user = await verifyToken(token); // Should return something like { reqUserType: 'admin' }
 
   if (!user) {
+    // console.log('❌ Token failed verification:', token);
     //console.log('❌ Token failed verification:', token);
 
     return noCacheResponse(response);

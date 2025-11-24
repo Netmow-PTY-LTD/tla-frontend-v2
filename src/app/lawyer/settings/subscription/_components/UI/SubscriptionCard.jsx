@@ -2,6 +2,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 
 const SubscriptionCard = ({ subscription }) => {
+
   const {
     subscriptionPackageId,
     status,
@@ -10,6 +11,8 @@ const SubscriptionCard = ({ subscription }) => {
     autoRenew,
     monthlyCaseContacts,
   } = subscription;
+
+
 
   return (
     <div className=" bg-white rounded-xl overflow-hidden border border-gray-200 p-4 md:p-6">

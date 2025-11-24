@@ -38,7 +38,7 @@ const AddExperienceModal = ({ profile, updateUserData, refetch }) => {
         refetch();
         setOpen(false); // Close the modal after successful submission
       }
-      console.log('Update response:', res);
+      // console.log('Update response:', res);
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);

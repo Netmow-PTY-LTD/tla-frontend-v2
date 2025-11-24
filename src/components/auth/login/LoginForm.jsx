@@ -44,13 +44,13 @@ const LoginForm = () => {
     try {
       const res = await authLogin(data).unwrap();
 
-      console.log('res', res);
+   
 
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Login successful');
         const user = await verifyToken(res?.token);
 
-        console.log('user', user);
+      
 
         if (user) {
           const dispatchUser = dispatch(
@@ -69,23 +69,23 @@ const LoginForm = () => {
             localStorage.removeItem('userEmail');
           }
 
-          console.log('dispatchUser', res?.data?.regUserType);
+
           if (dispatchUser?.payload?.token) {
             if (res?.data?.regUserType === 'lawyer') {
               router.push(`/lawyer/dashboard`);
               const cachedRes = await cachedUserData().unwrap();
-              console.log('cachedRes', cachedRes);
+         
 
             } else if (res?.data?.regUserType === 'client') {
               router.push(`/client/dashboard`);
               const cachedRes = await cachedUserData().unwrap();
-              console.log('cachedRes', cachedRes);
+       
 
 
             } else if (res?.data?.regUserType === 'admin') {
               router.push(`/admin`);
               const cachedRes = await cachedUserData().unwrap();
-              console.log('cachedRes', cachedRes);
+        
 
 
             }
