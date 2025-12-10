@@ -12,17 +12,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import {
-  Archive,
-  CheckCircle,
   Circle,
-  Clock,
-  Eye,
-  Loader,
-  Loader2,
   MoreHorizontal,
-  Pencil,
-  Slash,
-  Trash2,
   View,
 } from 'lucide-react';
 import { useAllUsersQuery } from '@/store/features/admin/userApiService';
@@ -30,8 +21,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 import {
-  useChangeUserAccountStatsMutation,
-  useUpdateUserDataMutation,
+  useAuthUserInfoQuery,
   useUpdateUserDefalultPicMutation,
 } from '@/store/features/auth/authApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
@@ -39,6 +29,8 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import resizeAndConvertToWebP from '@/components/UIComponents/resizeAndConvertToWebP';
 import { UserDataTable } from '@/app/admin/user/_components/UserDataTable';
+import Cookies from 'js-cookie';
+import { skipToken } from '@reduxjs/toolkit/query';
 
 
 // Enable relative time support
@@ -63,24 +55,39 @@ export default function Page() {
   const [sortBy, setSortBy] = useState('createdAt');
   const [sortOrder, setSortOrder] = useState('desc');
 
-  const {
-    data: userList,
-    isFetching,
-    refetch,
-  } = useAllUsersQuery({
-    page,
-    limit,
-    search: debouncedSearch,
-    role,
-    regUserType,
-    accountStatus,
-    isVerifiedAccount,
-    isPhoneVerified,
-    sortBy,
-    sortOrder,
-  });
+  const token = Cookies.get('token');
+// Get current user
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    useAuthUserInfoQuery(undefined, {
+      skip: !token,
+    });
 
-  //console.log('userList', userList);
+  const userId = currentUser?.data?._id;
+
+  // Skip query until userId is available
+  const skipQuery = !userId;
+
+  // Fetch users with filters
+  const { data: userList, isFetching, refetch } = useAllUsersQuery(
+    skipQuery
+      ? skipToken
+      : {
+          page,
+          limit,
+          search: debouncedSearch,
+          role,
+          regUserType,
+          accountStatus,
+          isVerifiedAccount,
+          isPhoneVerified,
+          sortBy,
+          sortOrder,
+          createdBy: userId,
+        },
+    { refetchOnMountOrArgChange: true } // ensures query refetches when arguments change
+  );
+
+  
   // Debounce effect
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -92,26 +99,9 @@ export default function Page() {
     };
   }, [search]);
 
-  console.log('check user list', userList);
-  const [changeAccoutStatus] = useChangeUserAccountStatsMutation();
 
-  const handleChangeStatus = async (userId, status) => {
-    try {
-      const payload = {
-        userId,
-        data: { accountStatus: status },
-      };
 
-      const res = await changeAccoutStatus(payload).unwrap();
 
-      if (res.success) {
-        showSuccessToast(res?.message || 'Status Update Successful');
-      }
-    } catch (error) {
-      const errorMessage = error?.data?.message || 'An error occurred';
-      showErrorToast(errorMessage);
-    }
-  };
 
   const columns = [
     {
