@@ -92,11 +92,7 @@ export const lawyerSchema = z.object({
 });
 
 export default function CreateNewLawyer() {
-  const [inputValue, setInputValue] = React.useState("");
-  const [selectedServices, setSelectedServices] = React.useState([]);
-  const [hasServiceError, setHasServiceError] = React.useState(false);
   const [query, setQuery] = useState("");
-  const [gender, setGender] = useState("male");
   const [zipcode, setZipcode] = useState("");
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
@@ -105,7 +101,6 @@ export default function CreateNewLawyer() {
 
   const router = useRouter();
 
- 
 
   const form = useForm({
     resolver: zodResolver(lawyerSchema),
@@ -126,13 +121,7 @@ export default function CreateNewLawyer() {
   });
 
 
-
-
-
-
     const token = Cookies.get('token');
- 
-
         const { data: currentUser, isLoading: isCurrentUserLoading } =
           useAuthUserInfoQuery(undefined, {
             skip: !token,
@@ -140,15 +129,9 @@ export default function CreateNewLawyer() {
 
 
 
-
-
-
   // Watch country selection
   const countryId = useWatch({ control: form.control, name: 'country' });
-  console.log('Selected country:', countryId);
-
-
-
+ 
 
 
   const { data: countryWiseServices } = useGetCountryWiseServicesQuery(
@@ -157,11 +140,6 @@ export default function CreateNewLawyer() {
       skip: !countryId, // Skip
     }
   );
-
-
-
-
-
 
   const paramsPayload = {
     countryId: countryId,
@@ -172,27 +150,7 @@ export default function CreateNewLawyer() {
     skip: !countryId,
   });
 
-  const allServices = countryWiseServices?.data || [];
-
-  // Filter services dynamically based on input
-  const filteredServices = allServices.filter(
-    (service) =>
-      service.name.toLowerCase().includes(inputValue.toLowerCase()) &&
-      !selectedServices.some((s) => s._id === service._id)
-  );
-
-  // Add or remove selected service
-  const handleSelectService = (serviceId) => {
-    setSelectedServices((prev) => {
-      const alreadySelected = prev.includes(serviceId);
-      if (alreadySelected) {
-        return prev.filter((id) => id !== serviceId);
-      } else {
-        return [...prev, serviceId];
-      }
-    });
-    setHasServiceError(false);
-  };
+  
 
   const filteredZipCodes =
     allZipCodes?.data?.filter((z) =>
@@ -203,21 +161,14 @@ export default function CreateNewLawyer() {
 
   const ranges = rangeData?.data || [];
 
-  //console.log("selectedServices", selectedServices);
-  const handleGenderChange = (value) => {
-    setGender(value);
-  };
+
 
   // const [createLawyer, { isLoading: isCreatingLawyerLoading }] =
   //   useCreateLawyerMutation();
 
   const onSubmit = async (data) => {
     console.log("Form submitted", data);
-    if (selectedServices.length === 0) {
-      setHasServiceError(true);
-      return;
-    }
-
+  
     const {
       name,
       email,
@@ -230,6 +181,7 @@ export default function CreateNewLawyer() {
       rangeInKm,
       practiceWithin,
       practiceInternational,
+      services
     } = data;
 
     const payload = {
@@ -247,7 +199,7 @@ export default function CreateNewLawyer() {
         practising_certificate_number,
       },
       lawyerServiceMap: {
-        services: selectedServices,
+        services,
         rangeInKm,
         practiceWithin,
         practiceInternational,
