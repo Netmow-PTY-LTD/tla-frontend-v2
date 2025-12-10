@@ -665,16 +665,16 @@ export default function CreateNewLawyer() {
 
             {/* Add more fields as necessary */}
 
-            <div className="flex justify-between gap-4 items-center">
+            <div className="flex justify-between gap-4 items-center ">
               <Link
                 href="/marketing/lawyers"
-                className="text-sm flex items-center hover:underline bg-black text-white px-4 py-2 rounded-md"
+                className="text-sm flex items-center hover:underline bg-[#1da9a7] text-white px-4 py-2 rounded-md "
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 <span>Back to Lawyers List</span>
               </Link>
               <Button
-                className="cursor-pointer mt-2"
+                className="cursor-pointer mt-2 bg-[#1da9a7]"
                 type="submit"
                 disabled={isCreatingLawyerLoading}
               >

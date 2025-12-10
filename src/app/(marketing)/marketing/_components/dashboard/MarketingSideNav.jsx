@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import SidebarTop from '@/app/lawyer/dashboard/_component/common/SidebarTop';
 import { MarketingSidebarItems } from './MarketingSidebarItems';
+import SidebarTopMarketing from './SidebarTopMarketing';
 
 
 export default function MarketingSideNav({ isCollapsed, setIsCollapsed }) {
@@ -57,12 +58,12 @@ export default function MarketingSideNav({ isCollapsed, setIsCollapsed }) {
         } xl:static xl:translate-x-0 xl:transform-none xl:z-auto`}
     >
       <div className="p-3 lg:p-4">
-        <SidebarTop />
+        <SidebarTopMarketing/>
       </div>
 
       <nav className="p-3 lg:pt-2 lg:pb-3 lg:px-4 space-y-1 h-[calc(100%-170px)] overflow-y-auto">
         <h3 className="text-black leading-none font-semibold text-[20px] border-b border-[#f2f2f2] pb-2 mb-3">
-          Admin Menu
+          Marketing Menu
         </h3>
         {MarketingSidebarItems?.navMain?.map((item) => {
           const hasSubItems =
