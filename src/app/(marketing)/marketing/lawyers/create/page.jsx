@@ -48,10 +48,11 @@ import z from "zod";
 
 
 import Link from "next/link";
-import { useGetRangeListQuery, useGetZipCodeListQuery } from "@/store/features/public/publicApiService";
+import { useGetCountryListQuery, useGetRangeListQuery, useGetZipCodeListQuery } from "@/store/features/public/publicApiService";
 import { useGetCountryWiseServicesQuery } from "@/store/features/admin/servicesApiService";
 import Cookies from "js-cookie";
 import { useAuthUserInfoQuery } from "@/store/features/auth/authApiService";
+import CountrySelect from "../../_components/form/CountrySelect";
 
 const genderOptions = [
   { id: 1, label: "Male", value: "male" },
@@ -141,6 +142,10 @@ export default function CreateNewLawyer() {
 
 
   const countryId = currentUser?.data?.firmProfileId?.contactInfo?.country?._id;
+const {data:countryList}=useGetCountryListQuery();
+
+console.log('data ===>',countryList)
+
 
   const { data: countryWiseServices } = useGetCountryWiseServicesQuery(
     countryId,
@@ -572,6 +577,18 @@ export default function CreateNewLawyer() {
                   </div>
                 </FormItem>
               </div>
+
+
+
+                      <div className="w-full">
+             
+                  <CountrySelect form={form} name="country" />
+              </div>
+
+
+
+
+
               <div className="w-full">
                 <FormField
                   control={form.control}
