@@ -82,17 +82,23 @@ export default function MarketingProfileDropDown({ data, isCurrentUserLoading })
 
           {/* Role Switches */}
           <DropdownMenuGroup>
+            
             <DropdownMenuItem>
-              <Link href="/marketing/dashboard" className="w-full flex items-center justify-between px-2 py-1.5">
-                <span>Marketing</span>
+              <Link href="/marketing/my-profile" className="w-full flex items-center justify-between px-2 py-1.5">
+                <span>My Profile</span>
                 <DropdownMenuShortcut>
-                  <Briefcase />
+                  <LayoutDashboard />
                 </DropdownMenuShortcut>
               </Link>
             </DropdownMenuItem>
+           
+           
+          </DropdownMenuGroup>
+          <DropdownMenuGroup>
+            
             <DropdownMenuItem>
-              <Link href="/admin/dashboard" className="w-full flex items-center justify-between px-2 py-1.5">
-                <span>Admin</span>
+              <Link href="/admin" className="w-full flex items-center justify-between px-2 py-1.5">
+                <span>Switch to Admin</span>
                 <DropdownMenuShortcut>
                   <LayoutDashboard />
                 </DropdownMenuShortcut>
