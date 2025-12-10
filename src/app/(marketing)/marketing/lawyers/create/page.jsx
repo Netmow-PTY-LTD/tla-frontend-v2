@@ -53,6 +53,7 @@ import { useGetCountryWiseServicesQuery } from "@/store/features/admin/servicesA
 import Cookies from "js-cookie";
 import { useAuthUserInfoQuery } from "@/store/features/auth/authApiService";
 import CountrySelect from "../../_components/form/CountrySelect";
+import ServiceSelector from "../../_components/form/ServiceSelector";
 
 const genderOptions = [
   { id: 1, label: "Male", value: "male" },
@@ -75,10 +76,10 @@ export const lawyerSchema = z.object({
   gender: z.enum(["male", "female", "other"], {
     required_error: "Gender is required",
   }),
-  //   services: z
-  //     .array(z.string())
-  //     .min(1, "At least one service specialization is required"),
-  //AreaZipcode: z.string().min(1, "Practicing area is required"),
+    services: z
+      .array(z.string())
+      .min(1, "At least one service specialization is required"),
+  AreaZipcode: z.string().min(1, "Practicing area is required"),
   country:z.string(),
   rangeInKm: z
     .number()
@@ -652,73 +653,14 @@ export default function CreateNewLawyer() {
                 />
               </div>
            
-
+                      <ServiceSelector
+                      name="services"
+                      services={countryWiseServices?.data || []}
+                      hasError={form.formState.errors.services}
+                      />
 
 
               <div className="w-full">
-                {/* <FormField
-                  control={form.control}
-                  name="service"
-                  render={({ field }) => (
-                  
-                  )}
-                /> */}
-                <FormItem>
-                  <FormLabel>Services Specialization</FormLabel>
-                  <div className="space-y-1 relative">
-                    <Input
-                      placeholder="Type to search..."
-                      value={inputValue}
-                      onChange={(e) => setInputValue(e.target.value)}
-                      className="tla-form-control h-[44px]"
-                      autoComplete="off"
-                    />
-
-                    <div className="flex flex-wrap gap-2">
-                      {selectedServices.map((id) => {
-                        const service = countryWiseServices?.data?.find(
-                          (s) => s._id === id
-                        );
-                        return (
-                          <Badge
-                            key={id}
-                            onClick={() => handleSelectService(id)}
-                            className="cursor-pointer py-1 px-2 flex items-center gap-2 mt-1"
-                          >
-                            {service?.name || "Unknown"} ✕
-                          </Badge>
-                        );
-                      })}
-                    </div>
-
-                    {inputValue && filteredServices.length > 0 && (
-                      <div className="bg-white border rounded shadow max-h-48 overflow-y-auto p-2 absolute top-[41px] left-0 z-10 w-full">
-                        {filteredServices.map((s) => (
-                          <div
-                            key={s._id}
-                            className="cursor-pointer p-1 hover:bg-gray-100 rounded"
-                            onClick={() => {
-                              handleSelectService(s._id);
-                              setInputValue("");
-                            }}
-                          >
-                            {s.name}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
-                    {hasServiceError && (
-                      <FormMessage>
-                        At least one service must be selected.
-                      </FormMessage>
-                    )}
-                  </div>
-                </FormItem>
-              </div>
-
-
-   <div className="w-full">
                 <FormField
                   control={form.control}
                   name="practiceWithin"
