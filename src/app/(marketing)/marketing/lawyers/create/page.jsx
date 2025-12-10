@@ -43,7 +43,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import z from "zod";
 
 
@@ -79,6 +79,7 @@ export const lawyerSchema = z.object({
   //     .array(z.string())
   //     .min(1, "At least one service specialization is required"),
   //AreaZipcode: z.string().min(1, "Practicing area is required"),
+  country:z.string(),
   rangeInKm: z
     .number()
     .min(1, "Range of area is required")
@@ -141,10 +142,12 @@ export default function CreateNewLawyer() {
 
 
 
-  const countryId = currentUser?.data?.firmProfileId?.contactInfo?.country?._id;
-const {data:countryList}=useGetCountryListQuery();
+  // Watch country selection
+  const countryId = useWatch({ control: form.control, name: 'country' });
+  console.log('Selected country:', countryId);
 
-console.log('data ===>',countryList)
+
+
 
 
   const { data: countryWiseServices } = useGetCountryWiseServicesQuery(
@@ -516,70 +519,10 @@ console.log('data ===>',countryList)
                   )}
                 />
               </div>
-              <div className="w-full">
-                {/* <FormField
-                  control={form.control}
-                  name="service"
-                  render={({ field }) => (
+
+
+
                   
-                  )}
-                /> */}
-                <FormItem>
-                  <FormLabel>Services Specialization</FormLabel>
-                  <div className="space-y-1 relative">
-                    <Input
-                      placeholder="Type to search..."
-                      value={inputValue}
-                      onChange={(e) => setInputValue(e.target.value)}
-                      className="tla-form-control h-[44px]"
-                      autoComplete="off"
-                    />
-
-                    <div className="flex flex-wrap gap-2">
-                      {selectedServices.map((id) => {
-                        const service = countryWiseServices?.data?.find(
-                          (s) => s._id === id
-                        );
-                        return (
-                          <Badge
-                            key={id}
-                            onClick={() => handleSelectService(id)}
-                            className="cursor-pointer py-1 px-2 flex items-center gap-2 mt-1"
-                          >
-                            {service?.name || "Unknown"} ✕
-                          </Badge>
-                        );
-                      })}
-                    </div>
-
-                    {inputValue && filteredServices.length > 0 && (
-                      <div className="bg-white border rounded shadow max-h-48 overflow-y-auto p-2 absolute top-[41px] left-0 z-10 w-full">
-                        {filteredServices.map((s) => (
-                          <div
-                            key={s._id}
-                            className="cursor-pointer p-1 hover:bg-gray-100 rounded"
-                            onClick={() => {
-                              handleSelectService(s._id);
-                              setInputValue("");
-                            }}
-                          >
-                            {s.name}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
-                    {hasServiceError && (
-                      <FormMessage>
-                        At least one service must be selected.
-                      </FormMessage>
-                    )}
-                  </div>
-                </FormItem>
-              </div>
-
-
-
                       <div className="w-full">
              
                   <CountrySelect form={form} name="country" />
@@ -708,7 +651,74 @@ console.log('data ===>',countryList)
                   )}
                 />
               </div>
+           
+
+
+
               <div className="w-full">
+                {/* <FormField
+                  control={form.control}
+                  name="service"
+                  render={({ field }) => (
+                  
+                  )}
+                /> */}
+                <FormItem>
+                  <FormLabel>Services Specialization</FormLabel>
+                  <div className="space-y-1 relative">
+                    <Input
+                      placeholder="Type to search..."
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      className="tla-form-control h-[44px]"
+                      autoComplete="off"
+                    />
+
+                    <div className="flex flex-wrap gap-2">
+                      {selectedServices.map((id) => {
+                        const service = countryWiseServices?.data?.find(
+                          (s) => s._id === id
+                        );
+                        return (
+                          <Badge
+                            key={id}
+                            onClick={() => handleSelectService(id)}
+                            className="cursor-pointer py-1 px-2 flex items-center gap-2 mt-1"
+                          >
+                            {service?.name || "Unknown"} ✕
+                          </Badge>
+                        );
+                      })}
+                    </div>
+
+                    {inputValue && filteredServices.length > 0 && (
+                      <div className="bg-white border rounded shadow max-h-48 overflow-y-auto p-2 absolute top-[41px] left-0 z-10 w-full">
+                        {filteredServices.map((s) => (
+                          <div
+                            key={s._id}
+                            className="cursor-pointer p-1 hover:bg-gray-100 rounded"
+                            onClick={() => {
+                              handleSelectService(s._id);
+                              setInputValue("");
+                            }}
+                          >
+                            {s.name}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {hasServiceError && (
+                      <FormMessage>
+                        At least one service must be selected.
+                      </FormMessage>
+                    )}
+                  </div>
+                </FormItem>
+              </div>
+
+
+   <div className="w-full">
                 <FormField
                   control={form.control}
                   name="practiceWithin"
@@ -733,6 +743,7 @@ console.log('data ===>',countryList)
                   )}
                 />
               </div>
+
               <div className="w-full">
                 <FormField
                   control={form.control}
