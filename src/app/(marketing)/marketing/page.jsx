@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function DataEntryPage() {
+export default function MarketingDashboard() {
   return (
     <div>
       <h2>This is data entry</h2>

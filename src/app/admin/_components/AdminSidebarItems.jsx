@@ -326,21 +326,5 @@ export const AdminSidebarItems = {
     },
 
 
-    {
-    title: "Data Entry",
-    url: "#",
-    icon: ClipboardList,  
-    isActive: true,
-    items: [
-      {
-        title: "Lawyers Entry",
-        url: "/admin/data-entry",
-        icon: Gavel,       
-        isActive: true,
-      },
-    ],
-  },
-
-
   ],
 };
