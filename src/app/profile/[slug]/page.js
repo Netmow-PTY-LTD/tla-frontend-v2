@@ -44,7 +44,7 @@ const DynamicProfilePage = () => {
     useAuthUserInfoQuery(undefined, { skip: !isValidToken });
 
   const [visitProfile] = useVisitProfileMutation();
-  // ✅ Trigger visit API only when user is valid and profile is loaded
+  //  Trigger visit API only when user is valid and profile is loaded
   useEffect(() => {
     const targetId = userInfo?.data?.userId;
     const visitorId = currentUser?.data?._id;
@@ -53,7 +53,7 @@ const DynamicProfilePage = () => {
       isValidToken && // ✅ Only if logged in
       targetId &&
       visitorId &&
-      targetId !== visitorId // ✅ Avoid visiting own profile
+      targetId !== visitorId //  Avoid visiting own profile
     ) {
       const trackVisit = async () => {
         try {
@@ -195,7 +195,7 @@ const DynamicProfilePage = () => {
                       userInfo?.data?.languages?.length > 0 ? (
                         userInfo?.data?.languages?.map((language, index) => (
                           <div key={language + index}>
-                            <span className="py-2 px-4 mr-2 mb-2 rounded-lg inline-block bg-[#095761] text-white">
+                            <span className="py-2 px-4 mr-2 mb-2 rounded-lg inline-block bg-[#000000] text-white">
                               {language}
                             </span>
                           </div>

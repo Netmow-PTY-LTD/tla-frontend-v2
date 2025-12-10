@@ -24,6 +24,8 @@ import {
   Building2,
   Newspaper,
   BookImage,
+  ClipboardList,
+  Gavel,
 } from 'lucide-react';
 
 export const AdminSidebarItems = {
@@ -301,6 +303,7 @@ export const AdminSidebarItems = {
         },
       ],
     },
+    
     {
       title: 'Case Management',
       url: '/admin/cases-management',
@@ -321,5 +324,23 @@ export const AdminSidebarItems = {
       icon: Kanban,
       isActive: true,
     },
+
+
+    {
+    title: "Data Entry",
+    url: "#",
+    icon: ClipboardList,  
+    isActive: true,
+    items: [
+      {
+        title: "Lawyers Entry",
+        url: "/admin/data-entry",
+        icon: Gavel,       
+        isActive: true,
+      },
+    ],
+  },
+
+
   ],
 };
