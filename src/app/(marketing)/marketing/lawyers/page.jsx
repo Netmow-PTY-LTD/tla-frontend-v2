@@ -337,7 +337,7 @@ export default function Page() {
               {/* Details Page */}
               <DropdownMenuItem asChild>
                 <Link
-                  href={`/admin/user/${userId}`}
+                  href={`/marketing/lawyers/${userId}`}
                   className="flex items-center gap-2 cursor-pointer px-2 py-0.5"
                 >
                   <View className="w-4 h-4" />
