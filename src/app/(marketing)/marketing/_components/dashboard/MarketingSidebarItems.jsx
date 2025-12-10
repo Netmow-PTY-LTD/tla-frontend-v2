@@ -23,12 +23,12 @@ export const MarketingSidebarItems = {
     },
     {
       title: 'Lawyers',
-      url: '/marketing/lawyers/list',
+      url: '/marketing/lawyers',
       icon: Users,
       isActive: true,
       items: [
         { title: 'Add Lawyer', url: '/marketing/lawyers/create', isActive: true },
-        { title: 'All Lawyers', url: '/marketing/lawyers/list', isActive: true },
+        { title: 'All Lawyers', url: '/marketing/lawyers', isActive: true },
       ],
     },
     // {

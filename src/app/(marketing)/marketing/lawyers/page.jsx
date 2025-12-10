@@ -3,7 +3,7 @@ import React from 'react'
 export default function LawyersPage() {
   return (
     <div>
-      this is 
+      this is  lawyer list page
     </div>
   )
 }

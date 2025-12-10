@@ -3,11 +3,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect } from 'react';
 
-import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { BellRing, PanelLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import MarketingProfileDropDown from './MarketingProfileDropDown';
+import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 
 
 export default function MarketingDashboardHeader({ onToggleSidebar }) {
