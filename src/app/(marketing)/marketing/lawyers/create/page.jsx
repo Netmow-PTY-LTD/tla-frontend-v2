@@ -287,15 +287,16 @@ export default function CreateNewLawyer() {
   return (
     <div className="max-w-[1000px] mx-auto bg-white p-6 rounded-lg shadow-lg">
       <div className="w-full">
-        <h3 className="text-black font-semibold heading-lg">
-          Create New Lawyer
-        </h3>
-        <p className="text-[#6e6e6e] mt-2 text-sm">
-          Add individual lawyers to your firm’s profile to highlight your legal
-          team. Each lawyer’s profile can include personal details, professional
-          role, and area of specialization, helping clients understand who will
-          handle their cases.
-        </p>
+      <h3 className="text-black font-semibold heading-lg">
+  Add Lawyer to Marketing Campaign
+</h3>
+<p className="text-[#6e6e6e] mt-2 text-sm">
+  Use this form to add lawyers to your marketing campaigns or database. 
+  Each lawyer’s profile should include personal details, professional role, 
+  and areas of expertise. This ensures accurate representation in campaigns, 
+  helps segment leads effectively, and allows your team to target clients 
+  with the right expertise.
+</p>
       </div>
       <div className="mt-6">
         <Form {...form}>
