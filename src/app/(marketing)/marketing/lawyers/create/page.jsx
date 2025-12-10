@@ -48,12 +48,13 @@ import z from "zod";
 
 
 import Link from "next/link";
-import { useGetCountryListQuery, useGetRangeListQuery, useGetZipCodeListQuery } from "@/store/features/public/publicApiService";
+import {useGetRangeListQuery, useGetZipCodeListQuery } from "@/store/features/public/publicApiService";
 import { useGetCountryWiseServicesQuery } from "@/store/features/admin/servicesApiService";
 import Cookies from "js-cookie";
 import { useAuthUserInfoQuery } from "@/store/features/auth/authApiService";
 import CountrySelect from "../../_components/form/CountrySelect";
 import ServiceSelector from "../../_components/form/ServiceSelector";
+import { useCreateLawyerUserMutation } from "@/store/features/marketing/marketing";
 
 const genderOptions = [
   { id: 1, label: "Male", value: "male" },
@@ -131,6 +132,7 @@ export default function CreateNewLawyer() {
 
   // Watch country selection
   const countryId = useWatch({ control: form.control, name: 'country' });
+  const countryCode = useWatch({ control: form.control, name: 'countryCode' });
  
 
 
@@ -163,8 +165,8 @@ export default function CreateNewLawyer() {
 
 
 
-  // const [createLawyer, { isLoading: isCreatingLawyerLoading }] =
-  //   useCreateLawyerMutation();
+  const [createLawyer, { isLoading: isCreatingLawyerLoading }] =
+    useCreateLawyerUserMutation();
 
   const onSubmit = async (data) => {
     console.log("Form submitted", data);
@@ -181,7 +183,8 @@ export default function CreateNewLawyer() {
       rangeInKm,
       practiceWithin,
       practiceInternational,
-      services
+      services,
+      
     } = data;
 
     const payload = {
@@ -207,8 +210,8 @@ export default function CreateNewLawyer() {
         country: countryId,
         addressInfo: {
           countryId: countryId,
-          countryCode:
-            currentUser?.data?.firmProfileId?.contactInfo?.country?.slug,
+          countryCode,
+         
           zipcode: address,
           postalCode: postalCode,
           latitude: latitude,
@@ -218,27 +221,26 @@ export default function CreateNewLawyer() {
     };
 
     console.log("Submit payload:", payload);
-    // 🔥 You can call API here to create a new lawyer
+    //  You can call API here to create a new lawyer
 
-    // try {
-    //   const res = await createLawyer(payload).unwrap();
-    //   console.log("Lawyer created successfully:", res);
-    //   // Optionally, reset the form or show a success message
-    //   if (res?.success) {
-    //     showSuccessToast(res?.message || "Lawyer created successfully!");
-    //     form.reset();
-    //     setSelectedServices([]);
-    //     router.push("/dashboard/lawyers");
-    //   }
-    // } catch (error) {
-    //   console.error("Error creating lawyer:", error);
-    //   // Optionally, show an error message to the user
-    //   showErrorToast(
-    //     error?.message ||
-    //       error?.data?.message ||
-    //       "Failed to create lawyer. Please try again."
-    //   );
-    // }
+    try {
+      const res = await createLawyer(payload).unwrap();
+      console.log("Lawyer created successfully:", res);
+      // Optionally, reset the form or show a success message
+      if (res?.success) {
+        showSuccessToast(res?.message || "Lawyer created successfully!");
+        form.reset();
+        router.push("/marketing/lawyers");
+      }
+    } catch (error) {
+      console.error("Error creating lawyer:", error);
+      // Optionally, show an error message to the user
+      showErrorToast(
+        error?.message ||
+          error?.data?.message ||
+          "Failed to create lawyer. Please try again."
+      );
+    }
 
 
 
@@ -671,7 +673,7 @@ export default function CreateNewLawyer() {
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 <span>Back to Lawyers List</span>
               </Link>
-              {/* <Button
+              <Button
                 className="cursor-pointer mt-2"
                 type="submit"
                 disabled={isCreatingLawyerLoading}
@@ -684,13 +686,9 @@ export default function CreateNewLawyer() {
                 ) : (
                   "Create Lawyer"
                 )}
-              </Button> */}
-              <Button
-                className="cursor-pointer mt-2"
-                type="submit"
-              >
-                "Create Lawyer"
               </Button>
+             
+            
             </div>
           </form>
         </Form>

@@ -31,7 +31,20 @@ export default function CountrySelect({ form, name }) {
             <FormLabel>Select Country</FormLabel>
             <Combobox
               value={field.value}
-              onChange={(val) => field.onChange(val)}
+            //   onChange={(val) => field.onChange(val)}
+            onChange={(selectedId) => {
+                field.onChange(selectedId);
+
+                // find selected country object
+                const selectedCountry = countryList?.data?.find(
+                  (c) => c._id === selectedId
+                );
+
+                if (selectedCountry) {
+                  // auto-set countryCode = slug
+                  form.setValue('countryCode', selectedCountry.slug);
+                }
+              }}
             >
               <div className="relative">
                 <ComboboxInput
