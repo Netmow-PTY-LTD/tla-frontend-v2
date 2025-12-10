@@ -83,20 +83,22 @@ export default function MarketingProfileDropDown({ data, isCurrentUserLoading })
           {/* Role Switches */}
           <DropdownMenuGroup>
             
-            <DropdownMenuItem>
+            {/* <DropdownMenuItem>
               <Link href="/marketing/my-profile" className="w-full flex items-center justify-between px-2 py-1.5">
                 <span>My Profile</span>
                 <DropdownMenuShortcut>
                   <LayoutDashboard />
                 </DropdownMenuShortcut>
               </Link>
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
            
            
           </DropdownMenuGroup>
           <DropdownMenuGroup>
-            
-            <DropdownMenuItem>
+
+            {
+              data?.regUserType === 'admin' &&
+               <DropdownMenuItem>
               <Link href="/admin" className="w-full flex items-center justify-between px-2 py-1.5">
                 <span>Switch to Admin</span>
                 <DropdownMenuShortcut>
@@ -104,6 +106,9 @@ export default function MarketingProfileDropDown({ data, isCurrentUserLoading })
                 </DropdownMenuShortcut>
               </Link>
             </DropdownMenuItem>
+            }
+            
+           
            
            
           </DropdownMenuGroup>
@@ -113,7 +118,7 @@ export default function MarketingProfileDropDown({ data, isCurrentUserLoading })
           {/* Settings */}
           <DropdownMenuGroup>
             <DropdownMenuItem>
-              <Link href="/settings" className="w-full flex items-center justify-between px-2 py-1.5">
+              <Link href="#" className="w-full flex items-center justify-between px-2 py-1.5">
                 <span>Settings</span>
                 <DropdownMenuShortcut>
                   <Settings />
