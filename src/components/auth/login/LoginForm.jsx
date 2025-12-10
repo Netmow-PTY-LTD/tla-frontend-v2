@@ -88,6 +88,12 @@ const LoginForm = () => {
         
 
 
+            }else if (res?.data?.regUserType === 'marketer') {
+              router.push(`/marketing`);
+              const cachedRes = await cachedUserData().unwrap();
+        
+
+
             }
           }
         }
