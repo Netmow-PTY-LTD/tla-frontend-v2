@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { ChevronDown, LogOut, SendToBack, Settings } from 'lucide-react';
+import { Briefcase, ChevronDown, LogOut, SendToBack, Settings } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -123,6 +123,16 @@ export default function AdminProfileDropDown({ data, isCurrentUserLoading }) {
                 <span>Switch to Client</span>
                 <DropdownMenuShortcut>
                   <SendToBack />
+                </DropdownMenuShortcut>
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuGroup>
+           <DropdownMenuItem>
+              <Link href="/marketing" className="w-full flex items-center justify-between px-2 py-1.5">
+                <span>Switch to Marketing</span>
+                <DropdownMenuShortcut>
+                  <Briefcase />
                 </DropdownMenuShortcut>
               </Link>
             </DropdownMenuItem>

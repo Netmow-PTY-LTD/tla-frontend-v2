@@ -1,5 +1,5 @@
 'use client';
-import { DataTable } from '@/components/common/DataTable';
+
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -12,30 +12,26 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import {
-  Archive,
-  CheckCircle,
   Circle,
-  Clock,
   MoreHorizontal,
-  Pencil,
-  Slash,
-  Trash2,
   View,
 } from 'lucide-react';
 import { useAllUsersQuery } from '@/store/features/admin/userApiService';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { UserDetailsModal } from '../_components/UserDetailsModal';
+
 import {
-  useChangeUserAccountStatsMutation,
+  useAuthUserInfoQuery,
   useUpdateUserDefalultPicMutation,
 } from '@/store/features/auth/authApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
-import { UserDataTable } from '../_components/UserDataTable';
-
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import resizeAndConvertToWebP from '@/components/UIComponents/resizeAndConvertToWebP';
+import { UserDataTable } from '@/app/admin/user/_components/UserDataTable';
+import Cookies from 'js-cookie';
+import { skipToken } from '@reduxjs/toolkit/query';
+
 
 // Enable relative time support
 dayjs.extend(relativeTime);
@@ -48,7 +44,7 @@ export default function Page() {
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState(search);
   const [role, setRole] = useState();
-  const [regUserType, setRegUserType] = useState('client');
+  const [regUserType, setRegUserType] = useState('lawyer');
   const [accountStatus, setAccountStatus] = useState();
   const [isVerifiedAccount, setIsVerifiedAccount] = useState();
   const [isPhoneVerified, setIsPhoneVerified] = useState();
@@ -59,20 +55,39 @@ export default function Page() {
   const [sortBy, setSortBy] = useState('createdAt');
   const [sortOrder, setSortOrder] = useState('desc');
 
+  const token = Cookies.get('token');
+// Get current user
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    useAuthUserInfoQuery(undefined, {
+      skip: !token,
+    });
 
-  const { data: clientlist, isFetching, refetch } = useAllUsersQuery({
-    page,
-    limit,
-    search: debouncedSearch,
-    role,
-    regUserType,
-    accountStatus,
-    isVerifiedAccount,
-    isPhoneVerified,
-    sortBy,
-    sortOrder,
-  });
+  const userId = currentUser?.data?._id;
 
+  // Skip query until userId is available
+  const skipQuery = !userId;
+
+  // Fetch users with filters
+  const { data: userList, isFetching, refetch } = useAllUsersQuery(
+    skipQuery
+      ? skipToken
+      : {
+          page,
+          limit,
+          search: debouncedSearch,
+          role,
+          regUserType,
+          accountStatus,
+          isVerifiedAccount,
+          isPhoneVerified,
+          sortBy,
+          sortOrder,
+          createdBy: userId,
+        },
+    { refetchOnMountOrArgChange: true } // ensures query refetches when arguments change
+  );
+
+  
   // Debounce effect
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -84,25 +99,9 @@ export default function Page() {
     };
   }, [search]);
 
-  const [changeAccoutStatus] = useChangeUserAccountStatsMutation();
 
-  const handleChangeStatus = async (userId, status) => {
-    try {
-      const payload = {
-        userId,
-        data: { accountStatus: status },
-      };
 
-      const res = await changeAccoutStatus(payload).unwrap();
 
-      if (res.success) {
-        showSuccessToast(res?.message || 'Status Update Successful');
-      }
-    } catch (error) {
-      const errorMessage = error?.data?.message || 'An error occurred';
-      showErrorToast(errorMessage);
-    }
-  };
 
   const columns = [
     {
@@ -136,6 +135,7 @@ export default function Page() {
         return <div className="capitalize">{profile.name || 'N/A'}</div>;
       },
     },
+
     {
       id: 'profile.profilePicture',
       accessorKey: 'profile.profilePicture',
@@ -148,8 +148,10 @@ export default function Page() {
         const handleUpload = async (e) => {
           const file = e.target.files?.[0];
           if (file) {
-            const webpFile = await resizeAndConvertToWebP(file, 500, 0.8);
             // console.log('Upload image for:', profile, file);
+            // Resize to max 500px width AND compress to WebP (quality 0.8)
+            const webpFile = await resizeAndConvertToWebP(file, 500, 0.8);
+            // console.log('webpFile ===>',webpFile)
             try {
               const formData = new FormData();
               // Append the image file
@@ -161,13 +163,11 @@ export default function Page() {
 
               // Call RTK Query mutation
               const res = await uploadProfilePicture(payload).unwrap();
-
               if (res.success) {
-                refetch()
+                refetch();
 
-                // console.log('Upload successful');
-              }
-              // console.log('Upload successful');
+            // console.log('Upload successful');
+           }
               // Optionally, update row locally or refetch table
             } catch (err) {
               console.error('Upload failed', err);
@@ -198,6 +198,7 @@ export default function Page() {
         );
       },
     },
+
     {
       accessorKey: 'email',
       header: 'Email',
@@ -206,6 +207,15 @@ export default function Page() {
       ),
     },
 
+    {
+      accessorKey: 'accountStatus',
+      header: 'Account Status',
+      cell: ({ row }) => (
+        <div className="capitalize text-center">
+          {row.getValue('accountStatus')}
+        </div>
+      ),
+    },
     {
       id: 'isVerifiedAccount',
       accessorKey: 'isVerifiedAccount',
@@ -220,6 +230,32 @@ export default function Page() {
       },
     },
     {
+      id: 'serviceIds',
+      accessorKey: 'serviceIds',
+      header: 'Services',
+      cell: ({ row }) => {
+        const services = row.original?.profile?.serviceIds || []; // assuming array of service objects or names
+
+        return (
+          <div className="flex flex-wrap gap-1">
+            {services.length > 0 ? (
+              services.map((service, index) => (
+                <span
+                  key={index}
+                  className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full capitalize"
+                >
+                  {service?.name || service}{' '}
+                  {/* use service.name if object, else string */}
+                </span>
+              ))
+            ) : (
+              <span className="text-gray-400 text-xs">No Services</span>
+            )}
+          </div>
+        );
+      },
+    },
+    {
       accessorKey: 'profile.phone',
       header: 'Phone',
       cell: ({ row }) => <div>{row.original?.profile.phone || '-'}</div>,
@@ -229,7 +265,6 @@ export default function Page() {
       header: 'Address',
       cell: ({ row }) => <div>{row.original?.profile.address || '-'}</div>,
     },
-
     {
       accessorKey: 'isOnline',
       header: 'Status',
@@ -237,13 +272,13 @@ export default function Page() {
         const isOnline = row.original?.isOnline;
 
         return (
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             <Circle
-              size={8}
-              className={isOnline ? 'text-green-500' : 'text-gray-300'}
+              size={12}
+              className={isOnline ? 'text-green-500' : 'text-gray-400'}
               fill={isOnline ? 'green' : 'gray'}
             />
-            <span className="text-[13px] font-medium">
+            <span className="text-sm font-medium">
               {isOnline ? 'Online' : 'Offline'}
             </span>
           </div>
@@ -284,7 +319,8 @@ export default function Page() {
       enableHiding: false,
       cell: ({ row }) => {
         const user = row.original;
-        const userId = user._id; // Make sure _id exists in your data
+        const userId = user?._id; // Make sure _id exists in your data
+        const slug = user?.profile?.slug;
 
         return (
           <DropdownMenu>
@@ -296,31 +332,13 @@ export default function Page() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
+       
               <DropdownMenuSeparator />
-              {/* <DropdownMenuItem asChild>
-                <Link
-                  href={`/admin/user/edit/${userId}`}
-                  className="flex gap-2 items-center cursor-pointer"
-                >
-                  <Pencil />
-                  Edit
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link
-                  href={`/admin/user/delete/${userId}`}
-                  className="flex gap-2 items-center cursor-pointer"
-                >
-                  <Trash2 />
-                  Delete
-                </Link>
-              </DropdownMenuItem> */}
               {/* Details Page */}
               <DropdownMenuItem asChild>
                 <Link
-                  href={`/admin/user/${userId}`}
-                  className="flex items-center gap-2 cursor-pointer "
+                  href={`/marketing/lawyers/${userId}`}
+                  className="flex items-center gap-2 cursor-pointer px-2 py-0.5"
                 >
                   <View className="w-4 h-4" />
                   <span>View</span>
@@ -328,29 +346,20 @@ export default function Page() {
               </DropdownMenuItem>
 
               <DropdownMenuSeparator />
-
-              <DropdownMenuLabel>Change Status</DropdownMenuLabel>
-
-              {[
-                {
-                  status: 'approved',
-                  icon: <CheckCircle className="w-4 h-4" />,
-                },
-                { status: 'pending', icon: <Clock className="w-4 h-4" /> },
-                { status: 'suspended', icon: <Slash className="w-4 h-4" /> },
-                { status: 'archived', icon: <Archive className="w-4 h-4" /> },
-              ].map(({ status, icon }) => (
-                <DropdownMenuItem
-                  key={status}
-                  onClick={() => handleChangeStatus(userId, status)}
-                  className="cursor-pointer capitalize"
+              <DropdownMenuItem asChild>
+                <Link
+                  href={`/profile/${slug}`}
+                  target="_blank"
+                  className="flex items-center gap-2 cursor-pointer px-2 py-0.5"
                 >
-                  <div className="flex items-center gap-2">
-                    {icon}
-                    <span>{status}</span>
-                  </div>
-                </DropdownMenuItem>
-              ))}
+                  <View className="w-4 h-4" />
+                  <span>View Public Profile</span>
+                </Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+
+
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -360,26 +369,23 @@ export default function Page() {
 
   return (
     <div>
-      <h1 className="text-3xl font-semibold">Client List </h1>
+      <h1 className="text-3xl font-semibold">Lawyer List </h1>
       <UserDataTable
-        data={clientlist?.data || []}
+        data={userList?.data || []}
         columns={columns}
         searchColumn="profile.name"
         page={page}
         setPage={setPage}
-        totalPages={clientlist?.pagination?.totalPage || 1}
-        total={clientlist?.pagination?.total || 0}
+        totalPages={userList?.pagination?.totalPage || 1}
+        total={userList?.pagination?.total || 0}
         limit={limit}
         isFetching={isFetching}
         search={search}
         setSearch={setSearch}
       />
 
-      <UserDetailsModal
-        data={selectedUser}
-        open={open}
-        onOpenChange={setOpen}
-      />
+    
     </div>
   );
 }
+

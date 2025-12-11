@@ -341,26 +341,7 @@ export default function Page() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link
-                  href={`/admin/user/edit/${userId}`}
-                  className="flex gap-2 items-center cursor-pointer px-2 py-0.5"
-                >
-                  <Pencil />
-                  Edit
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link
-                  href={`/admin/user/delete/${userId}`}
-                  className="flex gap-2 items-center cursor-pointer px-2 py-0.5"
-                >
-                  <Trash2 />
-                  Delete
-                </Link>
-              </DropdownMenuItem>
+       
               <DropdownMenuSeparator />
               {/* Details Page */}
               <DropdownMenuItem asChild>

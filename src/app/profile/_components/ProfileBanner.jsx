@@ -20,6 +20,7 @@ export default function ProfileBanner({ data, token, currentUser }) {
   const handleClosePreview = () => setShowPreview(false);
   const validToken = checkValidity(token);
 
+
   const handleDownloadVCard = useCallback(() => {
     if (!data) return;
 
@@ -60,17 +61,15 @@ END:VCARD`;
     const badgeHtml =
       data?.badge && data?.badge.toLowerCase() !== 'basic lawyer'
         ? `<div style="background:#F3f3f3; padding:8px 12px; border-radius:6px; display:inline-flex; gap:8px; margin-top:16px; align-items:center;">
-          <img src="${
-            window.location.origin
-          }/assets/img/badge.svg" width="40" height="40" alt="${data.badge}" />
+          <img src="${window.location.origin
+        }/assets/img/badge.svg" width="40" height="40" alt="${data.badge}" />
           <span>${data.badge}</span>
-          <span>${
-            data?.badge.toLowerCase() === 'premium lawyer'
-              ? '( 10+ Hired )'
-              : data?.badge.toLowerCase() === 'expert lawyer'
-              ? '( 5+ Hired )'
-              : ''
-          }</span>
+          <span>${data?.badge.toLowerCase() === 'premium lawyer'
+          ? '( 10+ Hired )'
+          : data?.badge.toLowerCase() === 'expert lawyer'
+            ? '( 5+ Hired )'
+            : ''
+        }</span>
         </div>`
         : '';
 
@@ -253,9 +252,8 @@ END:VCARD`;
     <section class="section">
       <div class="container">
         <div class="profile-header">
-          <img src="${profilePicture}" alt="${
-      data?.name || ''
-    }" class="profile-img" />
+          <img src="${profilePicture}" alt="${data?.name || ''
+      }" class="profile-img" />
           <div class="info">
             <h2>${data?.name || ''}</h2>
             <div class="designation">${data?.designation || 'Lawyer'}</div>
@@ -419,8 +417,8 @@ END:VCARD`;
 
                     return shouldMask
                       ? `${phone.slice(0, 3)}${'*'.repeat(
-                          Math.max(0, phone.length - 3)
-                        )}`
+                        Math.max(0, phone.length - 3)
+                      )}`
                       : phone;
                   })()}
                 </span>
@@ -456,6 +454,21 @@ END:VCARD`;
                 <span>{data?.address}</span>
               </div>
             </div>
+            {data?.foundingMember && data?.foundingMember && (
+              <div className="bg-[#F3f3f3] py-2 px-3 rounded-[6px] inline-flex items-center gap-2 mt-8 mr-4">
+                <div className="icon">
+                  <img
+                    src="/assets/img/badge.svg"
+                    width="40"
+                    height="40"
+                    alt={"founder_Batch"}
+                  />
+                </div>
+                <span className="badge-name">Founding Member</span>
+
+              </div>
+            )}
+
             {data?.badge && data?.badge?.toLowerCase() !== 'basic lawyer' && (
               <div className="bg-[#F3f3f3] py-2 px-3 rounded-[6px] inline-flex items-center gap-2 mt-8">
                 <div className="icon">
@@ -471,8 +484,8 @@ END:VCARD`;
                   {data?.badge?.toLowerCase() === 'premium lawyer'
                     ? '( 10+ Hired )'
                     : data?.badge?.toLowerCase() === 'expert lawyer'
-                    ? '( 5+ Hired )'
-                    : ''}
+                      ? '( 5+ Hired )'
+                      : ''}
                 </span>
               </div>
             )}
