@@ -16,11 +16,53 @@ const marketingApi = baseApi.injectEndpoints({
         "userInfo",
       ],
     }),
+    editLawyerUser: builder.mutation({
+      query: (body) => ({
+        url: `/marketing/edit-lawyer/${body.userId}`,
+        method: "PATCH",
+        body:body.data,
+      }),
+      invalidatesTags: [
+        "marketing",
+        "leadService",
+        "lead",
+        "lead-list",
+        "userInfo",
+      ],
+    }),
+    getLawyerUserById:builder.query({
+      query:(id)=>{
+        return{
+          url:`/marketing/lawyer/${id}`,
+          method:"GET",
+        }
+      }
+    }),
+
+    deleteLayer:builder.mutation({
+      query:(id)=>{
+        return{
+          url:`/marketing/lawyer/${id}`,
+          method:"DELETE",
+        }
+      },
+      invalidatesTags: [
+        "marketing",
+        "leadService",
+        "lead",
+        "lead-list",
+        "userInfo",
+      ],
+    })
   }),
 
-  overrideExisting: false,
+  
 });
 
 export const { 
- useCreateLawyerUserMutation
+ useCreateLawyerUserMutation,
+ useEditLawyerUserMutation,
+ useGetLawyerUserByIdQuery,
+ useDeleteLayerMutation,
+ 
 } = marketingApi;

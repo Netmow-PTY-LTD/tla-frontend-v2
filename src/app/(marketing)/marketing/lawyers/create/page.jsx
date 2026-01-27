@@ -90,6 +90,7 @@ export const lawyerSchema = z.object({
     }),
   practiceWithin: z.boolean().optional(),
   practiceInternational: z.boolean().optional(),
+  full_address: z.string().optional(),
 });
 
 export default function CreateNewLawyer() {
@@ -118,6 +119,7 @@ export default function CreateNewLawyer() {
       rangeInKm: "",
       practiceWithin: false,
       practiceInternational: false,
+      full_address: "",
     },
   });
 
@@ -184,6 +186,7 @@ export default function CreateNewLawyer() {
       practiceWithin,
       practiceInternational,
       services,
+      full_address
       
     } = data;
 
@@ -200,6 +203,7 @@ export default function CreateNewLawyer() {
         country: countryId,
         law_society_member_number,
         practising_certificate_number,
+        full_address: full_address,
       },
       lawyerServiceMap: {
         services,
@@ -481,6 +485,29 @@ export default function CreateNewLawyer() {
                       <div className="w-full">
              
                   <CountrySelect form={form} name="country" />
+              </div>
+
+              <div className="w-full">
+                <FormField
+                  control={form.control}
+                  name="full_address"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Full Address</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter full address"
+                          className="h-[44px]"
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e);
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
 
