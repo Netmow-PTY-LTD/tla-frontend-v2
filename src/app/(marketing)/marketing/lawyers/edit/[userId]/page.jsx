@@ -152,12 +152,27 @@ export default function EditLawyer() {
          form.setValue("rangeInKm", Number(lawyerServiceMap.rangeInKm)); 
          form.setValue("practiceWithin", lawyerServiceMap.practiceWithin);
          form.setValue("practiceInternational", lawyerServiceMap.practiceInternational);
-         if (lawyerServiceMap.addressInfo) {
-              setAddress(lawyerServiceMap?.addressInfo?.zipcode);
-              setPostalCode(lawyerServiceMap?.addressInfo?.postalCode);
-              setLatitude(lawyerServiceMap?.addressInfo?.latitude);
-              setLongitude(lawyerServiceMap?.addressInfo?.longitude);
-              form.setValue("AreaZipcode", lawyerServiceMap?.addressInfo?.zipcode);
+         
+         // Fix: Map from zipCode object in API response
+         if (lawyerServiceMap.zipCode) {
+              setAddress(lawyerServiceMap.zipCode.zipcode);
+              setPostalCode(lawyerServiceMap.zipCode.postalCode);
+              setLatitude(lawyerServiceMap.zipCode.latitude);
+              setLongitude(lawyerServiceMap.zipCode.longitude);
+              form.setValue("AreaZipcode", lawyerServiceMap.zipCode._id);
+              if (lawyerServiceMap.zipCode.countryCode) {
+                form.setValue("countryCode", lawyerServiceMap.zipCode.countryCode);
+              }
+         } else if (lawyerServiceMap.addressInfo) { 
+              // Fallback for addressInfo if zipCode is missing (though API seems to use zipCode)
+              setAddress(lawyerServiceMap.addressInfo.zipcode);
+              setPostalCode(lawyerServiceMap.addressInfo.postalCode);
+              setLatitude(lawyerServiceMap.addressInfo.latitude);
+              setLongitude(lawyerServiceMap.addressInfo.longitude);
+              form.setValue("AreaZipcode", lawyerServiceMap.zipCode?._id || lawyerServiceMap.addressInfo?._id); // Try to find ID
+              if (lawyerServiceMap.addressInfo.countryCode) {
+                 form.setValue("countryCode", lawyerServiceMap.addressInfo.countryCode);
+              }
          }
       }
     }
@@ -257,7 +272,6 @@ export default function EditLawyer() {
           addressInfo: {
             countryId: countryId,
             countryCode,
-           
             zipcode: address,
             postalCode: postalCode,
             latitude: latitude,
