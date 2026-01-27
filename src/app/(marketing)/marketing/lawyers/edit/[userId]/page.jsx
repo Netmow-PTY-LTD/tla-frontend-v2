@@ -127,7 +127,7 @@ export default function EditLawyer() {
       gender: "male",
       services: [],
       AreaZipcode: "",
-      rangeInKm: "",
+      rangeInKm: 0,
       practiceWithin: false,
       practiceInternationally: false,
       full_address: "",
@@ -149,7 +149,7 @@ export default function EditLawyer() {
       if (lawyerServiceMap) {
          form.setValue("country", lawyerServiceMap.country);
          form.setValue("services", lawyerServiceMap.services);
-         form.setValue("rangeInKm", Number(lawyerServiceMap.rangeInKm)); 
+         form.setValue("rangeInKm", Number(lawyerServiceMap.rangeInKm || 0)); 
          form.setValue("practiceWithin", lawyerServiceMap.practiceWithin);
          form.setValue("practiceInternationally", lawyerServiceMap.practiceInternationally);
          

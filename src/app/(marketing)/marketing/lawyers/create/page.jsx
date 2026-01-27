@@ -116,7 +116,7 @@ export default function CreateNewLawyer() {
       gender: "male",
       services: [],
       AreaZipcode: "",
-      rangeInKm: "",
+      rangeInKm: 0,
       practiceWithin: false,
       practiceInternationally: false,
       full_address: "",
