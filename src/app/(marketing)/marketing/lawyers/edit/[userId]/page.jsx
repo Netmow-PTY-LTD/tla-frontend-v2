@@ -310,13 +310,24 @@ export default function EditLawyer() {
 
   return (
     <div className="max-w-[1000px] mx-auto bg-white p-6 rounded-lg shadow-lg">
+      <div className="w-full flex items-center gap-4 mb-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => router.back()}
+          className="flex items-center gap-1 h-9 px-3"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back</span>
+        </Button>
+      </div>
       <div className="w-full">
-      <h3 className="text-black font-semibold heading-lg">
-  Edit Lawyer
-</h3>
-<p className="text-[#6e6e6e] mt-2 text-sm">
-  Update the lawyer's profile information below.
-</p>
+        <h3 className="text-black font-semibold heading-lg">
+          Edit Lawyer
+        </h3>
+        <p className="text-[#6e6e6e] mt-2 text-sm">
+          Update the lawyer's profile information below.
+        </p>
       </div>
       <div className="mt-6">
         <Form {...form}>
@@ -409,7 +420,8 @@ export default function EditLawyer() {
                               autoComplete="new-password"
                               placeholder="Enter your password"
                               {...field}
-                              className="tla-form-control h-[44px] pr-10" // space for the icon
+                              disabled
+                              className="tla-form-control h-[44px] pr-10 bg-gray-50" // space for the icon
                               onChange={(e) => {
                                 field.onChange(e);
                               }}

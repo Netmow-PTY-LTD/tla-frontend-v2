@@ -110,7 +110,7 @@ export default function CreateNewLawyer() {
       name: "",
       email: "",
       phone: "",
-      password: "",
+      password: "123456",
       law_society_member_number: "",
       practising_certificate_number: "",
       gender: "male",
