@@ -113,6 +113,8 @@ export default function EditLawyer() {
     skip: !userId,
   });
 
+
+
   const form = useForm({
     resolver: zodResolver(editLawyerSchema),
     defaultValues: {
@@ -134,7 +136,7 @@ export default function EditLawyer() {
 
   React.useEffect(() => {
     if (lawyerData?.data) {
-      const { profile, lawyerServiceMap, email, phone } = lawyerData.data;
+      const { profile, lawyerServiceMap, userData} = lawyerData.data;
       if (profile) {
         form.setValue("name", profile.name);
         form.setValue("gender", profile.gender);
@@ -142,12 +144,12 @@ export default function EditLawyer() {
         form.setValue("practising_certificate_number", profile.practising_certificate_number);
         form.setValue("full_address", profile.full_address);
       }
-      form.setValue("email", email);
-      form.setValue("phone", phone);
+      form.setValue("email", userData.email);
+      form.setValue("phone", userData.phone);
       if (lawyerServiceMap) {
          form.setValue("country", lawyerServiceMap.country);
          form.setValue("services", lawyerServiceMap.services);
-         form.setValue("rangeInKm", Number(lawyerServiceMap.rangeInKm)); // Ensure number
+         form.setValue("rangeInKm", Number(lawyerServiceMap.rangeInKm)); 
          form.setValue("practiceWithin", lawyerServiceMap.practiceWithin);
          form.setValue("practiceInternational", lawyerServiceMap.practiceInternational);
          if (lawyerServiceMap.addressInfo) {
