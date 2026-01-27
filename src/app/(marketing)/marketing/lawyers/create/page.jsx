@@ -89,7 +89,7 @@ export const lawyerSchema = z.object({
       message: "Range of area must be greater than 0",
     }),
   practiceWithin: z.boolean().optional(),
-  practiceInternational: z.boolean().optional(),
+  practiceInternationally: z.boolean().optional(),
   full_address: z.string().optional(),
 });
 
@@ -118,7 +118,7 @@ export default function CreateNewLawyer() {
       AreaZipcode: "",
       rangeInKm: "",
       practiceWithin: false,
-      practiceInternational: false,
+      practiceInternationally: false,
       full_address: "",
     },
   });
@@ -184,7 +184,7 @@ export default function CreateNewLawyer() {
       AreaZipcode,
       rangeInKm,
       practiceWithin,
-      practiceInternational,
+      practiceInternationally,
       services,
       full_address
       
@@ -209,7 +209,7 @@ export default function CreateNewLawyer() {
         services,
         rangeInKm,
         practiceWithin,
-        practiceInternational,
+        practiceInternationally,
         isSoloPractitioner: false,
         country: countryId,
         addressInfo: {
@@ -670,7 +670,7 @@ export default function CreateNewLawyer() {
               <div className="w-full">
                 <FormField
                   control={form.control}
-                  name="practiceInternational"
+                  name="practiceInternationally"
                   render={({ field }) => (
                     <FormItem className="cursor-pointer flex items-center gap-3">
                       <FormControl>
