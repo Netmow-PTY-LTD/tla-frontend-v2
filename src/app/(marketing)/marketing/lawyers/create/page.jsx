@@ -83,6 +83,7 @@ export const lawyerSchema = z.object({
       .min(1, "At least one service specialization is required"),
   AreaZipcode: z.string().min(1, "Practicing area is required"),
   country:z.string(),
+  countryCode: z.string().optional(),
   rangeInKm: z
     .number()
     .min(1, "Range of area is required")
@@ -117,8 +118,10 @@ export default function CreateNewLawyer() {
       gender: "male",
       services: [],
       AreaZipcode: "",
-      rangeInKm: 0,
-      practiceWithin: false,
+      country: "682ecd01e6b730f229c8d3d3", // Default to Australia
+      countryCode: "au",
+      rangeInKm: 300,
+      practiceWithin: true,
       practiceInternationally: false,
       full_address: "",
     },
@@ -614,8 +617,7 @@ export default function CreateNewLawyer() {
                     <FormItem className="cursor-pointer flex items-center gap-3">
                       <FormControl>
                         <Checkbox
-                          {...field}
-                          //  checked={field.value}
+                          checked={field.value}
                           onCheckedChange={(val) => {
                             field.onChange(val);
                           }}
