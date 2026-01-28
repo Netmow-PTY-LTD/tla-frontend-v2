@@ -219,7 +219,7 @@ export default function EditBlog() {
       // console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'Blog Updated successfully.');
-        router.push('/admin/blog/list');
+        router.push('/marketing/blog/list');
       }
     } catch (error) {
       // console.log('error', error);

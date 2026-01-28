@@ -172,7 +172,7 @@ export default function AddBlog() {
       // console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'Blog added successfully.');
-        router.push('/admin/blog/list');
+        router.push('/marketing/blog/list');
         reset();
         setThumbPreviewUrl(null);
         setThumbImageFile(null);
