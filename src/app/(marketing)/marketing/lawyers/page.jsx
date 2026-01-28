@@ -207,6 +207,11 @@ export default function Page() {
         <div className="lowercase">{row.getValue('email')}</div>
       ),
     },
+   {
+      accessorKey: 'profile.gender',
+      header: 'Gender',
+      cell: ({ row }) => <div className="capitalize">{row.original?.profile.gender || '-'}</div>,
+    },
 
     {
       accessorKey: 'accountStatus',
