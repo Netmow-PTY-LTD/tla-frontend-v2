@@ -138,6 +138,7 @@ export default function EditLawyer() {
   React.useEffect(() => {
     if (lawyerData?.data) {
       const { profile, lawyerServiceMap, userData} = lawyerData.data;
+      console.log("Fetched lawyer data:", lawyerServiceMap);
       if (profile) {
         form.setValue("name", profile.name);
         form.setValue("gender", profile.gender);
@@ -680,7 +681,7 @@ export default function EditLawyer() {
                       <FormControl>
                         <Checkbox
                           {...field}
-                          //  checked={field.value}
+                           checked={field.value}
                           onCheckedChange={(val) => {
                             field.onChange(val);
                           }}
