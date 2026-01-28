@@ -48,12 +48,13 @@ import z from "zod";
 
 
 import Link from "next/link";
-import {useGetRangeListQuery, useGetZipCodeListQuery } from "@/store/features/public/publicApiService";
+import { useGetZipCodeListQuery } from "@/store/features/public/publicApiService";
 import { useGetCountryWiseServicesQuery } from "@/store/features/admin/servicesApiService";
 import Cookies from "js-cookie";
 import { useAuthUserInfoQuery } from "@/store/features/auth/authApiService";
 import CountrySelect from "../../../_components/form/CountrySelect";
 import ServiceSelector from "../../../_components/form/ServiceSelector";
+import RangeSelector from "../../../_components/form/RangeSelector";
 import { useEditLawyerUserMutation, useGetLawyerUserByIdQuery } from "@/store/features/marketing/marketing";
 import { useParams } from "next/navigation";
 
@@ -216,9 +217,7 @@ export default function EditLawyer() {
       z.zipcode.toLowerCase().includes(query.toLowerCase())
     ) || [];
 
-  const { data: rangeData } = useGetRangeListQuery();
 
-  const ranges = rangeData?.data || [];
 
 
 
@@ -662,41 +661,7 @@ export default function EditLawyer() {
                 />
               </div>
               <div className="w-full">
-                <FormField
-                  control={form.control}
-                  name="rangeInKm"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Range of Area</FormLabel>
-                      <Select
-                        onValueChange={(val) => {
-                          const parsedValue = Number(val); // convert from string to number
-                          field.onChange(parsedValue); // update form
-                        }}
-                        value={String(field.value)} // must be string for Select
-                      >
-                        <FormControl className="w-full h-[44px]">
-                          <SelectTrigger style={{ height: "44px" }}>
-                            <SelectValue placeholder="Select range of area" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {ranges?.map((item) => {
-                            return (
-                              <SelectItem
-                                key={item.value}
-                                value={String(item.value)}
-                              >
-                                {item?.name}
-                              </SelectItem>
-                            );
-                          })}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage className="text-red-600" />
-                    </FormItem>
-                  )}
-                />
+                <RangeSelector form={form} name="rangeInKm" />
               </div>
            
                       <ServiceSelector
