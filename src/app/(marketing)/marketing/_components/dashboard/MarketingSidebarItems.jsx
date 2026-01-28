@@ -41,12 +41,12 @@ export const MarketingSidebarItems = {
       icon: Newspaper,
       isActive: true,
       items: [
-        // {
-        //   title: 'List of Blog Category',
-        //   url: '/marketing/blog-category/list',
-        //   icon: List,
-        //   isActive: true,
-        // },
+        {
+          title: 'List of Blog Category',
+          url: '/marketing/blog-category/list',
+          icon: List,
+          isActive: true,
+        },
         {
           title: 'List of Blogs',
           url: '/marketing/blog/list',
