@@ -61,6 +61,22 @@ export const MarketingSidebarItems = {
         },
       ],
     },
+
+     {
+      title: 'SEO',
+      url: '#',
+      icon: List,
+      isActive: true,
+      items: [
+        {
+          title: 'SEO Pages',
+          url: '/marketing/seo/pages',
+          icon: List,
+          isActive: true,
+        },
+        
+      ],
+    },
     // {
     //   title: 'Services',
     //   url: '/marketing/services/list',
