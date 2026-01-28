@@ -28,7 +28,7 @@ export default function RangeSelector({ form, name }) {
                 const parsedValue = Number(val); // convert from string to number
                 field.onChange(parsedValue); // update form
               }}
-              value={field.value !== undefined && field.value !== null ? String(field.value) : ""} // must be string for Select
+              value={field.value ? String(field.value) : ""} // must be string for Select, and treat 0 as empty for placeholder
             >
               <FormControl className="w-full h-[44px]">
                 <SelectTrigger style={{ height: "44px" }}>
