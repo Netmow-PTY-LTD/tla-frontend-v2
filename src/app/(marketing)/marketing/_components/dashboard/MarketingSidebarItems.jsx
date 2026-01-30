@@ -11,6 +11,9 @@ import {
   BarChart2,
   ListChecks,
   Briefcase,
+  Newspaper,
+  List,
+  Logs,
 } from 'lucide-react';
 
 export const MarketingSidebarItems = {
@@ -29,6 +32,49 @@ export const MarketingSidebarItems = {
       items: [
         { title: 'Add Lawyer', url: '/marketing/lawyers/create', isActive: true },
         { title: 'All Lawyers', url: '/marketing/lawyers', isActive: true },
+      ],
+    },
+
+     {
+      title: 'Blog',
+      url: '#',
+      icon: Newspaper,
+      isActive: true,
+      items: [
+        {
+          title: 'List of Blog Category',
+          url: '/marketing/blog-category/list',
+          icon: List,
+          isActive: true,
+        },
+        {
+          title: 'List of Blogs',
+          url: '/marketing/blog/list',
+          icon: List,
+          isActive: true,
+        },
+        {
+          title: 'Add New Blog',
+          url: '/marketing/blog/add',
+          icon: Logs,
+          isActive: true,
+        },
+      ],
+    },
+
+     {
+      title: 'SEO',
+      url: '#',
+      icon: List,
+      isActive: true,
+      items: [
+        {
+          title: 'SEO Pages',
+          url: '/marketing/seo/pages',
+          icon: List,
+          isActive: true,
+        },
+        
       ],
     },
     // {

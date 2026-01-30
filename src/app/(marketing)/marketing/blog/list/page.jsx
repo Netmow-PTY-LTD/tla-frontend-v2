@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { DataTableWithPagination } from '../../_components/DataTableWithPagination';
+
 import {
   useDeleteBlogMutation,
   useGetAllBlogsQuery,
@@ -19,6 +19,7 @@ import Link from 'next/link';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 import { truncateText } from '@/helpers/truncateText';
+import { DataTableWithPagination } from '@/app/admin/_components/DataTableWithPagination';
 
 export default function BlogList() {
   const [page, setPage] = useState(1);
@@ -170,7 +171,7 @@ export default function BlogList() {
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <Link
-                  href={`/admin/blog/edit/${item?.slug}`}
+                  href={`/marketing/blog/edit/${item?.slug}`}
                   className="flex gap-2"
                 >
                   <Pencil className="w-4 h-4" />
@@ -196,7 +197,7 @@ export default function BlogList() {
     <div>
       <div className="flex flex-wrap justify-between gap-5">
         <h2 className="text-2xl font-semibold">Blog List</h2>
-        <Link href="/admin/blog/add">
+        <Link href="/marketing/blog/add">
           <Button>Add Blog</Button>
         </Link>
       </div>

@@ -97,8 +97,8 @@ export default function BlogPosts() {
                     className="bg-white transition-all overflow-hidden flex flex-col border-b border-gray-200"
                   >
                     <img
-                      src={post?.bannerImage}
-                      alt={post?.title}
+                      src={post?.featuredImage?.url}
+                      alt={post?.featuredImage?.alt || post?.title}
                       className="h-auto max-w-full object-cover rounded-t-xl"
                     />
                     <div className="py-6 flex flex-col flex-1">
@@ -196,10 +196,10 @@ export default function BlogPosts() {
                           key={post?._id}
                           className="flex items-center gap-3 bg-gray-50 rounded-xl p-2 hover:shadow-md transition"
                         >
-                          {post.bannerImage && (
+                          {post.featuredImage && (
                             <img
-                              src={post.bannerImage}
-                              alt={post.title}
+                              src={post.featuredImage.url}
+                              alt={post.featuredImage.alt || post.title}
                               className="w-12 h-12 object-cover rounded-lg border border-gray-200"
                             />
                           )}

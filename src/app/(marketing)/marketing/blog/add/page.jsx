@@ -26,14 +26,13 @@ import TextareaInput from '@/components/form/TextArea';
 import { Checkbox } from '@/components/ui/checkbox';
 import EditorField from '@/components/inleads-editor/EditorField';
 import {
-  useGetSingleBlogBySlugQuery,
-  useUpdateBlogMutation,
+  useAddBlogMutation,
   useGetBlogCategoryListQuery,
 } from '@/store/features/admin/blogApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { slugify } from '@/helpers/generateSlug';
 
 const blogSchema = z.object({
@@ -64,11 +63,8 @@ const blogSchema = z.object({
   seoSchema: z.string().optional(),
 });
 
-export default function EditBlog() {
+export default function AddBlog() {
   const router = useRouter();
-  const params = useParams();
-  const slug = params?.slug;
-
   const methods = useForm({
     resolver: zodResolver(blogSchema),
     defaultValues: {
@@ -118,11 +114,7 @@ export default function EditBlog() {
   const editorRef = useRef(null);
   const [html, setHtml] = useState('');
   const [excerpt, setExcerpt] = useState('');
-  const [blogId, setBlogId] = useState(null);
 
-  const { data: blogData, isLoading: isBlogLoading } = useGetSingleBlogBySlugQuery(slug, {
-    skip: !slug,
-  });
   const { data: allBlogCategories } = useGetBlogCategoryListQuery();
 
   const blogCategories = allBlogCategories?.data || [];
@@ -130,65 +122,11 @@ export default function EditBlog() {
   const title = watch('title');
 
   useEffect(() => {
-    if (title && !blogData) {
+    if (title) {
       const generatedSlug = slugify(title);
       setValue('slug', generatedSlug, { shouldValidate: true });
     }
-  }, [title, setValue, blogData]);
-
-  // Populate form with existing blog data
-  useEffect(() => {
-    if (blogData?.data) {
-      const blog = blogData.data;
-      setBlogId(blog._id);
-
-      // Set basic fields
-      reset({
-        title: blog.title || '',
-        slug: blog.slug || '',
-        featuredImageAlt: blog.featuredImage?.alt || '',
-        featuredImageTitle: blog.featuredImage?.title || '',
-        featuredImageDescription: blog.featuredImage?.description || '',
-        categories: blog.category?.map((cat) => cat._id || cat) || [],
-        tags: blog.tags || [],
-        status: blog.status || 'published',
-        isFeatured: blog.isFeatured || false,
-        metaTitle: blog.seo?.metaTitle || '',
-        metaDescription: blog.seo?.metaDescription || '',
-        canonicalUrl: blog.seo?.canonicalUrl || '',
-        noIndex: blog.seo?.noIndex || false,
-        noFollow: blog.seo?.noFollow || false,
-        schemaType: blog.seo?.schemaType || 'Article',
-        seoSchema: blog.seoSchema ? JSON.stringify(blog.seoSchema, null, 2) : '',
-      });
-
-      // Set excerpt and content
-      setExcerpt(blog.excerpt || '');
-      setHtml(blog.content || '');
-
-      // Set authors
-      if (blog.authors && Array.isArray(blog.authors)) {
-        setAuthors(blog.authors);
-        setValue('authors', blog.authors);
-      }
-
-      // Set meta keywords
-      if (blog.seo?.metaKeywords && Array.isArray(blog.seo.metaKeywords)) {
-        setKeywords(blog.seo.metaKeywords);
-        setValue('metaKeywords', blog.seo.metaKeywords);
-      }
-
-      // Set featured image preview
-      if (blog.featuredImage?.url) {
-        setFeaturedImagePreviewUrl(blog.featuredImage.url);
-      }
-
-      // Set meta image preview
-      if (blog.seo?.metaImage) {
-        setThumbPreviewUrl(blog.seo.metaImage);
-      }
-    }
-  }, [blogData, reset, setValue]);
+  }, [title, setValue]);
 
   const handleAddKeyword = (e) => {
     if (e.key === 'Enter' && keyword.trim() !== '') {
@@ -226,14 +164,10 @@ export default function EditBlog() {
     methods.setValue('authors', newAuthors);
   };
 
-  const [updateBlog, { isLoading: isUpdateBlogLoading }] = useUpdateBlogMutation();
+  const [addBlog, { isLoading: isAddBlogLoading }] = useAddBlogMutation();
 
   const onSubmit = async (data) => {
-    if (!blogId) {
-      showErrorToast('Blog ID not found.');
-      return;
-    }
-
+    // console.log('Submitted blog data', data);
     const {
       title,
       slug,
@@ -256,14 +190,6 @@ export default function EditBlog() {
       schemaType,
       seoSchema,
     } = data;
-
-
-  //    const finalMetaKeywords =
-  // metaKeywords && metaKeywords.length > 0 ? metaKeywords : keywords;
-
-const finalMetaImage = metaImage instanceof File ? metaImage : null;
-const finalFeaturedImage = featuredImage instanceof File ? featuredImage : null;
-
 
     const payload = {
       title,
@@ -292,62 +218,40 @@ const finalFeaturedImage = featuredImage instanceof File ? featuredImage : null;
       seoSchema: seoSchema ? JSON.parse(seoSchema) : undefined,
     };
 
+    // console.log('payload to be sent', payload);
 
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(payload));
 
-   
+    if (featuredImage instanceof File) {
+      formData.append('featuredImage', featuredImage);
+    }
 
-
-const formData = new FormData();
-formData.append('data', JSON.stringify(payload));
-
-if (finalFeaturedImage instanceof File) {
-  formData.append('featuredImage', finalFeaturedImage);
-} else {
-  formData.append('featuredImage', null);
-}
-
-if (finalMetaImage instanceof File) {
-  formData.append('metaImage', finalMetaImage);
-} else {
-  formData.append('metaImage', null);
-}
-
-
-
-
-
-    // const formData = new FormData();
-    // formData.append('data', JSON.stringify(payload));
-
-    // if (featuredImage instanceof File) {
-    //   formData.append('featuredImage', featuredImage);
-    // }
-
-    // if (metaImage instanceof File) {
-    //   formData.append('metaImage', metaImage);
-    // }
+    if (metaImage instanceof File) {
+      formData.append('metaImage', metaImage);
+    }
 
     try {
-      const res = await updateBlog({ blogId, data: formData }).unwrap();
+      const res = await addBlog(formData).unwrap();
+      // console.log('res', res);
       if (res?.success) {
-        showSuccessToast(res?.message || 'Blog updated successfully.');
-        router.push('/admin/blog/list');
+        showSuccessToast(res?.message || 'Blog added successfully.');
+        router.push('/marketing/blog/list');
+        reset();
+        setThumbPreviewUrl(null);
+        setThumbImageFile(null);
+        setFeaturedImagePreviewUrl(null);
+        setFeaturedImageFile(null);
+        setKeywords([]);
+        setAuthors([]);
+        setExcerpt('');
+        setHtml('');
       }
     } catch (error) {
-      showErrorToast(error?.data?.message || 'Failed to update blog.');
+      // console.log('error', error);
+      showErrorToast(error?.data?.message || 'Failed to add blog.');
     }
   };
-
-  if (isBlogLoading) {
-    return (
-      <div className="max-w-[1000px] mx-auto py-10 flex items-center justify-center">
-        <div className="flex items-center gap-2">
-          <Loader2 className="w-6 h-6 animate-spin" />
-          <span>Loading blog...</span>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-[1000px] mx-auto py-10">
@@ -356,7 +260,7 @@ if (finalMetaImage instanceof File) {
           <Card>
             <CardHeader className="border-b border-gray-300">
               <CardTitle>
-                <h4>Edit Blog</h4>
+                <h4>Add New Blog</h4>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6 pt-4">
@@ -734,14 +638,14 @@ if (finalMetaImage instanceof File) {
 
           {/* Submit Button */}
           <div className="pt-4 text-center">
-            <Button type="submit" disabled={isUpdateBlogLoading}>
-              {isUpdateBlogLoading ? (
+            <Button type="submit" disabled={isAddBlogLoading}>
+              {isAddBlogLoading ? (
                 <div className="flex items-center justify-center gap-2">
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Updating...</span>
+                  <span>Adding...</span>
                 </div>
               ) : (
-                'Update Blog'
+                'Add Blog'
               )}
             </Button>
           </div>
@@ -757,7 +661,7 @@ if (finalMetaImage instanceof File) {
 
 
 
-//  previous code 
+//   previous code base 
 
 
 // 'use client';
@@ -785,17 +689,15 @@ if (finalMetaImage instanceof File) {
 // import MultipleTagsSelector from '@/components/MultipleTagsSelector';
 // import SelectInput from '@/components/form/SelectInput';
 // import TextareaInput from '@/components/form/TextArea';
+// import EditorField from '@/components/inleads-editor/EditorField';
 // import {
+//   useAddBlogMutation,
 //   useGetBlogCategoryListQuery,
-//   useGetSingleBlogByIdQuery,
-//   useGetSingleBlogBySlugQuery,
-//   useUpdateBlogMutation,
 // } from '@/store/features/admin/blogApiService';
 // import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 // import z from 'zod';
 // import { zodResolver } from '@hookform/resolvers/zod';
-// import { useParams, useRouter } from 'next/navigation';
-// import EditorField from '@/components/inleads-editor/EditorField';
+// import { useRouter } from 'next/navigation';
 // import { slugify } from '@/helpers/generateSlug';
 
 // const blogSchema = z.object({
@@ -815,26 +717,8 @@ if (finalMetaImage instanceof File) {
 //   metaImage: z.any().optional(),
 // });
 
-// export default function EditBlog() {
-//   const [thumbPreviewUrl, setThumbPreviewUrl] = useState(null);
-//   const [thumbImageFile, setThumbImageFile] = useState(null);
-//   const [bannerImagePreviewUrl, setBannerImagePreviewUrl] = useState(null);
-//   const [bannerImageFile, setBannerImageFile] = useState(null);
-//   const [keyword, setKeyword] = useState('');
-//   const [keywords, setKeywords] = useState([]);
-//   const editorRef = useRef(null);
-//   const [html, setHtml] = useState('');
-//   const [shortDescription, setShortDescription] = useState('');
-
+// export default function AddBlog() {
 //   const router = useRouter();
-//   const params = useParams();
-//   const { data: singleBlogData } = useGetSingleBlogBySlugQuery(params.slug, {
-//     skip: !params.slug,
-//   });
-
-//   console.log('singleBlogData', singleBlogData);
-//   const blog = singleBlogData?.data;
-
 //   const methods = useForm({
 //     resolver: zodResolver(blogSchema),
 //     defaultValues: {
@@ -863,29 +747,17 @@ if (finalMetaImage instanceof File) {
 //     formState: { isSubmitting },
 //   } = methods;
 
-//   useEffect(() => {
-//     if (!blog) return;
-
-//     if (blog) {
-//       reset({
-//         title: blog?.title || '',
-//         slug: blog?.slug || '',
-//         categories: blog.category?.map((c) => c._id) || [],
-//         tags: blog?.tags || [],
-//         status: blog?.status || 'published',
-//         metaTitle: blog?.seo?.metaTitle || '',
-//         metaDescription: blog?.seo?.metaDescription || '',
-//       });
-//       setShortDescription(blog?.shortDescription || '');
-//       setHtml(blog?.content || '');
-//       setKeywords(blog?.seo?.metaKeywords || []);
-//       setThumbPreviewUrl(blog?.seo?.metaImage || '');
-//       setBannerImagePreviewUrl(blog?.bannerImage || '');
-//     }
-//   }, [blog]);
+//   const [thumbPreviewUrl, setThumbPreviewUrl] = useState(null);
+//   const [thumbImageFile, setThumbImageFile] = useState(null);
+//   const [bannerImagePreviewUrl, setBannerImagePreviewUrl] = useState(null);
+//   const [bannerImageFile, setBannerImageFile] = useState(null);
+//   const [keyword, setKeyword] = useState('');
+//   const [keywords, setKeywords] = useState([]);
+//   const editorRef = useRef(null);
+//   const [html, setHtml] = useState('');
+//   const [shortDescription, setShortDescription] = useState('');
 
 //   const { data: allBlogCategories } = useGetBlogCategoryListQuery();
-//   //console.log('blogCategories', allBlogCategories);
 
 //   const blogCategories = allBlogCategories?.data || [];
 
@@ -916,8 +788,7 @@ if (finalMetaImage instanceof File) {
 //     methods.setValue('metaKeywords', newKeywords);
 //   };
 
-//   const [updateBlog, { isLoading: isUpdateBlogLoading }] =
-//     useUpdateBlogMutation();
+//   const [addBlog, { isLoading: isAddBlogLoading }] = useAddBlogMutation();
 
 //   const onSubmit = async (data) => {
 //     // console.log('Submitted blog data', data);
@@ -934,13 +805,6 @@ if (finalMetaImage instanceof File) {
 //       metaImage,
 //     } = data;
 
-//     const finalMetaKeywords =
-//       metaKeywords && metaKeywords.length > 0 ? metaKeywords : keywords;
-
-//     const finalMetaImage = metaImage instanceof File ? metaImage : null;
-
-//     const finalBannerImage = bannerImage instanceof File ? bannerImage : null;
-
 //     const payload = {
 //       title,
 //       slug,
@@ -952,7 +816,7 @@ if (finalMetaImage instanceof File) {
 //       seo: {
 //         metaTitle,
 //         metaDescription,
-//         metaKeywords: finalMetaKeywords,
+//         metaKeywords,
 //       },
 //     };
 
@@ -961,31 +825,31 @@ if (finalMetaImage instanceof File) {
 //     const formData = new FormData();
 //     formData.append('data', JSON.stringify(payload));
 
-//     if (finalBannerImage instanceof File) {
-//       formData.append('bannerImage', finalBannerImage);
-//     } else {
-//       formData.append('bannerImage', null);
+//     if (bannerImage instanceof File) {
+//       formData.append('bannerImage', bannerImage);
 //     }
 
-//     if (finalMetaImage instanceof File) {
-//       formData.append('metaImage', finalMetaImage);
-//     } else {
-//       formData.append('metaImage', null);
+//     if (metaImage instanceof File) {
+//       formData.append('metaImage', metaImage);
 //     }
 
 //     try {
-//       const res = await updateBlog({
-//         blogId: blog?._id,
-//         data: formData,
-//       }).unwrap();
+//       const res = await addBlog(formData).unwrap();
 //       // console.log('res', res);
 //       if (res?.success) {
-//         showSuccessToast(res?.message || 'Blog Updated successfully.');
+//         showSuccessToast(res?.message || 'Blog added successfully.');
 //         router.push('/admin/blog/list');
+//         reset();
+//         setThumbPreviewUrl(null);
+//         setThumbImageFile(null);
+//         setBannerImagePreviewUrl(null);
+//         setBannerImageFile(null);
+//         setKeywords([]); // Reset keywords
+//         setHtml('');
 //       }
 //     } catch (error) {
 //       // console.log('error', error);
-//       showErrorToast(error?.data?.message || 'Failed to update blog.');
+//       showErrorToast(error?.data?.message || 'Failed to add blog.');
 //     }
 //   };
 
@@ -996,7 +860,7 @@ if (finalMetaImage instanceof File) {
 //           <Card>
 //             <CardHeader className="border-b border-gray-300">
 //               <CardTitle>
-//                 <h4>Update Blog</h4>
+//                 <h4>Add New Blog</h4>
 //               </CardTitle>
 //             </CardHeader>
 //             <CardContent className="space-y-6 pt-4">
@@ -1103,11 +967,11 @@ if (finalMetaImage instanceof File) {
 //                     <FormControl>
 //                       <MultiSelect
 //                         options={blogCategories?.map((category) => ({
-//                           label: category.name,
-//                           value: category._id,
+//                           label: category?.name,
+//                           value: category?._id,
 //                         }))}
-//                         value={field.value} // array of IDs
-//                         onChange={(selectedIds) => field.onChange(selectedIds)}
+//                         value={field.value}
+//                         onChange={field.onChange}
 //                         placeholder="Select categories"
 //                       />
 //                     </FormControl>
@@ -1115,7 +979,6 @@ if (finalMetaImage instanceof File) {
 //                   </FormItem>
 //                 )}
 //               />
-
 //               <FormField
 //                 control={control}
 //                 name="categories"
@@ -1172,9 +1035,9 @@ if (finalMetaImage instanceof File) {
 //                   placeholder="Type and press Enter to add keyword"
 //                 />
 //                 <div className="flex flex-wrap gap-2 mt-2">
-//                   {keywords?.map((word) => (
+//                   {keywords.map((word) => (
 //                     <Badge
-//                       key={word} // use the keyword itself
+//                       key={word}
 //                       variant="secondary"
 //                       className="cursor-pointer group transition"
 //                       onClick={() => handleRemoveKeyword(word)}
@@ -1195,7 +1058,7 @@ if (finalMetaImage instanceof File) {
 //                   control={control}
 //                   render={({ field }) => (
 //                     <div>
-//                       {thumbPreviewUrl && thumbPreviewUrl !== null ? (
+//                       {thumbPreviewUrl ? (
 //                         <div className="relative inline-block mb-2">
 //                           <img
 //                             src={thumbPreviewUrl}
@@ -1251,14 +1114,14 @@ if (finalMetaImage instanceof File) {
 
 //           {/* Submit Button */}
 //           <div className="pt-4 text-center">
-//             <Button type="submit" disabled={isUpdateBlogLoading}>
-//               {isUpdateBlogLoading ? (
+//             <Button type="submit" disabled={isAddBlogLoading}>
+//               {isAddBlogLoading ? (
 //                 <div className="flex items-center justify-center gap-2">
 //                   <Loader2 className="w-4 h-4 animate-spin" />
-//                   <span>Updating...</span>
+//                   <span>Adding...</span>
 //                 </div>
 //               ) : (
-//                 'Update Blog'
+//                 'Add Blog'
 //               )}
 //             </Button>
 //           </div>
