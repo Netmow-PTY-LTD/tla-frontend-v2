@@ -100,7 +100,7 @@ export default function EditSEOMetaPageModal({
   const { watch, handleSubmit, setValue, reset } = methods;
 
   useEffect(() => {
-    if (singleMetaPageData) {
+    if (singleMetaPageData && open) {
       reset({
         pageKey: singleMetaPageData.pageKey || '',
         slug: singleMetaPageData.slug || '',
@@ -109,11 +109,10 @@ export default function EditSEOMetaPageModal({
         metaKeywords: singleMetaPageData.metaKeywords || [],
         metaImage: singleMetaPageData.metaImage || null,
       });
-      setThumbPreviewUrl((prev) =>
-        prev === null ? singleMetaPageData.metaImage || null : prev
-      );
+      setThumbPreviewUrl(singleMetaPageData.metaImage || null);
+      setThumbImageFile(null);
     }
-  }, [singleMetaPageData, reset]);
+  }, [singleMetaPageData, reset, open]);
 
   //console.log('thumbPreviewUrl', thumbPreviewUrl);
 
@@ -180,17 +179,12 @@ export default function EditSEOMetaPageModal({
   return (
     <Modal
       open={open}
-      onOpenChange={(open) => {
-        setOpen(open);
-        if (open) {
-          reset({
-            pageKey: '',
-            slug: '',
-            metaTitle: '',
-            metaDescription: '',
-            metaKeywords: [],
-            metaImage: null,
-          });
+      onOpenChange={(isOpen) => {
+        setOpen(isOpen);
+        if (!isOpen) {
+          setThumbPreviewUrl(null);
+          setThumbImageFile(null);
+          reset(defaultValues);
         }
       }}
       width="max-w-[600px]"
