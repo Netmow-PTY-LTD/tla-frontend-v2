@@ -83,14 +83,14 @@ export default function BlogList() {
     },
 
     {
-      accessorKey: 'bannerImage',
-      header: 'Banner Image',
+      accessorKey: 'featuredImage',
+      header: 'Featured Image',
       cell: ({ row }) => {
-        const bannerImage = row.original?.bannerImage;
+        const featuredImage = row.original?.featuredImage;
         const imageUrl =
-          typeof bannerImage === 'string'
-            ? bannerImage
-            : bannerImage?.url || null;
+          typeof featuredImage === 'string'
+            ? featuredImage
+            : featuredImage?.url || null;
         return imageUrl ? (
           <img
             src={imageUrl}
