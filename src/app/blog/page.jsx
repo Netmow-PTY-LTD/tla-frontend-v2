@@ -10,7 +10,8 @@ export async function generateMetadata() {
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/seo/by-slug/${slug}`
   );
   const seoMetadata = await res.json();
-  const seo = seoMetadata?.data || {};
+  const data = seoMetadata?.data || {};
+  const seo = data.seo || data; // Robust check for nested seo object
 
   const metaTitle = seo.metaTitle || 'Blog Page | TheLawApp';
   const metaDescription =
@@ -21,17 +22,28 @@ export async function generateMetadata() {
     seo.metaImage ||
     'https://thelawapp.syd1.digitaloceanspaces.com/thelawapp/seo/metaimages/about.webp';
 
+  const canonicalUrl =
+    seo.canonicalUrl || `${process.env.NEXT_PUBLIC_SITE_URL}/blog`;
+
   return {
     title: metaTitle,
     description: metaDescription,
     keywords: metaKeywords,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    robots: {
+      index: !seo.noIndex,
+      follow: !seo.noFollow,
+    },
     openGraph: {
       title: metaTitle,
-      description: metaDescription, // ✔ fixed
+      description: metaDescription,
       images: [{ url: metaImage }],
+      url: canonicalUrl,
     },
     twitter: {
-      card: 'summary_large_image', // ✔ fixed
+      card: 'summary_large_image',
       title: metaTitle,
       description: metaDescription,
       images: [metaImage],
@@ -40,7 +52,8 @@ export async function generateMetadata() {
 }
 
 export default async function BlogPage() {
-  const seo = await getSeoData(seoData, 'blog');
+  const data = await getSeoData(seoData, 'blog');
+  const seo = data.seo || data; // Robust check for nested seo object
   const schema = await generateSchemaBySlug('blog', seo);
   return (
     <>
@@ -50,6 +63,14 @@ export default async function BlogPage() {
           __html: JSON.stringify(schema),
         }}
       />
+      {(data?.seoSchema || seo?.seoSchema) && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(data.seoSchema || seo.seoSchema),
+          }}
+        />
+      )}
       <BlogPosts />
     </>
   );
