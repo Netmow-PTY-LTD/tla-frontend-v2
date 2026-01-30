@@ -184,8 +184,8 @@ export default function EditBlog() {
       }
 
       // Set meta image preview
-      if (blog.seo?.metaImage?.url) {
-        setThumbPreviewUrl(blog.seo.metaImage.url);
+      if (blog.seo?.metaImage) {
+        setThumbPreviewUrl(blog.seo.metaImage);
       }
     }
   }, [blogData, reset, setValue]);
