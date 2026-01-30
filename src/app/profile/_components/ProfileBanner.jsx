@@ -4,7 +4,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { userDummyImage } from '@/data/data';
+
 import { checkValidity } from '@/helpers/validityCheck';
 import { Info } from 'lucide-react';
 import Image from 'next/image';
@@ -19,6 +19,12 @@ export default function ProfileBanner({ data, token, currentUser }) {
   const handleOpenPreview = () => setShowPreview(true);
   const handleClosePreview = () => setShowPreview(false);
   const validToken = checkValidity(token);
+
+   const dummyImage =
+      data?.gender?.toLowerCase() === 'female'
+        ? '/assets/img/user/female.svg'
+        : '/assets/img/user/male.svg';
+
 
 
   const handleDownloadVCard = useCallback(() => {
@@ -54,9 +60,12 @@ END:VCARD`;
   const handlePrint = useCallback(() => {
     if (!data) return;
 
+ 
+
+
+
     const profilePicture =
-      window.location.origin +
-      (data?.profilePicture || '/assets/img/user-dummy.png');
+      window.location.origin + (data?.profilePicture || dummyImage);
 
     const badgeHtml =
       data?.badge && data?.badge.toLowerCase() !== 'basic lawyer'
@@ -326,7 +335,8 @@ END:VCARD`;
         >
           <div className="flex">
             <Image
-              src={data?.profilePicture || userDummyImage}
+              src={
+                data?.profilePicture ||dummyImage}
               width={423}
               height={531}
               alt={data?.name || 'Profile Image'}
@@ -580,7 +590,6 @@ END:VCARD`;
               <PDFViewer width="100%" height="100%">
                 <ProfilePdfDocument
                   data={data}
-                  profilePicture={data?.profilePicture}
                 />
               </PDFViewer>
             </div>
@@ -597,8 +606,7 @@ END:VCARD`;
               <PDFDownloadLink
                 document={
                   <ProfilePdfDocument
-                    data={data}
-                    profilePicture={data?.profilePicture}
+                  data={data}
                   />
                 }
                 fileName={`${data?.name || 'profile'}.pdf`}
