@@ -257,6 +257,14 @@ export default function EditBlog() {
       seoSchema,
     } = data;
 
+
+  //    const finalMetaKeywords =
+  // metaKeywords && metaKeywords.length > 0 ? metaKeywords : keywords;
+
+const finalMetaImage = metaImage instanceof File ? metaImage : null;
+const finalFeaturedImage = featuredImage instanceof File ? featuredImage : null;
+
+
     const payload = {
       title,
       slug,
@@ -284,16 +292,40 @@ export default function EditBlog() {
       seoSchema: seoSchema ? JSON.parse(seoSchema) : undefined,
     };
 
-    const formData = new FormData();
-    formData.append('data', JSON.stringify(payload));
 
-    if (featuredImage instanceof File) {
-      formData.append('featuredImage', featuredImage);
-    }
 
-    if (metaImage instanceof File) {
-      formData.append('metaImage', metaImage);
-    }
+   
+
+
+const formData = new FormData();
+formData.append('data', JSON.stringify(payload));
+
+if (finalFeaturedImage instanceof File) {
+  formData.append('featuredImage', finalFeaturedImage);
+} else {
+  formData.append('featuredImage', null);
+}
+
+if (finalMetaImage instanceof File) {
+  formData.append('metaImage', finalMetaImage);
+} else {
+  formData.append('metaImage', null);
+}
+
+
+
+
+
+    // const formData = new FormData();
+    // formData.append('data', JSON.stringify(payload));
+
+    // if (featuredImage instanceof File) {
+    //   formData.append('featuredImage', featuredImage);
+    // }
+
+    // if (metaImage instanceof File) {
+    //   formData.append('metaImage', metaImage);
+    // }
 
     try {
       const res = await updateBlog({ blogId, data: formData }).unwrap();
