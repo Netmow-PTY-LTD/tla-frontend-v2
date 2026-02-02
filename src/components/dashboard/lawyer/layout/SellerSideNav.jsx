@@ -12,8 +12,8 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
   const [openMenus, setOpenMenus] = useState({});
   const sidebarRef = useRef(null);
 
-    const { data: userInfo, isLoading } = useAuthUserInfoQuery();
-    const status = userInfo?.data?.accountStatus;
+  const { data: userInfo, isLoading } = useAuthUserInfoQuery();
+  const status = userInfo?.data?.accountStatus;
   const toggleMenu = (title) => {
     setOpenMenus((prev) => ({
       ...prev,
@@ -59,14 +59,6 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
         } xl:static xl:translate-x-0 xl:transform-none xl:z-auto`}
     >
       <div className="p-4">
-
-          {status !== 'approved' && (
-                          <span className="flex items-center gap-1 mb-2 text-xs font-medium bg-yellow-50 text-yellow-800 border border-yellow-200 rounded-full px-2 py-0.5 shadow-sm">
-                            <BadgeAlert className="h-3.5 w-3.5 text-yellow-600" />
-                            Your account is under approval by admin
-                          </span>
-                        )}
-
         <SidebarTop />
       </div>
 

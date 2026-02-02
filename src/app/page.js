@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import countries from '@/data/countries';
 import { useRouter } from 'next/navigation';
+import HomeCompanyCTA from '@/components/main/home/HomeCompanyCTA';
 
 export default function Home() {
   const [searchParam, setSearchParam] = useState('');
@@ -77,6 +78,7 @@ export default function Home() {
       <HomeCategoryWiseServices />
       {/* <HomeFeatures /> */}
       {/* <HomeTestimonials /> */}
+      <HomeCompanyCTA />
       <TestimonialSlider />
       {/* <TestimonialSliderTest /> */}
       {/* <HomeCTA /> */}

@@ -5,7 +5,7 @@ import React from 'react';
 import ProfileDropDown from './ProfileDropDown';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import { useSelector } from 'react-redux';
-import { BadgeCent, PanelLeft } from 'lucide-react';
+import { BadgeAlert, BadgeCent, PanelLeft } from 'lucide-react';
 import { useGetNotificationsQuery } from '@/store/features/notification/notificationApiService';
 import NotificationDropdown from './NotificationDropdown';
 import { useGetUserCreditStatsQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
@@ -26,6 +26,8 @@ export default function DashboardHeader({ onToggleSidebar }) {
 
   const { data: currentUser } = useAuthUserInfoQuery();
 
+  const status = currentUser?.data?.accountStatus;
+
   // console.log('userInfo', userInfo);
   //console.log('currentUser', currentUser);
 
@@ -36,8 +38,8 @@ export default function DashboardHeader({ onToggleSidebar }) {
 
   return (
     <header className="db-header">
-      <div className="db-header-container flex gap-4">
-        <Link href="/lawyer/dashboard" className="db-logo">
+      <div className="db-header-container flex items-center gap-4">
+        <Link href="/lawyer/dashboard" className="db-logo shrink-0">
           <Image
             src={appData?.appLogo || '/assets/img/logo.png'}
             alt={appData?.siteName || 'TLA Logo'}
@@ -52,6 +54,13 @@ export default function DashboardHeader({ onToggleSidebar }) {
         >
           <PanelLeft />
         </button>
+
+        {status !== 'approved' && (
+          <span className="flex items-center gap-1 text-xs font-medium bg-yellow-50 text-yellow-800 border border-yellow-200 rounded-full px-2 py-1 shadow-sm max-md:fixed max-md:top-[65px] max-md:left-1/2 max-md:-translate-x-1/2 max-md:z-[100] max-md:w-[min(90%,400px)] max-md:w-max max-md:justify-center max-md:px-4 max-md:shadow-xl max-md:border-yellow-300">
+            <BadgeAlert className="h-3.5 w-3.5 text-yellow-600" />
+            Your account is under approval by admin
+          </span>
+        )}
       </div>
       <div className="flex items-center gap-2">
         {/* Elite Pro */}
