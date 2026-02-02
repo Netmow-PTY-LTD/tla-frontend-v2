@@ -9,6 +9,7 @@ import HeroHome from '@/components/main/home/HeroHome';
 import HomeCategoryWiseServices from '@/components/main/home/HomeCategoryWiseServices';
 import TestimonialSlider from '@/components/main/home/HomeTestimonials';
 import { useGetMetadataBySlugQuery } from '@/store/features/admin/SEOMetaApiService';
+import HomeCompanyCTA from '@/components/main/home/HomeCompanyCTA';
 
 export default function page() {
   const [searchParam, setSearchParam] = useState('');
@@ -73,6 +74,7 @@ export default function page() {
       <HomeCategoryWiseServices />
       {/* <HomeFeatures /> */}
       {/* <HomeTestimonials /> */}
+      <HomeCompanyCTA />
       <TestimonialSlider />
       {/* <TestimonialSliderTest /> */}
       {/* <HomeCTA /> */}
