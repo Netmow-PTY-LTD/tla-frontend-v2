@@ -166,6 +166,9 @@ export default function Footer() {
                           Join as a Lawyer
                         </Link>
                       </li>
+                       <li>
+                        <Link target="_blank" href="https://company-thelawapp.netlify.app/"> Login to Company Profile</Link>
+                      </li>
                       <li>
                         <Link target="_blank" href="https://company-thelawapp.netlify.app/">Company</Link>
                       </li>
