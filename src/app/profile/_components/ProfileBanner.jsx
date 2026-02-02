@@ -22,8 +22,8 @@ export default function ProfileBanner({ data, token, currentUser }) {
 
    const dummyImage =
       data?.gender?.toLowerCase() === 'female'
-        ? '/assets/img/user/female.svg'
-        : '/assets/img/user/male.svg';
+        ? '/assets/img/user/female.png'
+        : '/assets/img/user/male.png';
 
 
 
