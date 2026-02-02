@@ -464,7 +464,23 @@ END:VCARD`;
                 <span>{data?.address}</span>
               </div>
             </div>
-            {data?.foundingMember && data?.foundingMember && (
+           
+             <div className="bg-[#F3f3f3] py-2 px-3 rounded-[6px] inline-flex items-center gap-2 mt-8 mr-4">
+                <div className="icon">
+                  <img
+                    src="/assets/img/badge.svg"
+                    width="40"
+                    height="40"
+                    alt={"founder_Batch"}
+                  />
+                </div>
+                <span className="badge-name">Membership Logo</span>
+
+              </div>
+
+              {/*  it will be comment out in future  */}
+
+            {/* {data?.foundingMember && data?.foundingMember && (
               <div className="bg-[#F3f3f3] py-2 px-3 rounded-[6px] inline-flex items-center gap-2 mt-8 mr-4">
                 <div className="icon">
                   <img
@@ -498,7 +514,7 @@ END:VCARD`;
                       : ''}
                 </span>
               </div>
-            )}
+            )} */}
 
             <div
               className="flex flex-wrap items-center gap-4 mt-8"
