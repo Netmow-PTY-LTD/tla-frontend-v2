@@ -169,9 +169,7 @@ export default function Footer() {
                        <li>
                         <Link target="_blank" href="https://company-thelawapp.netlify.app/"> Login to Company Profile</Link>
                       </li>
-                      <li>
-                        <Link target="_blank" href="https://company-thelawapp.netlify.app/">Company</Link>
-                      </li>
+                    
                       <li>
                         <Link href="/pricing">Pricing</Link>
                       </li>
