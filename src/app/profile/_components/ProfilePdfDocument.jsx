@@ -77,12 +77,22 @@ export default function ProfilePdfDocument({ data }) {
   const [convertedImage, setConvertedImage] = useState(null);
   const [galleryImages, setGalleryImages] = useState([]);
 
+  const dummyImage =
+    data?.gender?.toLowerCase() === 'female'
+      ? '/assets/img/user/female.svg'
+      : '/assets/img/user/male.svg';
+
   useEffect(() => {
-    if (data?.profilePicture?.endsWith('.webp')) {
-      convertWebpToPng(data.profilePicture).then(setConvertedImage);
+    const profilePic = data?.profilePicture || dummyImage;
+
+    console.log('Profile Picture URL:', profilePic);
+
+    if (profilePic?.endsWith('.webp')) {
+      convertWebpToPng(profilePic).then(setConvertedImage);
     } else {
-      setConvertedImage(data?.profilePicture);
+      setConvertedImage(profilePic);
     }
+
     if (data?.photosVideos?.photos?.length > 0) {
       Promise.all(
         data.photosVideos.photos.map((imgUrl) =>
@@ -92,7 +102,7 @@ export default function ProfilePdfDocument({ data }) {
         )
       );
     }
-  }, [data]);
+  }, [data, dummyImage]);
 
   const extractYouTubeId = (url) => {
     const match =

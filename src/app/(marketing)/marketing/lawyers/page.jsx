@@ -13,6 +13,7 @@ import {
 
 import {
   Circle,
+  Edit,
   MoreHorizontal,
   View,
 } from 'lucide-react';
@@ -206,6 +207,11 @@ export default function Page() {
         <div className="lowercase">{row.getValue('email')}</div>
       ),
     },
+   {
+      accessorKey: 'profile.gender',
+      header: 'Gender',
+      cell: ({ row }) => <div className="capitalize">{row.original?.profile.gender || '-'}</div>,
+    },
 
     {
       accessorKey: 'accountStatus',
@@ -358,6 +364,16 @@ export default function Page() {
               </DropdownMenuItem>
 
               <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                <Link
+                  href={`/marketing/lawyers/edit/${userId}`}
+
+                  className="flex items-center gap-2 cursor-pointer px-2 py-0.5"
+                >
+                  <Edit className="w-4 h-4" />
+                  <span>Edit Lawyer</span>
+                </Link>
+              </DropdownMenuItem>
 
 
             </DropdownMenuContent>

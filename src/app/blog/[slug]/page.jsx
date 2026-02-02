@@ -11,24 +11,46 @@ export async function generateMetadata({ params }) {
   );
   const blogData = await res.json();
   const post = blogData?.data || {};
+  const seo = post?.seo || {};
 
-  const title = post?.seo?.metaTitle || 'Blog Post | TheLawApp';
+  const title = seo.metaTitle || post.title || 'Blog Post | TheLawApp';
   const description =
-    post?.seo?.metaDescription ||
+    seo.metaDescription ||
+    post.excerpt ||
     'Read the latest legal insights and updates from TheLawApp.';
   const image =
-    post.seo?.metaImage ||
+    seo.metaImage ||
+    post.featuredImage?.url ||
     'https://thelawapp.syd1.digitaloceanspaces.com/thelawapp/seo/metaimages/blog.webp';
-  const keywords = post?.seo?.keywords || ['law', 'legal', 'TheLawApp'];
+  const keywords = Array.isArray(seo.metaKeywords)
+    ? seo.metaKeywords.join(', ')
+    : seo.metaKeywords || 'law, legal, TheLawApp';
+
+  const canonicalUrl =
+    seo.canonicalUrl ||
+    `${process.env.NEXT_PUBLIC_SITE_URL}/blog/${post.slug || slug}`;
 
   return {
     title,
     description,
     keywords,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    robots: {
+      index: !seo.noIndex,
+      follow: !seo.noFollow,
+    },
     openGraph: {
       title,
       description,
       images: [{ url: image }],
+      type: 'article',
+      url: canonicalUrl,
+      publishedTime: post.createdAt,
+      modifiedTime: post.updatedAt,
+      authors: post.authors || ['TheLawApp'],
+      tags: post.tags || [],
     },
     twitter: {
       card: 'summary_large_image',
@@ -46,21 +68,33 @@ export default async function BlogDetailsPage({ params }) {
   );
   const blogData = await res.json();
   const post = blogData?.data || {};
-  // Generate schema for this post
-  //const seo = await getSeoData(seoData, 'blog');
-  const schema = await generateSchemaBySlug('blogPost', post);
+  const seo = post?.seo || {};
+
+  // Generate default schema
+  const defaultSchema = await generateSchemaBySlug('blogPost', post);
+
+  // Custom schema from API (could be in post.seoSchema or seo.seoSchema)
+  const customSchema = post.seoSchema || seo.seoSchema;
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(schema),
-        }}
-      />
-      <>
-        <BlogPostDetails slug={slug} />
-      </>
+      {defaultSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(defaultSchema),
+          }}
+        />
+      )}
+      {customSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(customSchema),
+          }}
+        />
+      )}
+      <BlogPostDetails slug={slug} />
     </>
   );
 }

@@ -52,10 +52,11 @@ import { useGetZipCodeListQuery } from "@/store/features/public/publicApiService
 import { useGetCountryWiseServicesQuery } from "@/store/features/admin/servicesApiService";
 import Cookies from "js-cookie";
 import { useAuthUserInfoQuery } from "@/store/features/auth/authApiService";
-import CountrySelect from "../../_components/form/CountrySelect";
-import ServiceSelector from "../../_components/form/ServiceSelector";
-import RangeSelector from "../../_components/form/RangeSelector";
-import { useCreateLawyerUserMutation } from "@/store/features/marketing/marketing";
+import CountrySelect from "../../../_components/form/CountrySelect";
+import ServiceSelector from "../../../_components/form/ServiceSelector";
+import RangeSelector from "../../../_components/form/RangeSelector";
+import { useEditLawyerUserMutation, useGetLawyerUserByIdQuery } from "@/store/features/marketing/marketing";
+import { useParams } from "next/navigation";
 
 const genderOptions = [
   { id: 1, label: "Male", value: "male" },
@@ -83,7 +84,6 @@ export const lawyerSchema = z.object({
       .min(1, "At least one service specialization is required"),
   AreaZipcode: z.string().min(1, "Practicing area is required"),
   country:z.string(),
-  countryCode: z.string().optional(),
   rangeInKm: z
     .number()
     .min(1, "Range of area is required")
@@ -95,7 +95,11 @@ export const lawyerSchema = z.object({
   full_address: z.string().optional(),
 });
 
-export default function CreateNewLawyer() {
+export const editLawyerSchema = lawyerSchema.extend({
+  password: z.string().optional(),
+});
+
+export default function EditLawyer() {
   const [query, setQuery] = useState("");
   const [zipcode, setZipcode] = useState("");
   const [latitude, setLatitude] = useState(null);
@@ -104,28 +108,77 @@ export default function CreateNewLawyer() {
   const [address, setAddress] = useState("");
 
   const router = useRouter();
+  const { userId } = useParams();
+
+  const { data: lawyerData, isLoading: isLawyerLoading } = useGetLawyerUserByIdQuery(userId, {
+    skip: !userId,
+  });
+
 
 
   const form = useForm({
-    resolver: zodResolver(lawyerSchema),
+    resolver: zodResolver(editLawyerSchema),
     defaultValues: {
       name: "",
       email: "",
       phone: "",
-      password: "123456",
+      password: "",
       law_society_member_number: "",
       practising_certificate_number: "",
       gender: "male",
       services: [],
       AreaZipcode: "",
-      country: "682ecd01e6b730f229c8d3d3", // Default to Australia
-      countryCode: "au",
-      rangeInKm: 300,
-      practiceWithin: true,
+      rangeInKm: 0,
+      practiceWithin: false,
       practiceInternationally: false,
       full_address: "",
     },
   });
+
+  React.useEffect(() => {
+    if (lawyerData?.data) {
+      const { profile, lawyerServiceMap, userData} = lawyerData.data;
+      console.log("Fetched lawyer data:", lawyerServiceMap);
+      if (profile) {
+        form.setValue("name", profile.name);
+        form.setValue("gender", profile.gender);
+        form.setValue("law_society_member_number", profile.law_society_member_number);
+        form.setValue("practising_certificate_number", profile.practising_certificate_number);
+        form.setValue("full_address", profile.full_address);
+      }
+      form.setValue("email", userData.email);
+      form.setValue("phone", userData.phone);
+      if (lawyerServiceMap) {
+         form.setValue("country", lawyerServiceMap.country);
+         form.setValue("services", lawyerServiceMap.services);
+         form.setValue("rangeInKm", Number(lawyerServiceMap.rangeInKm || 0)); 
+         form.setValue("practiceWithin", lawyerServiceMap.practiceWithin);
+         form.setValue("practiceInternationally", lawyerServiceMap.practiceInternationally);
+         
+         // Fix: Map from zipCode object in API response
+         if (lawyerServiceMap.zipCode) {
+              setAddress(lawyerServiceMap.zipCode.zipcode);
+              setPostalCode(lawyerServiceMap.zipCode.postalCode);
+              setLatitude(lawyerServiceMap.zipCode.latitude);
+              setLongitude(lawyerServiceMap.zipCode.longitude);
+              form.setValue("AreaZipcode", lawyerServiceMap.zipCode._id);
+              if (lawyerServiceMap.zipCode.countryCode) {
+                form.setValue("countryCode", lawyerServiceMap.zipCode.countryCode);
+              }
+         } else if (lawyerServiceMap.addressInfo) { 
+              // Fallback for addressInfo if zipCode is missing (though API seems to use zipCode)
+              setAddress(lawyerServiceMap.addressInfo.zipcode);
+              setPostalCode(lawyerServiceMap.addressInfo.postalCode);
+              setLatitude(lawyerServiceMap.addressInfo.latitude);
+              setLongitude(lawyerServiceMap.addressInfo.longitude);
+              form.setValue("AreaZipcode", lawyerServiceMap.zipCode?._id || lawyerServiceMap.addressInfo?._id); // Try to find ID
+              if (lawyerServiceMap.addressInfo.countryCode) {
+                 form.setValue("countryCode", lawyerServiceMap.addressInfo.countryCode);
+              }
+         }
+      }
+    }
+  }, [lawyerData, form]);
 
 
     const token = Cookies.get('token');
@@ -169,8 +222,8 @@ export default function CreateNewLawyer() {
 
 
 
-  const [createLawyer, { isLoading: isCreatingLawyerLoading }] =
-    useCreateLawyerUserMutation();
+  const [updateLawyer, { isLoading: isUpdatingLawyerLoading }] =
+    useEditLawyerUserMutation();
 
   const onSubmit = async (data) => {
     console.log("Form submitted", data);
@@ -193,58 +246,60 @@ export default function CreateNewLawyer() {
     } = data;
 
     const payload = {
-      email,
-      phone,
-      password,
-      role: "user",
-      regUserType: "lawyer",
-      profile: {
-        name,
-        profileType: "basic",
-        gender,
-        country: countryId,
-        law_society_member_number,
-        practising_certificate_number,
-        full_address: full_address,
-      },
-      lawyerServiceMap: {
-        services,
-        rangeInKm,
-        practiceWithin,
-        practiceInternationally,
-        isSoloPractitioner: false,
-        country: countryId,
-        addressInfo: {
-          countryId: countryId,
-          countryCode,
-         
-          zipcode: address,
-          postalCode: postalCode,
-          latitude: latitude,
-          longitude: longitude,
+      userId,
+      data: {
+        email,
+        phone,
+        password: password || undefined, // Only send if provided
+        role: "user",
+        regUserType: "lawyer",
+        profile: {
+          name,
+          profileType: "basic",
+          gender,
+          country: countryId,
+          law_society_member_number,
+          practising_certificate_number,
+          full_address: full_address,
         },
-      },
+        lawyerServiceMap: {
+          services,
+          rangeInKm,
+          practiceWithin,
+          practiceInternationally,
+          isSoloPractitioner: false,
+          country: countryId,
+          addressInfo: {
+            countryId: countryId,
+            countryCode,
+            zipcode: address,
+            postalCode: postalCode,
+            latitude: latitude,
+            longitude: longitude,
+          },
+        },
+      }
     };
 
     console.log("Submit payload:", payload);
     //  You can call API here to create a new lawyer
 
     try {
-      const res = await createLawyer(payload).unwrap();
-      console.log("Lawyer created successfully:", res);
+      const res = await updateLawyer(payload).unwrap();
+      console.log("Lawyer updated successfully:", res);
       // Optionally, reset the form or show a success message
       if (res?.success) {
-        showSuccessToast(res?.message || "Lawyer created successfully!");
+        showSuccessToast(res?.message || "Lawyer updated successfully!");
         form.reset();
         router.push("/marketing/lawyers");
       }
     } catch (error) {
-      console.error("Error creating lawyer:", error);
+      console.error("Error updating lawyer:", error);
       // Optionally, show an error message to the user
       showErrorToast(
         error?.message ||
           error?.data?.message ||
-          "Failed to create lawyer. Please try again."
+          "Failed to update lawyer. Please try again."
       );
     }
 
@@ -255,17 +310,24 @@ export default function CreateNewLawyer() {
 
   return (
     <div className="max-w-[1000px] mx-auto bg-white p-6 rounded-lg shadow-lg">
+      <div className="w-full flex items-center gap-4 mb-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => router.back()}
+          className="flex items-center gap-1 h-9 px-3"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back</span>
+        </Button>
+      </div>
       <div className="w-full">
-      <h3 className="text-black font-semibold heading-lg">
-  Add Lawyer to Marketing Campaign
-</h3>
-<p className="text-[#6e6e6e] mt-2 text-sm">
-  Use this form to add lawyers to your marketing campaigns or database. 
-  Each lawyer’s profile should include personal details, professional role, 
-  and areas of expertise. This ensures accurate representation in campaigns, 
-  helps segment leads effectively, and allows your team to target clients 
-  with the right expertise.
-</p>
+        <h3 className="text-black font-semibold heading-lg">
+          Edit Lawyer
+        </h3>
+        <p className="text-[#6e6e6e] mt-2 text-sm">
+          Update the lawyer's profile information below.
+        </p>
       </div>
       <div className="mt-6">
         <Form {...form}>
@@ -358,7 +420,8 @@ export default function CreateNewLawyer() {
                               autoComplete="new-password"
                               placeholder="Enter your password"
                               {...field}
-                              className="tla-form-control h-[44px] pr-10" // space for the icon
+                              disabled
+                              className="tla-form-control h-[44px] pr-10 bg-gray-50" // space for the icon
                               onChange={(e) => {
                                 field.onChange(e);
                               }}
@@ -617,7 +680,8 @@ export default function CreateNewLawyer() {
                     <FormItem className="cursor-pointer flex items-center gap-3">
                       <FormControl>
                         <Checkbox
-                          checked={field.value}
+                          {...field}
+                           checked={field.value}
                           onCheckedChange={(val) => {
                             field.onChange(val);
                           }}
@@ -670,15 +734,15 @@ export default function CreateNewLawyer() {
               <Button
                 className="cursor-pointer mt-2 bg-[#1da9a7]"
                 type="submit"
-                disabled={isCreatingLawyerLoading}
+                disabled={isUpdatingLawyerLoading}
               >
-                {isCreatingLawyerLoading ? (
+                {isUpdatingLawyerLoading ? (
                   <div className="flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin" />{" "}
-                    <span>Creating...</span>
+                    <span>Updating...</span>
                   </div>
                 ) : (
-                  "Create Lawyer"
+                  "Update Lawyer"
                 )}
               </Button>
              
