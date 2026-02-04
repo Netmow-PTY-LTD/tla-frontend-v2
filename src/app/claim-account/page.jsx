@@ -200,7 +200,7 @@ export default function ClaimAccountPage() {
                           Processing Request...
                         </span>
                       ) : (
-                        'Submit Account Claim'
+                        'Submit Account Claim Request'
                       )}
                     </Button>
                   </div>
