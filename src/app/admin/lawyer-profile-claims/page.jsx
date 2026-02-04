@@ -75,11 +75,11 @@ export default function LawyerProfileClaims() {
       header: 'Target Profile Email',
       cell: ({ row }) => <div>{row.getValue('lawyerProfileEmail')}</div>,
     },
-    {
-      accessorKey: 'claimerPhone',
-      header: 'Phone',
-      cell: ({ row }) => <div>{row.getValue('claimerPhone')}</div>,
-    },
+    // {
+    //   accessorKey: 'claimerPhone',
+    //   header: 'Phone',
+    //   cell: ({ row }) => <div>{row.getValue('claimerPhone')}</div>,
+    // },
     {
       accessorKey: 'status',
       header: 'Status',
@@ -125,7 +125,7 @@ export default function LawyerProfileClaims() {
               <DropdownMenuItem asChild>
                 <Link
                   href={`/admin/lawyer-profile-claims/${item?._id}`}
-                  className="flex items-center gap-2 cursor-pointer"
+                  className="flex items-center gap-2 cursor-pointer px-3 py-1"
                 >
                   <Eye className="w-4 h-4" />
                   View Details
@@ -136,14 +136,15 @@ export default function LawyerProfileClaims() {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={() => handleUpdateStatus(item?._id, 'approved')}
-                    className="flex gap-2 cursor-pointer text-green-600 focus:text-green-600"
+                    className="flex gap-2 cursor-pointer text-green-600 focus:text-green-600 px-3 py-1"
                   >
                     <Check className="w-4 h-4" />
                     Approve
                   </DropdownMenuItem>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={() => handleUpdateStatus(item?._id, 'rejected')}
-                    className="flex gap-2 cursor-pointer text-red-600 focus:text-red-600"
+                    className="flex gap-2 cursor-pointer text-red-600 focus:text-red-600 px-3 py-1"
                   >
                     <X className="w-4 h-4" />
                     Reject
