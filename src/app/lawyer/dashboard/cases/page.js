@@ -255,17 +255,18 @@ const LeadsBoardPage = () => {
     return (
       <div className="flex flex-col justify-center items-center h-full text-center">
         <Inbox className="w-12 h-12 mb-4 text-gray-400" />
-        <h4 className="italic text-[18px] text-gray-500">
-          Currently there are no cases.
+        <h4 className="italic text-gray-500 max-w-md whitespace-normal break-words">
+          Thousands of cases are waiting for you—update your profile with your skills and start bidding on matching cases.
         </h4>
+
         <Button
           className="mt-4"
           onClick={() => {
             localStorage.removeItem('lead-filters');
-            window.location.href = '/lawyer/dashboard/cases';
+            window.location.href = '/lawyer/settings/skill-settings';
           }}
         >
-          Reload
+          Upgrade Profile
         </Button>
       </div>
     );
@@ -336,9 +337,8 @@ const LeadsBoardPage = () => {
               </div>
             )}
             <div
-              className={`${
-                showLeadDetails ? 'right-column-4 ' : 'right-column-full'
-              }`}
+              className={`${showLeadDetails ? 'right-column-4 ' : 'right-column-full'
+                }`}
             >
               <div className="column-wrap-right" id="scroll-target-for-data">
                 <div className="leads-top-row">
