@@ -44,13 +44,13 @@ const LoginForm = () => {
     try {
       const res = await authLogin(data).unwrap();
 
-   
+
 
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Login successful');
         const user = await verifyToken(res?.token);
 
-      
+
 
         if (user) {
           const dispatchUser = dispatch(
@@ -74,24 +74,24 @@ const LoginForm = () => {
             if (res?.data?.regUserType === 'lawyer') {
               router.push(`/lawyer/dashboard`);
               const cachedRes = await cachedUserData().unwrap();
-         
+
 
             } else if (res?.data?.regUserType === 'client') {
               router.push(`/client/dashboard`);
               const cachedRes = await cachedUserData().unwrap();
-       
+
 
 
             } else if (res?.data?.regUserType === 'admin') {
               router.push(`/admin`);
               const cachedRes = await cachedUserData().unwrap();
-        
 
 
-            }else if (res?.data?.regUserType === 'marketer') {
+
+            } else if (res?.data?.regUserType === 'marketer') {
               router.push(`/marketing`);
               const cachedRes = await cachedUserData().unwrap();
-        
+
 
 
             }
@@ -195,7 +195,7 @@ const LoginForm = () => {
               <b>Join as a Lawyer</b>
             </Link>
           </div>
-          <Link href="/claime-account">
+          <Link href="/claim-account">
             <b>Claim Your Account</b>
           </Link>
         </div>
