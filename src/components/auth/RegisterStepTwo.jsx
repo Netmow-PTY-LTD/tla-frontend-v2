@@ -418,12 +418,12 @@ export default function RegisterStepTwo() {
                         <SelectTrigger>
                           <SelectValue
                             placeholder="Select range of area"
-                            // render={(selectedValue) => {
-                            //   const selectedItem = ranges?.find(
-                            //     (item) => String(item.value) === selectedValue
-                            //   );
-                            //   return selectedItem?.label || '';
-                            // }}
+                          // render={(selectedValue) => {
+                          //   const selectedItem = ranges?.find(
+                          //     (item) => String(item.value) === selectedValue
+                          //   );
+                          //   return selectedItem?.label || '';
+                          // }}
                           />
                         </SelectTrigger>
                       </FormControl>
@@ -513,7 +513,7 @@ export default function RegisterStepTwo() {
                 <b>Log In</b>
               </Link>
             </div>
-            <Link href="/claime-account">
+            <Link href="/claim-account">
               <b>Claim Your Account</b>
             </Link>
           </div>
