@@ -56,14 +56,14 @@ export default function ClaimAccountPage() {
 
   return (
     <MainLayout>
-      <section className='py-16 relative overflow-hidden bg-slate-50'>
+      <section className='py-10 md:py-16 relative overflow-hidden bg-slate-50'>
         {/* Background Decorative Elements */}
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--color-special)] opacity-5 rounded-full blur-[120px] -mr-64 -mt-64"></div>
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[var(--color-special)] opacity-5 rounded-full blur-[120px] -ml-64 -mb-64"></div>
 
         <div className="mx-auto px-4 max-w-5xl w-full relative z-10">
           <div className="text-center mb-10 space-y-4">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--color-special)] bg-opacity-10 text-[var(--color-special)] mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--color-special)] bg-opacity-10 text-[var(--color-special)] mb-2">
               <ShieldCheckIcon className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">
@@ -102,7 +102,7 @@ export default function ClaimAccountPage() {
                             <FormControl>
                               <div className="relative">
                                 <User className="absolute left-3 top-3.5 w-4 h-4 text-slate-400" />
-                                <Input placeholder="John Doe" {...field} className="pl-10 bg-slate-50 border-slate-200 focus:bg-white focus:ring-1 focus:ring-[var(--color-special)] transition-all h-12" />
+                                <Input placeholder="John Doe" {...field} className="pl-10 bg-slate-50 border-slate-200 focus:bg-white focus:ring-1 focus:ring-[var(--color-special)] transition-all h-11" />
                               </div>
                             </FormControl>
                             <FormMessage />
@@ -118,7 +118,7 @@ export default function ClaimAccountPage() {
                             <FormControl>
                               <div className="relative">
                                 <Mail className="absolute left-3 top-3.5 w-4 h-4 text-slate-400" />
-                                <Input placeholder="john@example.com" {...field} className="pl-10 bg-slate-50 border-slate-200 focus:bg-white focus:ring-1 focus:ring-[var(--color-special)] transition-all h-12" />
+                                <Input placeholder="john@example.com" {...field} className="pl-10 bg-slate-50 border-slate-200 focus:bg-white focus:ring-1 focus:ring-[var(--color-special)] transition-all h-11" />
                               </div>
                             </FormControl>
                             <FormMessage />
@@ -138,7 +138,7 @@ export default function ClaimAccountPage() {
                           <FormControl>
                             <div className="relative">
                               <ShieldCheck className="absolute left-3 top-3.5 w-4 h-4 text-slate-400" />
-                              <Input placeholder="lawyer@firm.com" {...field} className="pl-10 bg-slate-50 border-slate-200 focus:bg-white focus:ring-1 focus:ring-[var(--color-special)] transition-all h-12" />
+                              <Input placeholder="lawyer@firm.com" {...field} className="pl-10 bg-slate-50 border-slate-200 focus:bg-white focus:ring-1 focus:ring-[var(--color-special)] transition-all h-11" />
                             </div>
                           </FormControl>
                           <FormDescription className="text-slate-500">

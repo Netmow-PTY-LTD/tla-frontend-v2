@@ -297,11 +297,10 @@ export default function RegisterStepOne() {
               )} */}
 
                 <div
-                  className={`popular-services mt-3 ${
-                    hasServiceError
+                  className={`popular-services mt-3 ${hasServiceError
                       ? 'border border-red-500 p-4 rounded-md'
                       : ''
-                  }`}
+                    }`}
                 >
                   <label className="font-medium text-[16px]">
                     Popular Services:
@@ -315,11 +314,10 @@ export default function RegisterStepOne() {
                         <button
                           type="button"
                           onClick={() => handleSelectService(service._id)}
-                          className={`relative service-box flex gap-2 items-center w-full border border-1 border-[#DCE2EA] ${
-                            selectedServiceIds.includes(service._id)
+                          className={`relative service-box flex gap-2 items-center w-full border border-1 border-[#DCE2EA] ${selectedServiceIds.includes(service._id)
                               ? 'selected'
                               : ''
-                          }`}
+                            }`}
                         >
                           {/* <Image
                             src={service.image || '/assets/img/no-image.jpg'}
@@ -362,7 +360,7 @@ export default function RegisterStepOne() {
                 <b>Log In</b>
               </Link>
             </div>
-            <Link href="/claime-account">
+            <Link href="/claim-account">
               <b>Claim Your Account</b>
             </Link>
           </div>
