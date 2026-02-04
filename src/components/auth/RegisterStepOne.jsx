@@ -356,9 +356,14 @@ export default function RegisterStepOne() {
           </Form>
 
           <div className="tla-auth-footer text-center">
-            <span>Already have an account? </span>
-            <Link href="/login">
-              <b>Log In</b>
+            <div className="mb-2">
+              <span>Already have an account? </span>
+              <Link href="/login">
+                <b>Log In</b>
+              </Link>
+            </div>
+            <Link href="/claime-account">
+              <b>Claim Your Account</b>
             </Link>
           </div>
         </div>
