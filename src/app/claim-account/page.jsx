@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, Suspense } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -21,6 +21,7 @@ import { showSuccessToast, showErrorToast } from '@/components/common/toasts';
 import { useSubmitLawyerProfileClaimMutation } from '@/store/features/admin/lawyerProfileClaimService';
 import { Loader2, User, Mail, FileText, Info, ShieldCheck, ShieldCheckIcon } from 'lucide-react';
 import MainLayout from '@/components/main/common/layout';
+import { useSearchParams } from 'next/navigation';
 
 const claimSchema = z.object({
   lawyerProfileEmail: z.string().email({ message: "Invalid email address for the lawyer profile." }),
@@ -30,19 +31,27 @@ const claimSchema = z.object({
   additionalInfo: z.string().optional(),
 });
 
-export default function ClaimAccountPage() {
+function ClaimAccountForm() {
+  const searchParams = useSearchParams();
+  const email = searchParams.get('email');
   const [submitClaim, { isLoading }] = useSubmitLawyerProfileClaimMutation();
 
   const form = useForm({
     resolver: zodResolver(claimSchema),
     defaultValues: {
-      lawyerProfileEmail: '',
+      lawyerProfileEmail: email || '',
       claimerName: '',
       claimerEmail: '',
       claimReason: '',
       additionalInfo: '',
     },
   });
+
+  useEffect(() => {
+    if (email) {
+      form.setValue('lawyerProfileEmail', email);
+    }
+  }, [email, form]);
 
   async function onSubmit(values) {
     try {
@@ -215,5 +224,15 @@ export default function ClaimAccountPage() {
         </div>
       </section>
     </MainLayout>
+  );
+}
+
+export default function ClaimAccountPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <Loader2 className="w-10 h-10 animate-spin text-[var(--color-special)]" />
+    </div>}>
+      <ClaimAccountForm />
+    </Suspense>
   );
 }

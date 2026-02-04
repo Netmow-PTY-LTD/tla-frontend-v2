@@ -17,6 +17,7 @@ import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { useSelector } from 'react-redux';
 import { useVisitProfileMutation } from '@/store/features/visitorTracker/visitorTracker';
 import { checkValidity } from '@/helpers/validityCheck';
+import { Button } from '@/components/ui/button';
 
 const DynamicProfilePage = () => {
   const params = useParams();
@@ -187,12 +188,20 @@ const DynamicProfilePage = () => {
             </div>
             <div className="w-full lg:w-1/3 lg:pl-8 flex gap-10 items-start">
               <div className="related-areas relative">
+                <Link href={`/claim-account?email=${userInfo?.data?.email}`}>
+                  <Button
+                    className="w-auto hover:opacity-90 text-white rounded-xl text-xs font-medium transition-all outline-none mb-5 p-2 bg-red-500"
+                    variant="default"
+                  >
+                    Claim Your Account
+                  </Button>
+                </Link>
                 {userInfo?.data?.languages?.length > 0 && (
                   <>
                     <h4 className="font-semibold mb-4">Languages</h4>
                     <div className="flex flex-wrap mb-4">
                       {Array.isArray(userInfo?.data?.languages) &&
-                      userInfo?.data?.languages?.length > 0 ? (
+                        userInfo?.data?.languages?.length > 0 ? (
                         userInfo?.data?.languages?.map((language, index) => (
                           <div key={language + index}>
                             <span className="py-2 px-4 mr-2 mb-2 rounded-lg inline-block bg-[#000000] text-white">
@@ -215,7 +224,7 @@ const DynamicProfilePage = () => {
                     </h4>
                     <div className="">
                       {Array.isArray(userInfo?.data?.services) &&
-                      userInfo?.data?.services?.length > 0 ? (
+                        userInfo?.data?.services?.length > 0 ? (
                         userInfo?.data?.services?.map((service, index) => (
                           <div key={service + index}>
                             <span className="py-2 px-4 mr-2 mb-2 rounded-lg inline-block chip">
@@ -234,7 +243,7 @@ const DynamicProfilePage = () => {
                 {userInfo?.data?.socialMedia && (
                   <>
                     <h2 className="text-[18px] font-semibold mb-4 mt-8">
-                      Share
+                      Social Links
                     </h2>
                     <div className="flex flex-wrap gap-5">
                       <Link
