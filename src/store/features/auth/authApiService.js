@@ -133,7 +133,7 @@ const authApi = baseApi.injectEndpoints({
       invalidatesTags: ['lead-list-admin'],
     }),
 
-     ssoLogin: builder.mutation({
+    ssoLogin: builder.mutation({
       query: (data) => ({
         url: '/auth/sso-login',
         method: 'POST',
@@ -141,15 +141,58 @@ const authApi = baseApi.injectEndpoints({
       }),
 
     }),
-     cachedUserData: builder.mutation({
+    cachedUserData: builder.mutation({
       query: () => ({
         url: '/auth/cache-user-data',
         method: 'POST',
       }),
 
     }),
+    lawyerRegistrationDraft: builder.mutation({
+      query: (data) => ({
+        url: '/auth/lawyer/registration/draft',
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    lawyerRegistrationVerifyEmail: builder.mutation({
+      query: (data) => ({
+        url: '/auth/lawyer/registration/verify-email',
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    lawyerRegistrationCommit: builder.mutation({
+      query: (data) => ({
+        url: '/auth/lawyer/registration/commit',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['userInfo'],
+    }),
 
-
+    clientRegistrationDraft: builder.mutation({
+      query: (data) => ({
+        url: '/auth/client/registration/draft',
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    clientRegistrationVerifyEmail: builder.mutation({
+      query: (data) => ({
+        url: '/auth/client/registration/verify-email',
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    clientRegistrationCommit: builder.mutation({
+      query: (data) => ({
+        url: '/auth/client/registration/commit',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['userInfo'],
+    }),
 
   }),
 });
@@ -175,4 +218,10 @@ export const {
   useUpdateUserDefalultPicMutation,
   useSsoLoginMutation,
   useCachedUserDataMutation,
+  useLawyerRegistrationDraftMutation,
+  useLawyerRegistrationVerifyEmailMutation,
+  useLawyerRegistrationCommitMutation,
+  useClientRegistrationDraftMutation,
+  useClientRegistrationVerifyEmailMutation,
+  useClientRegistrationCommitMutation,
 } = authApi;

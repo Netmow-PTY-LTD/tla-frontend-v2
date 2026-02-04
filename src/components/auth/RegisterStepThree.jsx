@@ -20,10 +20,12 @@ import {
   bulkUpdate,
   resetRegistration,
 } from '@/store/features/auth/lawyerRegistrationSlice';
-import { useAuthRegisterMutation } from '@/store/features/auth/authApiService';
+import {
+  useLawyerRegistrationDraftMutation,
+} from '@/store/features/auth/authApiService';
+import { Mail } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { showErrorToast, showSuccessToast } from '../common/toasts';
-import { verifyToken } from '@/utils/verifyToken';
 import { setUser } from '@/store/features/auth/authSlice';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getLawyerRegistrationStepThreeFormValidation } from '@/schema/auth/lawyerRegistration.schema';
@@ -42,6 +44,15 @@ import {
 } from '@headlessui/react';
 import { useGetCompanyListQuery } from '@/store/features/public/publicApiService';
 import { cn } from '@/lib/utils';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
 const genderOptions = [
   { id: 1, label: 'Male', value: 'male' },
@@ -52,6 +63,8 @@ const genderOptions = [
 export default function RegisterStepThree() {
   const dispatch = useDispatch();
   const [query, setQuery] = useState('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
   const registration = useSelector((state) => state.lawyerRegistration);
   const { email, password, profile } = registration;
   const {
@@ -176,33 +189,15 @@ export default function RegisterStepThree() {
     );
   }, []);
 
-  // useEffect(() => {
-  //   // Sync redux data to local form
-  //   form.reset({
-  //     email,
-  //     phone: profile?.phone,
-  //     password,
-  //     soloPractitioner: registration.lawyerServiceMap.isSoloPractitioner,
-  //     companyTeam,
-  //     company_name: companyName,
-  //     company_website: website,
-  //     company_size: companySize,
-  //     gender: profile.gender,
-  //     law_society_member_number: profile.law_society_member_number,
-  //     practising_certificate_number: profile.practising_certificate_number,
-  //   });
-  // }, [
-  //   email,
-  //   profile?.phone,
-  //   password,
-  //   companyTeam,
-  //   companyName,
-  //   website,
-  //   companySize,
-  //   profile.gender, // ✅ include gender so reset reacts
-  //   profile.law_society_member_number,
-  //   profile.practising_certificate_number,
-  // ]);
+  useEffect(() => {
+    let timer;
+    if (showSuccessModal) {
+      timer = setTimeout(() => {
+        setShowSuccessModal(false);
+      }, 10000); // 10 seconds
+    }
+    return () => clearTimeout(timer);
+  }, [showSuccessModal]);
 
   const handleGenderChange = (value) => {
     dispatch(updateNestedField({ section: 'profile', field: 'gender', value })); // Update Redux
@@ -211,48 +206,31 @@ export default function RegisterStepThree() {
 
   const router = useRouter();
   const registrationState = useSelector((state) => state.lawyerRegistration);
-  const [authRegister, { isLoading }] = useAuthRegisterMutation();
+
+  const [lawyerRegistrationDraft, { isLoading: isDraftLoading }] =
+    useLawyerRegistrationDraftMutation();
+
+  const isLoading = isDraftLoading;
 
   console.log('registrationState', registrationState);
 
   const handleSubmit = async (data) => {
-    // console.log('data', data);
     try {
-      const result = await authRegister(registrationState).unwrap();
-      if (result?.success && result?.token) {
-        showSuccessToast(result?.message || 'Registration successful');
-        form.reset();
-        const token = result.token;
-        const userPayload = verifyToken(token);
-        //console.log('userPayload', userPayload);
-        if (userPayload) {
-          dispatch(
-            setUser({
-              user: { ...result?.data, country: userPayload?.country },
-              token,
-            })
-          );
-          const userType = result?.data?.regUserType;
-          if (userType === 'lawyer')
-            router.push('/lawyer/settings/profile?section=about');
-          else if (userType === 'client') router.push('/client/dashboard');
-          else router.push('/');
-          dispatch(resetRegistration());
-        }
-      } else {
-        const errorMessage =
-          result?.errorSources?.[0]?.message ||
-          result?.message ||
-          'Registration failed.';
-        // console.log('Registration error:', result);
-        showErrorToast(errorMessage || 'Something went wrong');
+      const payload = {
+        ...registrationState,
+        step: 3,
+      };
+      const result = await lawyerRegistrationDraft(payload).unwrap();
+      console.log('Draft Registration API Response:', result);
+      if (result?.success && result?.data?.lawyerDraftId) {
+        setShowSuccessModal(true);
       }
     } catch (error) {
-      // console.log('Registration error:', error);
-      console.error('❌ Registration API Error:', error);
+      console.error('❌ Draft Registration API Error:', error);
       showErrorToast(error?.data?.message || 'Server error');
     }
   };
+
 
   return (
     <div className="flex flex-wrap lg:flex-nowrap">
@@ -472,11 +450,10 @@ export default function RegisterStepThree() {
                       />
                       <div
                         className={`w-4 h-4 rounded-full border-2 border-[var(--primary-color)] flex items-center justify-center transition-all
-            ${
-              gender === option.value
-                ? 'bg-[var(--primary-color)]'
-                : 'bg-transparent'
-            }`}
+            ${gender === option.value
+                            ? 'bg-[var(--primary-color)]'
+                            : 'bg-transparent'
+                          }`}
                       >
                         <div
                           className={`w-1.5 h-1.5 rounded-full transition
@@ -574,18 +551,16 @@ export default function RegisterStepThree() {
                               />
 
                               <div
-                                className={`w-4 h-4 rounded-full border-2 border-[var(--primary-color)] flex items-center justify-center transition-all ${
-                                  field.value === option.value
-                                    ? 'bg-[var(--primary-color)]'
-                                    : 'bg-transparent'
-                                }`}
+                                className={`w-4 h-4 rounded-full border-2 border-[var(--primary-color)] flex items-center justify-center transition-all ${field.value === option.value
+                                  ? 'bg-[var(--primary-color)]'
+                                  : 'bg-transparent'
+                                  }`}
                               >
                                 <div
-                                  className={`w-1.5 h-1.5 rounded-full transition ${
-                                    field.value === option.value
-                                      ? 'bg-white'
-                                      : 'bg-transparent'
-                                  }`}
+                                  className={`w-1.5 h-1.5 rounded-full transition ${field.value === option.value
+                                    ? 'bg-white'
+                                    : 'bg-transparent'
+                                    }`}
                                 />
                               </div>
                               <span className="text-sm text-gray-800">
@@ -607,7 +582,7 @@ export default function RegisterStepThree() {
                     control={form.control}
                     name="company_name"
                     render={({ field }) => {
-                    
+
                       return (
                         <FormItem>
                           <FormLabel>Select Company</FormLabel>
@@ -881,6 +856,60 @@ export default function RegisterStepThree() {
               <b>Log In</b>
             </Link>
           </div>
+
+          <Dialog
+            open={showSuccessModal}
+            onOpenChange={(open) => {
+              setShowSuccessModal(open);
+              if (!open) {
+                dispatch(resetRegistration());
+                form.reset();
+                setQuery('');
+                setLocalCompanySize('');
+              }
+            }}
+          >
+            <DialogContent className="max-w-md rounded-2xl p-8 bg-white shadow-2xl border-none">
+              <div className="flex flex-col items-center text-center space-y-5">
+                <div className="w-16 h-16 bg-[var(--color-special)] bg-opacity-10 rounded-full flex items-center justify-center">
+                  <Check className="w-8 h-8 text-white" />
+                </div>
+
+                <div>
+                  <DialogTitle className="sr-only">
+                    Account Created Successfully
+                  </DialogTitle>
+                  <p className="text-lg text-[var(--color-special)]">
+                    Your account has been created successfully. Once your email is
+                    verified, you will be able to review available cases and complete your professional profile.
+                  </p>
+                </div>
+
+                <div className="bg-[var(--color-special)] bg-opacity-5 p-6 rounded-xl border border-[var(--color-special)] border-opacity-10 w-full text-center">
+                  <p className="text-white font-semibold flex items-center justify-center gap-2 mb-2 uppercase text-xs tracking-wider">
+                    <Mail className="w-4 h-4 text-white" /> Email Verification
+                    Required
+                  </p>
+                  <p className="text-white text-sm leading-relaxed">
+                    A verification link has been sent to your registered email
+                    address. Please check your inbox or spam folder and follow the
+                    instructions to activate your account.
+                  </p>
+                </div>
+                {/* 
+                <Button
+                  onClick={() => setShowSuccessModal(false)}
+                  className="w-full bg-[var(--color-special)] hover:opacity-90 text-white h-12 rounded-xl text-lg font-medium transition-all outline-none"
+                >
+                  I'll check my email
+                </Button> */}
+
+                <p className="text-gray-400 text-xs italic">
+                  This message will close automatically in 10 seconds.
+                </p>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
       {/* <div className="hidden lg:block lg:max-w-[31.25rem]">

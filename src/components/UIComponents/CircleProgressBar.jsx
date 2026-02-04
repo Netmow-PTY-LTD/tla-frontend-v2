@@ -7,8 +7,7 @@ const CircularProgress = ({ progress = 25, size = 80 }) => {
   const strokeDashoffset = circumference - (progress / 100) * circumference;
 
   const center = size / 2;
-    const isComplete = progress >= 100;
-
+  const isComplete = progress >= 100;
 
   return (
     <div style={{ width: size, height: size }} className="relative">
@@ -37,23 +36,31 @@ const CircularProgress = ({ progress = 25, size = 80 }) => {
         />
       </svg>
 
-      {/* Checkmark */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className={`text-gray-400 ${size < 60 ? 'w-4 h-4' : 'w-6 h-6'}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          // stroke="currentColor"
-           stroke={isComplete ? '#06b6d4' : '#9ca3af'}
-          strokeWidth={2}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M5 13l4 4L19 7"
-          />
-        </svg>
+      {/* Content inside circle */}
+      <div className="absolute inset-0 flex items-center justify-center cursor-default">
+        {isComplete ? (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={`${size < 60 ? 'w-4 h-4' : 'w-6 h-6'}`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="#06b6d4"
+            strokeWidth={3}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        ) : (
+          <span
+            className="font-bold text-[#9ca3af]"
+            style={{ fontSize: size / 3.5 }}
+          >
+            {Math.round(progress)}
+          </span>
+        )}
       </div>
     </div>
   );
