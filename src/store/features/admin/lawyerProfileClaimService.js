@@ -27,7 +27,7 @@ const lawyerProfileClaimService = baseApi.injectEndpoints({
     }),
     updateLawyerProfileClaimStatus: builder.mutation({
       query: ({ id, status, reviewerNote }) => ({
-        url: `/lawyer-profile-claims/${id}/status`,
+        url: `/lawyer-profile-claims/${id}`,
         method: 'PATCH',
         body: { status, reviewerNote },
       }),
