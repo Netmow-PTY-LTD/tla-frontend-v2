@@ -266,6 +266,12 @@ export const AdminSidebarItems = {
       isActive: true,
     },
     {
+      title: 'Lawyer Profile Claims',
+      url: '/admin/lawyer-profile-claims',
+      icon: ClipboardList,
+      isActive: true,
+    },
+    {
       title: 'Firms List',
       url: '/admin/firm/list',
       icon: Building2,
