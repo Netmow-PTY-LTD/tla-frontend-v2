@@ -173,6 +173,9 @@ export default function Footer() {
                       <li>
                         <Link href="/pricing">Pricing</Link>
                       </li>
+                      <li>
+                        <Link href="/claime-account">Claim Your Account</Link>
+                      </li>
                     </ul>
                   </div>
                   <div className="footer-widget w-[calc(50%-15px)] md:w-auto">

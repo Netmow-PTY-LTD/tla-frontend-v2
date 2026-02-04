@@ -1090,7 +1090,7 @@ export default function ClientLeadRegistrationModal({
 
             <div>
               <DialogTitle className="sr-only">Account Created Successfully</DialogTitle>
-              <p className="text-lg text-[var(--color-special)]">
+              <p className="text-sm text-[var(--color-special)]">
                 Your account has been created successfully. Your case is now available for lawyers to review.
               </p>
             </div>

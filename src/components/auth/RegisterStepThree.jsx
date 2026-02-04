@@ -26,7 +26,6 @@ import {
 import { Mail } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { showErrorToast, showSuccessToast } from '../common/toasts';
-import { setUser } from '@/store/features/auth/authSlice';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getLawyerRegistrationStepThreeFormValidation } from '@/schema/auth/lawyerRegistration.schema';
 import Link from 'next/link';
@@ -47,12 +46,8 @@ import { cn } from '@/lib/utils';
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogTitle,
-  DialogDescription,
-  DialogFooter,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 
 const genderOptions = [
   { id: 1, label: 'Male', value: 'male' },
@@ -851,9 +846,14 @@ export default function RegisterStepThree() {
             </form>
           </Form>
           <div className="tla-auth-footer text-center">
-            <span>Already have an account? </span>
-            <Link href="/login">
-              <b>Log In</b>
+            <div className="mb-2">
+              <span>Already have an account? </span>
+              <Link href="/login">
+                <b>Log In</b>
+              </Link>
+            </div>
+            <Link href="/claim-account">
+              <b>Claim Your Account</b>
             </Link>
           </div>
 
@@ -879,7 +879,7 @@ export default function RegisterStepThree() {
                   <DialogTitle className="sr-only">
                     Account Created Successfully
                   </DialogTitle>
-                  <p className="text-lg text-[var(--color-special)]">
+                  <p className="text-sm text-[var(--color-special)]">
                     Your account has been created successfully. Once your email is
                     verified, you will be able to review available cases and complete your professional profile.
                   </p>
