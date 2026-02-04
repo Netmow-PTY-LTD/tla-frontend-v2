@@ -91,7 +91,7 @@ export default function Footer() {
       {/* <NewsletterSignup /> */}
       <footer
         className="main-footer"
-        // style={{ backgroundImage: `url('/assets/img/footer_bg.png')` }}
+      // style={{ backgroundImage: `url('/assets/img/footer_bg.png')` }}
       >
         <div className="footer-top mb-[60px]">
           <div className="container">
@@ -166,7 +166,7 @@ export default function Footer() {
                           Join as a Lawyer
                         </Link>
                       </li>
-                       <li>
+                      <li>
                         <Link target="_blank" href="https://company-thelawapp.netlify.app/"> Login to Company Profile</Link>
                       </li>
                     
@@ -174,7 +174,7 @@ export default function Footer() {
                         <Link href="/pricing">Pricing</Link>
                       </li>
                       <li>
-                        <Link href="/claime-account">Claim Your Account</Link>
+                        <Link href="/claim-account">Claim Your Account</Link>
                       </li>
                     </ul>
                   </div>

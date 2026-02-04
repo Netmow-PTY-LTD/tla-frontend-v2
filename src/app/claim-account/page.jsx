@@ -79,7 +79,7 @@ export default function ClaimAccountPage() {
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-1 h-6 bg-[var(--color-special)] rounded-full"></div>
                 <CardTitle className="text-xl md:text-2xl font-bold uppercase tracking-wider">
-                  Verification Request
+                  Account Claim Request
                 </CardTitle>
               </div>
               <CardDescription className="text-slate-400 text-base">
@@ -200,7 +200,7 @@ export default function ClaimAccountPage() {
                           Processing Request...
                         </span>
                       ) : (
-                        'Submit Verification Request'
+                        'Submit Account Claim'
                       )}
                     </Button>
                   </div>

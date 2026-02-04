@@ -2,18 +2,18 @@
 
 import React, { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { 
-  useGetSingleLawyerProfileClaimQuery, 
-  useUpdateLawyerProfileClaimStatusMutation 
+import {
+  useGetSingleLawyerProfileClaimQuery,
+  useUpdateLawyerProfileClaimStatusMutation
 } from '@/store/features/admin/lawyerProfileClaimService';
-import { 
-  User, 
-  Mail, 
-  Phone, 
-  FileText, 
-  Info, 
-  Check, 
-  X, 
+import {
+  User,
+  Mail,
+  Phone,
+  FileText,
+  Info,
+  Check,
+  X,
   ArrowLeft,
   Loader2,
   Calendar
@@ -29,12 +29,12 @@ export default function LawyerProfileClaimDetailPage() {
   const { id } = useParams();
   const router = useRouter();
   const [reviewerNote, setReviewerNote] = useState('');
-  
-  const { 
-    data: claimResponse, 
-    isLoading, 
+
+  const {
+    data: claimResponse,
+    isLoading,
     isError,
-    refetch 
+    refetch
   } = useGetSingleLawyerProfileClaimQuery(id, { skip: !id });
 
   const [updateStatus, { isLoading: isUpdating }] = useUpdateLawyerProfileClaimStatusMutation();
@@ -106,7 +106,7 @@ export default function LawyerProfileClaimDetailPage() {
           <CardContent className="space-y-4">
             <DetailItem label="Name" value={claim.claimerName} />
             <DetailItem label="Email" value={claim.claimerEmail} icon={<Mail className="h-4 w-4" />} />
-            <DetailItem label="Phone" value={claim.claimerPhone} icon={<Phone className="h-4 w-4" />} />
+            {/* <DetailItem label="Phone" value={claim.claimerPhone} icon={<Phone className="h-4 w-4" />} /> */}
           </CardContent>
         </Card>
 
@@ -157,8 +157,8 @@ export default function LawyerProfileClaimDetailPage() {
           <CardContent>
             <div className="space-y-2">
               <label className="text-sm font-medium">Reviewer Note (Internal)</label>
-              <Textarea 
-                placeholder="Enter notes for this decision..." 
+              <Textarea
+                placeholder="Enter notes for this decision..."
                 value={reviewerNote}
                 onChange={(e) => setReviewerNote(e.target.value)}
                 className="min-h-[100px]"
@@ -166,8 +166,8 @@ export default function LawyerProfileClaimDetailPage() {
             </div>
           </CardContent>
           <CardFooter className="flex justify-end gap-4">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="text-red-600 border-red-200 hover:bg-red-50"
               onClick={() => handleUpdateStatus('rejected')}
               disabled={isUpdating}
@@ -175,7 +175,7 @@ export default function LawyerProfileClaimDetailPage() {
               <X className="mr-2 h-4 w-4" />
               Reject Claim
             </Button>
-            <Button 
+            <Button
               className="bg-green-600 hover:bg-green-700"
               onClick={() => handleUpdateStatus('approved')}
               disabled={isUpdating}
