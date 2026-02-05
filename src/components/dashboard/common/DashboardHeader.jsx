@@ -11,7 +11,6 @@ import NotificationDropdown from './NotificationDropdown';
 import { useGetUserCreditStatsQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import EliteProBadge from '@/components/icon/EliteProBadge';
-import { Sub } from '@radix-ui/react-dropdown-menu';
 import SubscriptionBadge from '@/components/icon/SubscriptionBadge';
 import { useGetSettingsQuery } from '@/store/features/admin/appSettings';
 

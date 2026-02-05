@@ -22,11 +22,12 @@ import { useGetSettingsQuery } from '@/store/features/admin/appSettings';
 
 export default function Footer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState(null);
-
-  let cookieCountry = safeJsonParse(Cookies.get('countryObj'));
+  const [selectedCountry, setSelectedCountry] = useState(() => {
+    return safeJsonParse(Cookies.get('countryObj'));
+  });
 
   useEffect(() => {
+    const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
     if (cookieCountry) {
       setSelectedCountry(cookieCountry);
     }
@@ -127,7 +128,7 @@ export default function Footer() {
                           href={
                             isValidToken || currentUser
                               ? dashboardUrl
-                              : `/${cookieCountry?.slug}?clientRegister=true`
+                              : `/${selectedCountry?.slug}?clientRegister=true`
                           }
                         >
                           Find Lawyers
