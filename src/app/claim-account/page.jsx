@@ -71,14 +71,14 @@ function ClaimAccountForm() {
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[var(--color-special)] opacity-5 rounded-full blur-[120px] -ml-64 -mb-64"></div>
 
         <div className="mx-auto px-4 max-w-5xl w-full relative z-10">
-          <div className="text-center mb-10 space-y-4">
+          <div className="text-center mb-6 space-y-4">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--color-special)] bg-opacity-10 text-[var(--color-special)] mb-2">
               <ShieldCheckIcon className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">
+            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
               Claim Your Profile
             </h1>
-            <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-sm md:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
               If you own a lawyer profile on our platform, claim it now to manage your details and connect with clients directly.
             </p>
           </div>
@@ -87,11 +87,11 @@ function ClaimAccountForm() {
             <CardHeader className="bg-slate-900 text-white p-4 md:p-6">
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-1 h-6 bg-[var(--color-special)] rounded-full"></div>
-                <CardTitle className="text-xl md:text-2xl font-bold uppercase tracking-wider">
+                <CardTitle className="text-lg md:text-xl font-bold uppercase tracking-wider">
                   Account Claim Request
                 </CardTitle>
               </div>
-              <CardDescription className="text-slate-400 text-base">
+              <CardDescription className="text-slate-400 text-sm">
                 Please provide the following details to help us verify your identity.
               </CardDescription>
             </CardHeader>
@@ -200,7 +200,7 @@ function ClaimAccountForm() {
                   <div className="flex justify-center">
                     <Button
                       type="submit"
-                      className="text-lg h-14 bg-[var(--color-special)] hover:opacity-90 text-white shadow-[0_10px_30px_rgba(0,195,192,0.3)] transition-all transform hover:-translate-y-1 rounded-2xl font-bold mt-4 px-8"
+                      className="text-md bg-[var(--color-special)] hover:opacity-90 hover:bg-[var(--primary-color)] text-white transition-all transform hover:-translate-y-1 rounded-2xl font-bold mt-4 py-6 px-6"
                       disabled={isLoading}
                     >
                       {isLoading ? (
