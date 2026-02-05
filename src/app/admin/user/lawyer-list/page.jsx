@@ -274,6 +274,19 @@ export default function Page() {
       header: 'Address',
       cell: ({ row }) => <div>{row.original?.profile.address || '-'}</div>,
     },
+  {
+  accessorKey: 'createdBy.regUserType',
+  header: 'Created By',
+  cell: ({ row }) => {
+    const regUserType = row.original?.createdBy?.regUserType || '-';
+    // Capitalize first letter
+    const capitalized = regUserType === '-' 
+      ? '-' 
+      : regUserType.charAt(0).toUpperCase() + regUserType.slice(1);
+    return <div>{capitalized}</div>;
+  },
+}
+,
     {
       accessorKey: 'isOnline',
       header: 'Status',
