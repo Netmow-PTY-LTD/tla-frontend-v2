@@ -144,16 +144,6 @@ export default function ClientLeadRegistrationModal({
     search: debouncedSearch || '',
   };
 
-  useEffect(() => {
-    let timer;
-    if (showSuccessModal) {
-      timer = setTimeout(() => {
-        setShowSuccessModal(false);
-      }, 10000); // 10 seconds
-    }
-    return () => clearTimeout(timer);
-  }, [showSuccessModal]);
-
   const { data: allZipCodes, isLoading: isZipCodeLoading } =
     useGetZipCodeListQuery(paramsPayload, {
       skip: !countryId || !debouncedSearch,
@@ -430,7 +420,7 @@ export default function ClientLeadRegistrationModal({
     const leadDetails = {
       leadPriority,
       additionalDetails,
-      budgetAmount: budgetAmount || 0,
+      budgetAmount: Number(budgetAmount) || 0,
       zipCode: addressInfo?.zipcode,
       name,
       email,
@@ -1090,7 +1080,7 @@ export default function ClientLeadRegistrationModal({
 
             <div>
               <DialogTitle className="sr-only">Account Created Successfully</DialogTitle>
-              <p className="text-lg text-[var(--color-special)]">
+              <p className="text-sm text-[var(--color-special)]">
                 Your account has been created successfully. Your case is now available for lawyers to review.
               </p>
             </div>
@@ -1104,17 +1094,6 @@ export default function ClientLeadRegistrationModal({
                 Please check your inbox or spam folder and follow the instructions to verify your account.
               </p>
             </div>
-
-            {/* <Button
-              onClick={() => setShowSuccessModal(false)}
-              className="w-full bg-[var(--color-special)] hover:opacity-90 text-white h-12 rounded-xl text-lg font-medium transition-all outline-none"
-            >
-              Great, I'll check my email
-            </Button> */}
-
-            <p className="text-gray-400 text-xs italic">
-              This message will close automatically in 10 seconds.
-            </p>
           </div>
         </DialogContent>
       </Dialog>

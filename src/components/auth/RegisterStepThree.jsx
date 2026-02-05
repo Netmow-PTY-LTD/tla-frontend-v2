@@ -26,7 +26,6 @@ import {
 import { Mail } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { showErrorToast, showSuccessToast } from '../common/toasts';
-import { setUser } from '@/store/features/auth/authSlice';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getLawyerRegistrationStepThreeFormValidation } from '@/schema/auth/lawyerRegistration.schema';
 import Link from 'next/link';
@@ -47,12 +46,8 @@ import { cn } from '@/lib/utils';
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogTitle,
-  DialogDescription,
-  DialogFooter,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 
 const genderOptions = [
   { id: 1, label: 'Male', value: 'male' },
@@ -63,7 +58,6 @@ const genderOptions = [
 export default function RegisterStepThree() {
   const dispatch = useDispatch();
   const [query, setQuery] = useState('');
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const registration = useSelector((state) => state.lawyerRegistration);
   const { email, password, profile } = registration;
@@ -189,15 +183,6 @@ export default function RegisterStepThree() {
     );
   }, []);
 
-  useEffect(() => {
-    let timer;
-    if (showSuccessModal) {
-      timer = setTimeout(() => {
-        setShowSuccessModal(false);
-      }, 10000); // 10 seconds
-    }
-    return () => clearTimeout(timer);
-  }, [showSuccessModal]);
 
   const handleGenderChange = (value) => {
     dispatch(updateNestedField({ section: 'profile', field: 'gender', value })); // Update Redux
@@ -223,7 +208,11 @@ export default function RegisterStepThree() {
       const result = await lawyerRegistrationDraft(payload).unwrap();
       console.log('Draft Registration API Response:', result);
       if (result?.success && result?.data?.lawyerDraftId) {
-        setShowSuccessModal(true);
+        router.push('/registration-success');
+        dispatch(resetRegistration());
+        form.reset();
+        setQuery('');
+        setLocalCompanySize('');
       }
     } catch (error) {
       console.error('❌ Draft Registration API Error:', error);
@@ -857,64 +846,11 @@ export default function RegisterStepThree() {
                 <b>Log In</b>
               </Link>
             </div>
-            <Link href="/claime-account">
+            <Link href="/claim-account">
               <b>Claim Your Account</b>
             </Link>
           </div>
 
-          <Dialog
-            open={showSuccessModal}
-            onOpenChange={(open) => {
-              setShowSuccessModal(open);
-              if (!open) {
-                dispatch(resetRegistration());
-                form.reset();
-                setQuery('');
-                setLocalCompanySize('');
-              }
-            }}
-          >
-            <DialogContent className="max-w-md rounded-2xl p-8 bg-white shadow-2xl border-none">
-              <div className="flex flex-col items-center text-center space-y-5">
-                <div className="w-16 h-16 bg-[var(--color-special)] bg-opacity-10 rounded-full flex items-center justify-center">
-                  <Check className="w-8 h-8 text-white" />
-                </div>
-
-                <div>
-                  <DialogTitle className="sr-only">
-                    Account Created Successfully
-                  </DialogTitle>
-                  <p className="text-lg text-[var(--color-special)]">
-                    Your account has been created successfully. Once your email is
-                    verified, you will be able to review available cases and complete your professional profile.
-                  </p>
-                </div>
-
-                <div className="bg-[var(--color-special)] bg-opacity-5 p-6 rounded-xl border border-[var(--color-special)] border-opacity-10 w-full text-center">
-                  <p className="text-white font-semibold flex items-center justify-center gap-2 mb-2 uppercase text-xs tracking-wider">
-                    <Mail className="w-4 h-4 text-white" /> Email Verification
-                    Required
-                  </p>
-                  <p className="text-white text-sm leading-relaxed">
-                    A verification link has been sent to your registered email
-                    address. Please check your inbox or spam folder and follow the
-                    instructions to activate your account.
-                  </p>
-                </div>
-                {/* 
-                <Button
-                  onClick={() => setShowSuccessModal(false)}
-                  className="w-full bg-[var(--color-special)] hover:opacity-90 text-white h-12 rounded-xl text-lg font-medium transition-all outline-none"
-                >
-                  I'll check my email
-                </Button> */}
-
-                <p className="text-gray-400 text-xs italic">
-                  This message will close automatically in 10 seconds.
-                </p>
-              </div>
-            </DialogContent>
-          </Dialog>
         </div>
       </div>
       {/* <div className="hidden lg:block lg:max-w-[31.25rem]">
