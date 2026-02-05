@@ -43,6 +43,12 @@ export const AdminSidebarItems = {
       isActive: true,
     },
     {
+      title: 'Env Configurations',
+      url: '/admin/env-config',
+      icon: SquareTerminal,
+      isActive: true,
+    },
+    {
       title: 'Countries',
       url: '/admin/country/list',
       icon: Earth,
