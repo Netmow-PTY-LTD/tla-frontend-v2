@@ -320,7 +320,7 @@ export default function Page() {
               <DropdownMenuItem asChild>
                 <Link
                   href={`/admin/user/${userId}`}
-                  className="flex items-center gap-2 cursor-pointer "
+                  className="flex items-center gap-2 cursor-pointer py-1 px-2"
                 >
                   <View className="w-4 h-4" />
                   <span>View</span>
@@ -330,7 +330,7 @@ export default function Page() {
               <DropdownMenuSeparator />
 
               <DropdownMenuLabel>Change Status</DropdownMenuLabel>
-
+              <DropdownMenuSeparator />
               {[
                 {
                   status: 'approved',
@@ -339,17 +339,20 @@ export default function Page() {
                 { status: 'pending', icon: <Clock className="w-4 h-4" /> },
                 { status: 'suspended', icon: <Slash className="w-4 h-4" /> },
                 { status: 'archived', icon: <Archive className="w-4 h-4" /> },
-              ].map(({ status, icon }) => (
-                <DropdownMenuItem
-                  key={status}
-                  onClick={() => handleChangeStatus(userId, status)}
-                  className="cursor-pointer capitalize"
-                >
-                  <div className="flex items-center gap-2">
-                    {icon}
-                    <span>{status}</span>
-                  </div>
-                </DropdownMenuItem>
+              ].map(({ status, icon }, index, arr) => (
+                <>
+                  <DropdownMenuItem
+                    key={status}
+                    onClick={() => handleChangeStatus(userId, status)}
+                    className="cursor-pointer capitalize py-0.5 px-2"
+                  >
+                    <div className="flex items-center gap-2">
+                      {icon}
+                      <span>{status}</span>
+                    </div>
+                  </DropdownMenuItem>
+                  {index !== arr.length - 1 && <DropdownMenuSeparator />}
+                </>
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
