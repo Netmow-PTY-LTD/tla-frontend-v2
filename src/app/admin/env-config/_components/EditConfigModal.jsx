@@ -18,6 +18,7 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { Loader2, Settings2 } from 'lucide-react';
+import { ENV_CONFIG_GROUPS } from '../_constants/envConfig.constants';
 
 export default function EditConfigModal({ isOpen, onOpenChange, config, refetch }) {
     const [updateConfig] = useUpdateEnvConfigMutation();
@@ -133,13 +134,21 @@ export default function EditConfigModal({ isOpen, onOpenChange, config, refetch 
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="edit-group" className="text-right">Group</Label>
-                        <Input
-                            id="edit-group"
-                            value={formData.group}
-                            onChange={(e) => handleChange('group', e.target.value.toUpperCase())}
-                            className="col-span-3 text-xs font-bold"
-                            placeholder="e.g. GENERAL, DATABASE"
-                        />
+                        <div className="col-span-3">
+                            <Select 
+                                value={formData.group} 
+                                onValueChange={(v) => handleChange('group', v)}
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select group" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {Object.entries(ENV_CONFIG_GROUPS).map(([key, label]) => (
+                                        <SelectItem key={key} value={label}>{label}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="edit-type" className="text-right">Type</Label>
