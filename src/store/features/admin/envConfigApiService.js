@@ -50,7 +50,7 @@ const envConfigApiService = baseApi.injectEndpoints({
         syncFromEnv: builder.mutation({
             query: (data) => ({
                 url: '/env-config/sync/from-env',
-                method: 'POST',
+                method: 'PUT',
                 body: data,
             }),
             invalidatesTags: ['env-config'],
@@ -64,7 +64,7 @@ const envConfigApiService = baseApi.injectEndpoints({
         reloadEnvConfigs: builder.mutation({
             query: () => ({
                 url: '/env-config/reload',
-                method: 'POST',
+                method: 'PUT',
             }),
             invalidatesTags: ['env-config'],
         }),

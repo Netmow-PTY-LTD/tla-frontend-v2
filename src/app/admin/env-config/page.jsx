@@ -8,8 +8,7 @@ import {
     useBulkUpdateEnvConfigsMutation, 
     useSyncFromEnvMutation, 
     useReloadEnvConfigsMutation,
-    useLazyGetEnvConfigByKeyQuery,
-    useDeleteEnvConfigMutation
+    useLazyGetEnvConfigByKeyQuery
 } from '@/store/features/admin/envConfigApiService';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -25,15 +24,14 @@ import {
     Zap, 
     Eye, 
     EyeOff, 
-    Plus, 
     Search, 
-    Trash2,
     Database,
     FileJson,
     Server,
-    Layout
+    Layout,
+    Settings
 } from 'lucide-react';
-import CreateConfigModal from './_components/CreateConfigModal';
+import EditConfigModal from './_components/EditConfigModal';
 
 export default function EnvConfigPage() {
     const { data, isLoading, refetch, isFetching } = useGetAllEnvConfigsQuery();
@@ -41,18 +39,17 @@ export default function EnvConfigPage() {
     const [syncFromEnv] = useSyncFromEnvMutation();
     const [reloadConfigs] = useReloadEnvConfigsMutation();
     const [getByKey] = useLazyGetEnvConfigByKeyQuery();
-    const [deleteConfig] = useDeleteEnvConfigMutation();
 
     const [isUpdating, setIsUpdating] = useState(false);
     const [isSyncing, setIsSyncing] = useState(false);
     const [isReloading, setIsReloading] = useState(false);
-    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editingConfig, setEditingConfig] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     
     const [localChanges, setLocalChanges] = useState({});
     const [revealedValues, setRevealedValues] = useState({});
     const [revealingKey, setRevealingKey] = useState(null);
-    const [deletingKey, setDeletingKey] = useState(null);
 
     const configs = data?.data || {};
     
@@ -104,6 +101,11 @@ export default function EnvConfigPage() {
         } finally {
             setRevealingKey(null);
         }
+    };
+
+    const handleEdit = (config) => {
+        setEditingConfig(config);
+        setIsEditModalOpen(true);
     };
 
     const handleSave = async (group) => {
@@ -170,20 +172,6 @@ export default function EnvConfigPage() {
             toast.error(error?.data?.message || 'Reload failed');
         } finally {
             setIsReloading(false);
-        }
-    };
-
-    const handleDelete = async (key) => {
-        if (!confirm(`Are you sure you want to delete ${key}? This action cannot be undone.`)) return;
-        try {
-            setDeletingKey(key);
-            await deleteConfig(key).unwrap();
-            toast.success('Configuration deleted successfully');
-            refetch();
-        } catch (error) {
-            toast.error(error?.data?.message || 'Delete failed');
-        } finally {
-            setDeletingKey(null);
         }
     };
 
@@ -262,13 +250,6 @@ export default function EnvConfigPage() {
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
-                    <Button 
-                        onClick={() => setIsCreateModalOpen(true)}
-                        className="bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-100 rounded-xl"
-                    >
-                        <Plus className="w-4 h-4 mr-2" />
-                        New Config
-                    </Button>
                     <div className="h-8 w-px bg-gray-200 mx-1 hidden sm:block" />
                     <Button variant="outline" size="icon" onClick={handleReload} disabled={isReloading} title="Reload from Database" className="rounded-xl">
                         <RefreshCw className={`w-4 h-4 ${isReloading ? 'animate-spin' : ''}`} />
@@ -408,10 +389,11 @@ export default function EnvConfigPage() {
                                                         <Button 
                                                             variant="ghost" 
                                                             size="icon" 
-                                                            onClick={() => handleDelete(config.key)}
-                                                            className="shrink-0 h-10 w-10 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all opacity-0 group-hover/row:opacity-100 rounded-xl border border-transparent hover:border-red-100"
+                                                            onClick={() => handleEdit(config)}
+                                                            className="shrink-0 h-10 w-10 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all opacity-0 group-hover/row:opacity-100 rounded-xl border border-transparent hover:border-indigo-100"
+                                                            title="Advanced Configuration"
                                                         >
-                                                            {deletingKey === config.key ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                                                            <Settings className="w-4 h-4" />
                                                         </Button>
                                                     </div>
                                                     
@@ -446,19 +428,16 @@ export default function EnvConfigPage() {
                                 {isSyncing ? <Loader2 className="w-5 h-5 animate-spin" /> : <RefreshCw className="w-5 h-5" />}
                                 Sync from .env File
                             </Button>
-                            <Button onClick={() => setIsCreateModalOpen(true)} className="px-8 py-6 rounded-2xl bg-blue-600 shadow-xl shadow-blue-100 flex items-center gap-2">
-                                <Plus className="w-5 h-5" />
-                                Create First Entry
-                            </Button>
                         </div>
                     )}
                 </div>
             )}
 
             {/* Modals and Overlays */}
-            <CreateConfigModal 
-                isOpen={isCreateModalOpen} 
-                onOpenChange={setIsCreateModalOpen}
+            <EditConfigModal 
+                isOpen={isEditModalOpen} 
+                onOpenChange={setIsEditModalOpen}
+                config={editingConfig}
                 refetch={refetch}
             />
         </div>
