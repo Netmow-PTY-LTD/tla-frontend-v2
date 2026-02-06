@@ -17,7 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
-import { Loader2, Settings2 } from 'lucide-react';
+import { Loader2, Settings2, AlertTriangle } from 'lucide-react';
 import { ENV_CONFIG_GROUPS } from '../_constants/envConfig.constants';
 
 export default function EditConfigModal({ isOpen, onOpenChange, config, refetch }) {
@@ -101,6 +101,8 @@ export default function EditConfigModal({ isOpen, onOpenChange, config, refetch 
 
     if (!config) return null;
 
+    const isCritical = ['CLIENT_SITE_URL', 'FIRM_CLIENT_URL'].includes(config?.key);
+
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[500px]">
@@ -109,9 +111,23 @@ export default function EditConfigModal({ isOpen, onOpenChange, config, refetch 
                         <Settings2 className="w-5 h-5 text-indigo-600" />
                         Edit Configuration: {config.key}
                     </DialogTitle>
-                    <DialogDescription>
-                        Modify metadata and secure values for this environment variable.
-                    </DialogDescription>
+                    <div className="mt-2">
+                        {isCritical ? (
+                            <div className="flex flex-col gap-2">
+                                <span className="text-red-500 font-bold flex items-center gap-2 text-sm animate-pulse">
+                                    <AlertTriangle className="w-4 h-4" />
+                                    CRITICAL SYSTEM LINK
+                                </span>
+                                <div className="text-[11px] leading-relaxed text-red-600 bg-red-50 p-3 rounded-lg border border-red-100 font-medium">
+                                    ⚠️ <strong>Warning:</strong> This URL is fundamental to system connectivity. Incorrect modification will cause "Connection Refused" errors and system crashes for users.
+                                </div>
+                            </div>
+                        ) : (
+                            <DialogDescription>
+                                Modify metadata and secure values for this environment variable.
+                            </DialogDescription>
+                        )}
+                    </div>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
@@ -121,7 +137,7 @@ export default function EditConfigModal({ isOpen, onOpenChange, config, refetch 
                                 id="edit-value"
                                 value={formData.value}
                                 onChange={(e) => handleChange('value', e.target.value)}
-                                className="font-mono"
+                                className="font-mono text-xs"
                                 placeholder="Enter value"
                                 required
                             />

@@ -318,6 +318,12 @@ export default function EnvConfigPage() {
                                                             {config.key}
                                                         </code>
                                                         <div className="flex gap-1">
+                                                            {['CLIENT_SITE_URL', 'FIRM_CLIENT_URL'].includes(config.key) && (
+                                                                <span className="flex items-center text-[9px] bg-red-50 text-red-600 font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider animate-pulse border border-red-100">
+                                                                    <Zap className="w-2.5 h-2.5 mr-1" />
+                                                                    Critical Link
+                                                                </span>
+                                                            )}
                                                             {config.isSensitive && (
                                                                 <span className="flex items-center text-[9px] bg-indigo-50 text-indigo-600 font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider">
                                                                     <ShieldCheck className="w-2.5 h-2.5 mr-1" />
