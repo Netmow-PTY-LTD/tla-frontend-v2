@@ -16,26 +16,11 @@ const envConfigApiService = baseApi.injectEndpoints({
             }),
             providesTags: (result, error, key) => [{ type: 'env-config', id: key }],
         }),
-        createEnvConfig: builder.mutation({
-            query: (data) => ({
-                url: '/env-config',
-                method: 'POST',
-                body: data,
-            }),
-            invalidatesTags: ['env-config'],
-        }),
         updateEnvConfig: builder.mutation({
             query: ({ key, data }) => ({
                 url: `/env-config/${key}`,
                 method: 'PUT',
                 body: data,
-            }),
-            invalidatesTags: ['env-config'],
-        }),
-        deleteEnvConfig: builder.mutation({
-            query: (key) => ({
-                url: `/env-config/${key}`,
-                method: 'DELETE',
             }),
             invalidatesTags: ['env-config'],
         }),
@@ -59,6 +44,7 @@ const envConfigApiService = baseApi.injectEndpoints({
             query: () => ({
                 url: '/env-config/export/to-env',
                 method: 'POST',
+                responseHandler: (response) => response.blob(),
             }),
         }),
         reloadEnvConfigs: builder.mutation({
@@ -76,8 +62,6 @@ export const {
     useGetEnvConfigByKeyQuery,
     useLazyGetEnvConfigByKeyQuery,
     useUpdateEnvConfigMutation,
-    useCreateEnvConfigMutation,
-    useDeleteEnvConfigMutation,
     useBulkUpdateEnvConfigsMutation,
     useSyncFromEnvMutation,
     useExportToEnvMutation,

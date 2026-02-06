@@ -38,7 +38,7 @@ export default function EditConfigModal({ isOpen, onOpenChange, config, refetch 
         if (config && isOpen) {
             setFormData({
                 value: config.value === '***MASKED***' ? '' : config.value,
-                group: config.group || 'GENERAL',
+                group: config.group || '',
                 type: config.type || 'string',
                 isSensitive: !!config.isSensitive,
                 requiresRestart: !!config.requiresRestart,

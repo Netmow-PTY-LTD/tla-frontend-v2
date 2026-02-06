@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { 
     useGetAllEnvConfigsQuery, 
     useBulkUpdateEnvConfigsMutation, 
     useSyncFromEnvMutation, 
     useReloadEnvConfigsMutation,
-    useLazyGetEnvConfigByKeyQuery
+    useLazyGetEnvConfigByKeyQuery,
+    useExportToEnvMutation
 } from '@/store/features/admin/envConfigApiService';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -39,6 +39,7 @@ export default function EnvConfigPage() {
     const [syncFromEnv] = useSyncFromEnvMutation();
     const [reloadConfigs] = useReloadEnvConfigsMutation();
     const [getByKey] = useLazyGetEnvConfigByKeyQuery();
+    const [exportToEnv, { isLoading: isExporting }] = useExportToEnvMutation();
 
     const [isUpdating, setIsUpdating] = useState(false);
     const [isSyncing, setIsSyncing] = useState(false);
@@ -177,17 +178,7 @@ export default function EnvConfigPage() {
 
     const handleExport = async () => {
         try {
-            const token = Cookies.get('token');
-            const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/env-config/export/to-env`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `${token}`
-                }
-            });
-            
-            if (!res.ok) throw new Error('Export failed');
-            
-            const blob = await res.blob();
+            const blob = await exportToEnv().unwrap();
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -254,8 +245,15 @@ export default function EnvConfigPage() {
                     <Button variant="outline" size="icon" onClick={handleReload} disabled={isReloading} title="Reload from Database" className="rounded-xl">
                         <RefreshCw className={`w-4 h-4 ${isReloading ? 'animate-spin' : ''}`} />
                     </Button>
-                    <Button variant="outline" size="icon" onClick={handleExport} title="Export to .env" className="rounded-xl">
-                        <Download className="w-4 h-4" />
+                    <Button 
+                        variant="outline" 
+                        size="icon" 
+                        onClick={handleExport} 
+                        disabled={isExporting} 
+                        title="Export to .env" 
+                        className="rounded-xl"
+                    >
+                        {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
                     </Button>
                 </div>
             </div>
@@ -291,9 +289,9 @@ export default function EnvConfigPage() {
                                         </div>
                                         <div>
                                             <h3 className="font-bold text-gray-900 uppercase tracking-wide text-xs">
-                                                {group} PARAMETERS
+                                                {group} OVERVIEW
                                             </h3>
-                                            <p className="text-[10px] text-gray-400 font-medium">Configurations in this category</p>
+                                            <p className="text-[10px] text-gray-400 font-medium">Manage system variables for this category</p>
                                         </div>
                                     </div>
                                     <Button 
@@ -335,7 +333,7 @@ export default function EnvConfigPage() {
                                                         </div>
                                                     </div>
                                                     <p className="text-xs text-gray-400 font-medium leading-relaxed pr-4">
-                                                        {config.description || "No description provided for this parameter."}
+                                                        {config.description}
                                                     </p>
                                                     
                                                     {isModified && (
@@ -395,12 +393,6 @@ export default function EnvConfigPage() {
                                                         >
                                                             <Settings className="w-4 h-4" />
                                                         </Button>
-                                                    </div>
-                                                    
-                                                    <div className="flex items-center gap-4 px-1">
-                                                        <span className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">DATA TYPE: {config.type}</span>
-                                                        <div className="h-1 w-1 rounded-full bg-gray-300" />
-                                                        <span className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">STATUS: {config.isActive ? 'ACTIVE' : 'INACTIVE'}</span>
                                                     </div>
                                                 </div>
                                             </div>
