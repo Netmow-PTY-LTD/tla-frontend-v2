@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { 
@@ -8,12 +8,32 @@ import {
     useBulkUpdateEnvConfigsMutation, 
     useSyncFromEnvMutation, 
     useReloadEnvConfigsMutation,
-    useLazyGetEnvConfigByKeyQuery 
+    useLazyGetEnvConfigByKeyQuery,
+    useDeleteEnvConfigMutation
 } from '@/store/features/admin/envConfigApiService';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
-import { Loader2, RefreshCw, Save, Download, AlertTriangle, ShieldCheck, ShieldAlert, Zap, Eye, EyeOff } from 'lucide-react';
+import { 
+    Loader2, 
+    RefreshCw, 
+    Save, 
+    Download, 
+    AlertTriangle, 
+    ShieldCheck, 
+    Zap, 
+    Eye, 
+    EyeOff, 
+    Plus, 
+    Search, 
+    Trash2,
+    Database,
+    FileJson,
+    Server,
+    Layout
+} from 'lucide-react';
+import CreateConfigModal from './_components/CreateConfigModal';
 
 export default function EnvConfigPage() {
     const { data, isLoading, refetch, isFetching } = useGetAllEnvConfigsQuery();
@@ -21,16 +41,39 @@ export default function EnvConfigPage() {
     const [syncFromEnv] = useSyncFromEnvMutation();
     const [reloadConfigs] = useReloadEnvConfigsMutation();
     const [getByKey] = useLazyGetEnvConfigByKeyQuery();
+    const [deleteConfig] = useDeleteEnvConfigMutation();
 
     const [isUpdating, setIsUpdating] = useState(false);
     const [isSyncing, setIsSyncing] = useState(false);
     const [isReloading, setIsReloading] = useState(false);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    
     const [localChanges, setLocalChanges] = useState({});
     const [revealedValues, setRevealedValues] = useState({});
     const [revealingKey, setRevealingKey] = useState(null);
+    const [deletingKey, setDeletingKey] = useState(null);
 
     const configs = data?.data || {};
-    const groups = Object.keys(configs);
+    
+    // Filter configs based on search query
+    const filteredConfigs = useMemo(() => {
+        if (!searchQuery) return configs;
+        
+        const filtered = {};
+        Object.keys(configs).forEach(group => {
+            const matches = configs[group].filter(c => 
+                c.key.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                c.description?.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            if (matches.length > 0) {
+                filtered[group] = matches;
+            }
+        });
+        return filtered;
+    }, [configs, searchQuery]);
+
+    const groups = Object.keys(filteredConfigs);
 
     const handleValueChange = (key, value) => {
         setLocalChanges(prev => ({
@@ -56,10 +99,6 @@ export default function EnvConfigPage() {
                 ...prev,
                 [key]: res.data.value
             }));
-            // Also update local changes if they haven't been edited yet
-            if (localChanges[key] === undefined) {
-                // We don't necessarily want to set it as a change, just show it
-            }
         } catch (error) {
             toast.error('Failed to reveal sensitive value');
         } finally {
@@ -108,8 +147,7 @@ export default function EnvConfigPage() {
     };
 
     const handleSync = async () => {
-        if (!confirm('This will sync missing configurations from the .env file. Existing ones will not be overwritten unless you force it. Continue?')) return;
-        
+        if (!confirm('Sync configurations from .env? Missing keys will be added.')) return;
         try {
             setIsSyncing(true);
             const res = await syncFromEnv({ force: false }).unwrap();
@@ -135,6 +173,20 @@ export default function EnvConfigPage() {
         }
     };
 
+    const handleDelete = async (key) => {
+        if (!confirm(`Are you sure you want to delete ${key}? This action cannot be undone.`)) return;
+        try {
+            setDeletingKey(key);
+            await deleteConfig(key).unwrap();
+            toast.success('Configuration deleted successfully');
+            refetch();
+        } catch (error) {
+            toast.error(error?.data?.message || 'Delete failed');
+        } finally {
+            setDeletingKey(null);
+        }
+    };
+
     const handleExport = async () => {
         try {
             const token = Cookies.get('token');
@@ -155,175 +207,260 @@ export default function EnvConfigPage() {
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
-            toast.success('Exported successfully');
+            toast.success('Export downloaded successfully');
         } catch (error) {
             toast.error('Export failed');
             console.error(error);
         }
     };
 
+    const getGroupIcon = (group) => {
+        const g = group.toLowerCase();
+        if (g.includes('aws') || g.includes('s3') || g.includes('cloud')) return <Server className="w-4 h-4" />;
+        if (g.includes('db') || g.includes('mongo') || g.includes('redis')) return <Database className="w-4 h-4" />;
+        if (g.includes('api') || g.includes('url')) return <FileJson className="w-4 h-4" />;
+        return <Layout className="w-4 h-4" />;
+    };
+
     if (isLoading) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
-                <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
-                <p className="text-gray-500 animate-pulse">Loading configurations...</p>
+                <div className="relative">
+                    <div className="w-16 h-16 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin"></div>
+                    <Zap className="w-6 h-6 text-amber-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                </div>
+                <p className="text-gray-500 font-medium animate-pulse">Initializing Configuration Engine...</p>
             </div>
         );
     }
 
     return (
-        <div className="p-6 max-w-[1200px] mx-auto space-y-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-3xl font-bold flex items-center gap-3">
-                        <Zap className="text-amber-500" />
-                        <span className="bg-gradient-to-r from-blue-700 to-indigo-600 bg-clip-text text-transparent">
-                            Environment Configuration
+        <div className="p-6 max-w-[1400px] mx-auto space-y-8 animate-in fade-in duration-500">
+            {/* Header Section */}
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                <div className="space-y-1">
+                    <h1 className="text-3xl font-extrabold flex items-center gap-3 tracking-tight">
+                        <div className="bg-amber-100 p-2 rounded-xl">
+                            <Zap className="text-amber-600 w-6 h-6" />
+                        </div>
+                        <span className="bg-gradient-to-r from-blue-800 to-indigo-600 bg-clip-text text-transparent">
+                            System Environment
                         </span>
                     </h1>
-                    <p className="text-gray-500">Manage your application runtime settings and env variables.</p>
+                    <p className="text-gray-500 text-sm font-medium pl-14">
+                        Control application runtime behavior and secure credentials.
+                    </p>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                    <Button variant="outline" size="sm" onClick={handleReload} disabled={isReloading}>
-                        <RefreshCw className={`w-4 h-4 mr-2 ${isReloading ? 'animate-spin' : ''}`} />
-                        Reload
+                
+                <div className="flex flex-wrap items-center gap-3 lg:pl-0 pl-14">
+                    <div className="relative group">
+                        <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                        <Input 
+                            placeholder="Search keys..." 
+                            className="pl-9 w-[280px] bg-gray-50 border-gray-200 focus:bg-white transition-all rounded-xl"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
+                    <Button 
+                        onClick={() => setIsCreateModalOpen(true)}
+                        className="bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-100 rounded-xl"
+                    >
+                        <Plus className="w-4 h-4 mr-2" />
+                        New Config
                     </Button>
-                    <Button variant="outline" size="sm" onClick={handleSync} disabled={isSyncing}>
-                        <RefreshCw className={`w-4 h-4 mr-2 ${isSyncing ? 'animate-spin' : ''}`} />
-                        Sync from .env
+                    <div className="h-8 w-px bg-gray-200 mx-1 hidden sm:block" />
+                    <Button variant="outline" size="icon" onClick={handleReload} disabled={isReloading} title="Reload from Database" className="rounded-xl">
+                        <RefreshCw className={`w-4 h-4 ${isReloading ? 'animate-spin' : ''}`} />
                     </Button>
-                    <Button variant="outline" size="sm" onClick={handleExport}>
-                        <Download className="w-4 h-4 mr-2" />
-                        Export
+                    <Button variant="outline" size="icon" onClick={handleExport} title="Export to .env" className="rounded-xl">
+                        <Download className="w-4 h-4" />
                     </Button>
                 </div>
             </div>
 
-            <Tabs defaultValue={groups[0]} className="w-full">
-                <TabsList className="mb-4 flex flex-wrap h-auto bg-gray-100 p-1 rounded-lg">
-                    {groups.map(group => (
-                        <TabsTrigger key={group} value={group} className="px-6 py-2.5 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md transition-all">
-                            {group}
-                        </TabsTrigger>
-                    ))}
-                </TabsList>
-
-                {groups.map(group => (
-                    <TabsContent key={group} value={group} className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                            <div className="p-4 bg-gray-50/80 border-b border-gray-200 flex justify-between items-center">
-                                <div className="flex items-center gap-2">
-                                    <h3 className="font-bold text-gray-800 uppercase tracking-tight text-sm">
-                                        {group} Properties
-                                    </h3>
-                                    <span className="bg-gray-200 text-gray-600 text-[10px] px-2 py-0.5 rounded-full font-bold">
-                                        {configs[group].length} items
-                                    </span>
-                                </div>
-                                <Button 
-                                    size="sm" 
-                                    onClick={() => handleSave(group)}
-                                    disabled={isUpdating}
-                                    className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+            {/* Main Content Area */}
+            {groups.length > 0 ? (
+                <Tabs defaultValue={groups[0]} className="w-full space-y-6">
+                    <div className="flex items-center justify-between pb-2 border-b border-gray-100 overflow-x-auto">
+                        <TabsList className="bg-transparent h-auto p-0 flex gap-2">
+                            {groups.map(group => (
+                                <TabsTrigger 
+                                    key={group} 
+                                    value={group} 
+                                    className="px-4 py-2 rounded-full border border-transparent data-[state=active]:border-blue-200 data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 font-semibold text-gray-500 transition-all text-sm flex items-center gap-2"
                                 >
-                                    {isUpdating ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-                                    Save Group Changes
-                                </Button>
-                            </div>
-                            <div className="divide-y divide-gray-100">
-                                {configs[group].map((config) => {
-                                    const isRevealed = !!revealedValues[config.key];
-                                    const currentValue = localChanges[config.key] ?? (isRevealed ? revealedValues[config.key] : config.value);
-                                    const isModified = localChanges[config.key] !== undefined && localChanges[config.key] !== (isRevealed ? revealedValues[config.key] : config.value);
+                                    {getGroupIcon(group)}
+                                    {group}
+                                    <span className="bg-gray-100 text-[10px] px-1.5 py-0.5 rounded-full group-data-[state=active]:bg-blue-100 group-data-[state=active]:text-blue-600">
+                                        {filteredConfigs[group].length}
+                                    </span>
+                                </TabsTrigger>
+                            ))}
+                        </TabsList>
+                    </div>
 
-                                    return (
-                                        <div key={config.key} className="p-5 grid grid-cols-1 md:grid-cols-12 gap-6 items-start hover:bg-gray-50/50 transition-colors">
-                                            <div className="md:col-span-4 space-y-2">
-                                                <div className="flex flex-wrap items-center gap-2">
-                                                    <code className="text-sm font-bold bg-blue-50 px-2.5 py-1 rounded text-blue-800 border border-blue-100">
-                                                        {config.key}
-                                                    </code>
-                                                    {config.isSensitive && (
-                                                        <span className="flex items-center text-[10px] bg-indigo-100 text-indigo-700 font-bold px-1.5 py-0.5 rounded uppercase">
-                                                            <ShieldCheck className="w-3 h-3 mr-1" />
-                                                            Sensitive
-                                                        </span>
-                                                    )}
-                                                    {config.requiresRestart && (
-                                                        <span className="flex items-center text-[10px] bg-amber-100 text-amber-700 font-bold px-1.5 py-0.5 rounded uppercase">
-                                                            <AlertTriangle className="w-3 h-3 mr-1" />
-                                                            Restart Req
-                                                        </span>
-                                                    )}
-                                                </div>
-                                                <p className="text-xs text-gray-500 leading-relaxed">{config.description}</p>
-                                            </div>
-                                            <div className="md:col-span-8 flex flex-col gap-2">
-                                                <div className="relative group/input">
-                                                    {config.type === 'boolean' ? (
-                                                        <select
-                                                            className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all appearance-none bg-white shadow-sm"
-                                                            value={currentValue}
-                                                            onChange={(e) => handleValueChange(config.key, e.target.value)}
-                                                        >
-                                                            <option value="true">True</option>
-                                                            <option value="false">False</option>
-                                                        </select>
-                                                    ) : (
-                                                        <div className="flex gap-2">
-                                                            <input
-                                                                type={config.isSensitive && !isRevealed ? 'password' : 'text'}
-                                                                className={`flex-1 border ${isModified ? 'border-amber-400 bg-amber-50/30' : 'border-gray-300'} rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm font-mono`}
-                                                                value={currentValue}
-                                                                onChange={(e) => handleValueChange(config.key, e.target.value)}
-                                                                placeholder={`Enter ${config.type} value`}
-                                                            />
+                    {groups.map(group => (
+                        <TabsContent key={group} value={group} className="space-y-4 outline-none">
+                            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden border-t-4 border-t-blue-600">
+                                <div className="px-6 py-4 bg-gray-50/50 border-b border-gray-200 flex justify-between items-center">
+                                    <div className="flex items-center gap-3">
+                                        <div className="bg-blue-100 p-1.5 rounded-lg">
+                                            {getGroupIcon(group)}
+                                        </div>
+                                        <div>
+                                            <h3 className="font-bold text-gray-900 uppercase tracking-wide text-xs">
+                                                {group} PARAMETERS
+                                            </h3>
+                                            <p className="text-[10px] text-gray-400 font-medium">Configurations in this category</p>
+                                        </div>
+                                    </div>
+                                    <Button 
+                                        size="sm" 
+                                        onClick={() => handleSave(group)}
+                                        disabled={isUpdating}
+                                        className="bg-gray-900 hover:bg-black text-white rounded-lg px-4"
+                                    >
+                                        {isUpdating ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-2" /> : <Save className="w-3.5 h-3.5 mr-2" />}
+                                        Apply Changes
+                                    </Button>
+                                </div>
+                                <div className="divide-y divide-gray-100">
+                                    {filteredConfigs[group].map((config) => {
+                                        const isRevealed = !!revealedValues[config.key];
+                                        const currentValue = localChanges[config.key] ?? (isRevealed ? revealedValues[config.key] : config.value);
+                                        const isModified = localChanges[config.key] !== undefined && localChanges[config.key] !== (isRevealed ? revealedValues[config.key] : config.value);
+
+                                        return (
+                                            <div key={config.key} className="p-6 grid grid-cols-1 md:grid-cols-12 gap-8 items-start hover:bg-blue-50/20 transition-all group/row">
+                                                <div className="md:col-span-4 space-y-3">
+                                                    <div className="flex flex-wrap items-center gap-2">
+                                                        <code className="text-xs font-bold bg-gray-100 px-2.5 py-1 rounded-md text-gray-700 border border-gray-200 group-hover/row:bg-white group-hover/row:border-blue-200 transition-colors">
+                                                            {config.key}
+                                                        </code>
+                                                        <div className="flex gap-1">
                                                             {config.isSensitive && (
-                                                                <Button
-                                                                    variant="ghost" 
-                                                                    size="icon"
-                                                                    onClick={() => handleReveal(config.key)}
-                                                                    disabled={revealingKey === config.key}
-                                                                    className="shrink-0 text-gray-400 hover:text-blue-600"
-                                                                >
-                                                                    {revealingKey === config.key ? <Loader2 className="w-4 h-4 animate-spin" /> : 
-                                                                     isRevealed ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                                                                </Button>
+                                                                <span className="flex items-center text-[9px] bg-indigo-50 text-indigo-600 font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider">
+                                                                    <ShieldCheck className="w-2.5 h-2.5 mr-1" />
+                                                                    Sensitive
+                                                                </span>
                                                             )}
+                                                            {config.requiresRestart && (
+                                                                <span className="flex items-center text-[9px] bg-amber-50 text-amber-600 font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider">
+                                                                    <AlertTriangle className="w-2.5 h-2.5 mr-1" />
+                                                                    Restart Required
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    <p className="text-xs text-gray-400 font-medium leading-relaxed pr-4">
+                                                        {config.description || "No description provided for this parameter."}
+                                                    </p>
+                                                    
+                                                    {isModified && (
+                                                        <div className="flex items-center gap-2 pt-1">
+                                                            <div className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.5)] animate-pulse" />
+                                                            <span className="text-[10px] text-amber-600 font-bold uppercase tracking-widest">Pending local change</span>
                                                         </div>
                                                     )}
                                                 </div>
-                                                {isModified && (
-                                                    <div className="flex items-center gap-1.5 pl-1">
-                                                        <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                                                        <p className="text-[10px] text-amber-600 font-bold uppercase tracking-wider">Unsaved Change</p>
+
+                                                <div className="md:col-span-8 flex flex-col gap-3">
+                                                    <div className="flex gap-2">
+                                                        <div className="relative flex-1 group/input">
+                                                            {config.type === 'boolean' ? (
+                                                                <div className="relative">
+                                                                    <select
+                                                                        className={`w-full border ${isModified ? 'border-amber-300 ring-2 ring-amber-50 bg-amber-50/20' : 'border-gray-200 bg-gray-50/50'} rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all appearance-none cursor-pointer font-semibold pr-10`}
+                                                                        value={currentValue}
+                                                                        onChange={(e) => handleValueChange(config.key, e.target.value)}
+                                                                    >
+                                                                        <option value="true">ENABLED (TRUE)</option>
+                                                                        <option value="false">DISABLED (FALSE)</option>
+                                                                    </select>
+                                                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
+                                                                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+                                                                    </div>
+                                                                </div>
+                                                            ) : (
+                                                                <div className="relative">
+                                                                    <input
+                                                                        type={config.isSensitive && !isRevealed ? 'password' : 'text'}
+                                                                        className={`w-full border ${isModified ? 'border-amber-300 ring-2 ring-amber-50 bg-amber-50/20' : 'border-gray-200 bg-gray-50/50'} rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all font-mono`}
+                                                                        value={currentValue}
+                                                                        onChange={(e) => handleValueChange(config.key, e.target.value)}
+                                                                        placeholder={`Value (${config.type})`}
+                                                                    />
+                                                                    {config.isSensitive && (
+                                                                        <button
+                                                                            onClick={() => handleReveal(config.key)}
+                                                                            disabled={revealingKey === config.key}
+                                                                            className="absolute right-3 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-200 rounded-lg text-gray-500 transition-colors"
+                                                                        >
+                                                                            {revealingKey === config.key ? <Loader2 className="w-4 h-4 animate-spin" /> : 
+                                                                             isRevealed ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                                                        </button>
+                                                                    )}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                        
+                                                        <Button 
+                                                            variant="ghost" 
+                                                            size="icon" 
+                                                            onClick={() => handleDelete(config.key)}
+                                                            className="shrink-0 h-10 w-10 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all opacity-0 group-hover/row:opacity-100 rounded-xl border border-transparent hover:border-red-100"
+                                                        >
+                                                            {deletingKey === config.key ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                                                        </Button>
                                                     </div>
-                                                )}
+                                                    
+                                                    <div className="flex items-center gap-4 px-1">
+                                                        <span className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">DATA TYPE: {config.type}</span>
+                                                        <div className="h-1 w-1 rounded-full bg-gray-300" />
+                                                        <span className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">STATUS: {config.isActive ? 'ACTIVE' : 'INACTIVE'}</span>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    );
-                                })}
+                                        );
+                                    })}
+                                </div>
                             </div>
+                        </TabsContent>
+                    ))}
+                </Tabs>
+            ) : (
+                <div className="bg-white border-2 border-dashed border-gray-100 rounded-[2rem] p-24 text-center space-y-6 shadow-sm">
+                    <div className="bg-blue-50 w-24 h-24 rounded-3xl flex items-center justify-center mx-auto text-blue-400 rotate-12 group hover:rotate-0 transition-transform duration-500">
+                        <Database className="w-12 h-12" />
+                    </div>
+                    <div className="max-w-md mx-auto space-y-2">
+                        <h3 className="text-2xl font-black text-gray-900">Config Grid Empty</h3>
+                        <p className="text-gray-400 font-medium">
+                            {searchQuery ? `No matches found for "${searchQuery}". Try a different term or group.` : "No environment configurations detected in the secure vault."}
+                        </p>
+                    </div>
+                    {!searchQuery && (
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                            <Button onClick={handleSync} variant="outline" className="px-8 py-6 rounded-2xl border-2 hover:bg-gray-50 flex items-center gap-2" disabled={isSyncing}>
+                                {isSyncing ? <Loader2 className="w-5 h-5 animate-spin" /> : <RefreshCw className="w-5 h-5" />}
+                                Sync from .env File
+                            </Button>
+                            <Button onClick={() => setIsCreateModalOpen(true)} className="px-8 py-6 rounded-2xl bg-blue-600 shadow-xl shadow-blue-100 flex items-center gap-2">
+                                <Plus className="w-5 h-5" />
+                                Create First Entry
+                            </Button>
                         </div>
-                    </TabsContent>
-                ))}
-            </Tabs>
-            
-            {groups.length === 0 && !isFetching && (
-                 <div className="bg-white border-2 border-dashed border-gray-200 rounded-2xl p-12 text-center space-y-4">
-                    <div className="bg-gray-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto text-gray-400">
-                        <AlertTriangle className="w-8 h-8" />
-                    </div>
-                    <div className="max-w-xs mx-auto">
-                        <h3 className="text-lg font-bold text-gray-900">No Configurations Found</h3>
-                        <p className="text-gray-500 text-sm mt-1">Try syncing from your .env file to get started.</p>
-                    </div>
-                    <Button onClick={handleSync} variant="outline" className="mt-4">
-                        Sync Now
-                    </Button>
-                 </div>
+                    )}
+                </div>
             )}
+
+            {/* Modals and Overlays */}
+            <CreateConfigModal 
+                isOpen={isCreateModalOpen} 
+                onOpenChange={setIsCreateModalOpen}
+                refetch={refetch}
+            />
         </div>
     );
 }
-
