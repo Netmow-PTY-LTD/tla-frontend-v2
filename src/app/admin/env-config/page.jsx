@@ -205,8 +205,8 @@ export default function EnvConfigPage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
                 <div className="relative">
-                    <div className="w-16 h-16 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin"></div>
-                    <Zap className="w-6 h-6 text-amber-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                    <div className="w-16 h-16 border-4 border-[#1BABA9]/10 border-t-[#1BABA9] rounded-full animate-spin"></div>
+                    <Zap className="w-6 h-6 text-[#1BABA9] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
                 </div>
                 <p className="text-gray-500 font-medium animate-pulse">Initializing Configuration Engine...</p>
             </div>
@@ -219,10 +219,10 @@ export default function EnvConfigPage() {
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
                 <div className="space-y-1">
                     <h1 className="text-3xl font-extrabold flex items-center gap-3 tracking-tight">
-                        <div className="bg-amber-100 p-2 rounded-xl">
-                            <Zap className="text-amber-600 w-6 h-6" />
+                        <div className="bg-[#1BABA9]/10 p-2 rounded-xl">
+                            <Zap className="text-[#1BABA9] w-6 h-6" />
                         </div>
-                        <span className="bg-gradient-to-r from-blue-800 to-indigo-600 bg-clip-text text-transparent">
+                        <span className="bg-gradient-to-r from-[#1BABA9] to-[#0D9488] bg-clip-text text-transparent">
                             System Environment
                         </span>
                     </h1>
@@ -233,10 +233,10 @@ export default function EnvConfigPage() {
                 
                 <div className="flex flex-wrap items-center gap-3 lg:pl-0 pl-14">
                     <div className="relative group">
-                        <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                        <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#1BABA9] transition-colors" />
                         <Input 
                             placeholder="Search keys..." 
-                            className="pl-9 w-[280px] bg-gray-50 border-gray-200 focus:bg-white transition-all rounded-xl"
+                            className="pl-9 w-[280px] bg-gray-50 border-gray-200 focus:bg-white focus:ring-[#1BABA9]/20 focus:border-[#1BABA9] transition-all rounded-xl"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
@@ -267,11 +267,11 @@ export default function EnvConfigPage() {
                                 <TabsTrigger 
                                     key={group} 
                                     value={group} 
-                                    className="px-4 py-2 rounded-full border border-transparent data-[state=active]:border-blue-200 data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 font-semibold text-gray-500 transition-all text-sm flex items-center gap-2"
+                                    className="px-4 py-2 rounded-full border border-transparent data-[state=active]:border-[#1BABA9]/20 data-[state=active]:bg-[#1BABA9]/5 data-[state=active]:text-[#1BABA9] font-semibold text-gray-500 transition-all text-sm flex items-center gap-2"
                                 >
                                     {getGroupIcon(group)}
                                     {group}
-                                    <span className="bg-gray-100 text-[10px] px-1.5 py-0.5 rounded-full group-data-[state=active]:bg-blue-100 group-data-[state=active]:text-blue-600">
+                                    <span className="bg-gray-100 text-[10px] px-1.5 py-0.5 rounded-full group-data-[state=active]:bg-[#1BABA9]/10 group-data-[state=active]:text-[#1BABA9]">
                                         {filteredConfigs[group].length}
                                     </span>
                                 </TabsTrigger>
@@ -281,10 +281,10 @@ export default function EnvConfigPage() {
 
                     {groups.map(group => (
                         <TabsContent key={group} value={group} className="space-y-4 outline-none">
-                            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden border-t-4 border-t-blue-600">
+                            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden border-t-4 border-t-[#1BABA9]">
                                 <div className="px-6 py-4 bg-gray-50/50 border-b border-gray-200 flex justify-between items-center">
                                     <div className="flex items-center gap-3">
-                                        <div className="bg-blue-100 p-1.5 rounded-lg">
+                                        <div className="bg-[#1BABA9]/10 p-1.5 rounded-lg text-[#1BABA9]">
                                             {getGroupIcon(group)}
                                         </div>
                                         <div>
@@ -298,7 +298,7 @@ export default function EnvConfigPage() {
                                         size="sm" 
                                         onClick={() => handleSave(group)}
                                         disabled={isUpdating}
-                                        className="bg-gray-900 hover:bg-black text-white rounded-lg px-4"
+                                        className="bg-[#1BABA9] hover:bg-[#0D9488] text-white rounded-lg px-4 hover:shadow-lg hover:shadow-[#1BABA9]/20 transition-all"
                                     >
                                         {isUpdating ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-2" /> : <Save className="w-3.5 h-3.5 mr-2" />}
                                         Apply Changes
@@ -314,7 +314,7 @@ export default function EnvConfigPage() {
                                             <div key={config.key} className="p-6 grid grid-cols-1 md:grid-cols-12 gap-8 items-start hover:bg-blue-50/20 transition-all group/row">
                                                 <div className="md:col-span-4 space-y-3">
                                                     <div className="flex flex-wrap items-center gap-2">
-                                                        <code className="text-xs font-bold bg-gray-100 px-2.5 py-1 rounded-md text-gray-700 border border-gray-200 group-hover/row:bg-white group-hover/row:border-blue-200 transition-colors">
+                                                        <code className="text-xs font-bold bg-gray-100 px-2.5 py-1 rounded-md text-gray-700 border border-gray-200 group-hover/row:bg-white group-hover/row:border-[#1BABA9]/20 transition-colors">
                                                             {config.key}
                                                         </code>
                                                         <div className="flex gap-1">
@@ -325,7 +325,7 @@ export default function EnvConfigPage() {
                                                                 </span>
                                                             )}
                                                             {config.isSensitive && (
-                                                                <span className="flex items-center text-[9px] bg-indigo-50 text-indigo-600 font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider">
+                                                                <span className="flex items-center text-[9px] bg-[#1BABA9]/5 text-[#1BABA9] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider border border-[#1BABA9]/10">
                                                                     <ShieldCheck className="w-2.5 h-2.5 mr-1" />
                                                                     Sensitive
                                                                 </span>
@@ -356,7 +356,7 @@ export default function EnvConfigPage() {
                                                             {config.type === 'boolean' ? (
                                                                 <div className="relative">
                                                                     <select
-                                                                        className={`w-full border ${isModified ? 'border-amber-300 ring-2 ring-amber-50 bg-amber-50/20' : 'border-gray-200 bg-gray-50/50'} rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all appearance-none cursor-pointer font-semibold pr-10`}
+                                                                        className={`w-full border ${isModified ? 'border-amber-300 ring-2 ring-amber-50 bg-amber-50/20' : 'border-gray-200 bg-gray-50/50'} rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#1BABA9] focus:border-[#1BABA9] outline-none transition-all appearance-none cursor-pointer font-semibold pr-10`}
                                                                         value={currentValue}
                                                                         onChange={(e) => handleValueChange(config.key, e.target.value)}
                                                                     >
@@ -371,7 +371,7 @@ export default function EnvConfigPage() {
                                                                 <div className="relative">
                                                                     <input
                                                                         type={config.isSensitive && !isRevealed ? 'password' : 'text'}
-                                                                        className={`w-full border ${isModified ? 'border-amber-300 ring-2 ring-amber-50 bg-amber-50/20' : 'border-gray-200 bg-gray-50/50'} rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all font-mono`}
+                                                                        className={`w-full border ${isModified ? 'border-amber-300 ring-2 ring-amber-50 bg-amber-50/20' : 'border-gray-200 bg-gray-50/50'} rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#1BABA9] focus:border-[#1BABA9] outline-none transition-all font-mono`}
                                                                         value={currentValue}
                                                                         onChange={(e) => handleValueChange(config.key, e.target.value)}
                                                                         placeholder={`Value (${config.type})`}
@@ -394,7 +394,7 @@ export default function EnvConfigPage() {
                                                             variant="ghost" 
                                                             size="icon" 
                                                             onClick={() => handleEdit(config)}
-                                                            className="shrink-0 h-10 w-10 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all opacity-0 group-hover/row:opacity-100 rounded-xl border border-transparent hover:border-indigo-100"
+                                                            className="shrink-0 h-10 w-10 text-gray-400 hover:text-[#1BABA9] hover:bg-[#1BABA9]/5 transition-all opacity-0 group-hover/row:opacity-100 rounded-xl border border-transparent hover:border-[#1BABA9]/20"
                                                             title="Advanced Configuration"
                                                         >
                                                             <Settings className="w-4 h-4" />
@@ -411,7 +411,7 @@ export default function EnvConfigPage() {
                 </Tabs>
             ) : (
                 <div className="bg-white border-2 border-dashed border-gray-100 rounded-[2rem] p-24 text-center space-y-6 shadow-sm">
-                    <div className="bg-blue-50 w-24 h-24 rounded-3xl flex items-center justify-center mx-auto text-blue-400 rotate-12 group hover:rotate-0 transition-transform duration-500">
+                    <div className="bg-[#1BABA9]/10 w-24 h-24 rounded-3xl flex items-center justify-center mx-auto text-[#1BABA9] rotate-12 group hover:rotate-0 transition-transform duration-500">
                         <Database className="w-12 h-12" />
                     </div>
                     <div className="max-w-md mx-auto space-y-2">

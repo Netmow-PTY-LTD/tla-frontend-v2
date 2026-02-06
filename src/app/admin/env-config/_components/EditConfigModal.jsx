@@ -108,7 +108,7 @@ export default function EditConfigModal({ isOpen, onOpenChange, config, refetch 
             <DialogContent className="sm:max-w-[500px]">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
-                        <Settings2 className="w-5 h-5 text-indigo-600" />
+                        <Settings2 className="w-5 h-5 text-[#1BABA9]" />
                         Edit Configuration: {config.key}
                     </DialogTitle>
                     <div className="mt-2">
@@ -219,7 +219,7 @@ export default function EditConfigModal({ isOpen, onOpenChange, config, refetch 
                     <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
                         Cancel
                     </Button>
-                    <Button onClick={handleSubmit} disabled={isLoading || isFetchingValue} className="bg-indigo-600 hover:bg-indigo-700">
+                    <Button onClick={handleSubmit} disabled={isLoading || isFetchingValue} className="bg-[#1BABA9] hover:bg-[#0D9488] text-white">
                         {isLoading && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
                         Save Changes
                     </Button>
