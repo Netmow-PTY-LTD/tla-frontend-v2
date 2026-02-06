@@ -32,6 +32,7 @@ import {
     Settings
 } from 'lucide-react';
 import EditConfigModal from './_components/EditConfigModal';
+import SyncFromEnvModal from './_components/SyncFromEnvModal';
 
 export default function EnvConfigPage() {
     const { data, isLoading, refetch, isFetching } = useGetAllEnvConfigsQuery();
@@ -45,6 +46,7 @@ export default function EnvConfigPage() {
     const [isSyncing, setIsSyncing] = useState(false);
     const [isReloading, setIsReloading] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
     const [editingConfig, setEditingConfig] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     
@@ -149,12 +151,16 @@ export default function EnvConfigPage() {
         }
     };
 
-    const handleSync = async () => {
-        if (!confirm('Sync configurations from .env? Missing keys will be added.')) return;
+    const handleSync = () => {
+        setIsSyncModalOpen(true);
+    };
+
+    const confirmSync = async () => {
         try {
             setIsSyncing(true);
             const res = await syncFromEnv({ force: false }).unwrap();
             toast.success(res.message);
+            setIsSyncModalOpen(false);
             refetch();
         } catch (error) {
             toast.error(error?.data?.message || 'Sync failed');
@@ -437,6 +443,12 @@ export default function EnvConfigPage() {
                 onOpenChange={setIsEditModalOpen}
                 config={editingConfig}
                 refetch={refetch}
+            />
+            <SyncFromEnvModal 
+                isOpen={isSyncModalOpen}
+                onOpenChange={setIsSyncModalOpen}
+                onConfirm={confirmSync}
+                isLoading={isSyncing}
             />
         </div>
     );
