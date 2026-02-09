@@ -140,6 +140,7 @@ export const baseApi = createApi({
     'headerFooterCodes',
     'recent-blogs',
     'lawyer-profile-claims',
+    'env-config',
   ],
   endpoints: () => ({}),
 });

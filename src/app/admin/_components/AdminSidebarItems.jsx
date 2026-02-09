@@ -26,6 +26,7 @@ import {
   BookImage,
   ClipboardList,
   Gavel,
+  Cpu,
 } from 'lucide-react';
 
 export const AdminSidebarItems = {
@@ -38,9 +39,21 @@ export const AdminSidebarItems = {
     },
     {
       title: 'Settings',
-      url: '/admin/settings',
+      url: '#',
       icon: Settings,
       isActive: true,
+      items: [
+        {
+          title: 'General Settings',
+          url: '/admin/settings',
+          icon: List,
+        },
+        {
+          title: 'Env Configurations',
+          url: '/admin/env-config',
+          icon: Cpu,
+        },
+      ],
     },
     {
       title: 'Countries',
