@@ -4,7 +4,7 @@ import Link from 'next/link';
 import React from 'react';
 import BuyerProfileDropDown from './BuyerProfileDropDown';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
-import {  PanelLeft } from 'lucide-react';
+import { PanelLeft } from 'lucide-react';
 
 import NotificationDropdownClient from '@/components/dashboard/common/NotificationDropdownClient';
 
@@ -15,11 +15,10 @@ export default function BuyerDashboardHeader({ onToggleSidebar }) {
     <header className="db-header">
       <div className="db-header-container flex items-center gap-4">
         <Link href="/client/dashboard" className="db-logo">
-          <Image
-            src={'/assets/img/logo.png'}
-            alt="TLA Logo"
-            width={150}
-            height={40}
+          <img
+            src={'/assets/img/logo-tla.svg'}
+            alt={'TLA Logo'}
+            className="h-[48px]"
           />
         </Link>
         <button
@@ -31,7 +30,7 @@ export default function BuyerDashboardHeader({ onToggleSidebar }) {
         </button>
       </div>
       <div className="flex items-center gap-4">
-        <NotificationDropdownClient/>
+        <NotificationDropdownClient />
         <BuyerProfileDropDown data={userInfo?.data ?? []} />
       </div>
     </header>
