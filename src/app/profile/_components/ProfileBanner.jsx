@@ -10,7 +10,7 @@ import { Info } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useCallback, useState } from 'react';
-import PrintProfile from './PrintProfile';
+//import PrintProfile from './PrintProfile';
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import ProfilePdfDocument from './ProfilePdfDocument';
 
@@ -20,10 +20,10 @@ export default function ProfileBanner({ data, token, currentUser }) {
   const handleClosePreview = () => setShowPreview(false);
   const validToken = checkValidity(token);
 
-   const dummyImage =
-      data?.gender?.toLowerCase() === 'female'
-        ? '/assets/img/user/female.png'
-        : '/assets/img/user/male.png';
+  const dummyImage =
+    data?.gender?.toLowerCase() === 'female'
+      ? '/assets/img/user/female.png'
+      : '/assets/img/user/male.png';
 
 
 
@@ -60,7 +60,7 @@ END:VCARD`;
   const handlePrint = useCallback(() => {
     if (!data) return;
 
- 
+
 
 
 
@@ -319,7 +319,7 @@ END:VCARD`;
 
   return (
     <section
-      className="pt-[50px] lg:pt-[100px] pb-[40px] lg:pb-0"
+      className="pt-[50px] lg:pt-[80px] pb-[40px] lg:pb-0"
       style={{
         backgroundImage: 'url("/assets/img/Bg-hero1.webp")',
         backgroundSize: 'cover',
@@ -330,20 +330,20 @@ END:VCARD`;
     >
       <div className="container">
         <div
-          className="flex flex-wrap gap-5 relative md:top-[30px]"
+          className="flex flex-wrap lg:flex-nowrap gap-5"
           id="profile-banner-content"
         >
-          <div className="flex">
+          <div className="flex lg:shrink-0 relative md:top-[30px]">
             <Image
               src={
-                data?.profilePicture ||dummyImage}
+                data?.profilePicture || dummyImage}
               width={423}
               height={531}
               alt={data?.name || 'Profile Image'}
-              className="max-w-full h-auto lg:h-[523px] rounded-lg object-cover"
+              className="max-w-full h-auto lg:h-[550px] rounded-lg object-cover"
             />
           </div>
-          <div className="lg:pl-[100px]">
+          <div className="lg:pl-[100px] pt-6">
             <h2 className="text-[48px] font-medium text-white leading-none">
               {data?.name}
             </h2>
@@ -464,21 +464,21 @@ END:VCARD`;
                 <span>{data?.address}</span>
               </div>
             </div>
-           
-             <div className="bg-[#F3f3f3] py-2 px-3 rounded-[6px] inline-flex items-center gap-2 mt-8 mr-4">
-                <div className="icon">
-                  <img
-                    src="/assets/img/badge.svg"
-                    width="40"
-                    height="40"
-                    alt={"founder_Batch"}
-                  />
-                </div>
-                <span className="badge-name">Membership Logo</span>
 
+            <div className="bg-[#F3f3f3] py-2 px-3 rounded-[6px] inline-flex items-center gap-2 mt-8 mr-4">
+              <div className="icon">
+                <img
+                  src="/assets/img/badge.svg"
+                  width="40"
+                  height="40"
+                  alt={"founder_Batch"}
+                />
               </div>
+              <span className="badge-name">Membership Logo</span>
 
-              {/*  it will be comment out in future  */}
+            </div>
+
+            {/*  it will be comment out in future  */}
 
             {/* {data?.foundingMember && data?.foundingMember && (
               <div className="bg-[#F3f3f3] py-2 px-3 rounded-[6px] inline-flex items-center gap-2 mt-8 mr-4">
@@ -622,7 +622,7 @@ END:VCARD`;
               <PDFDownloadLink
                 document={
                   <ProfilePdfDocument
-                  data={data}
+                    data={data}
                   />
                 }
                 fileName={`${data?.name || 'profile'}.pdf`}
