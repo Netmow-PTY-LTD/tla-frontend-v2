@@ -16,14 +16,23 @@ import { useGetSettingsQuery } from '@/store/features/admin/appSettings';
 
 export default function DashboardHeader({ onToggleSidebar }) {
   const userInfo = useSelector(selectCurrentUser);
-  const { data } = useGetNotificationsQuery({ read: false });
+  const token = useSelector((state) => state.auth.token);
+
+  const { data } = useGetNotificationsQuery(
+    { read: false },
+    {
+      skip: !token,
+    }
+  );
   //const { data: credits } = useGetUserCreditStatsQuery();
 
   const { data: appSettings } = useGetSettingsQuery();
 
   const appData = appSettings?.data || {};
 
-  const { data: currentUser } = useAuthUserInfoQuery();
+  const { data: currentUser } = useAuthUserInfoQuery(undefined, {
+    skip: !token,
+  });
 
   const status = currentUser?.data?.accountStatus;
 

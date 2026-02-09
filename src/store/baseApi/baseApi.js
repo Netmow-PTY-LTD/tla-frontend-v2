@@ -35,6 +35,12 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
   }
 
   if (result.error?.status === 401) {
+    const token = api.getState().auth.token;
+    if (!token) {
+      // Already logged out or no token, so just return the error
+      return result;
+    }
+
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/refresh-token`,
@@ -51,11 +57,20 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
         result = await baseQuery(arg, api, extraOptions);
       } else {
         api.dispatch(logOut());
-        await api.dispatch(baseApi.endpoints.authLogOut.initiate()).unwrap();
+        try {
+          await api.dispatch(baseApi.endpoints.authLogOut.initiate()).unwrap();
+        } catch (e) {
+          console.error("Logout error during refresh failure:", e);
+        }
       }
     } catch (err) {
+      console.error("Refresh token error:", err);
       api.dispatch(logOut());
-      await api.dispatch(baseApi.endpoints.authLogOut.initiate()).unwrap();
+      try {
+        await api.dispatch(baseApi.endpoints.authLogOut.initiate()).unwrap();
+      } catch (e) {
+        console.error("Logout error during refresh exception:", e);
+      }
     }
   }
 

@@ -9,7 +9,10 @@ import {
 } from '@/store/features/lawyer/LeadsApiService';
 import { useState } from 'react';
 
+import { useSelector } from 'react-redux';
+
 export default function LeadsCountCard() {
+  const token = useSelector((state) => state.auth.token);
   // const { data: allLeads, isLoading } = useGetAllMyLeadsQuery({
   //   page: 1,
   //   limit: 10,
@@ -21,10 +24,13 @@ export default function LeadsCountCard() {
     data,
     isLoading: isAllLeadsLoading,
     isFetching,
-  } = useGetAllLeadsQuery({
-    page,
-    limit: 10,
-  });
+  } = useGetAllLeadsQuery(
+    {
+      page,
+      limit: 10,
+    },
+    { skip: !token }
+  );
 
   const totalLeads = data?.pagination?.total ?? 0;
   // const approvedLeads = allLeads?.data?.filter(
