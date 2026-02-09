@@ -63,9 +63,12 @@ export default function ProfileDropDown() {
       console.error("Logout API failed:", error);
     }
 
+    // Redirect immediately before clearing state to prevent UI flash
+    router.push('/login');
+
+    // Clear state after initiating redirect
     dispatch(logOut());
     dispatch(baseApi.util.resetApiState());
-    router.push('/login');
   };
 
 
@@ -143,10 +146,10 @@ export default function ProfileDropDown() {
                 className="bg-green-400 h-2.5 rounded-full transition-all duration-300"
                 style={{
                   width: `${creditStats?.totalUsedCredits
-                      ? (creditStats.totalUsedCredits /
-                        creditStats.totalPurchasedCredits) *
-                      100
-                      : 0
+                    ? (creditStats.totalUsedCredits /
+                      creditStats.totalPurchasedCredits) *
+                    100
+                    : 0
                     }%`,
                 }}
               ></div>
