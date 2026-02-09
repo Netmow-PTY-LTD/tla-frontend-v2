@@ -54,7 +54,7 @@ export default function DashboardHeader({ onToggleSidebar }) {
           <PanelLeft />
         </button>
 
-        {status !== 'approved' && (
+        {status && status !== 'approved' && (
           <span className="flex items-center gap-1 text-xs font-medium bg-yellow-50 text-yellow-800 border border-yellow-200 rounded-full px-2 py-1 shadow-sm max-md:fixed max-md:top-[65px] max-md:left-1/2 max-md:-translate-x-1/2 max-md:z-[100] max-md:w-[min(90%,400px)] max-md:w-max max-md:justify-center max-md:px-4 max-md:shadow-xl max-md:border-yellow-300">
             <BadgeAlert className="h-3.5 w-3.5 text-yellow-600" />
             Your account is under approval by admin
