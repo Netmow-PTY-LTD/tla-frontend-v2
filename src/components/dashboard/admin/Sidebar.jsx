@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   List,
   BriefcaseBusiness,
+  Cpu,
 } from 'lucide-react';
 
 export const data = {
@@ -43,6 +44,11 @@ export const data = {
           title: 'General',
           url: '#',
           icon: BriefcaseBusiness,
+        },
+        {
+          title: 'Environment Variables',
+          url: '/admin/env-config',
+          icon: Cpu,
         },
       ],
     },

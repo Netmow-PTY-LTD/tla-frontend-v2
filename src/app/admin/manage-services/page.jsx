@@ -302,7 +302,7 @@ export default function ManageServices() {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-5"
               >
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
                     name="countryId"
@@ -311,7 +311,7 @@ export default function ManageServices() {
                         <FormLabel>Country</FormLabel>
                         <Select onValueChange={handleCountryChange}>
                           <FormControl>
-                            <SelectTrigger>
+                            <SelectTrigger className="w-full">
                               <SelectValue placeholder="Select a country" />
                             </SelectTrigger>
                           </FormControl>
@@ -337,7 +337,7 @@ export default function ManageServices() {
                         <FormLabel>Service</FormLabel>
                         <Select onValueChange={handleCountryWiseServiceChange}>
                           <FormControl>
-                            <SelectTrigger>
+                            <SelectTrigger className="w-full">
                               <SelectValue placeholder="Select a service" />
                             </SelectTrigger>
                           </FormControl>

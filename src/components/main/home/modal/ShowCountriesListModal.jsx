@@ -12,10 +12,11 @@ export default function ShowCountriesListModal({
   const router = useRouter();
   const handleSelect = (country) => {
     //console.log('country', country);
-    // Cookies.set('countryObj', JSON.stringify(country), {
-    //   expires: 3650,
-    //   path: '/',
-    // });
+    Cookies.set('countryObj', JSON.stringify(country), {
+      expires: 3650,
+      path: '/',
+      sameSite: 'lax',
+    });
     setSelectedCountry(country);
     setIsModalOpen(false);
     //router.push(`/${country?.slug}`);
@@ -36,9 +37,8 @@ export default function ShowCountriesListModal({
             return (
               <li
                 key={country.countryId || country.code}
-                className={`flex items-center gap-3 mb-2 p-2 rounded-sm transition cursor-pointer ${
-                  isSelected ? 'border border-[#f3f3f3]' : '' // only selected has border
-                }`}
+                className={`flex items-center gap-3 mb-2 p-2 rounded-sm transition cursor-pointer ${isSelected ? 'border border-[#f3f3f3]' : '' // only selected has border
+                  }`}
                 onClick={() => handleSelect(country)}
               >
                 {country.flag && (

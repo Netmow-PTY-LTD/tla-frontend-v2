@@ -175,8 +175,8 @@ export default function Page() {
               if (res.success) {
                 refetch();
 
-            // console.log('Upload successful');
-           }
+                // console.log('Upload successful');
+              }
               // Optionally, update row locally or refetch table
             } catch (err) {
               console.error('Upload failed', err);
@@ -246,12 +246,12 @@ export default function Page() {
         const services = row.original?.profile?.serviceIds || []; // assuming array of service objects or names
 
         return (
-          <div className="flex flex-wrap gap-1">
+          <div className="flex flex-wrap gap-1 min-w-[200px] max-w-[350px]">
             {services.length > 0 ? (
               services.map((service, index) => (
                 <span
                   key={index}
-                  className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full capitalize"
+                  className="bg-blue-100 text-blue-800 text-xs px-2.5 py-1.5 rounded-full capitalize"
                 >
                   {service?.name || service}{' '}
                   {/* use service.name if object, else string */}
@@ -274,6 +274,19 @@ export default function Page() {
       header: 'Address',
       cell: ({ row }) => <div>{row.original?.profile.address || '-'}</div>,
     },
+  {
+  accessorKey: 'createdBy.regUserType',
+  header: 'Created By',
+  cell: ({ row }) => {
+    const regUserType = row.original?.createdBy?.regUserType || '-';
+    // Capitalize first letter
+    const capitalized = regUserType === '-' 
+      ? '-' 
+      : regUserType.charAt(0).toUpperCase() + regUserType.slice(1);
+    return <div>{capitalized}</div>;
+  },
+}
+,
     {
       accessorKey: 'isOnline',
       header: 'Status',
@@ -341,7 +354,7 @@ export default function Page() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-       
+
               <DropdownMenuSeparator />
               {/* Details Page */}
               <DropdownMenuItem asChild>

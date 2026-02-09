@@ -139,6 +139,8 @@ export const baseApi = createApi({
     'BlogCategory-list',
     'headerFooterCodes',
     'recent-blogs',
+    'lawyer-profile-claims',
+    'env-config',
   ],
   endpoints: () => ({}),
 });

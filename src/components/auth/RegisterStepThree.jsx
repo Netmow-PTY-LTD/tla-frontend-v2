@@ -20,11 +20,12 @@ import {
   bulkUpdate,
   resetRegistration,
 } from '@/store/features/auth/lawyerRegistrationSlice';
-import { useAuthRegisterMutation } from '@/store/features/auth/authApiService';
+import {
+  useLawyerRegistrationDraftMutation,
+} from '@/store/features/auth/authApiService';
+import { Mail } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { showErrorToast, showSuccessToast } from '../common/toasts';
-import { verifyToken } from '@/utils/verifyToken';
-import { setUser } from '@/store/features/auth/authSlice';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getLawyerRegistrationStepThreeFormValidation } from '@/schema/auth/lawyerRegistration.schema';
 import Link from 'next/link';
@@ -42,6 +43,11 @@ import {
 } from '@headlessui/react';
 import { useGetCompanyListQuery } from '@/store/features/public/publicApiService';
 import { cn } from '@/lib/utils';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 const genderOptions = [
   { id: 1, label: 'Male', value: 'male' },
@@ -52,6 +58,7 @@ const genderOptions = [
 export default function RegisterStepThree() {
   const dispatch = useDispatch();
   const [query, setQuery] = useState('');
+
   const registration = useSelector((state) => state.lawyerRegistration);
   const { email, password, profile } = registration;
   const {
@@ -176,33 +183,6 @@ export default function RegisterStepThree() {
     );
   }, []);
 
-  // useEffect(() => {
-  //   // Sync redux data to local form
-  //   form.reset({
-  //     email,
-  //     phone: profile?.phone,
-  //     password,
-  //     soloPractitioner: registration.lawyerServiceMap.isSoloPractitioner,
-  //     companyTeam,
-  //     company_name: companyName,
-  //     company_website: website,
-  //     company_size: companySize,
-  //     gender: profile.gender,
-  //     law_society_member_number: profile.law_society_member_number,
-  //     practising_certificate_number: profile.practising_certificate_number,
-  //   });
-  // }, [
-  //   email,
-  //   profile?.phone,
-  //   password,
-  //   companyTeam,
-  //   companyName,
-  //   website,
-  //   companySize,
-  //   profile.gender, // ✅ include gender so reset reacts
-  //   profile.law_society_member_number,
-  //   profile.practising_certificate_number,
-  // ]);
 
   const handleGenderChange = (value) => {
     dispatch(updateNestedField({ section: 'profile', field: 'gender', value })); // Update Redux
@@ -211,48 +191,35 @@ export default function RegisterStepThree() {
 
   const router = useRouter();
   const registrationState = useSelector((state) => state.lawyerRegistration);
-  const [authRegister, { isLoading }] = useAuthRegisterMutation();
+
+  const [lawyerRegistrationDraft, { isLoading: isDraftLoading }] =
+    useLawyerRegistrationDraftMutation();
+
+  const isLoading = isDraftLoading;
 
   console.log('registrationState', registrationState);
 
   const handleSubmit = async (data) => {
-    // console.log('data', data);
     try {
-      const result = await authRegister(registrationState).unwrap();
-      if (result?.success && result?.token) {
-        showSuccessToast(result?.message || 'Registration successful');
+      const payload = {
+        ...registrationState,
+        step: 3,
+      };
+      const result = await lawyerRegistrationDraft(payload).unwrap();
+      console.log('Draft Registration API Response:', result);
+      if (result?.success && result?.data?.lawyerDraftId) {
+        router.push('/registration-success');
+        dispatch(resetRegistration());
         form.reset();
-        const token = result.token;
-        const userPayload = verifyToken(token);
-        //console.log('userPayload', userPayload);
-        if (userPayload) {
-          dispatch(
-            setUser({
-              user: { ...result?.data, country: userPayload?.country },
-              token,
-            })
-          );
-          const userType = result?.data?.regUserType;
-          if (userType === 'lawyer')
-            router.push('/lawyer/settings/profile?section=about');
-          else if (userType === 'client') router.push('/client/dashboard');
-          else router.push('/');
-          dispatch(resetRegistration());
-        }
-      } else {
-        const errorMessage =
-          result?.errorSources?.[0]?.message ||
-          result?.message ||
-          'Registration failed.';
-        // console.log('Registration error:', result);
-        showErrorToast(errorMessage || 'Something went wrong');
+        setQuery('');
+        setLocalCompanySize('');
       }
     } catch (error) {
-      // console.log('Registration error:', error);
-      console.error('❌ Registration API Error:', error);
+      console.error('❌ Draft Registration API Error:', error);
       showErrorToast(error?.data?.message || 'Server error');
     }
   };
+
 
   return (
     <div className="flex flex-wrap lg:flex-nowrap">
@@ -472,11 +439,10 @@ export default function RegisterStepThree() {
                       />
                       <div
                         className={`w-4 h-4 rounded-full border-2 border-[var(--primary-color)] flex items-center justify-center transition-all
-            ${
-              gender === option.value
-                ? 'bg-[var(--primary-color)]'
-                : 'bg-transparent'
-            }`}
+            ${gender === option.value
+                            ? 'bg-[var(--primary-color)]'
+                            : 'bg-transparent'
+                          }`}
                       >
                         <div
                           className={`w-1.5 h-1.5 rounded-full transition
@@ -574,18 +540,16 @@ export default function RegisterStepThree() {
                               />
 
                               <div
-                                className={`w-4 h-4 rounded-full border-2 border-[var(--primary-color)] flex items-center justify-center transition-all ${
-                                  field.value === option.value
-                                    ? 'bg-[var(--primary-color)]'
-                                    : 'bg-transparent'
-                                }`}
+                                className={`w-4 h-4 rounded-full border-2 border-[var(--primary-color)] flex items-center justify-center transition-all ${field.value === option.value
+                                  ? 'bg-[var(--primary-color)]'
+                                  : 'bg-transparent'
+                                  }`}
                               >
                                 <div
-                                  className={`w-1.5 h-1.5 rounded-full transition ${
-                                    field.value === option.value
-                                      ? 'bg-white'
-                                      : 'bg-transparent'
-                                  }`}
+                                  className={`w-1.5 h-1.5 rounded-full transition ${field.value === option.value
+                                    ? 'bg-white'
+                                    : 'bg-transparent'
+                                    }`}
                                 />
                               </div>
                               <span className="text-sm text-gray-800">
@@ -607,7 +571,7 @@ export default function RegisterStepThree() {
                     control={form.control}
                     name="company_name"
                     render={({ field }) => {
-                    
+
                       return (
                         <FormItem>
                           <FormLabel>Select Company</FormLabel>
@@ -876,11 +840,17 @@ export default function RegisterStepThree() {
             </form>
           </Form>
           <div className="tla-auth-footer text-center">
-            <span>Already have an account? </span>
-            <Link href="/login">
-              <b>Log In</b>
+            <div className="mb-2">
+              <span>Already have an account? </span>
+              <Link href="/login">
+                <b>Log In</b>
+              </Link>
+            </div>
+            <Link href="/claim-account">
+              <b>Claim Your Account</b>
             </Link>
           </div>
+
         </div>
       </div>
       {/* <div className="hidden lg:block lg:max-w-[31.25rem]">

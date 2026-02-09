@@ -418,12 +418,12 @@ export default function RegisterStepTwo() {
                         <SelectTrigger>
                           <SelectValue
                             placeholder="Select range of area"
-                            // render={(selectedValue) => {
-                            //   const selectedItem = ranges?.find(
-                            //     (item) => String(item.value) === selectedValue
-                            //   );
-                            //   return selectedItem?.label || '';
-                            // }}
+                          // render={(selectedValue) => {
+                          //   const selectedItem = ranges?.find(
+                          //     (item) => String(item.value) === selectedValue
+                          //   );
+                          //   return selectedItem?.label || '';
+                          // }}
                           />
                         </SelectTrigger>
                       </FormControl>
@@ -507,9 +507,14 @@ export default function RegisterStepTwo() {
             </form>
           </Form>
           <div className="tla-auth-footer text-center">
-            <span>Already have an account? </span>
-            <Link href="/login">
-              <b>Log In</b>
+            <div className="mb-2">
+              <span>Already have an account? </span>
+              <Link href="/login">
+                <b>Log In</b>
+              </Link>
+            </div>
+            <Link href="/claim-account">
+              <b>Claim Your Account</b>
             </Link>
           </div>
         </div>
