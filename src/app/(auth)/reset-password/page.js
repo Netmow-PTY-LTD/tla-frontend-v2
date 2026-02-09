@@ -9,25 +9,26 @@ import { Button } from '@/components/ui/button';
 import { useResetPassowrdMutation } from '@/store/features/auth/authApiService';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 const ResetPassword = () => {
-  const [token, setToken] = useState(null);
-  const [email, setEmail] = useState(null);
+  const searchParams = useSearchParams();
+  const rawEmail = searchParams.get('email');
+  const rawToken = searchParams.get('token');
+
+  // Handle '+' signs in email and token (which URLSearchParams converts to spaces)
+  const email = rawEmail ? rawEmail.replace(/ /g, '+') : null;
+  const token = rawToken ? rawToken.replace(/ /g, '+') : null;
+
   const router = useRouter();
   const [handleResetPassword, { isLoading, isSuccess, data }] =
     useResetPassowrdMutation();
 
  
 
-  useEffect(() => {
-    // Manually parse query parameters from URL
-    const searchParams = new URLSearchParams(window.location.search);
-    setToken(searchParams.get('token'));
-    setEmail(searchParams.get('email'));
-  }, []);
+
 
   useEffect(() => {
     if (data && !data?.success) {
@@ -41,6 +42,9 @@ const ResetPassword = () => {
   }, [isLoading, isSuccess, data]);
 
   const onSubmit = (data) => {
+
+    console.log('email', email);
+    console.log(data);
     handleResetPassword({ ...data, email, token });
   };
 

@@ -1,9 +1,11 @@
 import { useGetNextOfferQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 import Link from 'next/link';
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 export default function GetStartedCard() {
-  const { data, isLoading } = useGetNextOfferQuery();
+  const token = useSelector((state) => state.auth.token);
+  const { data, isLoading } = useGetNextOfferQuery(undefined, { skip: !token });
   const creditPackage = data?.data || {};
   return (
     <div className="flex justify-center items-center mt-5 w-full">

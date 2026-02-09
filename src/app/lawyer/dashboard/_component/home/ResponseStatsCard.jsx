@@ -2,9 +2,11 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useGetAllMyResponsesQuery } from '@/store/features/lawyer/ResponseApiService';
 import Link from 'next/link';
+import { useSelector } from 'react-redux';
 
 const ResponseStatsCard = () => {
-  const { data: allMyResponses, isLoading } = useGetAllMyResponsesQuery();
+  const token = useSelector((state) => state.auth.token);
+  const { data: allMyResponses, isLoading } = useGetAllMyResponsesQuery(undefined, { skip: !token });
 
   console.log('pending ===>', allMyResponses);
 
