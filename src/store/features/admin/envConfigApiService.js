@@ -54,6 +54,13 @@ const envConfigApiService = baseApi.injectEndpoints({
             }),
             invalidatesTags: ['env-config'],
         }),
+        clearCache: builder.mutation({
+            query: () => ({
+                url: '/env-config/clear-cache',
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['env-config'],
+        }),
     }),
 });
 
@@ -66,4 +73,5 @@ export const {
     useSyncFromEnvMutation,
     useExportToEnvMutation,
     useReloadEnvConfigsMutation,
+    useClearCacheMutation,
 } = envConfigApiService;

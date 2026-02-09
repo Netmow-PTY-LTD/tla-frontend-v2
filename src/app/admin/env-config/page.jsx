@@ -1,14 +1,15 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import Cookies from 'js-cookie';
+
 import { 
     useGetAllEnvConfigsQuery, 
     useBulkUpdateEnvConfigsMutation, 
     useSyncFromEnvMutation, 
     useReloadEnvConfigsMutation,
     useLazyGetEnvConfigByKeyQuery,
-    useExportToEnvMutation
+    useExportToEnvMutation,
+    useClearCacheMutation
 } from '@/store/features/admin/envConfigApiService';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -29,7 +30,8 @@ import {
     FileJson,
     Server,
     Layout,
-    Settings
+    Settings,
+    Eraser
 } from 'lucide-react';
 import EditConfigModal from './_components/EditConfigModal';
 import SyncFromEnvModal from './_components/SyncFromEnvModal';
@@ -41,10 +43,12 @@ export default function EnvConfigPage() {
     const [reloadConfigs] = useReloadEnvConfigsMutation();
     const [getByKey] = useLazyGetEnvConfigByKeyQuery();
     const [exportToEnv, { isLoading: isExporting }] = useExportToEnvMutation();
+    const [clearCache] = useClearCacheMutation();
 
     const [isUpdating, setIsUpdating] = useState(false);
     const [isSyncing, setIsSyncing] = useState(false);
     const [isReloading, setIsReloading] = useState(false);
+    const [isClearingCache, setIsClearingCache] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
     const [editingConfig, setEditingConfig] = useState(null);
@@ -181,6 +185,19 @@ export default function EnvConfigPage() {
             setIsReloading(false);
         }
     };
+    
+    const handleClearCache = async () => {
+        try {
+            setIsClearingCache(true);
+            await clearCache().unwrap();
+            toast.success('System cache cleared successfully');
+            refetch();
+        } catch (error) {
+            toast.error(error?.data?.message || 'Failed to clear cache');
+        } finally {
+            setIsClearingCache(false);
+        }
+    };
 
     const handleExport = async () => {
         try {
@@ -254,6 +271,16 @@ export default function EnvConfigPage() {
                     <Button 
                         variant="outline" 
                         size="icon" 
+                        onClick={handleClearCache} 
+                        disabled={isClearingCache} 
+                        title="Clear System Cache" 
+                        className="rounded-xl text-red-500 hover:text-red-600 hover:bg-red-50 border-red-100"
+                    >
+                        {isClearingCache ? <Loader2 className="w-4 h-4 animate-spin" /> : <Eraser className="w-4 h-4" />}
+                    </Button>
+                    <Button 
+                        variant="outline" 
+                        size="icon" 
                         onClick={handleExport} 
                         disabled={isExporting} 
                         title="Export to .env" 
@@ -300,15 +327,29 @@ export default function EnvConfigPage() {
                                             <p className="text-[10px] text-gray-400 font-medium">Manage system variables for this category</p>
                                         </div>
                                     </div>
-                                    <Button 
-                                        size="sm" 
-                                        onClick={() => handleSave(group)}
-                                        disabled={isUpdating}
-                                        className="bg-[#1BABA9] hover:bg-[#0D9488] text-white rounded-lg px-4 hover:shadow-lg hover:shadow-[#1BABA9]/20 transition-all"
-                                    >
-                                        {isUpdating ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-2" /> : <Save className="w-3.5 h-3.5 mr-2" />}
-                                        Apply Changes
-                                    </Button>
+                                    <div className="flex gap-2">
+                                        {(group.toUpperCase() === 'API' || group.toLowerCase().includes('api') || group.toLowerCase().includes('redis')) && (
+                                            <Button 
+                                                size="sm" 
+                                                variant="outline"
+                                                onClick={handleClearCache}
+                                                disabled={isClearingCache}
+                                                className="text-red-500 hover:text-red-700 hover:bg-red-50 border-red-100 rounded-lg px-4 transition-all"
+                                            >
+                                                {isClearingCache ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-2" /> : <Eraser className="w-3.5 h-3.5 mr-2" />}
+                                                Clear Cache
+                                            </Button>
+                                        )}
+                                        <Button 
+                                            size="sm" 
+                                            onClick={() => handleSave(group)}
+                                            disabled={isUpdating}
+                                            className="bg-[#1BABA9] hover:bg-[#0D9488] text-white rounded-lg px-4 hover:shadow-lg hover:shadow-[#1BABA9]/20 transition-all"
+                                        >
+                                            {isUpdating ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-2" /> : <Save className="w-3.5 h-3.5 mr-2" />}
+                                            Apply Changes
+                                        </Button>
+                                    </div>
                                 </div>
                                 <div className="divide-y divide-gray-100">
                                     {filteredConfigs[group].map((config) => {
