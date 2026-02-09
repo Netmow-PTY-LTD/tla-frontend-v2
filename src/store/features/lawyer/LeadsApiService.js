@@ -3,19 +3,36 @@ import { baseApi } from '../../baseApi/baseApi';
 const leadsApiService = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllLeads: builder.query({
-      query: ({ page, limit, searchKeyword }) => ({
-        url: '/lead/list',
-        method: 'GET',
-        params: { page, limit, searchKeyword },
-      }),
+      query: (arg) => {
+        if (arg) {
+          const { page, limit, searchKeyword } = arg;
+          return {
+            url: '/lead/list',
+            method: 'GET',
+            params: { page, limit, searchKeyword },
+          };
+        }
+        return {
+          url: '/lead/list',
+          method: 'GET',
+        };
+      },
       providesTags: ['lead-list'],
     }),
     getAllLeadsForAdmin: builder.query({
-      query: (params) => ({
-        url: '/lead/list/admin',
-        method: 'GET',
-        params,
-      }),
+      query: (params) => {
+        if (params) {
+          return {
+            url: '/lead/list/admin',
+            method: 'GET',
+            params,
+          };
+        }
+        return {
+          url: '/lead/list/admin',
+          method: 'GET',
+        };
+      },
       providesTags: ['lead-list-admin'],
     }),
     getSingleLead: builder.query({
@@ -26,11 +43,20 @@ const leadsApiService = baseApi.injectEndpoints({
       providesTags: ['lead'],
     }),
     getAllMyLeads: builder.query({
-      query: ({ page, limit }) => ({
-        url: '/lead/my',
-        method: 'GET',
-        params: { page, limit },
-      }),
+      query: (arg) => {
+        if (arg) {
+          const { page, limit } = arg;
+          return {
+            url: '/lead/my',
+            method: 'GET',
+            params: { page, limit },
+          };
+        }
+        return {
+          url: '/lead/my',
+          method: 'GET',
+        };
+      },
       providesTags: ['lead-my'],
     }),
     updateLead: builder.mutation({

@@ -27,30 +27,18 @@ const LoginForm = () => {
 
   const [cachedUserData] = useCachedUserDataMutation();
 
-
-
-  const form = useForm({
-    resolver: zodResolver(loginValidationSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
+  const [formValues, setFormValues] = useState({
+    email: '',
+    password: '',
   });
-
-
-
 
   const onSubmit = async (data) => {
     try {
       const res = await authLogin(data).unwrap();
 
-
-
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Login successful');
         const user = await verifyToken(res?.token);
-
-
 
         if (user) {
           const dispatchUser = dispatch(
@@ -64,36 +52,26 @@ const LoginForm = () => {
           if (rememberMe) {
             localStorage.setItem('rememberMe', 'true');
             localStorage.setItem('userEmail', data.email);
+            localStorage.setItem('userPassword', data.password);
           } else {
             localStorage.removeItem('rememberMe');
             localStorage.removeItem('userEmail');
+            localStorage.removeItem('userPassword');
           }
-
 
           if (dispatchUser?.payload?.token) {
             if (res?.data?.regUserType === 'lawyer') {
               router.push(`/lawyer/dashboard`);
               const cachedRes = await cachedUserData().unwrap();
-
-
             } else if (res?.data?.regUserType === 'client') {
               router.push(`/client/dashboard`);
               const cachedRes = await cachedUserData().unwrap();
-
-
-
             } else if (res?.data?.regUserType === 'admin') {
               router.push(`/admin`);
               const cachedRes = await cachedUserData().unwrap();
-
-
-
             } else if (res?.data?.regUserType === 'marketer') {
               router.push(`/marketing`);
               const cachedRes = await cachedUserData().unwrap();
-
-
-
             }
           }
         }
@@ -109,9 +87,13 @@ const LoginForm = () => {
   useEffect(() => {
     const remembered = localStorage.getItem('rememberMe') === 'true';
     const email = localStorage.getItem('userEmail');
+    const password = localStorage.getItem('userPassword');
 
     if (remembered && email) {
-      form.setValue('email', email);
+      setFormValues({
+        email: email,
+        password: password || ''
+      });
       setRememberMe(true);
     }
   }, []);
@@ -129,7 +111,11 @@ const LoginForm = () => {
         <h4 className="my-6 text-center">Login</h4>
 
         {/* Form Wrapper */}
-        <FormWrapper onSubmit={onSubmit} schema={loginValidationSchema}>
+        <FormWrapper
+          onSubmit={onSubmit}
+          schema={loginValidationSchema}
+          defaultValues={formValues}
+        >
           <div className="space-y-5">
             <TextInput
               label="Email"

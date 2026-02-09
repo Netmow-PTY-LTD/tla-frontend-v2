@@ -3,19 +3,36 @@ import { baseApi } from '@/store/baseApi/baseApi';
 const dashboardStatsApiService = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getDashboardSChartData: builder.query({
-      query: ({ startDate, endDate }) => ({
-        url: `/admin/dashboard/chart`,
-        method: 'GET',
-        params: { startDate, endDate },
-      }),
+      query: (arg) => {
+        if (arg) {
+          const { startDate, endDate } = arg;
+          return {
+            url: `/admin/dashboard/chart`,
+            method: 'GET',
+            params: { startDate, endDate },
+          };
+        }
+        return {
+          url: `/admin/dashboard/chart`,
+          method: 'GET',
+        };
+      },
       providesTags: ['dashboard-stats'],
     }),
     getDashboardBarChartData: builder.query({
-      query: (filterType) => ({
-        url: `/admin/dashboard/bar-chart`,
-        method: 'GET',
-        params: { filterType },
-      }),
+      query: (filterType) => {
+        if (filterType) {
+          return {
+            url: `/admin/dashboard/bar-chart`,
+            method: 'GET',
+            params: { filterType },
+          };
+        }
+        return {
+          url: `/admin/dashboard/bar-chart`,
+          method: 'GET',
+        };
+      },
       providesTags: ['dashboard-stats'],
     }),
     getDashboardStats: builder.query({
