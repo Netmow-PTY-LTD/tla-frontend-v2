@@ -49,6 +49,7 @@
 .sidebar-wrapper {
   width: 300px;
 }
+
 .main-content {
   width: calc(100% - 300px);
   display: grid;
@@ -62,7 +63,7 @@
 .db-header {
   border-bottom: 1px solid var(--brand-surface-4-stroke, #dce2ea);
   background: var(--brand-surface-2-text-on-dark, #fff);
-  padding: 10px 30px;
+  padding: 10px 15px;
   width: 100%;
   height: 64px;
   display: flex;
@@ -230,17 +231,20 @@
   font-weight: 700;
   line-height: 1.4;
   margin: 0;
+
   @media (max-width: 1366px) {
     font-size: 15px;
   }
 }
 
 .sidebar-top .highlight {
-  color: var(--primary-color); /* Yellow-400 */
+  color: var(--primary-color);
+  /* Yellow-400 */
 }
 
 .sidebar-top .dashboard {
-  color: #e0f2f1; /* Light mint */
+  color: #e0f2f1;
+  /* Light mint */
 }
 
 .nav-group ul li {
@@ -378,9 +382,11 @@
   .db-logo {
     width: 100px;
   }
+
   .left-column-8 {
     width: 100%;
   }
+
   .right-column-4 {
     max-width: 100%;
     display: none;

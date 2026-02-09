@@ -48,11 +48,17 @@ export default function DashboardHeader({ onToggleSidebar }) {
     <header className="db-header">
       <div className="db-header-container flex items-center gap-4">
         <Link href="/lawyer/dashboard" className="db-logo shrink-0">
-          <Image
-            src={appData?.appLogo || '/assets/img/logo.png'}
+          {/* <Image
+            src={appData?.appLogo || '/assets/img/logo-tla.svg'}
             alt={appData?.siteName || 'TLA Logo'}
             width={150}
             height={40}
+            className="h-[48px]"
+          /> */}
+          <img
+            src={appData?.appLogo || '/assets/img/logo-tla.svg'}
+            alt={appData?.siteName || 'TLA Logo'}
+            className="h-[48px]"
           />
         </Link>
         <button

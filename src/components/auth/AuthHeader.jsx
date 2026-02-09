@@ -1,5 +1,4 @@
 'use client';
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
@@ -12,11 +11,10 @@ export default function AuthHeader() {
         <div className="flex justify-between gap-4">
           <div className="flex items-center gap-6">
             <Link href="/">
-              <Image
-                src={'/assets/img/logo.png'}
-                alt="TLA Logo"
-                width={150}
-                height={40}
+              <img
+                src={'/assets/img/logo-tla.svg'}
+                alt={'TLA Logo'}
+                className="h-[48px]"
               />
             </Link>
             <Link href="/" className="underline">

@@ -227,11 +227,10 @@ export default function Header() {
       <div className="container-lg">
         <div className="flex items-center gap-4 md:gap-6">
           <Link href="/" className={styles.logo}>
-            <Image
-              src={appData?.appLogo || '/assets/img/logo.png'}
+            <img
+              src={appData?.appLogo || '/assets/img/logo-tla.svg'}
               alt={appData?.siteName || 'TLA Logo'}
-              width={166}
-              height={40}
+              className="h-[48px]"
             />
           </Link>
           <nav className="relative">
@@ -417,9 +416,8 @@ export default function Header() {
           </nav>
           <div className="flex items-center gap-6 ml-auto">
             <div
-              className={`relative w-full max-w-xs transition-opacity duration-500 ${
-                isHeaderFixed ? 'opacity-100 visible' : 'opacity-0 invisible'
-              }`}
+              className={`relative w-full max-w-xs transition-opacity duration-500 ${isHeaderFixed ? 'opacity-100 visible' : 'opacity-0 invisible'
+                }`}
             >
               <input
                 type="search"
@@ -500,7 +498,7 @@ export default function Header() {
       {validToken && currentUser ? (
         <>
           {currentUser?.data?.regUserType?.toLowerCase() === 'lawyer' &&
-          authModalOpen ? (
+            authModalOpen ? (
             <LawyerWarningModal
               modalOpen={authModalOpen}
               setModalOpen={setAuthModalOpen}
