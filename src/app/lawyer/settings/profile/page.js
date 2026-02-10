@@ -81,7 +81,7 @@ export default function MyProfilePage() {
   const accordionItems = [
     {
       id: 'about',
-      title: 'About',
+      title: 'About Me',
       content: <About />,
       progress: sectionProgress.about,
     },
@@ -115,12 +115,12 @@ export default function MyProfilePage() {
       content: <Accreditations />,
       progress: sectionProgress.accreditations,
     },
-    {
-      id: 'agreement',
-      title: 'Agreement',
-      content: <Agreement />,
-      progress: sectionProgress.agreement,
-    },
+    // {
+    //   id: 'agreement',
+    //   title: 'Agreement',
+    //   content: <Agreement />,
+    //   progress: sectionProgress.agreement,
+    // },
     {
       id: 'qa',
       title: 'Questions And Answers',
