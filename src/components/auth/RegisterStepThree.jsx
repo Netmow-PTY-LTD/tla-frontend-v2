@@ -8,6 +8,7 @@ import {
   FormItem,
   FormLabel,
   FormControl,
+  FormDescription,
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -681,6 +682,10 @@ export default function RegisterStepThree() {
                               ) : null}
                             </div>
                           </Combobox>
+                          <FormDescription className="text-[var(--color-special)] font-medium">
+                            * Please provide at least 3 characters for company
+                            search
+                          </FormDescription>
                           <FormMessage className="text-red-600" />
                         </FormItem>
                       );

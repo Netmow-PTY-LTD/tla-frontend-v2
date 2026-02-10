@@ -38,7 +38,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { use, useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -62,6 +62,7 @@ export default function LeadDetailsPage() {
   const LIMIT = '10';
 
   const params = useParams();
+  const searchParams = useSearchParams();
   const id = params.id;
 
   const { data: singleLead, isLoading: isSingleLeadLoading } =
@@ -103,8 +104,9 @@ export default function LeadDetailsPage() {
   // }, [leadWiseResponses?.data?.length]);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const statusParam = params.get('status') || '';
+    const statusParam = searchParams.get('status') || '';
+    const tabParam = searchParams.get('tab') || '';
+    const responseIdParam = searchParams.get('responseId') || '';
 
     if (statusParam?.toLowerCase().trim() === 'hired') {
       setActiveTab('responded-lawyers'); // auto-select responded tab
@@ -117,8 +119,24 @@ export default function LeadDetailsPage() {
         setSelectedLeadResponse(hiredResponse);
         setShowLeadResponseDetails(true);
       }
+    } else if (tabParam === 'responded-lawyers') {
+      setActiveTab('responded-lawyers');
+
+      //  ----------------------- 126nl it will be change in future for better user experience  -------------------
+      if (responseIdParam) {
+        const targetResponse = leadWiseResponses?.data?.find(
+          (res) => res._id === responseIdParam
+        );
+
+        if (targetResponse) {
+          setSelectedLeadResponse(targetResponse);
+          setShowLeadResponseDetails(true);
+        }
+      }
+    } else if (tabParam === 'matched-lawyers') {
+      setActiveTab('matched-lawyers');
     }
-  }, [leadWiseResponses?.data]);
+  }, [searchParams, leadWiseResponses?.data]);
 
   //  ----------- user online offline ---------------------
 
@@ -231,6 +249,9 @@ export default function LeadDetailsPage() {
   const handleShowLeadResponseDetails = (response) => {
     setSelectedLeadResponse(response);
     setShowLeadResponseDetails(true);
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set('responseId', response._id);
+    router.replace(`${pathname}?${newParams.toString()}`, { scroll: false });
   };
 
   useEffect(() => {
@@ -286,11 +307,11 @@ export default function LeadDetailsPage() {
             <div className="max-w-full">
               <div className="flex items-center justify-between">
                 <Link
-                  className="flex py-2 items-center gap-2"
+                  className="group flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-all duration-200 px-3 py-1.5 -ml-3 rounded-lg hover:bg-gray-100/50"
                   href="/client/dashboard/my-cases?redirect=false"
                 >
-                  {' '}
-                  <MoveLeft /> <span>Back to my cases</span>
+                  <MoveLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300 ease-in-out" />
+                  <span className="font-semibold text-sm tracking-tight">Back to my cases</span>
                 </Link>
               </div>
               <div className="flex justify-center">

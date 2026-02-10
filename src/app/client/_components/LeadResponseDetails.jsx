@@ -35,8 +35,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import SendMailModalForClient from './my-leads/SendMailModalForClient';
 import SendSmsModalClient from './my-leads/SendSmsModalClient';
@@ -45,9 +44,10 @@ import { HireRequestMessageModal } from './modal/HireRequestMessageModal';
 
 import { RatingStars } from './RatingUi';
 import RatingForm from '../dashboard/my-cases/_components/RatingForm';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export default function LeadResponseDetails({ onBack, response, onlineMap }) {
-  const [activeTab, setActiveTab] = useState('activity');
+  // const [activeTab, setActiveTab] = useState('activity');
   const [isExpanded, setIsExpanded] = useState(false);
   const [openMail, setOpenMail] = useState(false);
   const [openSms, setOpenSms] = useState(false);
@@ -61,11 +61,46 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
     skip: !response?._id,
   });
 
-  console.log('single respoonse ==>', singleResponse?.data?.leadId);
-  console.log(
-    'singleResponse?.data?.clientRating ==>',
-    singleResponse?.data?.clientRating
-  );
+
+
+
+   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const [activeTab, setActiveTab] = useState(searchParams?.get('subTab') || 'activity');
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set('subTab', tab);
+    router.replace(`${pathname}?${newParams.toString()}`, { scroll: false });
+  };
+
+  useEffect(() => {
+    const subTab = searchParams?.get('subTab');
+    if (subTab) {
+      setActiveTab(subTab);
+    } else {
+      setActiveTab('activity');
+    }
+  }, [searchParams]);
+
+  const handleBack = () => {
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.delete('responseId');
+    newParams.delete('subTab');
+    newParams.set('tab', 'responded-lawyers');
+    router.replace(`${pathname}?${newParams.toString()}`, { scroll: false });
+    if (onBack) onBack();
+  };
+
+
+
+
+
+
+
 
   const toUser = singleResponse?.data?.responseBy?.user?._id;
   useNotifications(currentUser?._id, (data) => {
@@ -150,6 +185,7 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
         extraField: {
           fieldChanged: 'avatar',
         },
+        link: `/client/dashboard/my-cases/${response?.lead?._id}?tab=responded-lawyers&responseId=${response?._id}&subTab=activity`
       };
 
       try {
@@ -181,10 +217,13 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
     <>
       <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
         <div className="max-w-[900px]">
-          <div className="flex items-center justify-between">
-            <button className="flex py-2 items-center gap-2" onClick={onBack}>
-              {' '}
-              <MoveLeft /> <span>Back to All</span>
+          <div className="flex items-center justify-between border-b border-gray-100 pb-4 mb-2">
+            <button
+              className="group flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-all duration-200 px-3 py-1.5 -ml-3 rounded-lg hover:bg-gray-50"
+              onClick={handleBack}
+            >
+              <MoveLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300 ease-in-out" />
+              <span className="font-semibold text-sm tracking-tight">Back to All Responses</span>
             </button>
           </div>
           <div className="mt-3 mb-4 flex items-center justify-between bg-[#F5F6F9] rounded-lg py-2 px-4">
@@ -342,7 +381,7 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
             <div className="flex w-full flex-col gap-4 mt-5">
               <div className="flex border-b border-gray-200 gap-6">
                 <button
-                  onClick={() => setActiveTab('activity')}
+                  onClick={() => handleTabChange('activity')}
                   className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
                       ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
                       : 'hover:text-black'
@@ -351,7 +390,7 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
                   Activity
                 </button>
                 <button
-                  onClick={() => setActiveTab('chat')}
+                  onClick={() => handleTabChange('chat')}
                   className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'chat'
                       ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
                       : 'hover:text-black'
