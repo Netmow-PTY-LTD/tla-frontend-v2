@@ -69,20 +69,20 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const [activeTab, setActiveTab] = useState(searchParams?.get('tab') || 'activity');
+  const [activeTab, setActiveTab] = useState(searchParams?.get('subTab') || 'activity');
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     const newParams = new URLSearchParams(searchParams.toString());
-    newParams.set('tab', tab);
+    newParams.set('subTab', tab);
     router.replace(`${pathname}?${newParams.toString()}`, { scroll: false });
   };
 
   useEffect(() => {
-    const tab = searchParams?.get('tab');
-    if (tab === 'chat') {
-      setActiveTab('chat');
-    } else if (tab === 'activity') {
+    const subTab = searchParams?.get('subTab');
+    if (subTab) {
+      setActiveTab(subTab);
+    } else {
       setActiveTab('activity');
     }
   }, [searchParams]);
@@ -90,6 +90,7 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
   const handleBack = () => {
     const newParams = new URLSearchParams(searchParams.toString());
     newParams.delete('responseId');
+    newParams.delete('subTab');
     newParams.set('tab', 'responded-lawyers');
     router.replace(`${pathname}?${newParams.toString()}`, { scroll: false });
     if (onBack) onBack();

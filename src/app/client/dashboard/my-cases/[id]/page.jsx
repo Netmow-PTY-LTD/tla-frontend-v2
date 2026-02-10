@@ -249,6 +249,9 @@ export default function LeadDetailsPage() {
   const handleShowLeadResponseDetails = (response) => {
     setSelectedLeadResponse(response);
     setShowLeadResponseDetails(true);
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set('responseId', response._id);
+    router.replace(`${pathname}?${newParams.toString()}`, { scroll: false });
   };
 
   useEffect(() => {
