@@ -52,7 +52,21 @@ export default function MyResponseDetails({
 }) {
   // Find the selected responseId from selectedResponse (if present)
   const selectedResponseId = selectedResponse?._id || selectedResponse?.data?._id;
-  const [activeTab, setActiveTab] = useState('activity');
+  const [activeTab, setActiveTab] = useState(searchParams?.get('tab') || 'activity');
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set('tab', tab);
+    router.replace(`?${newParams.toString()}`, { scroll: false });
+  };
+
+  useEffect(() => {
+    const tab = searchParams?.get('tab');
+    if (tab) {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
   const [isExpanded, setIsExpanded] = useState(false);
   const [openMail, setOpenMail] = useState(false);
   const [openSms, setOpenSms] = useState(false);
@@ -224,6 +238,7 @@ export default function MyResponseDetails({
     if (searchParams.has('responseId')) {
       const newParams = new URLSearchParams(searchParams.toString());
       newParams.delete('responseId');
+      newParams.delete('tab');
 
       const queryString = newParams.toString();
       const newUrl = queryString ? `?${queryString}` : window.location.pathname;
@@ -427,7 +442,7 @@ export default function MyResponseDetails({
               <div className="flex w-full flex-col gap-4 mt-5">
                 <div className="flex border-b border-gray-200 gap-6">
                   <button
-                    onClick={() => setActiveTab('activity')}
+                    onClick={() => handleTabChange('activity')}
                     className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
                       ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
                       : 'hover:text-black'
@@ -436,7 +451,7 @@ export default function MyResponseDetails({
                     Activity
                   </button>
                   <button
-                    onClick={() => setActiveTab('lead-details')}
+                    onClick={() => handleTabChange('lead-details')}
                     className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'lead-details'
                       ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
                       : 'hover:text-black'
@@ -455,7 +470,7 @@ export default function MyResponseDetails({
                   My Notes
                 </button> */}
                   <button
-                    onClick={() => setActiveTab('chat')}
+                    onClick={() => handleTabChange('chat')}
                     className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'chat'
                       ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
                       : 'hover:text-black'

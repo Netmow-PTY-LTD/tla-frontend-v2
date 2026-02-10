@@ -371,6 +371,20 @@ export default function About() {
             </div>
           ) : !profile?.firmProfileId || profile?.firmProfileId === null ? (
             <div className="rounded-lg border border-gray-200 bg-white p-6">
+              {profile?.isFirmMemberRequestRejected &&
+                !profile?.isFirmMemberRequest && (
+                  <div className="rounded-xl bg-red-50 border border-red-200 p-4 text-sm text-red-800 mb-6">
+                    <div className="flex flex-col gap-2">
+                      <h3 className="text-base font-bold text-red-900">
+                        Request Rejected
+                      </h3>
+                    <p className="text-sm leading-relaxed">
+                      Your request to join the firm has been rejected. You can
+                      search and request to join another firm below.
+                    </p>
+                  </div>
+                </div>
+              )}
               <label className="block text-lg font-semibold text-gray-900 mb-4">
                 Add Company Profile
               </label>
