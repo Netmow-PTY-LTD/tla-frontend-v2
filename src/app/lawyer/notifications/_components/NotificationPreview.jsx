@@ -29,6 +29,7 @@ import {
   Tag,
   Trash2,
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { Fragment, useState } from 'react';
 import ResponseSkeleton from '../../dashboard/my-responses/_components/ResponseSkeleton';
 
@@ -66,10 +67,16 @@ export default function NotificationPreview() {
     return <Icon className="w-5 h-5 inline" stroke={'#fff'} />;
   };
 
-  const handleMarkAsRead = async (id) => {
-    try {
-      await markAsRead(id).unwrap();
-      // Optionally, you can refetch or update local cache if needed here
+  const router = useRouter();
+
+  const handleMarkAsRead = async (n) => {
+     try {
+      if (!n.isRead) {
+        const res = await markAsRead(n._id).unwrap();
+        if (res?.success) {
+          router.push(n.link);
+        }
+      }
     } catch (error) {
       console.error('Failed to mark notification as read', error);
     }
@@ -233,7 +240,7 @@ export default function NotificationPreview() {
                         {!n.isRead && (
                           <button
                             className="text-sm text-blue-600 hover:underline"
-                            onClick={() => handleMarkAsRead(n._id)}
+                            onClick={() => handleMarkAsRead(n)}
                           >
                             Mark as Read
                           </button>
