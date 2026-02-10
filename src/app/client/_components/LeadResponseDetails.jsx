@@ -36,7 +36,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import SendMailModalForClient from './my-leads/SendMailModalForClient';
 import SendSmsModalClient from './my-leads/SendSmsModalClient';
@@ -45,9 +45,10 @@ import { HireRequestMessageModal } from './modal/HireRequestMessageModal';
 
 import { RatingStars } from './RatingUi';
 import RatingForm from '../dashboard/my-cases/_components/RatingForm';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export default function LeadResponseDetails({ onBack, response, onlineMap }) {
-  const [activeTab, setActiveTab] = useState('activity');
+  // const [activeTab, setActiveTab] = useState('activity');
   const [isExpanded, setIsExpanded] = useState(false);
   const [openMail, setOpenMail] = useState(false);
   const [openSms, setOpenSms] = useState(false);
@@ -61,11 +62,37 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
     skip: !response?._id,
   });
 
-  console.log('single respoonse ==>', singleResponse?.data?.leadId);
-  console.log(
-    'singleResponse?.data?.clientRating ==>',
-    singleResponse?.data?.clientRating
-  );
+
+
+
+   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const [activeTab, setActiveTab] = useState(searchParams?.get('tab') || 'activity');
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set('tab', tab);
+    router.replace(`${pathname}?${newParams.toString()}`, { scroll: false });
+  };
+
+  useEffect(() => {
+    const tab = searchParams?.get('tab');
+    if (tab === 'chat') {
+      setActiveTab('chat');
+    } else if (tab === 'activity') {
+      setActiveTab('activity');
+    }
+  }, [searchParams]);
+
+
+
+
+
+
+
 
   const toUser = singleResponse?.data?.responseBy?.user?._id;
   useNotifications(currentUser?._id, (data) => {
@@ -342,7 +369,7 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
             <div className="flex w-full flex-col gap-4 mt-5">
               <div className="flex border-b border-gray-200 gap-6">
                 <button
-                  onClick={() => setActiveTab('activity')}
+                  onClick={() => handleTabChange('activity')}
                   className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
                       ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
                       : 'hover:text-black'
@@ -351,7 +378,7 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
                   Activity
                 </button>
                 <button
-                  onClick={() => setActiveTab('chat')}
+                  onClick={() => handleTabChange('chat')}
                   className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'chat'
                       ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
                       : 'hover:text-black'
