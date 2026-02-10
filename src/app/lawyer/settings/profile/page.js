@@ -81,7 +81,7 @@ export default function MyProfilePage() {
   const accordionItems = [
     {
       id: 'about',
-      title: 'About Me',
+      title: 'About me',
       content: <About />,
       progress: sectionProgress.about,
     },
