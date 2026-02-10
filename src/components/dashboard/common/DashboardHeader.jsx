@@ -16,14 +16,23 @@ import { useGetSettingsQuery } from '@/store/features/admin/appSettings';
 
 export default function DashboardHeader({ onToggleSidebar }) {
   const userInfo = useSelector(selectCurrentUser);
-  const { data } = useGetNotificationsQuery({ read: false });
+  const token = useSelector((state) => state.auth.token);
+
+  const { data } = useGetNotificationsQuery(
+    { read: false },
+    {
+      skip: !token,
+    }
+  );
   //const { data: credits } = useGetUserCreditStatsQuery();
 
   const { data: appSettings } = useGetSettingsQuery();
 
   const appData = appSettings?.data || {};
 
-  const { data: currentUser } = useAuthUserInfoQuery();
+  const { data: currentUser } = useAuthUserInfoQuery(undefined, {
+    skip: !token,
+  });
 
   const status = currentUser?.data?.accountStatus;
 
@@ -39,11 +48,17 @@ export default function DashboardHeader({ onToggleSidebar }) {
     <header className="db-header">
       <div className="db-header-container flex items-center gap-4">
         <Link href="/lawyer/dashboard" className="db-logo shrink-0">
-          <Image
-            src={appData?.appLogo || '/assets/img/logo.png'}
+          {/* <Image
+            src={appData?.appLogo || '/assets/img/logo-tla.svg'}
             alt={appData?.siteName || 'TLA Logo'}
             width={150}
             height={40}
+            className="h-[48px]"
+          /> */}
+          <img
+            src={appData?.appLogo || '/assets/img/logo-tla.svg'}
+            alt={appData?.siteName || 'TLA Logo'}
+            className="h-[48px]"
           />
         </Link>
         <button
@@ -54,7 +69,7 @@ export default function DashboardHeader({ onToggleSidebar }) {
           <PanelLeft />
         </button>
 
-        {status !== 'approved' && (
+        {status && status !== 'approved' && (
           <span className="flex items-center gap-1 text-xs font-medium bg-yellow-50 text-yellow-800 border border-yellow-200 rounded-full px-2 py-1 shadow-sm max-md:fixed max-md:top-[65px] max-md:left-1/2 max-md:-translate-x-1/2 max-md:z-[100] max-md:w-[min(90%,400px)] max-md:w-max max-md:justify-center max-md:px-4 max-md:shadow-xl max-md:border-yellow-300">
             <BadgeAlert className="h-3.5 w-3.5 text-yellow-600" />
             Your account is under approval by admin

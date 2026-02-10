@@ -51,9 +51,13 @@ export default function NotificationDropdownClient() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const currentUser = useSelector(selectCurrentUser);
-  const { data, isLoading, refetch } = useGetNotificationsQuery({
-    read: false,
-  });
+  const token = useSelector((state) => state.auth.token);
+  const { data, isLoading, refetch } = useGetNotificationsQuery(
+    {
+      read: false,
+    },
+    { skip: !token }
+  );
   const [markAsRead] = useMarkAsRedNotificationMutation();
   const notifications = data?.data || [];
 
