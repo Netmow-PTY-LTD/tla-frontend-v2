@@ -87,6 +87,14 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
     }
   }, [searchParams]);
 
+  const handleBack = () => {
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.delete('responseId');
+    newParams.set('tab', 'responded-lawyers');
+    router.replace(`${pathname}?${newParams.toString()}`, { scroll: false });
+    if (onBack) onBack();
+  };
+
 
 
 
@@ -208,10 +216,13 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
     <>
       <div className="bg-white rounded-lg p-5 border border-[#DCE2EA] shadow-lg">
         <div className="max-w-[900px]">
-          <div className="flex items-center justify-between">
-            <button className="flex py-2 items-center gap-2" onClick={onBack}>
-              {' '}
-              <MoveLeft /> <span>Back to All</span>
+          <div className="flex items-center justify-between border-b border-gray-100 pb-4 mb-2">
+            <button
+              className="group flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-all duration-200 px-3 py-1.5 -ml-3 rounded-lg hover:bg-gray-50"
+              onClick={handleBack}
+            >
+              <MoveLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300 ease-in-out" />
+              <span className="font-semibold text-sm tracking-tight">Back to All Responses</span>
             </button>
           </div>
           <div className="mt-3 mb-4 flex items-center justify-between bg-[#F5F6F9] rounded-lg py-2 px-4">
