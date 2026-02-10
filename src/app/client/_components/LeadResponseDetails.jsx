@@ -35,7 +35,6 @@ import {
   Trash2,
 } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
 import React, { Fragment, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import SendMailModalForClient from './my-leads/SendMailModalForClient';
@@ -186,6 +185,7 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
         extraField: {
           fieldChanged: 'avatar',
         },
+        link: `/client/dashboard/my-cases/${response?.lead?._id}?tab=responded-lawyers&responseId=${response?._id}&subTab=activity`
       };
 
       try {
