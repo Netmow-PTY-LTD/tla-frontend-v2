@@ -33,6 +33,9 @@ const formSchema = z.object({
   slug: z.string().min(2).max(3, {
     message: 'Country code must be 2 to 3 characters.',
   }),
+  currency: z.string().min(1).max(10, {
+    message: 'Currency must be 1 to 10 characters.',
+  }),
 });
 
 export default function EditCountryModal({ id, open, onClose }) {
@@ -43,6 +46,7 @@ export default function EditCountryModal({ id, open, onClose }) {
     defaultValues: {
       name: '',
       slug: '',
+      currency: '',
     },
   });
 
@@ -68,6 +72,7 @@ export default function EditCountryModal({ id, open, onClose }) {
       form.reset({
         name: singleCountry?.data?.name || '',
         slug: singleCountry?.data?.slug || '',
+        currency: singleCountry?.data?.currency || '',
       });
       setLocalLoading(false);
     }
@@ -81,6 +86,7 @@ export default function EditCountryModal({ id, open, onClose }) {
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' '),
       slug: values.slug.toLowerCase(),
+      currency: values.currency.toUpperCase(),
     };
 
     try {
@@ -135,6 +141,19 @@ export default function EditCountryModal({ id, open, onClose }) {
                     <FormLabel>Code</FormLabel>
                     <FormControl>
                       <Input placeholder="Country Code" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="currency"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Currency</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Currency" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

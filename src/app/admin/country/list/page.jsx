@@ -87,6 +87,13 @@ export default function Page() {
       ),
     },
     {
+      accessorKey: 'currency',
+      header: 'Currency',
+      cell: ({ row }) => (
+        <div className="uppercase">{row.getValue('currency')}</div>
+      ),
+    },
+    {
       id: 'actions',
       header: 'Actions',
       enableHiding: false,
