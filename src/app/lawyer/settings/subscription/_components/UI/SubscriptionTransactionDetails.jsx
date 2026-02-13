@@ -117,6 +117,7 @@ export const SubscriptionTransactionDetails = () => {
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {paginatedTransactions.map((tx, index) => {
+                  //console.log("tx", tx)
                   return (
                     <tr key={tx._id} className="hover:bg-gray-50">
                       <td className="py-4 px-6 text-sm font-mono text-gray-800">
@@ -134,11 +135,10 @@ export const SubscriptionTransactionDetails = () => {
                       </td>
                       <td className="py-4 px-6 text-sm">
                         <span
-                          className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
-                            tx.status === 'active'
-                              ? 'bg-green-100 text-green-700'
-                              : 'bg-yellow-100 text-yellow-700'
-                          }`}
+                          className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${tx.status === 'active'
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-yellow-100 text-yellow-700'
+                            }`}
                         >
                           {tx.status}
                         </span>
@@ -223,7 +223,7 @@ export const SubscriptionTransactionDetails = () => {
             const maxVisiblePages = 5;
             const startPage =
               Math.floor((currentPage - 1) / maxVisiblePages) *
-                maxVisiblePages +
+              maxVisiblePages +
               1;
             const endPage = Math.min(
               startPage + maxVisiblePages - 1,
