@@ -49,6 +49,13 @@ const notificationApiService = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['notification'],
     }),
+    markAllAsRead: builder.mutation({
+      query: () => ({
+        url: '/settings/notification/read-all',
+        method: 'PUT',
+      }),
+      invalidatesTags: ['notification'],
+    }),
   }),
 });
 
@@ -57,6 +64,7 @@ export const {
   useUpdateBrowserNotificationMutation,
   useGetNotificationsQuery,
   useGetAllNotificationsPreferencesQuery,
-  useMarkAsRedNotificationMutation
+  useMarkAsRedNotificationMutation,
+  useMarkAllAsReadMutation
 
 } = notificationApiService;

@@ -68,7 +68,7 @@ const CreditsPurchase = ({ creditPackage }) => {
           </div>
         )}
 
-        <div className="mt-12">
+        <div className={`${creditPackage?.discountPercentage > 0 ? 'mt-12' : ''}`}>
           <div className="grid md:grid-cols-4 gap-6 items-start">
             <div className="flex items-start space-x-4">
               <p className="font-medium text-gray-900">{creditPackage?.name}</p>
