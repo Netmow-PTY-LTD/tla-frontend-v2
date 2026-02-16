@@ -59,10 +59,20 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
     }),
 
     getAllCreditPackages: builder.query({
-      query: () => ({
-        url: '/settings/credit-payment/packages/list',
-        method: 'GET',
-      }),
+      query: (params) => {
+        console.log(params);
+        if (params) {
+          return {
+            url: '/settings/credit-payment/packages/list',
+            method: 'GET',
+            params,
+          };
+        }
+        return {
+          url: '/settings/credit-payment/packages/list',
+          method: 'GET',
+        };
+      },
       providesTags: ['credit-payment'],
     }),
 
