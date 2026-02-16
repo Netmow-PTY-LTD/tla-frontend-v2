@@ -26,6 +26,7 @@ import {
   useGetAllFirmsQuery,
   useUpdateFirmStatusMutation,
 } from '@/store/features/admin/firmsApiService';
+import { useGetSettingsQuery } from '@/store/features/admin/appSettings';
 import { data } from '@/data/data';
 
 const companies = [
@@ -112,6 +113,9 @@ export default function Page() {
       showErrorToast(error?.message || 'Failed to update firm status.');
     }
   };
+
+  const { data: appSettings } = useGetSettingsQuery();
+  const firmClientUrl = appSettings?.data?.firm_client_url || '';
 
   const columns = [
     {
@@ -243,7 +247,7 @@ export default function Page() {
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <Link
-                  href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/company-profile/${item?.slug}`}
+                  href={`${firmClientUrl}/company-profile/${item?.slug}`}
                   target="_blank"
                 >
                   <button className="flex gap-2 cursor-pointer w-full px-2 py-0.5">
