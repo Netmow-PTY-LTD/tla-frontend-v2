@@ -1,7 +1,12 @@
+'use client';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useGetSettingsQuery } from '@/store/features/admin/appSettings';
 
 export default function HomeCompanyCTA() {
+    const { data: appSettings } = useGetSettingsQuery();
+    const firmClientUrl = appSettings?.data?.firm_client_url || '';
+
     return (
         <section className="section overflow-hidden py-24 bg-white">
             <div className="container px-5 relative">
@@ -16,14 +21,14 @@ export default function HomeCompanyCTA() {
                         </p>
                         <div className="flex flex-wrap gap-4 mt-2">
                             <Link
-                                href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/register`}
+                                href={`${firmClientUrl}/register`}
                                 target="_blank"
                                 className="bg-[#ff8602] hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-md transition-colors shadow-lg min-w-[140px] text-center"
                             >
                                 Try now
                             </Link>
                             <Link
-                                href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/login`}
+                                href={`${firmClientUrl}/login`}
                                 target="_blank"
                                 className="bg-[#00c3c0] hover:bg-teal-600 text-white font-bold py-3 px-8 rounded-md transition-colors shadow-lg min-w-[140px] text-center"
                             >
