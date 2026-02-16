@@ -9,7 +9,17 @@ const contactApiService = baseApi.injectEndpoints({
         body,
       }),
     }),
+    getContactInfo: builder.query({
+      query: () => ({
+        url: '/contact/contact-info',
+        method: 'GET',
+      }),
+      providesTags: ['contact-info'],
+    }),
   }),
 });
 
-export const { useSendContactMessageMutation } = contactApiService;
+export const {
+  useSendContactMessageMutation,
+  useGetContactInfoQuery
+} = contactApiService;
