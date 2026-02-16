@@ -204,7 +204,7 @@ const CreditPurchaseLead = ({
             </Button>
 
             {/* Auto Top-Up */}
-            <div className="flex items-start mt-3 space-x-2">
+            {/* <div className="flex items-start mt-3 space-x-2">
               <Checkbox
                 id="auto-topup"
                 checked={autoTopUP}
@@ -217,7 +217,7 @@ const CreditPurchaseLead = ({
               >
                 Auto top-up next time
               </label>
-            </div>
+            </div> */}
           </div>
         </div>
 

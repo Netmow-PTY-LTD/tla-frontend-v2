@@ -161,6 +161,13 @@ export default function Page() {
       ),
     },
     {
+      accessorKey: 'discountPercentage',
+      header: 'Discount Percentage',
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue('discountPercentage')}</div>
+      ),
+    },
+    {
       id: 'actions',
       header: 'Actions',
       enableHiding: false,

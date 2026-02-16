@@ -70,54 +70,56 @@ export default function EditCreditPackageModal({
       title="Edit Credit Package"
       width="max-w-[600px]"
     >
-      <FormWrapper
-        defaultValues={defaultValues}
-        onSubmit={handleSubmit}
+      <div className="max-h-[600px] overflow-y-auto">
+        <FormWrapper
+          defaultValues={defaultValues}
+          onSubmit={handleSubmit}
         // schema={schema}
-      >
-        <TextInput
-          type="text"
-          label="Package Name"
-          name="name"
-          placeholder="Enter Package Name"
-        />
-        <TextInput
-          type="text"
-          label="Credit"
-          name="credit"
-          placeholder="Enter credit amount"
-        />
+        >
+          <TextInput
+            type="text"
+            label="Package Name"
+            name="name"
+            placeholder="Enter Package Name"
+          />
+          <TextInput
+            type="text"
+            label="Credit"
+            name="credit"
+            placeholder="Enter credit amount"
+          />
 
-        <TextInput
-          type="text"
-          label="Package Price"
-          name="price"
-          placeholder="Enter Package Name"
-        />
+          <TextInput
+            type="text"
+            label="Package Price"
+            name="price"
+            placeholder="Enter Package Name"
+          />
 
-        <TextInput
-          type="text"
-          label="Price Display"
-          name="priceDisplay"
-          placeholder="Enter price display"
-        />
+          <TextInput
+            type="text"
+            label="Price Display"
+            name="priceDisplay"
+            placeholder="Enter price display"
+          />
 
-        <TextInput
-          type="text"
-          label="Price Per Credit"
-          name="pricePerCredit"
-          placeholder="Enter price per credit"
-        />
+          <TextInput
+            type="text"
+            label="Price Per Credit"
+            name="pricePerCredit"
+            placeholder="Enter price per credit"
+          />
 
-        <TextInput
-          type="text"
-          label="Discount Percentage"
-          name="discountPercentage"
-          placeholder="Enter discount percentage"
-        />
-        <CheckboxInput label="Active" name="isActive" />
-        <Button type="submit">Update</Button>
-      </FormWrapper>
+          <TextInput
+            type="text"
+            label="Discount Percentage"
+            name="discountPercentage"
+            placeholder="Enter discount percentage"
+          />
+          <CheckboxInput label="Active" name="isActive" />
+          <Button type="submit">Update</Button>
+        </FormWrapper>
+      </div>
     </Modal>
   );
 }

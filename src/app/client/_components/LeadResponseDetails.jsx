@@ -33,6 +33,7 @@ import {
   Send,
   Tag,
   Trash2,
+  User,
 } from 'lucide-react';
 import Image from 'next/image';
 import React, { Fragment, useEffect, useState } from 'react';
@@ -303,8 +304,8 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
                     <div className="flex items-center gap-2 text-sm">
                       <span
                         className={`w-2 h-2 rounded-full ${onlineMap[response?.responseBy?.user?._id]
-                            ? 'bg-green-500'
-                            : 'bg-gray-400'
+                          ? 'bg-green-500'
+                          : 'bg-gray-400'
                           }`}
                       ></span>
                       <span className="text-gray-700">
@@ -338,6 +339,15 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
+              <Link
+                href={`/profile/${singleResponse?.data?.responseBy?.slug}`}
+                target="_blank"
+              >
+                <Button className="bg-[#00C3C0] hover:bg-[#00b3b0]">
+                  <User className="w-5 h-5" />
+                  View Public Profile
+                </Button>
+              </Link>
               {/* <Button className="bg-[#00C3C0]">
                         <Phone />
                         Show Number
@@ -383,8 +393,8 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
                 <button
                   onClick={() => handleTabChange('activity')}
                   className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
-                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                      : 'hover:text-black'
+                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                    : 'hover:text-black'
                     }`}
                 >
                   Activity
@@ -392,8 +402,8 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
                 <button
                   onClick={() => handleTabChange('chat')}
                   className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'chat'
-                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                      : 'hover:text-black'
+                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                    : 'hover:text-black'
                     }`}
                 >
                   Chat
