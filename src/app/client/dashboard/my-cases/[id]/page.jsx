@@ -175,28 +175,28 @@ export default function LeadDetailsPage() {
   useEffect(() => {
     setPage(1);
     setLawyers([]);
+    setTotalLawyersCount(0);
   }, [minRating]);
 
   useEffect(() => {
-    if (lawyersData && lawyersData?.data?.length > 0) {
+    if (lawyersData) {
       const currentPage = lawyersData?.pagination?.page ?? 1;
+      const data = lawyersData?.data || [];
 
       setLawyers((prev) => {
         if (currentPage === 1) {
           // first page → replace completely
-          return lawyersData.data;
+          return data;
         } else {
           // append new results (avoid duplicates by _id)
           const existingIds = new Set(prev.map((l) => l._id));
-          const newItems = lawyersData?.data?.filter(
-            (l) => !existingIds.has(l._id)
-          );
+          const newItems = data.filter((l) => !existingIds.has(l._id));
           return [...prev, ...newItems];
         }
       });
 
-      setTotalPages(lawyersData?.pagination?.totalPage);
-      setTotalLawyersCount(lawyersData?.pagination?.total);
+      setTotalPages(lawyersData?.pagination?.totalPage || 0);
+      setTotalLawyersCount(lawyersData?.pagination?.total || 0);
     }
   }, [lawyersData]);
 
@@ -444,7 +444,7 @@ export default function LeadDetailsPage() {
                       </Select>
                     </div>
 
-                    {!isFetching && totalLawyersCount === 0 ? (
+                    {!isFetching && lawyers?.length === 0 ? (
                       <p className="text-center text-gray-500 text-sm">
                         Currently there is no matched lawyer
                       </p>
@@ -454,6 +454,7 @@ export default function LeadDetailsPage() {
                         id="scroll-target-for-data"
                       >
                         {lawyers?.map((lawyer, i) => (
+
                           <LawyerCard
                             key={i}
                             lawyer={lawyer}
@@ -463,6 +464,7 @@ export default function LeadDetailsPage() {
                             isHiredLead={singleLead?.data?.isHired}
                             isClosed={singleLead?.data?.isClosed}
                           />
+
                         ))}
 
                         {/* Only show loader when fetching AND there are already some lawyers */}
