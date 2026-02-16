@@ -49,18 +49,28 @@ import { safeJsonParse } from '@/helpers/safeJsonParse';
 import countries from '@/data/countries.json';
 
 export default function RegisterStepTwo() {
-  const [zipcode, setZipcode] = useState('');
-  const [latitude, setLatitude] = useState('');
-  const [longitude, setLongitude] = useState('');
-  const [postalCode, setPostalCode] = useState('');
-  const [address, setAddress] = useState('');
-  const [query, setQuery] = useState('');
-
   const dispatch = useDispatch();
 
   const lawyerServiceMap = useSelector(
     (state) => state.lawyerRegistration.lawyerServiceMap
   );
+
+  const [zipcode, setZipcode] = useState(
+    lawyerServiceMap?.zipCode?._id || lawyerServiceMap?.zipCode || ''
+  );
+  const [latitude, setLatitude] = useState(
+    lawyerServiceMap?.addressInfo?.latitude || ''
+  );
+  const [longitude, setLongitude] = useState(
+    lawyerServiceMap?.addressInfo?.longitude || ''
+  );
+  const [postalCode, setPostalCode] = useState(
+    lawyerServiceMap?.addressInfo?.postalCode || ''
+  );
+  const [address, setAddress] = useState(
+    lawyerServiceMap?.addressInfo?.zipcode || ''
+  );
+  const [query, setQuery] = useState('');
 
   console.log('lawyerServiceMap in step 2', lawyerServiceMap);
 
@@ -110,7 +120,7 @@ export default function RegisterStepTwo() {
     defaultValues: {
       practiceWithin: practiceWithin || true,
       practiceInternational: practiceInternationally || false,
-      AreaZipcode: zipCode?.zipcode || '',
+      AreaZipcode: zipCode?._id || zipCode || '',
       rangeInKm: rangeInKm || '',
     },
   });
@@ -121,8 +131,9 @@ export default function RegisterStepTwo() {
   // Ensure AreaZipcode persists when coming back from next step
   useEffect(() => {
     // Rehydrate AreaZipcode from Redux
-    if (zipCode && form.getValues('AreaZipcode') !== zipCode) {
-      form.setValue('AreaZipcode', zipCode);
+    const zipCodeId = zipCode?._id || zipCode;
+    if (zipCodeId && form.getValues('AreaZipcode') !== zipCodeId) {
+      form.setValue('AreaZipcode', zipCodeId);
     }
 
     // Rehydrate rangeInKm from Redux
@@ -131,17 +142,28 @@ export default function RegisterStepTwo() {
     }
 
     // Sync local state for addressInfo if zipCode exists in Redux
-    if (zipCode && allZipCodes?.data) {
-      const selectedZipcode = allZipCodes.data.find((z) => z._id === zipCode);
-      if (selectedZipcode) {
-        setLatitude(selectedZipcode.latitude);
-        setLongitude(selectedZipcode.longitude);
-        setPostalCode(selectedZipcode.postalCode);
-        setAddress(selectedZipcode.zipcode);
-        setZipcode(selectedZipcode._id); // store the id as well
+    if (zipCodeId) {
+      if (allZipCodes?.data) {
+        const selectedZipcode = allZipCodes.data.find(
+          (z) => z._id === zipCodeId
+        );
+        if (selectedZipcode) {
+          setLatitude(selectedZipcode.latitude);
+          setLongitude(selectedZipcode.longitude);
+          setPostalCode(selectedZipcode.postalCode);
+          setAddress(selectedZipcode.zipcode);
+          setZipcode(selectedZipcode._id);
+        }
+      } else if (lawyerServiceMap?.addressInfo?.zipcode) {
+        // Fallback to Redux addressInfo if API data haven't loaded yet
+        setLatitude(lawyerServiceMap.addressInfo.latitude);
+        setLongitude(lawyerServiceMap.addressInfo.longitude);
+        setPostalCode(lawyerServiceMap.addressInfo.postalCode);
+        setAddress(lawyerServiceMap.addressInfo.zipcode);
+        setZipcode(zipCodeId);
       }
     }
-  }, [zipCode, rangeInKm, allZipCodes?.data, form]);
+  }, [zipCode, rangeInKm, allZipCodes?.data, form, lawyerServiceMap?.addressInfo]);
 
   const addressInfo = useMemo(
     () => ({

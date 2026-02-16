@@ -18,7 +18,6 @@ import { useDispatch } from 'react-redux';
 
 
 const LoginForm = () => {
-  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState();
   const [rememberMe, setRememberMe] = useState(false);
   const [authLogin, { isLoading }] = useAuthLoginMutation();
@@ -79,8 +78,6 @@ const LoginForm = () => {
     } catch (error) {
       const errorMessage = error?.data?.message || 'An error occurred';
       showErrorToast(errorMessage);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -166,9 +163,9 @@ const LoginForm = () => {
               type="submit"
               className="btn-auth-login bg-[var(--color-special)] w-full hover:bg-[--primary-color] transition-all duration-300"
               style={{ cursor: 'pointer' }}
-              disabled={loading || isLoading}
+              disabled={isLoading}
             >
-              {loading || isLoading ? <LoaderSpinner /> : <span>Log In</span>}
+              {isLoading ? <LoaderSpinner /> : <span>Log In</span>}
             </button>
           </div>
         </FormWrapper>
