@@ -156,6 +156,7 @@ export const baseApi = createApi({
     'recent-blogs',
     'lawyer-profile-claims',
     'env-config',
+    'contact-info',
   ],
   endpoints: () => ({}),
 });
