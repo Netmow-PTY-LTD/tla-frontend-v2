@@ -15,11 +15,6 @@ import {
 } from '@/components/ui/accordion';
 
 const MySubscription = () => {
-  const {
-    data: subscriptionData,
-    isError,
-    isLoading,
-  } = useGetAllSubscriptionsQuery();
 
   const {
     data: userInfo,
@@ -31,9 +26,20 @@ const MySubscription = () => {
     refetchOnMountOrArgChange: true, // keep data fresh
   });
 
+  const countryId = userInfo?.data?.profile?.country || '';
+
+
+  const {
+    data: subscriptionData,
+    isError,
+    isLoading,
+  } = useGetAllSubscriptionsQuery({ country: countryId, isActive: true });
+
+
+
+
   const mySubscription = userInfo?.data?.profile?.subscriptionId || null;
 
-  console.log('My Subscription ID:', mySubscription);
 
   return (
     <div className="w-full border-none bg-[#F3F3F3] py-8 px-[15px] rounded-[5px] ">
@@ -50,7 +56,7 @@ const MySubscription = () => {
             type="single"
             collapsible
             className="w-full"
-            // defaultValue="item-1"
+          // defaultValue="item-1"
           >
             <AccordionItem value="item-1">
               <AccordionTrigger>
