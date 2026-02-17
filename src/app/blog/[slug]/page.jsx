@@ -1,15 +1,35 @@
 import React, { Suspense } from 'react';
 import BlogPostDetails from '../_components/BlogDetails';
+import BlogPosts from '../_components/BlogPosts';
 import { generateSchemaBySlug } from '@/helpers/generateSchemaBySlug';
+import { getSeoData } from '@/helpers/getSeoData';
 import { Loader2 } from 'lucide-react';
+import MainLayout from '@/components/main/common/layout';
+
+import seoData from '@/data/seoData';
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
+  const isPageNumber = /^\d+$/.test(slug);
 
-  const res = await fetch(
+  if (isPageNumber) {
+    const pageNum = parseInt(slug);
+    const pageSeoData = await getSeoData(seoData, 'blog'); // Correct usage
+    return {
+      title: `${pageSeoData?.title || 'Blog'} - Page ${pageNum}`,
+      description: pageSeoData?.description,
+      openGraph: {
+        title: `${pageSeoData?.title || 'Blog'} - Page ${pageNum}`,
+        description: pageSeoData?.description,
+      },
+    };
+  }
+
+  // Fetch blog data for slug
+  const result = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/blog/${slug}`
   );
-  const blogData = await res.json();
+  const blogData = await result.json();
   const post = blogData?.data || {};
   const seo = post?.seo || {};
 
@@ -63,18 +83,35 @@ export async function generateMetadata({ params }) {
 
 export default async function BlogDetailsPage({ params }) {
   const { slug } = await params;
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/blog/${slug}`
-  );
-  const blogData = await res.json();
-  const post = blogData?.data || {};
-  const seo = post?.seo || {};
+  const isPageNumber = /^\d+$/.test(slug);
 
-  // Generate default schema
-  const defaultSchema = await generateSchemaBySlug('blogPost', post);
+  if (isPageNumber) {
+    return (
+      <MainLayout>
+        <BlogPosts currentPage={parseInt(slug)} />
+      </MainLayout>
+    );
+  }
 
-  // Custom schema from API (could be in post.seoSchema or seo.seoSchema)
-  const customSchema = post.seoSchema || seo.seoSchema;
+  let defaultSchema = null;
+  let customSchema = null;
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/blog/${slug}`
+    );
+    const blogData = await res.json();
+    const post = blogData?.data || {};
+    const seo = post?.seo || {};
+
+    // Generate default schema
+    defaultSchema = await generateSchemaBySlug('blogPost', post);
+
+    // Custom schema from API
+    customSchema = post.seoSchema || seo.seoSchema;
+  } catch (error) {
+    console.error('Failed to fetch blog data for schema (SSR):', error);
+  }
 
   return (
     <>
@@ -94,7 +131,9 @@ export default async function BlogDetailsPage({ params }) {
           }}
         />
       )}
-      <BlogPostDetails slug={slug} />
+      <MainLayout>
+        <BlogPostDetails slug={slug} />
+      </MainLayout>
     </>
   );
 }
