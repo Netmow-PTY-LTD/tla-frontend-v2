@@ -37,6 +37,7 @@ export default function SubscriptionList() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [filterCountry, setFilterCountry] = useState('all');
+  const [isActive, setIsActive] = useState('true');
 
   const LIMIT = 10;
 
@@ -55,6 +56,10 @@ export default function SubscriptionList() {
 
   if (filterCountry !== 'all') {
     queryParams.country = filterCountry;
+  }
+
+  if (isActive !== 'all') {
+    queryParams.isActive = isActive;
   }
 
   const {
@@ -202,6 +207,22 @@ export default function SubscriptionList() {
                   {c.name}
                 </SelectItem>
               ))}
+            </SelectContent>
+          </Select>
+          <Select
+            value={isActive}
+            onValueChange={(val) => {
+              setIsActive(val);
+              setPage(1);
+            }}
+          >
+            <SelectTrigger className="w-[150px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="true">Active</SelectItem>
+              <SelectItem value="false">Inactive</SelectItem>
             </SelectContent>
           </Select>
           <Button onClick={() => setIsModalOpen(true)}>Add Subscription</Button>
