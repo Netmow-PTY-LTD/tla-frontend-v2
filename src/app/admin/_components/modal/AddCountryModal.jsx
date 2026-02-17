@@ -36,7 +36,18 @@ export default function AddCountryModal({ open, onClose }) {
     taxPercentage: z.preprocess((val) => Number(val), z.number().min(0)),
     taxAmount: z.preprocess((val) => Number(val), z.number().min(0)),
     taxType: z.string().optional(),
-  });
+  }).refine(
+    (data) => {
+      if (data.taxPercentage > 0 && data.taxAmount > 0) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: 'Either taxPercentage OR taxAmount',
+      path: ['taxAmount'],
+    }
+  );
 
   const form = useForm({
     resolver: zodResolver(formSchema),

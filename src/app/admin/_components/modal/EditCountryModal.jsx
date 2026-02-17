@@ -40,7 +40,18 @@ const formSchema = z.object({
   taxPercentage: z.preprocess((val) => Number(val), z.number().min(0)),
   taxAmount: z.preprocess((val) => Number(val), z.number().min(0)),
   taxType: z.string().optional(),
-});
+}).refine(
+  (data) => {
+    if (data.taxPercentage > 0 && data.taxAmount > 0) {
+      return false;
+    }
+    return true;
+  },
+  {
+    message: 'Either taxPercentage OR taxAmount',
+    path: ['taxAmount'],
+  }
+);
 
 export default function EditCountryModal({ id, open, onClose }) {
   const [localLoading, setLocalLoading] = useState(true);
