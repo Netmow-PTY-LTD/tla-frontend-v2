@@ -3,6 +3,7 @@ import { useRealTimeStatus } from '@/hooks/useSocketListener';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import Link from 'next/link';
 import {
   Tooltip,
   TooltipContent,
@@ -10,10 +11,12 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 export default function RespondersOnline({ user }) {
+  console.log('user', user);
   const currentUserId = useSelector(selectCurrentUser)?._id;
   const [onlineMap, setOnlineMap] = useState({});
   const maxVisible = 5;
   const visibleAvatars = user?.responders?.slice(0, maxVisible);
+  console.log('visibleAvatars', visibleAvatars);
   const extraCount = user?.responders?.length - maxVisible;
 
   const userIds = Array.isArray(user?.responders)
@@ -38,15 +41,20 @@ export default function RespondersOnline({ user }) {
               {visibleAvatars.map((lead, index) => (
                 <Tooltip key={index}>
                   <TooltipTrigger asChild>
-                    <img
-                      src={lead?.profilePicture || userDummyImage}
-                      alt={lead?.name || 'Avatar'}
-                      className={`w-8 h-8 rounded-full border-2 object-cover ${
-                        onlineMap[lead?.user]
+                    <Link
+                      href={`/profile/${lead?.slug}`}
+                      target="_blank"
+                      className="cursor-pointer"
+                    >
+                      <img
+                        src={lead?.profilePicture || userDummyImage}
+                        alt={lead?.name || 'Avatar'}
+                        className={`w-8 h-8 rounded-full border-2 object-cover ${onlineMap[lead?.user]
                           ? 'border-green-500'
                           : 'border-gray-200'
-                      }`}
-                    />
+                          }`}
+                      />
+                    </Link>
                   </TooltipTrigger>
                   <TooltipContent side="top">
                     {lead?.name || 'Unknown responder'}
