@@ -3,6 +3,7 @@ import BlogPosts from './_components/BlogPosts';
 import { getSeoData } from '@/helpers/getSeoData';
 import { generateSchemaBySlug } from '@/helpers/generateSchemaBySlug';
 import seoData from '@/data/seoData';
+import MainLayout from '@/components/main/common/layout';
 
 export async function generateMetadata() {
   const slug = 'blog';
@@ -63,15 +64,19 @@ export default async function BlogPage() {
           __html: JSON.stringify(schema),
         }}
       />
-      {(data?.seoSchema || seo?.seoSchema) && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(data.seoSchema || seo.seoSchema),
-          }}
-        />
-      )}
-      <BlogPosts />
+      {
+        (data?.seoSchema || seo?.seoSchema) && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(data.seoSchema || seo.seoSchema),
+            }}
+          />
+        )
+      }
+      <MainLayout>
+        <BlogPosts />
+      </MainLayout>
     </>
   );
 }

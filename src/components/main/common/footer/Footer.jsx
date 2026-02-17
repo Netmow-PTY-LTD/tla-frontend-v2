@@ -33,9 +33,9 @@ export default function Footer() {
     }
   }, [countries]);
 
-  const { data: headerFooterCodes } = useGetPublicHeaderFooterCodesQuery();
+  // const { data: headerFooterCodes } = useGetPublicHeaderFooterCodesQuery();
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (!headerFooterCodes?.data?.length) return;
 
     const headerScripts = headerFooterCodes.data.filter(
@@ -62,7 +62,7 @@ export default function Footer() {
         if (document.head.contains(el)) document.head.removeChild(el);
       });
     };
-  }, [headerFooterCodes]);
+  }, [headerFooterCodes]); */
 
   //console.log('selectedCountry', selectedCountry);
 
@@ -170,7 +170,7 @@ export default function Footer() {
                       <li>
                         <Link target="_blank" href="https://company-thelawapp.netlify.app/"> Login to Company Profile</Link>
                       </li>
-                    
+
                       <li>
                         <Link href="/pricing">Pricing</Link>
                       </li>
