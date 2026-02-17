@@ -33,7 +33,9 @@ const MySubscription = () => {
     data: subscriptionData,
     isError,
     isLoading,
-  } = useGetAllSubscriptionsQuery({ country: countryId, isActive: true });
+  } = useGetAllSubscriptionsQuery({ country: countryId, isActive: true }, {
+    skip: !countryId,
+  });
 
 
 

@@ -16,11 +16,7 @@ import {
 } from '@/components/ui/accordion';
 
 const EliteProSubscription = () => {
-  const {
-    data: elliteProSubscriptionData,
-    isError,
-    isLoading,
-  } = useGetAllEliteProSubscriptionsQuery();
+
 
   const {
     data: userInfo,
@@ -30,6 +26,16 @@ const EliteProSubscription = () => {
     refetch: userRefetch,
   } = useAuthUserInfoQuery(undefined, {
     refetchOnMountOrArgChange: true, // keep data fresh
+  });
+
+  const countryId = userInfo?.data?.profile?.country || '';
+
+  const {
+    data: elliteProSubscriptionData,
+    isError,
+    isLoading,
+  } = useGetAllEliteProSubscriptionsQuery({ country: countryId, isActive: true }, {
+    skip: !countryId,
   });
 
   const MyElitePro = userInfo?.data?.profile?.eliteProSubscriptionId || null;
@@ -51,7 +57,7 @@ const EliteProSubscription = () => {
             type="single"
             collapsible
             className="w-full"
-            // defaultValue="item-1"
+          // defaultValue="item-1"
           >
             <AccordionItem value="item-1">
               <AccordionTrigger>What is the Elite Pro Plan?</AccordionTrigger>
