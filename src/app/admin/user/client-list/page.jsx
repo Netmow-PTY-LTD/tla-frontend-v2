@@ -340,9 +340,8 @@ export default function Page() {
                 { status: 'suspended', icon: <Slash className="w-4 h-4" /> },
                 { status: 'archived', icon: <Archive className="w-4 h-4" /> },
               ].map(({ status, icon }, index, arr) => (
-                <>
+                <React.Fragment key={status}>
                   <DropdownMenuItem
-                    key={status}
                     onClick={() => handleChangeStatus(userId, status)}
                     className="cursor-pointer capitalize py-0.5 px-2"
                   >
@@ -352,7 +351,7 @@ export default function Page() {
                     </div>
                   </DropdownMenuItem>
                   {index !== arr.length - 1 && <DropdownMenuSeparator />}
-                </>
+                </React.Fragment>
               ))}
             </DropdownMenuContent>
           </DropdownMenu>

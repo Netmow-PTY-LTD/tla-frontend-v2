@@ -41,6 +41,7 @@ export default function ChatBoxForLead({ response }) {
   const [liveMessages, setLiveMessages] = useState([]);
 
   const socketRef = useRef(null); // store socket instance
+  const emittedReadReceipts = useRef(new Set()); // Track emitted read receipts to prevent loops
 
   // ✅ Initialize socket only once when userId exists
   useEffect(() => {
@@ -60,8 +61,10 @@ export default function ChatBoxForLead({ response }) {
 
   // ✅ Load initial history
   useEffect(() => {
-    setLiveMessages(history?.data || []);
-  }, [history]);
+    if (history?.data) {
+      setLiveMessages(history.data);
+    }
+  }, [history?.data]);
 
   // ✅ Join room & listen for events
   useEffect(() => {
@@ -82,9 +85,9 @@ export default function ChatBoxForLead({ response }) {
         prev.map((msg) =>
           msg._id === messageId
             ? {
-                ...msg,
-                readBy: [...new Set([...(msg.readBy || []), readerId])],
-              }
+              ...msg,
+              readBy: [...new Set([...(msg.readBy || []), readerId])],
+            }
             : msg
         )
       );
@@ -138,16 +141,21 @@ export default function ChatBoxForLead({ response }) {
 
     const unreadMessages = liveMessages.filter((m) => {
       const senderId = typeof m.from === 'object' ? m.from._id : m.from;
-      return senderId !== userId && !m.readBy?.includes(userId);
+      const isUnreadByMe = senderId !== userId && !m.readBy?.includes(userId);
+      // Only emit if it's unread by me AND we haven't emitted a receipt for it yet
+      return isUnreadByMe && !emittedReadReceipts.current.has(m._id);
     });
 
-    unreadMessages.forEach((m) => {
-      socketRef.current.emit('message-read', {
-        responseId,
-        messageId: m._id,
-        userId,
+    if (unreadMessages.length > 0) {
+      unreadMessages.forEach((m) => {
+        socketRef.current.emit('message-read', {
+          responseId,
+          messageId: m._id,
+          userId,
+        });
+        emittedReadReceipts.current.add(m._id); // Mark as emitted
       });
-    });
+    }
   }, [liveMessages, responseId, userId]);
 
   const messageBoxRef = useRef(null);
@@ -184,11 +192,10 @@ export default function ChatBoxForLead({ response }) {
             return (
               <div
                 key={m._id || i}
-                className={`flex items-center gap-2 w-1/2 ${
-                  isCurrentUser
-                    ? 'flex-row-reverse ml-auto'
-                    : 'justify-start mr-auto'
-                }`}
+                className={`flex items-center gap-2 w-1/2 ${isCurrentUser
+                  ? 'flex-row-reverse ml-auto'
+                  : 'justify-start mr-auto'
+                  }`}
               >
                 <Image
                   src={m?.from?.profile?.profilePicture || userDummyImage}
@@ -198,32 +205,29 @@ export default function ChatBoxForLead({ response }) {
                   className="rounded-full object-cover w-10 h-10 border border-gray-300"
                 />
                 <div
-                  className={`flex flex-col gap-0.5 ${
-                    isCurrentUser ? 'items-end' : 'items-start'
-                  }`}
+                  className={`flex flex-col gap-0.5 ${isCurrentUser ? 'items-end' : 'items-start'
+                    }`}
                 >
                   <p className="text-[11px] text-gray-500">
                     {dayjs(m.createdAt).locale('en-short').fromNow()}
                   </p>
 
                   <div
-                    className={`rounded p-2 ${
-                      isCurrentUser
-                        ? 'bg-[var(--secondary-color)] text-right'
-                        : 'bg-gray-300 text-left'
-                    }`}
+                    className={`rounded p-2 ${isCurrentUser
+                      ? 'bg-[var(--secondary-color)] text-right'
+                      : 'bg-gray-300 text-left'
+                      }`}
                   >
                     <div className="flex items-center justify-between gap-4">
                       <p
-                        className={`text-xs font-semibold ${
-                          isCurrentUser ? 'text-white' : ''
-                        }`}
+                        className={`text-xs font-semibold ${isCurrentUser ? 'text-white' : ''
+                          }`}
                       >
                         {isCurrentUser
                           ? 'You'
                           : typeof m.from === 'object'
-                          ? m.from.profile?.name || m.from._id
-                          : m.from}
+                            ? m.from.profile?.name || m.from._id
+                            : m.from}
                       </p>
                     </div>
                     <div

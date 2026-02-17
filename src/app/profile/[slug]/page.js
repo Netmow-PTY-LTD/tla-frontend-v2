@@ -188,14 +188,16 @@ const DynamicProfilePage = () => {
             </div>
             <div className="w-full lg:w-1/3 lg:pl-8 flex gap-10 items-start">
               <div className="related-areas relative">
-                <Link href={`/claim-account?email=${userInfo?.data?.email}`}>
-                  <Button
-                    className="w-auto hover:opacity-90 text-white rounded-xl text-xs font-medium transition-all outline-none mb-5 p-2 bg-red-500"
-                    variant="default"
-                  >
-                    Claim Your Account
-                  </Button>
-                </Link>
+                {userInfo?.data?.isVerifiedAccount === false && (
+                  <Link href={`/claim-account?email=${userInfo?.data?.email}`}>
+                    <Button
+                      className="w-auto hover:opacity-90 text-white rounded-xl text-xs font-medium transition-all outline-none mb-5 p-2 bg-red-500"
+                      variant="default"
+                    >
+                      Claim Your Account
+                    </Button>
+                  </Link>
+                )}
                 {userInfo?.data?.languages?.length > 0 && (
                   <>
                     <h4 className="font-semibold mb-4">Languages</h4>
