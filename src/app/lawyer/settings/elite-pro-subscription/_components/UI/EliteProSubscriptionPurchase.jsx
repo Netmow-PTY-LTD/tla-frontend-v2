@@ -128,12 +128,24 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
             </div>
 
             <div>
-              <p className="font-medium text-gray-900 text-lg">
-                {subscriptionPlan?.priceFormatted}
-              </p>
+              <div className="flex items-baseline gap-1">
+                <p className="font-semibold text-gray-900 text-lg">
+                  {subscriptionPlan?.priceFormatted}
+                </p>
+                {subscriptionPlan?.taxAmount > 0 && (
+                  <p className="text-gray-500 text-xs font-normal">
+                    (Inc. {subscriptionPlan?.taxAmount} {subscriptionPlan?.taxType || 'GST'})
+                  </p>
+                )}
+                {!subscriptionPlan?.taxAmount && (
+                  <p className="text-gray-500 text-xs font-normal">
+                    (Inc. {subscriptionPlan?.taxType || 'GST'})
+                  </p>
+                )}
+              </div>
               <p className="text-gray-500 text-sm">
                 {subscriptionPlan?.price?.currency}{' '}
-                {subscriptionPlan?.price?.amount}/month
+                {subscriptionPlan?.price?.amount}/month (Ex. {subscriptionPlan?.taxType || 'GST'})
               </p>
             </div>
 

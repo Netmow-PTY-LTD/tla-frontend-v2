@@ -99,17 +99,20 @@ const InvoiceModal = ({ open, setOpen, transaction }) => {
 
         {/* Summary */}
         <div className="mt-4 text-right space-y-1">
-          {/* no remove this comment it will be use next time */}
-          {/* <p>
-                        Sub Total: <span className="ml-4 font-medium">{formatCurrency(subTotal)}</span>
-                    </p>
-                    <p>
-                        VAT (10%): <span className="ml-4 font-medium">{formatCurrency(vat)}</span>
-                    </p> */}
-          <p className="font-semibold text-lg">
-            {/* no remove this comment it will be use next time */}
-            {/* Total inc. GST: <span className="ml-4 text-green-600 font-bold">{formatCurrency(total)}</span> */}
-            Total :{' '}
+          <p className="text-gray-600">
+            Sub Total:{' '}
+            <span className="ml-4 font-medium">
+              {formatCurrency(transaction?.subTotal || subTotal)}
+            </span>
+          </p>
+          <p className="text-gray-600">
+            {transaction?.taxType || 'GST'} ({transaction?.taxPercentage || 10}%):{' '}
+            <span className="ml-4 font-medium">
+              {formatCurrency(transaction?.taxAmount || vat)}
+            </span>
+          </p>
+          <p className="font-semibold text-lg pt-2 border-t border-gray-200 inline-block w-full max-w-[200px] ml-auto">
+            Total inc. {transaction?.taxType || 'GST'}:{' '}
             <span className="ml-4 text-green-600 font-bold">
               {formatCurrency(total)}
             </span>

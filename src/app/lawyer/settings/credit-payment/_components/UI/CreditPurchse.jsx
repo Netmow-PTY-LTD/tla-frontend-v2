@@ -82,11 +82,17 @@ const CreditsPurchase = ({ creditPackage }) => {
             </div>
 
             <div>
-              <p className="font-medium text-gray-900">
-                $ {creditPackage?.priceDisplay}{' '}
-                <span className="text-gray-500 text-sm font-normal">
-                  (ex GST)
-                </span>
+              <div className="flex items-baseline gap-1">
+                <p className="font-semibold text-gray-900 text-lg">
+                  $ {creditPackage?.priceDisplay}
+                </p>
+                <p className="text-gray-500 text-xs font-normal">
+                  + $ {creditPackage?.taxAmount || (creditPackage?.priceDisplay * 0.1).toFixed(2)}{' '}
+                  {creditPackage?.taxType || 'GST'}
+                </p>
+              </div>
+              <p className="text-[#00C3C0] text-sm font-semibold">
+                Total: $ {creditPackage?.totalPrice || (creditPackage?.priceDisplay * 1.1).toFixed(2)} (Inc {creditPackage?.taxType || 'GST'})
               </p>
               <p className="text-gray-500 text-sm">
                 $ {creditPackage?.pricePerCredit}/credit
