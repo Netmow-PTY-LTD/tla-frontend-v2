@@ -5,12 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/UIComponents/Modal';
 import React from 'react';
 import { z } from 'zod';
-import countries from '@/data/countries.json';
 import SelectInput from '@/components/form/SelectInput';
 import MultipleTagsSelector from '@/components/MultipleTagsSelector';
 import { useAddSubscriptionMutation } from '@/store/features/admin/subcriptionsApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { Loader } from 'lucide-react';
+import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
 
 const subscriptionSchema = z.object({
   name: z
@@ -40,6 +40,8 @@ const subscriptionSchema = z.object({
   description: z
     .string({ invalid_type_error: 'Description must be a string' })
     .min(1, { message: 'Description is required' }),
+
+  country: z.string().min(1, { message: 'Country is required' }),
 });
 
 export default function AddSubscriptionModal({
@@ -47,6 +49,8 @@ export default function AddSubscriptionModal({
   setOpen,
   refetchSubscriptions,
 }) {
+  const { data: countryList } = useGetCountryListQuery();
+
   const defaultValues = {
     name: '',
     price_amount: '',
@@ -54,14 +58,13 @@ export default function AddSubscriptionModal({
     monthlyCaseContacts: '',
     features: [],
     description: '',
+    country: '',
   };
 
   const [addSubscription, { isLoading: isAddSubscriptionLoading }] =
     useAddSubscriptionMutation();
 
   const handleAddSubscription = async (values) => {
-    // console.log('values', values);
-
     const {
       name,
       price_amount,
@@ -69,6 +72,7 @@ export default function AddSubscriptionModal({
       monthlyCaseContacts,
       features,
       description,
+      country,
     } = values;
 
     const payload = {
@@ -78,13 +82,11 @@ export default function AddSubscriptionModal({
       monthlyCaseContacts: Number(monthlyCaseContacts),
       features,
       description,
+      country,
     };
-
-    // console.log('payload', payload);
 
     try {
       const res = await addSubscription(payload).unwrap();
-      // console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'Subscription added successfully');
         refetchSubscriptions();
@@ -107,18 +109,11 @@ export default function AddSubscriptionModal({
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <TextInput name="name" label="Name" placeholder="subscription name" />
-          {/* <TextInput name="slug" label="Slug" placeholder="slug" /> */}
           <TextInput
             name="price_amount"
             label="Price ($)"
             placeholder="price"
           />
-          {/* <SelectInput
-            name="currency"
-            label="Currency"
-            placeholder="currency"
-            options={options}
-          /> */}
           <SelectInput
             name="billingCycle"
             label="Billing Cycle"
@@ -136,6 +131,15 @@ export default function AddSubscriptionModal({
             label="Monthly Case Contacts"
             placeholder="monthly case contacts"
           />
+          <SelectInput
+            name="country"
+            label="Country"
+            options={countryList?.data?.map((c) => ({
+              label: c.name,
+              value: c._id,
+            }))}
+            placeholder="Select Country"
+          />
           <div className="col-span-2">
             <MultipleTagsSelector
               name="features"
@@ -143,7 +147,6 @@ export default function AddSubscriptionModal({
               label="Features"
             />
           </div>
-          {/* Make the last item full width using col-span-2 */}
           <div className="col-span-2">
             <TextareaInput
               name="description"

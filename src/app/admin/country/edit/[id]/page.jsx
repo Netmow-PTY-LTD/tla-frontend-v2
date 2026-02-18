@@ -31,6 +31,9 @@ export default function Page() {
     slug: z.string().min(2).max(3, {
       message: 'Country code must be 2 to 3 characters.',
     }),
+    currency: z.string().min(1).max(10, {
+      message: 'Currency must be 1 to 10 characters.',
+    }),
   });
 
   // 1. Define your form.
@@ -39,6 +42,7 @@ export default function Page() {
     defaultValues: {
       name: '',
       slug: '',
+      currency: '',
     },
   });
 
@@ -53,6 +57,7 @@ export default function Page() {
       form.reset({
         name: singleCountry?.data?.name || '',
         slug: singleCountry?.data?.slug || '',
+        currency: singleCountry?.data?.currency || '',
       });
     }
   }, [isSuccess, singleCountry, form]);
@@ -67,9 +72,10 @@ export default function Page() {
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' '),
       slug: values.slug.toLowerCase(),
+      currency: values.currency.toUpperCase(),
     };
 
-  
+
 
     try {
       const res = await editCountry({
@@ -123,6 +129,19 @@ export default function Page() {
                     <FormLabel>Code</FormLabel>
                     <FormControl>
                       <Input placeholder="Country Code" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="currency"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Currency</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Currency" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
