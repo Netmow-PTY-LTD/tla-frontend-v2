@@ -11,6 +11,7 @@ import CookieGlobalInit from '@/components/CookieGlobalInit';
 import seoData from '@/data/seoData.json';
 import { generateSchemaBySlug } from '@/helpers/generateSchemaBySlug';
 import { getSeoData } from '@/helpers/getSeoData';
+import HeadScripts from '@/components/HeadScripts';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -99,6 +100,7 @@ export default async function RootLayout({ children }) {
       <body className={`${poppins.variable} antialiased`}>
         <CookieGlobalInit />
         <ReduxProvider>
+          <HeadScripts />
           <Suspense fallback={<Preloader />}>
             <SocketProvider>
               <Toaster position="top-center" />

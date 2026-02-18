@@ -1,7 +1,6 @@
 'use client';
 import Facebook from '@/components/icon/Facebook';
 import Twitter from '@/components/icon/Twiiter';
-import MainLayout from '@/components/main/common/layout';
 import { truncateText } from '@/helpers/truncateText';
 import {
   useGetAllBlogsQuery,
@@ -12,9 +11,12 @@ import Link from 'next/link';
 import React from 'react';
 import { useState } from 'react';
 
-export default function BlogPosts() {
+import { useRouter } from 'next/navigation';
+
+export default function BlogPosts({ currentPage = 1 }) {
+  const router = useRouter();
   const [search, setSearch] = useState('');
-  const [page, setPage] = useState(1);
+  // const [page, setPage] = useState(1); // Removed local state
   const limit = 5;
 
   const {
@@ -22,7 +24,7 @@ export default function BlogPosts() {
     isLoading: isBlogPostsLoading,
     isFetching: isBlogPostsFetching,
   } = useGetAllBlogsQuery({
-    page,
+    page: currentPage, // Use prop
     limit,
     search,
   });
@@ -38,11 +40,15 @@ export default function BlogPosts() {
   // Pagination info from API
   const pagination = blogPosts?.pagination;
   const totalPages = pagination?.totalPage || 1;
-  const currentPage = pagination?.page || 1;
+  // const currentPage = pagination?.page || 1;
 
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
-      setPage(newPage);
+      if (newPage === 1) {
+        router.push('/blog');
+      } else {
+        router.push(`/blog/${newPage}`);
+      }
     }
   };
 
@@ -57,7 +63,7 @@ export default function BlogPosts() {
   }
 
   return (
-    <MainLayout>
+    <>
       <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-gray-100">
         <div className="container mx-auto px-4">
           <div className="flex flex-col items-center mb-12">
@@ -178,14 +184,14 @@ export default function BlogPosts() {
             </div>
 
             {/* Sidebar (1/3) */}
-            <aside className="lg:col-span-1 flex flex-col gap-8">
+            <aside className="lg:col-span-1 flex flex-col gap-8 sticky top-[80px] self-start">
               <div className="bg-white">
                 <h3 className="text-xl font-extrabold text-black mb-4">
                   Recent Posts
                 </h3>
                 <ul className="space-y-4">
                   {Array.isArray(recentBlogs?.data) &&
-                  recentBlogs?.data?.length > 0 ? (
+                    recentBlogs?.data?.length > 0 ? (
                     [...recentBlogs?.data]
                       .sort(
                         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -321,9 +327,8 @@ export default function BlogPosts() {
             <div className="flex justify-center items-center mt-12 gap-2">
               {/* Previous button with left arrow */}
               <button
-                className={`w-10 h-10 flex items-center justify-center rounded-lg border bg-white shadow hover:bg-purple-100 transition font-semibold ${
-                  currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
+                className={`w-10 h-10 flex items-center justify-center rounded-lg border bg-white shadow hover:bg-purple-100 transition font-semibold ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
                 aria-label="Previous page"
@@ -386,11 +391,10 @@ export default function BlogPosts() {
                   ) : (
                     <button
                       key={p}
-                      className={`w-10 h-10 flex items-center justify-center rounded-lg border shadow font-semibold transition-all ${
-                        p === currentPage
-                          ? 'bg-[var(--primary-color)] text-white font-bold'
-                          : 'bg-white hover:bg-purple-100 text-[var(--color-black)]'
-                      }`}
+                      className={`w-10 h-10 flex items-center justify-center rounded-lg border shadow font-semibold transition-all ${p === currentPage
+                        ? 'bg-[var(--primary-color)] text-white font-bold'
+                        : 'bg-white hover:bg-purple-100 text-[var(--color-black)]'
+                        }`}
                       onClick={() => handlePageChange(p)}
                       disabled={p === currentPage}
                     >
@@ -402,11 +406,10 @@ export default function BlogPosts() {
 
               {/* Next button with right arrow */}
               <button
-                className={`w-10 h-10 flex items-center justify-center rounded-lg border bg-white shadow hover:bg-purple-100 transition font-semibold ${
-                  currentPage === totalPages
-                    ? 'opacity-50 cursor-not-allowed'
-                    : ''
-                }`}
+                className={`w-10 h-10 flex items-center justify-center rounded-lg border bg-white shadow hover:bg-purple-100 transition font-semibold ${currentPage === totalPages
+                  ? 'opacity-50 cursor-not-allowed'
+                  : ''
+                  }`}
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
                 aria-label="Next page"
@@ -430,6 +433,6 @@ export default function BlogPosts() {
           )}
         </div>
       </section>
-    </MainLayout>
+    </>
   );
 }

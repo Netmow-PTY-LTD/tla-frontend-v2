@@ -1,5 +1,4 @@
 'use client';
-import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect } from 'react';
 import AdminProfileDropDown from './AdminProfileDropDown';
@@ -60,11 +59,9 @@ export default function AdminDashboardHeader({ onToggleSidebar }) {
     <header className="db-header">
       <div className="db-header-container flex gap-4">
         <Link href="/admin" className="db-logo">
-          <Image
+          <img
             src={'/assets/img/logo-tla.svg'}
             alt="TLA Logo"
-            width={150}
-            height={40}
             className="h-[48px]"
           />
         </Link>

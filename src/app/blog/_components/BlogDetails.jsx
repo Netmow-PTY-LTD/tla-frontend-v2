@@ -1,18 +1,16 @@
 'use client';
 import Facebook from '@/components/icon/Facebook';
 import Twitter from '@/components/icon/Twiiter';
-import MainLayout from '@/components/main/common/layout';
 import { truncateText } from '@/helpers/truncateText';
 import {
   useGetAllBlogsQuery,
   useGetRecentBlogsQuery,
   useGetSingleBlogBySlugQuery,
 } from '@/store/features/admin/blogApiService';
-import { Arrow } from '@radix-ui/react-dropdown-menu';
-import { ArrowRight, Instagram, Linkedin, Loader, Loader2 } from 'lucide-react';
+import { Instagram, Linkedin, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function BlogPostDetails({ slug }) {
   const [page, setPage] = useState(1);
@@ -28,11 +26,17 @@ export default function BlogPostDetails({ slug }) {
     data: singleBlogData,
     isLoading: isSingleBlogDataLoading,
     isFetching: isBlogPostsFetching,
+    refetch,
   } = useGetSingleBlogBySlugQuery(slug);
 
   const post = singleBlogData?.data;
 
   const { data: recentBlogs } = useGetRecentBlogsQuery({ limit: 5 });
+
+  // Refetch when slug changes
+  useEffect(() => {
+    refetch();
+  }, [slug, refetch]);
 
   if (isSingleBlogDataLoading) {
     return (
@@ -43,7 +47,7 @@ export default function BlogPostDetails({ slug }) {
   }
 
   return (
-    <MainLayout>
+    <>
       <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-gray-100">
         <div className="container mx-auto px-4">
           <div className="flex flex-col items-center mb-12 max-w-5xl mx-auto text-center">
@@ -150,14 +154,14 @@ export default function BlogPostDetails({ slug }) {
               </div>
             </div>
 
-            <aside className="lg:col-span-1 flex flex-col gap-8">
+            <aside className="lg:col-span-1 flex flex-col gap-8 sticky top-[80px] self-start">
               <div className="bg-white">
                 <h3 className="text-xl font-extrabold text-black mb-4">
                   Recent Posts
                 </h3>
                 <ul className="space-y-4">
                   {Array.isArray(recentBlogs?.data) &&
-                  recentBlogs?.data?.length > 0 ? (
+                    recentBlogs?.data?.length > 0 ? (
                     [...recentBlogs?.data]
                       .sort(
                         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -307,6 +311,6 @@ export default function BlogPostDetails({ slug }) {
           }
         `}
       </style>
-    </MainLayout>
+    </>
   );
 }
