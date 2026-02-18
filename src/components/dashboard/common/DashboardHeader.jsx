@@ -110,9 +110,9 @@ export default function DashboardHeader({ onToggleSidebar }) {
           </span>
         </div>
 
-        <button className="w-8 h-8 items-center justify-center border border-gray-300 rounded-full hidden sm:flex cursor-pointer flex-shrink-0">
+        <div className="w-8 h-8 items-center justify-center border border-gray-300 rounded-full hidden sm:flex cursor-pointer flex-shrink-0">
           <NotificationDropdown />
-        </button>
+        </div>
         <ProfileDropDown data={userInfo} />
       </div>
     </header>

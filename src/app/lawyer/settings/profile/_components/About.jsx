@@ -33,6 +33,7 @@ import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 import { useRouter } from 'next/navigation';
 import AllowStaffsAccess from './about/AllowStaffsAccess';
 import { Checkbox } from '@/components/ui/checkbox';
+import TextareaInput from '@/components/form/TextArea';
 
 export default function About() {
   const [open, setOpen] = useState(false);
@@ -68,6 +69,7 @@ export default function About() {
       designation: profile?.designation ?? '',
       languages: profile?.languages ?? [],
       address: profile?.address ?? '',
+      full_address: profile?.full_address ?? '',
       phone: profile?.phone ?? '',
       gender: profile?.gender ?? '',
       law_society_member_number: profile?.law_society_member_number ?? '',
@@ -90,9 +92,9 @@ export default function About() {
 
       companyAddress: profile?.firmProfileId?.contactInfo?.zipCode
         ? {
-            value: profile.firmProfileId.contactInfo.zipCode._id,
-            label: profile.firmProfileId.contactInfo.zipCode.zipcode,
-          }
+          value: profile.firmProfileId.contactInfo.zipCode._id,
+          label: profile.firmProfileId.contactInfo.zipCode.zipcode,
+        }
         : null,
     }),
     [profile]
@@ -151,6 +153,7 @@ export default function About() {
         designation,
         languages,
         address,
+        full_address,
         phone,
         gender,
         law_society_member_number,
@@ -165,8 +168,8 @@ export default function About() {
 
       const companyInfo = showCompanyFields
         ? {
-            firmProfileId: data.firmProfileId ?? '',
-          }
+          firmProfileId: data.firmProfileId ?? '',
+        }
         : {};
 
       const payload = {
@@ -175,6 +178,7 @@ export default function About() {
           designation,
           languages,
           address,
+          full_address,
           phone,
           gender,
           law_society_member_number,
@@ -305,8 +309,10 @@ export default function About() {
             Building trust starts with a clear, professional introduction.
           </p>
 
-          <MultiTagSelector name="languages" />
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-7 mb-7">
+            <MultiTagSelector name="languages" />
+            <GenderRadioField />
             <TextInput
               label="Phone Number"
               name="phone"
@@ -314,14 +320,21 @@ export default function About() {
               textColor="text-[#4b4949]"
             />
 
-            <AddressCombobox />
             <TextInput
               label="Contact Email"
               name="lawyerContactEmail"
               placeholder="contact@gmail.com"
               textColor="text-[#4b4949]"
             />
-            <GenderRadioField />
+            <AddressCombobox />
+            <TextareaInput
+              label="Full Address"
+              name="full_address"
+              placeholder="Enter your full address"
+              textColor="text-[#4b4949]"
+              rows={2}
+            />
+
             <button
               type="button"
               onClick={() => setOpen(true)}
@@ -348,7 +361,7 @@ export default function About() {
 
         <div className="mt-6">
           {profile?.isFirmMemberRequest &&
-          profile?.activeFirmRequestId?.firmProfileId !== null ? (
+            profile?.activeFirmRequestId?.firmProfileId !== null ? (
             <div className="rounded-xl bg-yellow-50 border border-yellow-200 p-6 text-sm text-yellow-800 mt-6">
               <div className="flex flex-col gap-4">
                 <h3 className="text-lg font-bold text-yellow-900">
@@ -378,13 +391,13 @@ export default function About() {
                       <h3 className="text-base font-bold text-red-900">
                         Request Rejected
                       </h3>
-                    <p className="text-sm leading-relaxed">
-                      Your request to join the firm has been rejected. You can
-                      search and request to join another firm below.
-                    </p>
+                      <p className="text-sm leading-relaxed">
+                        Your request to join the firm has been rejected. You can
+                        search and request to join another firm below.
+                      </p>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
               <label className="block text-lg font-semibold text-gray-900 mb-4">
                 Add Company Profile
               </label>

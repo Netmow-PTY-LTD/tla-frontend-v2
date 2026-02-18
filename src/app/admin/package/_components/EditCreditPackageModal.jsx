@@ -95,26 +95,26 @@ export default function EditCreditPackageModal({
           placeholder="Enter credit amount"
         />
 
-        <TextInput
-          type="text"
-          label="Package Price"
-          name="price"
-          placeholder="Enter Package Name"
-        />
+          <TextInput
+            type="text"
+            label="Package Price"
+            name="price"
+            placeholder="Enter Package Name"
+          />
 
-        <TextInput
-          type="text"
-          label="Price Display"
-          name="priceDisplay"
-          placeholder="Enter price display"
-        />
+          <TextInput
+            type="text"
+            label="Price Display"
+            name="priceDisplay"
+            placeholder="Enter price display"
+          />
 
-        <TextInput
-          type="text"
-          label="Price Per Credit"
-          name="pricePerCredit"
-          placeholder="Enter price per credit"
-        />
+          <TextInput
+            type="text"
+            label="Price Per Credit"
+            name="pricePerCredit"
+            placeholder="Enter price per credit"
+          />
 
         <TextInput
           type="text"

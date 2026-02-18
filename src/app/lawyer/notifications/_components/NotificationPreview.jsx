@@ -32,10 +32,12 @@ import {
 import { useRouter } from 'next/navigation';
 import { Fragment, useState } from 'react';
 import ResponseSkeleton from '../../dashboard/my-responses/_components/ResponseSkeleton';
+import { toast } from 'sonner';
 
 const {
   useGetNotificationsQuery,
   useMarkAsRedNotificationMutation,
+  useMarkAllAsReadMutation,
 } = require('@/store/features/notification/notificationApiService');
 
 dayjs.extend(relativeTime);
@@ -46,6 +48,7 @@ export default function NotificationPreview() {
 
   const { data, isLoading } = useGetNotificationsQuery();
   const [markAsRead] = useMarkAsRedNotificationMutation();
+  const [markAllAsRead] = useMarkAllAsReadMutation();
 
   const iconStyles = {
     login: { Icon: LogIn, fill: '#3B82F6' }, // Blue
@@ -79,6 +82,16 @@ export default function NotificationPreview() {
       }
     } catch (error) {
       console.error('Failed to mark notification as read', error);
+    }
+  };
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      await markAllAsRead().unwrap();
+      toast.success('All notifications marked as read');
+    } catch (error) {
+      console.error('Failed to mark all notifications as read', error);
+      toast.error('Failed to mark all notifications as read');
     }
   };
 
@@ -157,7 +170,15 @@ export default function NotificationPreview() {
 
   return (
     <div className="p-4 max-w-[1100px] mx-auto">
-      <h2 className="text-xl font-semibold mb-4">All Notifications</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold">All Notifications</h2>
+        <button
+          onClick={handleMarkAllAsRead}
+          className="text-sm text-blue-600 hover:underline"
+        >
+          Mark All as read
+        </button>
+      </div>
       <div className="">
         {/* <ul>
           {paginatedData?.map((n) => (
@@ -194,9 +215,8 @@ export default function NotificationPreview() {
             {groupedData.map((group, groupIndex) => (
               <Fragment key={groupIndex}>
                 <div
-                  className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${
-                    groupIndex === 0 ? '' : 'border-l border-[#e6e7ec]'
-                  }`}
+                  className={`activity-log-date-item text-sm font-medium text-gray-500 pb-2 text-center ml-[16px] ${groupIndex === 0 ? '' : 'border-l border-[#e6e7ec]'
+                    }`}
                 >
                   {group.date}
                 </div>
@@ -204,9 +224,8 @@ export default function NotificationPreview() {
                 {group.items.map((n, index) => (
                   <div
                     key={n._id}
-                    className={`activity-log-item flex gap-2 ${
-                      groupIndex === 0 && index === 0 ? 'first-log-item' : ''
-                    }`}
+                    className={`activity-log-item flex gap-2 ${groupIndex === 0 && index === 0 ? 'first-log-item' : ''
+                      }`}
                   >
                     <div className="left-track flex-grow-0 flex flex-col w-[32px] items-center">
                       <div className="line-top h-1/2 w-[1] border-l border-[#e6e7ec]"></div>
@@ -283,9 +302,8 @@ export default function NotificationPreview() {
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`px-3 py-1 border border-gray-300 rounded ${
-                    currentPage === page ? 'bg-black text-white' : ''
-                  }`}
+                  className={`px-3 py-1 border border-gray-300 rounded ${currentPage === page ? 'bg-black text-white' : ''
+                    }`}
                 >
                   {page}
                 </button>

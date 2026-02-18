@@ -24,6 +24,7 @@ import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { useEffect, useState } from 'react';
 import AddressCombobox from '../../_components/profile/AddressCombobox';
 import ChangeEmail from '../../_components/ChangeEmail';
+import { clientProfileSchema } from '@/schema/client/clientProfile.schema';
 
 const page = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -61,6 +62,7 @@ const page = () => {
         phone,
         address,
         email,
+        ...(userProfileLogo === '' && { profilePicture: null }),
       },
     };
 
@@ -91,7 +93,7 @@ const page = () => {
   };
 
   return (
-    <div className="max-w-[900px] mx-auto my-8 bg-white border border-gray-300 rounded-lg px-5 md:px-10 py-5 md:py-12">
+    <div className="max-w-[900px] mx-auto my-8 bg-white border border-gray-300 rounded-lg px-5 md:px-10 py-5 md:py-10">
       <div className=" ">
         <h2 className="text-lg font-semibold mb-1 flex items-center gap-2">
           <BookOpenText className="text-[#00C3C0] w-6 h-6" />{' '}
@@ -102,7 +104,11 @@ const page = () => {
           you no longer require the service, please close the request.
         </p>
 
-        <FormWrapper onSubmit={handleSubmit} defaultValues={defaultValues}>
+        <FormWrapper
+          onSubmit={handleSubmit}
+          defaultValues={defaultValues}
+          schema={clientProfileSchema}
+        >
           <div className="flex flex-wrap gap-4 md:gap-10 items-start">
             {/* Avatar + Upload */}
             <div className="flex items-center gap-2">

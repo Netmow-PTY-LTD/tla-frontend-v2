@@ -20,10 +20,12 @@ import Link from 'next/link';
 import {
   useGetNotificationsQuery,
   useMarkAsRedNotificationMutation,
+  useMarkAllAsReadMutation,
 } from '@/store/features/notification/notificationApiService';
 import { useNotifications } from '@/hooks/useSocketListener';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import { useSelector } from 'react-redux';
+import { toast } from 'sonner';
 
 dayjs.extend(relativeTime);
 
@@ -60,6 +62,7 @@ export default function NotificationDropdown() {
     { skip: !token }
   );
   const [markAsRead] = useMarkAsRedNotificationMutation();
+  const [markAllAsRead] = useMarkAllAsReadMutation();
   const notifications = data?.data || [];
 
   useNotifications(
@@ -114,8 +117,15 @@ export default function NotificationDropdown() {
 
       {isOpen && (
         <div className="absolute right-0 bg-white shadow-[0_6px_16px_#0006] rounded-lg w-80 mt-2 z-[99]">
-          <div className="text-lg font-semibold text-gray-800 py-3 px-4 text-left border-b">
-            Notifications
+          <div className="text-lg font-semibold text-gray-800 py-3 px-4 text-left border-b flex justify-between items-center">
+            <span>Notifications</span>
+            <Link
+              href="/lawyer/notifications"
+              className="text-blue-500 text-xs hover:underline font-normal"
+              onClick={() => setIsOpen(false)}
+            >
+              View all
+            </Link>
           </div>
           <ul className="max-h-96 overflow-y-auto">
             {isLoading ? (
@@ -150,18 +160,30 @@ export default function NotificationDropdown() {
                 ))}
               </>
             ) : (
-              <li className="px-3 py-2 text-sm text-gray-500">
-                No notifications
+              <li className="px-3 py-2 text-sm text-gray-500 text-center">
+                No new notifications
               </li>
             )}
           </ul>
-          <div className="text-center py-2">
-            <Link
-              href="/lawyer/notifications"
-              className="text-blue-500 text-sm hover:underline"
+          <div className="text-center py-2 border-t">
+            <button
+              disabled={notifications.length === 0}
+              onClick={async () => {
+                try {
+                  await markAllAsRead();
+                  toast.success('All notifications marked as read');
+                } catch (error) {
+                  console.error(
+                    'Failed to mark all notifications as read',
+                    error
+                  );
+                  toast.error('Failed to mark all notifications as read');
+                }
+              }}
+              className="text-blue-500 text-sm hover:underline disabled:text-gray-400 disabled:no-underline"
             >
-              View all
-            </Link>
+              Mark All as read
+            </button>
           </div>
         </div>
       )}

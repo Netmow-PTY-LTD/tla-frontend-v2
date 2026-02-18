@@ -33,6 +33,7 @@ import {
   Send,
   Tag,
   Trash2,
+  User,
 } from 'lucide-react';
 import Image from 'next/image';
 import React, { Fragment, useEffect, useState } from 'react';
@@ -101,6 +102,16 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
 
 
 
+
+  const profileType = singleResponse?.data?.responseBy?.profileType;
+  const badge =
+    profileType
+      ?.replace(/[^a-zA-Z0-9]+/g, ' ')
+      ?.split(' ')
+      ?.map(
+        (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+      )
+      ?.join('') + ' Lawyer';
 
   const toUser = singleResponse?.data?.responseBy?.user?._id;
   useNotifications(currentUser?._id, (data) => {
@@ -280,7 +291,7 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
             </div>
           </div>
           <div className="mt-3">
-            <div className="flex flex-col items-start gap-4 ">
+            <div className="flex flex-col items-start gap-4 w-full">
               <figure className="w-20 h-20 overflow-hidden border rounded-full">
                 <Image
                   src={
@@ -294,30 +305,48 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
                   className="w-full h-full rounded-full object-cover"
                 />
               </figure>
-              <div>
-                <div className="flex items-center gap-3">
-                  <h2 className="font-medium heading-md">
-                    {singleResponse?.data?.responseBy?.name}
-                  </h2>
-                  <span className="text-xs">
-                    <div className="flex items-center gap-2 text-sm">
-                      <span
-                        className={`w-2 h-2 rounded-full ${onlineMap[response?.responseBy?.user?._id]
+              <div className="flex flex-wrap justify-between items-center gap-3">
+                <div>
+                  <div className="flex items-center gap-3">
+                    <h2 className="font-medium heading-md">
+                      {singleResponse?.data?.responseBy?.name}
+                    </h2>
+                    <span className="text-xs">
+                      <div className="flex items-center gap-2 text-sm">
+                        <span
+                          className={`w-2 h-2 rounded-full ${onlineMap[response?.responseBy?.user?._id]
                             ? 'bg-green-500'
                             : 'bg-gray-400'
-                          }`}
-                      ></span>
-                      <span className="text-gray-700">
-                        {onlineMap[response?.responseBy?.user?._id]
-                          ? 'Online'
-                          : 'Offline'}
-                      </span>
-                    </div>
-                  </span>
+                            }`}
+                        ></span>
+                        <span className="text-gray-700">
+                          {onlineMap[response?.responseBy?.user?._id]
+                            ? 'Online'
+                            : 'Offline'}
+                        </span>
+                      </div>
+                    </span>
+                  </div>
+                  <p className="text-gray-500 mt-2">
+                    {singleResponse?.data?.responseBy?.address}
+                  </p>
                 </div>
-                <p className="text-gray-500 mt-2">
-                  {singleResponse?.data?.responseBy?.address}
-                </p>
+                {badge && badge?.toLowerCase() !== 'basic lawyer' && (
+                  <div className="icon">
+                    <img
+                      src={
+                        badge.toLowerCase() === 'premium lawyer'
+                          ? '/assets/img/badge.svg'
+                          : badge.toLowerCase() === 'expert lawyer'
+                            ? '/assets/img/expert.png'
+                            : '/assets/img/basic.png'
+                      }
+                      width="60"
+                      height="60"
+                      alt={badge}
+                    />
+                  </div>
+                )}
               </div>
             </div>
             {/* Current Status */}
@@ -338,6 +367,15 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
+              <Link
+                href={`/profile/${singleResponse?.data?.responseBy?.slug}`}
+                target="_blank"
+              >
+                <Button className="bg-[#00C3C0] hover:bg-[#00b3b0]">
+                  <User className="w-5 h-5" />
+                  View Public Profile
+                </Button>
+              </Link>
               {/* <Button className="bg-[#00C3C0]">
                         <Phone />
                         Show Number
@@ -383,8 +421,8 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
                 <button
                   onClick={() => handleTabChange('activity')}
                   className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'activity'
-                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                      : 'hover:text-black'
+                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                    : 'hover:text-black'
                     }`}
                 >
                   Activity
@@ -392,8 +430,8 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
                 <button
                   onClick={() => handleTabChange('chat')}
                   className={`relative pb-2 text-gray-600 font-normal transition-colors ${activeTab === 'chat'
-                      ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
-                      : 'hover:text-black'
+                    ? 'font-semibold text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-black'
+                    : 'hover:text-black'
                     }`}
                 >
                   Chat

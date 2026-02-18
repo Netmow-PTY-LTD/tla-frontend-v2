@@ -2,22 +2,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './Header.module.css';
 import Link from 'next/link';
-import Image from 'next/image';
 import { selectCurrentUser } from '@/store/features/auth/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
-import { Arrow } from '@radix-ui/react-dropdown-menu';
-import {
-  ArrowDown,
-  ArrowLeft,
-  ChevronDown,
-  ChevronRight,
-  Hammer,
-  Loader,
-  LogOut,
-  SearchIcon,
-  X,
-} from 'lucide-react';
+import { SearchIcon } from 'lucide-react';
 import Gavel from '@/components/icon/Gavel';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { usePathname, useRouter } from 'next/navigation';
@@ -32,7 +20,6 @@ import LawyerWarningModal from '../../home/modal/LawyerWarningModal';
 import { safeJsonParse } from '@/helpers/safeJsonParse';
 import { useGetSettingsQuery } from '@/store/features/admin/appSettings';
 import { useGetPublicHeaderFooterCodesQuery } from '@/store/features/seo/seoApi';
-import Head from 'next/head';
 
 export default function Header() {
   const [isHeaderFixed, setIsHeaderFixed] = useState();
@@ -56,7 +43,7 @@ export default function Header() {
 
   const appData = appSettings?.data || {};
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (!appData) return;
 
     const metaTag = document.createElement('meta');
@@ -77,11 +64,11 @@ export default function Header() {
         document.head.removeChild(metaTag);
       }
     };
-  }, [appData?.robots]);
+  }, [appData?.robots]); */
 
-  const { data: headerFooterCodes } = useGetPublicHeaderFooterCodesQuery();
+  // const { data: headerFooterCodes } = useGetPublicHeaderFooterCodesQuery();
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (!headerFooterCodes?.data?.length) return;
 
     const headerScripts = headerFooterCodes.data.filter(
@@ -108,7 +95,7 @@ export default function Header() {
         if (document.head.contains(el)) document.head.removeChild(el);
       });
     };
-  }, [headerFooterCodes]);
+  }, [headerFooterCodes]); */
 
   const token = useSelector((state) => state.auth.token);
 
