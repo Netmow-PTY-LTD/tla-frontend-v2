@@ -203,6 +203,21 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
         'transaction-history',
       ],
     }),
+    changeSubscriptionPackage: builder.mutation({
+      query: (data) => {
+        return {
+          url: '/settings/credit-payment/change-subscription-package',
+          method: 'PATCH',
+          body: data,
+        };
+      },
+      invalidatesTags: [
+        'subscriptions-packages',
+        'subscriptions-package',
+        'userInfo',
+        'transaction-history',
+      ],
+    }),
   }),
 
   // subscription
@@ -229,4 +244,5 @@ export const {
   useUserTransactionHistoryQuery,
   useCreateSubscriptionMutation,
   useCancelSubscriptionMutation,
+  useChangeSubscriptionPackageMutation,
 } = creditAndPaymentApiService;

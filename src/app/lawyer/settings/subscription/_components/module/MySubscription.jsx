@@ -6,6 +6,8 @@ import SubscriptionPurchase from '../UI/subscriptionPurchase';
 import { SubscriptionTransactionDetails } from '../UI/SubscriptionTransactionDetails';
 import { useGetAllSubscriptionsQuery } from '@/store/features/admin/subcriptionsApiService';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import { useChangeSubscriptionPackageMutation } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import SubscriptionCard from '../UI/SubscriptionCard';
 import {
   Accordion,
@@ -26,6 +28,8 @@ const MySubscription = () => {
     refetchOnMountOrArgChange: true, // keep data fresh
   });
 
+  const [changeSubscriptionPackage, { isLoading: changeLoading }] = useChangeSubscriptionPackageMutation();
+
   const countryId = userInfo?.data?.profile?.country || '';
 
 
@@ -41,6 +45,25 @@ const MySubscription = () => {
 
 
   const mySubscription = userInfo?.data?.profile?.subscriptionId || null;
+
+
+  const handleChangeSubscription = async (newPackageId) => {
+    try {
+      const result = await changeSubscriptionPackage({
+        newPackageId,
+        type: 'subscription'
+      }).unwrap();
+      if (result.success) {
+        showSuccessToast(result?.message || 'Subscription changed successfully');
+        userRefetch(); // Refresh user info to get updated subscription
+      } else {
+        showErrorToast(result?.message || 'Failed to change subscription');
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+    }
+  };
 
 
   return (
@@ -112,7 +135,7 @@ const MySubscription = () => {
           </div>
 
           {isLoading ? (
-            <div className=" text-sm flex justify-center items-center ">
+            <div className="text-sm flex justify-center items-center">
               <Loader /> Loading...
             </div>
           ) : isError ? (
@@ -125,6 +148,9 @@ const MySubscription = () => {
                 <SubscriptionPurchase
                   key={subscription?._id}
                   subscriptionPlan={subscription}
+                  currentSubscription={mySubscription}
+                  onChangeSubscription={handleChangeSubscription}
+                  changeLoading={changeLoading}
                 />
               ))}
             </div>
