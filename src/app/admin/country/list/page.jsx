@@ -87,6 +87,30 @@ export default function Page() {
       ),
     },
     {
+      accessorKey: 'currency',
+      header: 'Currency',
+      cell: ({ row }) => (
+        <div className="uppercase">{row.getValue('currency')}</div>
+      ),
+    },
+    {
+      accessorKey: 'taxPercentage',
+      header: 'Tax %',
+      cell: ({ row }) => <div>{row.getValue('taxPercentage')}%</div>,
+    },
+    {
+      accessorKey: 'taxAmount',
+      header: 'Tax Amount',
+      cell: ({ row }) => <div>{row.getValue('taxAmount')}</div>,
+    },
+    {
+      accessorKey: 'taxType',
+      header: 'Tax Type',
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue('taxType') || '-'}</div>
+      ),
+    },
+    {
       id: 'actions',
       header: 'Actions',
       enableHiding: false,

@@ -174,14 +174,19 @@ const CreditPurchaseLead = ({
           </div>
 
           <div>
-            <p className="text-gray-900 font-medium">
-              ${recommendedPackage?.priceDisplay}
-              <span className="text-sm text-gray-500 font-normal">
-                {' '}
-                (ex GST)
-              </span>
+            <div className="flex items-baseline gap-1">
+              <p className="font-semibold text-gray-900 text-lg">
+                $ {recommendedPackage?.priceDisplay}
+              </p>
+              <p className="text-gray-500 text-xs font-normal">
+                + $ {recommendedPackage?.taxAmount || (recommendedPackage?.priceDisplay * 0.1).toFixed(2)}{' '}
+                {recommendedPackage?.taxType || 'GST'}
+              </p>
+            </div>
+            <p className="text-[#00C3C0] text-sm font-semibold">
+              Total: $ {recommendedPackage?.totalPrice || (recommendedPackage?.priceDisplay * 1.1).toFixed(2)} (Inc {recommendedPackage?.taxType || 'GST'})
             </p>
-            <p className="text-sm text-gray-500">
+            <p className="text-gray-500 text-sm">
               ${recommendedPackage?.pricePerCredit}/credit
             </p>
           </div>

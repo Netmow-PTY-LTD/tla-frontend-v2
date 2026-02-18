@@ -14,13 +14,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { useChangeSubscriptionPackageMutation } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
 
 const EliteProSubscription = () => {
-  const {
-    data: elliteProSubscriptionData,
-    isError,
-    isLoading,
-  } = useGetAllEliteProSubscriptionsQuery();
+
 
   const {
     data: userInfo,
@@ -32,9 +29,39 @@ const EliteProSubscription = () => {
     refetchOnMountOrArgChange: true, // keep data fresh
   });
 
+  const countryId = userInfo?.data?.profile?.country || '';
+
+  const {
+    data: elliteProSubscriptionData,
+    isError,
+    isLoading,
+  } = useGetAllEliteProSubscriptionsQuery({ country: countryId, isActive: true }, {
+    skip: !countryId,
+  });
+
+  const [changeSubscriptionPackage, { isLoading: changeLoading }] = useChangeSubscriptionPackageMutation();
+
   const MyElitePro = userInfo?.data?.profile?.eliteProSubscriptionId || null;
 
   console.log('My Elite Pro Subscription:', MyElitePro);
+
+  const handleChangeSubscription = async (newPackageId) => {
+    try {
+      const result = await changeSubscriptionPackage({
+        newPackageId,
+        type: 'elitePro'
+      }).unwrap();
+      if (result.success) {
+        showSuccessToast(result?.message || 'Elite Pro subscription changed successfully');
+        userRefetch(); // Refresh user info to get updated subscription
+      } else {
+        showErrorToast(result?.message || 'Failed to change elite pro subscription');
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+    }
+  };
 
   return (
     <div className="w-full border-none bg-[#F3F3F3] py-8 px-[15px] rounded-[5px] ">
@@ -51,7 +78,7 @@ const EliteProSubscription = () => {
             type="single"
             collapsible
             className="w-full"
-            // defaultValue="item-1"
+          // defaultValue="item-1"
           >
             <AccordionItem value="item-1">
               <AccordionTrigger>What is the Elite Pro Plan?</AccordionTrigger>
@@ -116,6 +143,9 @@ const EliteProSubscription = () => {
                 <EliteProSubscriptionPurchase
                   key={elitePro?._id}
                   subscriptionPlan={elitePro}
+                  currentSubscription={MyElitePro}
+                  onChangeSubscription={handleChangeSubscription}
+                  changeLoading={changeLoading}
                 />
               ))}
             </div>

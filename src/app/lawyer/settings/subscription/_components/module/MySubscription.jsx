@@ -6,6 +6,8 @@ import SubscriptionPurchase from '../UI/subscriptionPurchase';
 import { SubscriptionTransactionDetails } from '../UI/SubscriptionTransactionDetails';
 import { useGetAllSubscriptionsQuery } from '@/store/features/admin/subcriptionsApiService';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
+import { useChangeSubscriptionPackageMutation } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import SubscriptionCard from '../UI/SubscriptionCard';
 import {
   Accordion,
@@ -15,11 +17,6 @@ import {
 } from '@/components/ui/accordion';
 
 const MySubscription = () => {
-  const {
-    data: subscriptionData,
-    isError,
-    isLoading,
-  } = useGetAllSubscriptionsQuery();
 
   const {
     data: userInfo,
@@ -31,9 +28,43 @@ const MySubscription = () => {
     refetchOnMountOrArgChange: true, // keep data fresh
   });
 
+  const [changeSubscriptionPackage, { isLoading: changeLoading }] = useChangeSubscriptionPackageMutation();
+
+  const countryId = userInfo?.data?.profile?.country || '';
+
+
+  const {
+    data: subscriptionData,
+    isError,
+    isLoading,
+  } = useGetAllSubscriptionsQuery({ country: countryId, isActive: true }, {
+    skip: !countryId,
+  });
+
+
+
+
   const mySubscription = userInfo?.data?.profile?.subscriptionId || null;
 
-  console.log('My Subscription ID:', mySubscription);
+
+  const handleChangeSubscription = async (newPackageId) => {
+    try {
+      const result = await changeSubscriptionPackage({
+        newPackageId,
+        type: 'subscription'
+      }).unwrap();
+      if (result.success) {
+        showSuccessToast(result?.message || 'Subscription changed successfully');
+        userRefetch(); // Refresh user info to get updated subscription
+      } else {
+        showErrorToast(result?.message || 'Failed to change subscription');
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'An error occurred';
+      showErrorToast(errorMessage);
+    }
+  };
+
 
   return (
     <div className="w-full border-none bg-[#F3F3F3] py-8 px-[15px] rounded-[5px] ">
@@ -50,7 +81,7 @@ const MySubscription = () => {
             type="single"
             collapsible
             className="w-full"
-            // defaultValue="item-1"
+          // defaultValue="item-1"
           >
             <AccordionItem value="item-1">
               <AccordionTrigger>
@@ -104,7 +135,7 @@ const MySubscription = () => {
           </div>
 
           {isLoading ? (
-            <div className=" text-sm flex justify-center items-center ">
+            <div className="text-sm flex justify-center items-center">
               <Loader /> Loading...
             </div>
           ) : isError ? (
@@ -117,6 +148,9 @@ const MySubscription = () => {
                 <SubscriptionPurchase
                   key={subscription?._id}
                   subscriptionPlan={subscription}
+                  currentSubscription={mySubscription}
+                  onChangeSubscription={handleChangeSubscription}
+                  changeLoading={changeLoading}
                 />
               ))}
             </div>

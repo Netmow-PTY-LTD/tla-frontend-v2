@@ -5,6 +5,8 @@ import TextInput from '@/components/form/TextInput';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/UIComponents/Modal';
 import { useUpdateCreditPackageMutation } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
+import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
+import SelectInput from '@/components/form/SelectInput';
 import React, { useRef } from 'react';
 
 export default function EditCreditPackageModal({
@@ -14,6 +16,8 @@ export default function EditCreditPackageModal({
   schema,
   refetchCreditPackages,
 }) {
+  const { data: countryList } = useGetCountryListQuery();
+
   const defaultValues = {
     name: selectedPackage?.name ?? '',
     credit: selectedPackage?.credit ?? 0,
@@ -22,6 +26,7 @@ export default function EditCreditPackageModal({
     pricePerCredit: selectedPackage?.pricePerCredit ?? 0,
     discountPercentage: selectedPackage?.discountPercentage ?? 0,
     isActive: selectedPackage?.isActive ?? false,
+    country: selectedPackage?.country?._id ?? selectedPackage?.country ?? '',
   };
 
   const [updateCreatePackage, { isLoading }] = useUpdateCreditPackageMutation();
@@ -34,6 +39,7 @@ export default function EditCreditPackageModal({
       pricePerCredit,
       discountPercentage,
       isActive,
+      country,
     } = data;
 
     const payload = {
@@ -47,6 +53,7 @@ export default function EditCreditPackageModal({
         ? Number(discountPercentage)
         : null,
       isActive: isActive ? true : false,
+      country: country,
     };
     try {
       const res = await updateCreatePackage(payload).unwrap();
@@ -70,24 +77,23 @@ export default function EditCreditPackageModal({
       title="Edit Credit Package"
       width="max-w-[600px]"
     >
-      <div className="max-h-[600px] overflow-y-auto">
-        <FormWrapper
-          defaultValues={defaultValues}
-          onSubmit={handleSubmit}
-        // schema={schema}
-        >
-          <TextInput
-            type="text"
-            label="Package Name"
-            name="name"
-            placeholder="Enter Package Name"
-          />
-          <TextInput
-            type="text"
-            label="Credit"
-            name="credit"
-            placeholder="Enter credit amount"
-          />
+      <FormWrapper
+        defaultValues={defaultValues}
+        onSubmit={handleSubmit}
+      // schema={schema}
+      >
+        <TextInput
+          type="text"
+          label="Package Name"
+          name="name"
+          placeholder="Enter Package Name"
+        />
+        <TextInput
+          type="text"
+          label="Credit"
+          name="credit"
+          placeholder="Enter credit amount"
+        />
 
           <TextInput
             type="text"
@@ -110,16 +116,24 @@ export default function EditCreditPackageModal({
             placeholder="Enter price per credit"
           />
 
-          <TextInput
-            type="text"
-            label="Discount Percentage"
-            name="discountPercentage"
-            placeholder="Enter discount percentage"
-          />
-          <CheckboxInput label="Active" name="isActive" />
-          <Button type="submit">Update</Button>
-        </FormWrapper>
-      </div>
+        <TextInput
+          type="text"
+          label="Discount Percentage"
+          name="discountPercentage"
+          placeholder="Enter discount percentage"
+        />
+        <SelectInput
+          name="country"
+          label="Country"
+          options={countryList?.data?.map((c) => ({
+            label: c.name,
+            value: c._id,
+          }))}
+          placeholder="Select Country"
+        />
+        <CheckboxInput label="Active" name="isActive" />
+        <Button type="submit">Update</Button>
+      </FormWrapper>
     </Modal>
   );
 }
