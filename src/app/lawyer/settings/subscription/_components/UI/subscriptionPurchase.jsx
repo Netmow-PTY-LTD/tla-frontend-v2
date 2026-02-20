@@ -173,7 +173,7 @@ const SubscriptionPurchase = ({ subscriptionPlan, currentSubscription = null, on
                 )}
                 {!subscriptionPlan?.taxAmount && (
                   <p className="text-gray-500 text-xs font-normal">
-                    (Inc. {subscriptionPlan?.taxType || 'GST'})
+                    (Ex. {subscriptionPlan?.taxType || 'GST'})
                   </p>
                 )}
               </div>

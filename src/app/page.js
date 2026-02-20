@@ -70,6 +70,9 @@ export default function Home() {
     }
   }, []);
 
+
+  console.log('Version 1.0.0')
+
   return (
     <MainLayout>
       <HeroHome searchParam={searchParam} />
