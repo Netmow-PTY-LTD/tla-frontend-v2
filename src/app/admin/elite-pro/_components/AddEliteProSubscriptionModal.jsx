@@ -144,7 +144,7 @@ export default function AddEliteProSubscriptionModal({
         </div>
 
         <div className="text-center mt-10">
-          <Button type="submit" loading={isLoading}>
+          <Button type="submit" disabled={isLoading}>
             {isLoading ? (
               <span className="flex items-center gap-2">
                 <Loader className="w-4 h-4 animate-spin" />
