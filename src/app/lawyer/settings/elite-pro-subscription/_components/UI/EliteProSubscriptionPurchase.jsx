@@ -21,6 +21,7 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan, currentSubscription = 
   const [open, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
+  const [changeConfirmOpen, setChangeConfirmOpen] = useState(false);
   const [autoRenew, setAutoRenew] = useState(true);
   const [addPaymentMethod] = useAddPaymentMethodMutation();
   const [subscriptionSubscription, { isLoading: subscribeLoading }] =
@@ -124,6 +125,11 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan, currentSubscription = 
 
   // Handle change subscription (upgrade/downgrade)
   const handleChangeSubscription = async () => {
+    setChangeConfirmOpen(true);
+  };
+
+  const confirmChangeSubscription = async () => {
+    setChangeConfirmOpen(false);
     if (onChangeSubscription) {
       await onChangeSubscription(subscriptionPlan?._id);
     }
@@ -297,7 +303,8 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan, currentSubscription = 
         }
         open={isOpen}
         onOpenChange={setIsOpen}
-        description="Are you sure you want to subscribe to the Elite Pro plan?"
+        title="Confirm Elite Pro Subscription"
+        description={`Are you sure you want to subscribe to the Elite Pro ${subscriptionPlan?.name} plan?`}
       />
 
       {/* ✅ Confirm Cancel Modal */}
@@ -305,7 +312,23 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan, currentSubscription = 
         onConfirm={handleCancelSubscription}
         open={cancelOpen}
         onOpenChange={setCancelOpen}
-        description="Are you sure you want to cancel your elite pro subscription?"
+        title="Cancel Elite Pro"
+        description="Are you sure you want to cancel your Elite Pro subscription? This will affect your profile visibility."
+      />
+
+      {/* Confirm Change Subscription Modal */}
+      <ConfirmationModal
+        onConfirm={confirmChangeSubscription}
+        open={changeConfirmOpen}
+        onOpenChange={setChangeConfirmOpen}
+        title={subscriptionAction === 'upgrade' ? 'Confirm Upgrade' : subscriptionAction === 'downgrade' ? 'Confirm Downgrade' : 'Confirm Change'}
+        description={
+          subscriptionAction === 'upgrade'
+            ? `Are you sure you want to upgrade your plan to ${subscriptionPlan?.name}? Your new benefits will be available immediately.`
+            : subscriptionAction === 'downgrade'
+              ? `Are you sure you want to downgrade your plan to ${subscriptionPlan?.name}? Please note that this change will take effect immediately, and no refunds will be provided for the remaining period of your current plan.`
+              : `Are you sure you want to change your plan to ${subscriptionPlan?.name}?`
+        }
       />
     </div>
   );
