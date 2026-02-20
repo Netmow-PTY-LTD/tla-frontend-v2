@@ -21,7 +21,7 @@ const InvoiceModal = ({ open, setOpen, transaction }) => {
 
   console.log('transaction', transaction);
 
-  const formatCurrency = (amount) => `$${(amount || 0).toFixed(2)}`;
+  const formatCurrency = (amount) => `${currency?.toUpperCase() || '$'} ${(amount || 0).toFixed(2)}`;
 
   return (
     <Modal width="max-w-[800px]" open={open} onOpenChange={setOpen}>
