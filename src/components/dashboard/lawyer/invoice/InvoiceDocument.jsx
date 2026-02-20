@@ -29,12 +29,14 @@ const styles = StyleSheet.create({
   },
 });
 
-const formatCurrency = (value) =>
-  typeof value === 'number' ? `$${value.toFixed(2)}` : value || '-';
+
 
 const InvoiceDocument = ({ transaction }) => {
-  const { createdAt, _id, userId, creditPackageId, couponCode, discount } =
+  const { createdAt, _id, userId, creditPackageId, couponCode, discount, currency } =
     transaction || {};
+
+  const formatCurrency = (value) =>
+    typeof value === 'number' ? `${currency?.toUpperCase() || '$'} ${value.toFixed(2)}` : value || '-';
 
   return (
     <Document>
