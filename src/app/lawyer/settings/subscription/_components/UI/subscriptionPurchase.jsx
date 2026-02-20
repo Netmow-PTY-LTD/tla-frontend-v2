@@ -173,7 +173,7 @@ const SubscriptionPurchase = ({ subscriptionPlan, currentSubscription = null, on
                 )}
                 {!subscriptionPlan?.taxAmount && (
                   <p className="text-gray-500 text-xs font-normal">
-                    (Inc. {subscriptionPlan?.taxType || 'GST'})
+                    (Ex. {subscriptionPlan?.taxType || 'GST'})
                   </p>
                 )}
               </div>
@@ -186,7 +186,7 @@ const SubscriptionPurchase = ({ subscriptionPlan, currentSubscription = null, on
             <div>
               {subscriptionAction === 'current' ? (
                 <div className="flex items-center space-x-2">
-                 
+
                   <Button
                     variant="destructive"
                     className="bg-red-500 hover:bg-red-600 text-white px-4 flex items-center justify-center"
@@ -312,7 +312,8 @@ const SubscriptionPurchase = ({ subscriptionPlan, currentSubscription = null, on
         }
         open={isOpen}
         onOpenChange={setIsOpen}
-        description="Are you sure you want to subscribe to this plan?"
+        title="Confirm Subscription"
+        description={`Are you sure you want to subscribe to the ${subscriptionPlan?.name} plan?`}
       />
 
       {/*  Confirm Cancel Modal */}
@@ -320,7 +321,8 @@ const SubscriptionPurchase = ({ subscriptionPlan, currentSubscription = null, on
         onConfirm={handleCancelSubscription}
         open={cancelOpen}
         onOpenChange={setCancelOpen}
-        description="Are you sure you want to cancel your subscription?"
+        title="Cancel Subscription"
+        description="Are you sure you want to cancel your current subscription? You will lose access to premium features at the end of your billing cycle."
       />
 
       {/* Confirm Change Subscription Modal */}
@@ -328,7 +330,14 @@ const SubscriptionPurchase = ({ subscriptionPlan, currentSubscription = null, on
         onConfirm={confirmChangeSubscription}
         open={changeConfirmOpen}
         onOpenChange={setChangeConfirmOpen}
-        description={`Are you sure you want to ${subscriptionAction} to ${subscriptionPlan?.name}?`}
+        title={subscriptionAction === 'upgrade' ? 'Confirm Upgrade' : subscriptionAction === 'downgrade' ? 'Confirm Downgrade' : 'Confirm Change'}
+        description={
+          subscriptionAction === 'upgrade'
+            ? `Are you sure you want to upgrade your plan to ${subscriptionPlan?.name}? Your new benefits will be available immediately.`
+            : subscriptionAction === 'downgrade'
+              ? `Are you sure you want to downgrade your plan to ${subscriptionPlan?.name}? Please note that this change will take effect immediately, and no refunds will be provided for the remaining period of your current plan.`
+              : `Are you sure you want to change your plan to ${subscriptionPlan?.name}?`
+        }
       />
     </div>
   );

@@ -157,7 +157,7 @@ export default function AddSubscriptionModal({
         </div>
 
         <div className="text-center mt-10">
-          <Button type="submit" loading={isAddSubscriptionLoading}>
+          <Button type="submit" disabled={isAddSubscriptionLoading}>
             {isAddSubscriptionLoading ? (
               <span className="flex items-center gap-2">
                 <Loader className="w-4 h-4 animate-spin" />

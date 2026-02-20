@@ -32,8 +32,9 @@ export default function ProfileProgress() {
     if (profile.practising_certificate_number) score += 7.5;
 
     // Experience (10%)
-    if (profile.experience?.years || profile.experience?.months) score += 5;
-    if (profile.experience?.experienceHighlight) score += 5;
+    if (profile.experience?.years || profile.experience?.months) score += 10 / 3;
+    if (profile.experience?.experience) score += 10 / 3;
+    if (profile.experience?.experienceHighlight) score += 10 / 3;
 
     // Services (10%)
     if (profile.customService && profile.customService.length > 0) score += 10;
@@ -42,13 +43,11 @@ export default function ProfileProgress() {
     if (profile.accreditation && profile.accreditation.length > 0) score += 5;
 
     // Social Media (5%)
-    if (
-      profile.socialMedia &&
-      (profile.socialMedia.facebook ||
-        profile.socialMedia.twitter ||
-        profile.socialMedia.website)
-    )
-      score += 5;
+    if (profile.socialMedia) {
+      if (profile.socialMedia.facebook) score += 5 / 3;
+      if (profile.socialMedia.twitter) score += 5 / 3;
+      if (profile.socialMedia.website) score += 5 / 3;
+    }
 
     // Q&A (5%)
     if (profile.profileQA && profile.profileQA.some((qa) => qa.answer))
