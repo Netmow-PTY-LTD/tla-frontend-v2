@@ -19,7 +19,7 @@ const InvoiceContent = ({ transaction }) => {
   const discount = discountApplied || 0;
   const subTotal = total - (total * 10) / 110;
   const vat = total - subTotal;
-  const formatCurrency = (amount) => `$${(amount || 0).toFixed(2)}`;
+  const formatCurrency = (amount) => `${currency?.toUpperCase() || '$'} ${(amount || 0).toFixed(2)}`;
 
   return (
     <div className="p-6 text-gray-800 font-sans w-[800px] bg-white">

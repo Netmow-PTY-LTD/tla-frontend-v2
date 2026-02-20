@@ -84,18 +84,31 @@ const CreditsPurchase = ({ creditPackage }) => {
             <div>
               <div className="flex items-baseline gap-1">
                 <p className="font-semibold text-gray-900 text-lg">
-                  $ {creditPackage?.priceDisplay}
+                  {creditPackage?.country?.currency?.toUpperCase() || '$'} {creditPackage?.priceDisplay}
                 </p>
                 <p className="text-gray-500 text-xs font-normal">
-                  + $ {creditPackage?.taxAmount || (creditPackage?.priceDisplay * 0.1).toFixed(2)}{' '}
-                  {creditPackage?.taxType || 'GST'}
+                  + {creditPackage?.country?.currency?.toUpperCase() || '$'}{' '}
+                  {creditPackage?.taxAmount ||
+                    (
+                      creditPackage?.priceDisplay *
+                      (creditPackage?.country?.taxPercentage / 100 || 0.1)
+                    ).toFixed(2)}{' '}
+                  ({creditPackage?.country?.taxPercentage || 10}%{' '}
+                  {creditPackage?.taxType || 'GST'})
                 </p>
               </div>
               <p className="text-[#00C3C0] text-sm font-semibold">
-                Total: $ {creditPackage?.totalPrice || (creditPackage?.priceDisplay * 1.1).toFixed(2)} (Inc {creditPackage?.taxType || 'GST'})
+                Total: {creditPackage?.country?.currency?.toUpperCase() || '$'}{' '}
+                {creditPackage?.totalPrice ||
+                  (
+                    creditPackage?.priceDisplay *
+                    (1 + (creditPackage?.country?.taxPercentage / 100 || 0.1))
+                  ).toFixed(2)}{' '}
+                (Inc {creditPackage?.country?.taxPercentage || 10}%{' '}
+                {creditPackage?.taxType || 'GST'})
               </p>
               <p className="text-gray-500 text-sm">
-                $ {creditPackage?.pricePerCredit}/credit
+                {creditPackage?.country?.currency?.toUpperCase() || '$'} {creditPackage?.pricePerCredit}/credit
               </p>
             </div>
             <div className="">
