@@ -88,13 +88,23 @@ const CreditsPurchase = ({ creditPackage }) => {
                 </p>
                 <p className="text-gray-500 text-xs font-normal">
                   + {creditPackage?.country?.currency?.toUpperCase() || '$'}{' '}
-                  {creditPackage?.taxAmount || (creditPackage?.priceDisplay * 0.1).toFixed(2)}{' '}
-                  {creditPackage?.taxType || 'GST'}
+                  {creditPackage?.taxAmount ||
+                    (
+                      creditPackage?.priceDisplay *
+                      (creditPackage?.country?.taxPercentage / 100 || 0.1)
+                    ).toFixed(2)}{' '}
+                  ({creditPackage?.country?.taxPercentage || 10}%{' '}
+                  {creditPackage?.taxType || 'GST'})
                 </p>
               </div>
               <p className="text-[#00C3C0] text-sm font-semibold">
                 Total: {creditPackage?.country?.currency?.toUpperCase() || '$'}{' '}
-                {creditPackage?.totalPrice || (creditPackage?.priceDisplay * 1.1).toFixed(2)} (Inc{' '}
+                {creditPackage?.totalPrice ||
+                  (
+                    creditPackage?.priceDisplay *
+                    (1 + (creditPackage?.country?.taxPercentage / 100 || 0.1))
+                  ).toFixed(2)}{' '}
+                (Inc {creditPackage?.country?.taxPercentage || 10}%{' '}
                 {creditPackage?.taxType || 'GST'})
               </p>
               <p className="text-gray-500 text-sm">
