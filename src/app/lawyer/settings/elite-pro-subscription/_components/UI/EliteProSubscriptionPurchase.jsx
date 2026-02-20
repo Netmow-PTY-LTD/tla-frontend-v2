@@ -17,7 +17,7 @@ import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { Loader } from 'lucide-react';
 
-const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
+const EliteProSubscriptionPurchase = ({ subscriptionPlan, currentSubscription = null, onChangeSubscription = null, changeLoading = false }) => {
   const [open, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
@@ -40,6 +40,30 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
     activeSubscription &&
     activeSubscription.eliteProPackageId?._id === subscriptionPlan?._id &&
     activeSubscription.status === 'active';
+
+  // Determine if this is an upgrade, downgrade, or current plan
+  const getSubscriptionAction = () => {
+    if (!currentSubscription || !currentSubscription.eliteProPackageId) {
+      return 'subscribe'; // No current subscription
+    }
+
+    if (isSubscribedToThisPlan) {
+      return 'current'; // This is the current plan
+    }
+
+    const currentPrice = currentSubscription.eliteProPackageId?.price?.amount || 0;
+    const planPrice = subscriptionPlan?.price?.amount || 0;
+
+    if (planPrice > currentPrice) {
+      return 'upgrade';
+    } else if (planPrice < currentPrice) {
+      return 'downgrade';
+    } else {
+      return 'change'; // Same price, different plan
+    }
+  };
+
+  const subscriptionAction = getSubscriptionAction();
 
   const handleCardAdded = async (paymentMethodId) => {
     const result = await addPaymentMethod({ paymentMethodId }).unwrap();
@@ -98,6 +122,13 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
     }
   };
 
+  // Handle change subscription (upgrade/downgrade)
+  const handleChangeSubscription = async () => {
+    if (onChangeSubscription) {
+      await onChangeSubscription(subscriptionPlan?._id);
+    }
+  };
+
   return (
     <div>
       <div className="border-0 bg-white rounded-lg p-6 relative">
@@ -128,17 +159,29 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
             </div>
 
             <div>
-              <p className="font-medium text-gray-900 text-lg">
-                {subscriptionPlan?.priceFormatted}
-              </p>
+              <div className="flex items-baseline gap-1">
+                <p className="font-semibold text-gray-900 text-lg">
+                  {subscriptionPlan?.priceFormatted}
+                </p>
+                {subscriptionPlan?.taxAmount > 0 && (
+                  <p className="text-gray-500 text-xs font-normal">
+                    (Inc. {subscriptionPlan?.taxAmount} {subscriptionPlan?.taxType || 'GST'})
+                  </p>
+                )}
+                {!subscriptionPlan?.taxAmount && (
+                  <p className="text-gray-500 text-xs font-normal">
+                    (Inc. {subscriptionPlan?.taxType || 'GST'})
+                  </p>
+                )}
+              </div>
               <p className="text-gray-500 text-sm">
                 {subscriptionPlan?.price?.currency}{' '}
-                {subscriptionPlan?.price?.amount}/month
+                {subscriptionPlan?.price?.amount}/month (Ex. {subscriptionPlan?.taxType || 'GST'})
               </p>
             </div>
 
             <div>
-              {isSubscribedToThisPlan ? (
+              {subscriptionAction === 'current' ? (
                 <Button
                   variant="destructive"
                   className="bg-red-500 hover:bg-red-600 text-white px-4 flex items-center justify-center"
@@ -152,6 +195,38 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan }) => {
                     </>
                   ) : (
                     'Cancel Subscription'
+                  )}
+                </Button>
+              ) : subscriptionAction === 'upgrade' ? (
+                <Button
+                  variant="primary"
+                  className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-4 flex items-center justify-center"
+                  onClick={handleChangeSubscription}
+                  disabled={changeLoading}
+                >
+                  {changeLoading ? (
+                    <>
+                      <Loader size="sm" className="mr-2" />
+                      Upgrading...
+                    </>
+                  ) : (
+                    'Upgrade Plan'
+                  )}
+                </Button>
+              ) : subscriptionAction === 'downgrade' ? (
+                <Button
+                  variant="secondary"
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-4 flex items-center justify-center"
+                  onClick={handleChangeSubscription}
+                  disabled={changeLoading}
+                >
+                  {changeLoading ? (
+                    <>
+                      <Loader size="sm" className="mr-2" />
+                      Downgrading...
+                    </>
+                  ) : (
+                    'Downgrade Plan'
                   )}
                 </Button>
               ) : (

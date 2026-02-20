@@ -105,8 +105,14 @@ const InvoiceDocument = ({ transaction }) => {
 
           {/* Summary */}
           <View style={[styles.section, styles.right]}>
-            <Text style={{ fontSize: 14, fontWeight: 700 }}>
-              Total: {formatCurrency(creditPackageId?.price)}
+            <Text style={{ fontSize: 10, marginBottom: 2 }}>
+              Sub Total: {formatCurrency(transaction?.subTotal || (transaction?.amountPaid - (transaction?.amountPaid * 10 / 110)))}
+            </Text>
+            <Text style={{ fontSize: 10, marginBottom: 4 }}>
+              {transaction?.taxType || 'GST'} ({transaction?.taxPercentage || 10}%): {formatCurrency(transaction?.taxAmount || (transaction?.amountPaid * 10 / 110))}
+            </Text>
+            <Text style={{ fontSize: 14, fontWeight: 700, borderTop: 1, paddingTop: 4 }}>
+              Total Inc. {transaction?.taxType || 'GST'}: {formatCurrency(transaction?.amountPaid || creditPackageId?.price)}
             </Text>
           </View>
         </View>

@@ -31,7 +31,12 @@ import { checkValidity } from '@/helpers/validityCheck';
 import { useGetAllCategoriesQuery } from '@/store/features/public/catagorywiseServiceApiService';
 import { safeJsonParse } from '@/helpers/safeJsonParse';
 import Cookies from 'js-cookie';
+import { useGetSettingsQuery } from '@/store/features/admin/appSettings';
+
 export default function HeroHome({ searchParam }) {
+  const { data: appSettings } = useGetSettingsQuery();
+  const firmClientUrl = appSettings?.data?.firm_client_url || '';
+
   const [selectedService, setSelectedService] = useState(null);
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -192,7 +197,7 @@ export default function HeroHome({ searchParam }) {
               Post a case in minutes
             </p>
             <p className="text-[#444] text-[18px] font-medium">
-              Need a <Link href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/register`} target="_blank" className="text-[var(--primary-color)] underline">Business Profile?</Link>
+              Need a <Link href={`${firmClientUrl}/register`} target="_blank" className="text-[var(--primary-color)] underline">Business Profile?</Link>
             </p>
           </div>
           <form className="w-full" onSubmit={handleSubmit}>

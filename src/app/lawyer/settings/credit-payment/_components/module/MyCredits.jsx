@@ -3,6 +3,7 @@
 import React, { useEffect } from 'react';
 import CreditsPurchase from '../UI/CreditPurchse';
 import { useGetAllCreditPackagesQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
+import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { Loader } from 'lucide-react';
 import { BillingTransactionDetails } from '../UI/BillingTransactionTable';
 import {
@@ -13,11 +14,18 @@ import {
 } from '@/components/ui/accordion';
 
 const MyCredits = ({ setMyCreditsProgress }) => {
+  const { data: userInfo } = useAuthUserInfoQuery();
+
   const {
     data: packageData,
     isError,
     isLoading,
-  } = useGetAllCreditPackagesQuery();
+  } = useGetAllCreditPackagesQuery({
+    country: userInfo?.data?.profile?.country,
+    isActive: 'true',
+  }, {
+    skip: !userInfo?.data?.profile?.country,
+  });
 
   return (
     <div className="w-full ">

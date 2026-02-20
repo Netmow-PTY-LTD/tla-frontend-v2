@@ -20,6 +20,14 @@ import {
 import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { DataTableWithPagination } from '../_components/DataTableWithPagination';
+import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 export default function SubscriptionList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,24 +36,38 @@ export default function SubscriptionList() {
   const [deleteModalId, setDeleteModalId] = useState(null);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
+  const [filterCountry, setFilterCountry] = useState('all');
+  const [isActive, setIsActive] = useState('true');
 
   const LIMIT = 10;
+
+  const { data: countryList } = useGetCountryListQuery();
 
   const handleEditSubscriptionModalOpen = (id) => {
     setIsEditModalOpen(true);
     setSubscriptionId(id);
   };
 
+  const queryParams = {
+    page,
+    limit: LIMIT,
+    search,
+  };
+
+  if (filterCountry !== 'all') {
+    queryParams.country = filterCountry;
+  }
+
+  if (isActive !== 'all') {
+    queryParams.isActive = isActive;
+  }
+
   const {
     data: subscriptions,
     isLoading: isLoadingSubscriptions,
     refetch: refetchSubscriptions,
     isFetching,
-  } = useGetAllSubscriptionsQuery({
-    page,
-    limit: LIMIT,
-    search,
-  });
+  } = useGetAllSubscriptionsQuery(queryParams);
 
   console.log('subscriptions', subscriptions);
   const [deleteSubscription] = useDeleteSubscriptionMutation();
@@ -113,6 +135,13 @@ export default function SubscriptionList() {
       cell: ({ getValue }) => <div>{getValue()}</div>,
     },
     {
+      accessorKey: 'country',
+      header: 'Country',
+      cell: ({ row }) => (
+        <div className="capitalize">{row.original.country?.name || '-'}</div>
+      ),
+    },
+    {
       id: 'actions',
       header: 'Actions',
       enableHiding: false,
@@ -160,7 +189,44 @@ export default function SubscriptionList() {
     <div>
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-2xl font-bold">List of Subscriptions</h2>
-        <Button onClick={() => setIsModalOpen(true)}>Add Subscription</Button>
+        <div className="flex gap-2">
+          <Select
+            value={filterCountry}
+            onValueChange={(val) => {
+              setFilterCountry(val);
+              setPage(1);
+            }}
+          >
+            <SelectTrigger className="w-[150px]">
+              <SelectValue placeholder="Filter Country" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Countries</SelectItem>
+              {countryList?.data?.map((c) => (
+                <SelectItem key={c._id} value={c._id}>
+                  {c.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select
+            value={isActive}
+            onValueChange={(val) => {
+              setIsActive(val);
+              setPage(1);
+            }}
+          >
+            <SelectTrigger className="w-[150px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="true">Active</SelectItem>
+              <SelectItem value="false">Inactive</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button onClick={() => setIsModalOpen(true)}>Add Subscription</Button>
+        </div>
 
         {deleteModalId && (
           <ConfirmationModal
