@@ -1,13 +1,9 @@
 'use client';
 import {
   LayoutDashboard,
-  SquareKanban,
-  MessagesSquare,
-  CircleHelp,
-  BookText,
   Settings,
-  Users,
   BookOpenText,
+  PlusCircle,
 } from 'lucide-react';
 
 export const BuyerSidebarItems = {
@@ -18,7 +14,12 @@ export const BuyerSidebarItems = {
       icon: LayoutDashboard,
       isActive: true,
     },
-
+    {
+      title: 'Add New Case',
+      url: '/client/dashboard/add-new-case',
+      icon: PlusCircle,
+      isActive: true,
+    },
     {
       title: 'My Cases',
       url: '/client/dashboard/my-cases',
