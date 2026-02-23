@@ -35,6 +35,7 @@ export default function AddNewCase() {
     const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
     const [service, setService] = useState(null);
+    const [query, setQuery] = useState('');
     const [selectedCountry, setSelectedCountry] = useState('');
     const [leads, setLeads] = useState([]);
     const [page, setPage] = useState(1);
@@ -80,6 +81,14 @@ export default function AddNewCase() {
             skip: !defaultCountry?._id, // Skip
         }
     );
+
+    const filteredServices =
+        query === ''
+            ? allServices
+            : allServices.filter((s) =>
+                s.name.toLowerCase().replace(/\s+/g, '')
+                    .includes(query.toLowerCase().replace(/\s+/g, ''))
+            );
 
     const token = useSelector((state) => state.auth.token);
 
@@ -183,15 +192,19 @@ export default function AddNewCase() {
                                                 <ComboboxInput
                                                     className="w-full bg-gray-50 border border-gray-200 focus:border-[#00C3C0] focus:ring-2 focus:ring-[#00C3C0]/10 rounded-xl h-[48px] md:h-[56px] px-6 text-[16px] transition-all duration-200 outline-none"
                                                     onChange={(e) => {
-                                                        setService(e.target.value);
+                                                        setQuery(e.target.value);
                                                     }}
                                                     displayValue={(val) => val?.name || ''}
                                                     placeholder="e.g. Family Law, Criminal Defense, Property Law..."
                                                     autoComplete="off"
                                                 />
-                                                {allServices?.length > 0 && (
+                                                {(filteredServices?.length === 0 && query !== '') ? (
+                                                    <ComboboxOptions className="absolute z-50 mt-2 w-full rounded-xl bg-white p-4 text-sm shadow-xl ring-1 ring-black/5 text-gray-500 text-center">
+                                                        No results found.
+                                                    </ComboboxOptions>
+                                                ) : filteredServices?.length > 0 && (
                                                     <ComboboxOptions className="absolute z-50 mt-2 max-h-72 w-full overflow-auto rounded-xl bg-white p-2 text-sm shadow-xl ring-1 ring-black/5 focus:outline-none">
-                                                        {allServices?.map((item) => (
+                                                        {filteredServices?.map((item) => (
                                                             <ComboboxOption
                                                                 key={item._id}
                                                                 value={item}

@@ -47,8 +47,8 @@ export default function HeroHome({ searchParam }) {
   const [selectedZipCodeId, setSelectedZipCodeId] = useState(null);
   const [zipCodeList, setZipCodeList] = useState([]);
 
-  const [filteredServices, setFilteredServices] = useState([]);
-  //const [filteredZipCodes, setFilteredZipCodes] = useState([]);
+  const [filteredZipCodes, setFilteredZipCodes] = useState([]);
+  const [query, setQuery] = useState('');
   const [shouldAutoFocus, setShouldAutoFocus] = useState(false);
 
   const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
@@ -87,6 +87,14 @@ export default function HeroHome({ searchParam }) {
 
   const allServices =
     allCategories?.data?.flatMap((category) => category.services) || [];
+
+  const filteredServices =
+    query === ''
+      ? allServices
+      : allServices.filter((s) =>
+        s.name.toLowerCase().replace(/\s+/g, '')
+          .includes(query.toLowerCase().replace(/\s+/g, ''))
+      );
 
   // console.log('allCategories', allCategories);
   // console.log('allServices', allServices);
@@ -208,26 +216,23 @@ export default function HeroHome({ searchParam }) {
                     <ComboboxInput
                       className="border border-gray-300 rounded-md w-full h-[44px] px-4 text-sm font-medium"
                       onChange={(e) => {
-                        const query = e.target.value.toLowerCase();
-                        const matched = countryWiseServices?.data?.filter((s) =>
-                          s.name.toLowerCase().includes(query)
-                        );
-                        setFilteredServices(
-                          query ? matched : countryWiseServices?.data
-                        );
-                        setService(e.target.value);
+                        setQuery(e.target.value);
                       }}
                       displayValue={(val) => val?.name || ''}
                       placeholder="What area of law are you interested in?"
-                      onFocus={() =>
-                        setFilteredServices(countryWiseServices?.data ?? [])
-                      }
+                      onFocus={() => {
+                        setQuery('');
+                      }}
                       ref={inputRef}
                       autoComplete="off"
                     />
-                    {allServices?.length > 0 && (
+                    {filteredServices?.length === 0 && query !== '' ? (
+                      <ComboboxOptions className="absolute z-10 mt-1 w-full rounded-md bg-white p-4 text-sm shadow-lg ring-1 ring-black ring-opacity-5 text-gray-500 text-center">
+                        No results found.
+                      </ComboboxOptions>
+                    ) : filteredServices?.length > 0 && (
                       <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {allServices.map((item) => (
+                        {filteredServices.map((item) => (
                           <ComboboxOption
                             key={item._id}
                             value={item}

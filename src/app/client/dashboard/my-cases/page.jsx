@@ -37,6 +37,7 @@ export default function MyLeads() {
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [service, setService] = useState(null);
+  const [query, setQuery] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('');
   const [leads, setLeads] = useState([]);
   const [page, setPage] = useState(1);
@@ -100,6 +101,14 @@ export default function MyLeads() {
       skip: !defaultCountry?._id, // Skip
     }
   );
+
+  const filteredServices =
+    query === ''
+      ? allServices
+      : allServices.filter((s) =>
+        s.name.toLowerCase().replace(/\s+/g, '')
+          .includes(query.toLowerCase().replace(/\s+/g, ''))
+      );
 
   const loader = useRef(null);
 
@@ -261,15 +270,19 @@ export default function MyLeads() {
                     <ComboboxInput
                       className="border border-gray-300 rounded-md w-full h-[44px] px-4 text-[14px]"
                       onChange={(e) => {
-                        setService(e.target.value);
+                        setQuery(e.target.value);
                       }}
                       displayValue={(val) => val?.name || ''}
                       placeholder="Search a service..."
                       autoComplete="off"
                     />
-                    {allServices?.length > 0 && (
+                    {(filteredServices?.length === 0 && query !== '') ? (
+                      <ComboboxOptions className="absolute z-10 mt-1 w-full rounded-md bg-white p-4 text-sm shadow-lg ring-1 ring-black ring-opacity-5 text-gray-500 text-center">
+                        No results found.
+                      </ComboboxOptions>
+                    ) : filteredServices?.length > 0 && (
                       <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {allServices?.map((item) => (
+                        {filteredServices?.map((item) => (
                           <ComboboxOption
                             key={item._id}
                             value={item}
