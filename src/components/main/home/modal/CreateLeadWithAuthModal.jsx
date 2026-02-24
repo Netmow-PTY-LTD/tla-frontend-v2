@@ -79,8 +79,6 @@ export default function CreateLeadWithAuthModal({
   const [isTypedNewValue, setIsTypedNewValue] = useState(false);
 
   useEffect(() => {
-    if (!selectedServiceWiseQuestions?.length) return;
-
     setQuestionLoading(true); // 👈 Start loading
 
     setStep(0);
@@ -93,7 +91,7 @@ export default function CreateLeadWithAuthModal({
     setFullClonedQuestions([]);
     setPartialClonedQuestions([]);
     setViewData(null);
-  }, [selectedServiceWiseQuestions]);
+  }, [serviceId]);
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -504,9 +502,13 @@ export default function CreateLeadWithAuthModal({
       showCloseButton={true}
     >
       <div className="max-h-[90vh] overflow-y-auto">
-        {isQuestionsLoading || !selectedServiceWiseQuestions?.length ? (
+        {isQuestionsLoading ? (
           <div className="flex items-center justify-center gap-2 pt-6 px-6">
             <Loader className="w-4 h-4 animate-spin" /> Loading question...
+          </div>
+        ) : !selectedServiceWiseQuestions?.length ? (
+          <div className="text-center text-gray-500 pt-6 px-6">
+            No question found
           </div>
         ) : step < totalQuestions ? (
           viewData?.question ? (

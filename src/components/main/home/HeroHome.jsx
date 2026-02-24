@@ -109,6 +109,7 @@ export default function HeroHome({ searchParam }) {
   const {
     data: singleServicewiseQuestionsData,
     isLoading: isQuestionsLoading,
+    isFetching: isQuestionsFetching,
     refetch,
   } = useGetServiceWiseQuestionsQuery(
     {
@@ -121,9 +122,9 @@ export default function HeroHome({ searchParam }) {
   );
 
   useEffect(() => {
-    if (isQuestionsLoading) return; // ✅ Wait for loading to complete
+    if (isQuestionsLoading || isQuestionsFetching) return; // ✅ Wait for both
     setServiceWiseQuestions(singleServicewiseQuestionsData?.data || []);
-  }, [isQuestionsLoading, singleServicewiseQuestionsData]);
+  }, [isQuestionsLoading, isQuestionsFetching, singleServicewiseQuestionsData]);
 
   const token = useSelector((state) => state.auth.token);
 
@@ -169,8 +170,19 @@ export default function HeroHome({ searchParam }) {
       showErrorToast('Please select a service and location.');
       return;
     }
+    let serviceToSelect = service;
+    if (!serviceToSelect && query) {
+      // Robust search for "Others" in available service lists
+      const findOthers = (list) =>
+        list?.find(
+          (s) => s.slug === 'others' || s.name.toLowerCase() === 'others'
+        );
 
-    setSelectedService(service);
+      serviceToSelect =
+        findOthers(allServices) || findOthers(countryWiseServices?.data);
+    }
+
+    setSelectedService(serviceToSelect);
 
     // const selectedZipCode = defaultCountryZipCodes?.find(
     //   (z) => z._id === selectedZipCodeId
@@ -212,18 +224,24 @@ export default function HeroHome({ searchParam }) {
           <form className="w-full" onSubmit={handleSubmit}>
             <div className="hero-search-area flex flex-wrap md:flex-nowrap gap-2 items-center w-full">
               <div className="tla-form-group w-full lg:w-5/12">
-                <Combobox value={service} onChange={(val) => setService(val)}>
+                <Combobox
+                  value={service}
+                  onChange={(val) => {
+                    setService(val);
+                    if (val) {
+                      setQuery('');
+                    }
+                  }}
+                >
                   <div className="relative">
                     <ComboboxInput
                       className="border border-gray-300 rounded-md w-full h-[44px] px-4 text-sm font-medium"
                       onChange={(e) => {
                         setQuery(e.target.value);
+                        setService(null);
                       }}
                       displayValue={(val) => val?.name || query}
                       placeholder="What area of law are you interested in?"
-                      onFocus={() => {
-                        setQuery('');
-                      }}
                       ref={inputRef}
                       autoComplete="off"
                     />
@@ -406,7 +424,7 @@ export default function HeroHome({ searchParam }) {
               defaultCountry={defaultCountry}
               serviceId={selectedService?._id}
               locationId={selectedZipCodeId}
-              isQuestionsLoading={isQuestionsLoading}
+              isQuestionsLoading={isQuestionsLoading || isQuestionsFetching}
               zipCodeList={zipCodeList}
             />
           )}
@@ -421,7 +439,7 @@ export default function HeroHome({ searchParam }) {
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
           locationId={selectedZipCodeId}
-          isQuestionsLoading={isQuestionsLoading}
+          isQuestionsLoading={isQuestionsLoading || isQuestionsFetching}
           defaultCountry={defaultCountry}
           zipCodeList={zipCodeList}
         />
