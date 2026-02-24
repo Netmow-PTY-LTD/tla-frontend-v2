@@ -11,7 +11,7 @@ import TestimonialSlider from '@/components/main/home/HomeTestimonials';
 import { useGetMetadataBySlugQuery } from '@/store/features/admin/SEOMetaApiService';
 import HomeCompanyCTA from '@/components/main/home/HomeCompanyCTA';
 
-export default function page() {
+export default function Page() {
   const [searchParam, setSearchParam] = useState('');
   const token = useSelector((state) => state.auth.token);
   //console.log('token', token);
