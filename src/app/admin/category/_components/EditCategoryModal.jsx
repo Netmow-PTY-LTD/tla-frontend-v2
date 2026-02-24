@@ -93,7 +93,7 @@ export default function EditCategoryModal({ id, open, onClose }) {
           </div>
         ) : (
           <FormWrapper onSubmit={onSubmit} defaultValues={defaultValues}>
-            <FormField onClose={onClose} isLoading={isLoading} />
+            <FormField onClose={onClose} isLoading={isLoading} isEdit={true} />
           </FormWrapper>
         )}
       </DialogContent>

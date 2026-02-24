@@ -6,7 +6,7 @@ import AvatarUploader from '@/components/UIComponents/AvaterUploader';
 import React, { useEffect } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form';
 
-export default function FormField({ isLoading, onClose }) {
+export default function FormField({ isLoading, onClose, isEdit }) {
     const { setValue } = useFormContext();
     const name = useWatch({ name: 'name' });
 
@@ -31,7 +31,7 @@ export default function FormField({ isLoading, onClose }) {
                     Cancel
                 </Button>
                 <Button type="submit" disabled={isLoading}>
-                    {isLoading ? 'Adding...' : 'Add'}
+                    {isLoading ? 'Loading...' : !isEdit ? 'Add' : 'Update'}
                 </Button>
 
             </DialogFooter>
