@@ -165,11 +165,12 @@ export default function HeroHome({ searchParam }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    setSelectedService(service);
-    if (!service || !service?._id || !location) {
+    if ((!service && !query) || !location) {
       showErrorToast('Please select a service and location.');
       return;
     }
+
+    setSelectedService(service);
 
     // const selectedZipCode = defaultCountryZipCodes?.find(
     //   (z) => z._id === selectedZipCodeId
@@ -218,7 +219,7 @@ export default function HeroHome({ searchParam }) {
                       onChange={(e) => {
                         setQuery(e.target.value);
                       }}
-                      displayValue={(val) => val?.name || ''}
+                      displayValue={(val) => val?.name || query}
                       placeholder="What area of law are you interested in?"
                       onFocus={() => {
                         setQuery('');
