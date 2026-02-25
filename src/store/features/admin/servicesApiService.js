@@ -8,7 +8,7 @@ const servicesApiService = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['service','service-list'],
+      invalidatesTags: ['service', 'service-list'],
       // onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
       //   try {
       //     await queryFulfilled;
@@ -39,14 +39,14 @@ const servicesApiService = baseApi.injectEndpoints({
         method: 'PATCH',
         body,
       }),
-      invalidatesTags: ['service','service-list'],
+      invalidatesTags: ['service', 'service-list'],
     }),
     deleteService: builder.mutation({
       query: (id) => ({
         url: `/service/delete/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['service','service-list'],
+      invalidatesTags: ['service', 'service-list'],
     }),
     addCountryWiseService: builder.mutation({
       query: (body) => ({
@@ -54,7 +54,7 @@ const servicesApiService = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['country-wise-map','country-wise-map-list'],
+      invalidatesTags: ['country-wise-map', 'country-wise-map-list'],
     }),
     editCountryWiseService: builder.mutation({
       query: (body) => ({
@@ -62,7 +62,7 @@ const servicesApiService = baseApi.injectEndpoints({
         method: 'PATCH',
         body,
       }),
-      invalidatesTags: ['country-wise-map','country-wise-map-list'],
+      invalidatesTags: ['country-wise-map', 'country-wise-map-list'],
     }),
     getAllCountryWiseServices: builder.query({
       query: () => ({
@@ -84,7 +84,7 @@ const servicesApiService = baseApi.injectEndpoints({
         method: 'PATCH',
         body,
       }),
-      invalidatesTags: ['country-wise-map','country-wise-map-list'],
+      invalidatesTags: ['country-wise-map', 'country-wise-map-list'],
     }),
     getAllManagedServices: builder.query({
       query: ({ countryId, serviceId }) => ({
@@ -92,6 +92,13 @@ const servicesApiService = baseApi.injectEndpoints({
         method: 'GET',
       }),
       providesTags: ['service'],
+    }),
+    getServiceGroups: builder.query({
+      query: (countryId) => ({
+        url: `/country-wise-map/service-group/${countryId}`,
+        method: 'GET',
+      }),
+      providesTags: ['country-wise-map'],
     }),
   }),
 });
@@ -108,4 +115,5 @@ export const {
   useGetCountryWiseServicesQuery,
   useManageServiceMutation,
   useGetAllManagedServicesQuery,
+  useGetServiceGroupsQuery,
 } = servicesApiService;

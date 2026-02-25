@@ -42,13 +42,13 @@ export default function ServicesList() {
   const columns = [
     {
       accessorKey: 'image',
-      header: 'Images',
+      header: 'Image',
       cell: ({ row }) => {
         const imageUrl = row.getValue('image');
         return (
           <div className="flex justify-center items-center">
             <img
-              src={imageUrl || '/images/placeholder.png'}
+              src={imageUrl}
               alt="avatar"
               className="w-10 h-10 rounded-full object-cover border"
             />
