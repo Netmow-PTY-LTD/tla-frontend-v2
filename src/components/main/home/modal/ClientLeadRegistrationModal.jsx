@@ -44,6 +44,7 @@ export default function ClientLeadRegistrationModal({
   locationId,
   zipCodeList,
   isQuestionsLoading,
+  customService,
 }) {
   const [step, setStep] = useState(0);
 
@@ -423,6 +424,7 @@ export default function ClientLeadRegistrationModal({
       name,
       email,
       phone,
+      ...(selectedService?.slug === 'others' && { customService }),
     };
 
     // Transform questions to match user's expected format
@@ -442,6 +444,8 @@ export default function ClientLeadRegistrationModal({
       leadDetails,
       addressInfo,
     };
+
+    console.log('payload to be sent for client registration draft', payload);
 
     try {
       const res = await clientRegistrationDraft(payload).unwrap();

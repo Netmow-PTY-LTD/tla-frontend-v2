@@ -72,8 +72,13 @@ export default function AddNewCase() {
             }
         );
 
-    const allServices =
+    const allServicesRaw =
         allCategories?.data?.flatMap((category) => category.services) || [];
+
+    // Deduplicate services by _id
+    const allServices = Array.from(
+        new Map(allServicesRaw.map((s) => [s._id, s])).values()
+    );
 
     const { data: countryWiseServices } = useGetCountryWiseServicesQuery(
         defaultCountry?._id,
@@ -125,11 +130,29 @@ export default function AddNewCase() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setSelectedService(service);
-        if (!service || !service?._id) {
+
+        if (!service && !query) {
             showErrorToast('Please select a service.');
             return;
         }
+
+        let serviceToSelect = service;
+        if (!serviceToSelect && query) {
+            // Robust search for "Others" in available service lists
+            const findOthers = (list) =>
+                list?.find(
+                    (s) => s.slug === 'others' || s.name.toLowerCase() === 'others'
+                );
+
+            serviceToSelect = findOthers(allServices);
+        }
+
+        if (!serviceToSelect || !serviceToSelect?._id) {
+            showErrorToast('Please select a service.');
+            return;
+        }
+
+        setSelectedService(serviceToSelect);
         setModalOpen(true);
     };
 
@@ -187,14 +210,20 @@ export default function AddNewCase() {
                             <form className="w-full" onSubmit={handleSubmit}>
                                 <div className="flex flex-col md:flex-row gap-4">
                                     <div className="relative flex-1">
-                                        <Combobox value={service} onChange={(val) => setService(val)}>
+                                        <Combobox value={service} onChange={(val) => {
+                                            setService(val);
+                                            if (val) {
+                                                setQuery('');
+                                            }
+                                        }}>
                                             <div className="relative group">
                                                 <ComboboxInput
                                                     className="w-full bg-gray-50 border border-gray-200 focus:border-[#00C3C0] focus:ring-2 focus:ring-[#00C3C0]/10 rounded-xl h-[48px] md:h-[56px] px-6 text-[16px] transition-all duration-200 outline-none"
                                                     onChange={(e) => {
                                                         setQuery(e.target.value);
+                                                        setService(null);
                                                     }}
-                                                    displayValue={(val) => val?.name || ''}
+                                                    displayValue={(val) => val?.name || query}
                                                     placeholder="e.g. Family Law, Criminal Defense, Property Law..."
                                                     autoComplete="off"
                                                 />
@@ -285,6 +314,7 @@ export default function AddNewCase() {
                 defaultCountry={defaultCountry}
                 serviceId={selectedService?._id}
                 isQuestionsLoading={isQuestionsLoading}
+                customService={query}
             />
         </div>
     )

@@ -91,8 +91,13 @@ export default function MyLeads() {
       }
     );
 
-  const allServices =
+  const allServicesRaw =
     allCategories?.data?.flatMap((category) => category.services) || [];
+
+  // Deduplicate services by _id
+  const allServices = Array.from(
+    new Map(allServicesRaw.map((s) => [s._id, s])).values()
+  );
 
   // Default to Australia (AU) if available
   const { data: countryWiseServices } = useGetCountryWiseServicesQuery(
@@ -208,11 +213,28 @@ export default function MyLeads() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    setSelectedService(service);
-    if (!service || !service?._id) {
-      showErrorToast('Please select a service and location.');
+    if (!service && !query) {
+      showErrorToast('Please select a service.');
       return;
     }
+
+    let serviceToSelect = service;
+    if (!serviceToSelect && query) {
+      // Robust search for "Others" in available service lists
+      const findOthers = (list) =>
+        list?.find(
+          (s) => s.slug === 'others' || s.name.toLowerCase() === 'others'
+        );
+
+      serviceToSelect = findOthers(allServices);
+    }
+
+    if (!serviceToSelect || !serviceToSelect?._id) {
+      showErrorToast('Please select a service.');
+      return;
+    }
+
+    setSelectedService(serviceToSelect);
     setModalOpen(true);
   };
 
@@ -265,14 +287,20 @@ export default function MyLeads() {
           <form className="w-full md:w-1/2" onSubmit={handleSubmit}>
             <div className="hero-search-area flex flex-wrap md:flex-nowrap gap-2 items-center w-full md:justify-end">
               <div className="tla-form-group w-full sm:max-w-[300px]">
-                <Combobox value={service} onChange={(val) => setService(val)}>
+                <Combobox value={service} onChange={(val) => {
+                  setService(val);
+                  if (val) {
+                    setQuery('');
+                  }
+                }}>
                   <div className="relative">
                     <ComboboxInput
                       className="border border-gray-300 rounded-md w-full h-[44px] px-4 text-[14px]"
                       onChange={(e) => {
                         setQuery(e.target.value);
+                        setService(null);
                       }}
-                      displayValue={(val) => val?.name || ''}
+                      displayValue={(val) => val?.name || query}
                       placeholder="Search a service..."
                       autoComplete="off"
                     />
@@ -371,6 +399,7 @@ export default function MyLeads() {
         defaultCountry={defaultCountry}
         serviceId={selectedService?._id}
         isQuestionsLoading={isQuestionsLoading}
+        customService={query}
       />
     </>
   );
