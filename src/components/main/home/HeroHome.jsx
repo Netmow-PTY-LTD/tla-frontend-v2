@@ -85,8 +85,13 @@ export default function HeroHome({ searchParam }) {
       }
     );
 
-  const allServices =
+  const allServicesRaw =
     allCategories?.data?.flatMap((category) => category.services) || [];
+
+  // Deduplicate services by _id
+  const allServices = Array.from(
+    new Map(allServicesRaw.map((s) => [s._id, s])).values()
+  );
 
   const filteredServices =
     query === ''
@@ -426,6 +431,7 @@ export default function HeroHome({ searchParam }) {
               locationId={selectedZipCodeId}
               isQuestionsLoading={isQuestionsLoading || isQuestionsFetching}
               zipCodeList={zipCodeList}
+              customService={query}
             />
           )}
         </>
@@ -442,6 +448,7 @@ export default function HeroHome({ searchParam }) {
           isQuestionsLoading={isQuestionsLoading || isQuestionsFetching}
           defaultCountry={defaultCountry}
           zipCodeList={zipCodeList}
+          customService={query}
         />
       )}
     </section>

@@ -33,6 +33,7 @@ export default function CreateLeadWithAuthModal({
   locationId,
   isQuestionsLoading,
   zipCodeList,
+  customService,
 }) {
   const [step, setStep] = useState(0);
 
@@ -364,9 +365,10 @@ export default function CreateLeadWithAuthModal({
       additionalDetails,
       budgetAmount: budgetAmount || 0,
       addressInfo,
+      ...(selectedService?.slug === 'others' && { customService }),
     };
 
-
+    console.log('payload to be sent for create lead with auth', payload);
 
     try {
       const res = await createLead(payload).unwrap();
