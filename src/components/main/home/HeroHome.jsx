@@ -1,9 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import React, { use, useEffect, useRef, useState } from 'react';
-import HeroShowcase from './HeroShowcase';
-import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
+import React, { useEffect, useRef, useState } from 'react';
+import { useGetCountryWiseServicesQuery, useGetServiceGroupsQuery } from '@/store/features/admin/servicesApiService';
 import {
   useGetCountryListQuery,
   useGetZipCodeListQuery,
@@ -12,7 +11,7 @@ import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/question
 import ClientLeadRegistrationModal from './modal/ClientLeadRegistrationModal';
 import { useSelector } from 'react-redux';
 import CreateLeadWithAuthModal from './modal/CreateLeadWithAuthModal';
-import { Check, ChevronDown, Loader, MapPin } from 'lucide-react';
+import { Check, Loader } from 'lucide-react';
 import HeroSlider from '../common/HeroSlider';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import {
@@ -23,19 +22,13 @@ import {
   ComboboxOptions,
 } from '@headlessui/react';
 import { cn } from '@/lib/utils';
-import { useParams } from 'next/navigation';
-import { toast } from 'sonner';
 import { showErrorToast } from '@/components/common/toasts';
 import LawyerWarningModal from './modal/LawyerWarningModal';
 import { checkValidity } from '@/helpers/validityCheck';
-import { useGetAllCategoriesQuery } from '@/store/features/public/catagorywiseServiceApiService';
 import { safeJsonParse } from '@/helpers/safeJsonParse';
 import Cookies from 'js-cookie';
-import { useGetSettingsQuery } from '@/store/features/admin/appSettings';
 
 export default function HeroHome({ searchParam }) {
-  const { data: appSettings } = useGetSettingsQuery();
-  const firmClientUrl = appSettings?.data?.firm_client_url || '';
 
   const [selectedService, setSelectedService] = useState(null);
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
@@ -77,21 +70,29 @@ export default function HeroHome({ searchParam }) {
       skip: !defaultCountry?._id, // Skip
     });
 
-  const { data: allCategories, isLoading: isAllCategoriesLoading } =
-    useGetAllCategoriesQuery(
-      { countryId: defaultCountry?._id },
-      {
-        skip: !defaultCountry?._id,
-      }
-    );
+  // const { data: allCategories, isLoading: isAllCategoriesLoading } =
+  //   useGetAllCategoriesQuery(
+  //     { countryId: defaultCountry?._id },
+  //     {
+  //       skip: !defaultCountry?._id,
+  //     }
+  //   );
 
-  const allServicesRaw =
-    allCategories?.data?.flatMap((category) => category.services) || [];
+  // const allServicesRaw =
+  //   allCategories?.data?.flatMap((category) => category.services) || [];
 
   // Deduplicate services by _id
-  const allServices = Array.from(
-    new Map(allServicesRaw.map((s) => [s._id, s])).values()
-  );
+  // const allServices = Array.from(
+  //   new Map(allServicesRaw.map((s) => [s._id, s])).values()
+  // );
+  const { data: serviceGroupsData, isLoading: isServiceGroupsLoading } =
+    useGetServiceGroupsQuery(defaultCountry?._id, {
+      skip: !defaultCountry?._id,
+    });
+
+  // console.log('service groups data', serviceGroupsData);
+
+  const allServices = serviceGroupsData?.data?.services || [];
 
   const filteredServices =
     query === ''
@@ -223,7 +224,7 @@ export default function HeroHome({ searchParam }) {
               Post a case in minutes
             </p>
             <p className="text-[#444] text-[18px] font-medium">
-              Need a <Link href={`${firmClientUrl}/register`} target="_blank" className="text-[var(--primary-color)] underline">Business Profile?</Link>
+              Need a <Link href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/register`} target="_blank" className="text-[var(--primary-color)] underline">Business Profile?</Link>
             </p>
           </div>
           <form className="w-full" onSubmit={handleSubmit}>
@@ -378,7 +379,7 @@ export default function HeroHome({ searchParam }) {
           </form>
           <div className="flex flex-wrap gap-2 w-full suggestion-area">
             <b>Popular</b>:
-            {isAllCategoriesLoading ? (
+            {isServiceGroupsLoading ? (
               <Loader className="w-6 h-6 animate-spin" />
             ) : (
               allServices?.length > 0 &&

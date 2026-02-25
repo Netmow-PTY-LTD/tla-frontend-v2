@@ -423,7 +423,7 @@ export default function MyResponseDetails({
                 </h4>
                 <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
                   <h5 className="font-medium mb-2 heading-base">
-                    {responseData?.data?.serviceId?.name || ''}
+                    {responseData?.data?.serviceId?.name || ''} {responseData?.data?.leadId?.customService ? `: ${responseData?.data?.leadId?.customService}` : ''}
                   </h5>
                   <div className="text-sm text-[#34495E] ">
                     {displayText}
