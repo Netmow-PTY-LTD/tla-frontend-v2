@@ -284,7 +284,7 @@ export default function AddNewCase() {
                             <div className="pt-2">
                                 <p className="text-sm font-medium text-gray-500 mb-3">Popular Services:</p>
                                 <div className="flex flex-wrap gap-2">
-                                    {allServices.slice(0, 6).map((s) => (
+                                    {allServices.map((s) => (
                                         <button
                                             key={s._id}
                                             onClick={() => {

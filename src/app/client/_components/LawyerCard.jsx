@@ -113,8 +113,8 @@ const LawyerCard = ({
                             badge.toLowerCase() === 'premium lawyer'
                               ? '/assets/img/badge.svg'
                               : badge.toLowerCase() === 'expert lawyer'
-                              ? '/assets/img/expert.png'
-                              : '/assets/img/basic.png'
+                                ? '/assets/img/expert.png'
+                                : '/assets/img/basic.png'
                           }
                           width="30"
                           height="30"
@@ -123,19 +123,17 @@ const LawyerCard = ({
                       </div>
                     )}
                     <div
-                      className={`font-medium mb-1 ${
-                        isExpanded ? 'heading-base' : 'text-[18px]'
-                      }`}
+                      className={`font-medium mb-1 ${isExpanded ? 'heading-base' : 'text-[18px]'
+                        }`}
                     >
                       {lawyer?.profile?.name}
                     </div>
                     <div className="flex items-center gap-1 text-xs ">
                       <span
-                        className={`w-2 h-2 rounded-full ${
-                          lawyerOnlineStatus[lawyer?._id]
+                        className={`w-2 h-2 rounded-full ${lawyerOnlineStatus[lawyer?._id]
                             ? 'bg-green-500'
                             : 'bg-gray-400'
-                        }`}
+                          }`}
                       ></span>
                     </div>
                   </div>
@@ -183,8 +181,8 @@ const LawyerCard = ({
                 <div className="flex-shrink-0 text-sm text-gray-400">
                   {lawyer?.profileVisit?.visitedAt
                     ? dayjs(lawyer.profileVisit.visitedAt).format(
-                        'DD MMM, hh:mm A'
-                      )
+                      'DD MMM, hh:mm A'
+                    )
                     : null}
                 </div>
               </div>
@@ -199,11 +197,10 @@ const LawyerCard = ({
             </Link>
           </div>
           <div
-            className={`w-full md:w-auto flex flex-row md:flex-col items-center gap-4 justify-between ${
-              lawyer?.profile?.isElitePro
+            className={`w-full md:w-auto flex flex-row md:flex-col items-center gap-4 justify-between ${lawyer?.profile?.isElitePro
                 ? 'md:justify-between'
                 : 'md:justify-end'
-            }`}
+              }`}
           >
             {lawyer?.profile?.isElitePro && (
               <div className="flex flex-col items-center flex-shrink-0">
@@ -216,11 +213,9 @@ const LawyerCard = ({
             )}
             <div className="flex flex-col">
               <Button
-                className={`px-4 py-2 w-full sm:w-auto rounded-lg ${
-                  isExpanded ? 'text-[14px]' : 'text-[12px]'
-                } font-medium bg-[var(--color-special)] text-white ${
-                  lawyer?.isRequested ? 'bg-[var(--primary-color)]' : ''
-                }`}
+                className={`px-4 py-2 w-full sm:w-auto rounded-lg ${isExpanded ? 'text-[14px]' : 'text-[12px]'
+                  } font-medium bg-[var(--color-special)] text-white ${lawyer?.isRequested ? 'bg-[var(--primary-color)]' : ''
+                  }`}
                 onClick={() => {
                   if (lawyer?.isRequested) {
                     setSelectedLawyerMessage(
