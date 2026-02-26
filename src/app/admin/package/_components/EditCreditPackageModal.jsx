@@ -31,6 +31,7 @@ export default function EditCreditPackageModal({
 
   const [updateCreatePackage, { isLoading }] = useUpdateCreditPackageMutation();
   const handleSubmit = async (data) => {
+    console.log(data);
     const {
       name,
       credit,
@@ -49,12 +50,11 @@ export default function EditCreditPackageModal({
       price: Number(price),
       priceDisplay: Number(priceDisplay),
       pricePerCredit: Number(pricePerCredit),
-      discountPercentage: discountPercentage
-        ? Number(discountPercentage)
-        : null,
+      discountPercentage: Number(discountPercentage),
       isActive: isActive ? true : false,
       country: country,
     };
+
     try {
       const res = await updateCreatePackage(payload).unwrap();
       // Optionally reset form or show success toast
@@ -77,23 +77,24 @@ export default function EditCreditPackageModal({
       title="Edit Credit Package"
       width="max-w-[600px]"
     >
-      <FormWrapper
-        defaultValues={defaultValues}
-        onSubmit={handleSubmit}
-      // schema={schema}
-      >
-        <TextInput
-          type="text"
-          label="Package Name"
-          name="name"
-          placeholder="Enter Package Name"
-        />
-        <TextInput
-          type="text"
-          label="Credit"
-          name="credit"
-          placeholder="Enter credit amount"
-        />
+      <div className='max-h-[80vh] overflow-y-auto pr-2'>
+        <FormWrapper
+          defaultValues={defaultValues}
+          onSubmit={handleSubmit}
+        // schema={schema}
+        >
+          <TextInput
+            type="text"
+            label="Package Name"
+            name="name"
+            placeholder="Enter Package Name"
+          />
+          <TextInput
+            type="text"
+            label="Credit"
+            name="credit"
+            placeholder="Enter credit amount"
+          />
 
           <TextInput
             type="text"
@@ -116,24 +117,25 @@ export default function EditCreditPackageModal({
             placeholder="Enter price per credit"
           />
 
-        <TextInput
-          type="text"
-          label="Discount Percentage"
-          name="discountPercentage"
-          placeholder="Enter discount percentage"
-        />
-        <SelectInput
-          name="country"
-          label="Country"
-          options={countryList?.data?.map((c) => ({
-            label: c.name,
-            value: c._id,
-          }))}
-          placeholder="Select Country"
-        />
-        <CheckboxInput label="Active" name="isActive" />
-        <Button type="submit">Update</Button>
-      </FormWrapper>
+          <TextInput
+            type="text"
+            label="Discount Percentage"
+            name="discountPercentage"
+            placeholder="Enter discount percentage"
+          />
+          <SelectInput
+            name="country"
+            label="Country"
+            options={countryList?.data?.map((c) => ({
+              label: c.name,
+              value: c._id,
+            }))}
+            placeholder="Select Country"
+          />
+          <CheckboxInput label="Active" name="isActive" />
+          <Button type="submit">Update</Button>
+        </FormWrapper>
+      </div>
     </Modal>
   );
 }

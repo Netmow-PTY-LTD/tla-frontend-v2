@@ -317,7 +317,7 @@ export default function LeadDetailsPage() {
               <div className="flex justify-center">
                 <div className="">
                   <h5 className="font-semibold mb-2 text-2xl">
-                    {singleLead?.data?.serviceId?.name ?? ''}
+                    {singleLead?.data?.serviceId?.name ?? ''} {singleLead?.data?.customService ? `: ${singleLead?.data?.customService}` : ''}
                   </h5>
                 </div>
               </div>

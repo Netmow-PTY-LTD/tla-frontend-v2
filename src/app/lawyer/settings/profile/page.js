@@ -15,7 +15,7 @@ import { DynamicAccordion } from '@/components/UIComponents/AcordionComponent';
 import PublicProfile from './_components/PublicProfile';
 import { Loader } from 'lucide-react';
 import MediaTest from './_components/MediaTest';
-import Agreement from './_components/Agreement';
+//import Agreement from './_components/Agreement';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 
 export default function MyProfilePage() {
@@ -73,7 +73,7 @@ export default function MyProfilePage() {
           : 0,
       social: calculateSocialProgress(),
       accreditations: profile.accreditation?.length > 0 ? 100 : 0,
-      agreement: profile.agreement?.agreement ? 100 : 0,
+      // agreement: profile.agreement?.agreement ? 100 : 0,
       qa: profile.profileQA?.some((qa) => qa.answer?.length > 0) ? 100 : 0,
     };
   }, [userInfo]);

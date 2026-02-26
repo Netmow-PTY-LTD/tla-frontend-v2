@@ -1,4 +1,6 @@
-import React, { useState, useEffect, use, useMemo } from 'react';
+"use client";
+
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button'; // adjust if your button import path differs
 import { Modal } from '@/components/UIComponents/Modal';
 import { Check, ChevronDown, Loader } from 'lucide-react';
@@ -31,6 +33,7 @@ export default function CreateLeadWithAuthModal({
   locationId,
   isQuestionsLoading,
   zipCodeList,
+  customService,
 }) {
   const [step, setStep] = useState(0);
 
@@ -77,8 +80,6 @@ export default function CreateLeadWithAuthModal({
   const [isTypedNewValue, setIsTypedNewValue] = useState(false);
 
   useEffect(() => {
-    if (!selectedServiceWiseQuestions?.length) return;
-
     setQuestionLoading(true); // 👈 Start loading
 
     setStep(0);
@@ -91,7 +92,7 @@ export default function CreateLeadWithAuthModal({
     setFullClonedQuestions([]);
     setPartialClonedQuestions([]);
     setViewData(null);
-  }, [selectedServiceWiseQuestions]);
+  }, [serviceId]);
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -247,9 +248,9 @@ export default function CreateLeadWithAuthModal({
       // checkbox
       newCheckedOptionsDetails = checked
         ? [
-            ...checkedOptionsDetails.filter((o) => o.id !== optionId),
-            tempOption,
-          ]
+          ...checkedOptionsDetails.filter((o) => o.id !== optionId),
+          tempOption,
+        ]
         : checkedOptionsDetails.filter((o) => o.id !== optionId);
 
       setCheckedOptions(
@@ -364,13 +365,14 @@ export default function CreateLeadWithAuthModal({
       additionalDetails,
       budgetAmount: budgetAmount || 0,
       addressInfo,
+      ...(selectedService?.slug === 'others' && { customService }),
     };
 
- 
+    console.log('payload to be sent for create lead with auth', payload);
 
     try {
       const res = await createLead(payload).unwrap();
-   
+
 
       if (res?.success === true) {
         showSuccessToast(res?.message || 'Case registered successfully');
@@ -502,9 +504,13 @@ export default function CreateLeadWithAuthModal({
       showCloseButton={true}
     >
       <div className="max-h-[90vh] overflow-y-auto">
-        {isQuestionsLoading || !selectedServiceWiseQuestions?.length ? (
+        {isQuestionsLoading ? (
           <div className="flex items-center justify-center gap-2 pt-6 px-6">
             <Loader className="w-4 h-4 animate-spin" /> Loading question...
+          </div>
+        ) : !selectedServiceWiseQuestions?.length ? (
+          <div className="text-center text-gray-500 pt-6 px-6">
+            No question found
           </div>
         ) : step < totalQuestions ? (
           viewData?.question ? (
@@ -521,9 +527,8 @@ export default function CreateLeadWithAuthModal({
               <div className="pt-6 px-6">
                 {totalSteps > 0 && (
                   <div
-                    className={`w-full h-2 bg-gray-200 rounded-full mb-6 ${
-                      step === 0 ? '' : 'mt-8'
-                    }`}
+                    className={`w-full h-2 bg-gray-200 rounded-full mb-6 ${step === 0 ? '' : 'mt-8'
+                      }`}
                   >
                     <div
                       className="h-2 bg-green-600 rounded-full transition-all duration-300"
@@ -549,9 +554,8 @@ export default function CreateLeadWithAuthModal({
                       return (
                         <label
                           key={option._id || index}
-                          className={`flex gap-3 px-4 py-3 ${
-                            !isLast ? 'border-b' : ''
-                          }`}
+                          className={`flex gap-3 px-4 py-3 cursor-pointer ${!isLast ? 'border-b' : ''
+                            }`}
                         >
                           <span className="flex items-center gap-3">
                             <input
@@ -580,9 +584,9 @@ export default function CreateLeadWithAuthModal({
                               id={`${option._id}-other`}
                               placeholder="Other"
                               className="border rounded px-2 py-1 w-full"
-                              // onChange={(e) =>
-                              //   handleOptionChange(option._id, e.target.value)
-                              // }
+                            // onChange={(e) =>
+                            //   handleOptionChange(option._id, e.target.value)
+                            // }
                             />
                           )}
                         </label>
@@ -616,9 +620,8 @@ export default function CreateLeadWithAuthModal({
                 const isLast = frequency.value === 'not_sure';
                 return (
                   <label
-                    className={`flex gap-3 px-4 py-3 ${
-                      !isLast ? 'border-b' : ''
-                    }`}
+                    className={`flex gap-3 px-4 py-3 cursor-pointer ${!isLast ? 'border-b' : ''
+                      }`}
                     key={frequency.id}
                   >
                     <input
@@ -811,9 +814,8 @@ export default function CreateLeadWithAuthModal({
         {isQuestionsLoading ||
           (selectedServiceWiseQuestions?.length > 0 && (
             <div
-              className={`flex px-6 ${
-                step === 0 ? 'justify-end' : 'justify-between'
-              } mt-8`}
+              className={`flex px-6 ${step === 0 ? 'justify-end' : 'justify-between'
+                } mt-8`}
             >
               {step !== 0 && (
                 <Button

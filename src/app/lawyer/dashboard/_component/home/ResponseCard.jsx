@@ -79,20 +79,18 @@ export default function ResponseCard({
 
   return (
     <Card
-      className={`w-full max-w-full mx-auto flex flex-col cursor-pointer ${
-        !isExpanded && isSelected
+      className={`w-full max-w-full mx-auto flex flex-col cursor-pointer ${!isExpanded && isSelected
           ? 'border-l-[3px] border-l-[var(--secondary-color)] rounded-tl-none rounded-bl-none'
           : 'border-transparent'
-      }`}
+        }`}
       onClick={() => handleClick(user)}
     >
       {/* Header Section */}
       <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 p-3">
         <figure className="w-10 h-10 overflow-hidden flex-shrink-0 border rounded-full">
           <Image
-            src={`${
-              user?.leadId?.userProfileId?.profilePicture ?? userDummyImage
-            }`}
+            src={`${user?.leadId?.userProfileId?.profilePicture ?? userDummyImage
+              }`}
             alt={user?.userProfileId?.name ?? 'John Doe'}
             width={40}
             height={40}
@@ -104,24 +102,21 @@ export default function ResponseCard({
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
           <div>
             <div
-              className={`font-medium mb-1 ${
-                isExpanded ? 'heading-base' : 'text-[13px]'
-              }`}
+              className={`font-medium mb-1 ${isExpanded ? 'heading-base' : 'text-[13px]'
+                }`}
             >
               {user?.leadId?.userProfileId?.name}
             </div>
             <div
-              className={`${
-                isExpanded ? 'text-[13px]' : 'text-[10px]'
-              } text-gray-500`}
+              className={`${isExpanded ? 'text-[13px]' : 'text-[10px]'
+                } text-gray-500`}
             >
               {user?.leadId?.userProfileId?.address ?? ''}
             </div>
             <div className="flex items-center gap-1 text-xs mt-1">
               <span
-                className={`ml-2 w-2 h-2 rounded-full ${
-                  onlineMap[leadUser] ? 'bg-green-500' : 'bg-gray-400'
-                }`}
+                className={`ml-2 w-2 h-2 rounded-full ${onlineMap[leadUser] ? 'bg-green-500' : 'bg-gray-400'
+                  }`}
               ></span>
               <span className="text-gray-700">
                 {onlineMap[leadUser] ? 'Online' : 'Offline'}
@@ -140,18 +135,18 @@ export default function ResponseCard({
         (user?.leadId?.additionalDetails &&
           user?.leadId?.additionalDetails !== '') ||
         user?.leadId?.userProfileId?.phone) && (
-        <div className="px-3 pt-3 pb-2">
-          <div className="flex flex-wrap gap-2">
-            {user?.leadId?.additionalDetails &&
-              user?.leadId?.additionalDetails !== '' && (
-                <TagButton
-                  text="Additional Details"
-                  bgColor="#004DA61A"
-                  icon={<List className="text-[var(--color-black)] w-4 h-4" />}
-                />
-              )}
+          <div className="px-3 pt-3 pb-2">
+            <div className="flex flex-wrap gap-2">
+              {user?.leadId?.additionalDetails &&
+                user?.leadId?.additionalDetails !== '' && (
+                  <TagButton
+                    text="Additional Details"
+                    bgColor="#004DA61A"
+                    icon={<List className="text-[var(--color-black)] w-4 h-4" />}
+                  />
+                )}
 
-            {/* {user?.leadId?.userProfileId?.user?.isPhoneVerified === true  && (
+              {/* {user?.leadId?.userProfileId?.user?.isPhoneVerified === true  && (
               <TagButton
                 text="Verified Phone"
                 textColor="text-[#00C3C0]"
@@ -159,25 +154,24 @@ export default function ResponseCard({
                 icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
               />
             )} */}
-            {user?.leadId?.leadPriority?.toLowerCase() === 'urgent' && (
-              <TagButton
-                text={user?.leadId?.leadPriority}
-                bgColor="#FF86021A"
-                textColor="text-[#FF8602]"
-                icon={<Zap className="text-[#FF8602] w-4 h-4" />}
-              />
-            )}
+              {user?.leadId?.leadPriority?.toLowerCase() === 'urgent' && (
+                <TagButton
+                  text={user?.leadId?.leadPriority}
+                  bgColor="#FF86021A"
+                  textColor="text-[#FF8602]"
+                  icon={<Zap className="text-[#FF8602] w-4 h-4" />}
+                />
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
       {/* Job Description */}
       <div className="p-3 flex-1">
         {user?.serviceId?.name && (
           <h3
-            className={`font-medium mb-2 ${
-              isExpanded ? 'heading-base' : 'text-[13px]'
-            }`}
+            className={`font-medium mb-2 ${isExpanded ? 'heading-base' : 'text-[13px]'
+              }`}
           >
             Looking for a {user?.serviceId?.name} consultation
           </h3>
@@ -185,16 +179,14 @@ export default function ResponseCard({
 
         <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg flex-1">
           <h4
-            className={`font-medium mb-2 ${
-              isExpanded ? 'heading-base' : 'text-[14px]'
-            }`}
+            className={`font-medium mb-2 ${isExpanded ? 'heading-base' : 'text-[14px]'
+              }`}
           >
-            {user?.serviceId?.name}
+            {user?.serviceId?.name} {user?.leadId?.customService ? `: ${user?.leadId?.customService}` : ''}
           </h4>
           <p
-            className={`text-[#34495E] ${
-              isExpanded ? 'text-[13px]' : 'text-[12px]'
-            }`}
+            className={`text-[#34495E] ${isExpanded ? 'text-[13px]' : 'text-[12px]'
+              }`}
           >
             {user?.leadId?.additionalDetails === ''
               ? `If you're facing a divorce, it's crucial to seek professional legal

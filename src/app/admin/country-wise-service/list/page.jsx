@@ -45,55 +45,18 @@ export default function Page() {
       header: ({ table }) => (
         <Checkbox
           checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && 'indeterminate')
+            table.getIsAllRowsSelected() ||
+            (table.getIsSomeRowsSelected() && 'indeterminate')
           }
-          onCheckedChange={(value) => {
-            table.toggleAllPageRowsSelected(!!value);
-            const selected = table
-              .getRowModel()
-              .rows.map((row) => row.original);
-            const selectedMap = {};
-            selected.forEach((s) => {
-              selectedMap[s._id] = true;
-            });
-
-            setRowSelection(!!value ? selectedMap : {});
-            setSelectedServices(!!value ? selected : []);
-          }}
+          onCheckedChange={(value) => table.toggleAllRowsSelected(!!value)}
           aria-label="Select all"
         />
       ),
       cell: ({ row }) => {
-        const service = row.original;
-        const isChecked = selectedServices.some((s) => s._id === service._id);
-
         return (
           <Checkbox
-            checked={isChecked}
-            onCheckedChange={(value) => {
-              const newSelection = value;
-
-              setRowSelection((prev) => {
-                const updated = { ...prev };
-                if (newSelection) {
-                  updated[service._id] = true;
-                } else {
-                  delete updated[service._id];
-                }
-                return updated;
-              });
-
-              setSelectedServices((prev) => {
-                const exists = prev.find((s) => s._id === service._id);
-                if (newSelection && !exists) {
-                  return [...prev, service];
-                } else if (!newSelection && exists) {
-                  return prev.filter((s) => s._id !== service._id);
-                }
-                return prev;
-              });
-            }}
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
             aria-label="Select row"
           />
         );
@@ -112,7 +75,7 @@ export default function Page() {
 
   //countrywise service change handler
   const handleCountryWiseServiceChange = (val) => {
-  
+
     setSelectedCountry(val);
   };
 
@@ -139,7 +102,17 @@ export default function Page() {
     }
   };
 
-  //showing selected country's services
+  // Effect to set Australia as default country
+  useEffect(() => {
+    if (countryList?.data && !selectedCountry) {
+      const australia = countryList.data.find(
+        (c) => c.name.toLowerCase() === 'australia'
+      );
+      if (australia) {
+        setSelectedCountry(australia._id);
+      }
+    }
+  }, [countryList, selectedCountry]);
 
   useEffect(() => {
     if (!servicesList?.data || !countrywiseServices?.data) return;
@@ -149,13 +122,11 @@ export default function Page() {
       countrywiseServices?.data?.map((s) => s._id)
     );
 
-  
-
     // Update selectedServices with matched full service objects
     const preselectedServices = servicesList?.data?.filter((service) =>
       preselectedIds.has(service._id)
     );
-    
+
     setSelectedServices(preselectedServices);
 
     // Build rowSelection object: { "serviceId1": true, "serviceId2": true }
@@ -165,6 +136,19 @@ export default function Page() {
     });
     setRowSelection(preselectedRowSelection);
   }, [servicesList, countrywiseServices]);
+
+  // Sync selectedServices based on rowSelection object
+  useEffect(() => {
+    if (!servicesList?.data) return;
+
+    const selectedIds = Object.keys(rowSelection).filter(
+      (key) => rowSelection[key]
+    );
+    const selectedFull = servicesList.data.filter((service) =>
+      selectedIds.includes(service._id)
+    );
+    setSelectedServices(selectedFull);
+  }, [rowSelection, servicesList?.data]);
 
   return (
     <>
@@ -197,22 +181,12 @@ export default function Page() {
       </div>
       {selectedCountry && (
         <DataTable
+          key={selectedCountry}
           data={servicesList?.data || []}
           columns={columns}
           searchColumn={'name'}
           rowSelection={rowSelection}
-          onRowSelectionChange={(updated) => {
-            setRowSelection(updated);
-
-            // Sync selectedServices as well
-            const selectedIds = Object.keys(updated).filter(
-              (key) => updated[key]
-            );
-            const selectedFull = servicesList.data.filter((service) =>
-              selectedIds.includes(service._id)
-            );
-            setSelectedServices(selectedFull);
-          }}
+          onRowSelectionChange={setRowSelection}
         />
       )}
     </>

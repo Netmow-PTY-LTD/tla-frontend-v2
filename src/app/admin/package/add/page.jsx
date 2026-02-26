@@ -135,9 +135,7 @@ export default function Page() {
       price: Number(price),
       priceDisplay: Number(priceDisplay),
       pricePerCredit: Number(pricePerCredit),
-      discountPercentage: discountPercentage
-        ? Number(discountPercentage)
-        : null,
+      discountPercentage: Number(discountPercentage),
       isActive: isActive ? true : false,
       country: country,
     };
@@ -184,6 +182,13 @@ export default function Page() {
       header: 'Price Per Credit',
       cell: ({ row }) => (
         <div className="lowercase">{row.getValue('pricePerCredit')}</div>
+      ),
+    },
+    {
+      accessorKey: 'discountPercentage',
+      header: 'Discount (%)',
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue('discountPercentage')}</div>
       ),
     },
     {

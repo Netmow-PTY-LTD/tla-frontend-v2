@@ -37,6 +37,7 @@ export default function MyLeads() {
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [service, setService] = useState(null);
+  const [query, setQuery] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('');
   const [leads, setLeads] = useState([]);
   const [page, setPage] = useState(1);
@@ -90,8 +91,13 @@ export default function MyLeads() {
       }
     );
 
-  const allServices =
+  const allServicesRaw =
     allCategories?.data?.flatMap((category) => category.services) || [];
+
+  // Deduplicate services by _id
+  const allServices = Array.from(
+    new Map(allServicesRaw.map((s) => [s._id, s])).values()
+  );
 
   // Default to Australia (AU) if available
   const { data: countryWiseServices } = useGetCountryWiseServicesQuery(
@@ -100,6 +106,14 @@ export default function MyLeads() {
       skip: !defaultCountry?._id, // Skip
     }
   );
+
+  const filteredServices =
+    query === ''
+      ? allServices
+      : allServices.filter((s) =>
+        s.name.toLowerCase().replace(/\s+/g, '')
+          .includes(query.toLowerCase().replace(/\s+/g, ''))
+      );
 
   const loader = useRef(null);
 
@@ -199,11 +213,28 @@ export default function MyLeads() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    setSelectedService(service);
-    if (!service || !service?._id) {
-      showErrorToast('Please select a service and location.');
+    if (!service && !query) {
+      showErrorToast('Please select a service.');
       return;
     }
+
+    let serviceToSelect = service;
+    if (!serviceToSelect && query) {
+      // Robust search for "Others" in available service lists
+      const findOthers = (list) =>
+        list?.find(
+          (s) => s.slug === 'others' || s.name.toLowerCase() === 'others'
+        );
+
+      serviceToSelect = findOthers(allServices);
+    }
+
+    if (!serviceToSelect || !serviceToSelect?._id) {
+      showErrorToast('Please select a service.');
+      return;
+    }
+
+    setSelectedService(serviceToSelect);
     setModalOpen(true);
   };
 
@@ -256,20 +287,30 @@ export default function MyLeads() {
           <form className="w-full md:w-1/2" onSubmit={handleSubmit}>
             <div className="hero-search-area flex flex-wrap md:flex-nowrap gap-2 items-center w-full md:justify-end">
               <div className="tla-form-group w-full sm:max-w-[300px]">
-                <Combobox value={service} onChange={(val) => setService(val)}>
+                <Combobox value={service} onChange={(val) => {
+                  setService(val);
+                  if (val) {
+                    setQuery('');
+                  }
+                }}>
                   <div className="relative">
                     <ComboboxInput
                       className="border border-gray-300 rounded-md w-full h-[44px] px-4 text-[14px]"
                       onChange={(e) => {
-                        setService(e.target.value);
+                        setQuery(e.target.value);
+                        setService(null);
                       }}
-                      displayValue={(val) => val?.name || ''}
+                      displayValue={(val) => val?.name || query}
                       placeholder="Search a service..."
                       autoComplete="off"
                     />
-                    {allServices?.length > 0 && (
+                    {(filteredServices?.length === 0 && query !== '') ? (
+                      <ComboboxOptions className="absolute z-10 mt-1 w-full rounded-md bg-white p-4 text-sm shadow-lg ring-1 ring-black ring-opacity-5 text-gray-500 text-center">
+                        No results found.
+                      </ComboboxOptions>
+                    ) : filteredServices?.length > 0 && (
                       <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {allServices?.map((item) => (
+                        {filteredServices?.map((item) => (
                           <ComboboxOption
                             key={item._id}
                             value={item}
@@ -358,6 +399,7 @@ export default function MyLeads() {
         defaultCountry={defaultCountry}
         serviceId={selectedService?._id}
         isQuestionsLoading={isQuestionsLoading}
+        customService={query}
       />
     </>
   );

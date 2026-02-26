@@ -1,8 +1,7 @@
 'use client';
 import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/questionApiService';
-import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
+import { useGetServiceGroupsQuery, useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
-import { useGetAllCategoriesQuery } from '@/store/features/public/catagorywiseServiceApiService';
 import {
   useGetCountryListQuery,
   useGetZipCodeListQuery,
@@ -43,17 +42,14 @@ export default function HomeCategoryWiseServices() {
   const defaultCountry = countryList?.data?.find(
     (country) => country?._id === cookieCountry?.countryId
   );
+  const { data: serviceGroupsData, isLoading: isServiceGroupsLoading } =
+    useGetServiceGroupsQuery(defaultCountry?._id, {
+      skip: !defaultCountry?._id,
+    });
 
-  const { data: allCategories, isLoading: isAllCategoriesLoading } =
-    useGetAllCategoriesQuery(
-      { countryId: defaultCountry?._id },
-      { skip: !defaultCountry?._id }
-    );
+  // console.log('service groups data', serviceGroupsData);
 
-  const allServices =
-    allCategories?.data?.flatMap((category) => category.services) || [];
-
-  //console.log('defaultCountry', defaultCountry);
+  const allServices = serviceGroupsData?.data?.services || [];
 
   useEffect(() => {
     if (!selectedService?._id) return;
@@ -153,7 +149,7 @@ export default function HomeCategoryWiseServices() {
       {validToken && currentUser ? (
         <>
           {currentUser?.data?.regUserType?.toLowerCase() === 'lawyer' &&
-          authModalOpen ? (
+            authModalOpen ? (
             <LawyerWarningModal
               modalOpen={authModalOpen}
               setModalOpen={setAuthModalOpen}

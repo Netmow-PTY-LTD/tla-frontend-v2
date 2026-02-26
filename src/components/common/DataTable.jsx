@@ -40,11 +40,22 @@ import {
 } from '@/components/ui/table';
 import Link from 'next/link';
 
-export function DataTable({ data, columns, searchColumn, isFetching }) {
+export function DataTable({
+  data,
+  columns,
+  searchColumn,
+  isFetching,
+  rowSelection: externalRowSelection,
+  onRowSelectionChange: externalOnRowSelectionChange,
+}) {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
-  const [rowSelection, setRowSelection] = React.useState({});
+  const [internalRowSelection, setInternalRowSelection] = React.useState({});
+
+  const rowSelection = externalRowSelection ?? internalRowSelection;
+  const setRowSelection =
+    externalOnRowSelectionChange ?? setInternalRowSelection;
 
   const table = useReactTable({
     data,
@@ -116,9 +127,9 @@ export function DataTable({ data, columns, searchColumn, isFetching }) {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}
