@@ -325,17 +325,23 @@ export const AdminSidebarItems = {
     
     {
       title: 'Case Management',
-      url: '/admin/cases-management',
+      url: '#',
       icon: Kanban,
       isActive: true,
-      // items: [
-      //   {
-      //     title: 'List of Users',
-      //     url: '/admin/cases-management',
-      //     icon: List,
-      //     isActive: true,
-      //   },
-      // ],
+      items: [
+        {
+          title: 'All Cases',
+          url: '/admin/cases-management',
+          icon: List,
+          isActive: true,
+        },
+        {
+          title: 'Others Cases',
+          url: '/admin/cases-management/others-cases',
+          icon: List,
+          isActive: true,
+        },
+      ],
     },
     {
       title: 'Testimonials',
