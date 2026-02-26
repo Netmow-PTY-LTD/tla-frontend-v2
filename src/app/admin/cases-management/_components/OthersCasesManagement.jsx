@@ -140,7 +140,7 @@ export default function OthersCasesManagement() {
     {
       accessorKey: 'serviceId.name',
       header: 'Service',
-      cell: ({ row }) => <div>{`${row.original?.serviceId?.name} : ${row.original?.customService}` || '-'}</div>,
+      cell: ({ row }) => <div>{`${row.original?.serviceId?.name} : ${row.original?.customService ?? ''}` || '-'}</div>,
     },
     // {
     //   accessorKey: 'additionalDetails',
