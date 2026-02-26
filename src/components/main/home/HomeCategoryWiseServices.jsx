@@ -55,7 +55,7 @@ export default function HomeCategoryWiseServices() {
     if (!selectedService?._id) return;
 
     // Immediately clear previous questions to prevent flash
-    setServiceWiseQuestions([]);
+    setServiceWiseQuestions(null);
   }, [selectedService?._id]);
 
   // Default to Australia (AU) if available
@@ -67,6 +67,7 @@ export default function HomeCategoryWiseServices() {
   const {
     data: singleServicewiseQuestionsData,
     isLoading: isQuestionsLoading,
+    isFetching,
     refetch,
   } = useGetServiceWiseQuestionsQuery(
     {
@@ -79,8 +80,9 @@ export default function HomeCategoryWiseServices() {
   );
 
   useEffect(() => {
+    if (isQuestionsLoading || isFetching) return;
     setServiceWiseQuestions(singleServicewiseQuestionsData?.data || []);
-  }, [singleServicewiseQuestionsData]);
+  }, [isQuestionsLoading, isFetching, singleServicewiseQuestionsData]);
 
   const token = useSelector((state) => state.auth.token);
 
@@ -164,7 +166,11 @@ export default function HomeCategoryWiseServices() {
               countryId={defaultCountry?._id}
               serviceId={selectedService?._id}
               locationId={location}
-              isQuestionsLoading={isQuestionsLoading}
+              isQuestionsLoading={
+                isQuestionsLoading ||
+                isFetching ||
+                serviceWiseQuestions === null
+              }
             />
           )}
         </>
@@ -177,6 +183,9 @@ export default function HomeCategoryWiseServices() {
           selectedService={selectedService}
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
+          isQuestionsLoading={
+            isQuestionsLoading || isFetching || serviceWiseQuestions === null
+          }
         />
       )}
     </section>

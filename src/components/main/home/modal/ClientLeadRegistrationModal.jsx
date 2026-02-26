@@ -324,6 +324,14 @@ export default function ClientLeadRegistrationModal({
     }
   };
 
+  const handleOtherInputChange = (optionId, value) => {
+    const updatedDetails = checkedOptionsDetails.map((opt) =>
+      opt.id === optionId ? { ...opt, idExtraData: value } : opt
+    );
+    setCheckedOptionsDetails(updatedDetails);
+    setStepwiseCheckedOptions(updatedDetails);
+  };
+
   // console.log('checkedOptions', checkedOptionsDetails);
   // console.log('step', step);
 
@@ -690,9 +698,10 @@ export default function ClientLeadRegistrationModal({
                                 id={`${option._id}-other`}
                                 placeholder="Other"
                                 className="border rounded px-2 py-1 w-full"
-                              // onChange={(e) =>
-                              //   handleOptionChange(option._id, e.target.value)
-                              // }
+                                value={option.idExtraData || ''}
+                                onChange={(e) =>
+                                  handleOtherInputChange(option._id, e.target.value)
+                                }
                               />
                             )}
                           </label>

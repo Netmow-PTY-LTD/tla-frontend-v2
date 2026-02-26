@@ -299,6 +299,14 @@ export default function CreateLeadWithAuthModal({
     }
   };
 
+  const handleOtherInputChange = (optionId, value) => {
+    const updatedDetails = checkedOptionsDetails.map((opt) =>
+      opt.id === optionId ? { ...opt, idExtraData: value } : opt
+    );
+    setCheckedOptionsDetails(updatedDetails);
+    setStepwiseCheckedOptions(updatedDetails);
+  };
+
   useEffect(() => {
     if (step === 0) {
       partialClonedQuestions[step] = fullClonedQuestions?.[step];
@@ -584,9 +592,10 @@ export default function CreateLeadWithAuthModal({
                               id={`${option._id}-other`}
                               placeholder="Other"
                               className="border rounded px-2 py-1 w-full"
-                            // onChange={(e) =>
-                            //   handleOptionChange(option._id, e.target.value)
-                            // }
+                              value={option.idExtraData || ''}
+                              onChange={(e) =>
+                                handleOtherInputChange(option._id, e.target.value)
+                              }
                             />
                           )}
                         </label>

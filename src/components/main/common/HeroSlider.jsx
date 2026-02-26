@@ -7,7 +7,7 @@ import CreateLeadWithAuthModal from '../home/modal/CreateLeadWithAuthModal';
 import ClientLeadRegistrationModal from '../home/modal/ClientLeadRegistrationModal';
 import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/questionApiService';
 import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
-import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
+import { useGetCountryWiseServicesQuery, useGetServiceGroupsQuery } from '@/store/features/admin/servicesApiService';
 import LawyerWarningModal from '../home/modal/LawyerWarningModal';
 import { checkValidity } from '@/helpers/validityCheck';
 import { useGetAllCategoriesQuery } from '@/store/features/public/catagorywiseServiceApiService';
@@ -84,16 +84,25 @@ export default function HeroSlider() {
     (country) => country?._id === cookieCountry?.countryId
   );
 
-  const { data: allCategories, isLoading: isAllCategoriesLoading } =
-    useGetAllCategoriesQuery(
-      { countryId: defaultCountry?._id },
-      {
-        skip: !defaultCountry?._id,
-      }
-    );
+  // const { data: allCategories, isLoading: isAllCategoriesLoading } =
+  //   useGetAllCategoriesQuery(
+  //     { countryId: defaultCountry?._id },
+  //     {
+  //       skip: !defaultCountry?._id,
+  //     }
+  //   );
 
-  const allServices =
-    allCategories?.data?.flatMap((category) => category.services) || [];
+  // const allServices =
+  //   allCategories?.data?.flatMap((category) => category.services) || [];
+
+  const { data: serviceGroupsData, isLoading: isServiceGroupsLoading } =
+    useGetServiceGroupsQuery(defaultCountry?._id, {
+      skip: !defaultCountry?._id,
+    });
+
+  // console.log('service groups data', serviceGroupsData);
+
+  const allServices = serviceGroupsData?.data?.services || [];
 
   // Default to Australia (AU) if available
   const { data: countryWiseServices, isLoading: isCountryWiseServicesLoading } =
@@ -103,16 +112,19 @@ export default function HeroSlider() {
 
   //console.log('countryWiseServices', countryWiseServices);
 
+  //const allServices = countryWiseServices?.data || [];
+
   useEffect(() => {
     if (!selectedService?._id) return;
 
     // Immediately clear previous questions to prevent flash
-    setServiceWiseQuestions([]);
+    setServiceWiseQuestions(null);
   }, [selectedService?._id]);
 
   const {
     data: singleServicewiseQuestionsData,
     isLoading: isQuestionsLoading,
+    isFetching,
     refetch,
   } = useGetServiceWiseQuestionsQuery(
     {
@@ -125,9 +137,9 @@ export default function HeroSlider() {
   );
 
   useEffect(() => {
-    if (isQuestionsLoading) return; // ✅ Wait for loading to complete
+    if (isQuestionsLoading || isFetching) return; // ✅ Wait for both
     setServiceWiseQuestions(singleServicewiseQuestionsData?.data || []);
-  }, [isQuestionsLoading, singleServicewiseQuestionsData]);
+  }, [isQuestionsLoading, isFetching, singleServicewiseQuestionsData]);
 
   const token = useSelector((state) => state.auth.token);
 
@@ -141,16 +153,18 @@ export default function HeroSlider() {
     <>
       <div className={styles.carouselWrapper}>
         <div className={styles.carouselContainer}>
-          {isAllCategoriesLoading ? (
+          {isServiceGroupsLoading ? (
             <div className="flex justify-center items-center">
               <Loader className="w-6 h-6 animate-spin" />
             </div>
           ) : (
             allServices?.length > 0 &&
             allServices?.slice(0, 5).map((service, index) => {
-              const image =
-                slidesData[index % slidesData.length]?.image ||
-                '/assets/img/services/service-slider-1.webp';
+              // const image =
+              //   slidesData[index % slidesData.length]?.image ||
+              //   '/assets/img/services/service-slider-1.webp';
+
+              const image = service?.serviceField?.bannerImage;
 
               return (
                 <div
@@ -192,9 +206,8 @@ export default function HeroSlider() {
             {slidesData.map((_, index) => (
               <span
                 key={index}
-                className={`${styles.sliderDot} ${
-                  index === current ? styles.activeDot : ''
-                }`}
+                className={`${styles.sliderDot} ${index === current ? styles.activeDot : ''
+                  }`}
                 onClick={() => updateSlides(index)}
               />
             ))}
@@ -212,7 +225,7 @@ export default function HeroSlider() {
       {validToken && currentUser ? (
         <>
           {currentUser?.data?.regUserType?.toLowerCase() === 'lawyer' &&
-          authModalOpen ? (
+            authModalOpen ? (
             <LawyerWarningModal
               modalOpen={authModalOpen}
               setModalOpen={setAuthModalOpen}
@@ -227,7 +240,9 @@ export default function HeroSlider() {
               countryId={defaultCountry?._id}
               serviceId={selectedService?._id}
               // locationId={location}
-              isQuestionsLoading={isQuestionsLoading}
+              isQuestionsLoading={
+                isQuestionsLoading || isFetching || serviceWiseQuestions === null
+              }
             />
           )}
         </>
@@ -241,7 +256,9 @@ export default function HeroSlider() {
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
           // locationId={location}
-          isQuestionsLoading={isQuestionsLoading}
+          isQuestionsLoading={
+            isQuestionsLoading || isFetching || serviceWiseQuestions === null
+          }
         />
       )}
     </>
