@@ -266,7 +266,7 @@ const AboutPageComponent = () => {
             </div>
           </div>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/" className="btn-default btn-secondary">
+            <Link href="/register" className="btn-default btn-secondary">
               Join as Lawyer - find client
             </Link>
             <Link
