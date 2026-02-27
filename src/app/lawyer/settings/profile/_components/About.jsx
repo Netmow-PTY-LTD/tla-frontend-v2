@@ -13,7 +13,7 @@ import AboutFormActions from './about/AboutFormAction';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { lawyerSettingAboutSchema } from '@/schema/dashboard/lawyerSettings';
 import TextInput from '@/components/form/TextInput';
-import { AirVent, Loader, UserPlusIcon } from 'lucide-react';
+import { AirVent, Loader, UserPlusIcon, Clock, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor';
 import ChangePassword from '@/app/client/_components/ChangePassword';
 import GenderRadioField from '@/components/form/GenderRadioField';
@@ -362,45 +362,62 @@ export default function About() {
         <div className="mt-6">
           {profile?.isFirmMemberRequest &&
             profile?.activeFirmRequestId?.firmProfileId !== null ? (
-            <div className="rounded-xl bg-yellow-50 border border-yellow-200 p-6 text-sm text-yellow-800 mt-6">
-              <div className="flex flex-col gap-4">
-                <h3 className="text-lg font-bold text-yellow-900">
-                  Firm Requested:{' '}
-                  {profile?.activeFirmRequestId?.firmProfileId?.firmName}
-                </h3>
-                <p className="flex items-center gap-2 text-base leading-relaxed">
-                  <span className="text-2xl">🕓</span>
-                  Your request to join this firm is currently
-                  <span className="font-medium">pending approval</span>.
+            <div className="rounded-xl bg-amber-50 border border-amber-200 p-6 shadow-sm mt-6">
+              <div className="flex flex-col gap-5">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-amber-100 rounded-lg">
+                      <Clock className="w-5 h-5 text-amber-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-amber-900 leading-tight">
+                        Membership Pending Approval
+                      </h3>
+                      <p className="text-sm text-amber-700 font-medium">
+                        Request sent to: {profile?.activeFirmRequestId?.firmProfileId?.firmName}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-sm text-amber-800 leading-relaxed bg-white/50 p-3 rounded-lg border border-amber-100/50">
+                  Your request to join this firm as a member is currently under review by the firm's administration. You will be notified once a decision has been made.
                 </p>
-                <Button
-                  type="button"
-                  className="self-start bg-[#00C3C0] text-white px-5 py-2 text-sm font-medium rounded-md hover:bg-[#009a98] transition-all duration-300 shadow-md"
-                  onClick={() => setIsOpenRew(true)}
-                >
-                  Cancel Request
-                </Button>
+                <div className="flex items-center gap-3 mt-1">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="bg-white border-amber-200 text-amber-700 hover:bg-amber-100 hover:text-amber-800 transition-all duration-300 shadow-sm"
+                    onClick={() => setIsOpenRew(true)}
+                  >
+                    Cancel Join Request
+                  </Button>
+                </div>
               </div>
             </div>
           ) : !profile?.firmProfileId || profile?.firmProfileId === null ? (
-            <div className="rounded-lg border border-gray-200 bg-white p-6">
+            <div className="rounded-xl border border-gray-200 bg-white p-7 shadow-sm">
               {profile?.isFirmMemberRequestRejected &&
                 !profile?.isFirmMemberRequest && (
-                  <div className="rounded-xl bg-red-50 border border-red-200 p-4 text-sm text-red-800 mb-6">
+                  <div className="rounded-xl bg-rose-50 border border-rose-200 p-5 text-sm text-rose-800 mb-8 flex gap-4">
+                    <div className="flex-shrink-0 mt-0.5">
+                      <AlertCircle className="w-5 h-5 text-rose-600" />
+                    </div>
                     <div className="flex flex-col gap-2">
-                      <h3 className="text-base font-bold text-red-900">
-                        Request Rejected
+                      <h3 className="text-base font-bold text-rose-900">
+                        Membership Request Declined
                       </h3>
-                      <p className="text-sm leading-relaxed">
-                        Your request to join the firm has been rejected. You can
-                        search and request to join another firm below.
+                      <p className="text-sm leading-relaxed text-rose-700">
+                        Unfortunately, your request to join the firm has been declined. You are now free to search and request to join a different firm from the list below.
                       </p>
                     </div>
                   </div>
                 )}
-              <label className="block text-lg font-semibold text-gray-900 mb-4">
-                Add Company Profile
-              </label>
+              <div className="flex items-center gap-3 mb-6">
+                <UserPlusIcon className="w-6 h-6 text-[#00C3C0]" />
+                <label className="text-xl font-bold text-gray-900">
+                  Join a Law Firm
+                </label>
+              </div>
 
               <div className="flex items-center gap-3 mb-5">
                 {/* <input
