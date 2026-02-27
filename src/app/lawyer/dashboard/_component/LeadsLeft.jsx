@@ -490,8 +490,8 @@ export default function LeadDetailsPage({
                       <div className="flex items-center gap-2 text-sm">
                         <span
                           className={`ml-2 w-2 h-2 rounded-full ${onlineMap[lead?.userProfileId?.user?._id]
-                              ? 'bg-green-500'
-                              : 'bg-gray-400'
+                            ? 'bg-green-500'
+                            : 'bg-gray-400'
                             }`}
                         ></span>
                         <span className="text-gray-700">
@@ -669,14 +669,20 @@ export default function LeadDetailsPage({
                       <div className="text-[#34495E] mt-2">
                         {leadAnswer?.options &&
                           leadAnswer?.options
-                            .map(
-                              (option) =>
-                                option?.option
-                                  ?.replace(/_/g, ' ') // replace underscores with spaces
-                                  ?.replace(/\b\w/g, (char) =>
-                                    char.toUpperCase()
-                                  ) // capitalize each word
-                            )
+                            .map((option) => {
+                              const formattedOption = option?.option
+                                ?.replace(/_/g, ' ') // replace underscores with spaces
+                                ?.replace(/\b\w/g, (char) => char.toUpperCase()); // capitalize each word
+
+                              if (
+                                formattedOption?.toLowerCase() === 'other' &&
+                                option?.idExtraData
+                              ) {
+                                return `${formattedOption} - ${option.idExtraData}`;
+                              }
+
+                              return formattedOption;
+                            })
                             .join(', ')}
                       </div>
                     </div>
