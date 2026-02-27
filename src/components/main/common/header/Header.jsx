@@ -12,7 +12,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useGetAllCategoriesQuery } from '@/store/features/public/catagorywiseServiceApiService';
 import CreateLeadWithAuthModal from '../../home/modal/CreateLeadWithAuthModal';
 import ClientLeadRegistrationModal from '../../home/modal/ClientLeadRegistrationModal';
-import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
+import { useGetCountryWiseServicesQuery, useGetServiceGroupsQuery } from '@/store/features/admin/servicesApiService';
 import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/questionApiService';
 import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
 import { checkValidity } from '@/helpers/validityCheck';
@@ -171,6 +171,14 @@ export default function Header() {
   //   allCategories?.data?.flatMap((category) => category.services) || [];
 
 
+  const { data: serviceGroupsData, isLoading: isServiceGroupsLoading } =
+    useGetServiceGroupsQuery(defaultCountry?._id, {
+      skip: !defaultCountry?._id,
+    });
+
+  // console.log('service groups data', serviceGroupsData);
+
+  const allServices = serviceGroupsData?.data?.services || [];
 
   // Default to Australia (AU) if available
   const { data: countryWiseServices, isLoading: isCountryWiseServicesLoading } =
@@ -180,7 +188,7 @@ export default function Header() {
 
   //console.log('countryWiseServices', countryWiseServices);
 
-  const allServices = countryWiseServices?.data || [];
+  //const allServices = countryWiseServices?.data || [];
 
   useEffect(() => {
     if (!selectedService?._id) return;
