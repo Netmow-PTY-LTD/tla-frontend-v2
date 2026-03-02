@@ -46,6 +46,7 @@ import { HireRequestMessageModal } from './modal/HireRequestMessageModal';
 import { RatingStars } from './RatingUi';
 import RatingForm from '../dashboard/my-cases/_components/RatingForm';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 export default function LeadResponseDetails({ onBack, response, onlineMap }) {
   // const [activeTab, setActiveTab] = useState('activity');
@@ -65,7 +66,7 @@ export default function LeadResponseDetails({ onBack, response, onlineMap }) {
 
 
 
-   const searchParams = useSearchParams();
+  const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
 
