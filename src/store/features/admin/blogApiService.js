@@ -76,7 +76,7 @@ const blogApiService = baseApi.injectEndpoints({
     }),
     editBlogCategory: builder.mutation({
       query: (body) => ({
-        url: `/blog-category/edit/${body?.id}`,
+        url: `/blog-category/${body?.id}/update`,
         method: 'PATCH',
         body,
       }),
