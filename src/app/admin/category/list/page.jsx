@@ -14,6 +14,8 @@ import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
 import AddCategoryModal from '../_components/AddCategoryModal ';
 import EditCategoryModal from '../_components/EditCategoryModal';
+import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
+
 import {
   useAllCategoriesQuery,
   useDeleteCategoryMutation,
@@ -23,6 +25,8 @@ export default function ServicesList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [deleteModalId, setDeleteModalId] = useState(null);
+
 
   const { data: categoryList, refetch, isFetching } = useAllCategoriesQuery();
   const [deleteCategory] = useDeleteCategoryMutation();
@@ -106,10 +110,11 @@ export default function ServicesList() {
               <DropdownMenuItem>
                 <div
                   className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => handleDeleteCategory(category?._id)}
+                  onClick={() => setDeleteModalId(category?._id)}
                 >
                   <Trash2 className="w-4 h-4" /> Delete
                 </div>
+
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -141,6 +146,17 @@ export default function ServicesList() {
           setEditId(null); // reset after close
         }}
       />
+      {deleteModalId && (
+        <ConfirmationModal
+          open={!!deleteModalId}
+          onOpenChange={() => setDeleteModalId(null)}
+          onConfirm={() => handleDeleteCategory(deleteModalId)}
+          title="Are you sure you want to delete this category?"
+          description="This action cannot be undone. So please proceed with caution."
+          cancelText="No"
+        />
+      )}
     </>
+
   );
 }

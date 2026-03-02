@@ -54,6 +54,8 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 import { AdminCollapsible } from '../../_components/AdminCollapsible';
+import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
+
 
 export default function AddOptionPage() {
   //state variables
@@ -67,6 +69,8 @@ export default function AddOptionPage() {
   const [question, setQuestion] = useState(null);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [option, setOption] = useState('');
+  const [deleteModalId, setDeleteModalId] = useState(null);
+
 
   const router = useRouter();
 
@@ -192,7 +196,7 @@ export default function AddOptionPage() {
     setSelectedService(val);
   };
 
- 
+
 
   //single service wise questions
 
@@ -219,7 +223,7 @@ export default function AddOptionPage() {
   //   }
   // }, [selectedCountry, selectedService]);
 
- 
+
 
   //Add option modal handling
 
@@ -234,7 +238,7 @@ export default function AddOptionPage() {
   //handling adding service wise question
 
   async function onSubmit(values) {
-  
+
     // try {
     //   const result = await addQuestion(values).unwrap();
     //   // Optionally reset form or show success toast
@@ -260,7 +264,7 @@ export default function AddOptionPage() {
   //       skip: !selectedQuestionId,
   //     });
 
- 
+
 
   //handle SelectOptionsModal
   const handleSelectOptionsModal = (option, currentOrder) => {
@@ -277,7 +281,7 @@ export default function AddOptionPage() {
 
   //handle SelectOptionsModal
   const handleEditOptionModal = (questionId, OptionId) => {
-   
+
     const singleQuestion = singleServicewiseQuestionsData?.data?.find(
       (item) => item?._id === questionId
     );
@@ -443,10 +447,11 @@ export default function AddOptionPage() {
                             </div>
                             <div
                               className="flex items-center gap-2 cursor-pointer border border-b border-1 py-1 px-2 rounded-md"
-                              onClick={() => handleDeleteOption(option?._id)}
+                              onClick={() => setDeleteModalId(option?._id)}
                             >
                               <Trash2 className="w-4 h-4" /> Delete
                             </div>
+
                           </div>
                         </td>
                         <td>
@@ -484,6 +489,18 @@ export default function AddOptionPage() {
         option={option}
         refetch={singleServicewiseQuestionsRefetch}
       />
+
+      {deleteModalId && (
+        <ConfirmationModal
+          open={!!deleteModalId}
+          onOpenChange={() => setDeleteModalId(null)}
+          onConfirm={() => handleDeleteOption(deleteModalId)}
+          title="Are you sure you want to delete this option?"
+          description="This action cannot be undone. So please proceed with caution."
+          cancelText="No"
+        />
+      )}
     </>
+
   );
 }
