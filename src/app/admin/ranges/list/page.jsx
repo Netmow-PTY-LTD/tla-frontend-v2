@@ -19,11 +19,15 @@ import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
 import CreateRangeModal from '../_components/CreateRangeModal';
 import EditRangeModal from '../_components/EditRangeModal';
+import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
+
 
 export default function Page() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedRange, setSelectedRange] = useState(null);
+  const [deleteModalId, setDeleteModalId] = useState(null);
+
 
   const { data: countryList, refetch: refetchCountry } =
     useGetCountryListQuery();
@@ -40,15 +44,10 @@ export default function Page() {
   const [deleteRange] = useDeleteRangeMutation();
 
   const handleDeleteRange = async (id) => {
-    const confirmDelete = window.confirm(
-      'Are you sure you want to delete this range?'
-    );
-
-    if (!confirmDelete) return;
-
     try {
       const res = await deleteRange(id).unwrap();
       if (res) {
+
         showSuccessToast(res?.message);
         refetchRange();
       }
@@ -137,10 +136,11 @@ export default function Page() {
               <DropdownMenuItem>
                 <div
                   className="flex gap-2 cursor-pointer"
-                  onClick={() => handleDeleteRange(item?._id)}
+                  onClick={() => setDeleteModalId(item?._id)}
                 >
                   <Trash2 className="w-4 h-4" /> Delete
                 </div>
+
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -191,6 +191,17 @@ export default function Page() {
         searchColumn="name"
         isFetching={isFetching}
       />
+      {deleteModalId && (
+        <ConfirmationModal
+          open={!!deleteModalId}
+          onOpenChange={() => setDeleteModalId(null)}
+          onConfirm={() => handleDeleteRange(deleteModalId)}
+          title="Are you sure you want to delete this range?"
+          description="This action cannot be undone. So please proceed with caution."
+          cancelText="No"
+        />
+      )}
     </>
+
   );
 }
