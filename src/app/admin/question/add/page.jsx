@@ -45,6 +45,8 @@ import {
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { QuestionDialog } from '../../_components/modal/QuestionModal';
 import { SimpleQuestionTable } from '@/components/common/SimpleQuestionTable';
+import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
+
 
 export default function AddQuestionPage() {
   //state variables
@@ -54,6 +56,8 @@ export default function AddQuestionPage() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [data, setData] = useState([]);
   const [isDragEnabled, setIsDragEnabled] = useState(false);
+  const [deleteModalId, setDeleteModalId] = useState(null);
+
 
   const router = useRouter();
 
@@ -134,11 +138,12 @@ export default function AddQuestionPage() {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => handleDeleteQuestion(item?._id)}
+                onClick={() => setDeleteModalId(item?._id)}
                 className="flex items-center gap-2 cursor-pointer"
               >
                 <Trash2 className="w-4 h-4" /> Delete
               </DropdownMenuItem>
+
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -188,7 +193,7 @@ export default function AddQuestionPage() {
   //country change handler
 
   const handleCountryChange = (val) => {
-  
+
     setSelectedCountry(val);
     setSelectedService(''); // reset service
   };
@@ -200,7 +205,7 @@ export default function AddQuestionPage() {
     setSelectedService(val);
   };
 
-  
+
 
   //single service wise questions
 
@@ -233,13 +238,13 @@ export default function AddQuestionPage() {
     }
   }, [singleServicewiseQuestionsData]);
 
-  
+
 
   //handling adding service wise question
   const [addQuestion, { isLoading }] = useAddQuestionMutation();
 
   async function onSubmit(values) {
- 
+
     try {
       const result = await addQuestion(values).unwrap();
       // Optionally reset form or show success toast
@@ -437,6 +442,17 @@ export default function AddQuestionPage() {
         onOpenChange={setDialogOpen}
         item={selectedItem}
       />
+      {deleteModalId && (
+        <ConfirmationModal
+          open={!!deleteModalId}
+          onOpenChange={() => setDeleteModalId(null)}
+          onConfirm={() => handleDeleteQuestion(deleteModalId)}
+          title="Are you sure you want to delete this question?"
+          description="This action cannot be undone. So please proceed with caution."
+          cancelText="No"
+        />
+      )}
     </>
+
   );
 }
