@@ -8,6 +8,7 @@ import {
 } from '@/store/features/public/publicApiService';
 import {
     useGetCountryWiseServicesQuery,
+    useGetServiceGroupsQuery,
 } from '@/store/features/admin/servicesApiService';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -26,7 +27,7 @@ import CreateLeadWithAuthModal from '@/components/main/home/modal/CreateLeadWith
 import { useSelector } from 'react-redux';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { showErrorToast } from '@/components/common/toasts';
-import { useGetAllCategoriesQuery } from '@/store/features/public/catagorywiseServiceApiService';
+// import { useGetAllCategoriesQuery } from '@/store/features/public/catagorywiseServiceApiService';
 import Cookies from 'js-cookie';
 import { safeJsonParse } from '@/helpers/safeJsonParse';
 
@@ -47,7 +48,7 @@ export default function AddNewCase() {
     const {
         data: allMyLeads,
         isLoading: isAllMyLeadsLoading,
-        isFetching,
+        // isFetching,
     } = useGetAllMyLeadsQuery(
         { page, limit: 10 },
         { keepPreviousData: true, refetchOnMountOrArgChange: true }
@@ -62,23 +63,11 @@ export default function AddNewCase() {
         (country) => country?._id === cookieCountry?.countryId
     );
 
-    const { data: allCategories, isLoading: isAllCategoriesLoading } =
-        useGetAllCategoriesQuery(
-            {
-                countryId: defaultCountry?._id,
-            },
-            {
-                skip: !defaultCountry?._id,
-            }
-        );
-
-    const allServicesRaw =
-        allCategories?.data?.flatMap((category) => category.services) || [];
-
-    // Deduplicate services by _id
-    const allServices = Array.from(
-        new Map(allServicesRaw.map((s) => [s._id, s])).values()
-    );
+    const { data: serviceGroupsData, isLoading: isServiceGroupsLoading } =
+        useGetServiceGroupsQuery(defaultCountry?._id, {
+            skip: !defaultCountry?._id,
+        });
+    const allServices = serviceGroupsData?.data?.services || [];
 
     const { data: countryWiseServices } = useGetCountryWiseServicesQuery(
         defaultCountry?._id,
@@ -107,12 +96,13 @@ export default function AddNewCase() {
 
     useEffect(() => {
         if (!selectedService?._id) return;
-        setServiceWiseQuestions([]);
+        setServiceWiseQuestions(null);
     }, [selectedService?._id]);
 
     const {
         data: singleServicewiseQuestionsData,
         isLoading: isQuestionsLoading,
+        isFetching,
     } = useGetServiceWiseQuestionsQuery(
         {
             countryId: defaultCountry?._id,
@@ -124,9 +114,9 @@ export default function AddNewCase() {
     );
 
     useEffect(() => {
-        if (isQuestionsLoading) return;
+        if (isQuestionsLoading || isFetching) return;
         setServiceWiseQuestions(singleServicewiseQuestionsData?.data || []);
-    }, [isQuestionsLoading, singleServicewiseQuestionsData]);
+    }, [isQuestionsLoading, isFetching, singleServicewiseQuestionsData]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -313,7 +303,7 @@ export default function AddNewCase() {
                 countryId={defaultCountry?._id}
                 defaultCountry={defaultCountry}
                 serviceId={selectedService?._id}
-                isQuestionsLoading={isQuestionsLoading}
+                isQuestionsLoading={isQuestionsLoading || isFetching || serviceWiseQuestions === null}
                 customService={query}
             />
         </div>

@@ -28,4 +28,6 @@ export const clientProfileSchema = z.object({
             }
         ),
     address: z.string().min(1, 'Address is required'),
+    userProfileLogo: z.any().optional(),
+    email: z.string().email('Invalid email').optional(),
 });

@@ -376,7 +376,7 @@ export default function CreateLeadWithAuthModal({
       ...(selectedService?.slug === 'others' && { customService }),
     };
 
-    console.log('payload to be sent for create lead with auth', payload);
+    // console.log('payload to be sent for create lead with auth', payload);
 
     try {
       const res = await createLead(payload).unwrap();
@@ -504,7 +504,7 @@ export default function CreateLeadWithAuthModal({
       }}
       title=""
       width="max-w-[570px]"
-      height="max-h-[90vh]"
+      // height="max-h-[90vh]"
       paddingTop="pt-0"
       paddingLeft="pl-0"
       paddingRight="pr-0"
