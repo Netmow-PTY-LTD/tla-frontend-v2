@@ -12,7 +12,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useGetAllCategoriesQuery } from '@/store/features/public/catagorywiseServiceApiService';
 import CreateLeadWithAuthModal from '../../home/modal/CreateLeadWithAuthModal';
 import ClientLeadRegistrationModal from '../../home/modal/ClientLeadRegistrationModal';
-import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
+import { useGetCountryWiseServicesQuery, useGetServiceGroupsQuery } from '@/store/features/admin/servicesApiService';
 import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/questionApiService';
 import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
 import { checkValidity } from '@/helpers/validityCheck';
@@ -161,14 +161,24 @@ export default function Header() {
     (country) => country?._id === cookieCountry?.countryId
   );
 
-  const { data: allCategories, isLoading: isAllCategoriesLoading } =
-    useGetAllCategoriesQuery(
-      { countryId: defaultCountry?._id },
-      { skip: !defaultCountry?._id }
-    );
+  // const { data: allCategories, isLoading: isAllCategoriesLoading } =
+  //   useGetAllCategoriesQuery(
+  //     { countryId: defaultCountry?._id },
+  //     { skip: !defaultCountry?._id }
+  //   );
 
-  const allServices =
-    allCategories?.data?.flatMap((category) => category.services) || [];
+  // const allServices =
+  //   allCategories?.data?.flatMap((category) => category.services) || [];
+
+
+  const { data: serviceGroupsData, isLoading: isServiceGroupsLoading } =
+    useGetServiceGroupsQuery(defaultCountry?._id, {
+      skip: !defaultCountry?._id,
+    });
+
+  // console.log('service groups data', serviceGroupsData);
+
+  const allServices = serviceGroupsData?.data?.services || [];
 
   // Default to Australia (AU) if available
   const { data: countryWiseServices, isLoading: isCountryWiseServicesLoading } =
@@ -178,16 +188,19 @@ export default function Header() {
 
   //console.log('countryWiseServices', countryWiseServices);
 
+  //const allServices = countryWiseServices?.data || [];
+
   useEffect(() => {
     if (!selectedService?._id) return;
 
     // Immediately clear previous questions to prevent flash
-    setServiceWiseQuestions([]);
+    setServiceWiseQuestions(null);
   }, [selectedService?._id]);
 
   const {
     data: singleServicewiseQuestionsData,
     isLoading: isQuestionsLoading,
+    isFetching,
     refetch,
   } = useGetServiceWiseQuestionsQuery(
     {
@@ -200,8 +213,9 @@ export default function Header() {
   );
 
   useEffect(() => {
+    if (isQuestionsLoading || isFetching) return;
     setServiceWiseQuestions(singleServicewiseQuestionsData?.data || []);
-  }, [singleServicewiseQuestionsData]);
+  }, [isQuestionsLoading, isFetching, singleServicewiseQuestionsData]);
 
   const filteredServices = allServices?.filter((service) =>
     service.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -500,7 +514,9 @@ export default function Header() {
               countryId={defaultCountry?._id}
               serviceId={selectedService?._id}
               locationId={location}
-              isQuestionsLoading={isQuestionsLoading}
+              isQuestionsLoading={
+                isQuestionsLoading || isFetching || serviceWiseQuestions === null
+              }
             />
           )}
         </>
@@ -513,6 +529,9 @@ export default function Header() {
           selectedService={selectedService}
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
+          isQuestionsLoading={
+            isQuestionsLoading || isFetching || serviceWiseQuestions === null
+          }
         />
       )}
     </header>
