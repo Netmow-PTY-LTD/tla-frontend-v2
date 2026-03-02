@@ -15,6 +15,7 @@ export default function AvatarUploader({
   disabled = false,
 }) {
   const { register, setValue, watch, getValues } = useFormContext();
+  register(name);
   const file = watch(name);
   const [preview, setPreview] = useState(null);
 
