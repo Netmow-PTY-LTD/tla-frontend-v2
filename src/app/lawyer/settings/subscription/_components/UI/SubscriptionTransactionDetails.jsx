@@ -4,10 +4,9 @@ import { Search, Download, Filter, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useUserTransactionHistoryQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
-import InvoiceModal from '../modal/InvoiceMoadal';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import InvoiceDocument from '@/components/dashboard/lawyer/invoice/InvoiceDocument';
 import SubscriptionInvoiceDocument from '../module/InvoiceSubscription';
+import SubInvoiceModal from '../modal/SubInvoiceModal';
 
 export const SubscriptionTransactionDetails = () => {
   const [selectedTransaction, setSelectedTransaction] = useState(null);
@@ -282,7 +281,7 @@ export const SubscriptionTransactionDetails = () => {
           </Button>
         </div>
       </div>
-      <InvoiceModal
+      <SubInvoiceModal
         open={open}
         setOpen={setOpen}
         transaction={selectedTransaction}

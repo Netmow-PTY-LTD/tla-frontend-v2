@@ -78,7 +78,7 @@ const CreditsPurchase = ({ creditPackage }) => {
         <div className={`${creditPackage?.discountPercentage > 0 ? 'mt-12' : ''}`}>
           <div className="grid md:grid-cols-4 gap-6 items-start">
             <div className="flex items-start space-x-4">
-              <p className="font-medium text-gray-900">{creditPackage?.name}</p>
+              <p className="font-medium text-gray-900">{creditPackage?.name} Package</p>
             </div>
 
             <div className="flex items-center space-x-2">
@@ -115,7 +115,7 @@ const CreditsPurchase = ({ creditPackage }) => {
                 {creditPackage?.taxType || 'GST'})
               </p>
               <p className="text-gray-500 text-sm">
-                {formatCurrency(creditPackage?.pricePerCredit)}/credit
+                {formatCurrency(creditPackage.discountPercentage > 0 ? (Number(creditPackage?.priceDisplay) / Number(creditPackage?.credit)) : Number(creditPackage?.pricePerCredit))}/credit
               </p>
             </div>
             <div className="">
