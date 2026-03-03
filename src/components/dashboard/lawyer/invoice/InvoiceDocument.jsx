@@ -65,7 +65,7 @@ const InvoiceDocument = ({ transaction }) => {
             <Text>+61 490 135 339</Text>
             <Text style={{ color: 'green', marginTop: 6 }}>✓ PAID</Text>
             <Text style={{ fontSize: 16, color: 'green' }}>
-              {formatCurrency(creditPackageId?.price)}
+              {formatCurrency(transaction?.amountPaid)}
             </Text>
           </View>
         </View>
@@ -90,6 +90,19 @@ const InvoiceDocument = ({ transaction }) => {
                 {formatCurrency(creditPackageId?.price)}
               </Text>
             </View>
+
+            {/* Package Discount Row */}
+            {creditPackageId?.discountPercentage > 0 && (
+              <View style={styles.row}>
+                <Text
+                  style={{ flex: 2 }}
+                >{`Package Discount (${creditPackageId.discountPercentage}%)`}</Text>
+                <Text style={{ flex: 1 }}>-</Text>
+                <Text style={{ flex: 1, textAlign: 'right', color: 'red' }}>
+                  - {formatCurrency((creditPackageId.price * creditPackageId.discountPercentage) / 100)}
+                </Text>
+              </View>
+            )}
 
             {/* Coupon Row */}
             {couponCode && (

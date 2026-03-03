@@ -86,6 +86,15 @@ const InvoiceModal = ({ open, setOpen, transaction }) => {
               {formatCurrency(creditPackageId?.price)}
             </div>
           </div>
+          {creditPackageId?.discountPercentage > 0 && (
+            <div className="grid grid-cols-3">
+              <div>{`Package Discount (${creditPackageId.discountPercentage}%)`}</div>
+              <div>-</div>
+              <div className="text-right text-red-500">
+                - {formatCurrency((creditPackageId.price * creditPackageId.discountPercentage) / 100)}
+              </div>
+            </div>
+          )}
           {couponCode && (
             <div className="grid grid-cols-3">
               <div>{`Discount from coupon (${couponCode})`}</div>
