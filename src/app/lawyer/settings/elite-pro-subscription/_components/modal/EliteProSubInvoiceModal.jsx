@@ -1,7 +1,7 @@
 import { Modal } from '@/components/UIComponents/Modal';
 import React from 'react';
 
-const InvoiceModal = ({ open, setOpen, transaction }) => {
+const EliteProSubInvoiceModal = ({ open, setOpen, transaction }) => {
   if (!transaction) return null;
 
   const {
@@ -130,4 +130,4 @@ const InvoiceModal = ({ open, setOpen, transaction }) => {
   );
 };
 
-export default InvoiceModal;
+export default EliteProSubInvoiceModal;

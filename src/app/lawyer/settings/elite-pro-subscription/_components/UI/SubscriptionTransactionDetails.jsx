@@ -4,10 +4,9 @@ import { Search, Download, Filter, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useUserTransactionHistoryQuery } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
-import InvoiceModal from '../modal/InvoiceMoadal';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import InvoiceDocument from '@/components/dashboard/lawyer/invoice/InvoiceDocument';
 import EliteProInvoiceDocument from '../module/InvoiceElitePro';
+import EliteProSubInvoiceModal from '../modal/EliteProSubInvoiceModal';
 
 export const SubscriptionTransactionDetails = () => {
   const [selectedTransaction, setSelectedTransaction] = useState(null);
@@ -134,11 +133,10 @@ export const SubscriptionTransactionDetails = () => {
                       </td>
                       <td className="py-4 px-6 text-sm">
                         <span
-                          className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
-                            tx.status === 'active'
+                          className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${tx.status === 'active'
                               ? 'bg-green-100 text-green-700'
                               : 'bg-yellow-100 text-yellow-700'
-                          }`}
+                            }`}
                         >
                           {tx.status}
                         </span>
@@ -223,7 +221,7 @@ export const SubscriptionTransactionDetails = () => {
             const maxVisiblePages = 5;
             const startPage =
               Math.floor((currentPage - 1) / maxVisiblePages) *
-                maxVisiblePages +
+              maxVisiblePages +
               1;
             const endPage = Math.min(
               startPage + maxVisiblePages - 1,
@@ -282,7 +280,7 @@ export const SubscriptionTransactionDetails = () => {
           </Button>
         </div>
       </div>
-      <InvoiceModal
+      <EliteProSubInvoiceModal
         open={open}
         setOpen={setOpen}
         transaction={selectedTransaction}
