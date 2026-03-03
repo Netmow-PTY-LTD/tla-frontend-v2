@@ -32,9 +32,14 @@ const SubscriptionInvoiceDocument = ({ transaction }) => {
     discountApplied,
     currency,
     invoice_pdf_url,
+    subtotal: subTotal,
+    taxAmount,
+    totalWithTax,
+    taxRate,
+    taxType,
   } = transaction;
 
-  const total = amountPaid || 0;
+  const total = totalWithTax || amountPaid || 0;
   const discount = discountApplied || 0;
 
   return (
@@ -52,10 +57,12 @@ const SubscriptionInvoiceDocument = ({ transaction }) => {
                 : userId?.profile?.address?.replace(/,/g, ', ')}
             </Text>
 
-            <Text style={[styles.bold, { marginTop: 50 }]}>
-              Tax Invoice {transactionId?.slice(-6).toUpperCase()}
-            </Text>
-            <Text>{new Date(createdAt).toLocaleDateString()}</Text>
+            <View style={{ marginTop: 50 }}>
+              <Text style={styles.bold}>
+                Tax Invoice {transactionId || transaction?._id?.slice(-6).toUpperCase()}
+              </Text>
+              <Text style={{ fontSize: 10, color: '#666' }}>{new Date(createdAt).toLocaleDateString()}</Text>
+            </View>
           </View>
 
           {/* Company Info */}
@@ -64,8 +71,8 @@ const SubscriptionInvoiceDocument = ({ transaction }) => {
             <Text>Suite 8/3, Level 3/54 Jephson ST</Text>
             <Text>Toowong, QLD 4066, Australia</Text>
             <Text>+61 490 135 339</Text>
-            <Text style={{ color: 'green', marginTop: 6 }}>✓ {transaction.status === 'completed' ? 'PAID' : 'PENDING'}</Text>
-            <Text style={{ fontSize: 16, color: 'green' }}>{formatCurrency(total, currency)}</Text>
+            <Text style={{ color: 'green', marginTop: 6, fontSize: 10 }}>✓ {transaction.status === 'completed' ? 'PAID' : 'PENDING'}</Text>
+            <Text style={{ fontSize: 16, color: 'green', fontWeight: 'bold' }}>{formatCurrency(total, currency)}</Text>
           </View>
         </View>
 
@@ -81,7 +88,7 @@ const SubscriptionInvoiceDocument = ({ transaction }) => {
           {/* Credit purchase */}
           {creditPackageId && (
             <View style={styles.tableRow}>
-              <Text style={{ flex: 2 }}>Purchase of {creditPackageId?.credit} credits</Text>
+              <Text style={{ flex: 2 }}>{creditPackageId?.name} Package ({creditPackageId?.credit} credits)</Text>
               <Text style={{ flex: 1 }}>One-time charge</Text>
               <Text style={{ flex: 1, textAlign: 'right' }}>{formatCurrency(creditPackageId?.price, currency)}</Text>
             </View>
@@ -96,7 +103,7 @@ const SubscriptionInvoiceDocument = ({ transaction }) => {
                 {new Date(subscriptionId.subscriptionPeriodEnd).toLocaleDateString()}
               </Text>
               <Text style={{ flex: 1, textAlign: 'right' }}>
-                {formatCurrency(subscriptionId.subscriptionPackageId.price?.amount || total, currency)}
+                {formatCurrency(subscriptionId.subscriptionPackageId.price?.amount || subTotal, currency)}
               </Text>
             </View>
           )}
@@ -113,8 +120,14 @@ const SubscriptionInvoiceDocument = ({ transaction }) => {
 
         {/* Summary */}
         <View style={[styles.section, styles.right, { marginTop: 20 }]}>
-          <Text style={{ fontSize: 14, fontWeight: 'bold' }}>
-            Total: {formatCurrency(total, currency)}
+          <Text style={{ marginBottom: 2 }}>
+            Sub Total: {formatCurrency(subTotal, currency)}
+          </Text>
+          <Text style={{ marginBottom: 2 }}>
+            {taxType || 'GST'} ({taxRate || 0}%): {formatCurrency(taxAmount, currency)}
+          </Text>
+          <Text style={{ fontSize: 14, fontWeight: 'bold', borderTop: 1, borderTopColor: '#eee', paddingTop: 4, marginTop: 4 }}>
+            Total inc. {taxType || 'GST'}: {formatCurrency(total, currency)}
           </Text>
         </View>
 
