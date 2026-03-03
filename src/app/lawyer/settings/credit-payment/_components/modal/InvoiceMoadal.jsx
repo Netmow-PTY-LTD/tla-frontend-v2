@@ -16,8 +16,13 @@ const InvoiceModal = ({ open, setOpen, transaction }) => {
 
   const total = amountPaid || 0;
   const discount = discountApplied || 0;
-  const subTotal = total - (total * 10) / 110; // reverse-calculate 10% VAT from total
-  const vat = total - subTotal;
+
+  const subTotal = transaction?.subtotal || 0;
+  const taxAmount = transaction?.taxAmount || 0;
+  const totalWithTax = transaction?.totalWithTax || amountPaid || 0;
+  const taxRate = transaction?.taxRate || 0;
+
+
 
   console.log('transaction', transaction);
 
@@ -37,12 +42,15 @@ const InvoiceModal = ({ open, setOpen, transaction }) => {
                 ? `${userId.profile.billingAddress.addressLine1}, ${userId.profile.billingAddress.addressLine2}, ${userId.profile.billingAddress.city}, ${userId.profile.billingAddress.postcode}`
                 : userId?.profile?.address?.replace(/,/g, ', ')}
             </p>
+            {userId?.profile?.phone && (
+              <p className="text-sm">{userId.profile.phone}</p>
+            )}
 
             <p className="">{userId?.companyName || userId?.email}</p>
             <div className="mt-10">
               <p className="font-semibold text-lg">
                 Tax Invoice{' '}
-                <strong>{transaction._id?.slice(-6).toUpperCase()}</strong>
+                <strong>{transaction?.transactionId || transaction._id?.slice(-6).toUpperCase()}</strong>
               </p>
               <p className="text-sm text-gray-500">
                 {new Date(createdAt).toLocaleDateString()}
@@ -65,7 +73,7 @@ const InvoiceModal = ({ open, setOpen, transaction }) => {
               ✓ PAID
             </div>
             <div className="mt-2 text-2xl text-green-600 font-bold">
-              {formatCurrency(total)}
+              {formatCurrency(totalWithTax)}
             </div>
             {/* <p className="text-sm text-gray-500">TOTAL INC. GST</p> */}
             {/* <p className="text-sm text-gray-500">TOTAL </p> */}
@@ -80,7 +88,7 @@ const InvoiceModal = ({ open, setOpen, transaction }) => {
             <div className="text-right">PRICE</div>
           </div>
           <div className="grid grid-cols-3 mb-1">
-            <div>Purchase of {creditPackageId?.credit} credits</div>
+            <div>{creditPackageId?.name} Package ({creditPackageId?.credit} credits)</div>
             <div>One-time Charge</div>
             <div className="text-right">
               {formatCurrency(creditPackageId?.price)}
@@ -111,19 +119,19 @@ const InvoiceModal = ({ open, setOpen, transaction }) => {
           <p className="text-gray-600">
             Sub Total:{' '}
             <span className="ml-4 font-medium">
-              {formatCurrency(transaction?.subTotal || subTotal)}
+              {formatCurrency(subTotal)}
             </span>
           </p>
           <p className="text-gray-600">
-            {transaction?.taxType || 'GST'} ({transaction?.taxPercentage || 10}%):{' '}
+            {transaction?.taxType || 'GST'} ({taxRate}%):{' '}
             <span className="ml-4 font-medium">
-              {formatCurrency(transaction?.taxAmount || vat)}
+              {formatCurrency(taxAmount)}
             </span>
           </p>
           <p className="font-semibold text-lg pt-2 border-t border-gray-200 inline-block w-full max-w-[200px] ml-auto">
             Total inc. {transaction?.taxType || 'GST'}:{' '}
             <span className="ml-4 text-green-600 font-bold">
-              {formatCurrency(total)}
+              {formatCurrency(totalWithTax)}
             </span>
           </p>
         </div>
