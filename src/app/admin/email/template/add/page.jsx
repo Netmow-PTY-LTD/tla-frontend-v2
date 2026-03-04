@@ -209,9 +209,9 @@ export default function AddEmailCampaign() {
                         </div>
                         <div className="flex gap-3">
                             {!watchIsDrip && (
-                                <Button 
-                                    type="button" 
-                                    variant="outline" 
+                                <Button
+                                    type="button"
+                                    variant="outline"
                                     onClick={handlePreview}
                                     disabled={isPreviewing}
                                     className="rounded-xl border-slate-200 hover:bg-slate-50"
@@ -243,7 +243,7 @@ export default function AddEmailCampaign() {
                                         name="title"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel className="font-bold text-slate-700">Internal Reference</FormLabel>
+                                                <FormLabel className="font-bold text-slate-700">Title</FormLabel>
                                                 <FormControl>
                                                     <Input placeholder="e.g. Q1 Newsletter - Members" className="rounded-xl border-slate-200 focus:border-[#00c3c0] focus:ring-[#00c3c0]/20" {...field} />
                                                 </FormControl>
@@ -530,16 +530,16 @@ export default function AddEmailCampaign() {
                                             <h3 className="font-black text-slate-800 text-xl tracking-tight">Sequence <span className="text-[#ff8602]">Architecture</span></h3>
                                             <p className="text-xs text-slate-500 font-medium italic">Define the chain of events for this campaign.</p>
                                         </div>
-                                        <Button 
-                                            type="button" 
-                                            size="sm" 
+                                        <Button
+                                            type="button"
+                                            size="sm"
                                             onClick={() => append({ dayOffset: fields.length * 2, subject: '', templateKey: 'admin_custom', headline: '', body: '' })}
                                             className="bg-[#00c3c0] hover:bg-[#00c3c0]/90 rounded-xl px-5 h-10 border-none"
                                         >
                                             <Plus className="w-4 h-4 mr-1" /> Add Step
                                         </Button>
                                     </div>
-                                    
+
                                     {fields.length === 0 && (
                                         <div className="text-center p-20 bg-white border-2 border-dashed border-slate-200 rounded-[32px]">
                                             <Mail className="w-16 h-16 text-slate-200 mx-auto mb-4" />
