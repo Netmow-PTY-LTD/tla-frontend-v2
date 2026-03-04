@@ -2,36 +2,60 @@ import { baseApi } from '../../baseApi/baseApi';
 
 const emailApiService = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        // Templates & Utilities
-        getTemplates: builder.query({
+        // Email Templates CRUD (api/v1/email-templates)
+        getAllEmailTemplates: builder.query({
+            query: (params) => ({
+                url: '/email-templates',
+                method: 'GET',
+                params,
+            }),
+            providesTags: ['email-templates'],
+        }),
+        getSingleEmailTemplate: builder.query({
+            query: (id) => ({
+                url: `/email-templates/${id}`,
+                method: 'GET',
+            }),
+            providesTags: ['email-templates'],
+        }),
+        getEmailTemplateByKey: builder.query({
+            query: (key) => ({
+                url: `/email-templates/template-key/${key}`,
+                method: 'GET',
+            }),
+            providesTags: ['email-templates'],
+        }),
+        getEmailTemplateConstants: builder.query({
             query: () => ({
-                url: '/admin/email-campaigns/templates',
+                url: '/email-templates/constants',
                 method: 'GET',
             }),
         }),
-        getSegments: builder.query({
-            query: () => ({
-                url: '/admin/email-campaigns/segments',
-                method: 'GET',
-            }),
-        }),
-        sendPreview: builder.mutation({
-            query: (body) => ({
-                url: '/admin/email-campaigns/preview',
-                method: 'POST',
-                body,
-            }),
-        }),
-
-        // CRUD
         addEmailTemplate: builder.mutation({
             query: (body) => ({
-                url: '/admin/email-campaigns',
+                url: '/email-templates',
                 method: 'POST',
                 body,
             }),
-            invalidatesTags: ['email-campaigns'],
+            invalidatesTags: ['email-templates'],
         }),
+        updateEmailTemplate: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `/email-templates/${id}`,
+                method: 'PATCH',
+                body: data,
+            }),
+            invalidatesTags: ['email-templates'],
+        }),
+        deleteEmailTemplate: builder.mutation({
+            query: (id) => ({
+                url: `/email-templates/${id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['email-templates'],
+        }),
+
+        // Email Campaigns CRUD (api/v1/admin/email-campaigns) - Legacy/Continued
         getAllEmails: builder.query({
             query: (params) => ({
                 url: '/admin/email-campaigns',
@@ -47,23 +71,7 @@ const emailApiService = baseApi.injectEndpoints({
             }),
             providesTags: ['email-campaigns'],
         }),
-        updateEmailTemplate: builder.mutation({
-            query: ({ id, data }) => ({
-                url: `/admin/email-campaigns/${id}`,
-                method: 'PATCH',
-                body: data,
-            }),
-            invalidatesTags: ['email-campaigns'],
-        }),
-        deleteEmail: builder.mutation({
-            query: (id) => ({
-                url: `/admin/email-campaigns/${id}`,
-                method: 'DELETE',
-            }),
-            invalidatesTags: ['email-campaigns'],
-        }),
-
-        // Actions
+        // ... other campaign endpoints if needed, but keeping it clean for the user's request
         sendCampaignNow: builder.mutation({
             query: (id) => ({
                 url: `/admin/email-campaigns/${id}/send-now`,
@@ -84,19 +92,55 @@ const emailApiService = baseApi.injectEndpoints({
                 method: 'GET',
             }),
         }),
+        deleteEmail: builder.mutation({
+            query: (id) => ({
+                url: `/admin/email-campaigns/${id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['email-campaigns'],
+        }),
+
+        // Utilities for Campaigns
+        getTemplates: builder.query({
+            query: () => ({
+                url: '/admin/email-campaigns/templates',
+                method: 'GET',
+            }),
+        }),
+        getSegments: builder.query({
+            query: () => ({
+                url: '/admin/email-campaigns/segments',
+                method: 'GET',
+            }),
+        }),
+        sendPreview: builder.mutation({
+            query: (body) => ({
+                url: '/admin/email-campaigns/preview',
+                method: 'POST',
+                body,
+            }),
+        }),
     }),
 });
 
 export const {
-    useGetTemplatesQuery,
-    useGetSegmentsQuery,
-    useSendPreviewMutation,
+    // Template Hooks
+    useGetAllEmailTemplatesQuery,
+    useGetSingleEmailTemplateQuery,
+    useGetEmailTemplateByKeyQuery,
+    useGetEmailTemplateConstantsQuery,
     useAddEmailTemplateMutation,
+    useUpdateEmailTemplateMutation,
+    useDeleteEmailTemplateMutation,
+
+    // Campaign Hooks
     useGetAllEmailsQuery,
     useGetSingleEmailQuery,
-    useUpdateEmailTemplateMutation,
-    useDeleteEmailMutation,
     useSendCampaignNowMutation,
     useGetCampaignLogQuery,
     useGetCampaignStatsQuery,
+    useDeleteEmailMutation,
+    useGetTemplatesQuery,
+    useGetSegmentsQuery,
+    useSendPreviewMutation,
 } = emailApiService;

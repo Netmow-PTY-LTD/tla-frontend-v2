@@ -159,6 +159,7 @@ export const baseApi = createApi({
     'contact-info',
     'email',
     'email-campaigns',
+    'email-templates',
   ],
   endpoints: () => ({}),
 });

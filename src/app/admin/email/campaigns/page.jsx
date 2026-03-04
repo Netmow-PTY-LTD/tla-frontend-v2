@@ -17,17 +17,17 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { 
-    MoreHorizontal, 
-    Plus, 
-    Trash2, 
-    Edit, 
-    Send, 
-    History, 
-    BarChart3, 
-    Clock, 
-    CheckCircle2, 
-    AlertCircle, 
+import {
+    MoreHorizontal,
+    Plus,
+    Trash2,
+    Edit,
+    Send,
+    History,
+    BarChart3,
+    Clock,
+    CheckCircle2,
+    AlertCircle,
     RotateCw,
     Repeat,
     ArrowUpRight,
@@ -38,10 +38,9 @@ import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import CampaignStatsModal from './_components/CampaignStatsModal';
 import { Progress } from "@/components/ui/progress";
 import { DataTable } from '@/components/common/DataTable';
+import CampaignStatsModal from '../_components/CampaignStatsModal';
 
 export default function EmailListPage() {
     const router = useRouter();
@@ -126,10 +125,10 @@ export default function EmailListPage() {
             header: 'Performance Output',
             cell: ({ row }) => {
                 const campaign = row.original;
-                const rate = campaign.totalTargeted > 0 
-                    ? Math.round((campaign.sentCount / campaign.totalTargeted) * 100) 
+                const rate = campaign.totalTargeted > 0
+                    ? Math.round((campaign.sentCount / campaign.totalTargeted) * 100)
                     : 0;
-                
+
                 return (
                     <div className="w-[160px] space-y-1.5">
                         <div className="flex justify-between items-center text-[11px]">
@@ -175,9 +174,9 @@ export default function EmailListPage() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl border-slate-200 shadow-xl">
                             <DropdownMenuLabel className="text-xs font-bold text-slate-400 uppercase tracking-widest px-2 pb-2">Campaign Actions</DropdownMenuLabel>
-                            
+
                             <DropdownMenuItem asChild>
-                                <Link href={`/admin/email/template/edit/${campaign._id}`} className="flex items-center gap-2 p-2 rounded-lg focus:bg-[#00c3c0]/5 focus:text-[#00c3c0] transition-all">
+                                <Link href={`/admin/email/campaigns/edit/${campaign._id}`} className="flex items-center gap-2 p-2 rounded-lg focus:bg-[#00c3c0]/5 focus:text-[#00c3c0] transition-all">
                                     <div className="w-8 h-8 rounded-lg bg-[#ff8602]/10 flex items-center justify-center text-[#ff8602]">
                                         <Edit className="h-4 w-4" />
                                     </div>
@@ -185,7 +184,7 @@ export default function EmailListPage() {
                                 </Link>
                             </DropdownMenuItem>
 
-                            <DropdownMenuItem 
+                            <DropdownMenuItem
                                 className="flex items-center gap-2 p-2 rounded-lg focus:bg-[#00c3c0]/5 focus:text-[#00c3c0] transition-all"
                                 onClick={() => {
                                     setSelectedCampaign({ id: campaign._id, title: campaign.title, totalTargeted: campaign.totalTargeted, sentCount: campaign.sentCount, failedCount: campaign.failedCount });
@@ -208,7 +207,7 @@ export default function EmailListPage() {
                             </DropdownMenuItem>
 
                             {(campaign.status === 'pending' || campaign.status === 'failed') && (
-                                <DropdownMenuItem 
+                                <DropdownMenuItem
                                     className="flex items-center gap-2 p-2 rounded-lg focus:bg-green-50 focus:text-green-700 transition-all text-green-600"
                                     onClick={() => handleSendNow(campaign._id)}
                                 >
@@ -220,8 +219,8 @@ export default function EmailListPage() {
                             )}
 
                             <DropdownMenuSeparator className="bg-slate-100 my-1" />
-                            
-                            <DropdownMenuItem 
+
+                            <DropdownMenuItem
                                 className="flex items-center gap-2 p-2 rounded-lg focus:bg-red-50 focus:text-red-700 transition-all text-red-600"
                                 onClick={() => handleDelete(campaign._id)}
                             >
@@ -274,10 +273,10 @@ export default function EmailListPage() {
                 </Card>
             </div>
 
-            <CampaignStatsModal 
-                campaign={selectedCampaign} 
-                isOpen={isStatsOpen} 
-                onOpenChange={setIsStatsOpen} 
+            <CampaignStatsModal
+                campaign={selectedCampaign}
+                isOpen={isStatsOpen}
+                onOpenChange={setIsStatsOpen}
             />
         </div>
     );
