@@ -245,10 +245,10 @@ export default function EmailListPage() {
                         <h1 className="text-4xl font-black text-slate-900 tracking-tight">Email <span className="text-[#00c3c0]">Campaigns</span></h1>
                         <p className="text-slate-500 mt-1 font-medium italic">Automate your communication workflow with smart sequences.</p>
                     </div>
-                    <Button asChild className="bg-[#ff8602] hover:bg-[#ff8602]/90 text-white shadow-lg shadow-[#ff8602]/20 px-6 py-6 rounded-2xl h-auto border-none">
+                    <Button asChild className="bg-[#ff8602] hover:bg-[#ff8602]/90 text-white shadow-md shadow-[#ff8602]/20 px-5 py-5 rounded-xl h-auto border-none transition-all hover:scale-[1.02]">
                         <Link href="/admin/email/template/add" className="flex items-center gap-2">
-                            <Plus className="w-5 h-5 font-bold" />
-                            <span className="font-extrabold uppercase tracking-widest text-xs">Create New Hub</span>
+                            <Plus className="w-4 h-4 font-bold" />
+                            <span className="font-bold uppercase tracking-widest text-[10px]">Create New Hub</span>
                         </Link>
                     </Button>
                 </div>
