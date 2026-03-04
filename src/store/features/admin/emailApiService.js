@@ -2,6 +2,28 @@ import { baseApi } from '../../baseApi/baseApi';
 
 const emailApiService = baseApi.injectEndpoints({
     endpoints: (builder) => ({
+        // Templates & Utilities
+        getTemplates: builder.query({
+            query: () => ({
+                url: '/admin/email-campaigns/templates',
+                method: 'GET',
+            }),
+        }),
+        getSegments: builder.query({
+            query: () => ({
+                url: '/admin/email-campaigns/segments',
+                method: 'GET',
+            }),
+        }),
+        sendPreview: builder.mutation({
+            query: (body) => ({
+                url: '/admin/email-campaigns/preview',
+                method: 'POST',
+                body,
+            }),
+        }),
+
+        // CRUD
         addEmailTemplate: builder.mutation({
             query: (body) => ({
                 url: '/admin/email-campaigns',
@@ -40,13 +62,34 @@ const emailApiService = baseApi.injectEndpoints({
             }),
             invalidatesTags: ['email-campaigns'],
         }),
+
+        // Actions
+        sendCampaignNow: builder.mutation({
+            query: (id) => ({
+                url: `/admin/email-campaigns/${id}/send-now`,
+                method: 'POST',
+            }),
+            invalidatesTags: ['email-campaigns'],
+        }),
+        getCampaignLog: builder.query({
+            query: ({ id, params }) => ({
+                url: `/admin/email-campaigns/${id}/log`,
+                method: 'GET',
+                params,
+            }),
+        }),
     }),
 });
 
 export const {
+    useGetTemplatesQuery,
+    useGetSegmentsQuery,
+    useSendPreviewMutation,
     useAddEmailTemplateMutation,
     useGetAllEmailsQuery,
     useGetSingleEmailQuery,
     useUpdateEmailTemplateMutation,
     useDeleteEmailMutation,
+    useSendCampaignNowMutation,
+    useGetCampaignLogQuery,
 } = emailApiService;

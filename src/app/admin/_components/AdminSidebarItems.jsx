@@ -60,29 +60,23 @@ export const AdminSidebarItems = {
       ],
     },
     {
-      title: 'Emails',
+      title: 'Email Campaigns',
       url: '#',
       icon: Mail,
       isActive: true,
       items: [
         {
-          title: 'List of Emails',
+          title: 'Email List',
           url: '/admin/email',
           icon: List,
           isActive: true,
         },
         {
-          title: 'Add New Email Template',
+          title: 'Create Email',
           url: '/admin/email/template/add',
           icon: PlusCircle,
           isActive: true,
         },
-        // {
-        //   title: 'Edit Email Template',
-        //   url: '/admin/email/template/edit/[id]',
-        //   icon: Edit,
-        //   isActive: true,
-        // },
       ],
     },
     {
