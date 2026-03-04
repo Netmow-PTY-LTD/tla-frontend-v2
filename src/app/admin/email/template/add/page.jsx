@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -11,6 +11,7 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
+    FormDescription,
 } from '@/components/ui/form';
 import {
     Select,
@@ -23,9 +24,15 @@ import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor
 import z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAddEmailTemplateMutation } from '@/store/features/admin/emailApiService';
+import {
+    useAddEmailTemplateMutation,
+    useGetTemplatesQuery,
+    useGetSegmentsQuery,
+    useSendPreviewMutation
+} from '@/store/features/admin/emailApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { useRouter } from 'next/navigation';
+import { Eye, Send, Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
     title: z.string().min(2, {
@@ -40,9 +47,11 @@ const formSchema = z.object({
     targetAudience: z.string().min(1, {
         message: 'Target Audience is required.',
     }),
+    segmentId: z.string().optional(),
     scheduleType: z.string().min(1, {
         message: 'Schedule Type is required.',
     }),
+    scheduledAt: z.string().optional(),
     headline: z.string().min(1, {
         message: 'Headline is required.',
     }),
@@ -56,6 +65,13 @@ const formSchema = z.object({
 
 export default function AddEmailCampaign() {
     const router = useRouter();
+    const { data: templatesRes } = useGetTemplatesQuery();
+    const { data: segmentsRes } = useGetSegmentsQuery();
+    const [sendPreview, { isLoading: isPreviewing }] = useSendPreviewMutation();
+    const [addEmailTemplate, { isLoading: isCreating }] = useAddEmailTemplateMutation();
+
+    const templates = templatesRes?.data || [];
+    const segments = segmentsRes?.data || [];
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -64,7 +80,9 @@ export default function AddEmailCampaign() {
             templateKey: '',
             subject: '',
             targetAudience: 'all_lawyers',
+            segmentId: '',
             scheduleType: 'immediate',
+            scheduledAt: '',
             headline: '',
             body: '',
             ctaLabel: '',
@@ -73,10 +91,35 @@ export default function AddEmailCampaign() {
         },
     });
 
-    const [addEmailTemplate, { isLoading }] = useAddEmailTemplateMutation();
+    const watchTargetAudience = form.watch('targetAudience');
+    const watchScheduleType = form.watch('scheduleType');
+
+    async function handlePreview() {
+        const values = form.getValues();
+        if (!values.templateKey || !values.subject || !values.headline || !values.body) {
+            showErrorToast("Please fill in template, subject, headline and body to preview.");
+            return;
+        }
+
+        try {
+            await sendPreview({
+                templateKey: values.templateKey,
+                subject: values.subject,
+                customData: {
+                    headline: values.headline,
+                    body: values.body,
+                    ctaLabel: values.ctaLabel,
+                    ctaUrl: values.ctaUrl,
+                    footerText: values.footerText,
+                }
+            }).unwrap();
+            showSuccessToast("Preview email sent to your inbox.");
+        } catch (error) {
+            showErrorToast("Failed to send preview.");
+        }
+    }
 
     async function onSubmit(values) {
-        // Transform values to use nested customData structure
         const formattedData = {
             title: values.title,
             templateKey: values.templateKey,
@@ -92,42 +135,56 @@ export default function AddEmailCampaign() {
             },
         };
 
+        if (values.targetAudience === 'segment') {
+            formattedData.segmentId = values.segmentId;
+        }
+
+        if (values.scheduleType === 'scheduled' && values.scheduledAt) {
+            formattedData.scheduledAt = new Date(values.scheduledAt).toISOString();
+        }
+
         try {
             const result = await addEmailTemplate(formattedData).unwrap();
-            showSuccessToast(result?.message || 'Email campaign added successfully.');
-            setTimeout(() => {
-                router.push('/admin/email');
-            }, 2000);
+            showSuccessToast(result?.message || 'Email campaign created.');
+            router.push('/admin/email');
         } catch (error) {
-            const backendMessage =
-                error?.data?.errorSources?.[0]?.message ||
-                error?.data?.message ||
-                'Failed to add email campaign.';
-
-            showErrorToast(backendMessage);
-            console.error('Error adding email campaign:', error);
+            showErrorToast(error?.data?.message || 'Failed to create campaign.');
         }
     }
 
     return (
         <div className="p-4">
-            <Card className="max-w-3xl mx-auto">
-                <CardHeader>
-                    <CardTitle className="text-2xl font-bold">Add New Email Campaign</CardTitle>
+            <Card className="max-w-4xl mx-auto shadow-lg">
+                <CardHeader className="border-b bg-slate-50/50">
+                    <div className="flex justify-between items-center">
+                        <CardTitle className="text-2xl font-bold">Launch New Campaign</CardTitle>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={handlePreview}
+                            disabled={isPreviewing}
+                        >
+                            {isPreviewing ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
+                            Test Preview
+                        </Button>
+                    </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="pt-6">
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                            {/* Basic Info Section */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <FormField
                                     control={form.control}
                                     name="title"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Title</FormLabel>
+                                            <FormLabel>Campaign Title</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Welcome New Lawyers" {...field} />
+                                                <Input placeholder="e.g. March Lawyer Newsletter" {...field} />
                                             </FormControl>
+                                            <FormDescription>Internal name for your campaign</FormDescription>
                                             <FormMessage />
                                         </FormItem>
                                     )}
@@ -138,15 +195,27 @@ export default function AddEmailCampaign() {
                                     name="templateKey"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Template Key</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="welcome_to_lawyer" {...field} />
-                                            </FormControl>
+                                            <FormLabel>Email Template</FormLabel>
+                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                <FormControl>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select a template" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    {templates.map(t => (
+                                                        <SelectItem key={t.key} value={t.key}>{t.label}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
+                            </div>
 
+                            {/* Audience Section */}
+                            <div className="bg-slate-50 p-4 rounded-lg border grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <FormField
                                     control={form.control}
                                     name="targetAudience"
@@ -156,13 +225,14 @@ export default function AddEmailCampaign() {
                                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                 <FormControl>
                                                     <SelectTrigger>
-                                                        <SelectValue placeholder="Select target" />
+                                                        <SelectValue placeholder="Who should receive this?" />
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
                                                     <SelectItem value="all_lawyers">All Lawyers</SelectItem>
                                                     <SelectItem value="all_clients">All Clients</SelectItem>
                                                     <SelectItem value="all_users">All Users</SelectItem>
+                                                    <SelectItem value="segment">Specific Segment</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                             <FormMessage />
@@ -170,6 +240,34 @@ export default function AddEmailCampaign() {
                                     )}
                                 />
 
+                                {watchTargetAudience === 'segment' && (
+                                    <FormField
+                                        control={form.control}
+                                        name="segmentId"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Choose Segment</FormLabel>
+                                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                    <FormControl>
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder="Select segment" />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        {segments.map(s => (
+                                                            <SelectItem key={s.id} value={s.id}>{s.label}</SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                )}
+                            </div>
+
+                            {/* Scheduling Section */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <FormField
                                     control={form.control}
                                     name="scheduleType"
@@ -179,18 +277,34 @@ export default function AddEmailCampaign() {
                                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                 <FormControl>
                                                     <SelectTrigger>
-                                                        <SelectValue placeholder="Select schedule" />
+                                                        <SelectValue placeholder="When to send?" />
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
-                                                    <SelectItem value="immediate">Immediate</SelectItem>
-                                                    <SelectItem value="scheduled">Scheduled</SelectItem>
+                                                    <SelectItem value="immediate">Send Immediately</SelectItem>
+                                                    <SelectItem value="scheduled">Schedule for Later</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
+
+                                {watchScheduleType === 'scheduled' && (
+                                    <FormField
+                                        control={form.control}
+                                        name="scheduledAt"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Date & Time</FormLabel>
+                                                <FormControl>
+                                                    <Input type="datetime-local" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                )}
                             </div>
 
                             <FormField
@@ -198,26 +312,27 @@ export default function AddEmailCampaign() {
                                 name="subject"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Subject</FormLabel>
+                                        <FormLabel>Email Subject Line</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Enter email subject" {...field} />
+                                            <Input placeholder="Catchy subject to improve open rates" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
 
-                            <div className="border-t pt-6">
-                                <h3 className="text-lg font-semibold mb-4">Custom Data (Content)</h3>
-                                <div className="space-y-4">
+                            {/* Content Section */}
+                            <div className="border rounded-lg overflow-hidden">
+                                <div className="bg-slate-800 text-white px-4 py-2 text-sm font-medium">Email Content (Template Data)</div>
+                                <div className="p-4 space-y-4">
                                     <FormField
                                         control={form.control}
                                         name="headline"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Headline</FormLabel>
+                                                <FormLabel>Main Headline</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="Main headline" {...field} />
+                                                    <Input placeholder="Large text at top of email" {...field} />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -229,10 +344,15 @@ export default function AddEmailCampaign() {
                                         name="body"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Body Content</FormLabel>
+                                                <FormLabel>Message Body</FormLabel>
                                                 <FormControl>
-                                                    <SimpleEditor name="body" />
+                                                    <Textarea
+                                                        placeholder="Write your email body here..."
+                                                        className="min-h-[200px]"
+                                                        {...field}
+                                                    />
                                                 </FormControl>
+                                                <FormDescription>Supports plain text or HTML depending on template.</FormDescription>
                                                 <FormMessage />
                                             </FormItem>
                                         )}
@@ -244,9 +364,9 @@ export default function AddEmailCampaign() {
                                             name="ctaLabel"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>CTA Label</FormLabel>
+                                                    <FormLabel>Button Label (Optional)</FormLabel>
                                                     <FormControl>
-                                                        <Input placeholder="Claim Your Discount" {...field} />
+                                                        <Input placeholder="e.g. Read More" {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -258,7 +378,7 @@ export default function AddEmailCampaign() {
                                             name="ctaUrl"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>CTA URL</FormLabel>
+                                                    <FormLabel>Button Link (Optional)</FormLabel>
                                                     <FormControl>
                                                         <Input placeholder="https://..." {...field} />
                                                     </FormControl>
@@ -273,9 +393,9 @@ export default function AddEmailCampaign() {
                                         name="footerText"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Footer Text</FormLabel>
+                                                <FormLabel>Footer Text (Optional)</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="Terms and conditions apply..." {...field} />
+                                                    <Input placeholder="Unsubscribe info or disclaimers" {...field} />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -285,13 +405,14 @@ export default function AddEmailCampaign() {
                             </div>
 
                             <div className="flex gap-4 pt-4 border-t">
-                                <Button type="submit" disabled={isLoading}>
-                                    {isLoading ? 'Creating...' : 'Create Campaign'}
+                                <Button type="submit" size="lg" disabled={isCreating} className="w-full md:w-auto px-12">
+                                    {isCreating ? <><Loader2 className="w-4 h-4 animate-spin mr-2" />Creating...</> : 'Launch Campaign'}
                                 </Button>
                                 <Button
                                     type="button"
-                                    variant="outline"
+                                    variant="ghost"
                                     onClick={() => router.push('/admin/email')}
+                                    disabled={isCreating}
                                 >
                                     Cancel
                                 </Button>
