@@ -34,6 +34,7 @@ import {
 } from '@/store/features/admin/emailApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { Eye, Loader2, Plus, Trash2, Mail, Users, Settings2, Clock, Zap, ArrowLeft, Save } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 const dripStepSchema = z.object({
     dayOffset: z.coerce.number().min(0),
@@ -230,7 +231,7 @@ export default function EditEmailCampaign() {
                 <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-6xl mx-auto space-y-8">
                     <div className="flex justify-between items-center bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
                         <div className="flex items-center gap-4">
-                            <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-xl hover:bg-slate-100">
+                            <Button type="button" variant="ghost" size="icon" onClick={() => router.back()} className="rounded-xl hover:bg-slate-100">
                                 <ArrowLeft className="w-5 h-5 text-slate-500" />
                             </Button>
                             <div>
