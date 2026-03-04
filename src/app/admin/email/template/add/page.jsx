@@ -33,6 +33,7 @@ import {
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { useRouter } from 'next/navigation';
 import { Eye, Send, Loader2 } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
 
 const formSchema = z.object({
     title: z.string().min(2, {
