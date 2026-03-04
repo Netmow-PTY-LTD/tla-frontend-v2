@@ -78,6 +78,12 @@ const emailApiService = baseApi.injectEndpoints({
                 params,
             }),
         }),
+        getCampaignStats: builder.query({
+            query: (id) => ({
+                url: `/admin/email-campaigns/${id}/stats`,
+                method: 'GET',
+            }),
+        }),
     }),
 });
 
@@ -92,4 +98,5 @@ export const {
     useDeleteEmailMutation,
     useSendCampaignNowMutation,
     useGetCampaignLogQuery,
+    useGetCampaignStatsQuery,
 } = emailApiService;

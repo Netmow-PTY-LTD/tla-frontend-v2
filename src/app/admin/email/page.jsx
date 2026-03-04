@@ -1,9 +1,14 @@
 'use client';
 
-import { DataTable } from '@/components/common/DataTable';
-import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import {
+    useGetAllEmailsQuery,
+    useDeleteEmailMutation,
+    useSendCampaignNowMutation,
+} from '@/store/features/admin/emailApiService';
+
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -12,172 +17,217 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-    useDeleteEmailMutation,
-    useGetAllEmailsQuery,
-    useSendCampaignNowMutation,
-} from '@/store/features/admin/emailApiService';
-import { MoreHorizontal, Pencil, Trash2, Send, FileText, CheckCircle2, Clock, AlertCircle, XCircle } from 'lucide-react';
+import { 
+    MoreHorizontal, 
+    Plus, 
+    Trash2, 
+    Edit, 
+    Send, 
+    History, 
+    BarChart3, 
+    Clock, 
+    CheckCircle2, 
+    AlertCircle, 
+    RotateCw,
+    Repeat,
+    ArrowUpRight
+} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import Link from 'next/link';
-import React from 'react';
-
-const StatusBadge = ({ status }) => {
-    const variants = {
-        draft: 'bg-gray-100 text-gray-800 border-gray-200',
-        queued: 'bg-blue-100 text-blue-800 border-blue-200',
-        sending: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-        sent: 'bg-green-100 text-green-800 border-green-200',
-        failed: 'bg-red-100 text-red-800 border-red-200',
-        canceled: 'bg-slate-100 text-slate-800 border-slate-200',
-    };
-
-    const icons = {
-        draft: <Pencil className="w-3 h-3 mr-1" />,
-        queued: <Clock className="w-3 h-3 mr-1" />,
-        sending: <Send className="w-3 h-3 mr-1 animate-pulse" />,
-        sent: <CheckCircle2 className="w-3 h-3 mr-1" />,
-        failed: <AlertCircle className="w-3 h-3 mr-1" />,
-        canceled: <XCircle className="w-3 h-3 mr-1" />,
-    };
-
-    return (
-        <Badge variant="outline" className={`${variants[status] || ''} capitalize flex items-center w-fit`}>
-            {icons[status] || null}
-            {status}
-        </Badge>
-    );
-};
+import { format } from 'date-fns';
+import { useRouter } from 'next/navigation';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import CampaignStatsModal from './_components/CampaignStatsModal';
+import { Progress } from "@/components/ui/progress";
+import { DataTable } from '@/components/common/DataTable';
 
 export default function EmailListPage() {
-    const { data: emailList, refetch, isFetching } = useGetAllEmailsQuery();
+    const router = useRouter();
+    const [page, setPage] = useState(1);
+    const { data: emailsRes, isLoading, refetch } = useGetAllEmailsQuery({ page, limit: 10 });
     const [deleteEmail] = useDeleteEmailMutation();
-    const [sendNow, { isLoading: isSendingNow }] = useSendCampaignNowMutation();
+    const [sendCampaignNow] = useSendCampaignNowMutation();
+    const [selectedCampaign, setSelectedCampaign] = useState(null);
+    const [isStatsOpen, setIsStatsOpen] = useState(false);
 
-    const handleDeleteEmail = async (id) => {
-        if (!window.confirm('Are you sure you want to delete this campaign?')) return;
-        try {
-            const res = await deleteEmail(id).unwrap();
-            if (res) {
-                showSuccessToast(res?.message || 'Campaign deleted successfully');
+    const emails = emailsRes?.data || [];
+    const totalCount = emailsRes?.totalCount || 0;
+
+    const handleDelete = async (id) => {
+        if (window.confirm('Are you sure you want to delete this campaign?')) {
+            try {
+                await deleteEmail(id).unwrap();
+                showSuccessToast('Campaign deleted successfully.');
                 refetch();
+            } catch (error) {
+                showErrorToast('Failed to delete campaign.');
             }
-        } catch (error) {
-            console.error(error);
-            showErrorToast('Failed to delete campaign.');
         }
     };
 
     const handleSendNow = async (id) => {
-        if (!window.confirm('Are you sure you want to send this campaign now?')) return;
         try {
-            const res = await sendNow(id).unwrap();
-            showSuccessToast(res?.message || 'Campaign dispatch started.');
+            await sendCampaignNow(id).unwrap();
+            showSuccessToast('Campaign dispatch triggered successfully.');
             refetch();
         } catch (error) {
-            console.error(error);
-            showErrorToast(error?.data?.message || 'Failed to send campaign.');
+            showErrorToast('Failed to trigger send.');
         }
     };
 
     const columns = [
         {
             accessorKey: 'title',
-            header: 'Title',
-            cell: ({ row }) => (
-                <div className="font-medium max-w-[200px] truncate">{row.getValue('title')}</div>
-            ),
+            header: 'Campaign Name',
+            cell: ({ row }) => {
+                const campaign = row.original;
+                return (
+                    <div className="flex flex-col">
+                        <span className="font-bold text-slate-800">{campaign.title}</span>
+                        <div className="flex items-center gap-1.5 mt-1">
+                            {campaign.isDrip && (
+                                <Badge variant="secondary" className="text-[10px] h-4 bg-purple-50 text-purple-700 border-purple-100 uppercase tracking-tighter font-black">
+                                    <RotateCw className="w-2.5 h-2.5 mr-1" /> Drip AI
+                                </Badge>
+                            )}
+                            <Badge variant="outline" className="text-[10px] h-4 text-slate-500 border-slate-200 uppercase tracking-tighter">
+                                {campaign.targetAudience?.replace('_', ' ')}
+                            </Badge>
+                        </div>
+                    </div>
+                );
+            },
         },
         {
             accessorKey: 'status',
-            header: 'Status',
-            cell: ({ row }) => <StatusBadge status={row.getValue('status')} />,
+            header: 'Current Status',
+            cell: ({ row }) => {
+                const status = row.original.status;
+                const variants = {
+                    pending: "bg-slate-100 text-slate-600 border-slate-200",
+                    sending: "bg-blue-100 text-blue-700 border-blue-200 animate-pulse",
+                    sent: "bg-green-100 text-green-700 border-green-200",
+                    canceled: "bg-red-100 text-red-600 border-red-200",
+                    failed: "bg-red-100 text-red-600 border-red-200",
+                    draft: "bg-slate-50 text-slate-400 border-slate-200",
+                };
+                return (
+                    <Badge className={`${variants[status] || "bg-slate-100"} capitalize shadow-none border font-medium`}>
+                        {status === 'sending' && <RotateCw className="w-3 h-3 mr-1.5 animate-spin" />}
+                        {status}
+                    </Badge>
+                );
+            },
         },
         {
             accessorKey: 'delivery',
-            header: 'Sent / Total',
+            header: 'Performance Output',
             cell: ({ row }) => {
-                const item = row.original;
+                const campaign = row.original;
+                const rate = campaign.totalTargeted > 0 
+                    ? Math.round((campaign.sentCount / campaign.totalTargeted) * 100) 
+                    : 0;
+                
                 return (
-                    <div className="text-sm">
-                        <span className="font-semibold">{item.sentCount}</span>
-                        <span className="text-gray-400 mx-1">/</span>
-                        <span>{item.totalTargeted}</span>
-                        {item.totalTargeted > 0 && (
-                            <div className="text-xs text-gray-500 mt-1">
-                                {Math.round((item.sentCount / item.totalTargeted) * 100)}% Delivered
-                            </div>
-                        )}
+                    <div className="w-[160px] space-y-1.5">
+                        <div className="flex justify-between items-center text-[11px]">
+                            <span className="font-bold text-primary">{campaign.sentCount} / <span className="text-slate-400">{campaign.totalTargeted}</span></span>
+                            <span className="text-slate-500 font-medium">{rate}% success</span>
+                        </div>
+                        <Progress value={rate} className="h-1.5 bg-slate-100" />
                     </div>
                 );
             },
         },
         {
             accessorKey: 'scheduleType',
-            header: 'Schedule',
-            cell: ({ row }) => (
-                <div className="capitalize text-sm">{row.getValue('scheduleType')}</div>
-            ),
-        },
-        {
-            accessorKey: 'createdAt',
-            header: 'Created At',
-            cell: ({ row }) => (
-                <div className="text-sm">{new Date(row.getValue('createdAt')).toLocaleDateString()}</div>
-            ),
+            header: 'Schedule Delivery',
+            cell: ({ row }) => {
+                const campaign = row.original;
+                return (
+                    <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-1.5 text-xs text-slate-600 font-medium lowercase">
+                            {campaign.scheduleType === 'recurring' ? (
+                                <><Repeat className="w-3 h-3 text-primary" /> {campaign.cronExpression || 'Recurring'}</>
+                            ) : campaign.scheduleType === 'scheduled' ? (
+                                <><Clock className="w-3 h-3 text-primary" /> {campaign.scheduledAt ? format(new Date(campaign.scheduledAt), 'MMM dd, p') : 'Scheduled'}</>
+                            ) : (
+                                <><Send className="w-3 h-3 text-primary" /> Immediate Send</>
+                            )}
+                        </div>
+                    </div>
+                );
+            },
         },
         {
             id: 'actions',
-            header: 'Actions',
-            enableHiding: false,
             cell: ({ row }) => {
                 const campaign = row.original;
-                const canSendNow = ['draft', 'queued'].includes(campaign.status);
-
                 return (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
+                            <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-slate-100 rounded-full">
                                 <span className="sr-only">Open menu</span>
-                                <MoreHorizontal className="w-4 h-4" />
+                                <MoreHorizontal className="h-4 w-4 text-slate-500" />
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
+                        <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl border-slate-200 shadow-xl">
+                            <DropdownMenuLabel className="text-xs font-bold text-slate-400 uppercase tracking-widest px-2 pb-2">Campaign Actions</DropdownMenuLabel>
+                            
                             <DropdownMenuItem asChild>
-                                <Link
-                                    href={`/admin/email/template/edit/${campaign?._id}`}
-                                    className="flex items-center gap-2 cursor-pointer"
-                                >
-                                    <Pencil className="w-4 h-4" />
-                                    Edit
+                                <Link href={`/admin/email/template/edit/${campaign._id}`} className="flex items-center gap-2 p-2 rounded-lg focus:bg-primary/5 focus:text-primary transition-all">
+                                    <div className="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center text-orange-600">
+                                        <Edit className="h-4 w-4" />
+                                    </div>
+                                    <span className="font-medium">Edit Details</span>
                                 </Link>
                             </DropdownMenuItem>
-                            
-                            {canSendNow && (
-                                <DropdownMenuItem
-                                    onClick={() => handleSendNow(campaign?._id)}
-                                    className="flex items-center gap-2 cursor-pointer text-blue-600 focus:text-blue-600"
+
+                            <DropdownMenuItem 
+                                className="flex items-center gap-2 p-2 rounded-lg focus:bg-primary/5 focus:text-primary transition-all"
+                                onClick={() => {
+                                    setSelectedCampaign({ id: campaign._id, title: campaign.title, totalTargeted: campaign.totalTargeted, sentCount: campaign.sentCount, failedCount: campaign.failedCount });
+                                    setIsStatsOpen(true);
+                                }}
+                            >
+                                <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+                                    <BarChart3 className="h-4 w-4" />
+                                </div>
+                                <span className="font-medium">Performance Metrics</span>
+                            </DropdownMenuItem>
+
+                            <DropdownMenuItem asChild>
+                                <Link href={`/admin/email/log/${campaign._id}`} className="flex items-center gap-2 p-2 rounded-lg focus:bg-primary/5 focus:text-primary transition-all text-slate-600">
+                                    <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">
+                                        <History className="h-4 w-4" />
+                                    </div>
+                                    <span className="font-medium">Delivery Logs</span>
+                                </Link>
+                            </DropdownMenuItem>
+
+                            {(campaign.status === 'pending' || campaign.status === 'failed') && (
+                                <DropdownMenuItem 
+                                    className="flex items-center gap-2 p-2 rounded-lg focus:bg-green-50 focus:text-green-700 transition-all text-green-600"
+                                    onClick={() => handleSendNow(campaign._id)}
                                 >
-                                    <Send className="w-4 h-4" /> Send Now
+                                    <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center text-green-600">
+                                        <ArrowUpRight className="h-4 w-4" />
+                                    </div>
+                                    <span className="font-medium">Force Dispatch Now</span>
                                 </DropdownMenuItem>
                             )}
 
-                            <DropdownMenuItem asChild>
-                                <Link
-                                    href={`/admin/email/log/${campaign?._id}`}
-                                    className="flex items-center gap-2 cursor-pointer"
-                                >
-                                    <FileText className="w-4 h-4" /> View Log
-                                </Link>
-                            </DropdownMenuItem>
-
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                                onClick={() => handleDeleteEmail(campaign?._id)}
-                                className="flex items-center gap-2 cursor-pointer text-red-600 focus:text-red-600"
+                            <DropdownMenuSeparator className="bg-slate-100 my-1" />
+                            
+                            <DropdownMenuItem 
+                                className="flex items-center gap-2 p-2 rounded-lg focus:bg-red-50 focus:text-red-700 transition-all text-red-600"
+                                onClick={() => handleDelete(campaign._id)}
                             >
-                                <Trash2 className="w-4 h-4" /> Delete
+                                <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-600">
+                                    <Trash2 className="h-4 w-4" />
+                                </div>
+                                <span className="font-medium">Delete Permanent</span>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -187,21 +237,46 @@ export default function EmailListPage() {
     ];
 
     return (
-        <div className="p-4">
-            <div className="flex justify-between items-center mb-6">
-                <div>
-                    <h2 className="text-2xl font-bold">Email Campaigns</h2>
-                    <p className="text-gray-500 text-sm">Create and track automated email outreach</p>
+        <div className="p-4 bg-white min-h-screen">
+            <div className="max-w-7xl mx-auto space-y-6">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 py-6 border-b border-slate-100">
+                    <div>
+                        <h1 className="text-4xl font-black text-slate-900 tracking-tight">Email Campaigns</h1>
+                        <p className="text-slate-500 mt-1 font-medium italic">Automate your communication workflow with smart sequences.</p>
+                    </div>
+                    <Button asChild className="bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 px-6 py-6 rounded-2xl h-auto">
+                        <Link href="/admin/email/template/add" className="flex items-center gap-2">
+                            <Plus className="w-5 h-5 font-bold" />
+                            <span className="font-extrabold uppercase tracking-widest text-xs">Create New Hub</span>
+                        </Link>
+                    </Button>
                 </div>
-                <Button asChild>
-                    <Link href="/admin/email/template/add">Add New Campaign</Link>
-                </Button>
+
+                <Card className="border-none shadow-2xl shadow-slate-200/50 rounded-3xl overflow-hidden bg-white">
+                    <CardHeader className="bg-gradient-to-r from-slate-50 to-white border-b border-slate-50 px-8 py-6">
+                        <CardTitle className="text-xl font-bold flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                                <RotateCw className="w-5 h-5" />
+                            </div>
+                            Live Campaign Monitor
+                        </CardTitle>
+                        <CardDescription>Track real-time delivery performance and automation health.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                        <DataTable
+                            columns={columns}
+                            data={emails}
+                            isFetching={isLoading}
+                            searchColumn="title"
+                        />
+                    </CardContent>
+                </Card>
             </div>
-            <DataTable
-                data={emailList?.data || []}
-                columns={columns}
-                searchColumn={'title'}
-                isFetching={isFetching}
+
+            <CampaignStatsModal 
+                campaign={selectedCampaign} 
+                isOpen={isStatsOpen} 
+                onOpenChange={setIsStatsOpen} 
             />
         </div>
     );
