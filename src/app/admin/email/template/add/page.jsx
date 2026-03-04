@@ -19,7 +19,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
+import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor';
 import z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -231,11 +231,7 @@ export default function AddEmailCampaign() {
                                             <FormItem>
                                                 <FormLabel>Body Content</FormLabel>
                                                 <FormControl>
-                                                    <Textarea
-                                                        placeholder="Enter campaign details..."
-                                                        className="min-h-[150px]"
-                                                        {...field}
-                                                    />
+                                                    <SimpleEditor name="body" />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>

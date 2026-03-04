@@ -19,7 +19,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
+import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor';
 import z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -34,18 +34,30 @@ const formSchema = z.object({
     title: z.string().min(2, {
         message: 'Title must be at least 2 characters.',
     }),
-    templateNo: z.string().min(1, {
-        message: 'Template No. is required.',
+    templateKey: z.string().min(1, {
+        message: 'Template Key is required.',
     }),
-    subject: z.string().min(2, {
-        message: 'Subject must be at least 2 characters.',
+    subject: z.string().min(1, {
+        message: 'Subject is required.',
+    }),
+    targetAudience: z.string().min(1, {
+        message: 'Target Audience is required.',
+    }),
+    scheduleType: z.string().min(1, {
+        message: 'Schedule Type is required.',
+    }),
+    headline: z.string().min(1, {
+        message: 'Headline is required.',
     }),
     body: z.string().min(10, {
         message: 'Body must be at least 10 characters.',
     }),
+    ctaLabel: z.string().optional(),
+    ctaUrl: z.string().url({ message: "Must be a valid URL" }).optional().or(z.literal('')),
+    footerText: z.string().optional(),
 });
 
-export default function EditEmailTemplate() {
+export default function EditEmailCampaign() {
     const router = useRouter();
     const { id } = useParams();
 
@@ -56,27 +68,55 @@ export default function EditEmailTemplate() {
         resolver: zodResolver(formSchema),
         defaultValues: {
             title: '',
-            templateNo: '',
+            templateKey: '',
             subject: '',
+            targetAudience: 'all_lawyers',
+            scheduleType: 'immediate',
+            headline: '',
             body: '',
+            ctaLabel: '',
+            ctaUrl: '',
+            footerText: '',
         },
     });
 
     useEffect(() => {
         if (emailData?.data) {
+            const data = emailData.data;
             form.reset({
-                title: emailData.data.title || '',
-                templateNo: emailData.data.templateNo || '',
-                subject: emailData.data.subject || '',
-                body: emailData.data.body || '',
+                title: data.title || '',
+                templateKey: data.templateKey || '',
+                subject: data.subject || '',
+                targetAudience: data.targetAudience || 'all_lawyers',
+                scheduleType: data.scheduleType || 'immediate',
+                headline: data.customData?.headline || '',
+                body: data.customData?.body || '',
+                ctaLabel: data.customData?.ctaLabel || '',
+                ctaUrl: data.customData?.ctaUrl || '',
+                footerText: data.customData?.footerText || '',
             });
         }
     }, [emailData, form]);
 
     async function onSubmit(values) {
+        const formattedData = {
+            title: values.title,
+            templateKey: values.templateKey,
+            subject: values.subject,
+            targetAudience: values.targetAudience,
+            scheduleType: values.scheduleType,
+            customData: {
+                headline: values.headline,
+                body: values.body,
+                ctaLabel: values.ctaLabel,
+                ctaUrl: values.ctaUrl,
+                footerText: values.footerText,
+            },
+        };
+
         try {
-            const result = await updateEmailTemplate({ id, data: values }).unwrap();
-            showSuccessToast(result?.message || 'Email template updated successfully.');
+            const result = await updateEmailTemplate({ id, data: formattedData }).unwrap();
+            showSuccessToast(result?.message || 'Email campaign updated successfully.');
             setTimeout(() => {
                 router.push('/admin/email');
             }, 2000);
@@ -84,53 +124,108 @@ export default function EditEmailTemplate() {
             const backendMessage =
                 error?.data?.errorSources?.[0]?.message ||
                 error?.data?.message ||
-                'Failed to update email template.';
+                'Failed to update email campaign.';
 
             showErrorToast(backendMessage);
-            console.error('Error updating email template:', error);
+            console.error('Error updating email campaign:', error);
         }
     }
 
     if (isFetching) {
-        return <div className="p-4 text-center">Loading template data...</div>;
+        return <div className="p-4 text-center">Loading campaign data...</div>;
     }
 
     return (
         <div className="p-4">
-            <Card className="max-w-2xl mx-auto">
+            <Card className="max-w-3xl mx-auto">
                 <CardHeader>
-                    <CardTitle className="text-2xl font-bold">Edit Email Template</CardTitle>
+                    <CardTitle className="text-2xl font-bold">Edit Email Campaign</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                            <FormField
-                                control={form.control}
-                                name="title"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Title</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Enter email title" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <FormField
+                                    control={form.control}
+                                    name="title"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Title</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Welcome New Lawyers" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
 
-                            <FormField
-                                control={form.control}
-                                name="templateNo"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Template No.</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Enter template number" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                                <FormField
+                                    control={form.control}
+                                    name="templateKey"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Template Key</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="welcome_to_lawyer" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="targetAudience"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Target Audience</FormLabel>
+                                            <Select
+                                                onValueChange={field.onChange}
+                                                value={field.value}
+                                                defaultValue={field.value}
+                                            >
+                                                <FormControl>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select target" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    <SelectItem value="all_lawyers">All Lawyers</SelectItem>
+                                                    <SelectItem value="all_clients">All Clients</SelectItem>
+                                                    <SelectItem value="all_users">All Users</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="scheduleType"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Schedule Type</FormLabel>
+                                            <Select
+                                                onValueChange={field.onChange}
+                                                value={field.value}
+                                                defaultValue={field.value}
+                                            >
+                                                <FormControl>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select schedule" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    <SelectItem value="immediate">Immediate</SelectItem>
+                                                    <SelectItem value="scheduled">Scheduled</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
 
                             <FormField
                                 control={form.control}
@@ -146,27 +241,86 @@ export default function EditEmailTemplate() {
                                 )}
                             />
 
-                            <FormField
-                                control={form.control}
-                                name="body"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Body</FormLabel>
-                                        <FormControl>
-                                            <Textarea
-                                                placeholder="Enter email content"
-                                                className="min-h-[200px]"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                            <div className="border-t pt-6">
+                                <h3 className="text-lg font-semibold mb-4">Custom Data (Content)</h3>
+                                <div className="space-y-4">
+                                    <FormField
+                                        control={form.control}
+                                        name="headline"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Headline</FormLabel>
+                                                <FormControl>
+                                                    <Input placeholder="Main headline" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
 
-                            <div className="flex gap-4 pt-4">
+                                    <FormField
+                                        control={form.control}
+                                        name="body"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Body Content</FormLabel>
+                                                <FormControl>
+                                                    <SimpleEditor name="body" />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <FormField
+                                            control={form.control}
+                                            name="ctaLabel"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>CTA Label</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="Claim Your Discount" {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        <FormField
+                                            control={form.control}
+                                            name="ctaUrl"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>CTA URL</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="https://..." {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+
+                                    <FormField
+                                        control={form.control}
+                                        name="footerText"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Footer Text</FormLabel>
+                                                <FormControl>
+                                                    <Input placeholder="Terms and conditions apply..." {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex gap-4 pt-4 border-t">
                                 <Button type="submit" disabled={isUpdating}>
-                                    {isUpdating ? 'Updating...' : 'Save Changes'}
+                                    {isUpdating ? 'Saving...' : 'Save Changes'}
                                 </Button>
                                 <Button
                                     type="button"

@@ -46,10 +46,10 @@ export default function EmailListPage() {
             ),
         },
         {
-            accessorKey: 'templateNo',
-            header: 'Template No.',
+            accessorKey: 'templateKey',
+            header: 'Template Key',
             cell: ({ row }) => (
-                <div className="font-medium">{row.getValue('templateNo')}</div>
+                <div className="font-medium">{row.getValue('templateKey')}</div>
             ),
         },
         {
@@ -57,6 +57,13 @@ export default function EmailListPage() {
             header: 'Subject',
             cell: ({ row }) => (
                 <div className="font-medium">{row.getValue('subject')}</div>
+            ),
+        },
+        {
+            accessorKey: 'targetAudience',
+            header: 'Audience',
+            cell: ({ row }) => (
+                <div className="capitalize">{row.getValue('targetAudience')?.replace('_', ' ')}</div>
             ),
         },
         {
