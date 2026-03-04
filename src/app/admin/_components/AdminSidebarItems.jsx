@@ -27,6 +27,10 @@ import {
   ClipboardList,
   Gavel,
   Cpu,
+  Mail,
+  Pencil,
+  Edit,
+  PlusCircle,
 } from 'lucide-react';
 
 export const AdminSidebarItems = {
@@ -53,6 +57,32 @@ export const AdminSidebarItems = {
           url: '/admin/env-config',
           icon: Cpu,
         },
+      ],
+    },
+    {
+      title: 'Emails',
+      url: '#',
+      icon: Mail,
+      isActive: true,
+      items: [
+        {
+          title: 'List of Emails',
+          url: '/admin/email',
+          icon: List,
+          isActive: true,
+        },
+        {
+          title: 'Add New Email Template',
+          url: '/admin/email/template/add',
+          icon: PlusCircle,
+          isActive: true,
+        },
+        // {
+        //   title: 'Edit Email Template',
+        //   url: '/admin/email/template/edit/[id]',
+        //   icon: Edit,
+        //   isActive: true,
+        // },
       ],
     },
     {
@@ -322,7 +352,7 @@ export const AdminSidebarItems = {
         },
       ],
     },
-    
+
     {
       title: 'Case Management',
       url: '/admin/cases-management',

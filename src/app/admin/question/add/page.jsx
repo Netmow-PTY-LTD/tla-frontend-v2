@@ -188,7 +188,7 @@ export default function AddQuestionPage() {
   //country change handler
 
   const handleCountryChange = (val) => {
-  
+
     setSelectedCountry(val);
     setSelectedService(''); // reset service
   };
@@ -200,7 +200,7 @@ export default function AddQuestionPage() {
     setSelectedService(val);
   };
 
-  
+
 
   //single service wise questions
 
@@ -233,13 +233,13 @@ export default function AddQuestionPage() {
     }
   }, [singleServicewiseQuestionsData]);
 
-  
+
 
   //handling adding service wise question
   const [addQuestion, { isLoading }] = useAddQuestionMutation();
 
   async function onSubmit(values) {
- 
+
     try {
       const result = await addQuestion(values).unwrap();
       // Optionally reset form or show success toast
@@ -248,6 +248,7 @@ export default function AddQuestionPage() {
         setTimeout(() => {
           router.push(`/admin/question/add`);
         }, 2000);
+        refetch();
       }
     } catch (error) {
       console.error('Error adding question:', error);
@@ -263,6 +264,7 @@ export default function AddQuestionPage() {
       const res = await deleteQuestion(id).unwrap();
       if (res) {
         showSuccessToast(res?.message);
+        refetch();
       }
     } catch (err) {
       // console.log('Error in deleting question', err);

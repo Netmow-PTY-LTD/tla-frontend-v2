@@ -157,6 +157,8 @@ export const baseApi = createApi({
     'lawyer-profile-claims',
     'env-config',
     'contact-info',
+    'email',
+    'email-campaigns',
   ],
   endpoints: () => ({}),
 });
