@@ -33,7 +33,7 @@ import {
 } from '@/store/features/admin/emailApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { useRouter } from 'next/navigation';
-import { Eye, Loader2, Plus, Trash2, Mail, Users, Settings2, Clock } from 'lucide-react';
+import { Eye, Loader2, Plus, Trash2, Mail, Users, Settings2, Clock, Zap, ArrowLeft } from 'lucide-react';
 
 const dripStepSchema = z.object({
     dayOffset: z.coerce.number().min(0, "Day offset cannot be negative."),
@@ -64,7 +64,6 @@ const formSchema = z.object({
     cronExpression: z.string().optional(),
     isDrip: z.boolean().default(false),
     dripSteps: z.array(dripStepSchema).optional(),
-    // Standard content (for non-drip)
     headline: z.string().optional(),
     body: z.string().optional(),
     ctaLabel: z.string().optional(),
@@ -195,13 +194,18 @@ export default function AddEmailCampaign() {
     }
 
     return (
-        <div className="p-4 bg-slate-50 min-h-screen">
+        <div className="p-6 bg-slate-50 min-h-screen">
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-5xl mx-auto space-y-6">
-                    <div className="flex justify-between items-center">
-                        <div>
-                            <h1 className="text-3xl font-bold text-slate-900 leading-tight">Create Email Campaign</h1>
-                            <p className="text-slate-500">Design and automate your outreach with advanced targeting.</p>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-6xl mx-auto space-y-8">
+                    <div className="flex justify-between items-center bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                        <div className="flex items-center gap-4">
+                            <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-xl hover:bg-slate-100">
+                                <ArrowLeft className="w-5 h-5 text-slate-500" />
+                            </Button>
+                            <div>
+                                <h1 className="text-3xl font-black text-slate-900 tracking-tight">Design <span className="text-[#00c3c0]">New Campaign</span></h1>
+                                <p className="text-slate-500 font-medium">Configure your audience and message sequence.</p>
+                            </div>
                         </div>
                         <div className="flex gap-3">
                             {!watchIsDrip && (
@@ -210,39 +214,40 @@ export default function AddEmailCampaign() {
                                     variant="outline" 
                                     onClick={handlePreview}
                                     disabled={isPreviewing}
+                                    className="rounded-xl border-slate-200 hover:bg-slate-50"
                                 >
-                                    {isPreviewing ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
-                                    Test Preview
+                                    {isPreviewing ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Eye className="w-4 h-4 mr-2 text-[#00c3c0]" />}
+                                    Send Preview
                                 </Button>
                             )}
-                            <Button type="submit" disabled={isSubmitting} className="bg-primary hover:bg-primary/90 px-8">
+                            <Button type="submit" disabled={isSubmitting} className="bg-[#ff8602] hover:bg-[#ff8602]/90 px-8 rounded-xl shadow-lg shadow-[#ff8602]/20 border-none transition-all hover:scale-[1.02]">
                                 {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Mail className="w-4 h-4 mr-2" />}
                                 Launch Campaign
                             </Button>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                         {/* LEFT COLUMN - CONFIG */}
-                        <div className="lg:col-span-1 space-y-6">
-                            <Card className="shadow-sm border-slate-200">
-                                <CardHeader className="pb-4">
-                                    <div className="flex items-center gap-2 text-primary">
-                                        <Settings2 className="w-5 h-5" />
-                                        <CardTitle className="text-lg">Basics & Audience</CardTitle>
+                        <div className="lg:col-span-4 space-y-6">
+                            <Card className="shadow-sm border-slate-200 rounded-3xl overflow-hidden">
+                                <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
+                                    <div className="flex items-center gap-2 text-[#00c3c0]">
+                                        <Users className="w-5 h-5" />
+                                        <CardTitle className="text-lg font-bold">Target Audience</CardTitle>
                                     </div>
                                 </CardHeader>
-                                <CardContent className="space-y-4">
+                                <CardContent className="space-y-4 pt-6">
                                     <FormField
                                         control={form.control}
                                         name="title"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Internal Title</FormLabel>
+                                                <FormLabel className="font-bold text-slate-700">Internal Reference</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="e.g. Q1 Newsletter" {...field} />
+                                                    <Input placeholder="e.g. Q1 Newsletter - Members" className="rounded-xl border-slate-200 focus:border-[#00c3c0] focus:ring-[#00c3c0]/20" {...field} />
                                                 </FormControl>
-                                                <FormDescription>For internal tracking only.</FormDescription>
+                                                <FormDescription>Strictly for internal identification.</FormDescription>
                                                 <FormMessage />
                                             </FormItem>
                                         )}
@@ -253,21 +258,21 @@ export default function AddEmailCampaign() {
                                         name="targetAudience"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Target Group</FormLabel>
+                                                <FormLabel className="font-bold text-slate-700">Recipient Group</FormLabel>
                                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                     <FormControl>
-                                                        <SelectTrigger>
+                                                        <SelectTrigger className="rounded-xl border-slate-200">
                                                             <div className="flex items-center gap-2">
                                                                 <Users className="w-4 h-4 text-slate-400" />
                                                                 <SelectValue />
                                                             </div>
                                                         </SelectTrigger>
                                                     </FormControl>
-                                                    <SelectContent>
+                                                    <SelectContent className="rounded-xl border-slate-200">
                                                         <SelectItem value="all_lawyers">All Lawyers</SelectItem>
                                                         <SelectItem value="all_clients">All Clients</SelectItem>
                                                         <SelectItem value="all_users">All Users</SelectItem>
-                                                        <SelectItem value="segment">Specific Segment</SelectItem>
+                                                        <SelectItem value="segment">Smart Segment</SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                                 <FormMessage />
@@ -281,14 +286,14 @@ export default function AddEmailCampaign() {
                                             name="segmentId"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Choose Smart Segment</FormLabel>
+                                                    <FormLabel className="font-bold text-slate-700">Choose Segment</FormLabel>
                                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                         <FormControl>
-                                                            <SelectTrigger>
-                                                                <SelectValue placeholder="Select a segment" />
+                                                            <SelectTrigger className="rounded-xl border-slate-200">
+                                                                <SelectValue placeholder="Select segment..." />
                                                             </SelectTrigger>
                                                         </FormControl>
-                                                        <SelectContent>
+                                                        <SelectContent className="rounded-xl border-slate-200">
                                                             {segments.map(s => (
                                                                 <SelectItem key={s.id} value={s.id}>{s.label}</SelectItem>
                                                             ))}
@@ -302,30 +307,30 @@ export default function AddEmailCampaign() {
                                 </CardContent>
                             </Card>
 
-                            <Card className="shadow-sm border-slate-200">
-                                <CardHeader className="pb-4">
-                                    <div className="flex items-center gap-2 text-primary">
+                            <Card className="shadow-sm border-slate-200 rounded-3xl overflow-hidden">
+                                <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
+                                    <div className="flex items-center gap-2 text-[#00c3c0]">
                                         <Clock className="w-5 h-5" />
-                                        <CardTitle className="text-lg">Scheduling</CardTitle>
+                                        <CardTitle className="text-lg font-bold">Delivery Schedule</CardTitle>
                                     </div>
                                 </CardHeader>
-                                <CardContent className="space-y-4">
+                                <CardContent className="space-y-4 pt-6">
                                     <FormField
                                         control={form.control}
                                         name="scheduleType"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Delivery Method</FormLabel>
+                                                <FormLabel className="font-bold text-slate-700">Dispatch Logic</FormLabel>
                                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                     <FormControl>
-                                                        <SelectTrigger>
+                                                        <SelectTrigger className="rounded-xl border-slate-200">
                                                             <SelectValue />
                                                         </SelectTrigger>
                                                     </FormControl>
-                                                    <SelectContent>
-                                                        <SelectItem value="immediate">Send Now</SelectItem>
-                                                        <SelectItem value="scheduled">One-time Scheduled</SelectItem>
-                                                        <SelectItem value="recurring">Recurring (Weekly/Daily)</SelectItem>
+                                                    <SelectContent className="rounded-xl border-slate-200">
+                                                        <SelectItem value="immediate">Send Instantly</SelectItem>
+                                                        <SelectItem value="scheduled">Specific Time</SelectItem>
+                                                        <SelectItem value="recurring">Recurring Cycle</SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                                 <FormMessage />
@@ -339,9 +344,9 @@ export default function AddEmailCampaign() {
                                             name="scheduledAt"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Send Date & Time</FormLabel>
+                                                    <FormLabel className="font-bold text-slate-700">Pick Date & Time</FormLabel>
                                                     <FormControl>
-                                                        <Input type="datetime-local" {...field} />
+                                                        <Input type="datetime-local" className="rounded-xl border-slate-200" {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -355,11 +360,11 @@ export default function AddEmailCampaign() {
                                             name="cronExpression"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Cron Schedule</FormLabel>
+                                                    <FormLabel className="font-bold text-slate-700">Cron Configuration</FormLabel>
                                                     <FormControl>
-                                                        <Input {...field} />
+                                                        <Input placeholder="0 9 * * *" className="rounded-xl border-slate-200" {...field} />
                                                     </FormControl>
-                                                    <FormDescription>Standard cron format (min hour day month weekday)</FormDescription>
+                                                    <FormDescription>Standard cron syntax (min hour day month weekday)</FormDescription>
                                                     <FormMessage />
                                                 </FormItem>
                                             )}
@@ -368,53 +373,56 @@ export default function AddEmailCampaign() {
                                 </CardContent>
                             </Card>
 
-                            <Card className="shadow-sm border-slate-200 overflow-hidden">
-                                <div className="p-4 bg-slate-900 text-white flex justify-between items-center">
-                                    <div className="flex items-center gap-2">
-                                        <Settings2 className="w-4 h-4" />
-                                        <span className="font-medium">Drip Automation</span>
+                            <Card className="shadow-sm border-slate-200 rounded-3xl overflow-hidden border-l-4 border-l-[#00c3c0]">
+                                <CardContent className="p-0">
+                                    <div className="p-5 bg-gradient-to-r from-cyan-50 to-white flex justify-between items-center">
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-2 rounded-lg bg-[#00c3c0]/10 text-[#00c3c0]">
+                                                <Zap className="w-5 h-5 fill-[#00c3c0]" />
+                                            </div>
+                                            <div>
+                                                <span className="font-bold text-slate-800">Drip AI</span>
+                                                <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Automation Sequence</p>
+                                            </div>
+                                        </div>
+                                        <FormField
+                                            control={form.control}
+                                            name="isDrip"
+                                            render={({ field }) => (
+                                                <Switch
+                                                    checked={field.value}
+                                                    onCheckedChange={field.onChange}
+                                                    className="data-[state=checked]:bg-[#00c3c0]"
+                                                />
+                                            )}
+                                        />
                                     </div>
-                                    <FormField
-                                        control={form.control}
-                                        name="isDrip"
-                                        render={({ field }) => (
-                                            <Switch
-                                                checked={field.value}
-                                                onCheckedChange={field.onChange}
-                                            />
-                                        )}
-                                    />
-                                </div>
-                                <CardContent className="pt-4">
-                                    <p className="text-xs text-slate-500">
-                                        Drip campaigns allow sending a sequence of emails over time.
-                                    </p>
                                 </CardContent>
                             </Card>
                         </div>
 
                         {/* RIGHT COLUMN - CONTENT */}
-                        <div className="lg:col-span-2">
+                        <div className="lg:col-span-8">
                             {!watchIsDrip ? (
-                                <Card className="shadow-sm border-slate-200">
-                                    <CardHeader className="bg-slate-50 border-b border-slate-100">
-                                        <CardTitle className="text-lg">Standard Email Content</CardTitle>
+                                <Card className="shadow-sm border-slate-200 rounded-3xl overflow-hidden">
+                                    <CardHeader className="bg-slate-50/50 border-b border-slate-100">
+                                        <CardTitle className="text-lg font-bold">Email Content Design</CardTitle>
                                     </CardHeader>
-                                    <CardContent className="pt-6 space-y-4">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <CardContent className="pt-8 space-y-6 px-8">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <FormField
                                                 control={form.control}
                                                 name="templateKey"
                                                 render={({ field }) => (
                                                     <FormItem>
-                                                        <FormLabel>Email Layout Template</FormLabel>
+                                                        <FormLabel className="font-bold text-slate-700">Base Layout</FormLabel>
                                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                             <FormControl>
-                                                                <SelectTrigger>
-                                                                    <SelectValue placeholder="Select layout" />
+                                                                <SelectTrigger className="rounded-xl border-slate-200">
+                                                                    <SelectValue placeholder="Select a layout" />
                                                                 </SelectTrigger>
                                                             </FormControl>
-                                                            <SelectContent>
+                                                            <SelectContent className="rounded-xl border-slate-200">
                                                                 {templates.map(t => (
                                                                     <SelectItem key={t.key} value={t.key}>{t.label}</SelectItem>
                                                                 ))}
@@ -429,9 +437,9 @@ export default function AddEmailCampaign() {
                                                 name="subject"
                                                 render={({ field }) => (
                                                     <FormItem>
-                                                        <FormLabel>Email Subject Line</FormLabel>
+                                                        <FormLabel className="font-bold text-slate-700">Subject Line</FormLabel>
                                                         <FormControl>
-                                                            <Input placeholder="Recipient will see this" {...field} />
+                                                            <Input placeholder="What recipients will see" className="rounded-xl border-slate-200" {...field} />
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>
@@ -444,9 +452,9 @@ export default function AddEmailCampaign() {
                                             name="headline"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Main Headline</FormLabel>
+                                                    <FormLabel className="font-bold text-slate-700">Primary Headline</FormLabel>
                                                     <FormControl>
-                                                        <Input placeholder="Bold text at the top" {...field} />
+                                                        <Input placeholder="Large bold text at the top" className="rounded-xl border-slate-200" {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -458,11 +466,11 @@ export default function AddEmailCampaign() {
                                             name="body"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Main Content</FormLabel>
+                                                    <FormLabel className="font-bold text-slate-700">Main Message</FormLabel>
                                                     <FormControl>
                                                         <Textarea
-                                                            placeholder="Write your email message here..."
-                                                            className="min-h-[250px] resize-none"
+                                                            placeholder="Craft your message here..."
+                                                            className="min-h-[300px] resize-none rounded-2xl border-slate-200 focus:border-[#00c3c0] focus:ring-[#00c3c0]/20"
                                                             {...field}
                                                         />
                                                     </FormControl>
@@ -471,15 +479,15 @@ export default function AddEmailCampaign() {
                                             )}
                                         />
 
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <FormField
                                                 control={form.control}
                                                 name="ctaLabel"
                                                 render={({ field }) => (
                                                     <FormItem>
-                                                        <FormLabel>Call to Action Button</FormLabel>
+                                                        <FormLabel className="font-bold text-slate-700">Button Text</FormLabel>
                                                         <FormControl>
-                                                            <Input placeholder="e.g. Visit Website" {...field} />
+                                                            <Input placeholder="e.g. Visit our Marketplace" className="rounded-xl border-slate-200" {...field} />
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>
@@ -490,9 +498,9 @@ export default function AddEmailCampaign() {
                                                 name="ctaUrl"
                                                 render={({ field }) => (
                                                     <FormItem>
-                                                        <FormLabel>Button Link (URL)</FormLabel>
+                                                        <FormLabel className="font-bold text-slate-700">Button Link</FormLabel>
                                                         <FormControl>
-                                                            <Input placeholder="https://..." {...field} />
+                                                            <Input placeholder="https://..." className="rounded-xl border-slate-200" {...field} />
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>
@@ -505,9 +513,9 @@ export default function AddEmailCampaign() {
                                             name="footerText"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Footer Message</FormLabel>
+                                                    <FormLabel className="font-bold text-slate-700">Footer Note</FormLabel>
                                                     <FormControl>
-                                                        <Input placeholder="e.g. Follow us on Social Media" {...field} />
+                                                        <Input placeholder="Tagline or secondary info" className="rounded-xl border-slate-200" {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -516,122 +524,133 @@ export default function AddEmailCampaign() {
                                     </CardContent>
                                 </Card>
                             ) : (
-                                <div className="space-y-4">
-                                    <div className="flex justify-between items-center mb-2">
-                                        <h3 className="font-bold text-slate-800">Drip Step Sequence</h3>
+                                <div className="space-y-6">
+                                    <div className="flex justify-between items-center bg-white p-6 rounded-3xl shadow-sm border border-slate-100 mb-2">
+                                        <div>
+                                            <h3 className="font-black text-slate-800 text-xl tracking-tight">Sequence <span className="text-[#ff8602]">Architecture</span></h3>
+                                            <p className="text-xs text-slate-500 font-medium italic">Define the chain of events for this campaign.</p>
+                                        </div>
                                         <Button 
                                             type="button" 
                                             size="sm" 
                                             onClick={() => append({ dayOffset: fields.length * 2, subject: '', templateKey: 'admin_custom', headline: '', body: '' })}
-                                            className="flex items-center gap-2"
+                                            className="bg-[#00c3c0] hover:bg-[#00c3c0]/90 rounded-xl px-5 h-10 border-none"
                                         >
-                                            <Plus className="w-4 h-4" /> Add Step
+                                            <Plus className="w-4 h-4 mr-1" /> Add Step
                                         </Button>
                                     </div>
                                     
                                     {fields.length === 0 && (
-                                        <div className="text-center p-12 bg-white border-2 border-dashed rounded-lg">
-                                            <Mail className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                                            <p className="text-slate-500 font-medium">No steps defined yet.</p>
-                                            <Button type="button" variant="link" onClick={() => append({ dayOffset: 0, subject: '', templateKey: 'admin_custom', headline: '', body: '' })}>
-                                                Create your first step
+                                        <div className="text-center p-20 bg-white border-2 border-dashed border-slate-200 rounded-[32px]">
+                                            <Mail className="w-16 h-16 text-slate-200 mx-auto mb-4" />
+                                            <p className="text-slate-400 font-bold text-lg">Your sequence is empty.</p>
+                                            <p className="text-slate-400 text-sm mb-6">Start by adding your first automated step.</p>
+                                            <Button type="button" variant="link" className="text-[#00c3c0] font-black" onClick={() => append({ dayOffset: 0, subject: '', templateKey: 'admin_custom', headline: '', body: '' })}>
+                                                Create Step 01
                                             </Button>
                                         </div>
                                     )}
 
-                                    {fields.map((field, index) => (
-                                        <Card key={field.id} className="shadow-sm border-slate-200 overflow-hidden">
-                                            <div className="bg-slate-50 px-4 py-2 border-b flex justify-between items-center">
-                                                <span className="text-sm font-bold text-slate-600">STEP {index + 1}</span>
-                                                <Button type="button" variant="ghost" size="sm" onClick={() => remove(index)} className="text-red-500 hover:text-red-600 hover:bg-red-50">
-                                                    <Trash2 className="w-4 h-4" />
-                                                </Button>
-                                            </div>
-                                            <CardContent className="pt-4 space-y-4">
-                                                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                    <div className="space-y-4">
+                                        {fields.map((field, index) => (
+                                            <Card key={field.id} className="shadow-sm border-slate-200 rounded-[24px] overflow-hidden border-l-4 border-l-[#ff8602]">
+                                                <div className="bg-slate-50/80 px-6 py-3 border-b border-slate-100 flex justify-between items-center">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="w-6 h-6 rounded-full bg-[#ff8602] text-white flex items-center justify-center text-[10px] font-black">0{index + 1}</span>
+                                                        <span className="text-xs font-black text-slate-700 uppercase tracking-widest">Automation Segment</span>
+                                                    </div>
+                                                    <Button type="button" variant="ghost" size="sm" onClick={() => remove(index)} className="text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg">
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </Button>
+                                                </div>
+                                                <CardContent className="pt-6 pb-8 px-8 space-y-6">
+                                                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                                                        <FormField
+                                                            control={form.control}
+                                                            name={`dripSteps.${index}.dayOffset`}
+                                                            render={({ field }) => (
+                                                                <FormItem>
+                                                                    <FormLabel className="font-bold text-slate-700">Days Delay</FormLabel>
+                                                                    <FormControl>
+                                                                        <Input type="number" className="rounded-xl border-slate-200 focus:ring-[#ff8602]/20 focus:border-[#ff8602]" {...field} />
+                                                                    </FormControl>
+                                                                    <FormMessage />
+                                                                </FormItem>
+                                                            )}
+                                                        />
+                                                        <div className="md:col-span-3">
+                                                            <FormField
+                                                                control={form.control}
+                                                                name={`dripSteps.${index}.templateKey`}
+                                                                render={({ field }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel className="font-bold text-slate-700">Layout</FormLabel>
+                                                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                                            <FormControl>
+                                                                                <SelectTrigger className="rounded-xl border-slate-200">
+                                                                                    <SelectValue />
+                                                                                </SelectTrigger>
+                                                                            </FormControl>
+                                                                            <SelectContent className="rounded-xl border-slate-200">
+                                                                                {templates.map(t => (
+                                                                                    <SelectItem key={t.key} value={t.key}>{t.label}</SelectItem>
+                                                                                ))}
+                                                                            </SelectContent>
+                                                                        </Select>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                        </div>
+                                                    </div>
+
                                                     <FormField
                                                         control={form.control}
-                                                        name={`dripSteps.${index}.dayOffset`}
+                                                        name={`dripSteps.${index}.subject`}
                                                         render={({ field }) => (
                                                             <FormItem>
-                                                                <FormLabel>Day Offset</FormLabel>
+                                                                <FormLabel className="font-bold text-slate-700">Email Subject</FormLabel>
                                                                 <FormControl>
-                                                                    <Input type="number" {...field} />
+                                                                    <Input placeholder="Subject for this step" className="rounded-xl border-slate-200 focus:ring-[#ff8602]/20 focus:border-[#ff8602]" {...field} />
                                                                 </FormControl>
                                                                 <FormMessage />
                                                             </FormItem>
                                                         )}
                                                     />
-                                                    <div className="md:col-span-3">
+
+                                                    <div className="grid grid-cols-1 gap-6">
                                                         <FormField
                                                             control={form.control}
-                                                            name={`dripSteps.${index}.templateKey`}
+                                                            name={`dripSteps.${index}.headline`}
                                                             render={({ field }) => (
                                                                 <FormItem>
-                                                                    <FormLabel>Layout Template</FormLabel>
-                                                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                                        <FormControl>
-                                                                            <SelectTrigger>
-                                                                                <SelectValue />
-                                                                            </SelectTrigger>
-                                                                        </FormControl>
-                                                                        <SelectContent>
-                                                                            {templates.map(t => (
-                                                                                <SelectItem key={t.key} value={t.key}>{t.label}</SelectItem>
-                                                                            ))}
-                                                                        </SelectContent>
-                                                                    </Select>
+                                                                    <FormLabel className="font-bold text-slate-700">Headline</FormLabel>
+                                                                    <FormControl>
+                                                                        <Input placeholder="Heading text" className="rounded-xl border-slate-200 focus:ring-[#ff8602]/20 focus:border-[#ff8602]" {...field} />
+                                                                    </FormControl>
+                                                                    <FormMessage />
+                                                                </FormItem>
+                                                            )}
+                                                        />
+
+                                                        <FormField
+                                                            control={form.control}
+                                                            name={`dripSteps.${index}.body`}
+                                                            render={({ field }) => (
+                                                                <FormItem>
+                                                                    <FormLabel className="font-bold text-slate-700">Detailed Message</FormLabel>
+                                                                    <FormControl>
+                                                                        <Textarea className="min-h-[150px] rounded-2xl border-slate-200 focus:ring-[#ff8602]/20 focus:border-[#ff8602]" placeholder="Write step content..." {...field} />
+                                                                    </FormControl>
                                                                     <FormMessage />
                                                                 </FormItem>
                                                             )}
                                                         />
                                                     </div>
-                                                </div>
-
-                                                <FormField
-                                                    control={form.control}
-                                                    name={`dripSteps.${index}.subject`}
-                                                    render={({ field }) => (
-                                                        <FormItem>
-                                                            <FormLabel>Email Subject</FormLabel>
-                                                            <FormControl>
-                                                                <Input {...field} />
-                                                            </FormControl>
-                                                            <FormMessage />
-                                                        </FormItem>
-                                                    )}
-                                                />
-
-                                                <FormField
-                                                    control={form.control}
-                                                    name={`dripSteps.${index}.headline`}
-                                                    render={({ field }) => (
-                                                        <FormItem>
-                                                            <FormLabel>Headline</FormLabel>
-                                                            <FormControl>
-                                                                <Input {...field} />
-                                                            </FormControl>
-                                                            <FormMessage />
-                                                        </FormItem>
-                                                    )}
-                                                />
-
-                                                <FormField
-                                                    control={form.control}
-                                                    name={`dripSteps.${index}.body`}
-                                                    render={({ field }) => (
-                                                        <FormItem>
-                                                            <FormLabel>Content Body</FormLabel>
-                                                            <FormControl>
-                                                                <Textarea className="min-h-[120px]" {...field} />
-                                                            </FormControl>
-                                                            <FormMessage />
-                                                        </FormItem>
-                                                    )}
-                                                />
-                                            </CardContent>
-                                        </Card>
-                                    ))}
+                                                </CardContent>
+                                            </Card>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
                         </div>

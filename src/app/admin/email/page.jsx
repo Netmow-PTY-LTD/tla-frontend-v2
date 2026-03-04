@@ -30,7 +30,8 @@ import {
     AlertCircle, 
     RotateCw,
     Repeat,
-    ArrowUpRight
+    ArrowUpRight,
+    Zap
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
@@ -87,8 +88,8 @@ export default function EmailListPage() {
                         <span className="font-bold text-slate-800">{campaign.title}</span>
                         <div className="flex items-center gap-1.5 mt-1">
                             {campaign.isDrip && (
-                                <Badge variant="secondary" className="text-[10px] h-4 bg-purple-50 text-purple-700 border-purple-100 uppercase tracking-tighter font-black">
-                                    <RotateCw className="w-2.5 h-2.5 mr-1" /> Drip AI
+                                <Badge variant="secondary" className="text-[10px] h-4 bg-[#ff8602]/10 text-[#ff8602] border-[#ff8602]/20 uppercase tracking-tighter font-black">
+                                    <Zap className="w-2.5 h-2.5 mr-1 fill-[#ff8602]" /> Drip AI
                                 </Badge>
                             )}
                             <Badge variant="outline" className="text-[10px] h-4 text-slate-500 border-slate-200 uppercase tracking-tighter">
@@ -106,7 +107,7 @@ export default function EmailListPage() {
                 const status = row.original.status;
                 const variants = {
                     pending: "bg-slate-100 text-slate-600 border-slate-200",
-                    sending: "bg-blue-100 text-blue-700 border-blue-200 animate-pulse",
+                    sending: "bg-cyan-50 text-[#00c3c0] border-cyan-100 animate-pulse",
                     sent: "bg-green-100 text-green-700 border-green-200",
                     canceled: "bg-red-100 text-red-600 border-red-200",
                     failed: "bg-red-100 text-red-600 border-red-200",
@@ -132,7 +133,7 @@ export default function EmailListPage() {
                 return (
                     <div className="w-[160px] space-y-1.5">
                         <div className="flex justify-between items-center text-[11px]">
-                            <span className="font-bold text-primary">{campaign.sentCount} / <span className="text-slate-400">{campaign.totalTargeted}</span></span>
+                            <span className="font-bold text-[#00c3c0]">{campaign.sentCount} / <span className="text-slate-400">{campaign.totalTargeted}</span></span>
                             <span className="text-slate-500 font-medium">{rate}% success</span>
                         </div>
                         <Progress value={rate} className="h-1.5 bg-slate-100" />
@@ -149,11 +150,11 @@ export default function EmailListPage() {
                     <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-1.5 text-xs text-slate-600 font-medium lowercase">
                             {campaign.scheduleType === 'recurring' ? (
-                                <><Repeat className="w-3 h-3 text-primary" /> {campaign.cronExpression || 'Recurring'}</>
+                                <><Repeat className="w-3 h-3 text-[#00c3c0]" /> {campaign.cronExpression || 'Recurring'}</>
                             ) : campaign.scheduleType === 'scheduled' ? (
-                                <><Clock className="w-3 h-3 text-primary" /> {campaign.scheduledAt ? format(new Date(campaign.scheduledAt), 'MMM dd, p') : 'Scheduled'}</>
+                                <><Clock className="w-3 h-3 text-[#00c3c0]" /> {campaign.scheduledAt ? format(new Date(campaign.scheduledAt), 'MMM dd, p') : 'Scheduled'}</>
                             ) : (
-                                <><Send className="w-3 h-3 text-primary" /> Immediate Send</>
+                                <><Send className="w-3 h-3 text-[#00c3c0]" /> Immediate Send</>
                             )}
                         </div>
                     </div>
@@ -176,8 +177,8 @@ export default function EmailListPage() {
                             <DropdownMenuLabel className="text-xs font-bold text-slate-400 uppercase tracking-widest px-2 pb-2">Campaign Actions</DropdownMenuLabel>
                             
                             <DropdownMenuItem asChild>
-                                <Link href={`/admin/email/template/edit/${campaign._id}`} className="flex items-center gap-2 p-2 rounded-lg focus:bg-primary/5 focus:text-primary transition-all">
-                                    <div className="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center text-orange-600">
+                                <Link href={`/admin/email/template/edit/${campaign._id}`} className="flex items-center gap-2 p-2 rounded-lg focus:bg-[#00c3c0]/5 focus:text-[#00c3c0] transition-all">
+                                    <div className="w-8 h-8 rounded-lg bg-[#ff8602]/10 flex items-center justify-center text-[#ff8602]">
                                         <Edit className="h-4 w-4" />
                                     </div>
                                     <span className="font-medium">Edit Details</span>
@@ -185,20 +186,20 @@ export default function EmailListPage() {
                             </DropdownMenuItem>
 
                             <DropdownMenuItem 
-                                className="flex items-center gap-2 p-2 rounded-lg focus:bg-primary/5 focus:text-primary transition-all"
+                                className="flex items-center gap-2 p-2 rounded-lg focus:bg-[#00c3c0]/5 focus:text-[#00c3c0] transition-all"
                                 onClick={() => {
                                     setSelectedCampaign({ id: campaign._id, title: campaign.title, totalTargeted: campaign.totalTargeted, sentCount: campaign.sentCount, failedCount: campaign.failedCount });
                                     setIsStatsOpen(true);
                                 }}
                             >
-                                <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+                                <div className="w-8 h-8 rounded-lg bg-cyan-50 flex items-center justify-center text-[#00c3c0]">
                                     <BarChart3 className="h-4 w-4" />
                                 </div>
                                 <span className="font-medium">Performance Metrics</span>
                             </DropdownMenuItem>
 
                             <DropdownMenuItem asChild>
-                                <Link href={`/admin/email/log/${campaign._id}`} className="flex items-center gap-2 p-2 rounded-lg focus:bg-primary/5 focus:text-primary transition-all text-slate-600">
+                                <Link href={`/admin/email/log/${campaign._id}`} className="flex items-center gap-2 p-2 rounded-lg focus:bg-[#00c3c0]/5 focus:text-[#00c3c0] transition-all text-slate-600">
                                     <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">
                                         <History className="h-4 w-4" />
                                     </div>
@@ -241,10 +242,10 @@ export default function EmailListPage() {
             <div className="max-w-7xl mx-auto space-y-6">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 py-6 border-b border-slate-100">
                     <div>
-                        <h1 className="text-4xl font-black text-slate-900 tracking-tight">Email Campaigns</h1>
+                        <h1 className="text-4xl font-black text-slate-900 tracking-tight">Email <span className="text-[#00c3c0]">Campaigns</span></h1>
                         <p className="text-slate-500 mt-1 font-medium italic">Automate your communication workflow with smart sequences.</p>
                     </div>
-                    <Button asChild className="bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 px-6 py-6 rounded-2xl h-auto">
+                    <Button asChild className="bg-[#ff8602] hover:bg-[#ff8602]/90 text-white shadow-lg shadow-[#ff8602]/20 px-6 py-6 rounded-2xl h-auto border-none">
                         <Link href="/admin/email/template/add" className="flex items-center gap-2">
                             <Plus className="w-5 h-5 font-bold" />
                             <span className="font-extrabold uppercase tracking-widest text-xs">Create New Hub</span>
@@ -253,9 +254,9 @@ export default function EmailListPage() {
                 </div>
 
                 <Card className="border-none shadow-2xl shadow-slate-200/50 rounded-3xl overflow-hidden bg-white">
-                    <CardHeader className="bg-gradient-to-r from-slate-50 to-white border-b border-slate-50 px-8 py-6">
+                    <CardHeader className="bg-gradient-to-r from-cyan-50/30 to-white border-b border-slate-50 px-8 py-6">
                         <CardTitle className="text-xl font-bold flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                            <div className="w-10 h-10 rounded-2xl bg-[#00c3c0]/10 flex items-center justify-center text-[#00c3c0]">
                                 <RotateCw className="w-5 h-5" />
                             </div>
                             Live Campaign Monitor

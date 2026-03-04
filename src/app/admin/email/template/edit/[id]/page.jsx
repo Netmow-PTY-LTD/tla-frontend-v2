@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -11,7 +12,6 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-    FormDescription,
 } from '@/components/ui/form';
 import {
     Select,
@@ -26,56 +26,44 @@ import z from 'zod';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-    useUpdateEmailTemplateMutation,
     useGetSingleEmailQuery,
+    useUpdateEmailTemplateMutation,
     useGetTemplatesQuery,
     useGetSegmentsQuery,
     useSendPreviewMutation,
 } from '@/store/features/admin/emailApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
-import { useRouter, useParams } from 'next/navigation';
-import { Eye, Loader2, Plus, Trash2, Mail, Users, Settings2, Clock, AlertTriangle } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Eye, Loader2, Plus, Trash2, Mail, Users, Settings2, Clock, Zap, ArrowLeft, Save } from 'lucide-react';
 
 const dripStepSchema = z.object({
     dayOffset: z.coerce.number().min(0),
-    subject: z.string().min(1, "Step subject is required"),
-    templateKey: z.string().min(1, "Step template is required"),
-    headline: z.string().min(1, "Step headline is required"),
-    body: z.string().min(10, "Step body is required"),
+    subject: z.string().min(1),
+    templateKey: z.string().min(1),
+    headline: z.string().min(1),
+    body: z.string().min(10),
 });
 
 const formSchema = z.object({
-    title: z.string().min(2, {
-        message: 'Title must be at least 2 characters.',
-    }),
+    title: z.string().min(2),
     templateKey: z.string().optional().or(z.literal('')),
     subject: z.string().optional().or(z.literal('')),
-    targetAudience: z.string().min(1),
+    targetAudience: z.string(),
     segmentId: z.string().optional(),
-    scheduleType: z.string().min(1),
+    scheduleType: z.string(),
     scheduledAt: z.string().optional(),
     cronExpression: z.string().optional(),
-    isDrip: z.boolean().default(false),
+    isDrip: z.boolean(),
     dripSteps: z.array(dripStepSchema).optional(),
     headline: z.string().optional(),
     body: z.string().optional(),
     ctaLabel: z.string().optional(),
     ctaUrl: z.string().url().optional().or(z.literal('')),
     footerText: z.string().optional(),
-}).refine(data => {
-    if (!data.isDrip) {
-        return !!data.templateKey && !!data.subject && !!data.headline && !!data.body;
-    }
-    return data.dripSteps && data.dripSteps.length > 0;
-}, {
-    message: "Requirement for either standard content or drip steps not met",
-    path: ["isDrip"]
 });
 
 export default function EditEmailCampaign() {
-    const router = useRouter();
     const { id } = useParams();
+    const router = useRouter();
     const { data: campaignRes, isLoading: isLoadingCampaign } = useGetSingleEmailQuery(id);
     const { data: templatesRes } = useGetTemplatesQuery();
     const { data: segmentsRes } = useGetSegmentsQuery();
@@ -116,44 +104,40 @@ export default function EditEmailCampaign() {
 
     useEffect(() => {
         if (campaign) {
-            form.reset({
+            const formData = {
                 title: campaign.title || '',
                 templateKey: campaign.templateKey || '',
                 subject: campaign.subject || '',
                 targetAudience: campaign.targetAudience || 'all_lawyers',
-                segmentId: campaign.segmentId || '',
                 scheduleType: campaign.scheduleType || 'immediate',
-                scheduledAt: campaign.scheduledAt ? new Date(campaign.scheduledAt).toISOString().slice(0, 16) : '',
-                cronExpression: campaign.cronExpression || '0 9 * * *',
                 isDrip: campaign.isDrip || false,
                 headline: campaign.customData?.headline || '',
                 body: campaign.customData?.body || '',
                 ctaLabel: campaign.customData?.ctaLabel || '',
                 ctaUrl: campaign.customData?.ctaUrl || '',
                 footerText: campaign.customData?.footerText || '',
-            });
+                scheduledAt: campaign.scheduledAt ? new Date(campaign.scheduledAt).toISOString().slice(0, 16) : '',
+                cronExpression: campaign.cronExpression || '0 9 * * *',
+            };
 
             if (campaign.isDrip && campaign.dripSteps) {
-                replace(campaign.dripSteps.map(step => ({
+                formData.dripSteps = campaign.dripSteps.map(step => ({
                     dayOffset: step.dayOffset,
                     subject: step.subject,
                     templateKey: step.templateKey,
                     headline: step.customData?.headline || '',
                     body: step.customData?.body || '',
-                })));
+                }));
             }
-        }
-    }, [campaign, form, replace]);
 
-    const watchTargetAudience = form.watch('targetAudience');
-    const watchScheduleType = form.watch('scheduleType');
+            form.reset(formData);
+        }
+    }, [campaign, form]);
+
     const watchIsDrip = form.watch('isDrip');
+    const watchScheduleType = form.watch('scheduleType');
 
     async function handlePreview() {
-        if (watchIsDrip) {
-            showErrorToast("Preview is only available for standard campaigns.");
-            return;
-        }
         const values = form.getValues();
         try {
             await sendPreview({
@@ -167,7 +151,7 @@ export default function EditEmailCampaign() {
                     footerText: values.footerText,
                 }
             }).unwrap();
-            showSuccessToast("Preview email sent to your inbox.");
+            showSuccessToast("Preview email sent.");
         } catch (error) {
             showErrorToast("Failed to send preview.");
         }
@@ -180,6 +164,7 @@ export default function EditEmailCampaign() {
         }
 
         const formattedData = {
+            id,
             title: values.title,
             targetAudience: values.targetAudience,
             scheduleType: values.scheduleType,
@@ -212,11 +197,6 @@ export default function EditEmailCampaign() {
             formattedData.dripSteps = [];
         }
 
-        if (values.targetAudience === 'segment') {
-            const selectedSegment = segments.find(s => s.id === values.segmentId);
-            formattedData.segmentFilter = selectedSegment?.filter || {};
-        }
-
         if (values.scheduleType === 'scheduled' && values.scheduledAt) {
             formattedData.scheduledAt = new Date(values.scheduledAt).toISOString();
         } else if (values.scheduleType === 'recurring') {
@@ -227,78 +207,73 @@ export default function EditEmailCampaign() {
         }
 
         try {
-            await updateEmailTemplate({ id, data: formattedData }).unwrap();
+            await updateEmailTemplate(formattedData).unwrap();
             showSuccessToast('Campaign updated successfully.');
             router.push('/admin/email');
         } catch (error) {
-            showErrorToast(error?.data?.message || 'Failed to update campaign.');
+            showErrorToast('Failed to update campaign.');
         }
     }
 
     if (isLoadingCampaign) {
         return (
-            <div className="flex items-center justify-center min-h-[400px]">
-                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            <div className="flex flex-col items-center justify-center p-24 space-y-4">
+                <Loader2 className="w-12 h-12 animate-spin text-[#00c3c0]" />
+                <p className="text-slate-500 font-bold animate-pulse">Loading Campaign Data...</p>
             </div>
         );
     }
 
     return (
-        <div className="p-4 bg-slate-50 min-h-screen">
+        <div className="p-6 bg-slate-50 min-h-screen">
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-5xl mx-auto space-y-6">
-                    <div className="flex justify-between items-center">
-                        <div>
-                            <h1 className="text-3xl font-bold text-slate-900 leading-tight">Edit Email Campaign</h1>
-                            <p className="text-slate-500">Update your campaign settings and content.</p>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-6xl mx-auto space-y-8">
+                    <div className="flex justify-between items-center bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                        <div className="flex items-center gap-4">
+                            <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-xl hover:bg-slate-100">
+                                <ArrowLeft className="w-5 h-5 text-slate-500" />
+                            </Button>
+                            <div>
+                                <div className="flex items-center gap-2">
+                                    <h1 className="text-3xl font-black text-slate-900 tracking-tight">Edit <span className="text-[#00c3c0]">Automation Hub</span></h1>
+                                    {isLocked && <Badge variant="secondary" className="bg-red-50 text-red-600 border-red-100">Locked</Badge>}
+                                </div>
+                                <p className="text-slate-500 font-medium">Modifying sequence for "<span className="text-[#00c3c0]">{campaign?.title}</span>"</p>
+                            </div>
                         </div>
                         <div className="flex gap-3">
                             {!watchIsDrip && (
-                                <Button 
-                                    type="button" 
-                                    variant="outline" 
-                                    onClick={handlePreview}
-                                    disabled={isPreviewing || isLocked}
-                                >
+                                <Button type="button" variant="outline" onClick={handlePreview} disabled={isPreviewing} className="rounded-xl border-slate-200">
                                     {isPreviewing ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
-                                    Test Preview
+                                    Send Preview
                                 </Button>
                             )}
-                            <Button type="submit" disabled={isSubmitting || isLocked} className="bg-primary hover:bg-primary/90 px-8">
-                                {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Mail className="w-4 h-4 mr-2" />}
+                            <Button type="submit" disabled={isSubmitting || isLocked} className="bg-[#ff8602] hover:bg-[#ff8602]/90 px-8 rounded-xl shadow-lg shadow-[#ff8602]/20 border-none transition-all">
+                                {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
                                 Save Changes
                             </Button>
                         </div>
                     </div>
 
-                    {isLocked && (
-                        <Alert variant="warning" className="bg-amber-50 border-amber-200">
-                            <AlertTriangle className="h-4 w-4 text-amber-600" />
-                            <AlertTitle className="text-amber-800">Campaign Locked</AlertTitle>
-                            <AlertDescription className="text-amber-700">
-                                This campaign has already been {campaign?.status} and cannot be modified.
-                            </AlertDescription>
-                        </Alert>
-                    )}
-
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <div className="lg:col-span-1 space-y-6">
-                            <Card className="shadow-sm border-slate-200">
-                                <CardHeader className="pb-4">
-                                    <div className="flex items-center gap-2 text-primary">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        {/* LEFT COLUMN */}
+                        <div className="lg:col-span-4 space-y-6">
+                            <Card className="shadow-sm border-slate-200 rounded-3xl overflow-hidden">
+                                <CardHeader className="bg-slate-50/50 border-b border-slate-100">
+                                    <div className="flex items-center gap-2 text-[#00c3c0]">
                                         <Settings2 className="w-5 h-5" />
-                                        <CardTitle className="text-lg">Basics & Audience</CardTitle>
+                                        <CardTitle className="text-lg font-bold tracking-tight">System Settings</CardTitle>
                                     </div>
                                 </CardHeader>
-                                <CardContent className="space-y-4">
+                                <CardContent className="pt-6 space-y-4">
                                     <FormField
                                         control={form.control}
                                         name="title"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Internal Title</FormLabel>
+                                                <FormLabel className="font-bold text-slate-700">Internal Title</FormLabel>
                                                 <FormControl>
-                                                    <Input disabled={isLocked} {...field} />
+                                                    <Input className="rounded-xl border-slate-200" {...field} />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -307,82 +282,20 @@ export default function EditEmailCampaign() {
 
                                     <FormField
                                         control={form.control}
-                                        name="targetAudience"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Target Group</FormLabel>
-                                                <Select disabled={isLocked} onValueChange={field.onChange} value={field.value}>
-                                                    <FormControl>
-                                                        <SelectTrigger>
-                                                            <div className="flex items-center gap-2">
-                                                                <Users className="w-4 h-4 text-slate-400" />
-                                                                <SelectValue />
-                                                            </div>
-                                                        </SelectTrigger>
-                                                    </FormControl>
-                                                    <SelectContent>
-                                                        <SelectItem value="all_lawyers">All Lawyers</SelectItem>
-                                                        <SelectItem value="all_clients">All Clients</SelectItem>
-                                                        <SelectItem value="all_users">All Users</SelectItem>
-                                                        <SelectItem value="segment">Specific Segment</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-
-                                    {watchTargetAudience === 'segment' && (
-                                        <FormField
-                                            control={form.control}
-                                            name="segmentId"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>Choose Smart Segment</FormLabel>
-                                                    <Select disabled={isLocked} onValueChange={field.onChange} value={field.value}>
-                                                        <FormControl>
-                                                            <SelectTrigger>
-                                                                <SelectValue placeholder="Select a segment" />
-                                                            </SelectTrigger>
-                                                        </FormControl>
-                                                        <SelectContent>
-                                                            {segments.map(s => (
-                                                                <SelectItem key={s.id} value={s.id}>{s.label}</SelectItem>
-                                                            ))}
-                                                        </SelectContent>
-                                                    </Select>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    )}
-                                </CardContent>
-                            </Card>
-
-                            <Card className="shadow-sm border-slate-200">
-                                <CardHeader className="pb-4">
-                                    <div className="flex items-center gap-2 text-primary">
-                                        <Clock className="w-5 h-5" />
-                                        <CardTitle className="text-lg">Scheduling</CardTitle>
-                                    </div>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-                                    <FormField
-                                        control={form.control}
                                         name="scheduleType"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Delivery Method</FormLabel>
-                                                <Select disabled={isLocked} onValueChange={field.onChange} value={field.value}>
+                                                <FormLabel className="font-bold text-slate-700">Delivery Method</FormLabel>
+                                                <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                     <FormControl>
-                                                        <SelectTrigger>
+                                                        <SelectTrigger className="rounded-xl border-slate-200">
                                                             <SelectValue />
                                                         </SelectTrigger>
                                                     </FormControl>
-                                                    <SelectContent>
-                                                        <SelectItem value="immediate">Send Now</SelectItem>
-                                                        <SelectItem value="scheduled">One-time Scheduled</SelectItem>
-                                                        <SelectItem value="recurring">Recurring (Weekly/Daily)</SelectItem>
+                                                    <SelectContent className="rounded-xl border-slate-200">
+                                                        <SelectItem value="immediate">Send Instantly</SelectItem>
+                                                        <SelectItem value="scheduled">Specific Time</SelectItem>
+                                                        <SelectItem value="recurring">Recurring Cycle</SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                                 <FormMessage />
@@ -396,9 +309,9 @@ export default function EditEmailCampaign() {
                                             name="scheduledAt"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Send Date & Time</FormLabel>
+                                                    <FormLabel className="font-bold text-slate-700">Time to Launch</FormLabel>
                                                     <FormControl>
-                                                        <Input disabled={isLocked} type="datetime-local" {...field} />
+                                                        <Input type="datetime-local" className="rounded-xl border-slate-200" {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -412,92 +325,92 @@ export default function EditEmailCampaign() {
                                             name="cronExpression"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Cron Schedule</FormLabel>
+                                                    <FormLabel className="font-bold text-slate-700">Cron Rule</FormLabel>
                                                     <FormControl>
-                                                        <Input disabled={isLocked} {...field} />
+                                                        <Input placeholder="0 9 * * *" className="rounded-xl border-slate-200" {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
                                             )}
                                         />
                                     )}
-                                </CardContent>
-                            </Card>
 
-                            <Card className="shadow-sm border-slate-200 overflow-hidden">
-                                <div className="p-4 bg-slate-900 text-white flex justify-between items-center">
-                                    <div className="flex items-center gap-2">
-                                        <Settings2 className="w-4 h-4" />
-                                        <span className="font-medium">Drip Automation</span>
+                                    <div className="p-5 bg-gradient-to-r from-cyan-50 to-white rounded-2xl flex justify-between items-center border border-cyan-100 mt-6">
+                                        <div className="flex items-center gap-3">
+                                            <Zap className="w-5 h-5 text-[#00c3c0] fill-[#00c3c0]" />
+                                            <span className="font-black text-slate-800 tracking-tighter uppercase text-xs">Sequence Mode</span>
+                                        </div>
+                                        <FormField
+                                            control={form.control}
+                                            name="isDrip"
+                                            render={({ field }) => (
+                                                <Switch
+                                                    checked={field.value}
+                                                    onCheckedChange={field.onChange}
+                                                    disabled
+                                                    className="data-[state=checked]:bg-[#00c3c0]"
+                                                />
+                                            )}
+                                        />
                                     </div>
-                                    <FormField
-                                        control={form.control}
-                                        name="isDrip"
-                                        render={({ field }) => (
-                                            <Switch
-                                                disabled={isLocked}
-                                                checked={field.value}
-                                                onCheckedChange={field.onChange}
-                                            />
-                                        )}
-                                    />
-                                </div>
+                                    <p className="text-[10px] text-slate-400 font-bold italic px-2">Automation mode cannot be changed after creation.</p>
+                                </CardContent>
                             </Card>
                         </div>
 
-                        <div className="lg:col-span-2">
+                        {/* RIGHT COLUMN */}
+                        <div className="lg:col-span-8">
                             {!watchIsDrip ? (
-                                <Card className="shadow-sm border-slate-200">
-                                    <CardHeader className="bg-slate-50 border-b border-slate-100">
-                                        <CardTitle className="text-lg">Standard Email Content</CardTitle>
+                                <Card className="shadow-sm border-slate-200 rounded-3xl overflow-hidden">
+                                    <CardHeader className="bg-white border-b border-slate-50">
+                                        <CardTitle className="text-xl font-black text-slate-800 tracking-tight"><span className="text-[#ff8602]">Message</span> Configuration</CardTitle>
                                     </CardHeader>
-                                    <CardContent className="pt-6 space-y-4">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <FormField
-                                                control={form.control}
-                                                name="templateKey"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Email Layout Template</FormLabel>
-                                                        <Select disabled={isLocked} onValueChange={field.onChange} value={field.value}>
-                                                            <FormControl>
-                                                                <SelectTrigger>
-                                                                    <SelectValue placeholder="Select layout" />
-                                                                </SelectTrigger>
-                                                            </FormControl>
-                                                            <SelectContent>
-                                                                {templates.map(t => (
-                                                                    <SelectItem key={t.key} value={t.key}>{t.label}</SelectItem>
-                                                                ))}
-                                                            </SelectContent>
-                                                        </Select>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-                                            <FormField
-                                                control={form.control}
-                                                name="subject"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Email Subject Line</FormLabel>
+                                    <CardContent className="pt-8 space-y-6 px-10">
+                                        <FormField
+                                            control={form.control}
+                                            name="templateKey"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel className="font-bold text-slate-700">Visual Blueprint</FormLabel>
+                                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                         <FormControl>
-                                                            <Input disabled={isLocked} {...field} />
+                                                            <SelectTrigger className="rounded-xl border-slate-200">
+                                                                <SelectValue placeholder="Select a layout" />
+                                                            </SelectTrigger>
                                                         </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-                                        </div>
+                                                        <SelectContent className="rounded-xl border-slate-200">
+                                                            {templates.map(t => (
+                                                                <SelectItem key={t.key} value={t.key}>{t.label}</SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        <FormField
+                                            control={form.control}
+                                            name="subject"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel className="font-bold text-slate-700">Subject Visibility</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="Enter subject" className="rounded-xl border-slate-200" {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
 
                                         <FormField
                                             control={form.control}
                                             name="headline"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Main Headline</FormLabel>
+                                                    <FormLabel className="font-bold text-slate-700">Main Header</FormLabel>
                                                     <FormControl>
-                                                        <Input disabled={isLocked} {...field} />
+                                                        <Input placeholder="Enter headline" className="rounded-xl border-slate-200" {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -509,56 +422,12 @@ export default function EditEmailCampaign() {
                                             name="body"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Main Content</FormLabel>
+                                                    <FormLabel className="font-bold text-slate-700">Message Canvas</FormLabel>
                                                     <FormControl>
-                                                        <Textarea
-                                                            disabled={isLocked}
-                                                            className="min-h-[250px] resize-none"
-                                                            {...field}
+                                                        <Textarea 
+                                                            className="min-h-[350px] rounded-2xl border-slate-200 focus:border-[#00c3c0] focus:ring-[#00c3c0]/20" 
+                                                            {...field} 
                                                         />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <FormField
-                                                control={form.control}
-                                                name="ctaLabel"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Call to Action Button</FormLabel>
-                                                        <FormControl>
-                                                            <Input disabled={isLocked} {...field} />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-                                            <FormField
-                                                control={form.control}
-                                                name="ctaUrl"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Button Link (URL)</FormLabel>
-                                                        <FormControl>
-                                                            <Input disabled={isLocked} {...field} />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-                                        </div>
-
-                                        <FormField
-                                            control={form.control}
-                                            name="footerText"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>Footer Message</FormLabel>
-                                                    <FormControl>
-                                                        <Input disabled={isLocked} {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -567,40 +436,38 @@ export default function EditEmailCampaign() {
                                     </CardContent>
                                 </Card>
                             ) : (
-                                <div className="space-y-4">
-                                    <div className="flex justify-between items-center mb-2">
-                                        <h3 className="font-bold text-slate-800">Drip Step Sequence</h3>
-                                        {!isLocked && (
-                                            <Button 
-                                                type="button" 
-                                                size="sm" 
-                                                onClick={() => append({ dayOffset: 0, subject: '', templateKey: 'admin_custom', headline: '', body: '' })}
-                                            >
-                                                <Plus className="w-4 h-4 mr-1" /> Add Step
-                                            </Button>
-                                        )}
+                                <div className="space-y-6">
+                                    <div className="flex justify-between items-center bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                                        <div>
+                                            <h3 className="font-black text-slate-800 text-xl tracking-tight">Sequence <span className="text-[#ff8602]">Timeline</span></h3>
+                                            <p className="text-xs text-slate-500 font-bold uppercase tracking-widest text-opacity-70 mt-1">Lifecycle Management</p>
+                                        </div>
+                                        <Button type="button" size="sm" onClick={() => append({ dayOffset: 0, subject: '', templateKey: 'admin_custom', headline: '', body: '' })} className="bg-[#00c3c0] hover:bg-[#00c3c0]/90 rounded-xl px-5 border-none">
+                                            <Plus className="w-4 h-4 mr-2" /> Add Next Step
+                                        </Button>
                                     </div>
-                                    
+
                                     {fields.map((field, index) => (
-                                        <Card key={field.id} className="shadow-sm border-slate-200">
-                                            <div className="bg-slate-50 px-4 py-2 border-b flex justify-between items-center">
-                                                <span className="text-sm font-bold text-slate-600">STEP {index + 1}</span>
-                                                {!isLocked && (
-                                                    <Button type="button" variant="ghost" size="sm" onClick={() => remove(index)} className="text-red-500">
-                                                        <Trash2 className="w-4 h-4" />
-                                                    </Button>
-                                                )}
+                                        <Card key={field.id} className="shadow-sm border-slate-200 rounded-[24px] overflow-hidden border-l-4 border-l-[#ff8602]">
+                                            <div className="bg-slate-50/50 px-6 py-3 border-b border-slate-100 flex justify-between items-center">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-6 h-6 rounded-full bg-[#ff8602] text-white flex items-center justify-center text-[10px] font-black">S{index + 1}</div>
+                                                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Automation Segment Node</span>
+                                                </div>
+                                                <Button type="button" variant="ghost" size="sm" onClick={() => remove(index)} className="text-red-400 hover:text-red-600 rounded-lg">
+                                                    <Trash2 className="w-4 h-4" />
+                                                </Button>
                                             </div>
-                                            <CardContent className="pt-4 space-y-4">
-                                                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                            <CardContent className="pt-8 pb-10 px-10 space-y-6">
+                                                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                                                     <FormField
                                                         control={form.control}
                                                         name={`dripSteps.${index}.dayOffset`}
                                                         render={({ field }) => (
                                                             <FormItem>
-                                                                <FormLabel>Day Offset</FormLabel>
+                                                                <FormLabel className="font-bold text-slate-700">Delay (Days)</FormLabel>
                                                                 <FormControl>
-                                                                    <Input disabled={isLocked} type="number" {...field} />
+                                                                    <Input type="number" className="rounded-xl border-slate-200 focus:border-[#ff8602] focus:ring-[#ff8602]/10" {...field} />
                                                                 </FormControl>
                                                                 <FormMessage />
                                                             </FormItem>
@@ -612,14 +479,14 @@ export default function EditEmailCampaign() {
                                                             name={`dripSteps.${index}.templateKey`}
                                                             render={({ field }) => (
                                                                 <FormItem>
-                                                                    <FormLabel>Layout Template</FormLabel>
-                                                                    <Select disabled={isLocked} onValueChange={field.onChange} value={field.value}>
+                                                                    <FormLabel className="font-bold text-slate-700">Step Layout</FormLabel>
+                                                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                                         <FormControl>
-                                                                            <SelectTrigger>
+                                                                            <SelectTrigger className="rounded-xl border-slate-200">
                                                                                 <SelectValue />
                                                                             </SelectTrigger>
                                                                         </FormControl>
-                                                                        <SelectContent>
+                                                                        <SelectContent className="rounded-xl border-slate-200">
                                                                             {templates.map(t => (
                                                                                 <SelectItem key={t.key} value={t.key}>{t.label}</SelectItem>
                                                                             ))}
@@ -637,42 +504,44 @@ export default function EditEmailCampaign() {
                                                     name={`dripSteps.${index}.subject`}
                                                     render={({ field }) => (
                                                         <FormItem>
-                                                            <FormLabel>Subject</FormLabel>
+                                                            <FormLabel className="font-bold text-slate-700">Subject Line</FormLabel>
                                                             <FormControl>
-                                                                <Input disabled={isLocked} {...field} />
+                                                                <Input className="rounded-xl border-slate-200 focus:border-[#ff8602] focus:ring-[#ff8602]/10" {...field} />
                                                             </FormControl>
                                                             <FormMessage />
                                                         </FormItem>
                                                     )}
                                                 />
 
-                                                <FormField
-                                                    control={form.control}
-                                                    name={`dripSteps.${index}.headline`}
-                                                    render={({ field }) => (
-                                                        <FormItem>
-                                                            <FormLabel>Headline</FormLabel>
-                                                            <FormControl>
-                                                                <Input disabled={isLocked} {...field} />
-                                                            </FormControl>
-                                                            <FormMessage />
-                                                        </FormItem>
-                                                    )}
-                                                />
+                                                <div className="grid grid-cols-1 gap-6">
+                                                    <FormField
+                                                        control={form.control}
+                                                        name={`dripSteps.${index}.headline`}
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel className="font-bold text-slate-700">Headline Tag</FormLabel>
+                                                                <FormControl>
+                                                                    <Input className="rounded-xl border-slate-200 focus:border-[#ff8602] focus:ring-[#ff8602]/10" {...field} />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
 
-                                                <FormField
-                                                    control={form.control}
-                                                    name={`dripSteps.${index}.body`}
-                                                    render={({ field }) => (
-                                                        <FormItem>
-                                                            <FormLabel>Body</FormLabel>
-                                                            <FormControl>
-                                                                <Textarea disabled={isLocked} className="min-h-[100px]" {...field} />
-                                                            </FormControl>
-                                                            <FormMessage />
-                                                        </FormItem>
-                                                    )}
-                                                />
+                                                    <FormField
+                                                        control={form.control}
+                                                        name={`dripSteps.${index}.body`}
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel className="font-bold text-slate-700">Component Message</FormLabel>
+                                                                <FormControl>
+                                                                    <Textarea className="min-h-[150px] rounded-2xl border-slate-200 focus:border-[#ff8602] focus:ring-[#ff8602]/10" {...field} />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                </div>
                                             </CardContent>
                                         </Card>
                                     ))}

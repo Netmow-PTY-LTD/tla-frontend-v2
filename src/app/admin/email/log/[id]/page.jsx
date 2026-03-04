@@ -7,7 +7,7 @@ import { useGetCampaignLogQuery, useGetSingleEmailQuery } from '@/store/features
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, CheckCircle2, XCircle, Loader2, Mail, Users, AlertCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, XCircle, Loader2, Mail, Users, AlertCircle, Search } from 'lucide-react';
 import { DataTable } from '@/components/common/DataTable';
 
 export default function CampaignLogPage() {
@@ -24,8 +24,10 @@ export default function CampaignLogPage() {
             accessorKey: 'recipientEmail',
             header: 'Recipient Email',
             cell: ({ row }) => (
-                <div className="flex items-center gap-2 font-medium text-slate-700">
-                    <Mail className="w-4 h-4 text-slate-400" />
+                <div className="flex items-center gap-2 font-bold text-slate-700">
+                    <div className="p-1.5 rounded-lg bg-slate-50 border border-slate-100">
+                        <Mail className="w-3.5 h-3.5 text-slate-400" />
+                    </div>
                     {row.original.recipientEmail}
                 </div>
             ),
@@ -53,7 +55,7 @@ export default function CampaignLogPage() {
             accessorKey: 'sentAt',
             header: 'Timestamp',
             cell: ({ row }) => (
-                <div className="text-sm text-slate-500 font-medium">
+                <div className="text-xs text-slate-500 font-bold uppercase tracking-tighter">
                     {row.original.sentAt ? new Date(row.original.sentAt).toLocaleString() : '-'}
                 </div>
             ),
@@ -64,74 +66,93 @@ export default function CampaignLogPage() {
             cell: ({ row }) => {
                 const error = row.original.error;
                 return error ? (
-                    <div className="flex items-center gap-1.5 text-xs text-red-500 bg-red-50 p-1.5 rounded-lg border border-red-100 max-w-[400px]">
-                        <AlertCircle className="w-3 h-3 shrink-0" />
-                        <span className="truncate" title={error}>{error}</span>
+                    <div className="flex items-center gap-2 text-[10px] text-red-500 bg-red-50/50 p-2 rounded-xl border border-red-100 max-w-[350px]">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                        <span className="truncate font-bold" title={error}>{error}</span>
                     </div>
                 ) : (
-                    <span className="text-slate-400 italic text-xs">Delivered successfully</span>
+                    <span className="text-slate-400 font-bold text-[10px] uppercase tracking-widest pl-2">Confirmed Handover</span>
                 );
             },
         },
     ];
 
     return (
-        <div className="p-4 bg-slate-50 min-h-screen">
-            <div className="max-w-6xl mx-auto space-y-6">
-                <div className="flex items-center justify-between py-4 border-b">
-                    <div className="flex items-center gap-4">
-                        <Button variant="outline" size="icon" className="rounded-xl shadow-sm bg-white" onClick={() => router.back()}>
-                            <ArrowLeft className="w-4 h-4" />
+        <div className="p-6 bg-white min-h-screen">
+            <div className="max-w-7xl mx-auto space-y-8">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 py-6 border-b border-slate-50">
+                    <div className="flex items-center gap-5">
+                        <Button variant="outline" size="icon" onClick={() => router.back()} className="rounded-2xl border-slate-200 shadow-sm hover:bg-slate-50">
+                            <ArrowLeft className="w-5 h-5" />
                         </Button>
                         <div>
-                            <h2 className="text-2xl font-black text-slate-900 tracking-tight">Campaign Dispatch Logs</h2>
-                            <p className="text-slate-500 text-sm font-medium italic">Tracing deliveries for: <span className="text-primary not-italic font-bold">{campaign?.title || 'Segment Hub'}</span></p>
+                            <h2 className="text-4xl font-black text-slate-900 tracking-tight">Campaign <span className="text-[#00c3c0]">Logs</span></h2>
+                            <p className="text-slate-500 text-sm font-medium italic mt-1">Tracing deliveries for: <span className="text-slate-800 not-italic font-black decoration-[#00c3c0] underline underline-offset-4">{campaign?.title || 'Active Hub'}</span></p>
                         </div>
                     </div>
-                    {isFetching && <Loader2 className="w-5 h-5 animate-spin text-primary" />}
+                    <div className="flex items-center gap-4">
+                        {isFetching && (
+                            <div className="flex items-center gap-2 text-[#00c3c0] font-black text-xs uppercase tracking-widest">
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                Live Polling...
+                            </div>
+                        )}
+                    </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <Card className="border-none shadow-sm rounded-2xl bg-white overflow-hidden">
-                        <div className="h-1 bg-slate-200" />
-                        <CardHeader className="pb-2">
-                            <CardDescription className="flex items-center gap-1.5 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
-                                <Users className="w-3 h-3" /> Target Audience
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <Card className="border-none shadow-sm rounded-3xl bg-slate-50 overflow-hidden">
+                        <CardHeader className="pb-2 px-6">
+                            <CardDescription className="flex items-center gap-2 text-slate-400 font-black uppercase tracking-widest text-[10px]">
+                                <Users className="w-3.5 h-3.5" /> Total Audience
                             </CardDescription>
                         </CardHeader>
-                        <CardContent>
-                            <div className="text-3xl font-black text-slate-800 tracking-tighter">{campaign?.totalTargeted || 0}</div>
+                        <CardContent className="px-6 pb-6">
+                            <div className="text-4xl font-black text-slate-800 tracking-tighter">{campaign?.totalTargeted || 0}</div>
                         </CardContent>
                     </Card>
 
-                    <Card className="border-none shadow-sm rounded-2xl bg-white overflow-hidden">
-                        <div className="h-1 bg-green-500" />
-                        <CardHeader className="pb-2">
-                            <CardDescription className="flex items-center gap-1.5 text-green-600 font-bold uppercase tracking-wider text-[10px]">
-                                <CheckCircle2 className="w-3 h-3" /> Reached
+                    <Card className="border-none shadow-sm rounded-3xl bg-green-50/50 overflow-hidden border-b-4 border-b-green-500">
+                        <CardHeader className="pb-2 px-6">
+                            <CardDescription className="flex items-center gap-2 text-green-600 font-black uppercase tracking-widest text-[10px]">
+                                <CheckCircle2 className="w-3.5 h-3.5" /> Delivered
                             </CardDescription>
                         </CardHeader>
-                        <CardContent>
-                            <div className="text-3xl font-black text-green-700 tracking-tighter">{campaign?.sentCount || 0}</div>
+                        <CardContent className="px-6 pb-6">
+                            <div className="text-4xl font-black text-green-700 tracking-tighter">{campaign?.sentCount || 0}</div>
                         </CardContent>
                     </Card>
 
-                    <Card className="border-none shadow-sm rounded-2xl bg-white overflow-hidden">
-                        <div className="h-1 bg-red-500" />
-                        <CardHeader className="pb-2">
-                            <CardDescription className="flex items-center gap-1.5 text-red-600 font-bold uppercase tracking-wider text-[10px]">
-                                <XCircle className="w-3 h-3" /> Bounced / Failed
+                    <Card className="border-none shadow-sm rounded-3xl bg-red-50/50 overflow-hidden border-b-4 border-b-red-500">
+                        <CardHeader className="pb-2 px-6">
+                            <CardDescription className="flex items-center gap-2 text-red-600 font-black uppercase tracking-widest text-[10px]">
+                                <XCircle className="w-3.5 h-3.5" /> Failed
                             </CardDescription>
                         </CardHeader>
-                        <CardContent>
-                            <div className="text-3xl font-black text-red-700 tracking-tighter">{campaign?.failedCount || 0}</div>
+                        <CardContent className="px-6 pb-6">
+                            <div className="text-4xl font-black text-red-700 tracking-tighter">{campaign?.failedCount || 0}</div>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="border-none shadow-sm rounded-3xl bg-cyan-50/50 overflow-hidden border-b-4 border-b-[#00c3c0]">
+                        <CardHeader className="pb-2 px-6">
+                            <CardDescription className="flex items-center gap-2 text-[#00c3c0] font-black uppercase tracking-widest text-[10px]">
+                                <Mail className="w-3.5 h-3.5" /> Active Sequence
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="px-6 pb-6">
+                            <div className="text-4xl font-black text-[#00c3c0] tracking-tighter">{campaign?.isDrip ? 'ENABLED' : 'STATIC'}</div>
                         </CardContent>
                     </Card>
                 </div>
 
-                <Card className="border-none shadow-xl shadow-slate-200/50 rounded-3xl bg-white overflow-hidden">
-                    <CardHeader className="bg-slate-50 border-b px-8 py-5">
-                        <CardTitle className="text-lg font-bold">Granular Delivery Timeline</CardTitle>
+                <Card className="border-none shadow-2xl shadow-slate-100 rounded-3xl overflow-hidden bg-white">
+                    <CardHeader className="bg-slate-50 border-b px-8 py-5 flex flex-row items-center justify-between">
+                        <div>
+                            <CardTitle className="text-xl font-black text-slate-800">Timeline Analysis</CardTitle>
+                            <CardDescription className="text-xs font-medium">Detailed breakdown of every dispatched message node.</CardDescription>
+                        </div>
+                        <Search className="w-5 h-5 text-slate-300" />
                     </CardHeader>
                     <CardContent className="p-0">
                         <DataTable
