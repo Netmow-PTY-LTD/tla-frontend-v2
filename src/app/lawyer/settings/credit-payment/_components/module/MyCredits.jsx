@@ -53,18 +53,9 @@ const MyCredits = ({ setMyCreditsProgress }) => {
               <AccordionTrigger>What are credits?</AccordionTrigger>
               <AccordionContent className="flex flex-col gap-4 text-balance">
                 <p>
-                  Credits are the currency used within our platform to access
-                  premium features and services. You can purchase credits
-                  through various subscription plans or one-time payments. If
-                  you see a job that you like and you want to get in contact
-                  with that customer, then you use credits to purchase their
-                  contact details (you will receive their personal phone number
-                  and email address). The amount of credits required to contact
-                  a customer varies depending on the potential value of the job
-                  e.g. you will need less credits to contact a customer looking
-                  for a cleaner once a month for a 1 bedroomed flat than a
-                  customer looking for a cleaner once a week for a 5 bedroomed
-                  house.
+                  Credits are the currency used within our platform to access premium features and legal services. You can purchase credits through various subscription plans or one-time payments. If you see a legal case or client request that matches your expertise and you want to get in contact with that client, you will use credits to access their contact details (including their phone number and email address).
+
+                  The number of credits required to connect with a client varies depending on the complexity and potential value of the legal matter. For example, fewer credits may be required to contact a client seeking assistance with a simple document review, while more credits may be needed for a client requiring full legal representation in a complex court case.
                 </p>
               </AccordionContent>
             </AccordionItem>
