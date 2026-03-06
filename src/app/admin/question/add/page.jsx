@@ -253,6 +253,7 @@ export default function AddQuestionPage() {
         setTimeout(() => {
           router.push(`/admin/question/add`);
         }, 2000);
+        refetch();
       }
     } catch (error) {
       console.error('Error adding question:', error);
@@ -268,6 +269,7 @@ export default function AddQuestionPage() {
       const res = await deleteQuestion(id).unwrap();
       if (res) {
         showSuccessToast(res?.message);
+        refetch();
       }
     } catch (err) {
       // console.log('Error in deleting question', err);
