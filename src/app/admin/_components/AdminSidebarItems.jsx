@@ -72,29 +72,36 @@ export const AdminSidebarItems = {
           isActive: true,
         },
         {
-          title: 'Add New Email Template',
-          url: '/admin/email/template/add',
-          icon: PlusCircle,
-          isActive: true,
-        },
-        {
-          title: 'Email Campaigns',
-          url: '/admin/email/campaigns',
-          icon: List,
-          isActive: true,
-        },
-        {
-          title: 'Add New Email Campaign',
-          url: '/admin/email/campaigns/add',
-          icon: PlusCircle,
-          isActive: true,
-        },
-        {
-          title: 'Email Builder',
+          title: 'Email Template Builder',
           url: '/admin/email/builder',
           icon: Pencil,
           isActive: true,
         },
+        {
+          title: 'Email Categories',
+          url: '/admin/email/categories',
+          icon: List,
+          isActive: true,
+        },
+        // {
+        //   title: 'Add New Email Template',
+        //   url: '/admin/email/template/add',
+        //   icon: PlusCircle,
+        //   isActive: true,
+        // },
+        // {
+        //   title: 'Email Campaigns',
+        //   url: '/admin/email/campaigns',
+        //   icon: List,
+        //   isActive: true,
+        // },
+        // {
+        //   title: 'Add New Email Campaign',
+        //   url: '/admin/email/campaigns/add',
+        //   icon: PlusCircle,
+        //   isActive: true,
+        // },
+
       ],
     },
     {

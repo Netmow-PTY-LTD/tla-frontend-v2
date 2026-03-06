@@ -55,6 +55,46 @@ const emailApiService = baseApi.injectEndpoints({
             invalidatesTags: ['email-templates'],
         }),
 
+        // Email Categories CRUD
+        getAllEmailCategories: builder.query({
+            query: (params) => ({
+                url: '/email-templates/category',
+                method: 'GET',
+                params,
+            }),
+            providesTags: ['email-categories'],
+        }),
+        getSingleEmailCategory: builder.query({
+            query: (id) => ({
+                url: `/email-templates/category/${id}`,
+                method: 'GET',
+            }),
+            providesTags: ['email-categories'],
+        }),
+        createEmailCategory: builder.mutation({
+            query: (body) => ({
+                url: '/email-templates/category',
+                method: 'POST',
+                body,
+            }),
+            invalidatesTags: ['email-categories'],
+        }),
+        updateEmailCategory: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `/email-templates/category/${id}`,
+                method: 'PATCH',
+                body: data,
+            }),
+            invalidatesTags: ['email-categories'],
+        }),
+        deleteEmailCategory: builder.mutation({
+            query: (id) => ({
+                url: `/email-templates/category/${id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['email-categories'],
+        }),
+
         // Email Campaigns CRUD (api/v1/admin/email-campaigns) - Legacy/Continued
         getAllEmails: builder.query({
             query: (params) => ({
@@ -132,6 +172,13 @@ export const {
     useAddEmailTemplateMutation,
     useUpdateEmailTemplateMutation,
     useDeleteEmailTemplateMutation,
+
+    // Category Hooks
+    useGetAllEmailCategoriesQuery,
+    useGetSingleEmailCategoryQuery,
+    useCreateEmailCategoryMutation,
+    useUpdateEmailCategoryMutation,
+    useDeleteEmailCategoryMutation,
 
     // Campaign Hooks
     useGetAllEmailsQuery,

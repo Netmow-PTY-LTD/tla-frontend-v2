@@ -160,6 +160,7 @@ export const baseApi = createApi({
     'email',
     'email-campaigns',
     'email-templates',
+    'email-categories',
   ],
   endpoints: () => ({}),
 });

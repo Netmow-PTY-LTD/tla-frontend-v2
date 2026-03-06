@@ -15,6 +15,13 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogClose,
+} from '@/components/ui/dialog';
+import {
     MoreHorizontal,
     Plus,
     Trash2,
@@ -22,6 +29,9 @@ import {
     Eye,
     Layout,
     Clock,
+    Monitor,
+    Smartphone,
+    X,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
@@ -32,6 +42,11 @@ export default function EmailTemplateListPage() {
     const [page, setPage] = useState(1);
     const { data: templatesRes, isLoading, refetch } = useGetAllEmailTemplatesQuery({ page, limit: 10 });
     const [deleteEmailTemplate] = useDeleteEmailTemplateMutation();
+
+    // Preview state
+    const [previewTemplate, setPreviewTemplate] = useState(null);
+    const [showPreview, setShowPreview] = useState(false);
+    const [previewMode, setPreviewMode] = useState('desktop');
 
     const templates = templatesRes?.data || [];
 
@@ -113,7 +128,7 @@ export default function EmailTemplateListPage() {
                             <DropdownMenuLabel className="text-xs font-bold text-slate-400 uppercase tracking-widest px-2 pb-2">Actions</DropdownMenuLabel>
 
                             <DropdownMenuItem asChild>
-                                <Link href={`/admin/email/template/edit/${template._id}`} className="flex items-center gap-2 p-2 rounded-lg focus:bg-[#00c3c0]/5 focus:text-[#00c3c0]">
+                                <Link href={`/admin/email/builder?id=${template._id}`} className="flex items-center gap-2 p-2 rounded-lg focus:bg-[#00c3c0]/5 focus:text-[#00c3c0] cursor-pointer">
                                     <div className="w-8 h-8 rounded-lg bg-[#00c3c0]/10 flex items-center justify-center text-[#00c3c0]">
                                         <Edit className="h-4 w-4" />
                                     </div>
@@ -121,7 +136,13 @@ export default function EmailTemplateListPage() {
                                 </Link>
                             </DropdownMenuItem>
 
-                            <DropdownMenuItem className="flex items-center gap-2 p-2 rounded-lg focus:bg-cyan-50 focus:text-cyan-700">
+                            <DropdownMenuItem
+                                className="flex items-center gap-2 p-2 rounded-lg focus:bg-cyan-50 focus:text-cyan-700 cursor-pointer"
+                                onClick={() => {
+                                    setPreviewTemplate(template);
+                                    setShowPreview(true);
+                                }}
+                            >
                                 <div className="w-8 h-8 rounded-lg bg-cyan-50 flex items-center justify-center text-cyan-600">
                                     <Eye className="h-4 w-4" />
                                 </div>
@@ -131,7 +152,7 @@ export default function EmailTemplateListPage() {
                             <DropdownMenuSeparator className="bg-slate-100 my-1" />
 
                             <DropdownMenuItem
-                                className="flex items-center gap-2 p-2 rounded-lg focus:bg-red-50 focus:text-red-700 text-red-600"
+                                className="flex items-center gap-2 p-2 rounded-lg focus:bg-red-50 focus:text-red-700 text-red-600 cursor-pointer"
                                 onClick={() => handleDelete(template._id)}
                             >
                                 <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-600">
@@ -155,7 +176,7 @@ export default function EmailTemplateListPage() {
                         <p className="text-slate-500 mt-1 font-medium italic text-sm">Design and manage reusable structural blueprints for campaign delivery.</p>
                     </div>
                     <Button asChild className="bg-[#00c3c0] hover:bg-[#00c3c0]/90 text-white shadow-md shadow-[#00c3c0]/20 px-4 py-2.5 rounded-xl h-auto border-none transition-all hover:scale-[1.02]">
-                        <Link href="/admin/email/template/add" className="flex items-center gap-2">
+                        <Link href="/admin/email/builder" className="flex items-center gap-2">
                             <Plus className="w-4 h-4 font-bold" />
                             <span className="font-bold uppercase tracking-widest text-[10px]">New Template Design</span>
                         </Link>
@@ -171,6 +192,57 @@ export default function EmailTemplateListPage() {
                     />
                 </div>
             </div>
+
+            {/* Quick Preview Modal */}
+            <Dialog open={showPreview} onOpenChange={setShowPreview}>
+                <DialogContent className="max-w-[1000px] w-[95vw] h-[90vh] p-0 overflow-hidden flex flex-col rounded-3xl border-none shadow-2xl">
+                    <DialogHeader className="p-6 bg-slate-50 border-b flex flex-row items-center justify-between shrink-0">
+                        <div className="space-y-1">
+                            <DialogTitle className="text-xl font-black text-slate-900">
+                                Preview: <span className="text-[#00c3c0]">{previewTemplate?.title}</span>
+                            </DialogTitle>
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 italic truncate max-w-[500px]">
+                                Subject: {previewTemplate?.subject}
+                            </p>
+                        </div>
+
+                        <div className="flex items-center gap-3 pr-8">
+                            <div className="flex items-center gap-1 bg-white p-1 rounded-xl shadow-sm border border-slate-200">
+                                <button
+                                    onClick={() => setPreviewMode('desktop')}
+                                    className={`w-9 h-9 flex items-center justify-center rounded-lg transition-all ${previewMode === 'desktop' ? 'bg-[#00c3c0] text-white' : 'text-slate-400 hover:text-slate-600'}`}
+                                >
+                                    <Monitor className="w-4 h-4" />
+                                </button>
+                                <button
+                                    onClick={() => setPreviewMode('mobile')}
+                                    className={`w-9 h-9 flex items-center justify-center rounded-lg transition-all ${previewMode === 'mobile' ? 'bg-[#00c3c0] text-white' : 'text-slate-400 hover:text-slate-600'}`}
+                                >
+                                    <Smartphone className="w-4 h-4" />
+                                </button>
+                            </div>
+                        </div>
+                    </DialogHeader>
+
+                    <div className="flex-1 bg-slate-200/50 p-8 overflow-auto flex justify-center items-start transition-all duration-300">
+                        <div
+                            className="bg-white shadow-2xl transition-all duration-300 overflow-hidden rounded-xl border border-white"
+                            style={{
+                                width: previewMode === 'mobile' ? '375px' : '100%',
+                                maxWidth: previewMode === 'mobile' ? '375px' : '800px',
+                                minHeight: '100%'
+                            }}
+                        >
+                            <iframe
+                                title="Email Preview"
+                                srcDoc={previewTemplate?.body || ''}
+                                className="w-full h-full border-none min-h-[700px]"
+                                sandbox="allow-same-origin"
+                            />
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
