@@ -14,7 +14,8 @@ const authSlice = createSlice({
       const { user, token } = action.payload;
       state.user = user;
       state.token = token;
-      Cookies.set('token', token);
+      // Set token cookie to expire in 7 days to persist session across browser restarts
+      Cookies.set('token', token, { expires: 7 });
     },
     logOut: (state) => {
       state.user = null;

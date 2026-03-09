@@ -1,5 +1,4 @@
 'use client';
-import { LoaderSpinner } from '@/components/common/LoaderSpinner';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import FormWrapper from '@/components/form/FromWrapper';
 import TextInput from '@/components/form/TextInput';
@@ -9,7 +8,7 @@ import { useAuthLoginMutation, useAuthUserInfoQuery, useCachedUserDataMutation }
 import { setUser } from '@/store/features/auth/authSlice';
 import { verifyToken } from '@/utils/verifyToken';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -165,7 +164,7 @@ const LoginForm = () => {
               style={{ cursor: 'pointer' }}
               disabled={isLoading}
             >
-              {isLoading ? <LoaderSpinner /> : <span>Log In</span>}
+              {isLoading ? <div className='flex items-center gap-2'><Loader2 className='animate-spin w-4 h-4' /> <span>Logging In...</span></div> : <span>Log In</span>}
             </button>
           </div>
         </FormWrapper>

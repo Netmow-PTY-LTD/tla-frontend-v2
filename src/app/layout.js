@@ -37,11 +37,19 @@ export async function generateMetadata() {
   const slug =
     seoData.find((item) => item.pageKey.toLowerCase() === 'home')?.slug ||
     'home';
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/seo/by-slug/${slug}`
-  );
-  const seoMetadata = await res.json();
-  const seo = seoMetadata?.data || {};
+  let seo = {};
+  
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/seo/by-slug/${slug}`
+    );
+    if (res.ok) {
+      const seoMetadata = await res.json();
+      seo = seoMetadata?.data || {};
+    }
+  } catch (error) {
+    console.warn('Error fetching SEO metadata in layout:', error.message);
+  }
 
   const metaTitle = seo.metaTitle || 'About TheLawApp | Our Mission and Vision';
   const metaDescription =
@@ -52,11 +60,18 @@ export async function generateMetadata() {
     seo.metaImage ||
     'https://thelawapp.syd1.digitaloceanspaces.com/thelawapp/seo/metaimages/about.webp';
 
-  const result = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/admin/settings`
-  );
-
-  const setting = await result.json();
+  let setting = null;
+  
+  try {
+    const result = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/admin/settings`
+    );
+    if (result.ok) {
+      setting = await result.json();
+    }
+  } catch (error) {
+    console.warn('Error fetching admin settings in generateMetadata:', error.message);
+  }
   const favicon = setting?.data?.favicon || '/assets/img/favicon.ico';
 
   return {

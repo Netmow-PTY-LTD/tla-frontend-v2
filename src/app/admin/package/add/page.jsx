@@ -192,10 +192,44 @@ export default function Page() {
       ),
     },
     {
+      id: 'discountedPrice',
+      header: 'Discounted Price',
+      cell: ({ row }) => {
+        const price = Number(row.getValue('price'));
+        const discountPercentage = Number(row.getValue('discountPercentage'));
+        const credit = Number(row.getValue('credit'));
+
+        if (discountPercentage && discountPercentage > 0) {
+          const discountedPrice = price - (price * discountPercentage) / 100;
+          const discountedPricePerCredit = discountedPrice / credit;
+          return (
+            <div className="flex flex-col">
+              <span className="font-semibold text-green-600">
+                {discountedPrice.toFixed(2)}
+              </span>
+              <span className="text-xs text-slate-500 font-medium">
+                {discountedPricePerCredit.toFixed(2)} / credit
+              </span>
+            </div>
+          );
+        }
+        return <div className="text-slate-400">-</div>;
+      },
+    },
+    {
       accessorKey: 'country',
       header: 'Country',
       cell: ({ row }) => (
         <div className="capitalize">{row.original.country?.name || '-'}</div>
+      ),
+    },
+    {
+      id: 'currency',
+      header: 'Currency',
+      cell: ({ row }) => (
+        <div className="uppercase font-medium">
+          {row.original.country?.currency || '-'}
+        </div>
       ),
     },
     {

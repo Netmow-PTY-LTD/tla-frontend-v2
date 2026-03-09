@@ -82,8 +82,8 @@ export default function EditZipCodeModal({ open, onClose, zipId }) {
         zipcode: singleZipCode?.data?.zipcode,
         countryId: singleZipCode?.data?.countryId?._id,
         postalCode: singleZipCode?.data?.postalCode,
-        latitude: singleZipCode?.data?.latitude,
-        longitude: singleZipCode?.data?.longitude,
+        latitude: String(singleZipCode?.data?.latitude),
+        longitude: String(singleZipCode?.data?.longitude),
       });
       setIsLocalLoading(false);
     }
@@ -96,8 +96,8 @@ export default function EditZipCodeModal({ open, onClose, zipId }) {
         zipcode: values.zipcode,
         countryId: values.countryId,
         postalCode: values.postalCode,
-        latitude: values.latitude,
-        longitude: values.longitude,
+        latitude: Number(values.latitude),
+        longitude: Number(values.longitude),
       };
       const res = await editZipCode(payload).unwrap();
       showSuccessToast(res?.message || 'Zip Code updated successfully!');
@@ -176,7 +176,7 @@ export default function EditZipCodeModal({ open, onClose, zipId }) {
                 name="latitude"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Post Code</FormLabel>
+                    <FormLabel>latitude</FormLabel>
                     <FormControl>
                       <Input placeholder="Enter latitude" {...field} />
                     </FormControl>
@@ -190,7 +190,7 @@ export default function EditZipCodeModal({ open, onClose, zipId }) {
                 name="longitude"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Post Code</FormLabel>
+                    <FormLabel>longitude</FormLabel>
                     <FormControl>
                       <Input placeholder="Enter longitude" {...field} />
                     </FormControl>

@@ -29,12 +29,16 @@ import React, { useEffect, useMemo, useState } from 'react';
 import CreateZipCodeModal from '../../_components/modal/CreateZipCodeModal';
 import EditZipCodeModal from '../../_components/modal/EditZipCodeModal';
 import { ZipCodeDataTable } from '../_components/ZipCodeTable';
+import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
+
 
 export default function Page() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedZipId, setSelectedZipId] = useState(null);
+  const [deleteModalId, setDeleteModalId] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
+
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
@@ -73,15 +77,10 @@ export default function Page() {
   const [zipCodeDelete] = useDeleteZipCodeMutation();
 
   const handleDeleteZipCode = async (id) => {
-    const confirmDelete = window.confirm(
-      'Are you sure you want to delete this zip code?'
-    );
-
-    if (!confirmDelete) return;
-
     try {
       const res = await zipCodeDelete(id).unwrap();
       if (res) {
+
         showSuccessToast(res?.message);
         refetchCountry();
       }
@@ -184,10 +183,11 @@ export default function Page() {
               <DropdownMenuItem>
                 <div
                   className="flex gap-2 cursor-pointer py-1 px-2"
-                  onClick={() => handleDeleteZipCode(item?._id)}
+                  onClick={() => setDeleteModalId(item?._id)}
                 >
                   <Trash2 className="w-4 h-4" /> Delete
                 </div>
+
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -252,6 +252,17 @@ export default function Page() {
         isFetching={isFetching}
         isZipCodeListLoading={isZipCodeListLoading}
       />
+      {deleteModalId && (
+        <ConfirmationModal
+          open={!!deleteModalId}
+          onOpenChange={() => setDeleteModalId(null)}
+          onConfirm={() => handleDeleteZipCode(deleteModalId)}
+          title="Are you sure you want to delete this zip code?"
+          description="This action cannot be undone. So please proceed with caution."
+          cancelText="No"
+        />
+      )}
     </div>
+
   );
 }

@@ -1,10 +1,17 @@
 export async function generateSchemaBySlug(slug, seo = {}) {
   const siteUrl = `${process.env.NEXT_PUBLIC_SITE_URL}`;
-  const result = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/admin/settings`
-  );
-
-  const setting = await result.json();
+  let setting = null;
+  
+  try {
+    const result = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/admin/settings`
+    );
+    if (result.ok) {
+      setting = await result.json();
+    }
+  } catch (error) {
+    console.warn('Error fetching website schema settings:', error.message);
+  }
   const logo = setting?.data?.appLogo || `/assets/img/logo.png`;
 
   const organization = {

@@ -84,9 +84,10 @@ export default function Page() {
     const selectedServiceIds = selectedServices.map((service) => service._id);
 
     if (!selectedCountry || selectedServiceIds.length === 0) {
-      alert('Please select a country and at least one service.');
+      showErrorToast('Please select a country and at least one service.');
       return;
     }
+
 
     try {
       await editCountrywiseServices({
