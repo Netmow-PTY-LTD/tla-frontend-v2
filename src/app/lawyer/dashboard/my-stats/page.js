@@ -57,7 +57,7 @@ const MyStatsPage = () => {
           />
 
           <CreditsStatsCard />
-          <Card className="flex-1 flex flex-col shadow-sm rounded-2xl">
+          <Card className="flex-1 flex flex-col shadow-sm rounded-2xl w-full">
             <div>
               <h2 className="font-medium flex items-center text-lg p-4">
                 Lead Notifications
@@ -81,7 +81,7 @@ const MyStatsPage = () => {
               </div>
             </div>
 
-            <div className="mt-4 px-4">
+            <div className="mt-4 px-4 pb-4">
               <hr className="border-t border-[#D9D9D9]" />
 
               <div className="font-medium flex items-center gap-2 text-lg mt-4">
@@ -110,11 +110,11 @@ const MyStatsPage = () => {
             </div>
           </Card>
 
-          <LeadStatsCard
+          {/* <LeadStatsCard
             className="flex-1"
             locations={leadServicesData?.data?.locations || []}
             profile={profileData}
-          />
+          /> */}
         </div>
 
         <Card className="p-6">
@@ -131,10 +131,70 @@ const MyStatsPage = () => {
                 <PencilIcon className="w-5 h-5" />
               </Link>
             </div>
-            <div
-              className="bg-gray-100 p-4 rounded-lg text-gray-700 leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: bio || fallbackBio }}
-            ></div>
+            <div className="profile-about">
+              <div
+                className="bg-gray-100 p-4 rounded-lg text-gray-700 leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: bio || fallbackBio }}
+              ></div>
+              <style>{`
+        .profile-about p {
+          color: #374151;
+          line-height: 1.5;
+          font-size: 15px;
+          margin-bottom: 20px;
+        }
+
+        .profile-about ul li{
+        margin-bottom: 8px;
+        }
+        .profile-about ul li p{
+        margin-bottom: 0;
+        }
+
+        .profile-about blockquote {
+          color: #374151;
+          line-height: 1.5;
+          }
+
+          .profile-about ul {
+            color: #374151;
+            line-height: 1.5;
+          }
+
+          .profile-about h1 {
+            color: #374151;
+            line-height: 1.5;
+          }
+
+          .profile-about h3 {
+            color: #374151;
+            line-height: 1.5;
+            margin-bottom: 10px;
+          }
+
+          .profile-about h4 {
+            color: #374151;
+            line-height: 1.5;
+            margin-bottom: 10px;
+          }
+
+          .profile-about h5 {
+            color: #374151;
+            line-height: 1.5;
+            margin-bottom: 10px;
+          }
+
+          .profile-about h6 {
+            color: #374151;
+            line-height: 1.5;
+            margin-bottom: 10px;
+          }
+          .profile-about p:not(:last-child) {
+            margin-bottom: 10px;
+          }
+        `}
+              </style>
+            </div>
           </div>
         </Card>
         {/* <LeadSettings className="h-full " /> */}

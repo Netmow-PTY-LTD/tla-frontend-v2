@@ -262,7 +262,7 @@ export default function EmailTemplateListPage() {
     return (
         <div className="p-4 bg-[#f8fafc] min-h-screen">
             <div className="max-w-7xl mx-auto space-y-4">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 py-8">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pt-8 pb-4">
                     <div>
                         <h1 className="text-4xl font-black text-slate-900 tracking-tight">Email <span className="text-[#00c3c0]">Templates</span></h1>
                         <p className="text-slate-500 mt-1 font-medium italic text-sm">Design and manage reusable structural blueprints for campaign delivery.</p>
@@ -291,7 +291,7 @@ export default function EmailTemplateListPage() {
                     </div>
                 </div>
 
-                <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/60 p-6 border border-slate-100">
+                <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/60 px-6 py-4 border border-slate-100">
                     <EmailTemplateSortableTable
                         columns={columns}
                         data={templates}
