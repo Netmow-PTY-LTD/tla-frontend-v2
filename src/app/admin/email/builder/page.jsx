@@ -102,6 +102,9 @@ const defaultBlockStyles = {
     backgroundColor: '#FFFFFF',
     color: '#1e293b',
     fontSize: 16,
+    lineHeight: 1.5,
+    letterSpacing: 0,
+    textTransform: 'none',
     textAlign: 'left',
     borderRadius: 0,
     fontWeight: 'normal',
@@ -332,6 +335,9 @@ function BlockRenderer({ block, onUpdateContent }) {
     const textStyle = {
         color: s.color,
         fontSize: s.fontSize,
+        lineHeight: s.lineHeight || 1.5,
+        letterSpacing: `${s.letterSpacing || 0}px`,
+        textTransform: s.textTransform || 'none',
         textAlign: s.textAlign,
         fontWeight: s.fontWeight || 'normal',
         fontStyle: s.fontStyle || 'normal',
@@ -369,6 +375,11 @@ function BlockRenderer({ block, onUpdateContent }) {
                                 onUpdateContent(block.id, newHTML);
                             }
                         }}
+                        onPaste={(e) => {
+                            e.preventDefault();
+                            const text = e.clipboardData.getData('text/plain');
+                            document.execCommand('insertText', false, text);
+                        }}
                         className="prose prose-slate max-w-none outline-none focus:ring-2 focus:ring-[#00c3c0]/10 rounded px-1 transition-all"
                     />
                 </div>
@@ -397,6 +408,11 @@ function BlockRenderer({ block, onUpdateContent }) {
                             if (newText !== block.text) {
                                 onUpdateContent(block.id, newText, 'text');
                             }
+                        }}
+                        onPaste={(e) => {
+                            e.preventDefault();
+                            const text = e.clipboardData.getData('text/plain');
+                            document.execCommand('insertText', false, text);
                         }}
                         className="outline-none focus:ring-2 focus:ring-white/50 px-1 rounded transition-all"
                         style={{
@@ -442,8 +458,8 @@ function blockToHTML(block) {
             const extraStyles = block.type === BLOCK_TYPES.LIST ? `li::marker { color: ${s.bulletColor || s.color || '#00c3c0'}; }` : '';
             const listIdAttr = block.type === BLOCK_TYPES.LIST ? `id="blk-${block.id}"` : '';
             const content = block.type === BLOCK_TYPES.LIST
-                ? `<style>#blk-${block.id} li::marker { color: ${s.bulletColor || s.color || '#00c3c0'}; }</style><div ${listIdAttr} style="color:${s.color};font-size:${s.fontSize}px;text-align:${s.textAlign};font-weight:${s.fontWeight || 'normal'};font-style:${s.fontStyle || 'normal'};text-decoration:${s.textDecoration || 'none'};">${block.content}</div>`
-                : `<div style="color:${s.color};font-size:${s.fontSize}px;text-align:${s.textAlign};font-weight:${s.fontWeight || 'normal'};font-style:${s.fontStyle || 'normal'};text-decoration:${s.textDecoration || 'none'};">${block.content}</div>`;
+                ? `<style>#blk-${block.id} li::marker { color: ${s.bulletColor || s.color || '#00c3c0'}; }</style><div ${listIdAttr} style="color:${s.color};font-size:${s.fontSize}px;line-height:${s.lineHeight || 1.5};letter-spacing:${s.letterSpacing || 0}px;text-transform:${s.textTransform || 'none'};text-align:${s.textAlign};font-weight:${s.fontWeight || 'normal'};font-style:${s.fontStyle || 'normal'};text-decoration:${s.textDecoration || 'none'};">${block.content}</div>`
+                : `<div style="color:${s.color};font-size:${s.fontSize}px;line-height:${s.lineHeight || 1.5};letter-spacing:${s.letterSpacing || 0}px;text-transform:${s.textTransform || 'none'};text-align:${s.textAlign};font-weight:${s.fontWeight || 'normal'};font-style:${s.fontStyle || 'normal'};text-decoration:${s.textDecoration || 'none'};">${block.content}</div>`;
             return wrap(content);
         }
         case BLOCK_TYPES.IMAGE:
@@ -757,6 +773,32 @@ function PropertyPanel({ block, onUpdate, blocks, setBlocks, templateKey, setTem
                                                     className="h-8 w-14 text-right text-xs font-mono font-bold border-slate-200 rounded-lg p-1.5 focus:ring-[#00c3c0]/50"
                                                 />
                                             </div>
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-[10px] text-slate-400 w-20 shrink-0">Line Height</span>
+                                                <input type="range" min={1} max={3} step={0.1} value={s.lineHeight || 1.5} onChange={(e) => set('lineHeight', Number(e.target.value))} className="flex-1 accent-[#00c3c0]" />
+                                                <Input
+                                                    type="number"
+                                                    min={1}
+                                                    max={3}
+                                                    step={0.1}
+                                                    value={s.lineHeight || 1.5}
+                                                    onChange={(e) => set('lineHeight', Number(e.target.value))}
+                                                    className="h-8 w-14 text-right text-xs font-mono font-bold border-slate-200 rounded-lg p-1.5 focus:ring-[#00c3c0]/50"
+                                                />
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-[10px] text-slate-400 w-20 shrink-0">Letter Spacing</span>
+                                                <input type="range" min={-2} max={10} step={0.5} value={s.letterSpacing || 0} onChange={(e) => set('letterSpacing', Number(e.target.value))} className="flex-1 accent-[#00c3c0]" />
+                                                <Input
+                                                    type="number"
+                                                    min={-2}
+                                                    max={10}
+                                                    step={0.5}
+                                                    value={s.letterSpacing || 0}
+                                                    onChange={(e) => set('letterSpacing', Number(e.target.value))}
+                                                    className="h-8 w-14 text-right text-xs font-mono font-bold border-slate-200 rounded-lg p-1.5 focus:ring-[#00c3c0]/50"
+                                                />
+                                            </div>
                                             <div className="flex gap-1.5">
                                                 {[
                                                     { align: 'left', icon: AlignLeft },
@@ -774,6 +816,7 @@ function PropertyPanel({ block, onUpdate, blocks, setBlocks, templateKey, setTem
                                                     { label: 'Bold', icon: Bold, key: 'fontWeight', activeVal: 'bold', normalVal: 'normal' },
                                                     { label: 'Italic', icon: Italic, key: 'fontStyle', activeVal: 'italic', normalVal: 'normal' },
                                                     { label: 'Underline', icon: Underline, key: 'textDecoration', activeVal: 'underline', normalVal: 'none' },
+                                                    { label: 'Uppercase', icon: Type, key: 'textTransform', activeVal: 'uppercase', normalVal: 'none' },
                                                 ].map(({ label, icon: Icon, key, activeVal, normalVal }) => (
                                                     <button
                                                         key={label}
@@ -1062,7 +1105,7 @@ function SaveModal({ open, onClose, onConfirm, isSaving, initialData, globalTemp
                     <p className="text-slate-500 text-sm mt-1 italic">Your design will be exported as HTML and saved.</p>
                 </div>
 
-                <div className="space-y-4 max-h-[80vh] overflow-y-auto">
+                <div className="space-y-4 max-h-[60vh] overflow-y-auto">
                     {/* Title */}
                     <div className="space-y-1.5">
                         <Label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Template Title</Label>

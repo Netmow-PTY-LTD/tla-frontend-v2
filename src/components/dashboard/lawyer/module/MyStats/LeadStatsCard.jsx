@@ -17,6 +17,7 @@ import Link from 'next/link';
 import PropTypes from 'prop-types';
 
 const LeadStatsCard = ({ locations, profile }) => {
+  console.log('profile', profile);
   const { data: allMyLeads, isLoading: isAllMyLeadsLoading } =
     useGetAllMyLeadsQuery(
       { page: 1, limit: 10 },
@@ -122,6 +123,7 @@ const LeadStatsCard = ({ locations, profile }) => {
               View Cases
             </button>
           </Link>
+
           <Link href="/client/dashboard/add-new-case">
             <button className="px-[19px] py-2 text-white font-medium bg-[#00C3C0] rounded-full text-sm sm:text-base">
               Add New Case
