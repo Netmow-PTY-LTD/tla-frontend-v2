@@ -1,11 +1,20 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import {
     useGetAllEmailTemplatesQuery,
     useDeleteEmailTemplateMutation,
+    useUpdateEmailTemplateMutation,
+    useGetAllEmailCategoriesQuery,
 } from '@/store/features/admin/emailApiService';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -32,23 +41,48 @@ import {
     Monitor,
     Smartphone,
     X,
+    GripVertical,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import Link from 'next/link';
-import { DataTable } from '@/components/common/DataTable';
+import { EmailTemplateSortableTable } from './_components/EmailTemplateSortableTable';
+import { useRowSortable } from './_components/EmailTemplateSortableTable';
+
+// Reusable Drag Handle Component for the Column
+function DragHandle() {
+    const { attributes, listeners } = useRowSortable();
+    return (
+        <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing p-1 text-slate-300 hover:text-slate-500 transition-colors">
+            <GripVertical className="w-4 h-4" />
+        </div>
+    );
+}
 
 export default function EmailTemplateListPage() {
     const [page, setPage] = useState(1);
-    const { data: templatesRes, isLoading, refetch } = useGetAllEmailTemplatesQuery({ page, limit: 10 });
+    const [categoryId, setCategoryId] = useState('all');
+
+    const { data: categoriesRes } = useGetAllEmailCategoriesQuery({ page: 1, limit: 100 });
+    const categories = categoriesRes?.data || [];
+
+    const { data: templatesRes, isLoading, refetch } = useGetAllEmailTemplatesQuery({
+        page,
+        limit: 10,
+        categoryId: categoryId === 'all' ? undefined : categoryId
+    });
     const [deleteEmailTemplate] = useDeleteEmailTemplateMutation();
+    const [updateEmailTemplate] = useUpdateEmailTemplateMutation();
 
     // Preview state
     const [previewTemplate, setPreviewTemplate] = useState(null);
     const [showPreview, setShowPreview] = useState(false);
     const [previewMode, setPreviewMode] = useState('desktop');
 
-    const templates = templatesRes?.data || [];
+    const templates = useMemo(() => {
+        if (!templatesRes?.data) return [];
+        return [...templatesRes.data].sort((a, b) => (a.step || 0) - (b.step || 0));
+    }, [templatesRes?.data]);
 
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure you want to delete this template?')) {
@@ -62,7 +96,60 @@ export default function EmailTemplateListPage() {
         }
     };
 
+    const handleReorder = async (reorderedData) => {
+        try {
+            // Identify the items that need a step update
+            // For simplicity and matching the request, we can update the items whose index changed
+            // Or just update the one that was moved.
+            // Requirement: "here in payload templateid and step will be sent"
+
+            // Find the moved item by comparing current templates with reordered data
+            // However, a better approach for UX is to update all affected items' steps
+
+            for (let i = 0; i < reorderedData.length; i++) {
+                const item = reorderedData[i];
+                const newStep = i + 1;
+
+                // Only update if the step actually changed relative to its position in the current list
+                // If the API is efficient, this is fine.
+                if (item.step !== newStep) {
+                    const payload = {
+                        title: item.title,
+                        subject: item.subject,
+                        categoryId: item.categoryId?._id || item.categoryId,
+                        step: newStep,
+                        delayTime: item.delayTime, // already in ms from builder
+                        body: item.body,
+                        isActive: item.isActive ?? true
+                    };
+
+                    await updateEmailTemplate({ id: item._id, data: payload }).unwrap();
+                }
+            }
+            showSuccessToast('Templates reordered successfully.');
+            refetch();
+        } catch (error) {
+            showErrorToast('Failed to sync new order.');
+            console.error('Reorder error:', error);
+        }
+    };
+
     const columns = [
+        {
+            id: 'order',
+            header: 'Order',
+            cell: ({ row }) => {
+                const index = row.index;
+                return (
+                    <div className="flex items-center gap-2">
+                        <DragHandle />
+                        <span className="text-slate-500 font-bold bg-slate-100 w-6 h-6 rounded-full flex items-center justify-center text-[10px]">
+                            {index + 1}
+                        </span>
+                    </div>
+                );
+            },
+        },
         {
             accessorKey: 'title',
             header: 'Template Name',
@@ -85,15 +172,6 @@ export default function EmailTemplateListPage() {
             ),
         },
         {
-            accessorKey: 'templateType',
-            header: 'Entity',
-            cell: ({ row }) => (
-                <Badge className="bg-cyan-50 text-cyan-700 border-cyan-100 capitalize font-medium">
-                    {row.getValue('templateType') || 'Generic'}
-                </Badge>
-            ),
-        },
-        {
             accessorKey: 'subject',
             header: 'Email Subject',
             cell: ({ row }) => (
@@ -101,6 +179,20 @@ export default function EmailTemplateListPage() {
                     {row.getValue('subject')}
                 </div>
             ),
+        },
+        {
+            accessorKey: 'categoryId',
+            header: 'Category',
+            cell: ({ row }) => {
+                const categoryId = row.getValue('categoryId');
+                return categoryId ? (
+                    <Badge variant="secondary" className="bg-purple-50 text-purple-700 border-purple-100 font-medium">
+                        {categoryId?.name || 'Unknown Category'}
+                    </Badge>
+                ) : (
+                    <span className="text-slate-400 text-xs italic">Uncategorized</span>
+                );
+            },
         },
         {
             accessorKey: 'createdAt',
@@ -168,27 +260,44 @@ export default function EmailTemplateListPage() {
     ];
 
     return (
-        <div className="p-4 bg-white min-h-screen">
-            <div className="max-w-7xl mx-auto space-y-6">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 py-6 border-b border-slate-100">
+        <div className="p-4 bg-[#f8fafc] min-h-screen">
+            <div className="max-w-7xl mx-auto space-y-4">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 py-8">
                     <div>
-                        <h1 className="text-4xl font-black text-slate-900 tracking-tight">Email <span className="text-[#ff8602]">Templates</span></h1>
+                        <h1 className="text-4xl font-black text-slate-900 tracking-tight">Email <span className="text-[#00c3c0]">Templates</span></h1>
                         <p className="text-slate-500 mt-1 font-medium italic text-sm">Design and manage reusable structural blueprints for campaign delivery.</p>
                     </div>
-                    <Button asChild className="bg-[#00c3c0] hover:bg-[#00c3c0]/90 text-white shadow-md shadow-[#00c3c0]/20 px-4 py-2.5 rounded-xl h-auto border-none transition-all hover:scale-[1.02]">
-                        <Link href="/admin/email/builder" className="flex items-center gap-2">
-                            <Plus className="w-4 h-4 font-bold" />
-                            <span className="font-bold uppercase tracking-widest text-[10px]">New Template Design</span>
-                        </Link>
-                    </Button>
+                    <div className="flex flex-wrap items-center gap-3">
+                        <Select value={categoryId} onValueChange={setCategoryId}>
+                            <SelectTrigger className="w-[250px] h-10 rounded-xl bg-white border-slate-200 shadow-sm">
+                                <SelectValue placeholder="All Categories" />
+                            </SelectTrigger>
+                            <SelectContent className="rounded-xl border-slate-200">
+                                <SelectItem value="all">All Categories</SelectItem>
+                                {categories.map((cat) => (
+                                    <SelectItem key={cat._id} value={cat._id}>
+                                        {cat.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+
+                        <Button asChild className="bg-[#00c3c0] hover:bg-[#00c3c0]/90 text-white shadow-lg shadow-[#00c3c0]/20 px-5 py-2.5 rounded-xl h-auto border-none transition-all hover:scale-[1.02] active:scale-95">
+                            <Link href="/admin/email/builder" className="flex items-center gap-2">
+                                <Plus className="w-4 h-4 font-bold" />
+                                <span className="font-bold uppercase tracking-widest text-[10px]">New Template Design</span>
+                            </Link>
+                        </Button>
+                    </div>
                 </div>
 
-                <div className="rounded-3xl overflow-hidden bg-white">
-                    <DataTable
+                <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/60 p-6 border border-slate-100">
+                    <EmailTemplateSortableTable
                         columns={columns}
                         data={templates}
                         isFetching={isLoading}
                         searchColumn="title"
+                        onReorder={handleReorder}
                     />
                 </div>
             </div>

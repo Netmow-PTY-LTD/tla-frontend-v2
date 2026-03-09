@@ -55,10 +55,10 @@ export default function EmailCategoriesPage() {
             cell: ({ row }) => (
                 <div className="flex flex-col">
                     <span className="font-bold text-slate-800 flex items-center gap-2">
-                        <List className="w-4 h-4 text-slate-400" />
+                        {/* <List className="w-4 h-4 text-slate-400" /> */}
                         {row.getValue('name')}
                     </span>
-                    <span className="text-[10px] text-slate-400 font-medium uppercase tracking-tighter ml-6">
+                    <span className="text-[10px] text-slate-400 font-medium uppercase tracking-tighter">
                         ID: {row.original._id}
                     </span>
                 </div>
@@ -71,15 +71,6 @@ export default function EmailCategoriesPage() {
                 <div className="max-w-[300px] truncate text-slate-500 text-xs text-wrap italic">
                     {row.getValue('description') || 'No description provided.'}
                 </div>
-            ),
-        },
-        {
-            accessorKey: 'slug',
-            header: 'Slug',
-            cell: ({ row }) => (
-                <Badge variant="outline" className="bg-slate-50 text-slate-600 border-slate-200 font-mono text-[11px]">
-                    {row.getValue('slug')}
-                </Badge>
             ),
         },
         {

@@ -83,7 +83,6 @@ export default function AddEmailCategoryDrawer({ open, onOpenChange }) {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
-                                        <List className="w-3.5 h-3.5 text-slate-400" />
                                         Category Name
                                     </FormLabel>
                                     <FormControl>
