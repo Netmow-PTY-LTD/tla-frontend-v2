@@ -67,8 +67,8 @@ export default function EmailTemplateListPage() {
     const categories = categoriesRes?.data || [];
 
     const { data: templatesRes, isLoading, refetch } = useGetAllEmailTemplatesQuery({
-        page,
-        limit: 10,
+        page: 1,
+        limit: 1000,
         categoryId: categoryId === 'all' ? undefined : categoryId
     });
     const [deleteEmailTemplate] = useDeleteEmailTemplateMutation();

@@ -113,6 +113,12 @@ const defaultBlockStyles = {
     bulletColor: '#00c3c0',
     buttonPaddingX: 28,
     buttonPaddingY: 10,
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    borderColor: '#e2e8f0',
+    borderStyle: 'solid',
 };
 
 function newBlock(type, extra = {}) {
@@ -278,6 +284,12 @@ function SortableBlock({ block, isSelected, onSelect, onDelete, selectedId, onDe
                         paddingRight: block.styles?.paddingRight,
                         backgroundColor: block.styles?.backgroundColor,
                         borderRadius: block.styles?.borderRadius,
+                        borderTopWidth: `${block.styles?.borderTopWidth || 0}px`,
+                        borderBottomWidth: `${block.styles?.borderBottomWidth || 0}px`,
+                        borderLeftWidth: `${block.styles?.borderLeftWidth || 0}px`,
+                        borderRightWidth: `${block.styles?.borderRightWidth || 0}px`,
+                        borderColor: block.styles?.borderColor || '#e2e8f0',
+                        borderStyle: block.styles?.borderStyle || 'solid',
                     }}
                     className={`mt-2 gap-2 ${viewMode === 'mobile' ? 'flex flex-col' : 'flex'}`}
                 >
@@ -331,6 +343,12 @@ function BlockRenderer({ block, onUpdateContent }) {
         paddingLeft: s.paddingLeft, paddingRight: s.paddingRight,
         backgroundColor: s.backgroundColor,
         borderRadius: s.borderRadius,
+        borderTopWidth: `${s.borderTopWidth || 0}px`,
+        borderBottomWidth: `${s.borderBottomWidth || 0}px`,
+        borderLeftWidth: `${s.borderLeftWidth || 0}px`,
+        borderRightWidth: `${s.borderRightWidth || 0}px`,
+        borderColor: s.borderColor || '#e2e8f0',
+        borderStyle: s.borderStyle || 'solid',
     };
     const textStyle = {
         color: s.color,
@@ -395,6 +413,12 @@ function BlockRenderer({ block, onUpdateContent }) {
                 <div style={{
                     paddingTop: s.paddingTop, paddingBottom: s.paddingBottom,
                     paddingLeft: s.paddingLeft, paddingRight: s.paddingRight,
+                    borderTopWidth: `${s.borderTopWidth || 0}px`,
+                    borderBottomWidth: `${s.borderBottomWidth || 0}px`,
+                    borderLeftWidth: `${s.borderLeftWidth || 0}px`,
+                    borderRightWidth: `${s.borderRightWidth || 0}px`,
+                    borderColor: s.borderColor || '#e2e8f0',
+                    borderStyle: s.borderStyle || 'solid',
                     display: 'flex',
                     justifyContent: s.textAlign === 'center' ? 'center' : s.textAlign === 'right' ? 'flex-end' : 'flex-start',
                 }}>
@@ -448,8 +472,8 @@ function BlockRenderer({ block, onUpdateContent }) {
 //  HTML Export utility
 // ─────────────────────────────────────────
 function blockToHTML(block) {
-    const s = block.styles || {};
-    const wrap = (inner) => `<div style="padding:${s.paddingTop}px ${s.paddingRight}px ${s.paddingBottom}px ${s.paddingLeft}px;background-color:${s.backgroundColor};border-radius:${s.borderRadius}px;">${inner}</div>`;
+    const borderCSS = `border-top-width:${s.borderTopWidth || 0}px;border-bottom-width:${s.borderBottomWidth || 0}px;border-left-width:${s.borderLeftWidth || 0}px;border-right-width:${s.borderRightWidth || 0}px;border-color:${s.borderColor || '#e2e8f0'};border-style:${s.borderStyle || 'solid'};`;
+    const wrap = (inner) => `<div style="padding:${s.paddingTop}px ${s.paddingRight}px ${s.paddingBottom}px ${s.paddingLeft}px;background-color:${s.backgroundColor};border-radius:${s.borderRadius}px;box-sizing:border-box;${borderCSS}">${inner}</div>`;
 
     switch (block.type) {
         case BLOCK_TYPES.TEXT:
@@ -465,7 +489,7 @@ function blockToHTML(block) {
         case BLOCK_TYPES.IMAGE:
             return wrap(`<img src="${block.src}" alt="${block.alt}" style="width:100%;display:block;" />`);
         case BLOCK_TYPES.BUTTON:
-            return `<div style="padding:${s.paddingTop}px ${s.paddingRight}px ${s.paddingBottom}px ${s.paddingLeft}px;text-align:${s.textAlign};"><a href="${block.url}" style="background-color:${s.backgroundColor};color:${s.color};border-radius:${s.borderRadius}px;font-size:${s.fontSize}px;padding:${s.buttonPaddingY || 10}px ${s.buttonPaddingX || 28}px;display:inline-block;font-weight:700;text-decoration:none;white-space:nowrap;">${block.text}</a></div>`;
+            return `<div style="padding:${s.paddingTop}px ${s.paddingRight}px ${s.paddingBottom}px ${s.paddingLeft}px;text-align:${s.textAlign};box-sizing:border-box;${borderCSS}"><a href="${block.url}" style="background-color:${s.backgroundColor};color:${s.color};border-radius:${s.borderRadius}px;font-size:${s.fontSize}px;padding:${s.buttonPaddingY || 10}px ${s.buttonPaddingX || 28}px;display:inline-block;font-weight:700;text-decoration:none;white-space:nowrap;">${block.text}</a></div>`;
         case BLOCK_TYPES.DIVIDER:
             return wrap(`<hr style="border:none;border-top:1px solid ${s.color || '#e2e8f0'};" />`);
         case BLOCK_TYPES.SPACER:
@@ -477,7 +501,7 @@ function blockToHTML(block) {
                 const childHTML = col.blocks.map(blockToHTML).join('');
                 return `<td class="col-block" valign="top" style="width:${pct}%;padding:4px;">${childHTML}</td>`;
             }).join('');
-            return `<div style="padding:${s.paddingTop}px ${s.paddingRight}px ${s.paddingBottom}px ${s.paddingLeft}px;background-color:${s.backgroundColor};">
+            return `<div style="padding:${s.paddingTop}px ${s.paddingRight}px ${s.paddingBottom}px ${s.paddingLeft}px;background-color:${s.backgroundColor};box-sizing:border-box;${borderCSS}">
 <table class="col-row" width="100%" cellpadding="0" cellspacing="0"><tr>${colHTMLs}</tr></table>
 </div>`;
         }
@@ -918,6 +942,46 @@ function PropertyPanel({ block, onUpdate, blocks, setBlocks, templateKey, setTem
                                             onChange={(e) => set('borderRadius', Number(e.target.value))}
                                             className="h-8 w-14 text-right text-xs font-mono font-bold border-slate-200 rounded-lg p-1.5 focus:ring-[#00c3c0]/50"
                                         />
+                                    </div>
+                                </div>
+                                <Separator />
+                                {/* Borders */}
+                                <div className="space-y-3">
+                                    <Label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Borders</Label>
+                                    {[
+                                        { label: 'Top', key: 'borderTopWidth' },
+                                        { label: 'Bottom', key: 'borderBottomWidth' },
+                                        { label: 'Left', key: 'borderLeftWidth' },
+                                        { label: 'Right', key: 'borderRightWidth' },
+                                    ].map(({ label, key }) => (
+                                        <div key={key} className="flex items-center gap-3">
+                                            <span className="text-[10px] text-slate-400 w-14 shrink-0">{label}</span>
+                                            <input type="range" min={0} max={20} value={s[key] ?? 0} onChange={(e) => set(key, Number(e.target.value))} className="flex-1 accent-[#00c3c0]" />
+                                            <Input
+                                                type="number"
+                                                min={0}
+                                                max={20}
+                                                value={s[key] ?? 0}
+                                                onChange={(e) => set(key, Number(e.target.value))}
+                                                className="h-8 w-14 text-right text-xs font-mono font-bold border-slate-200 rounded-lg p-1.5 focus:ring-[#00c3c0]/50"
+                                            />
+                                        </div>
+                                    ))}
+                                    <div className="flex flex-col gap-2 mt-2">
+                                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Color & Style</span>
+                                        <div className="flex gap-2 items-center">
+                                            <input type="color" value={s.borderColor || '#e2e8f0'} onChange={(e) => set('borderColor', e.target.value)}
+                                                className="w-7 h-7 rounded-lg border-2 border-slate-200 cursor-pointer overflow-hidden p-0" title="Border color" />
+                                            <select
+                                                value={s.borderStyle || 'solid'}
+                                                onChange={(e) => set('borderStyle', e.target.value)}
+                                                className="h-8 text-xs font-bold border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#00c3c0]/20 focus:border-[#00c3c0] outline-none px-2 flex-1 bg-white"
+                                            >
+                                                <option value="solid">Solid</option>
+                                                <option value="dashed">Dashed</option>
+                                                <option value="dotted">Dotted</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
