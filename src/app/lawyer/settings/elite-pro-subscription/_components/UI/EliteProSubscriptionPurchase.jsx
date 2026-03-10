@@ -171,18 +171,18 @@ const EliteProSubscriptionPurchase = ({ subscriptionPlan, currentSubscription = 
                 </p>
                 {subscriptionPlan?.taxAmount > 0 && (
                   <p className="text-gray-500 text-xs font-normal">
-                    (Inc. {subscriptionPlan?.taxAmount} {subscriptionPlan?.taxType || 'GST'})
+                    (Inc. {subscriptionPlan?.taxAmount} {subscriptionPlan?.country?.taxType || 'GST'})
                   </p>
                 )}
                 {!subscriptionPlan?.taxAmount && (
                   <p className="text-gray-500 text-xs font-normal">
-                    (Ex. {subscriptionPlan?.taxType || 'GST'})
+                    (Ex. {subscriptionPlan?.country?.taxType || 'GST'})
                   </p>
                 )}
               </div>
               <p className="text-gray-500 text-sm">
                 {subscriptionPlan?.price?.currency}{' '}
-                {subscriptionPlan?.price?.amount}/month (Ex. {subscriptionPlan?.taxType || 'GST'})
+                {subscriptionPlan?.price?.amount}/month (Ex. {subscriptionPlan?.country?.taxType || 'GST'})
               </p>
             </div>
 
