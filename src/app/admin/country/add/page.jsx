@@ -27,6 +27,9 @@ export default function Page() {
     slug: z.string().min(2).max(3, {
       message: 'Country code must be 2 to 3 characters.',
     }),
+    currency: z.string().min(1).max(10, {
+      message: 'Currency must be 1 to 10 characters.',
+    }),
   });
 
   // 1. Define your form.
@@ -35,12 +38,13 @@ export default function Page() {
     defaultValues: {
       name: '',
       slug: '',
+      currency: '',
     },
   });
   const [addCountry, { isLoading }] = useAddCountryMutation();
 
   async function onSubmit(values) {
-    
+
 
     const capitalize = (str) =>
       str
@@ -52,6 +56,7 @@ export default function Page() {
     const payload = {
       name: capitalize(values.name), // Capitalized name
       slug: values.slug.toLowerCase(), // Lowercase code
+      currency: values.currency.toUpperCase(), // Uppercase currency
     };
 
     try {
@@ -104,6 +109,19 @@ export default function Page() {
                     <FormLabel>Code</FormLabel>
                     <FormControl>
                       <Input placeholder="Country Code" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="currency"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Currency</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Currency" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

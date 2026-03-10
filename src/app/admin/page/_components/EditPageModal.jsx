@@ -68,7 +68,7 @@ export default function EditPageModal({ open, setOpen, pageId, refetchPages }) {
   };
   return (
     <Modal open={open} onOpenChange={setOpen}>
-      <h3 className="text-lg font-semibold mb-6">Add New Page</h3>
+      <h3 className="text-lg font-semibold mb-6">Edit Page</h3>
       <FormWrapper
         onSubmit={handlePageEdit}
         defaultValues={defaultValues}

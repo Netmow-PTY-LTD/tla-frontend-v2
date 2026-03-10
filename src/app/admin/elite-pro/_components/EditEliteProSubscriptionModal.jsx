@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/UIComponents/Modal';
 import React, { useEffect, useState } from 'react';
 import { z } from 'zod';
-import countries from '@/data/countries.json';
 import SelectInput from '@/components/form/SelectInput';
 import MultipleTagsSelector from '@/components/MultipleTagsSelector';
 import {
@@ -13,6 +12,8 @@ import {
   useUpdateEliteProSubscriptionMutation,
 } from '@/store/features/admin/eliteProSubscriptionsApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
+import { Loader } from 'lucide-react';
 
 const eliteProSubscriptionSchema = z.object({
   name: z
@@ -37,6 +38,8 @@ const eliteProSubscriptionSchema = z.object({
   description: z
     .string({ invalid_type_error: 'Description must be a string' })
     .min(1, { message: 'Description is required' }),
+
+  country: z.string().min(1, { message: 'Country is required' }),
 });
 
 export default function EditEliteProSubscriptionModal({
@@ -45,12 +48,15 @@ export default function EditEliteProSubscriptionModal({
   subscriptionId,
   refetchEliteProSubscriptions,
 }) {
+  const { data: countryList } = useGetCountryListQuery();
+
   const [defaultValues, setDefaultValues] = useState({
     name: '',
     price_amount: '',
     billingCycle: '',
     features: [],
     description: '',
+    country: '',
   });
 
   const { data: subscriptionData } = useGetEliteProSubscriptionByIdQuery(
@@ -72,13 +78,16 @@ export default function EditEliteProSubscriptionModal({
         billingCycle: subscription?.billingCycle,
         features: subscription?.features,
         description: subscription?.description,
+        country: subscription?.country?._id || subscription?.country,
       });
     }
   }, [subscription]);
 
-  const [updateEliteProSubscription] = useUpdateEliteProSubscriptionMutation();
+  const [updateEliteProSubscription, { isLoading }] =
+    useUpdateEliteProSubscriptionMutation();
   const handleEditEliteProSubscription = async (values) => {
-    const { name, price_amount, billingCycle, features, description } = values;
+    const { name, price_amount, billingCycle, features, description, country } =
+      values;
 
     const payload = {
       name,
@@ -86,6 +95,7 @@ export default function EditEliteProSubscriptionModal({
       billingCycle,
       features,
       description,
+      country,
     };
 
     // console.log('payload', payload);
@@ -107,7 +117,7 @@ export default function EditEliteProSubscriptionModal({
       console.error('Error updating Elite Pro Subscription:', error);
       showErrorToast(
         error?.data?.message ||
-          'Failed to update Elite Pro Subscription. Please try again.'
+        'Failed to update Elite Pro Subscription. Please try again.'
       );
     }
   };
@@ -130,19 +140,26 @@ export default function EditEliteProSubscriptionModal({
             placeholder="price"
           />
 
-          <div className="col-span-2">
-            <SelectInput
-              name="billingCycle"
-              label="Billing Cycle"
-              placeholder="Select a billing cycle"
-              options={[
-                { value: 'monthly', label: 'Monthly' },
-                { value: 'yearly', label: 'Yearly' },
-                { value: 'weekly', label: 'Weekly' },
-                { value: 'one_time', label: 'One Time' },
-              ]}
-            />
-          </div>
+          <SelectInput
+            name="billingCycle"
+            label="Billing Cycle"
+            placeholder="Select a billing cycle"
+            options={[
+              { value: 'monthly', label: 'Monthly' },
+              { value: 'yearly', label: 'Yearly' },
+              { value: 'weekly', label: 'Weekly' },
+              { value: 'one_time', label: 'One Time' },
+            ]}
+          />
+          <SelectInput
+            name="country"
+            label="Country"
+            options={countryList?.data?.map((c) => ({
+              label: c.name,
+              value: c._id,
+            }))}
+            placeholder="Select Country"
+          />
           <div className="col-span-2">
             <MultipleTagsSelector
               name="features"
@@ -161,9 +178,19 @@ export default function EditEliteProSubscriptionModal({
         </div>
 
         <div className="text-center mt-10">
-          <Button type="submit">Update Elite Pro Subscription</Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? (
+              <span className="flex items-center gap-2">
+                <Loader className="w-4 h-4 animate-spin" />
+                <span>Updating...</span>
+              </span>
+            ) : (
+              'Update Elite Pro Subscription'
+            )}
+          </Button>
         </div>
       </FormWrapper>
     </Modal>
   );
 }
+

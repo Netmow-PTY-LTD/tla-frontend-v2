@@ -5,11 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/UIComponents/Modal';
 import React from 'react';
 import { z } from 'zod';
-import countries from '@/data/countries.json';
 import SelectInput from '@/components/form/SelectInput';
 import MultipleTagsSelector from '@/components/MultipleTagsSelector';
 import { useAddEliteProSubscriptionMutation } from '@/store/features/admin/eliteProSubscriptionsApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
+import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
+import { Loader } from 'lucide-react';
 
 const eliteProSubscriptionSchema = z.object({
   name: z
@@ -34,6 +35,8 @@ const eliteProSubscriptionSchema = z.object({
   description: z
     .string({ invalid_type_error: 'Description must be a string' })
     .min(1, { message: 'Description is required' }),
+
+  country: z.string().min(1, { message: 'Country is required' }),
 });
 
 export default function AddEliteProSubscriptionModal({
@@ -41,21 +44,24 @@ export default function AddEliteProSubscriptionModal({
   setOpen,
   refetchEliteProSubscriptions,
 }) {
+  const { data: countryList } = useGetCountryListQuery();
+
   const defaultValues = {
     name: '',
-    price: '',
-    currency: '',
+    price_amount: '',
     billingCycle: '',
     features: [],
     description: '',
+    country: '',
   };
 
-  const [addEliteProSubscription, { isLoading, isSuccess, isError, error }] =
+  const [addEliteProSubscription, { isLoading }] =
     useAddEliteProSubscriptionMutation();
   const handleAddEliteProSubscription = async (values) => {
     // console.log('values', values);
 
-    const { name, price_amount, billingCycle, features, description } = values;
+    const { name, price_amount, billingCycle, features, description, country } =
+      values;
 
     const payload = {
       name,
@@ -63,6 +69,7 @@ export default function AddEliteProSubscriptionModal({
       billingCycle,
       features,
       description,
+      country,
     };
 
     // console.log('payload', payload);
@@ -99,19 +106,26 @@ export default function AddEliteProSubscriptionModal({
             label="Price ($)"
             placeholder="price"
           />
-          <div className="col-span-2">
-            <SelectInput
-              name="billingCycle"
-              label="Billing Cycle"
-              placeholder="billingCycle"
-              options={[
-                { value: 'monthly', label: 'Monthly' },
-                { value: 'yearly', label: 'Yearly' },
-                { value: 'weekly', label: 'Weekly' },
-                { value: 'one_time', label: 'One Time' },
-              ]}
-            />
-          </div>
+          <SelectInput
+            name="billingCycle"
+            label="Billing Cycle"
+            placeholder="billingCycle"
+            options={[
+              { value: 'monthly', label: 'Monthly' },
+              { value: 'yearly', label: 'Yearly' },
+              { value: 'weekly', label: 'Weekly' },
+              { value: 'one_time', label: 'One Time' },
+            ]}
+          />
+          <SelectInput
+            name="country"
+            label="Country"
+            options={countryList?.data?.map((c) => ({
+              label: c.name,
+              value: c._id,
+            }))}
+            placeholder="Select Country"
+          />
           <div className="col-span-2">
             <MultipleTagsSelector
               name="features"
@@ -130,9 +144,19 @@ export default function AddEliteProSubscriptionModal({
         </div>
 
         <div className="text-center mt-10">
-          <Button type="submit">Add Elite Pro Subscription</Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? (
+              <span className="flex items-center gap-2">
+                <Loader className="w-4 h-4 animate-spin" />
+                <span>Adding...</span>
+              </span>
+            ) : (
+              'Add Elite Pro Subscription'
+            )}
+          </Button>
         </div>
       </FormWrapper>
     </Modal>
   );
 }
+

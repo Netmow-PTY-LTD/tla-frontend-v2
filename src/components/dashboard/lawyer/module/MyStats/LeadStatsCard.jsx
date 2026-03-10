@@ -17,6 +17,7 @@ import Link from 'next/link';
 import PropTypes from 'prop-types';
 
 const LeadStatsCard = ({ locations, profile }) => {
+  console.log('profile', profile);
   const { data: allMyLeads, isLoading: isAllMyLeadsLoading } =
     useGetAllMyLeadsQuery(
       { page: 1, limit: 10 },
@@ -116,10 +117,16 @@ const LeadStatsCard = ({ locations, profile }) => {
         <hr className="border-[#F3F3F3] border mt-4" />
 
         {/* CTA Button */}
-        <div className="mt-4">
+        <div className="mt-4 flex gap-3">
           <Link href={'/client/dashboard/my-cases'}>
             <button className="px-[19px] py-2 text-[#0B1C2D]  hover:bg-[#00C3C0] hover:text-white  font-medium bg-[#EDF0F4] rounded-full text-sm sm:text-base">
               View Cases
+            </button>
+          </Link>
+
+          <Link href="/client/dashboard/add-new-case">
+            <button className="px-[19px] py-2 text-white font-medium bg-[#00C3C0] rounded-full text-sm sm:text-base">
+              Add New Case
             </button>
           </Link>
         </div>

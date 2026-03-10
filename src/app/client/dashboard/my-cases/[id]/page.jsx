@@ -36,10 +36,9 @@ import {
   PhoneOutgoing,
   Zap,
 } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
-import { useParams, useSearchParams } from 'next/navigation';
-import { use, useCallback, useEffect, useRef, useState } from 'react';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 export default function LeadDetailsPage() {
@@ -61,6 +60,7 @@ export default function LeadDetailsPage() {
 
   const LIMIT = '10';
 
+  const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
   const id = params.id;
@@ -317,7 +317,7 @@ export default function LeadDetailsPage() {
               <div className="flex justify-center">
                 <div className="">
                   <h5 className="font-semibold mb-2 text-2xl">
-                    {singleLead?.data?.serviceId?.name ?? ''}
+                    {singleLead?.data?.serviceId?.name ?? ''} {singleLead?.data?.customService ? `: ${singleLead?.data?.customService}` : ''}
                   </h5>
                 </div>
               </div>

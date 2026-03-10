@@ -20,11 +20,15 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import AddServiceModal from '../../_components/modal/AddServiceModal ';
 import EditServiceModal from '../../_components/modal/EditServiceModal';
+import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
+
 
 export default function ServicesList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [deleteModalId, setDeleteModalId] = useState(null);
+
 
   const { data: serviceList, refetch, isFetching } = useAllServicesQuery();
   const [deleteService] = useDeleteServiceMutation();
@@ -119,10 +123,11 @@ export default function ServicesList() {
               <DropdownMenuItem>
                 <div
                   className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => handleDeleteService(service?._id)}
+                  onClick={() => setDeleteModalId(service?._id)}
                 >
                   <Trash2 className="w-4 h-4" /> Delete
                 </div>
+
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -154,6 +159,17 @@ export default function ServicesList() {
           setEditId(null); // reset after close
         }}
       />
+      {deleteModalId && (
+        <ConfirmationModal
+          open={!!deleteModalId}
+          onOpenChange={() => setDeleteModalId(null)}
+          onConfirm={() => handleDeleteService(deleteModalId)}
+          title="Are you sure you want to delete this service?"
+          description="This action cannot be undone. So please proceed with caution."
+          cancelText="No"
+        />
+      )}
     </>
+
   );
 }

@@ -20,26 +20,25 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import AddCountryModal from '../../_components/modal/AddCountryModal';
 import EditCountryModal from '../../_components/modal/EditCountryModal';
+import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
+
 
 export default function Page() {
   const [addOpen, setAddOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [deleteModalId, setDeleteModalId] = useState(null);
+
 
   const { data: countryList, refetch, isFetching } = useGetCountryListQuery();
 
   const [countryDelete] = useDeleteCountryMutation();
 
   const handleDeleteCountry = async (id) => {
-    const confirmDelete = window.confirm(
-      'Are you sure you want to delete this country?'
-    );
-
-    if (!confirmDelete) return;
-
     try {
       const res = await countryDelete(id).unwrap();
       if (res) {
+
         showSuccessToast(res?.message);
         refetch();
       }
@@ -87,6 +86,30 @@ export default function Page() {
       ),
     },
     {
+      accessorKey: 'currency',
+      header: 'Currency',
+      cell: ({ row }) => (
+        <div className="uppercase">{row.getValue('currency')}</div>
+      ),
+    },
+    {
+      accessorKey: 'taxPercentage',
+      header: 'Tax %',
+      cell: ({ row }) => <div>{row.getValue('taxPercentage')}%</div>,
+    },
+    {
+      accessorKey: 'taxAmount',
+      header: 'Tax Amount',
+      cell: ({ row }) => <div>{row.getValue('taxAmount')}</div>,
+    },
+    {
+      accessorKey: 'taxType',
+      header: 'Tax Type',
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue('taxType') || '-'}</div>
+      ),
+    },
+    {
       id: 'actions',
       header: 'Actions',
       enableHiding: false,
@@ -127,10 +150,11 @@ export default function Page() {
               <DropdownMenuItem>
                 <div
                   className="flex gap-2 cursor-pointer"
-                  onClick={() => handleDeleteCountry(country?._id)}
+                  onClick={() => setDeleteModalId(country?._id)}
                 >
                   <Trash2 className="w-4 h-4" /> Delete
                 </div>
+
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -161,6 +185,17 @@ export default function Page() {
         searchColumn={'name'}
         isFetching={isFetching}
       />
+      {deleteModalId && (
+        <ConfirmationModal
+          open={!!deleteModalId}
+          onOpenChange={() => setDeleteModalId(null)}
+          onConfirm={() => handleDeleteCountry(deleteModalId)}
+          title="Are you sure you want to delete this country?"
+          description="This action cannot be undone. So please proceed with caution."
+          cancelText="No"
+        />
+      )}
     </>
+
   );
 }

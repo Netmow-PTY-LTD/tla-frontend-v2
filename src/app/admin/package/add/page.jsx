@@ -18,6 +18,15 @@ import {
   useAddCreditPackageMutation,
   useGetAllCreditPackagesQuery,
 } from '@/store/features/credit_and_payment/creditAndPaymentApiService';
+import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
+import SelectInput from '@/components/form/SelectInput';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import { z } from 'zod';
@@ -31,14 +40,20 @@ export default function Page() {
     setSelectedPackage(item);
   };
 
+  const [filterCountry, setFilterCountry] = useState('all');
+  const [filterIsActive, setFilterIsActive] = useState('true');
+
+  const { data: countryList } = useGetCountryListQuery();
+
   const defaultValues = {
     name: '',
-    creditAmount: '',
+    credit: '',
     price: '',
     priceDisplay: '',
     pricePerCredit: '',
     discountPercentage: '',
-    isActive: false,
+    isActive: true,
+    country: '',
   };
 
   const formSchema = z.object({
@@ -72,22 +87,31 @@ export default function Page() {
       .refine(
         (val) =>
           val === undefined ||
+          val === '' ||
           (!isNaN(Number(val)) && Number(val) >= 0 && Number(val) <= 100),
         {
           message: 'Discount percentage must be between 0 and 100.',
         }
       ),
     isActive: z.boolean().optional(),
+    country: z.string().min(1, { message: 'Country is required.' }),
   });
+
+  const queryParams = {};
+  if (filterCountry !== 'all') queryParams.country = filterCountry;
+  if (filterIsActive !== 'all') queryParams.isActive = filterIsActive;
 
   const {
     data: allCreditPackages,
     isLoading: isLoadingCreditPackages,
     refetch: refetchCreditPackages,
     isFetching,
-  } = useGetAllCreditPackagesQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-  });
+  } = useGetAllCreditPackagesQuery(
+    Object.keys(queryParams).length > 0 ? queryParams : undefined,
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  );
 
   const formRef = useRef();
 
@@ -102,6 +126,7 @@ export default function Page() {
       pricePerCredit,
       discountPercentage,
       isActive,
+      country,
     } = data;
 
     const payload = {
@@ -110,10 +135,9 @@ export default function Page() {
       price: Number(price),
       priceDisplay: Number(priceDisplay),
       pricePerCredit: Number(pricePerCredit),
-      discountPercentage: discountPercentage
-        ? Number(discountPercentage)
-        : null,
+      discountPercentage: Number(discountPercentage),
       isActive: isActive ? true : false,
+      country: country,
     };
 
     try {
@@ -162,9 +186,59 @@ export default function Page() {
     },
     {
       accessorKey: 'discountPercentage',
-      header: 'Discount Percentage',
+      header: 'Discount (%)',
       cell: ({ row }) => (
         <div className="lowercase">{row.getValue('discountPercentage')}</div>
+      ),
+    },
+    {
+      id: 'discountedPrice',
+      header: 'Discounted Price',
+      cell: ({ row }) => {
+        const price = Number(row.getValue('price'));
+        const discountPercentage = Number(row.getValue('discountPercentage'));
+        const credit = Number(row.getValue('credit'));
+
+        if (discountPercentage && discountPercentage > 0) {
+          const discountedPrice = price - (price * discountPercentage) / 100;
+          const discountedPricePerCredit = discountedPrice / credit;
+          return (
+            <div className="flex flex-col">
+              <span className="font-semibold text-green-600">
+                {discountedPrice.toFixed(2)}
+              </span>
+              <span className="text-xs text-slate-500 font-medium">
+                {discountedPricePerCredit.toFixed(2)} / credit
+              </span>
+            </div>
+          );
+        }
+        return <div className="text-slate-400">-</div>;
+      },
+    },
+    {
+      accessorKey: 'country',
+      header: 'Country',
+      cell: ({ row }) => (
+        <div className="capitalize">{row.original.country?.name || '-'}</div>
+      ),
+    },
+    {
+      id: 'currency',
+      header: 'Currency',
+      cell: ({ row }) => (
+        <div className="uppercase font-medium">
+          {row.original.country?.currency || '-'}
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'isActive',
+      header: 'Status',
+      cell: ({ row }) => (
+        <div className="capitalize">
+          {row.getValue('isActive') ? 'Active' : 'Inactive'}
+        </div>
       ),
     },
     {
@@ -251,6 +325,15 @@ export default function Page() {
                 name="discountPercentage"
                 placeholder="Enter discount percentage"
               />
+              <SelectInput
+                name="country"
+                label="Country"
+                options={countryList?.data?.map((c) => ({
+                  label: c.name,
+                  value: c._id,
+                }))}
+                placeholder="Select Country"
+              />
               <CheckboxInput label="Active" name="isActive" />
               <Button type="submit">Save</Button>
             </FormWrapper>
@@ -260,7 +343,41 @@ export default function Page() {
       <div className="w-full lg:w-2/3 lg:pl-3">
         <Card>
           <CardHeader>
-            <CardTitle className="heading">Packages List</CardTitle>
+            <div className="flex justify-between items-center">
+              <CardTitle className="heading">Packages List</CardTitle>
+              <div className="flex gap-2">
+                <Select
+                  value={filterCountry}
+                  onValueChange={(val) => setFilterCountry(val)}
+                >
+                  <SelectTrigger className="w-[150px]">
+                    <SelectValue placeholder="Filter Country" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Countries</SelectItem>
+                    {countryList?.data?.map((c) => (
+                      <SelectItem key={c._id} value={c._id}>
+                        {c.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select
+                  value={filterIsActive}
+                  onValueChange={(val) => setFilterIsActive(val)}
+                >
+                  <SelectTrigger className="w-[120px]">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Status</SelectItem>
+                    <SelectItem value="true">Active</SelectItem>
+                    <SelectItem value="false">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <DataTable

@@ -1,9 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import React, { use, useEffect, useRef, useState } from 'react';
-import HeroShowcase from './HeroShowcase';
-import { useGetCountryWiseServicesQuery } from '@/store/features/admin/servicesApiService';
+import React, { useEffect, useRef, useState } from 'react';
+import { useGetCountryWiseServicesQuery, useGetServiceGroupsQuery } from '@/store/features/admin/servicesApiService';
 import {
   useGetCountryListQuery,
   useGetZipCodeListQuery,
@@ -12,7 +11,7 @@ import { useGetServiceWiseQuestionsQuery } from '@/store/features/admin/question
 import ClientLeadRegistrationModal from './modal/ClientLeadRegistrationModal';
 import { useSelector } from 'react-redux';
 import CreateLeadWithAuthModal from './modal/CreateLeadWithAuthModal';
-import { Check, ChevronDown, Loader, MapPin } from 'lucide-react';
+import { Check, Loader } from 'lucide-react';
 import HeroSlider from '../common/HeroSlider';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import {
@@ -23,19 +22,13 @@ import {
   ComboboxOptions,
 } from '@headlessui/react';
 import { cn } from '@/lib/utils';
-import { useParams } from 'next/navigation';
-import { toast } from 'sonner';
 import { showErrorToast } from '@/components/common/toasts';
 import LawyerWarningModal from './modal/LawyerWarningModal';
 import { checkValidity } from '@/helpers/validityCheck';
-import { useGetAllCategoriesQuery } from '@/store/features/public/catagorywiseServiceApiService';
 import { safeJsonParse } from '@/helpers/safeJsonParse';
 import Cookies from 'js-cookie';
-import { useGetSettingsQuery } from '@/store/features/admin/appSettings';
 
 export default function HeroHome({ searchParam }) {
-  const { data: appSettings } = useGetSettingsQuery();
-  const firmClientUrl = appSettings?.data?.firm_client_url || '';
 
   const [selectedService, setSelectedService] = useState(null);
   const [serviceWiseQuestions, setServiceWiseQuestions] = useState(null);
@@ -47,8 +40,8 @@ export default function HeroHome({ searchParam }) {
   const [selectedZipCodeId, setSelectedZipCodeId] = useState(null);
   const [zipCodeList, setZipCodeList] = useState([]);
 
-  const [filteredServices, setFilteredServices] = useState([]);
-  //const [filteredZipCodes, setFilteredZipCodes] = useState([]);
+  const [filteredZipCodes, setFilteredZipCodes] = useState([]);
+  const [query, setQuery] = useState('');
   const [shouldAutoFocus, setShouldAutoFocus] = useState(false);
 
   const cookieCountry = safeJsonParse(Cookies.get('countryObj'));
@@ -77,16 +70,37 @@ export default function HeroHome({ searchParam }) {
       skip: !defaultCountry?._id, // Skip
     });
 
-  const { data: allCategories, isLoading: isAllCategoriesLoading } =
-    useGetAllCategoriesQuery(
-      { countryId: defaultCountry?._id },
-      {
-        skip: !defaultCountry?._id,
-      }
-    );
+  // const { data: allCategories, isLoading: isAllCategoriesLoading } =
+  //   useGetAllCategoriesQuery(
+  //     { countryId: defaultCountry?._id },
+  //     {
+  //       skip: !defaultCountry?._id,
+  //     }
+  //   );
 
-  const allServices =
-    allCategories?.data?.flatMap((category) => category.services) || [];
+  // const allServicesRaw =
+  //   allCategories?.data?.flatMap((category) => category.services) || [];
+
+  // Deduplicate services by _id
+  // const allServices = Array.from(
+  //   new Map(allServicesRaw.map((s) => [s._id, s])).values()
+  // );
+  const { data: serviceGroupsData, isLoading: isServiceGroupsLoading } =
+    useGetServiceGroupsQuery(defaultCountry?._id, {
+      skip: !defaultCountry?._id,
+    });
+
+  // console.log('service groups data', serviceGroupsData);
+
+  const allServices = serviceGroupsData?.data?.services || [];
+
+  const filteredServices =
+    query === ''
+      ? allServices
+      : allServices.filter((s) =>
+        s.name.toLowerCase().replace(/\s+/g, '')
+          .includes(query.toLowerCase().replace(/\s+/g, ''))
+      );
 
   // console.log('allCategories', allCategories);
   // console.log('allServices', allServices);
@@ -101,6 +115,7 @@ export default function HeroHome({ searchParam }) {
   const {
     data: singleServicewiseQuestionsData,
     isLoading: isQuestionsLoading,
+    isFetching: isQuestionsFetching,
     refetch,
   } = useGetServiceWiseQuestionsQuery(
     {
@@ -113,9 +128,9 @@ export default function HeroHome({ searchParam }) {
   );
 
   useEffect(() => {
-    if (isQuestionsLoading) return; // ✅ Wait for loading to complete
+    if (isQuestionsLoading || isQuestionsFetching) return; // ✅ Wait for both
     setServiceWiseQuestions(singleServicewiseQuestionsData?.data || []);
-  }, [isQuestionsLoading, singleServicewiseQuestionsData]);
+  }, [isQuestionsLoading, isQuestionsFetching, singleServicewiseQuestionsData]);
 
   const token = useSelector((state) => state.auth.token);
 
@@ -157,11 +172,23 @@ export default function HeroHome({ searchParam }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    setSelectedService(service);
-    if (!service || !service?._id || !location) {
+    if ((!service && !query) || !location) {
       showErrorToast('Please select a service and location.');
       return;
     }
+    let serviceToSelect = service;
+    if (!serviceToSelect && query) {
+      // Robust search for "Others" in available service lists
+      const findOthers = (list) =>
+        list?.find(
+          (s) => s.slug === 'others' || s.name.toLowerCase() === 'others'
+        );
+
+      serviceToSelect =
+        findOthers(allServices) || findOthers(countryWiseServices?.data);
+    }
+
+    setSelectedService(serviceToSelect);
 
     // const selectedZipCode = defaultCountryZipCodes?.find(
     //   (z) => z._id === selectedZipCodeId
@@ -197,37 +224,40 @@ export default function HeroHome({ searchParam }) {
               Post a case in minutes
             </p>
             <p className="text-[#444] text-[18px] font-medium">
-              Need a <Link href={`${firmClientUrl}/register`} target="_blank" className="text-[var(--primary-color)] underline">Business Profile?</Link>
+              Need a <Link href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/register`} target="_blank" className="text-[var(--primary-color)] underline">Business Profile?</Link>
             </p>
           </div>
           <form className="w-full" onSubmit={handleSubmit}>
             <div className="hero-search-area flex flex-wrap md:flex-nowrap gap-2 items-center w-full">
               <div className="tla-form-group w-full lg:w-5/12">
-                <Combobox value={service} onChange={(val) => setService(val)}>
+                <Combobox
+                  value={service}
+                  onChange={(val) => {
+                    setService(val);
+                    if (val) {
+                      setQuery('');
+                    }
+                  }}
+                >
                   <div className="relative">
                     <ComboboxInput
                       className="border border-gray-300 rounded-md w-full h-[44px] px-4 text-sm font-medium"
                       onChange={(e) => {
-                        const query = e.target.value.toLowerCase();
-                        const matched = countryWiseServices?.data?.filter((s) =>
-                          s.name.toLowerCase().includes(query)
-                        );
-                        setFilteredServices(
-                          query ? matched : countryWiseServices?.data
-                        );
-                        setService(e.target.value);
+                        setQuery(e.target.value);
+                        setService(null);
                       }}
-                      displayValue={(val) => val?.name || ''}
+                      displayValue={(val) => val?.name || query}
                       placeholder="What area of law are you interested in?"
-                      onFocus={() =>
-                        setFilteredServices(countryWiseServices?.data ?? [])
-                      }
                       ref={inputRef}
                       autoComplete="off"
                     />
-                    {allServices?.length > 0 && (
+                    {filteredServices?.length === 0 && query !== '' ? (
+                      <ComboboxOptions className="absolute z-10 mt-1 w-full rounded-md bg-white p-4 text-sm shadow-lg ring-1 ring-black ring-opacity-5 text-gray-500 text-center">
+                        No results found.
+                      </ComboboxOptions>
+                    ) : filteredServices?.length > 0 && (
                       <ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {allServices.map((item) => (
+                        {filteredServices.map((item) => (
                           <ComboboxOption
                             key={item._id}
                             value={item}
@@ -349,7 +379,7 @@ export default function HeroHome({ searchParam }) {
           </form>
           <div className="flex flex-wrap gap-2 w-full suggestion-area">
             <b>Popular</b>:
-            {isAllCategoriesLoading ? (
+            {isServiceGroupsLoading ? (
               <Loader className="w-6 h-6 animate-spin" />
             ) : (
               allServices?.length > 0 &&
@@ -400,8 +430,9 @@ export default function HeroHome({ searchParam }) {
               defaultCountry={defaultCountry}
               serviceId={selectedService?._id}
               locationId={selectedZipCodeId}
-              isQuestionsLoading={isQuestionsLoading}
+              isQuestionsLoading={isQuestionsLoading || isQuestionsFetching}
               zipCodeList={zipCodeList}
+              customService={query}
             />
           )}
         </>
@@ -415,9 +446,10 @@ export default function HeroHome({ searchParam }) {
           countryId={defaultCountry?._id}
           serviceId={selectedService?._id}
           locationId={selectedZipCodeId}
-          isQuestionsLoading={isQuestionsLoading}
+          isQuestionsLoading={isQuestionsLoading || isQuestionsFetching}
           defaultCountry={defaultCountry}
           zipCodeList={zipCodeList}
+          customService={query}
         />
       )}
     </section>

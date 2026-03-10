@@ -26,6 +26,7 @@ import {
   useSingleUserQuery,
   useEditProfileMutation,
 } from '@/store/features/admin/userApiService';
+import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 
 export default function UserBasicInfo() {
   const params = useParams();
@@ -59,14 +60,12 @@ export default function UserBasicInfo() {
   const { data: userData, isSuccess } = useSingleUserQuery(params.id);
   const [editProfile, { isLoading }] = useEditProfileMutation();
 
-  const showSuccessToast = (msg) => alert(msg);
-  const showErrorToast = (msg) => alert(msg);
 
   useEffect(() => {
     if (isSuccess && userData?.data) {
       const user = userData.data;
 
-    
+
       form.reset({
         userId: user._id || '',
         username: user.username || '',
@@ -97,7 +96,7 @@ export default function UserBasicInfo() {
 
   const onSubmit = async (values) => {
     try {
-    
+
 
       const formData = new FormData();
 
@@ -108,7 +107,7 @@ export default function UserBasicInfo() {
 
       // ✅ Log actual contents of FormData
       for (let pair of formData.entries()) {
-    
+
       }
 
       const res = await editProfile(formData).unwrap();

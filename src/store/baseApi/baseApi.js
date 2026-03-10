@@ -11,7 +11,7 @@ const baseQuery = fetchBaseQuery({
     const state = getState();
     const token = state.auth.token;
     if (token) {
-      headers.set('Authorization', token);
+      headers.set('Authorization', `Bearer ${token}`);
     }
     return headers;
   },
@@ -157,6 +157,10 @@ export const baseApi = createApi({
     'lawyer-profile-claims',
     'env-config',
     'contact-info',
+    'email',
+    'email-campaigns',
+    'email-templates',
+    'email-categories',
   ],
   endpoints: () => ({}),
 });

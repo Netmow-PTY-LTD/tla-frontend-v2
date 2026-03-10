@@ -378,7 +378,7 @@ export default function LeadDetailsPage({
   isSingleLeadFetching,
   data,
   forceSkeleton = false,
-  onSkeletonFinish = () => {},
+  onSkeletonFinish = () => { },
 }) {
   const fullText =
     singleLead?.additionalDetails === ''
@@ -430,9 +430,8 @@ export default function LeadDetailsPage({
     const bars = Array.from({ length: total }, (_, index) => (
       <div
         key={index}
-        className={`w-[10px] h-[20px] ${
-          index < responded ? 'bg-green-400' : 'bg-gray-300'
-        }`}
+        className={`w-[10px] h-[20px] ${index < responded ? 'bg-green-400' : 'bg-gray-300'
+          }`}
       ></div>
     ));
 
@@ -476,9 +475,8 @@ export default function LeadDetailsPage({
               <div className="flex flex-col items-start gap-4 z-0 ">
                 <Avatar className="w-20 h-20 z-10">
                   <AvatarImage
-                    src={`${
-                      lead?.userProfileId?.profilePicture ?? userDummyImage
-                    }`}
+                    src={`${lead?.userProfileId?.profilePicture ?? userDummyImage
+                      }`}
                     alt={lead?.userProfileId?.name ?? 'John Doe'}
                   />
                   <AvatarFallback>User</AvatarFallback>
@@ -491,11 +489,10 @@ export default function LeadDetailsPage({
                     <span className="text-xs">
                       <div className="flex items-center gap-2 text-sm">
                         <span
-                          className={`ml-2 w-2 h-2 rounded-full ${
-                            onlineMap[lead?.userProfileId?.user?._id]
-                              ? 'bg-green-500'
-                              : 'bg-gray-400'
-                          }`}
+                          className={`ml-2 w-2 h-2 rounded-full ${onlineMap[lead?.userProfileId?.user?._id]
+                            ? 'bg-green-500'
+                            : 'bg-gray-400'
+                            }`}
                         ></span>
                         <span className="text-gray-700">
                           {onlineMap[lead?.userProfileId?.user?._id]
@@ -524,8 +521,8 @@ export default function LeadDetailsPage({
                     const phone = lead?.userProfileId?.phone;
                     return phone
                       ? `${phone.slice(0, 3)}${'*'.repeat(
-                          Math.max(0, phone.length - 3)
-                        )}`
+                        Math.max(0, phone.length - 3)
+                      )}`
                       : '480*******';
                   })()}
                 </span>{' '}
@@ -594,8 +591,8 @@ export default function LeadDetailsPage({
             </div>
             {(singleLead?.additionalDetails &&
               singleLead.additionalDetails !== '') ||
-            singleLead?.leadPriority?.toLowerCase() === 'urgent' ||
-            singleLead?.userProfileId?.phone ? (
+              singleLead?.leadPriority?.toLowerCase() === 'urgent' ||
+              singleLead?.userProfileId?.phone ? (
               <div className="mt-5">
                 <div className="flex flex-wrap gap-2">
                   {singleLead?.additionalDetails &&
@@ -609,12 +606,12 @@ export default function LeadDetailsPage({
 
                   {singleLead?.userProfileId?.user?.isPhoneVerified ===
                     true && (
-                    <TagButton
-                      text="Verified Phone"
-                      bgColor="#00C3C01A"
-                      icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
-                    />
-                  )}
+                      <TagButton
+                        text="Verified Phone"
+                        bgColor="#00C3C01A"
+                        icon={<BadgeCheck className="text-[#00C3C0] w-4 h-4" />}
+                      />
+                    )}
 
                   {singleLead?.leadPriority?.toLowerCase() === 'urgent' && (
                     <TagButton
@@ -632,7 +629,7 @@ export default function LeadDetailsPage({
             <div className="mt-5">
               <div className="p-3 bg-[#F3F3F3] mt-3 rounded-lg">
                 <h5 className="font-medium mb-2 heading-base">
-                  {singleLead?.serviceId?.name ?? ''}
+                  {singleLead?.serviceId?.name ?? ''} {singleLead?.customService ? `: ${singleLead?.customService}` : ''}
                 </h5>
                 <div className="text-sm text-[#34495E] ">
                   {displayText}
@@ -672,14 +669,20 @@ export default function LeadDetailsPage({
                       <div className="text-[#34495E] mt-2">
                         {leadAnswer?.options &&
                           leadAnswer?.options
-                            .map(
-                              (option) =>
-                                option?.option
-                                  ?.replace(/_/g, ' ') // replace underscores with spaces
-                                  ?.replace(/\b\w/g, (char) =>
-                                    char.toUpperCase()
-                                  ) // capitalize each word
-                            )
+                            .map((option) => {
+                              const formattedOption = option?.option
+                                ?.replace(/_/g, ' ') // replace underscores with spaces
+                                ?.replace(/\b\w/g, (char) => char.toUpperCase()); // capitalize each word
+
+                              if (
+                                formattedOption?.toLowerCase() === 'other' &&
+                                option?.idExtraData
+                              ) {
+                                return `${formattedOption} - ${option.idExtraData}`;
+                              }
+
+                              return formattedOption;
+                            })
                             .join(', ')}
                       </div>
                     </div>

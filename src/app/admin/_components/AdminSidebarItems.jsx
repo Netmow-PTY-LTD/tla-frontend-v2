@@ -27,6 +27,10 @@ import {
   ClipboardList,
   Gavel,
   Cpu,
+  Mail,
+  Pencil,
+  Edit,
+  PlusCircle,
 } from 'lucide-react';
 
 export const AdminSidebarItems = {
@@ -53,6 +57,51 @@ export const AdminSidebarItems = {
           url: '/admin/env-config',
           icon: Cpu,
         },
+      ],
+    },
+    {
+      title: 'Emails',
+      url: '#',
+      icon: Mail,
+      isActive: true,
+      items: [
+        {
+          title: 'Email Templates',
+          url: '/admin/email/template/list',
+          icon: List,
+          isActive: true,
+        },
+        {
+          title: 'Email Template Builder',
+          url: '/admin/email/builder',
+          icon: Pencil,
+          isActive: true,
+        },
+        {
+          title: 'Email Categories',
+          url: '/admin/email/categories',
+          icon: List,
+          isActive: true,
+        },
+        // {
+        //   title: 'Add New Email Template',
+        //   url: '/admin/email/template/add',
+        //   icon: PlusCircle,
+        //   isActive: true,
+        // },
+        // {
+        //   title: 'Email Campaigns',
+        //   url: '/admin/email/campaigns',
+        //   icon: List,
+        //   isActive: true,
+        // },
+        // {
+        //   title: 'Add New Email Campaign',
+        //   url: '/admin/email/campaigns/add',
+        //   icon: PlusCircle,
+        //   isActive: true,
+        // },
+
       ],
     },
     {
@@ -322,20 +371,26 @@ export const AdminSidebarItems = {
         },
       ],
     },
-    
+
     {
       title: 'Case Management',
-      url: '/admin/cases-management',
+      url: '#',
       icon: Kanban,
       isActive: true,
-      // items: [
-      //   {
-      //     title: 'List of Users',
-      //     url: '/admin/cases-management',
-      //     icon: List,
-      //     isActive: true,
-      //   },
-      // ],
+      items: [
+        {
+          title: 'All Cases',
+          url: '/admin/cases-management',
+          icon: List,
+          isActive: true,
+        },
+        {
+          title: 'Others Cases',
+          url: '/admin/cases-management/others-cases',
+          icon: List,
+          isActive: true,
+        },
+      ],
     },
     {
       title: 'Testimonials',

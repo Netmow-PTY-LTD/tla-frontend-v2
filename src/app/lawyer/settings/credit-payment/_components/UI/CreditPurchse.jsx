@@ -25,6 +25,13 @@ const CreditsPurchase = ({ creditPackage }) => {
 
   const card = data?.data || null;
 
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: creditPackage?.country?.currency?.toUpperCase() || 'USD',
+    }).format(amount || 0);
+  };
+
   const handleCardAdded = async (paymentMethodId) => {
     const result = await addPaymentMethod({ paymentMethodId }).unwrap();
     if (result.success) {
@@ -71,7 +78,7 @@ const CreditsPurchase = ({ creditPackage }) => {
         <div className={`${creditPackage?.discountPercentage > 0 ? 'mt-12' : ''}`}>
           <div className="grid md:grid-cols-4 gap-6 items-start">
             <div className="flex items-start space-x-4">
-              <p className="font-medium text-gray-900">{creditPackage?.name}</p>
+              <p className="font-medium text-gray-900">{creditPackage?.name} Package</p>
             </div>
 
             <div className="flex items-center space-x-2">
@@ -82,14 +89,33 @@ const CreditsPurchase = ({ creditPackage }) => {
             </div>
 
             <div>
-              <p className="font-medium text-gray-900">
-                $ {creditPackage?.priceDisplay}{' '}
-                <span className="text-gray-500 text-sm font-normal">
-                  (ex GST)
-                </span>
+              <div className="flex items-baseline gap-1">
+                <p className="font-semibold text-gray-900 text-lg">
+                  {formatCurrency(creditPackage?.priceDisplay)}
+                </p>
+                <p className="text-gray-500 text-xs font-normal">
+                  +{' '}
+                  {formatCurrency(
+                    creditPackage?.taxAmount ||
+                    creditPackage?.priceDisplay *
+                    (creditPackage?.country?.taxPercentage / 100 || 0.1)
+                  )}{' '}
+                  ({creditPackage?.country?.taxPercentage || 10}%{' '}
+                  {creditPackage?.country?.taxType || 'GST'})
+                </p>
+              </div>
+              <p className="text-[#00C3C0] text-sm font-semibold">
+                Total:{' '}
+                {formatCurrency(
+                  creditPackage?.totalPrice ||
+                  creditPackage?.priceDisplay *
+                  (1 + (creditPackage?.country?.taxPercentage / 100 || 0.1))
+                )}{' '}
+                (Inc {creditPackage?.country?.taxPercentage || 10}%{' '}
+                {creditPackage?.country?.taxType || 'GST'})
               </p>
               <p className="text-gray-500 text-sm">
-                $ {creditPackage?.pricePerCredit}/credit
+                {formatCurrency(creditPackage.discountPercentage > 0 ? (Number(creditPackage?.priceDisplay) / Number(creditPackage?.credit)) : Number(creditPackage?.pricePerCredit))}/credit
               </p>
             </div>
             <div className="">

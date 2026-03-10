@@ -59,10 +59,20 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
     }),
 
     getAllCreditPackages: builder.query({
-      query: () => ({
-        url: '/settings/credit-payment/packages/list',
-        method: 'GET',
-      }),
+      query: (params) => {
+        console.log(params);
+        if (params) {
+          return {
+            url: '/settings/credit-payment/packages/list',
+            method: 'GET',
+            params,
+          };
+        }
+        return {
+          url: '/settings/credit-payment/packages/list',
+          method: 'GET',
+        };
+      },
       providesTags: ['credit-payment'],
     }),
 
@@ -193,6 +203,21 @@ const creditAndPaymentApiService = baseApi.injectEndpoints({
         'transaction-history',
       ],
     }),
+    changeSubscriptionPackage: builder.mutation({
+      query: (data) => {
+        return {
+          url: '/settings/credit-payment/change-subscription-package',
+          method: 'PATCH',
+          body: data,
+        };
+      },
+      invalidatesTags: [
+        'subscriptions-packages',
+        'subscriptions-package',
+        'userInfo',
+        'transaction-history',
+      ],
+    }),
   }),
 
   // subscription
@@ -219,4 +244,5 @@ export const {
   useUserTransactionHistoryQuery,
   useCreateSubscriptionMutation,
   useCancelSubscriptionMutation,
+  useChangeSubscriptionPackageMutation,
 } = creditAndPaymentApiService;

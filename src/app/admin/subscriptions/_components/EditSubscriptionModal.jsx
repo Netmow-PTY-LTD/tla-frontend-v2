@@ -13,6 +13,7 @@ import {
 } from '@/store/features/admin/subcriptionsApiService';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { Loader } from 'lucide-react';
+import { useGetCountryListQuery } from '@/store/features/public/publicApiService';
 
 const subscriptionSchema = z.object({
   name: z
@@ -42,6 +43,8 @@ const subscriptionSchema = z.object({
   description: z
     .string({ invalid_type_error: 'Description must be a string' })
     .min(1, { message: 'Description is required' }),
+
+  country: z.string().min(1, { message: 'Country is required' }),
 });
 
 export default function EditSubscriptionModal({
@@ -50,6 +53,8 @@ export default function EditSubscriptionModal({
   subscriptionId,
   refetchSubscriptions,
 }) {
+  const { data: countryList } = useGetCountryListQuery();
+
   const [defaultValues, setDefaultValues] = useState({
     name: '',
     price_amount: '',
@@ -57,6 +62,7 @@ export default function EditSubscriptionModal({
     monthlyCaseContacts: '',
     features: [],
     description: '',
+    country: '',
   });
 
   const {
@@ -69,10 +75,6 @@ export default function EditSubscriptionModal({
 
   const subscription = subscriptionData?.data;
 
-  console.log('subscription', subscription);
-
-  console.log('features', subscription?.features);
-
   useEffect(() => {
     if (subscription) {
       setDefaultValues({
@@ -82,6 +84,7 @@ export default function EditSubscriptionModal({
         monthlyCaseContacts: subscription.monthlyCaseContacts,
         features: subscription.features,
         description: subscription.description,
+        country: subscription.country?._id || subscription.country || '',
       });
     }
   }, [subscription]);
@@ -96,6 +99,7 @@ export default function EditSubscriptionModal({
       monthlyCaseContacts,
       features,
       description,
+      country,
     } = values;
 
     const payload = {
@@ -105,16 +109,14 @@ export default function EditSubscriptionModal({
       monthlyCaseContacts: Number(monthlyCaseContacts),
       features,
       description,
+      country,
     };
-
-    // console.log('payload', payload);
 
     try {
       const res = await updateSubscription({
         subscriptionId,
         body: payload,
       }).unwrap();
-      // console.log('res', res);
       if (res?.success) {
         showSuccessToast(res?.message || 'Subscription updated successfully');
         refetchSubscriptions();
@@ -124,7 +126,7 @@ export default function EditSubscriptionModal({
       console.error('Error updating subscription:', error);
       showErrorToast(
         error?.data?.message ||
-          'Failed to update subscription. Please try again.'
+        'Failed to update subscription. Please try again.'
       );
     }
   };
@@ -160,6 +162,15 @@ export default function EditSubscriptionModal({
             label="Monthly Case Contacts"
             placeholder="monthly case contacts"
           />
+          <SelectInput
+            name="country"
+            label="Country"
+            options={countryList?.data?.map((c) => ({
+              label: c.name,
+              value: c._id,
+            }))}
+            placeholder="Select Country"
+          />
           <div className="col-span-2">
             <MultipleTagsSelector
               name="features"
@@ -167,7 +178,6 @@ export default function EditSubscriptionModal({
               label="Features"
             />
           </div>
-          {/* Make the last item full width using col-span-2 */}
           <div className="col-span-2">
             <TextareaInput
               name="description"

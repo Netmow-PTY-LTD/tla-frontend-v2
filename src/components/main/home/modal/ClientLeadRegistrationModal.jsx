@@ -44,6 +44,7 @@ export default function ClientLeadRegistrationModal({
   locationId,
   zipCodeList,
   isQuestionsLoading,
+  customService,
 }) {
   const [step, setStep] = useState(0);
 
@@ -100,8 +101,6 @@ export default function ClientLeadRegistrationModal({
   // const [otpCode, setOtpCode] = useState('');
 
   useEffect(() => {
-    if (!selectedServiceWiseQuestions?.length) return;
-
     setQuestionLoading(true); // 👈 Start loading
 
     setStep(0);
@@ -114,7 +113,7 @@ export default function ClientLeadRegistrationModal({
     setFullClonedQuestions([]);
     setPartialClonedQuestions([]);
     setViewData(null);
-  }, [selectedServiceWiseQuestions]);
+  }, [serviceId]);
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -325,6 +324,14 @@ export default function ClientLeadRegistrationModal({
     }
   };
 
+  const handleOtherInputChange = (optionId, value) => {
+    const updatedDetails = checkedOptionsDetails.map((opt) =>
+      opt.id === optionId ? { ...opt, idExtraData: value } : opt
+    );
+    setCheckedOptionsDetails(updatedDetails);
+    setStepwiseCheckedOptions(updatedDetails);
+  };
+
   // console.log('checkedOptions', checkedOptionsDetails);
   // console.log('step', step);
 
@@ -425,6 +432,7 @@ export default function ClientLeadRegistrationModal({
       name,
       email,
       phone,
+      ...(selectedService?.slug === 'others' && { customService }),
     };
 
     // Transform questions to match user's expected format
@@ -444,6 +452,8 @@ export default function ClientLeadRegistrationModal({
       leadDetails,
       addressInfo,
     };
+
+    console.log('payload to be sent for client registration draft', payload);
 
     try {
       const res = await clientRegistrationDraft(payload).unwrap();
@@ -607,9 +617,13 @@ export default function ClientLeadRegistrationModal({
         showCloseButton={true}
       >
         <div className="max-h-[90vh] overflow-auto">
-          {isQuestionsLoading || !selectedServiceWiseQuestions?.length ? (
+          {isQuestionsLoading ? (
             <div className="flex items-center justify-center gap-2 pt-6 px-6">
               <Loader className="w-4 h-4 animate-spin" /> Loading question...
+            </div>
+          ) : !selectedServiceWiseQuestions?.length ? (
+            <div className="text-center text-gray-500 pt-6 px-6">
+              No question found
             </div>
           ) : step < totalQuestions ? (
             viewData?.question ? (
@@ -684,9 +698,10 @@ export default function ClientLeadRegistrationModal({
                                 id={`${option._id}-other`}
                                 placeholder="Other"
                                 className="border rounded px-2 py-1 w-full"
-                              // onChange={(e) =>
-                              //   handleOptionChange(option._id, e.target.value)
-                              // }
+                                value={option.idExtraData || ''}
+                                onChange={(e) =>
+                                  handleOtherInputChange(option._id, e.target.value)
+                                }
                               />
                             )}
                           </label>

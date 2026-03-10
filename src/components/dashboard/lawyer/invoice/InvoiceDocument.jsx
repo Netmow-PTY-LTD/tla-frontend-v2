@@ -29,12 +29,27 @@ const styles = StyleSheet.create({
   },
 });
 
-const formatCurrency = (value) =>
-  typeof value === 'number' ? `$${value.toFixed(2)}` : value || '-';
+
 
 const InvoiceDocument = ({ transaction }) => {
-  const { createdAt, _id, userId, creditPackageId, couponCode, discount } =
-    transaction || {};
+  const {
+    createdAt,
+    _id,
+    userId,
+    creditPackageId,
+    couponCode,
+    discountApplied,
+    currency,
+  } = transaction || {};
+
+  const subTotal = transaction?.subtotal || 0;
+  const taxAmount = transaction?.taxAmount || 0;
+  const totalWithTax = transaction?.totalWithTax || transaction?.amountPaid || 0;
+  const taxRate = transaction?.taxRate || 0;
+  const discount = discountApplied || 0;
+
+  const formatCurrency = (value) =>
+    typeof value === 'number' ? `${currency?.toUpperCase() || '$'} ${value.toFixed(2)}` : value || '-';
 
   return (
     <Document>
@@ -49,8 +64,11 @@ const InvoiceDocument = ({ transaction }) => {
                 ? `${userId.profile.billingAddress.addressLine1}, ${userId.profile.billingAddress.addressLine2}, ${userId.profile.billingAddress.city}, ${userId.profile.billingAddress.postcode}`
                 : userId?.profile?.address?.replace(/,/g, ', ')}
             </Text>
-            <Text style={[styles.bold, { marginTop: 50 }]}>
-              Tax Invoice {transaction?._id?.slice(-6).toUpperCase()}
+            {userId?.profile?.phone && (
+              <Text style={{ fontSize: 10 }}>{userId.profile.phone}</Text>
+            )}
+            <Text style={[styles.bold, { marginTop: 40 }]}>
+              Tax Invoice {transaction?.transactionId || _id?.slice(-6).toUpperCase()}
             </Text>
             <Text>{new Date(createdAt).toLocaleDateString()}</Text>
           </View>
@@ -63,7 +81,7 @@ const InvoiceDocument = ({ transaction }) => {
             <Text>+61 490 135 339</Text>
             <Text style={{ color: 'green', marginTop: 6 }}>✓ PAID</Text>
             <Text style={{ fontSize: 16, color: 'green' }}>
-              {formatCurrency(creditPackageId?.price)}
+              {formatCurrency(totalWithTax)}
             </Text>
           </View>
         </View>
@@ -81,13 +99,26 @@ const InvoiceDocument = ({ transaction }) => {
             {/* Table Row */}
             <View style={styles.row}>
               <Text style={{ flex: 2 }}>
-                Purchase of {creditPackageId?.credit} credits
+                {creditPackageId?.name} Package ({creditPackageId?.credit} credits)
               </Text>
               <Text style={{ flex: 1 }}>One-time charge</Text>
               <Text style={{ flex: 1, textAlign: 'right' }}>
                 {formatCurrency(creditPackageId?.price)}
               </Text>
             </View>
+
+            {/* Package Discount Row */}
+            {creditPackageId?.discountPercentage > 0 && (
+              <View style={styles.row}>
+                <Text
+                  style={{ flex: 2 }}
+                >{`Package Discount (${creditPackageId.discountPercentage}%)`}</Text>
+                <Text style={{ flex: 1 }}>-</Text>
+                <Text style={{ flex: 1, textAlign: 'right', color: 'red' }}>
+                  - {formatCurrency((creditPackageId.price * creditPackageId.discountPercentage) / 100)}
+                </Text>
+              </View>
+            )}
 
             {/* Coupon Row */}
             {couponCode && (
@@ -105,8 +136,14 @@ const InvoiceDocument = ({ transaction }) => {
 
           {/* Summary */}
           <View style={[styles.section, styles.right]}>
-            <Text style={{ fontSize: 14, fontWeight: 700 }}>
-              Total: {formatCurrency(creditPackageId?.price)}
+            <Text style={{ fontSize: 10, marginBottom: 2 }}>
+              Sub Total: {formatCurrency(subTotal)}
+            </Text>
+            <Text style={{ fontSize: 10, marginBottom: 4 }}>
+              {transaction?.taxType || 'GST'} ({taxRate}%): {formatCurrency(taxAmount)}
+            </Text>
+            <Text style={{ fontSize: 14, fontWeight: 700, borderTop: 1, paddingTop: 4 }}>
+              Total Inc. {transaction?.taxType || 'GST'}: {formatCurrency(totalWithTax)}
             </Text>
           </View>
         </View>

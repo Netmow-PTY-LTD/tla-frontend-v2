@@ -70,6 +70,7 @@ export default function Home() {
     }
   }, []);
 
+
   return (
     <MainLayout>
       <HeroHome searchParam={searchParam} />

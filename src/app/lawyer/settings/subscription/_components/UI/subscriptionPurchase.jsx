@@ -16,10 +16,11 @@ import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 import { useAuthUserInfoQuery } from '@/store/features/auth/authApiService';
 import { Loader } from 'lucide-react';
 
-const SubscriptionPurchase = ({ subscriptionPlan }) => {
+const SubscriptionPurchase = ({ subscriptionPlan, currentSubscription = null, onChangeSubscription = null, changeLoading = false }) => {
   const [open, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
+  const [changeConfirmOpen, setChangeConfirmOpen] = useState(false);
   const [autoRenew, setAutoRenew] = useState(true);
   const [addPaymentMethod] = useAddPaymentMethodMutation();
   const [subscriptionSubscription, { isLoading: subscribeLoading }] =
@@ -40,6 +41,30 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
     activeSubscription &&
     activeSubscription.subscriptionPackageId?._id === subscriptionPlan?._id &&
     activeSubscription.status === 'active';
+
+  // Determine if this is an upgrade, downgrade, or current plan
+  const getSubscriptionAction = () => {
+    if (!currentSubscription || !currentSubscription.subscriptionPackageId) {
+      return 'subscribe'; // No current subscription
+    }
+
+    if (isSubscribedToThisPlan) {
+      return 'current'; // This is the current plan
+    }
+
+    const currentPrice = currentSubscription.subscriptionPackageId?.price?.amount || 0;
+    const planPrice = subscriptionPlan?.price?.amount || 0;
+
+    if (planPrice > currentPrice) {
+      return 'upgrade';
+    } else if (planPrice < currentPrice) {
+      return 'downgrade';
+    } else {
+      return 'change'; // Same price, different plan
+    }
+  };
+
+  const subscriptionAction = getSubscriptionAction();
 
   const handleCardAdded = async (paymentMethodId) => {
     const result = await addPaymentMethod({ paymentMethodId }).unwrap();
@@ -98,6 +123,18 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
     }
   };
 
+  // Change subscription handler
+  const handleChangeSubscription = async () => {
+    setChangeConfirmOpen(true);
+  };
+
+  const confirmChangeSubscription = async () => {
+    setChangeConfirmOpen(false);
+    if (onChangeSubscription) {
+      await onChangeSubscription(subscriptionPlan?._id);
+    }
+  };
+
   return (
     <div>
       <div className="border-0 bg-white rounded-lg p-4 md:p-8 relative">
@@ -125,30 +162,77 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
             </div>
 
             <div>
-              <p className="font-medium text-gray-900 text-lg">
-                {subscriptionPlan?.priceFormatted}
-              </p>
+              <div className="flex items-baseline gap-1">
+                <p className="font-semibold text-gray-900 text-lg">
+                  {subscriptionPlan?.priceFormatted}
+                </p>
+                {subscriptionPlan?.taxAmount > 0 && (
+                  <p className="text-gray-500 text-xs font-normal">
+                    (Inc. {subscriptionPlan?.taxAmount} {subscriptionPlan?.country?.taxType || 'GST'})
+                  </p>
+                )}
+                {!subscriptionPlan?.taxAmount && (
+                  <p className="text-gray-500 text-xs font-normal">
+                    (Ex. {subscriptionPlan?.country?.taxType || 'GST'})
+                  </p>
+                )}
+              </div>
               <p className="text-gray-500 text-sm">
                 {subscriptionPlan?.price?.currency}{' '}
-                {subscriptionPlan?.price?.amount}/month
+                {subscriptionPlan?.price?.amount}/month (Ex. {subscriptionPlan?.country?.taxType || 'GST'})
               </p>
             </div>
 
             <div>
-              {isSubscribedToThisPlan ? (
+              {subscriptionAction === 'current' ? (
+                <div className="flex items-center space-x-2">
+
+                  <Button
+                    variant="destructive"
+                    className="bg-red-500 hover:bg-red-600 text-white px-4 flex items-center justify-center"
+                    onClick={() => setCancelOpen(true)}
+                    disabled={cancelSubscriptionLoading}
+                  >
+                    {cancelSubscriptionLoading ? (
+                      <>
+                        <Loader size="sm" className="mr-2" />
+                        Cancelling...
+                      </>
+                    ) : (
+                      'Cancel Subscription'
+                    )}
+                  </Button>
+                </div>
+              ) : subscriptionAction === 'upgrade' ? (
                 <Button
-                  variant="destructive"
-                  className="bg-red-500 hover:bg-red-600 text-white px-4 flex items-center justify-center"
-                  onClick={() => setCancelOpen(true)}
-                  disabled={cancelSubscriptionLoading}
+                  variant="primary"
+                  className="bg-[#12C7C4CC] hover:bg-teal-600 text-white px-4 flex items-center justify-center"
+                  onClick={handleChangeSubscription}
+                  disabled={changeLoading}
                 >
-                  {cancelSubscriptionLoading ? (
+                  {changeLoading ? (
                     <>
                       <Loader size="sm" className="mr-2" />
-                      Cancelling...
+                      Upgrading...
                     </>
                   ) : (
-                    'Cancel Subscription'
+                    'Upgrade Plan'
+                  )}
+                </Button>
+              ) : subscriptionAction === 'downgrade' ? (
+                <Button
+                  variant="secondary"
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-4 flex items-center justify-center"
+                  onClick={handleChangeSubscription}
+                  disabled={changeLoading}
+                >
+                  {changeLoading ? (
+                    <>
+                      <Loader size="sm" className="mr-2" />
+                      Downgrading...
+                    </>
+                  ) : (
+                    'Downgrade Plan'
                   )}
                 </Button>
               ) : (
@@ -228,7 +312,8 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
         }
         open={isOpen}
         onOpenChange={setIsOpen}
-        description="Are you sure you want to subscribe to this plan?"
+        title="Confirm Subscription"
+        description={`Are you sure you want to subscribe to the ${subscriptionPlan?.name} plan?`}
       />
 
       {/*  Confirm Cancel Modal */}
@@ -236,7 +321,23 @@ const SubscriptionPurchase = ({ subscriptionPlan }) => {
         onConfirm={handleCancelSubscription}
         open={cancelOpen}
         onOpenChange={setCancelOpen}
-        description="Are you sure you want to cancel your subscription?"
+        title="Cancel Subscription"
+        description="Are you sure you want to cancel your current subscription? You will lose access to premium features at the end of your billing cycle."
+      />
+
+      {/* Confirm Change Subscription Modal */}
+      <ConfirmationModal
+        onConfirm={confirmChangeSubscription}
+        open={changeConfirmOpen}
+        onOpenChange={setChangeConfirmOpen}
+        title={subscriptionAction === 'upgrade' ? 'Confirm Upgrade' : subscriptionAction === 'downgrade' ? 'Confirm Downgrade' : 'Confirm Change'}
+        description={
+          subscriptionAction === 'upgrade'
+            ? `Are you sure you want to upgrade your plan to ${subscriptionPlan?.name}? Your new benefits will be available immediately.`
+            : subscriptionAction === 'downgrade'
+              ? `Are you sure you want to downgrade your plan to ${subscriptionPlan?.name}? Please note that this change will take effect immediately, and no refunds will be provided for the remaining period of your current plan.`
+              : `Are you sure you want to change your plan to ${subscriptionPlan?.name}?`
+        }
       />
     </div>
   );
