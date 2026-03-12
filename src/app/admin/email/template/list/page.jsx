@@ -381,7 +381,10 @@ export default function EmailTemplateListPage() {
                         >
                             <iframe
                                 title="Email Preview"
-                                srcDoc={previewTemplate?.body || ''}
+                                srcDoc={`<style>
+                                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                                </style>
+                                ${previewTemplate?.body || ''}`}
                                 className="w-full h-full border-none min-h-[700px]"
                                 sandbox="allow-same-origin"
                             />
