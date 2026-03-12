@@ -59,6 +59,23 @@ function DragHandle() {
     );
 }
 
+// ─────────────────────────────────────────
+//  Helpers for Delay Conversion
+// ─────────────────────────────────────────
+const formatDelay = (ms) => {
+    if (!ms || ms === 0) return '0m';
+    const months = ms / (30 * 24 * 60 * 60 * 1000);
+    if (months >= 1 && months % 1 === 0) return `${months}mo`;
+    const weeks = ms / (7 * 24 * 60 * 60 * 1000);
+    if (weeks >= 1 && weeks % 1 === 0) return `${weeks}w`;
+    const days = ms / (24 * 60 * 60 * 1000);
+    if (days >= 1 && days % 1 === 0) return `${days}d`;
+    const hours = ms / (60 * 60 * 1000);
+    if (hours >= 1 && hours % 1 === 0) return `${hours}h`;
+    const minutes = Math.round(ms / (60 * 1000));
+    return `${minutes}m`;
+};
+
 export default function EmailTemplateListPage() {
     const [page, setPage] = useState(1);
     const [categoryId, setCategoryId] = useState('all');
@@ -66,10 +83,17 @@ export default function EmailTemplateListPage() {
     const { data: categoriesRes } = useGetAllEmailCategoriesQuery({ page: 1, limit: 100 });
     const categories = categoriesRes?.data || [];
 
+    // Auto-select first category if none selected
+    React.useEffect(() => {
+        if (categoryId === 'all' && categories.length > 0) {
+            setCategoryId(categories[0]._id);
+        }
+    }, [categories, categoryId]);
+
     const { data: templatesRes, isLoading, refetch } = useGetAllEmailTemplatesQuery({
         page: 1,
         limit: 1000,
-        categoryId: categoryId === 'all' ? undefined : categoryId
+        categoryId: categoryId === 'all' ? (categories[0]?._id || undefined) : categoryId
     });
     const [deleteEmailTemplate] = useDeleteEmailTemplateMutation();
     const [updateEmailTemplate] = useUpdateEmailTemplateMutation();
@@ -136,15 +160,15 @@ export default function EmailTemplateListPage() {
 
     const columns = [
         {
-            id: 'order',
+            accessorKey: 'step',
             header: 'Order',
             cell: ({ row }) => {
-                const index = row.index;
+                const step = row.getValue('step') || row.index + 1;
                 return (
                     <div className="flex items-center gap-2">
                         <DragHandle />
                         <span className="text-slate-500 font-bold bg-slate-100 w-6 h-6 rounded-full flex items-center justify-center text-[10px]">
-                            {index + 1}
+                            {step}
                         </span>
                     </div>
                 );
@@ -195,8 +219,21 @@ export default function EmailTemplateListPage() {
             },
         },
         {
+            accessorKey: 'delayTime',
+            header: () => <div className="whitespace-nowrap">Delay Time</div>,
+            cell: ({ row }) => {
+                const ms = row.getValue('delayTime') || 0;
+                return (
+                    <div className="flex items-center gap-1.5 text-xs text-slate-500 font-mono">
+                        <Clock className="w-3 h-3 text-[#ff8602]" />
+                        {formatDelay(ms)}
+                    </div>
+                );
+            },
+        },
+        {
             accessorKey: 'createdAt',
-            header: 'Creation Date',
+            header: () => <div className="whitespace-nowrap">Creation Date</div>,
             cell: ({ row }) => (
                 <div className="flex items-center gap-1.5 text-xs text-slate-500">
                     <Clock className="w-3 h-3" />
@@ -260,9 +297,9 @@ export default function EmailTemplateListPage() {
     ];
 
     return (
-        <div className="p-4 bg-[#f8fafc] min-h-screen">
+        <div className="min-h-screen">
             <div className="max-w-7xl mx-auto space-y-4">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pt-8 pb-4">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 md:pt-8 pb-4">
                     <div>
                         <h1 className="text-4xl font-black text-slate-900 tracking-tight">Email <span className="text-[#00c3c0]">Templates</span></h1>
                         <p className="text-slate-500 mt-1 font-medium italic text-sm">Design and manage reusable structural blueprints for campaign delivery.</p>
@@ -273,7 +310,7 @@ export default function EmailTemplateListPage() {
                                 <SelectValue placeholder="All Categories" />
                             </SelectTrigger>
                             <SelectContent className="rounded-xl border-slate-200">
-                                <SelectItem value="all">All Categories</SelectItem>
+                                {/* <SelectItem value="all">All Categories</SelectItem> */}
                                 {categories.map((cat) => (
                                     <SelectItem key={cat._id} value={cat._id}>
                                         {cat.name}
@@ -291,7 +328,7 @@ export default function EmailTemplateListPage() {
                     </div>
                 </div>
 
-                <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/60 px-6 py-4 border border-slate-100">
+                <div className="bg-white rounded-3xl">
                     <EmailTemplateSortableTable
                         columns={columns}
                         data={templates}
