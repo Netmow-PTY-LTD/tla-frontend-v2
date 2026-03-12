@@ -49,6 +49,13 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 
 const RowSortableContext = React.createContext({
     attributes: {},
@@ -241,30 +248,73 @@ export function EmailTemplateSortableTable({
                     </Table>
                 </DndContext>
             </div>
-            <div className="flex items-center justify-end space-x-2 py-4">
-                <div className="flex-1 text-sm text-slate-400 font-medium">
+            <div className="flex flex-wrap items-center justify-between gap-3 py-4">
+                <div className="flex-1 text-sm text-slate-400 font-medium italic">
                     {table.getFilteredSelectedRowModel().rows.length} of{' '}
-                    {table.getFilteredRowModel().rows.length} row(s) selected.
+                    {table.getFilteredRowModel().rows.length} rows selected
                 </div>
-                <div className="space-x-2">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        className="rounded-xl border-slate-200"
-                        onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}
-                    >
-                        Previous
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        className="rounded-xl border-slate-200"
-                        onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}
-                    >
-                        Next
-                    </Button>
+                <div className="flex flex-wrap items-center gap-4">
+                    <div className="flex items-center gap-2">
+                        <p className="text-sm font-medium text-slate-400 italic">Rows per page</p>
+                        <Select
+                            value={`${table.getState().pagination.pageSize}`}
+                            onValueChange={(value) => {
+                                table.setPageSize(Number(value));
+                            }}
+                        >
+                            <SelectTrigger className="h-8 w-[70px] rounded-xl border-slate-200">
+                                <SelectValue placeholder={table.getState().pagination.pageSize} />
+                            </SelectTrigger>
+                            <SelectContent side="top" className="rounded-xl border-slate-200">
+                                {[10, 20, 30, 40, 50, 100].map((pageSize) => (
+                                    <SelectItem key={pageSize} value={`${pageSize}`}>
+                                        {pageSize}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="flex flex-wrap items-center space-x-2">
+                        <p className="text-sm font-medium text-slate-400 italic">Page</p>
+                        <Select
+                            value={`${table.getState().pagination.pageIndex}`}
+                            onValueChange={(value) => {
+                                table.setPageIndex(Number(value));
+                            }}
+                        >
+                            <SelectTrigger className="h-8 w-[60px] rounded-xl border-slate-200">
+                                <SelectValue placeholder={table.getState().pagination.pageIndex + 1} />
+                            </SelectTrigger>
+                            <SelectContent side="top" className="rounded-xl border-slate-200 max-h-[300px]">
+                                {Array.from({ length: table.getPageCount() }, (_, i) => i).map((pageIdx) => (
+                                    <SelectItem key={pageIdx} value={`${pageIdx}`}>
+                                        {pageIdx + 1}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <span className="text-sm font-medium text-slate-400 italic">of {table.getPageCount()}</span>
+                    </div>
+                    <div className="flex flex-wrap items-center space-x-2">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="rounded-xl border-slate-200"
+                            onClick={() => table.previousPage()}
+                            disabled={!table.getCanPreviousPage()}
+                        >
+                            Previous
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="rounded-xl border-slate-200"
+                            onClick={() => table.nextPage()}
+                            disabled={!table.getCanNextPage()}
+                        >
+                            Next
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
