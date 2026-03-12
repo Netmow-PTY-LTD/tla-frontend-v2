@@ -46,6 +46,7 @@ import {
     Bold,
     Italic,
     Underline,
+    Palette,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -64,6 +65,11 @@ import {
     SelectTrigger as ShadSelectTrigger,
     SelectValue as ShadSelectValue,
 } from '@/components/ui/select';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
 
 // ─────────────────────────────────────────
 //  Constants
@@ -99,6 +105,10 @@ const defaultBlockStyles = {
     paddingBottom: 16,
     paddingLeft: 24,
     paddingRight: 24,
+    marginTop: 0,
+    marginBottom: 0,
+    marginLeft: 0,
+    marginRight: 0,
     backgroundColor: '#FFFFFF',
     color: '#1e293b',
     fontSize: 16,
@@ -119,6 +129,8 @@ const defaultBlockStyles = {
     borderRightWidth: 0,
     borderColor: '#e2e8f0',
     borderStyle: 'solid',
+    paragraphSpacing: 16,
+    paragraphPadding: 0,
 };
 
 function newBlock(type, extra = {}) {
@@ -282,6 +294,10 @@ function SortableBlock({ block, isSelected, onSelect, onDelete, selectedId, onDe
                         paddingBottom: block.styles?.paddingBottom,
                         paddingLeft: block.styles?.paddingLeft,
                         paddingRight: block.styles?.paddingRight,
+                        marginTop: block.styles?.marginTop,
+                        marginBottom: block.styles?.marginBottom,
+                        marginLeft: block.styles?.marginLeft,
+                        marginRight: block.styles?.marginRight,
                         backgroundColor: block.styles?.backgroundColor,
                         borderRadius: block.styles?.borderRadius,
                         borderTopWidth: `${block.styles?.borderTopWidth || 0}px`,
@@ -341,6 +357,8 @@ function BlockRenderer({ block, onUpdateContent }) {
     const containerStyle = {
         paddingTop: s.paddingTop, paddingBottom: s.paddingBottom,
         paddingLeft: s.paddingLeft, paddingRight: s.paddingRight,
+        marginTop: s.marginTop, marginBottom: s.marginBottom,
+        marginLeft: s.marginLeft, marginRight: s.marginRight,
         backgroundColor: s.backgroundColor,
         borderRadius: s.borderRadius,
         borderTopWidth: `${s.borderTopWidth || 0}px`,
@@ -378,28 +396,190 @@ function BlockRenderer({ block, onUpdateContent }) {
                 <div style={containerStyle}>
                     {block.type === BLOCK_TYPES.LIST && (
                         <style dangerouslySetInnerHTML={{
-                            __html: `#block-${block.id} li::marker { color: ${s.bulletColor || s.color || '#00c3c0'} !important; }`
+                            __html: `
+                                #block-${block.id} li::marker { color: ${s.bulletColor || s.color || '#00c3c0'} !important; }
+                                #block-${block.id} ul, #block-${block.id} ol { 
+                                    list-style-position: inside !important; 
+                                    padding-left: 0 !important; 
+                                    margin: 0 !important;
+                                    text-align: ${s.textAlign || 'left'} !important;
+                                }
+                                #block-${block.id} li {
+                                    text-align: ${s.textAlign || 'left'} !important;
+                                    display: list-item !important;
+                                }
+                            `
                         }} />
                     )}
-                    <div
-                        id={`block-${block.id}`}
-                        ref={contentRef}
-                        style={textStyle}
-                        contentEditable
-                        suppressContentEditableWarning
-                        onBlur={(e) => {
-                            const newHTML = e.currentTarget.innerHTML;
-                            if (newHTML !== block.content) {
-                                onUpdateContent(block.id, newHTML);
-                            }
-                        }}
-                        onPaste={(e) => {
-                            e.preventDefault();
-                            const text = e.clipboardData.getData('text/plain');
-                            document.execCommand('insertText', false, text);
-                        }}
-                        className="prose prose-slate max-w-none outline-none focus:ring-2 focus:ring-[#00c3c0]/10 rounded px-1 transition-all"
-                    />
+                    <style dangerouslySetInnerHTML={{
+                        __html: `#block-${block.id} p { margin-bottom: ${s.paragraphSpacing ?? 16}px !important; padding: ${s.paragraphPadding ?? 0}px !important; margin-top: 0 !important; } #block-${block.id} p:last-child { margin-bottom: 0 !important; }`
+                    }} />
+                    <div className="relative group/text-content">
+                        {/* Inline Formatting Toolbar */}
+                        <div className="absolute -top-12 left-0 z-50 bg-white border border-slate-200 shadow-xl rounded-xl p-1.5 hidden group-focus-within/text-content:flex items-center gap-1 animate-in fade-in slide-in-from-bottom-2">
+                            {[
+                                { label: 'Bold', icon: Bold, cmd: 'bold' },
+                                { label: 'Italic', icon: Italic, cmd: 'italic' },
+                                { label: 'Underline', icon: Underline, cmd: 'underline' },
+                            ].map(({ label, icon: Icon, cmd }) => (
+                                <button
+                                    key={cmd}
+                                    onMouseDown={(e) => {
+                                        e.preventDefault();
+                                        document.execCommand(cmd, false, null);
+                                    }}
+                                    className="p-1.5 hover:bg-slate-50 rounded-lg text-slate-500 hover:text-[#00c3c0] transition-colors"
+                                    title={label}
+                                >
+                                    <Icon className="w-3.5 h-3.5" />
+                                </button>
+                            ))}
+                            <div className="relative flex items-center group/color">
+                                <button className="p-1.5 hover:bg-slate-50 rounded-lg text-slate-500 hover:text-[#00c3c0] transition-colors" title="Text Color" onClick={(e) => { e.preventDefault(); e.currentTarget.nextElementSibling.classList.toggle('hidden'); }}>
+                                    <Palette className="w-3.5 h-3.5" />
+                                </button>
+                                <div className="absolute top-10 left-0 bg-white border border-slate-200 shadow-xl rounded-xl p-2 hidden z-[100] grid grid-cols-5 gap-1.5 min-w-[max-content]"
+                                    onMouseLeave={(e) => { e.currentTarget.classList.add('hidden'); }}
+                                >
+                                    {PALETTE_COLORS.map(c => (
+                                        <button
+                                            key={c}
+                                            onMouseDown={(e) => {
+                                                e.preventDefault();
+                                                document.execCommand('foreColor', false, c);
+                                                e.currentTarget.parentElement.classList.add('hidden');
+                                            }}
+                                            style={{ backgroundColor: c }}
+                                            className="w-6 h-6 rounded-md border border-slate-100 hover:scale-110 transition-transform shadow-sm flex-shrink-0"
+                                        />
+                                    ))}
+                                    <div className="relative w-6 h-6 rounded-md border border-slate-100 hover:scale-110 transition-transform shadow-sm overflow-hidden bg-slate-50 flex items-center justify-center flex-shrink-0">
+                                        <Plus className="w-3 h-3 text-slate-400" />
+                                        <input
+                                            type="color"
+                                            className="absolute inset-0 opacity-0 cursor-pointer"
+                                            onChange={(e) => {
+                                                const color = e.target.value;
+                                                document.execCommand('foreColor', false, color);
+                                                e.target.parentElement.parentElement.classList.add('hidden');
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="w-px h-4 bg-slate-100 mx-1" />
+                            {[
+                                { label: 'Uppercase', transform: 'uppercase' },
+                                { label: 'Lowercase', transform: 'lowercase' },
+                                { label: 'Capitalize', transform: 'capitalize' },
+                            ].map(({ label, transform }) => (
+                                <button
+                                    key={transform}
+                                    onMouseDown={(e) => {
+                                        e.preventDefault();
+                                        const selection = window.getSelection();
+                                        if (selection.rangeCount > 0) {
+                                            const range = selection.getRangeAt(0);
+                                            const span = document.createElement('span');
+                                            span.style.textTransform = transform;
+                                            span.style.display = 'inline-block';
+                                            range.surroundContents(span);
+                                        }
+                                    }}
+                                    className="px-2 py-1 text-[9px] font-black uppercase tracking-widest hover:bg-slate-50 rounded-lg text-slate-400 hover:text-[#ff8602] transition-colors"
+                                    title={label}
+                                >
+                                    {label[0]}
+                                </button>
+                            ))}
+                            <div className="w-px h-4 bg-slate-100 mx-1" />
+                            <button
+                                onMouseDown={(e) => {
+                                    e.preventDefault();
+                                    document.execCommand('removeFormat', false, null);
+                                }}
+                                className="p-1.5 hover:bg-slate-50 rounded-lg text-slate-500 hover:text-red-500 transition-colors"
+                                title="Clear Formatting"
+                            >
+                                <RotateCw className="w-3.5 h-3.5" />
+                            </button>
+                        </div>
+
+                        <div
+                            id={`block-${block.id}`}
+                            ref={contentRef}
+                            style={textStyle}
+                            contentEditable
+                            suppressContentEditableWarning
+                            onBlur={(e) => {
+                                const newHTML = e.currentTarget.innerHTML;
+                                if (newHTML !== block.content) {
+                                    onUpdateContent(block.id, newHTML);
+                                }
+                            }}
+                            onCopy={(e) => {
+                                if (block.type === BLOCK_TYPES.LIST) {
+                                    const selection = window.getSelection();
+                                    if (selection.rangeCount > 0) {
+                                        const range = selection.getRangeAt(0);
+                                        const container = document.createElement('div');
+                                        container.appendChild(range.cloneContents());
+                                        
+                                        // Identify all top-level UL/OL and flatten them to keep only LI
+                                        const lists = container.querySelectorAll('ul, ol');
+                                        lists.forEach(list => {
+                                            // Only flatten if it's a direct child of our selection container
+                                            // This preserves nested lists inside LIs
+                                            if (list.parentNode === container) {
+                                                const fragment = document.createDocumentFragment();
+                                                while (list.firstChild) {
+                                                    fragment.appendChild(list.firstChild);
+                                                }
+                                                list.parentNode.replaceChild(fragment, list);
+                                            }
+                                        });
+
+                                        e.clipboardData.setData('text/html', container.innerHTML);
+                                        e.clipboardData.setData('text/plain', container.innerText);
+                                        e.preventDefault();
+                                    }
+                                }
+                            }}
+                            onPaste={(e) => {
+                                e.preventDefault();
+                                const html = e.clipboardData.getData('text/html');
+                                const text = e.clipboardData.getData('text/plain');
+                                if (html) {
+                                    const parser = new DOMParser();
+                                    const doc = parser.parseFromString(html, 'text/html');
+
+                                    // Sanitize: strip all style, class, id from all elements
+                                    const allElements = doc.querySelectorAll('*');
+                                    allElements.forEach(el => {
+                                        el.removeAttribute('style');
+                                        el.removeAttribute('class');
+                                        el.removeAttribute('id');
+                                    });
+
+                                    // Tags to strip (remove tag but keep content to avoid default boldness/headings)
+                                    const tagsToStrip = ['B', 'STRONG', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
+                                    tagsToStrip.forEach(tagName => {
+                                        const tags = doc.querySelectorAll(tagName);
+                                        tags.forEach(t => {
+                                            const span = doc.createElement('span');
+                                            span.innerHTML = t.innerHTML;
+                                            t.parentNode.replaceChild(span, t);
+                                        });
+                                    });
+
+                                    document.execCommand('insertHTML', false, doc.body.innerHTML);
+                                } else {
+                                    document.execCommand('insertText', false, text);
+                                }
+                            }}
+                            className="prose prose-slate max-w-none outline-none focus:ring-2 focus:ring-[#00c3c0]/10 rounded px-1 transition-all"
+                        />
+                    </div>
                 </div>
             );
         case BLOCK_TYPES.IMAGE:
@@ -472,24 +652,30 @@ function BlockRenderer({ block, onUpdateContent }) {
 //  HTML Export utility
 // ─────────────────────────────────────────
 function blockToHTML(block) {
+    const s = block.styles || {};
+    const marginCSS = `margin:${s.marginTop || 0}px ${s.marginRight || 0}px ${s.marginBottom || 0}px ${s.marginLeft || 0}px;`;
     const borderCSS = `border-top-width:${s.borderTopWidth || 0}px;border-bottom-width:${s.borderBottomWidth || 0}px;border-left-width:${s.borderLeftWidth || 0}px;border-right-width:${s.borderRightWidth || 0}px;border-color:${s.borderColor || '#e2e8f0'};border-style:${s.borderStyle || 'solid'};`;
-    const wrap = (inner) => `<div style="padding:${s.paddingTop}px ${s.paddingRight}px ${s.paddingBottom}px ${s.paddingLeft}px;background-color:${s.backgroundColor};border-radius:${s.borderRadius}px;box-sizing:border-box;${borderCSS}">${inner}</div>`;
+    const wrap = (inner) => `<div style="padding:${s.paddingTop}px ${s.paddingRight}px ${s.paddingBottom}px ${s.paddingLeft}px;background-color:${s.backgroundColor};border-radius:${s.borderRadius}px;box-sizing:border-box;${marginCSS}${borderCSS}">${inner}</div>`;
 
     switch (block.type) {
         case BLOCK_TYPES.TEXT:
         case BLOCK_TYPES.HEADING:
         case BLOCK_TYPES.LIST: {
-            const extraStyles = block.type === BLOCK_TYPES.LIST ? `li::marker { color: ${s.bulletColor || s.color || '#00c3c0'}; }` : '';
-            const listIdAttr = block.type === BLOCK_TYPES.LIST ? `id="blk-${block.id}"` : '';
-            const content = block.type === BLOCK_TYPES.LIST
-                ? `<style>#blk-${block.id} li::marker { color: ${s.bulletColor || s.color || '#00c3c0'}; }</style><div ${listIdAttr} style="color:${s.color};font-size:${s.fontSize}px;line-height:${s.lineHeight || 1.5};letter-spacing:${s.letterSpacing || 0}px;text-transform:${s.textTransform || 'none'};text-align:${s.textAlign};font-weight:${s.fontWeight || 'normal'};font-style:${s.fontStyle || 'normal'};text-decoration:${s.textDecoration || 'none'};">${block.content}</div>`
-                : `<div style="color:${s.color};font-size:${s.fontSize}px;line-height:${s.lineHeight || 1.5};letter-spacing:${s.letterSpacing || 0}px;text-transform:${s.textTransform || 'none'};text-align:${s.textAlign};font-weight:${s.fontWeight || 'normal'};font-style:${s.fontStyle || 'normal'};text-decoration:${s.textDecoration || 'none'};">${block.content}</div>`;
+            const extraStyles = [
+                block.type === BLOCK_TYPES.LIST ? `#blk-${block.id} li::marker { color: ${s.bulletColor || s.color || '#00c3c0'}; }` : '',
+                `#blk-${block.id} p { margin-bottom: ${s.paragraphSpacing ?? 16}px; padding: ${s.paragraphPadding ?? 0}px; margin-top: 0; }`,
+                `#blk-${block.id} p:last-child { margin-bottom: 0; }`,
+                `#blk-${block.id} ul, #blk-${block.id} ol { list-style-position: inside; padding-left: 0; margin: 0; text-align: ${s.textAlign || 'left'}; }`,
+                `#blk-${block.id} li { text-align: ${s.textAlign || 'left'}; }`
+            ].join(' ');
+            const listIdAttr = `id="blk-${block.id}"`;
+            const content = `<style>${extraStyles}</style><div ${listIdAttr} style="color:${s.color};font-size:${s.fontSize}px;line-height:${s.lineHeight || 1.5};letter-spacing:${s.letterSpacing || 0}px;text-transform:${s.textTransform || 'none'};text-align:${s.textAlign};font-weight:${s.fontWeight || 'normal'};font-style:${s.fontStyle || 'normal'};text-decoration:${s.textDecoration || 'none'};">${block.content}</div>`;
             return wrap(content);
         }
         case BLOCK_TYPES.IMAGE:
             return wrap(`<img src="${block.src}" alt="${block.alt}" style="width:100%;display:block;" />`);
         case BLOCK_TYPES.BUTTON:
-            return `<div style="padding:${s.paddingTop}px ${s.paddingRight}px ${s.paddingBottom}px ${s.paddingLeft}px;text-align:${s.textAlign};box-sizing:border-box;${borderCSS}"><a href="${block.url}" style="background-color:${s.backgroundColor};color:${s.color};border-radius:${s.borderRadius}px;font-size:${s.fontSize}px;padding:${s.buttonPaddingY || 10}px ${s.buttonPaddingX || 28}px;display:inline-block;font-weight:700;text-decoration:none;white-space:nowrap;">${block.text}</a></div>`;
+            return `<div style="padding:${s.paddingTop}px ${s.paddingRight}px ${s.paddingBottom}px ${s.paddingLeft}px;text-align:${s.textAlign};box-sizing:border-box;${marginCSS}${borderCSS}"><a href="${block.url}" style="background-color:${s.backgroundColor};color:${s.color};border-radius:${s.borderRadius}px;font-size:${s.fontSize}px;padding:${s.buttonPaddingY || 10}px ${s.buttonPaddingX || 28}px;display:inline-block;font-weight:700;text-decoration:none;white-space:nowrap;">${block.text}</a></div>`;
         case BLOCK_TYPES.DIVIDER:
             return wrap(`<hr style="border:none;border-top:1px solid ${s.color || '#e2e8f0'};" />`);
         case BLOCK_TYPES.SPACER:
@@ -501,7 +687,7 @@ function blockToHTML(block) {
                 const childHTML = col.blocks.map(blockToHTML).join('');
                 return `<td class="col-block" valign="top" style="width:${pct}%;padding:4px;">${childHTML}</td>`;
             }).join('');
-            return `<div style="padding:${s.paddingTop}px ${s.paddingRight}px ${s.paddingBottom}px ${s.paddingLeft}px;background-color:${s.backgroundColor};box-sizing:border-box;${borderCSS}">
+            return `<div style="padding:${s.paddingTop}px ${s.paddingRight}px ${s.paddingBottom}px ${s.paddingLeft}px;background-color:${s.backgroundColor};box-sizing:border-box;${marginCSS}${borderCSS}">
 <table class="col-row" width="100%" cellpadding="0" cellspacing="0"><tr>${colHTMLs}</tr></table>
 </div>`;
         }
@@ -917,12 +1103,35 @@ function PropertyPanel({ block, onUpdate, blocks, setBlocks, templateKey, setTem
                                     ].map(({ label, key }) => (
                                         <div key={key} className="flex items-center gap-3">
                                             <span className="text-[10px] text-slate-400 w-14 shrink-0">{label}</span>
-                                            <input type="range" min={0} max={80} value={s[key] ?? 16} onChange={(e) => set(key, Number(e.target.value))} className="flex-1 accent-[#00c3c0]" />
+                                            <input type="range" min={0} max={100} value={s[key] ?? 16} onChange={(e) => set(key, Number(e.target.value))} className="flex-1 accent-[#00c3c0]" />
                                             <Input
                                                 type="number"
                                                 min={0}
-                                                max={80}
+                                                max={100}
                                                 value={s[key] ?? 16}
+                                                onChange={(e) => set(key, Number(e.target.value))}
+                                                className="h-8 w-14 text-right text-xs font-mono font-bold border-slate-200 rounded-lg p-1.5 focus:ring-[#00c3c0]/50"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="space-y-3">
+                                    <Label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Margin</Label>
+                                    {[
+                                        { label: 'Top', key: 'marginTop' },
+                                        { label: 'Bottom', key: 'marginBottom' },
+                                        { label: 'Left', key: 'marginLeft' },
+                                        { label: 'Right', key: 'marginRight' },
+                                    ].map(({ label, key }) => (
+                                        <div key={key} className="flex items-center gap-3">
+                                            <span className="text-[10px] text-slate-400 w-14 shrink-0">{label}</span>
+                                            <input type="range" min={0} max={100} value={s[key] ?? 0} onChange={(e) => set(key, Number(e.target.value))} className="flex-1 accent-[#00c3c0]" />
+                                            <Input
+                                                type="number"
+                                                min={0}
+                                                max={100}
+                                                value={s[key] ?? 0}
                                                 onChange={(e) => set(key, Number(e.target.value))}
                                                 className="h-8 w-14 text-right text-xs font-mono font-bold border-slate-200 rounded-lg p-1.5 focus:ring-[#00c3c0]/50"
                                             />
@@ -984,6 +1193,45 @@ function PropertyPanel({ block, onUpdate, blocks, setBlocks, templateKey, setTem
                                         </div>
                                     </div>
                                 </div>
+
+                                <Separator />
+
+                                {/* Paragraph Styling */}
+                                {(block.type === BLOCK_TYPES.TEXT || block.type === BLOCK_TYPES.LIST) && (
+                                    <div className="space-y-4">
+                                        <div className="flex items-center gap-2">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-[#ff8602]" />
+                                            <Label className="text-[10px] font-bold uppercase tracking-wider text-slate-800">Paragraph Spacing</Label>
+                                        </div>
+                                        <div className="space-y-3">
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-[10px] text-slate-400 w-20 shrink-0">Bottom Margin</span>
+                                                <input type="range" min={0} max={100} value={s.paragraphSpacing ?? 16} onChange={(e) => set('paragraphSpacing', Number(e.target.value))} className="flex-1 accent-[#ff8602]" />
+                                                <Input
+                                                    type="number"
+                                                    min={0}
+                                                    max={100}
+                                                    value={s.paragraphSpacing ?? 16}
+                                                    onChange={(e) => set('paragraphSpacing', Number(e.target.value))}
+                                                    className="h-8 w-14 text-right text-xs font-mono font-bold border-slate-200 rounded-lg p-1.5 focus:ring-[#ff8602]/50"
+                                                />
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-[10px] text-slate-400 w-20 shrink-0">Padding</span>
+                                                <input type="range" min={0} max={100} value={s.paragraphPadding ?? 0} onChange={(e) => set('paragraphPadding', Number(e.target.value))} className="flex-1 accent-[#ff8602]" />
+                                                <Input
+                                                    type="number"
+                                                    min={0}
+                                                    max={100}
+                                                    value={s.paragraphPadding ?? 0}
+                                                    onChange={(e) => set('paragraphPadding', Number(e.target.value))}
+                                                    className="h-8 w-14 text-right text-xs font-mono font-bold border-slate-200 rounded-lg p-1.5 focus:ring-[#ff8602]/50"
+                                                />
+                                            </div>
+                                        </div>
+                                        <Separator />
+                                    </div>
+                                )}
                             </div>
                         );
                     })()}
@@ -1124,6 +1372,38 @@ function SearchableSelect({ options, value, onChange, placeholder, isLoading }) 
     );
 }
 
+// ─────────────────────────────────────────
+//  Helpers for Delay Conversion
+// ─────────────────────────────────────────
+const formatDelay = (ms) => {
+    if (!ms || ms === 0) return '0m';
+    const months = ms / (30 * 24 * 60 * 60 * 1000);
+    if (months >= 1 && months % 1 === 0) return `${months}mo`;
+    const weeks = ms / (7 * 24 * 60 * 60 * 1000);
+    if (weeks >= 1 && weeks % 1 === 0) return `${weeks}w`;
+    const days = ms / (24 * 60 * 60 * 1000);
+    if (days >= 1 && days % 1 === 0) return `${days}d`;
+    const hours = ms / (60 * 60 * 1000);
+    if (hours >= 1 && hours % 1 === 0) return `${hours}h`;
+    const minutes = Math.round(ms / (60 * 1000));
+    return `${minutes}m`;
+};
+
+const parseDelay = (str) => {
+    if (!str) return 0;
+    const value = parseFloat(str);
+    const unit = str.replace(/[0-9.]/g, '').toLowerCase().trim();
+    
+    if (unit === 'mo') return value * 30 * 24 * 60 * 60 * 1000;
+    if (unit === 'w') return value * 7 * 24 * 60 * 60 * 1000;
+    if (unit === 'd') return value * 24 * 60 * 60 * 1000;
+    if (unit === 'h') return value * 60 * 60 * 1000;
+    if (unit === 'm') return value * 60 * 1000;
+    
+    // Default to days if no unit is provided (preserving legacy behavior)
+    return value * 24 * 60 * 60 * 1000;
+};
+
 function SaveModal({ open, onClose, onConfirm, isSaving, initialData, globalTemplateKey }) {
     const [form, setForm] = useState({
         title: '',
@@ -1131,7 +1411,8 @@ function SaveModal({ open, onClose, onConfirm, isSaving, initialData, globalTemp
         templateType: '',
         subject: '',
         categoryId: '',
-        daysAfter: ''
+        delay: '',
+        step: 1
     });
 
     useEffect(() => {
@@ -1143,9 +1424,10 @@ function SaveModal({ open, onClose, onConfirm, isSaving, initialData, globalTemp
                 templateType: initialData?.templateType || initialData?.target || p.templateType || '',
                 subject: initialData?.subject || p.subject || '',
                 categoryId: initialData?.category?._id || initialData?.category || initialData?.categoryId?._id || (typeof initialData?.categoryId === 'string' ? initialData?.categoryId : '') || p.categoryId || '',
-                daysAfter: initialData?.delayTime !== undefined && initialData?.delayTime !== null
-                    ? String(Math.floor(Number(initialData.delayTime) / (24 * 60 * 60 * 1000)))
-                    : p.daysAfter || '',
+                delay: initialData?.delayTime !== undefined && initialData?.delayTime !== null
+                    ? formatDelay(Number(initialData.delayTime))
+                    : p.delay || '',
+                step: initialData?.step || p.step || 1
             }));
         }
     }, [open, initialData, globalTemplateKey]);
@@ -1222,17 +1504,29 @@ function SaveModal({ open, onClose, onConfirm, isSaving, initialData, globalTemp
                         />
                     </div>
 
-                    {/* Days After – number input */}
-                    <div className="space-y-1.5">
-                        <Label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Delay (Days After)</Label>
-                        <Input
-                            type="number"
-                            min="0"
-                            className="h-10 rounded-xl border-slate-200 text-sm"
-                            placeholder="Immediate (0)"
-                            value={form.daysAfter}
-                            onChange={(e) => set('daysAfter', e.target.value)}
-                        />
+                    {/* Step & Delay Row */}
+                    <div className="grid grid-cols-2 gap-4 pt-1">
+                        <div className="space-y-1.5">
+                            <Label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Step Number</Label>
+                            <Input
+                                type="number"
+                                min="1"
+                                className="h-10 rounded-xl border-slate-200 text-sm"
+                                placeholder="1"
+                                value={form.step}
+                                onChange={(e) => set('step', e.target.value)}
+                            />
+                        </div>
+                        <div className="space-y-1.5">
+                            <Label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Delay (e.g. 1mo, 1d, 1h, 30m)</Label>
+                            <Input
+                                type="text"
+                                className="h-10 rounded-xl border-slate-200 text-sm"
+                                placeholder="0m"
+                                value={form.delay}
+                                onChange={(e) => set('delay', e.target.value)}
+                            />
+                        </div>
                     </div>
                 </div>
 
@@ -1424,8 +1718,8 @@ export default function EmailBuilderPage() {
             target: meta.templateType, // Ensuring compatibility
             subject: meta.subject,
             categoryId: meta.categoryId || undefined,
-            delayTime: meta.daysAfter ? Number(meta.daysAfter) * 24 * 60 * 60 * 1000 : undefined,
-            step: 1,
+            delayTime: parseDelay(meta.delay),
+            step: Number(meta.step) || 1,
             body: html,
             variables: subjectVars,
         };
