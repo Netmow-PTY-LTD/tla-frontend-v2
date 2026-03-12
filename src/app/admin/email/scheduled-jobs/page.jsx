@@ -47,6 +47,36 @@ export default function ScheduledJobListPage() {
 
     const jobs = jobsRes?.data || [];
 
+    const formatCron = (cron) => {
+        if (!cron) return 'Not set';
+        if (cron === '* * * * *') return 'Every Minute';
+        if (cron === '0 * * * *') return 'Every Hour';
+        if (cron === '0 0 * * *') return 'Daily (Midnight)';
+        if (cron === '0 0 * * 0') return 'Weekly (Sun)';
+        if (cron === '0 0 1 * *') return 'Monthly (1st)';
+
+        // Simple decomposition for intervals
+        const parts = cron.split(' ');
+        if (parts.length === 5) {
+            const [m, h, d, mon, dow] = parts;
+            if (m.startsWith('*/') && h === '*' && d === '*' && mon === '*' && dow === '*') {
+                return `Every ${m.replace('*/', '')} Minutes`;
+            }
+            if (!m.includes('*') && h.startsWith('*/') && d === '*' && mon === '*' && dow === '*') {
+                return `Every ${h.replace('*/', '')} Hours (at ${m}m)`;
+            }
+            if (!m.includes('*') && !h.includes('*') && d.startsWith('*/') && mon === '*' && dow === '*') {
+                return `Every ${d.replace('*/', '')} Days (at ${h}:${m.padStart(2, '0')})`;
+            }
+            if (!m.includes('*') && !h.includes('*') && d === '*' && mon === '*' && dow !== '*') {
+                const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                return `Weekly on ${days[dow]} at ${h}:${m.padStart(2, '0')}`;
+            }
+        }
+
+        return cron; // Fallback to raw cron
+    };
+
     const handleCreate = () => {
         setSelectedJob(null);
         setIsFormOpen(true);
@@ -143,9 +173,14 @@ export default function ScheduledJobListPage() {
                                         <TableCell>
                                             <div className="flex flex-col gap-1">
                                                 {job.runner === 'cron' ? (
-                                                    <div className="flex items-center gap-2 font-mono text-xs text-slate-600 bg-slate-100 px-2 py-1 rounded-lg w-fit">
-                                                        <Calendar className="w-3 h-3 text-[#00c3c0]" />
-                                                        {job.cron}
+                                                    <div className="flex flex-col gap-1">
+                                                        <div className="flex items-center gap-2 font-bold text-xs text-slate-800">
+                                                            <Calendar className="w-3 h-3 text-[#00c3c0]" />
+                                                            {formatCron(job.cron)}
+                                                        </div>
+                                                        <span className="text-[10px] font-mono text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded w-fit">
+                                                            {job.cron}
+                                                        </span>
                                                     </div>
                                                 ) : (
                                                     <div className="flex items-center gap-2 font-mono text-xs text-slate-600 bg-slate-100 px-2 py-1 rounded-lg w-fit">

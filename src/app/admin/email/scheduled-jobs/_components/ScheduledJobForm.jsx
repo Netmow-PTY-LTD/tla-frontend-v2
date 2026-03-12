@@ -26,13 +26,16 @@ import {
     useGetAvailableTasksQuery,
 } from '@/store/features/admin/emailApiService';
 import { showSuccessToast, showErrorToast } from '@/components/common/toasts';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Clock } from 'lucide-react';
 
 export default function ScheduledJobForm({ open, onOpenChange, job, onSuccess }) {
     const isEdit = !!job;
     const { data: tasksData, isLoading: isLoadingTasks } = useGetAvailableTasksQuery();
     const [createJob, { isLoading: isCreating }] = useCreateScheduledJobMutation();
     const [updateJob, { isLoading: isUpdating }] = useUpdateScheduledJobMutation();
+
+    const [scheduleType, setScheduleType] = React.useState('custom');
+    const [intervalData, setIntervalData] = React.useState({ days: 0, hours: 1, minutes: 0 });
 
     const {
         register,
@@ -45,7 +48,7 @@ export default function ScheduledJobForm({ open, onOpenChange, job, onSuccess })
         defaultValues: {
             name: '',
             task: '',
-            cron: '',
+            cron: '* * * * *',
             runner: 'cron',
             active: true,
             queueName: 'email-queue',
@@ -57,12 +60,34 @@ export default function ScheduledJobForm({ open, onOpenChange, job, onSuccess })
 
     const runner = watch('runner');
 
+    const updateInterval = (field, value) => {
+        const newData = { ...intervalData, [field]: parseInt(value) || 0 };
+        setIntervalData(newData);
+
+        // Simple cron mapping for common intervals
+        let cron = '* * * * *';
+        const { days, hours, minutes } = newData;
+
+        if (days > 0) {
+            // Every X days at H:M
+            cron = `${minutes} ${hours} */${days} * *`;
+        } else if (hours > 0) {
+            // Every X hours at M minute
+            cron = `${minutes} */${hours} * * *`;
+        } else if (minutes > 0) {
+            // Every X minutes
+            cron = `*/${minutes} * * * *`;
+        }
+
+        setValue('cron', cron);
+    };
+
     useEffect(() => {
         if (job) {
             reset({
                 name: job.name,
                 task: job.task,
-                cron: job.cron || '',
+                cron: job.cron || '* * * * *',
                 runner: job.runner,
                 active: job.active,
                 queueName: job.queueName || 'email-queue',
@@ -70,11 +95,20 @@ export default function ScheduledJobForm({ open, onOpenChange, job, onSuccess })
                 attempts: job.attempts || 3,
                 delay: job.delay || 0,
             });
+
+            // Try to guess schedule type from cron
+            if (job.cron) {
+                if (job.cron === '* * * * *') setScheduleType('every_minute');
+                else if (job.cron === '0 * * * *') setScheduleType('every_hour');
+                else if (job.cron === '0 0 * * *') setScheduleType('daily');
+                else if (job.cron.includes('*/')) setScheduleType('interval');
+                else setScheduleType('custom');
+            }
         } else {
             reset({
                 name: '',
                 task: '',
-                cron: '',
+                cron: '* * * * *',
                 runner: 'cron',
                 active: true,
                 queueName: 'email-queue',
@@ -165,19 +199,101 @@ export default function ScheduledJobForm({ open, onOpenChange, job, onSuccess })
                             {errors.task && <p className="text-red-500 text-xs">{errors.task.message}</p>}
                         </div>
 
-                        {runner === 'cron' ? (
-                            <div className="space-y-2 md:col-span-2">
-                                <Label htmlFor="cron" className="text-xs font-bold uppercase tracking-widest text-slate-400">Cron Expression</Label>
-                                <Input
-                                    id="cron"
-                                    placeholder="0 0 * * *"
-                                    className="rounded-xl border-slate-200 font-mono focus:ring-[#00c3c0]"
-                                    {...register('cron', { required: runner === 'cron' ? 'Cron expression is required' : false })}
-                                />
-                                <p className="text-[10px] text-slate-400 italic">Example: "0 0 * * *" for every day at midnight.</p>
+                        {runner === 'cron' && (
+                            <div className="md:col-span-2 space-y-4">
+                                <div className="space-y-2">
+                                    <Label className="text-xs font-bold uppercase tracking-widest text-slate-400">Schedule Type</Label>
+                                    <Select
+                                        value={scheduleType}
+                                        onValueChange={(val) => {
+                                            setScheduleType(val);
+                                            // Set default values for the selected type
+                                            if (val === 'every_minute') setValue('cron', '* * * * *');
+                                            if (val === 'every_hour') setValue('cron', '0 * * * *');
+                                            if (val === 'daily') setValue('cron', '0 0 * * *');
+                                            if (val === 'weekly') setValue('cron', '0 0 * * 0');
+                                            if (val === 'monthly') setValue('cron', '0 0 1 * *');
+                                        }}
+                                    >
+                                        <SelectTrigger className="rounded-xl border-slate-200 focus:ring-[#00c3c0]">
+                                            <SelectValue placeholder="Select frequency" />
+                                        </SelectTrigger>
+                                        <SelectContent className="rounded-xl">
+                                            <SelectItem value="every_minute">Every Minute</SelectItem>
+                                            <SelectItem value="every_hour">Every Hour</SelectItem>
+                                            <SelectItem value="daily">Daily</SelectItem>
+                                            <SelectItem value="weekly">Weekly</SelectItem>
+                                            <SelectItem value="monthly">Monthly</SelectItem>
+                                            <SelectItem value="interval">Custom Interval</SelectItem>
+                                            <SelectItem value="custom">Advanced (Cron Expression)</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
+                                {scheduleType === 'interval' && (
+                                    <div className="grid grid-cols-3 gap-2 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                        <div className="space-y-1">
+                                            <Label className="text-[10px] font-bold uppercase text-slate-400">Days</Label>
+                                            <Input
+                                                type="number"
+                                                min="0"
+                                                className="h-8 text-xs rounded-lg"
+                                                value={intervalData.days}
+                                                onChange={(e) => updateInterval('days', e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <Label className="text-[10px] font-bold uppercase text-slate-400">Hours</Label>
+                                            <Input
+                                                type="number"
+                                                min="0"
+                                                max="23"
+                                                className="h-8 text-xs rounded-lg"
+                                                value={intervalData.hours}
+                                                onChange={(e) => updateInterval('hours', e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <Label className="text-[10px] font-bold uppercase text-slate-400">Mins</Label>
+                                            <Input
+                                                type="number"
+                                                min="0"
+                                                max="59"
+                                                className="h-8 text-xs rounded-lg"
+                                                value={intervalData.minutes}
+                                                onChange={(e) => updateInterval('minutes', e.target.value)}
+                                            />
+                                        </div>
+                                        <p className="col-span-3 text-[10px] text-slate-500 italic mt-1 text-center">
+                                            Converts to best-fit cron: {watch('cron')}
+                                        </p>
+                                    </div>
+                                )}
+
+                                {scheduleType === 'custom' ? (
+                                    <div className="space-y-2">
+                                        <Label htmlFor="cron" className="text-xs font-bold uppercase tracking-widest text-slate-400">Cron Expression</Label>
+                                        <Input
+                                            id="cron"
+                                            placeholder="0 0 * * *"
+                                            className="rounded-xl border-slate-200 font-mono focus:ring-[#00c3c0]"
+                                            {...register('cron', { required: runner === 'cron' ? 'Cron expression is required' : false })}
+                                        />
+                                        <p className="text-[10px] text-slate-400 italic">Format: minute hour day month day-of-week</p>
+                                    </div>
+                                ) : (
+                                    <div className="p-3 bg-indigo-50/50 rounded-xl border border-indigo-100/50">
+                                        <div className="flex items-center gap-2 text-indigo-600">
+                                            <Clock className="w-4 h-4" />
+                                            <span className="text-xs font-bold font-mono">{watch('cron')}</span>
+                                        </div>
+                                    </div>
+                                )}
                                 {errors.cron && <p className="text-red-500 text-xs">{errors.cron.message}</p>}
                             </div>
-                        ) : (
+                        )}
+
+                        {runner === 'bullmq' && (
                             <>
                                 <div className="space-y-2">
                                     <Label htmlFor="queueName" className="text-xs font-bold uppercase tracking-widest text-slate-400">Queue Name</Label>
