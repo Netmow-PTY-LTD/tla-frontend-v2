@@ -106,7 +106,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { X, UploadCloud } from 'lucide-react';
 import { toast } from 'sonner';
-
 const defaultValues = {
   siteName: '',
   maintenanceMode: false,
@@ -120,7 +119,12 @@ const defaultValues = {
   appLogo: '',
   favicon: '',
   robots: 'noindex, nofollow',
-
+  emailSettings: {
+    isFlowEnabled: true,
+    maxRetries: 3,
+    workerConcurrency: 5,
+    batchSize: 50,
+  },
 };
 
 export default function SettingsForm({ appSettings, isLoading }) {
@@ -150,7 +154,13 @@ export default function SettingsForm({ appSettings, isLoading }) {
       const formData = new FormData();
       Object.keys(data).forEach((key) => {
         if (key !== 'appLogo' && key !== 'favicon') {
-          formData.append(key, data[key]);
+          if (typeof data[key] === 'object' && data[key] !== null && !Array.isArray(data[key])) {
+            Object.keys(data[key]).forEach((subKey) => {
+              formData.append(`${key}.${subKey}`, data[key][subKey]);
+            });
+          } else {
+            formData.append(key, data[key]);
+          }
         }
       });
 
@@ -356,6 +366,54 @@ export default function SettingsForm({ appSettings, isLoading }) {
           <option value="index, nofollow">Index, No Follow</option>
           <option value="noindex, nofollow">No Index & No Follow</option>
         </select>
+      </div>
+
+      {/* Email Flow Settings */}
+      <div className="pt-6 border-t mt-6">
+        <h3 className="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
+          📧 Email Flow Settings
+        </h3>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between border-b pb-2">
+            <label className="font-medium text-gray-700">Enable Email Flow</label>
+            <input
+              disabled={isLoading}
+              type="checkbox"
+              {...register('emailSettings.isFlowEnabled')}
+              className="w-5 h-5 accent-blue-600"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-600">Max Retries</label>
+              <input
+                disabled={isLoading}
+                type="number"
+                {...register('emailSettings.maxRetries', { valueAsNumber: true })}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-600">Worker Concurrency</label>
+              <input
+                disabled={isLoading}
+                type="number"
+                {...register('emailSettings.workerConcurrency', { valueAsNumber: true })}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-600">Batch Size</label>
+              <input
+                disabled={isLoading}
+                type="number"
+                {...register('emailSettings.batchSize', { valueAsNumber: true })}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Submit */}
