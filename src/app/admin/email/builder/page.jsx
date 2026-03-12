@@ -131,6 +131,7 @@ const defaultBlockStyles = {
     borderStyle: 'solid',
     paragraphSpacing: 16,
     paragraphPadding: 0,
+    listItemSpacing: 0,
 };
 
 function newBlock(type, extra = {}) {
@@ -144,7 +145,7 @@ function newBlock(type, extra = {}) {
         case BLOCK_TYPES.IMAGE:
             return { ...base, src: 'https://images.unsplash.com/photo-1579389083078-4e7018379f7e?auto=format&fit=crop&q=80&w=1170', alt: 'Email image', styles: { ...defaultBlockStyles, paddingLeft: 0, paddingRight: 0, paddingTop: 0, paddingBottom: 0 } };
         case BLOCK_TYPES.BUTTON:
-            return { ...base, text: 'Click Here', url: '#', styles: { ...defaultBlockStyles, paddingTop: 0, paddingBottom: 0, paddingLeft: 0, paddingRight: 0, backgroundColor: '#00c3c0', color: '#FFFFFF', textAlign: 'center', borderRadius: 12 } };
+            return { ...base, text: 'Click Here', url: '#', target: '_self', styles: { ...defaultBlockStyles, paddingTop: 0, paddingBottom: 0, paddingLeft: 0, paddingRight: 0, backgroundColor: '#00c3c0', color: '#FFFFFF', textAlign: 'center', borderRadius: 12 } };
         case BLOCK_TYPES.DIVIDER:
             return { ...base, styles: { ...defaultBlockStyles, paddingTop: 8, paddingBottom: 8 } };
         case BLOCK_TYPES.SPACER:
@@ -393,11 +394,13 @@ function BlockRenderer({ block, onUpdateContent }) {
         case BLOCK_TYPES.HEADING:
         case BLOCK_TYPES.LIST:
             return (
-                <div style={containerStyle}>
+                <div style={containerStyle} className="email-block-renderer">
                     {block.type === BLOCK_TYPES.LIST && (
                         <style dangerouslySetInnerHTML={{
                             __html: `
                                 #block-${block.id} li::marker { color: ${s.bulletColor || s.color || '#00c3c0'} !important; }
+                                #block-${block.id} li { margin-bottom: ${s.listItemSpacing ?? 0}px !important; }
+                                #block-${block.id} li:last-child { margin-bottom: 0 !important; }
                                 #block-${block.id} ul, #block-${block.id} ol { 
                                     list-style-position: inside !important; 
                                     padding-left: 0 !important; 
@@ -524,7 +527,7 @@ function BlockRenderer({ block, onUpdateContent }) {
                                         const range = selection.getRangeAt(0);
                                         const container = document.createElement('div');
                                         container.appendChild(range.cloneContents());
-                                        
+
                                         // Identify all top-level UL/OL and flatten them to keep only LI
                                         const lists = container.querySelectorAll('ul, ol');
                                         lists.forEach(list => {
@@ -584,7 +587,7 @@ function BlockRenderer({ block, onUpdateContent }) {
             );
         case BLOCK_TYPES.IMAGE:
             return (
-                <div style={containerStyle}>
+                <div style={containerStyle} className="email-block-renderer">
                     <img src={block.src} alt={block.alt} className="w-full object-cover" style={{ borderRadius: s.borderRadius }} />
                 </div>
             );
@@ -601,9 +604,10 @@ function BlockRenderer({ block, onUpdateContent }) {
                     borderStyle: s.borderStyle || 'solid',
                     display: 'flex',
                     justifyContent: s.textAlign === 'center' ? 'center' : s.textAlign === 'right' ? 'flex-end' : 'flex-start',
-                }}>
+                }} className="email-block-renderer">
                     <a
                         href={block.url}
+                        target={block.target || '_self'}
                         onClick={(e) => e.preventDefault()}
                         contentEditable
                         suppressContentEditableWarning
@@ -637,12 +641,12 @@ function BlockRenderer({ block, onUpdateContent }) {
             );
         case BLOCK_TYPES.DIVIDER:
             return (
-                <div style={containerStyle}>
+                <div style={containerStyle} className="email-block-renderer">
                     <hr style={{ borderColor: s.color || '#e2e8f0' }} />
                 </div>
             );
         case BLOCK_TYPES.SPACER:
-            return <div style={{ height: block.height || 40, backgroundColor: 'transparent' }} className="border-2 border-dashed border-slate-100 flex items-center justify-center text-slate-300 text-xs font-mono">spacer · {block.height || 40}px</div>;
+            return <div style={{ height: block.height || 40, backgroundColor: 'transparent' }} className="border-2 border-dashed border-slate-100 flex items-center justify-center text-slate-300 text-xs font-mono email-block-renderer">spacer · {block.height || 40}px</div>;
         default:
             return null;
     }
@@ -666,7 +670,8 @@ function blockToHTML(block) {
                 `#blk-${block.id} p { margin-bottom: ${s.paragraphSpacing ?? 16}px; padding: ${s.paragraphPadding ?? 0}px; margin-top: 0; }`,
                 `#blk-${block.id} p:last-child { margin-bottom: 0; }`,
                 `#blk-${block.id} ul, #blk-${block.id} ol { list-style-position: inside; padding-left: 0; margin: 0; text-align: ${s.textAlign || 'left'}; }`,
-                `#blk-${block.id} li { text-align: ${s.textAlign || 'left'}; }`
+                `#blk-${block.id} li { text-align: ${s.textAlign || 'left'}; margin-bottom: ${s.listItemSpacing ?? 0}px !important; }`,
+                `#blk-${block.id} li:last-child { margin-bottom: 0 !important; }`
             ].join(' ');
             const listIdAttr = `id="blk-${block.id}"`;
             const content = `<style>${extraStyles}</style><div ${listIdAttr} style="color:${s.color};font-size:${s.fontSize}px;line-height:${s.lineHeight || 1.5};letter-spacing:${s.letterSpacing || 0}px;text-transform:${s.textTransform || 'none'};text-align:${s.textAlign};font-weight:${s.fontWeight || 'normal'};font-style:${s.fontStyle || 'normal'};text-decoration:${s.textDecoration || 'none'};">${block.content}</div>`;
@@ -675,7 +680,7 @@ function blockToHTML(block) {
         case BLOCK_TYPES.IMAGE:
             return wrap(`<img src="${block.src}" alt="${block.alt}" style="width:100%;display:block;" />`);
         case BLOCK_TYPES.BUTTON:
-            return `<div style="padding:${s.paddingTop}px ${s.paddingRight}px ${s.paddingBottom}px ${s.paddingLeft}px;text-align:${s.textAlign};box-sizing:border-box;${marginCSS}${borderCSS}"><a href="${block.url}" style="background-color:${s.backgroundColor};color:${s.color};border-radius:${s.borderRadius}px;font-size:${s.fontSize}px;padding:${s.buttonPaddingY || 10}px ${s.buttonPaddingX || 28}px;display:inline-block;font-weight:700;text-decoration:none;white-space:nowrap;">${block.text}</a></div>`;
+            return `<div style="padding:${s.paddingTop}px ${s.paddingRight}px ${s.paddingBottom}px ${s.paddingLeft}px;text-align:${s.textAlign};box-sizing:border-box;${marginCSS}${borderCSS}"><a href="${block.url}" target="${block.target || '_self'}" style="background-color:${s.backgroundColor};color:${s.color};border-radius:${s.borderRadius}px;font-size:${s.fontSize}px;padding:${s.buttonPaddingY || 10}px ${s.buttonPaddingX || 28}px;display:inline-block;font-weight:700;text-decoration:none;white-space:nowrap;">${block.text}</a></div>`;
         case BLOCK_TYPES.DIVIDER:
             return wrap(`<hr style="border:none;border-top:1px solid ${s.color || '#e2e8f0'};" />`);
         case BLOCK_TYPES.SPACER:
@@ -698,10 +703,13 @@ function blockToHTML(block) {
 
 function generateHTML(blocks) {
     const blocksHtml = blocks.map(blockToHTML).join('\n');
-    const responsiveCSS = `<style>@media only screen and (max-width:600px){.col-row{width:100%!important;}.col-block{display:block!important;width:100%!important;box-sizing:border-box;}}</style>`;
+    const responsiveCSS = `<style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        @media only screen and (max-width:600px){.col-row{width:100%!important;}.col-block{display:block!important;width:100%!important;box-sizing:border-box;}}
+    </style>`;
 
     // Embed the visual design as a hidden comment for metadata persistence
-    const designComment = `\n<!-- VISUAL_DESIGN_BLOCKS:${JSON.stringify(blocks)} -->`;
+    const designComment = `\n<!-- VISUAL_DESIGN_BLOCKS:${JSON.stringify(blocks).replace(/--/g, '\\u002d\\u002d')} -->`;
 
     // User requested to remove DOCTYPE, html, head, and body tags.
     // We return a fragment containing the style tag and a wrapper div that mimics the body styles.
@@ -935,6 +943,18 @@ function PropertyPanel({ block, onUpdate, blocks, setBlocks, templateKey, setTem
                                             <Label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">URL</Label>
                                             <Input className="h-9 text-xs rounded-xl" value={block.url} onChange={(e) => setContent({ url: e.target.value })} />
                                         </div>
+                                        <div className="space-y-2">
+                                            <Label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Link Target</Label>
+                                            <ShadSelect value={block.target || '_self'} onValueChange={(val) => setContent({ target: val })}>
+                                                <ShadSelectTrigger className="h-9 rounded-xl border-slate-200 text-xs">
+                                                    <ShadSelectValue placeholder="Select target" />
+                                                </ShadSelectTrigger>
+                                                <ShadSelectContent>
+                                                    <ShadSelectItem value="_self">Same Tab (Default)</ShadSelectItem>
+                                                    <ShadSelectItem value="_blank">New Tab (_blank)</ShadSelectItem>
+                                                </ShadSelectContent>
+                                            </ShadSelect>
+                                        </div>
                                         <div className="space-y-3">
                                             <Label className="text-[10px] font-bold uppercase tracking-wider text-[#00c3c0]">Button Padding</Label>
                                             {[
@@ -1073,24 +1093,42 @@ function PropertyPanel({ block, onUpdate, blocks, setBlocks, templateKey, setTem
                                 )}
 
                                 {block.type === BLOCK_TYPES.LIST && (
-                                    <div className="space-y-3 mt-4">
-                                        <Label className="text-[10px] font-bold uppercase tracking-wider text-[#00c3c0] flex items-center gap-2">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-[#00c3c0]" />
-                                            Bullet Color
-                                        </Label>
-                                        <div className="flex flex-wrap gap-2 p-3 bg-slate-50 border border-slate-100 rounded-2xl">
-                                            {PALETTE_COLORS.map(c => (
-                                                <button key={c} onClick={() => set('bulletColor', c)}
-                                                    style={{ backgroundColor: c }}
-                                                    className={`w-7 h-7 rounded-lg border-2 transition-all ${s.bulletColor === c ? 'border-[#00c3c0] scale-110 shadow-md ring-4 ring-[#00c3c0]/10' : 'border-white hover:scale-110 shadow-sm hover:shadow-md'}`} />
-                                            ))}
-                                            <input type="color" value={s.bulletColor || '#00c3c0'} onChange={(e) => set('bulletColor', e.target.value)}
-                                                className="w-7 h-7 rounded-lg border-2 border-slate-200 cursor-pointer overflow-hidden p-0" title="Custom color" />
+                                    <div className="space-y-4 mt-4 text-slate-400">
+                                        <div className="space-y-3">
+                                            <Label className="text-[10px] font-bold uppercase tracking-wider text-[#00c3c0] flex items-center gap-2">
+                                                <span className="w-1.5 h-1.5 rounded-full bg-[#00c3c0]" />
+                                                Bullet Color
+                                            </Label>
+                                            <div className="flex flex-wrap gap-2 p-3 bg-slate-50 border border-slate-100 rounded-2xl">
+                                                {PALETTE_COLORS.map(c => (
+                                                    <button key={c} onClick={() => set('bulletColor', c)}
+                                                        style={{ backgroundColor: c }}
+                                                        className={`w-7 h-7 rounded-lg border-2 transition-all ${s.bulletColor === c ? 'border-[#00c3c0] scale-110 shadow-md ring-4 ring-[#00c3c0]/10' : 'border-white hover:scale-110 shadow-sm hover:shadow-md'}`} />
+                                                ))}
+                                                <input type="color" value={s.bulletColor || '#00c3c0'} onChange={(e) => set('bulletColor', e.target.value)}
+                                                    className="w-7 h-7 rounded-lg border-2 border-slate-200 cursor-pointer overflow-hidden p-0" title="Custom color" />
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-3">
+                                            <Label className="text-[10px] font-bold uppercase tracking-wider text-[#00c3c0] flex items-center gap-2">
+                                                <span className="w-1.5 h-1.5 rounded-full bg-[#00c3c0]" />
+                                                List Item Spacing
+                                            </Label>
+                                            <div className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-100 rounded-2xl">
+                                                <input type="range" min={0} max={100} value={s.listItemSpacing ?? 0} onChange={(e) => set('listItemSpacing', Number(e.target.value))} className="flex-1 accent-[#00c3c0]" />
+                                                <Input
+                                                    type="number"
+                                                    min={0}
+                                                    max={100}
+                                                    value={s.listItemSpacing ?? 0}
+                                                    onChange={(e) => set('listItemSpacing', Number(e.target.value))}
+                                                    className="h-8 w-14 text-right text-xs font-mono font-bold border-slate-200 rounded-lg p-1.5 focus:ring-[#00c3c0]/50"
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 )}
-
-                                <Separator />
 
                                 {/* Spacing */}
                                 <div className="space-y-3">
@@ -1393,13 +1431,13 @@ const parseDelay = (str) => {
     if (!str) return 0;
     const value = parseFloat(str);
     const unit = str.replace(/[0-9.]/g, '').toLowerCase().trim();
-    
+
     if (unit === 'mo') return value * 30 * 24 * 60 * 60 * 1000;
     if (unit === 'w') return value * 7 * 24 * 60 * 60 * 1000;
     if (unit === 'd') return value * 24 * 60 * 60 * 1000;
     if (unit === 'h') return value * 60 * 60 * 1000;
     if (unit === 'm') return value * 60 * 1000;
-    
+
     // Default to days if no unit is provided (preserving legacy behavior)
     return value * 24 * 60 * 60 * 1000;
 };
@@ -1896,7 +1934,30 @@ export default function EmailBuilderPage() {
                             <DndContext sensors={sensors} collisionDetection={closestCenter}
                                 onDragStart={e => setActiveId(e.active.id)} onDragEnd={handleDragEnd}>
                                 <SortableContext items={blocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
-                                    <div className="px-10 py-8 min-h-[600px] space-y-3">
+                                    <div className="px-10 py-8 min-h-[600px] space-y-3 relative" id="email-builder-canvas">
+                                        <style dangerouslySetInnerHTML={{
+                                            __html: `
+                                                #email-builder-canvas .email-block-renderer p,
+                                                #email-builder-canvas .email-block-renderer h1,
+                                                #email-builder-canvas .email-block-renderer h2,
+                                                #email-builder-canvas .email-block-renderer h3,
+                                                #email-builder-canvas .email-block-renderer h4,
+                                                #email-builder-canvas .email-block-renderer h5,
+                                                #email-builder-canvas .email-block-renderer h6,
+                                                #email-builder-canvas .email-block-renderer ul,
+                                                #email-builder-canvas .email-block-renderer ol,
+                                                #email-builder-canvas .email-block-renderer li,
+                                                #email-builder-canvas .email-block-renderer a,
+                                                #email-builder-canvas .email-block-renderer img,
+                                                #email-builder-canvas .email-block-renderer hr,
+                                                #email-builder-canvas .email-block-renderer table,
+                                                #email-builder-canvas .email-block-renderer td { 
+                                                    margin: 0; 
+                                                    padding: 0; 
+                                                    box-sizing: border-box; 
+                                                }
+                                            `
+                                        }} />
                                         {blocks.length === 0 ? (
                                             <div className="h-64 flex flex-col items-center justify-center border-4 border-dashed border-slate-100 rounded-2xl text-slate-300">
                                                 <Plus className="w-10 h-10 mb-3 stroke-1 animate-pulse" />
