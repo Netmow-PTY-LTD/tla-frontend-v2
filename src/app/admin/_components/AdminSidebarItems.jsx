@@ -72,7 +72,7 @@ export const AdminSidebarItems = {
           isActive: true,
         },
         {
-          title: 'Email Template Builder',
+          title: 'Add New Email Template',
           url: '/admin/email/builder',
           icon: Pencil,
           isActive: true,
