@@ -200,7 +200,15 @@ export default function ScheduledJobListPage() {
                                         </TableCell>
                                         <TableCell>
                                             <div className="flex flex-col gap-1">
-                                                {job.lastRunAt ? (
+                                                {job.active ? (
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="relative flex h-2 w-2">
+                                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                                            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                                        </div>
+                                                        <span className="text-xs font-bold text-green-600 uppercase tracking-widest animate-pulse">Running</span>
+                                                    </div>
+                                                ) : job.lastRunAt ? (
                                                     <div className="flex items-center gap-2">
                                                         {job.lastStatus === 'success' ? (
                                                             <CheckCircle2 className="w-4 h-4 text-green-500" />
