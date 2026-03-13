@@ -119,12 +119,12 @@ const defaultValues = {
   appLogo: '',
   favicon: '',
   robots: 'noindex, nofollow',
-  emailSettings: {
-    isFlowEnabled: true,
-    maxRetries: 3,
-    workerConcurrency: 5,
-    batchSize: 50,
-  },
+  // emailSettings: {
+  //   isFlowEnabled: true,
+  //   maxRetries: 3,
+  //   workerConcurrency: 5,
+  //   batchSize: 50,
+  // },
 };
 
 export default function SettingsForm({ appSettings, isLoading }) {
@@ -369,7 +369,7 @@ export default function SettingsForm({ appSettings, isLoading }) {
       </div>
 
       {/* Email Flow Settings */}
-      <div className="pt-6 border-t mt-6">
+      {/* <div className="pt-6 border-t mt-6">
         <h3 className="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
           📧 Email Flow Settings
         </h3>
@@ -414,7 +414,7 @@ export default function SettingsForm({ appSettings, isLoading }) {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Submit */}
       <Button

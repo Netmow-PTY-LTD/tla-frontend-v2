@@ -160,6 +160,44 @@ const emailApiService = baseApi.injectEndpoints({
                 body,
             }),
         }),
+
+        // Scheduled Jobs CRUD
+        getAllScheduledJobs: builder.query({
+            query: () => ({
+                url: '/scheduled-jobs',
+                method: 'GET',
+            }),
+            providesTags: ['scheduled-jobs'],
+        }),
+        getAvailableTasks: builder.query({
+            query: () => ({
+                url: '/scheduled-jobs/task-names',
+                method: 'GET',
+            }),
+        }),
+        createScheduledJob: builder.mutation({
+            query: (body) => ({
+                url: '/scheduled-jobs/create-job',
+                method: 'POST',
+                body,
+            }),
+            invalidatesTags: ['scheduled-jobs'],
+        }),
+        updateScheduledJob: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `/scheduled-jobs/${id}`,
+                method: 'PATCH',
+                body: data,
+            }),
+            invalidatesTags: ['scheduled-jobs'],
+        }),
+        deleteScheduledJob: builder.mutation({
+            query: (id) => ({
+                url: `/scheduled-jobs/${id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['scheduled-jobs'],
+        }),
     }),
 });
 
@@ -190,4 +228,11 @@ export const {
     useGetTemplatesQuery,
     useGetSegmentsQuery,
     useSendPreviewMutation,
+
+    // Scheduled Job Hooks
+    useGetAllScheduledJobsQuery,
+    useGetAvailableTasksQuery,
+    useCreateScheduledJobMutation,
+    useUpdateScheduledJobMutation,
+    useDeleteScheduledJobMutation,
 } = emailApiService;
