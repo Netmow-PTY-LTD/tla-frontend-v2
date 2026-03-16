@@ -70,7 +70,9 @@ export default function GlobalSocketListener() {
 
     return () => {
       socket.off(`toast:${userId}`, handleToast);
-      socket.disconnect();
+      // ✅ FIXED: Do NOT call socket.disconnect() here.
+      // The socket is a shared singleton — disconnecting here kills it for ALL tabs/components.
+      // Use disconnectSocket() only on actual user logout.
     };
   }, [userId]);
 
