@@ -14,10 +14,10 @@ export default function RegistrationSuccessPage() {
 
             <div className="max-w-lg w-full space-y-6 relative z-10">
                 <div className="text-center">
-                    <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-[var(--color-special)] bg-opacity-10 mb-6">
-                        <Check className="h-8 w-8 text-white" />
+                    <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-[var(--color-special)] bg-opacity-10 mb-4">
+                        <Check className="h-6 w-6 text-white" />
                     </div>
-                    <h2 className="mt-6 text-3xl font-extrabold text-slate-900">
+                    <h2 className="mt-4 text-2xl font-bold text-slate-900">
                         Account Created Successfully!
                     </h2>
                     <p className="mt-2 text-sm text-slate-600">
@@ -33,7 +33,7 @@ export default function RegistrationSuccessPage() {
                             </div>
                         </div>
                         <div>
-                            <h3 className="text-lg font-bold text-slate-900 mb-1">Email Verification Required</h3>
+                            <h3 className="text-base font-bold text-slate-900 mb-1">Email Verification Required</h3>
                             <p className="text-sm text-slate-600 leading-relaxed">
                                 A verification link has been sent to your registered email address.
                                 Please check your inbox (and spam folder) and follow the instructions to activate your account.
@@ -46,15 +46,15 @@ export default function RegistrationSuccessPage() {
                             Once verified, you'll be able to review available cases and complete your professional profile.
                         </p>
 
-                        <div className="grid grid-cols-1 gap-3">
-                            <Button asChild className="w-full bg-[var(--color-special)] hover:opacity-90 text-white h-12 rounded-xl text-lg font-bold transition-all shadow-[0_10px_30px_rgba(0,195,192,0.2)]">
-                                <Link href="/login" className="flex items-center justify-center gap-2">
-                                    Go to Login <ArrowRight className="h-5 w-5" />
-                                </Link>
-                            </Button>
-                            <Button asChild variant="ghost" className="w-full h-12 rounded-xl text-slate-600 hover:text-slate-900 transition-all font-medium">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <Button asChild variant="outline" className="w-full h-12 rounded-xl text-slate-600 hover:text-slate-900 transition-all font-medium text-sm">
                                 <Link href="/" className="flex items-center justify-center gap-2">
                                     <Home className="h-5 w-5" /> Back to Home
+                                </Link>
+                            </Button>
+                            <Button asChild className="w-full bg-[var(--color-special)] hover:opacity-90 text-white h-12 rounded-xl text-sm font-bold transition-all shadow-[0_10px_30px_rgba(0,195,192,0.2)]">
+                                <Link href="/login" className="flex items-center justify-center gap-2">
+                                    Go to Login <ArrowRight className="h-5 w-5" />
                                 </Link>
                             </Button>
                         </div>
