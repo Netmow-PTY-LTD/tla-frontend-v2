@@ -79,11 +79,11 @@ export const lawyerSchema = z.object({
   gender: z.enum(["male", "female", "other"], {
     required_error: "Gender is required",
   }),
-    services: z
-      .array(z.string())
-      .min(1, "At least one service specialization is required"),
+  services: z
+    .array(z.string())
+    .min(1, "At least one service specialisation is required"),
   AreaZipcode: z.string().min(1, "Practicing area is required"),
-  country:z.string(),
+  country: z.string(),
   rangeInKm: z
     .number()
     .min(1, "Range of area is required")
@@ -137,7 +137,7 @@ export default function EditLawyer() {
 
   React.useEffect(() => {
     if (lawyerData?.data) {
-      const { profile, lawyerServiceMap, userData} = lawyerData.data;
+      const { profile, lawyerServiceMap, userData } = lawyerData.data;
       console.log("Fetched lawyer data:", lawyerServiceMap);
       if (profile) {
         form.setValue("name", profile.name);
@@ -149,50 +149,50 @@ export default function EditLawyer() {
       form.setValue("email", userData.email);
       form.setValue("phone", userData.phone);
       if (lawyerServiceMap) {
-         form.setValue("country", lawyerServiceMap.country);
-         form.setValue("services", lawyerServiceMap.services);
-         form.setValue("rangeInKm", Number(lawyerServiceMap.rangeInKm || 0)); 
-         form.setValue("practiceWithin", lawyerServiceMap.practiceWithin);
-         form.setValue("practiceInternationally", lawyerServiceMap.practiceInternationally);
-         
-         // Fix: Map from zipCode object in API response
-         if (lawyerServiceMap.zipCode) {
-              setAddress(lawyerServiceMap.zipCode.zipcode);
-              setPostalCode(lawyerServiceMap.zipCode.postalCode);
-              setLatitude(lawyerServiceMap.zipCode.latitude);
-              setLongitude(lawyerServiceMap.zipCode.longitude);
-              form.setValue("AreaZipcode", lawyerServiceMap.zipCode._id);
-              if (lawyerServiceMap.zipCode.countryCode) {
-                form.setValue("countryCode", lawyerServiceMap.zipCode.countryCode);
-              }
-         } else if (lawyerServiceMap.addressInfo) { 
-              // Fallback for addressInfo if zipCode is missing (though API seems to use zipCode)
-              setAddress(lawyerServiceMap.addressInfo.zipcode);
-              setPostalCode(lawyerServiceMap.addressInfo.postalCode);
-              setLatitude(lawyerServiceMap.addressInfo.latitude);
-              setLongitude(lawyerServiceMap.addressInfo.longitude);
-              form.setValue("AreaZipcode", lawyerServiceMap.zipCode?._id || lawyerServiceMap.addressInfo?._id); // Try to find ID
-              if (lawyerServiceMap.addressInfo.countryCode) {
-                 form.setValue("countryCode", lawyerServiceMap.addressInfo.countryCode);
-              }
-         }
+        form.setValue("country", lawyerServiceMap.country);
+        form.setValue("services", lawyerServiceMap.services);
+        form.setValue("rangeInKm", Number(lawyerServiceMap.rangeInKm || 0));
+        form.setValue("practiceWithin", lawyerServiceMap.practiceWithin);
+        form.setValue("practiceInternationally", lawyerServiceMap.practiceInternationally);
+
+        // Fix: Map from zipCode object in API response
+        if (lawyerServiceMap.zipCode) {
+          setAddress(lawyerServiceMap.zipCode.zipcode);
+          setPostalCode(lawyerServiceMap.zipCode.postalCode);
+          setLatitude(lawyerServiceMap.zipCode.latitude);
+          setLongitude(lawyerServiceMap.zipCode.longitude);
+          form.setValue("AreaZipcode", lawyerServiceMap.zipCode._id);
+          if (lawyerServiceMap.zipCode.countryCode) {
+            form.setValue("countryCode", lawyerServiceMap.zipCode.countryCode);
+          }
+        } else if (lawyerServiceMap.addressInfo) {
+          // Fallback for addressInfo if zipCode is missing (though API seems to use zipCode)
+          setAddress(lawyerServiceMap.addressInfo.zipcode);
+          setPostalCode(lawyerServiceMap.addressInfo.postalCode);
+          setLatitude(lawyerServiceMap.addressInfo.latitude);
+          setLongitude(lawyerServiceMap.addressInfo.longitude);
+          form.setValue("AreaZipcode", lawyerServiceMap.zipCode?._id || lawyerServiceMap.addressInfo?._id); // Try to find ID
+          if (lawyerServiceMap.addressInfo.countryCode) {
+            form.setValue("countryCode", lawyerServiceMap.addressInfo.countryCode);
+          }
+        }
       }
     }
   }, [lawyerData, form]);
 
 
-    const token = Cookies.get('token');
-        const { data: currentUser, isLoading: isCurrentUserLoading } =
-          useAuthUserInfoQuery(undefined, {
-            skip: !token,
-          });
+  const token = Cookies.get('token');
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    useAuthUserInfoQuery(undefined, {
+      skip: !token,
+    });
 
 
 
   // Watch country selection
   const countryId = useWatch({ control: form.control, name: 'country' });
   const countryCode = useWatch({ control: form.control, name: 'countryCode' });
- 
+
 
 
   const { data: countryWiseServices } = useGetCountryWiseServicesQuery(
@@ -211,7 +211,7 @@ export default function EditLawyer() {
     skip: !countryId,
   });
 
-  
+
 
   const filteredZipCodes =
     allZipCodes?.data?.filter((z) =>
@@ -227,7 +227,7 @@ export default function EditLawyer() {
 
   const onSubmit = async (data) => {
     console.log("Form submitted", data);
-  
+
     const {
       name,
       email,
@@ -242,7 +242,7 @@ export default function EditLawyer() {
       practiceInternationally,
       services,
       full_address
-      
+
     } = data;
 
     const payload = {
@@ -298,8 +298,8 @@ export default function EditLawyer() {
       // Optionally, show an error message to the user
       showErrorToast(
         error?.message ||
-          error?.data?.message ||
-          "Failed to update lawyer. Please try again."
+        error?.data?.message ||
+        "Failed to update lawyer. Please try again."
       );
     }
 
@@ -516,19 +516,17 @@ export default function EditLawyer() {
                               />
                               <div
                                 className={`w-4 h-4 rounded-full border-2 border-[var(--primary-color)] flex items-center justify-center transition-all
-                  ${
-                    field.value === option.value
-                      ? "bg-[var(--primary-color)]"
-                      : "bg-transparent"
-                  }`}
+                  ${field.value === option.value
+                                    ? "bg-[var(--primary-color)]"
+                                    : "bg-transparent"
+                                  }`}
                               >
                                 <div
                                   className={`w-1.5 h-1.5 rounded-full transition
-                    ${
-                      field.value === option.value
-                        ? "bg-white"
-                        : "bg-transparent"
-                    }`}
+                    ${field.value === option.value
+                                      ? "bg-white"
+                                      : "bg-transparent"
+                                    }`}
                                 />
                               </div>
                               <span className="text-sm text-gray-800">
@@ -546,10 +544,10 @@ export default function EditLawyer() {
 
 
 
-                  
-                      <div className="w-full">
-             
-                  <CountrySelect form={form} name="country" />
+
+              <div className="w-full">
+
+                <CountrySelect form={form} name="country" />
               </div>
 
               <div className="w-full">
@@ -664,12 +662,12 @@ export default function EditLawyer() {
               <div className="w-full">
                 <RangeSelector form={form} name="rangeInKm" />
               </div>
-           
-                      <ServiceSelector
-                      name="services"
-                      services={countryWiseServices?.data || []}
-                      hasError={form.formState.errors.services}
-                      />
+
+              <ServiceSelector
+                name="services"
+                services={countryWiseServices?.data || []}
+                hasError={form.formState.errors.services}
+              />
 
 
               <div className="w-full">
@@ -681,7 +679,7 @@ export default function EditLawyer() {
                       <FormControl>
                         <Checkbox
                           {...field}
-                           checked={field.value}
+                          checked={field.value}
                           onCheckedChange={(val) => {
                             field.onChange(val);
                           }}
@@ -745,8 +743,8 @@ export default function EditLawyer() {
                   "Update Lawyer"
                 )}
               </Button>
-             
-            
+
+
             </div>
           </form>
         </Form>

@@ -96,7 +96,7 @@ export default function HomeCategoryWiseServices() {
     <section className="pt-[80px] category-wise-services pb-[100px]">
       <div className="container">
         <SectionHeading
-          title="Explore a comprehensive range of specialized legal services tailored
+          title="Explore a comprehensive range of specialised legal services tailored
             to your needs"
           subtitle="Our Services"
         />
