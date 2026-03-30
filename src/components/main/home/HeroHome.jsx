@@ -223,9 +223,9 @@ export default function HeroHome({ searchParam }) {
             <p className="text-[#444] text-2xl font-medium">
               Post a case in minutes
             </p>
-            <p className="text-[#444] text-[18px] font-medium">
+            {/* <p className="text-[#444] text-[18px] font-medium">
               Need a <Link href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}/register`} target="_blank" className="text-[var(--primary-color)] underline">Business Profile?</Link>
-            </p>
+            </p> */}
           </div>
           <form className="w-full" onSubmit={handleSubmit}>
             <div className="hero-search-area flex flex-wrap md:flex-nowrap gap-2 items-center w-full">

@@ -144,12 +144,12 @@ export default function ContactPageComponent() {
             <section className="home-cta section">
               <div className="container">
                 <div className="home-cta-content">
-                  <div className="flex flex-wrap">
-                    <div className="w-full md:w-1/2 lg:w-5/12">
+                  <div className="flex flex-wrap h-auto md:h-[330px] relative">
+                    <div className="w-full lg:w-5/12">
                       <div className="home-cta-text md:pr-5 lg:pr-20">
                         <h2>Take the Next Step – Get Legal Help Today!</h2>
                         <div className="contact-info">
-                          {contactInfo?.address && (
+                          {/* {contactInfo?.address && (
                             <div className="address">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -175,9 +175,34 @@ export default function ContactPageComponent() {
                               </svg>
                               <span>{contactInfo.address}</span>
                             </div>
-                          )}
+                          )} */}
+                          <div className="address">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="25"
+                              height="25"
+                              viewBox="0 0 25 25"
+                              fill="none"
+                            >
+                              <path
+                                d="M17.8068 17.0799C16.8701 18.0165 14.9115 19.9752 13.5637 21.3229C12.7827 22.104 11.5176 22.1044 10.7365 21.3234C9.41224 19.9991 7.49149 18.0783 6.49305 17.0799C3.36885 13.9557 3.36885 8.89037 6.49305 5.76618C9.61724 2.64199 14.6826 2.64199 17.8068 5.76618C20.931 8.89037 20.931 13.9557 17.8068 17.0799Z"
+                                stroke="#00C3C0"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                              <path
+                                d="M15.1499 11.423C15.1499 13.0799 13.8068 14.423 12.1499 14.423C10.493 14.423 9.1499 13.0799 9.1499 11.423C9.1499 9.76618 10.493 8.42303 12.1499 8.42303C13.8068 8.42303 15.1499 9.76618 15.1499 11.423Z"
+                                stroke="#00C3C0"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                            <span>Brisbane, QLD, Australia</span>
+                          </div>
 
-                          {contactInfo?.phone && (
+                          {/* {contactInfo?.phone && (
                             <Link href={`tel:${contactInfo.phone}`}>
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -196,7 +221,7 @@ export default function ContactPageComponent() {
                               </svg>
                               <span>{contactInfo.phone}</span>
                             </Link>
-                          )}
+                          )} */}
 
                           {contactInfo?.email && (
                             <Link href={`mailto:${contactInfo.email}`}>
@@ -245,7 +270,7 @@ export default function ContactPageComponent() {
                         <Link href="#"></Link>
                       </div>
                     </div>
-                    <div className="w-full md:w-1/2 lg:w-7/12">
+                    <div className="w-full md:w-1/2 lg:w-7/12 hidden lg:block">
                       <div className="home-cta-images">
                         <div className="cta-shape"></div>
                         <img
@@ -259,7 +284,7 @@ export default function ContactPageComponent() {
                 </div>
               </div>
             </section>
-            <div className="map-section">
+            {/* <div className="map-section">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3539.506014674869!2d152.98834087633077!3d-27.484634317344216!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6b9150ecb3ebd2e9%3A0x5efe28327748682a!2sSuite%208%2F3%2C%20Level%203%2F54%20Jephson%20St%2C%20Toowong%20QLD%204066%2C%20Australia!5e0!3m2!1sen!2sbd!4v1753866750663!5m2!1sen!2sbd"
                 width="600"
@@ -267,7 +292,7 @@ export default function ContactPageComponent() {
                 style={{ border: 0, width: '100%' }}
                 loading="lazy"
               ></iframe>
-            </div>
+            </div> */}
           </div>
         </section>
       </MainLayout>

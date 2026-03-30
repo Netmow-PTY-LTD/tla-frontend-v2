@@ -78,11 +78,11 @@ export const lawyerSchema = z.object({
   gender: z.enum(["male", "female", "other"], {
     required_error: "Gender is required",
   }),
-    services: z
-      .array(z.string())
-      .min(1, "At least one service specialization is required"),
+  services: z
+    .array(z.string())
+    .min(1, "At least one service specialisation is required"),
   AreaZipcode: z.string().min(1, "Practicing area is required"),
-  country:z.string(),
+  country: z.string(),
   countryCode: z.string().optional(),
   rangeInKm: z
     .number()
@@ -128,18 +128,18 @@ export default function CreateNewLawyer() {
   });
 
 
-    const token = Cookies.get('token');
-        const { data: currentUser, isLoading: isCurrentUserLoading } =
-          useAuthUserInfoQuery(undefined, {
-            skip: !token,
-          });
+  const token = Cookies.get('token');
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    useAuthUserInfoQuery(undefined, {
+      skip: !token,
+    });
 
 
 
   // Watch country selection
   const countryId = useWatch({ control: form.control, name: 'country' });
   const countryCode = useWatch({ control: form.control, name: 'countryCode' });
- 
+
 
 
   const { data: countryWiseServices } = useGetCountryWiseServicesQuery(
@@ -158,7 +158,7 @@ export default function CreateNewLawyer() {
     skip: !countryId,
   });
 
-  
+
 
   const filteredZipCodes =
     allZipCodes?.data?.filter((z) =>
@@ -174,7 +174,7 @@ export default function CreateNewLawyer() {
 
   const onSubmit = async (data) => {
     console.log("Form submitted", data);
-  
+
     const {
       name,
       email,
@@ -189,7 +189,7 @@ export default function CreateNewLawyer() {
       practiceInternationally,
       services,
       full_address
-      
+
     } = data;
 
     const payload = {
@@ -217,7 +217,7 @@ export default function CreateNewLawyer() {
         addressInfo: {
           countryId: countryId,
           countryCode,
-         
+
           zipcode: address,
           postalCode: postalCode,
           latitude: latitude,
@@ -243,8 +243,8 @@ export default function CreateNewLawyer() {
       // Optionally, show an error message to the user
       showErrorToast(
         error?.message ||
-          error?.data?.message ||
-          "Failed to create lawyer. Please try again."
+        error?.data?.message ||
+        "Failed to create lawyer. Please try again."
       );
     }
 
@@ -256,16 +256,16 @@ export default function CreateNewLawyer() {
   return (
     <div className="max-w-[1000px] mx-auto bg-white p-6 rounded-lg shadow-lg">
       <div className="w-full">
-      <h3 className="text-black font-semibold heading-lg">
-  Add Lawyer to Marketing Campaign
-</h3>
-<p className="text-[#6e6e6e] mt-2 text-sm">
-  Use this form to add lawyers to your marketing campaigns or database. 
-  Each lawyer’s profile should include personal details, professional role, 
-  and areas of expertise. This ensures accurate representation in campaigns, 
-  helps segment leads effectively, and allows your team to target clients 
-  with the right expertise.
-</p>
+        <h3 className="text-black font-semibold heading-lg">
+          Add Lawyer to Marketing Campaign
+        </h3>
+        <p className="text-[#6e6e6e] mt-2 text-sm">
+          Use this form to add lawyers to your marketing campaigns or database.
+          Each lawyer’s profile should include personal details, professional role,
+          and areas of expertise. This ensures accurate representation in campaigns,
+          helps segment leads effectively, and allows your team to target clients
+          with the right expertise.
+        </p>
       </div>
       <div className="mt-6">
         <Form {...form}>
@@ -453,19 +453,17 @@ export default function CreateNewLawyer() {
                               />
                               <div
                                 className={`w-4 h-4 rounded-full border-2 border-[var(--primary-color)] flex items-center justify-center transition-all
-                  ${
-                    field.value === option.value
-                      ? "bg-[var(--primary-color)]"
-                      : "bg-transparent"
-                  }`}
+                  ${field.value === option.value
+                                    ? "bg-[var(--primary-color)]"
+                                    : "bg-transparent"
+                                  }`}
                               >
                                 <div
                                   className={`w-1.5 h-1.5 rounded-full transition
-                    ${
-                      field.value === option.value
-                        ? "bg-white"
-                        : "bg-transparent"
-                    }`}
+                    ${field.value === option.value
+                                      ? "bg-white"
+                                      : "bg-transparent"
+                                    }`}
                                 />
                               </div>
                               <span className="text-sm text-gray-800">
@@ -483,10 +481,10 @@ export default function CreateNewLawyer() {
 
 
 
-                  
-                      <div className="w-full">
-             
-                  <CountrySelect form={form} name="country" />
+
+              <div className="w-full">
+
+                <CountrySelect form={form} name="country" />
               </div>
 
               <div className="w-full">
@@ -601,12 +599,12 @@ export default function CreateNewLawyer() {
               <div className="w-full">
                 <RangeSelector form={form} name="rangeInKm" />
               </div>
-           
-                      <ServiceSelector
-                      name="services"
-                      services={countryWiseServices?.data || []}
-                      hasError={form.formState.errors.services}
-                      />
+
+              <ServiceSelector
+                name="services"
+                services={countryWiseServices?.data || []}
+                hasError={form.formState.errors.services}
+              />
 
 
               <div className="w-full">
@@ -681,8 +679,8 @@ export default function CreateNewLawyer() {
                   "Create Lawyer"
                 )}
               </Button>
-             
-            
+
+
             </div>
           </form>
         </Form>
