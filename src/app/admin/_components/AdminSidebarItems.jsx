@@ -31,6 +31,7 @@ import {
   Pencil,
   Edit,
   PlusCircle,
+  Clock,
 } from 'lucide-react';
 
 export const AdminSidebarItems = {
@@ -81,6 +82,12 @@ export const AdminSidebarItems = {
           title: 'Email Categories',
           url: '/admin/email/categories',
           icon: List,
+          isActive: true,
+        },
+        {
+          title: 'Scheduled Jobs',
+          url: '/admin/email/scheduled-jobs',
+          icon: Clock,
           isActive: true,
         },
         // {

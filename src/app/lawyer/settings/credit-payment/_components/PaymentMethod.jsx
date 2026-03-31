@@ -26,7 +26,7 @@ const PaymentMethod = ({ card }) => {
     <div className=" bg-gray-50  p-4 rounded-lg">
       <div className="w-full max-w-2xl">
         <h1 className="text-2xl font-semibold text-gray-900 mb-6">
-          My Saved Card{' '}
+          {!card?.paymentType || card?.paymentType === 'card' ? 'My Saved Card' : 'My Saved Payment Method'}{' '}
           <button
             className="text-sm ml-2 text-red-600 hover:underline focus:outline-none"
             onClick={() => setIsOpen(true)} // ✅ FIXED
@@ -36,11 +36,22 @@ const PaymentMethod = ({ card }) => {
         </h1>
 
         <div className="flex flex-col  gap-6 items-start">
-          <CardDisplay
-            cardLastFour={card?.cardLastFour}
-            expiryMonth={card?.expiryMonth}
-            expiryYear={card?.expiryYear}
-          />
+          {!card?.paymentType || card?.paymentType === 'card' ? (
+            <CardDisplay
+              cardLastFour={card?.cardLastFour}
+              expiryMonth={card?.expiryMonth}
+              expiryYear={card?.expiryYear}
+            />
+          ) : (
+            <div className="w-80 bg-gradient-to-br bg-[#26365F] rounded-2xl p-6 text-white shadow-xl flex items-center justify-center h-48">
+              <div className="text-center">
+                <h3 className="text-2xl font-medium mb-2 capitalize">
+                  {card?.paymentType.replace('_', ' ')}
+                </h3>
+                <p className="text-gray-200">Connected</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
       <ConfirmationModal

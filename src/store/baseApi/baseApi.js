@@ -36,6 +36,17 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
 
   if (result.error?.status === 401) {
     const token = api.getState().auth.token;
+    const url = typeof arg === 'string' ? arg : arg.url || '';
+
+    // ✅ CRITICAL: Prevent infinite loops on auth-related endpoints
+    if (
+      url.includes('/auth/logout') ||
+      url.includes('/auth/refresh-token') ||
+      url.includes('/auth/login')
+    ) {
+      return result;
+    }
+
     if (!token) {
       // Already logged out or no token, so just return the error
       return result;
@@ -56,21 +67,30 @@ const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
         // Retry original request with new token
         result = await baseQuery(arg, api, extraOptions);
       } else {
-        api.dispatch(logOut());
+        // ✅ CRITICAL FIX: Call logout API BEFORE dispatching logOut()
+        // so that the refresh cookie is still available in the request
         try {
-          await api.dispatch(baseApi.endpoints.authLogOut.initiate()).unwrap();
+          await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/logout`,
+            { method: 'POST', credentials: 'include' }
+          );
         } catch (e) {
-          console.error("Logout error during refresh failure:", e);
+          console.error('Logout API error during refresh failure:', e);
         }
+        api.dispatch(logOut()); // Clear Redux state after API call
       }
     } catch (err) {
-      console.error("Refresh token error:", err);
-      api.dispatch(logOut());
+      console.error('Refresh token error:', err);
+      // ✅ CRITICAL FIX: Call logout API BEFORE dispatching logOut()
       try {
-        await api.dispatch(baseApi.endpoints.authLogOut.initiate()).unwrap();
+        await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/logout`,
+          { method: 'POST', credentials: 'include' }
+        );
       } catch (e) {
-        console.error("Logout error during refresh exception:", e);
+        console.error('Logout API error during refresh exception:', e);
       }
+      api.dispatch(logOut()); // Clear Redux state after API call
     }
   }
 

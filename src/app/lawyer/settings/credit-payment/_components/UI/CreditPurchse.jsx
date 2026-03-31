@@ -101,7 +101,7 @@ const CreditsPurchase = ({ creditPackage }) => {
                     (creditPackage?.country?.taxPercentage / 100 || 0.1)
                   )}{' '}
                   ({creditPackage?.country?.taxPercentage || 10}%{' '}
-                  {creditPackage?.taxType || 'GST'})
+                  {creditPackage?.country?.taxType || 'GST'})
                 </p>
               </div>
               <p className="text-[#00C3C0] text-sm font-semibold">
@@ -112,7 +112,7 @@ const CreditsPurchase = ({ creditPackage }) => {
                   (1 + (creditPackage?.country?.taxPercentage / 100 || 0.1))
                 )}{' '}
                 (Inc {creditPackage?.country?.taxPercentage || 10}%{' '}
-                {creditPackage?.taxType || 'GST'})
+                {creditPackage?.country?.taxType || 'GST'})
               </p>
               <p className="text-gray-500 text-sm">
                 {formatCurrency(creditPackage.discountPercentage > 0 ? (Number(creditPackage?.priceDisplay) / Number(creditPackage?.credit)) : Number(creditPackage?.pricePerCredit))}/credit
