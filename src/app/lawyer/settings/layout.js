@@ -52,25 +52,24 @@ const SettingsLayout = ({ children }) => {
       href: '/lawyer/settings/credit-payment',
       icon: <BanknoteArrowUp className="w-4 h-4" />,
     },
- 
+
     // {
     //   label: 'Notification',
     //   href: '/lawyer/settings/notifications',
     //   icon: <Bell className="w-4 h-4" />,
     // },
 
-    {
-      label: 'Subscription',
-      href: '/lawyer/settings/subscription',
-      icon: <Podcast className="w-4 h-4" />,
+    // {
+    //   label: 'Subscription',
+    //   href: '/lawyer/settings/subscription',
+    //   icon: <Podcast className="w-4 h-4" />,
 
-    },
-    {
-      label: ' Elite Pro',
-      href: '/lawyer/settings/elite-pro-subscription',
-      icon: <Podcast className="w-4 h-4" />,
-
-    },
+    // },
+    // {
+    //   label: ' Elite Pro',
+    //   href: '/lawyer/settings/elite-pro-subscription',
+    //   icon: <Podcast className="w-4 h-4" />,
+    // },
   ];
 
   return (

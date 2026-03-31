@@ -16,7 +16,9 @@ const formSchema = z.object({
   email: z.string().email({
     message: 'Please enter a valid email address.',
   }),
-  phone: z.string().optional(),
+  phone: z.string().min(10, {
+    message: 'Phone number is required and must be at least 10 characters.',
+  }),
   message: z.string().min(10, {
     message: 'Message must be at least 10 characters long.',
   }),
@@ -121,7 +123,7 @@ export default function ContactPageComponent() {
                         placeholder="Enter your email address"
                       />
                       <TextInput
-                        label="Phone(Optional)"
+                        label="Phone"
                         name="phone"
                         placeholder="Enter your phone number"
                       />

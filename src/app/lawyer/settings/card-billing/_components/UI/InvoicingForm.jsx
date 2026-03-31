@@ -25,8 +25,6 @@ export default function InvoicingForm({ setInvoicesBillingsProgress }) {
       city: invoiceBillingData?.data?.billingAddress?.city ?? '',
       postcode: invoiceBillingData?.data?.billingAddress?.postcode ?? '',
       phoneNumber: invoiceBillingData?.data?.billingAddress?.phoneNumber ?? '',
-      isVatRegistered:
-        invoiceBillingData?.data?.billingAddress?.isVatRegistered ?? false,
       // vatNumber: invoiceBillingData?.data?.billingAddress?.vatNumber ?? '',
     }),
     [invoiceBillingData]
@@ -46,7 +44,7 @@ export default function InvoicingForm({ setInvoicesBillingsProgress }) {
   const watchedValues = useWatch({ control });
 
   useEffect(() => {
-    const totalFields = 7;
+    const totalFields = 6;
     let filled = 0;
 
     const {
@@ -56,8 +54,6 @@ export default function InvoicingForm({ setInvoicesBillingsProgress }) {
       city,
       postcode,
       phoneNumber,
-      isVatRegistered,
-      vatNumber,
     } = watchedValues;
 
     if (contactName?.trim()) filled++;
@@ -66,8 +62,6 @@ export default function InvoicingForm({ setInvoicesBillingsProgress }) {
     if (city?.trim()) filled++;
     if (postcode?.trim()) filled++;
     if (phoneNumber?.trim()) filled++;
-    // if (isVatRegistered && vatNumber?.trim()) filled++;
-    if (isVatRegistered) filled++;
 
     const progress = Math.round((filled / totalFields) * 100);
     setInvoicesBillingsProgress(progress);
@@ -124,10 +118,7 @@ export default function InvoicingForm({ setInvoicesBillingsProgress }) {
           <TextInput name="postcode" label="Post Code" />
         </div>
 
-        <div className="flex items-center space-x-2">
-          <CheckboxInput name="isVatRegistered" label="I am VAT registered" />
-        </div>
-
+ 
         <div className="flex justify-end pt-4">
           <button className="bg-[#12C7C4] text-white px-4 py-2 text-sm rounded-md hover:bg-[#10b0ae]">
             Save

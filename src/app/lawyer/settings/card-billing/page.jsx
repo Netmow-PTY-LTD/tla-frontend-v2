@@ -12,24 +12,24 @@ const stripePromise = loadStripe(
 );
 
 export default function MyCreditsPage() {
- 
-  const [invoicesBillingsProgress,setInvoicesBillingsProgress]=useState(0)
 
-  const [myPayments,setMyPayments]=useState(0)
+  const [invoicesBillingsProgress, setInvoicesBillingsProgress] = useState(0)
+
+  const [myPayments, setMyPayments] = useState(0)
   const accordionItems = [
- 
-    {
-      id: 'invoices-billing',
-      title: 'Invoices And Billing Details',
-      content: <InvoicesBillings setInvoicesBillingsProgress={setInvoicesBillingsProgress} />,
-      progress: invoicesBillingsProgress
-    },
+
+    // {
+    //   id: 'invoices-billing',
+    //   title: 'Invoices And Billing Details',
+    //   content: <InvoicesBillings setInvoicesBillingsProgress={setInvoicesBillingsProgress} />,
+    //   progress: invoicesBillingsProgress
+    // },
 
     {
       id: 'my-payments',
       title: 'My Payment Details',
       content: <MyPayments setMyPayments={setMyPayments} />,
-       progress: myPayments
+      progress: myPayments
     },
   ];
   return (
