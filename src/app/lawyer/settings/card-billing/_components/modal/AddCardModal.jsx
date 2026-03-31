@@ -60,11 +60,11 @@ const AddCardForm = ({ setOpen, onCardAdded }) => {
       <h2 className="text-2xl font-semibold mb-6 text-center">
         Add card details
       </h2>
-      
+
       <div className="mb-4 pt-2">
         <PaymentElement
           onChange={(event) => {
-            setIsCardSelected(event.value.type === 'card' || event.value.type === ''); 
+            setIsCardSelected(event.value.type === 'card' || event.value.type === '');
             // empty string might happen on initial load, usually defaults to 'card'
           }}
           options={{
@@ -162,9 +162,11 @@ const AddCardModal = ({ open, setOpen, onCardAdded }) => {
           <div className="w-8 h-8 border-4 border-[#12C7C4] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : (
-        <Elements stripe={stripePromise} options={{ clientSecret }}>
-          <AddCardForm setOpen={setOpen} onCardAdded={onCardAdded} />
-        </Elements>
+        <div className='max-h-[80vh] overflow-hidden overflow-y-auto pr-2'>
+          <Elements stripe={stripePromise} options={{ clientSecret }}>
+            <AddCardForm setOpen={setOpen} onCardAdded={onCardAdded} />
+          </Elements>
+        </div>
       )}
     </Modal>
   );
