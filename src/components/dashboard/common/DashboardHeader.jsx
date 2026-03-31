@@ -78,30 +78,30 @@ export default function DashboardHeader({ onToggleSidebar }) {
       </div>
       <div className="flex items-center gap-2">
         {/* Elite Pro */}
-        {isElitePro === true && eliteProId && eliteProId !== null && (
+        {/* {isElitePro === true && eliteProId && eliteProId !== null && (
           <div className="border border-gray-300 rounded-full w-8 h-8 flex items-center justify-center">
-            {/* <Image
+            <Image
               src={'/assets/img/elite-pro-badge.svg'}
               alt="Elite Pro"
               width={40}
               height={40}
               className="w-5 h-5 object-cover"
-            /> */}
+            /> 
             <EliteProBadge className="w-5 h-5" />
           </div>
-        )}
-        {subscriptionId && subscriptionId !== null && (
+        )}*/}
+        {/* {subscriptionId && subscriptionId !== null && (
           <div className="border border-gray-300 rounded-full w-8 h-8 flex items-center justify-center">
-            {/* <Image
+            <Image
               src={'/assets/img/subscription-badge.svg'}
               alt="Subscription"
               width={40}
               height={40}
               className="w-5 h-5 object-cover"
-            /> */}
+            /> 
             <SubscriptionBadge className="w-5 h-5" />
           </div>
-        )}
+        )}*/}
         {/* Remaining Credits */}
         <div className="hidden sm:flex items-center gap-1 bg-gray-50 border border-gray-200 rounded-full px-2 py-1 shadow-sm h-8">
           <BadgeCent className="w-6 h-6 text-primary" />
