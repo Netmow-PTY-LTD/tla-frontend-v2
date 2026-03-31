@@ -27,7 +27,8 @@ export default function Faq() {
                   onClick={() => toggleAccordion(index)}
                 >
                   <h5>
-                    <span>{index + 1}.</span> {faq?.question}
+                    <span>{index + 1}.</span>{' '}
+                    <span dangerouslySetInnerHTML={{ __html: faq?.question }} />
                   </h5>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -46,9 +47,8 @@ export default function Faq() {
                   className={`tla-faq-accordion-body ${
                     index === activeIndex ? 'active' : ''
                   }`}
-                >
-                  {faq?.answer}
-                </div>
+                  dangerouslySetInnerHTML={{ __html: faq?.answer }}
+                />
               </div>
             ))}
         </div>
