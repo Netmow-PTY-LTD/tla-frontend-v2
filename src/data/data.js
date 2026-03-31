@@ -607,8 +607,8 @@ export const clientsfaqsData = [
   },
   {
     id: 5,
-    question: 'How do I post my legal case requirements?',
-    answer: `Once you log in to your account, you can post your legal requirements and list your case. This will ensure that the lawyers give you the best possible price based on your specific legal requirements. The case will be available to verify lawyers who are qualified to work in that particular field of law. Once your case is submitted you will receive bids from lawyers interested in taking on your case.`,
+    question: 'How do I post my legal case?',
+    answer: `Posting a case is simple. You can submit your case by providing detailed information about your legal issue, including all relevant facts and your expectations, by following a few steps on the homepage. Additionally, after logging into your account, you can post a case with comprehensive details about your legal matter. This ensures that only suitable and qualified lawyers can review your case and respond with accurate, tailored proposals that meet your needs.`,
   },
   {
     id: 6,
