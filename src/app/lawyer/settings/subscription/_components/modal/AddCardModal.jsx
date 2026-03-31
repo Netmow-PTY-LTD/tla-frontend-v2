@@ -22,6 +22,7 @@ const AddCardForm = ({ setOpen, onCardAdded }) => {
   const elements = useElements();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isCardSelected, setIsCardSelected] = useState(true);
 
   const handleAddCard = async (e) => {
     e.preventDefault();
@@ -62,6 +63,10 @@ const AddCardForm = ({ setOpen, onCardAdded }) => {
       
       <div className="mb-4 pt-2">
         <PaymentElement
+          onChange={(event) => {
+            setIsCardSelected(event.value.type === 'card' || event.value.type === ''); 
+            // empty string might happen on initial load, usually defaults to 'card'
+          }}
           options={{
             layout: 'tabs',
             fields: {
@@ -76,6 +81,11 @@ const AddCardForm = ({ setOpen, onCardAdded }) => {
       </div>
 
       {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+      {!isCardSelected && (
+        <p className="text-amber-600 text-sm mb-3">
+          Currently, only credit and debit cards are accepted.
+        </p>
+      )}
 
       <div className="flex justify-between items-center mt-6">
         <button
@@ -87,7 +97,7 @@ const AddCardForm = ({ setOpen, onCardAdded }) => {
         </button>
         <button
           type="submit"
-          disabled={!stripe || loading}
+          disabled={!stripe || loading || !isCardSelected}
           className="bg-[#12C7C4] text-white px-4 py-2 rounded hover:bg-[#10b0ae] disabled:opacity-50"
         >
           {loading ? 'Processing...' : 'Add card details'}
