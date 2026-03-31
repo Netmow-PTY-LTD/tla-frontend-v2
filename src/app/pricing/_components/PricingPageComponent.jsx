@@ -98,7 +98,7 @@ const PricingPageComponent = () => {
           </div>
         </div>
       </section>
-      <section className="section">
+      {/* <section className="section">
         <div className="container">
           <div className="flex flex-wrap items-center">
             <div className="w-full md:w-7/12">
@@ -125,8 +125,8 @@ const PricingPageComponent = () => {
             </div>
           </div>
         </div>
-      </section>
-      <section className="section">
+      </section> */}
+      {/* <section className="section">
         <div className="container">
           <div className="max-w-[1025px] mx-auto flex flex-wrap items-center">
             <div className="w-full md:w-5/12">
@@ -152,7 +152,7 @@ const PricingPageComponent = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
       <HomeCTA />
     </MainLayout>
   );
