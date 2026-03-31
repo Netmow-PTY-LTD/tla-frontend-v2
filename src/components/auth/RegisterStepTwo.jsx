@@ -113,7 +113,9 @@ export default function RegisterStepTwo() {
     zipcodeId: zipCode || '',
   });
 
-  const ranges = rangeData?.data || [];
+  const ranges = useMemo(() => {
+    return rangeData?.data ? [...rangeData.data].sort((a, b) => a.value - b.value) : [];
+  }, [rangeData]);
 
   const form = useForm({
     resolver: zodResolver(lawyerRegistrationStepTwoFormValidation),
@@ -285,7 +287,7 @@ export default function RegisterStepTwo() {
                 name="AreaZipcode"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Practicing Area</FormLabel>
+                    <FormLabel>Location</FormLabel>
                     <Combobox
                       value={field.value}
                       onChange={(val) => {
@@ -421,7 +423,7 @@ export default function RegisterStepTwo() {
                 name="rangeInKm"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Range of Area</FormLabel>
+                    <FormLabel>Range</FormLabel>
                     <Select
                       onValueChange={(val) => {
                         const parsedValue = Number(val); // convert from string to number

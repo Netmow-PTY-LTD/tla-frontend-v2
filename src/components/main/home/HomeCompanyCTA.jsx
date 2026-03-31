@@ -13,8 +13,8 @@ export default function HomeCompanyCTA() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                     {/* Left Content */}
                     <div className="flex flex-col gap-6 z-10">
-                        <h2 className="text-4xl lg:text-5xl font-bold leading-tight text-slate-900">
-                            List Your <span className="text-[#ff8602]">Law Firm</span> or <span className="text-[#ff8602]">Business Profile.</span>
+                        <h2 className="text-4xl lg:text-5xl font-bold leading-[1.3] lg:leading-[1.3] text-slate-900">
+                            List your <span className="text-[#ff8602]">Law Firm</span> or <span className="text-[#ff8602]">Business</span>
 
                         </h2>
                         <p className="text-lg text-slate-600 font-medium">
