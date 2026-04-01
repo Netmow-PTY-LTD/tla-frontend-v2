@@ -174,7 +174,6 @@ const ServiceCard = ({
         <div className="space-y-4">
           <Accordion
             type="multiple"
-            collapsible
             className="max-w-[85%] mx-auto"
           >
             {questions?.map((q, index) => {
