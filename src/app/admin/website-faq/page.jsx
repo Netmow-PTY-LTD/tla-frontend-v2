@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,9 +10,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Edit, MoreHorizontal, Pencil, Trash2, Power } from 'lucide-react';
+import { MoreHorizontal, Pencil, Trash2, Power, List, GripVertical } from 'lucide-react';
 import AddFaqModal from './_components/AddFaqModal';
 import EditFaqModal from './_components/EditFaqModal';
+import DraggableFaqList from './_components/DraggableFaqList';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
 import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 import { DataTableWithPagination } from '../_components/DataTableWithPagination';
@@ -22,6 +23,8 @@ import {
   useToggleWebsiteFaqStatusMutation,
 } from '@/store/features/admin/websiteFaqApiService';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
 
 const FAQ_CATEGORY_LABELS = {
   client: 'Client',
@@ -37,20 +40,27 @@ export default function WebsiteFaqManagement() {
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('');
+  const [viewMode, setViewMode] = useState('table');
 
   const limit = 10;
 
   const {
     data: faqsData,
-    isLoading: isFaqDataLoading,
     refetch: refetchFaqData,
     isFetching,
   } = useGetAllWebsiteFaqsQuery({
     search,
     page,
     limit,
-    category: categoryFilter,
+  });
+
+  // Fetch all FAQs for drag-and-drop (without pagination)
+  const {
+    data: allFaqsData,
+    refetch: refetchAllFaqsData,
+  } = useGetAllWebsiteFaqsQuery({
+    page: 1,
+    limit: 1000,
   });
 
   const handleEditFaqModalOpen = (id) => {
@@ -190,7 +200,19 @@ export default function WebsiteFaqManagement() {
     <>
       <div className="mb-2 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <h2 className="text-2xl font-bold">Website FAQs</h2>
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-2">
+          <Tabs value={viewMode} onValueChange={setViewMode} className="w-auto">
+            <TabsList>
+              <TabsTrigger value="table" className="flex items-center gap-2">
+                <List className="w-4 h-4" />
+                Table View
+              </TabsTrigger>
+              <TabsTrigger value="reorder" className="flex items-center gap-2">
+                <GripVertical className="w-4 h-4" />
+                Drag & Drop Order
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
           <Button onClick={() => setIsModalOpen(true)}>Add FAQ</Button>
         </div>
       </div>
@@ -216,21 +238,32 @@ export default function WebsiteFaqManagement() {
         faqId={faqId}
         refetchFaqData={refetchFaqData}
       />
-      <DataTableWithPagination
-        columns={columns}
-        data={faqsData?.data || []}
-        pagination={faqsData?.pagination}
-        page={page}
-        limit={limit}
-        totalPage={faqsData?.pagination?.totalPage}
-        total={faqsData?.pagination?.total}
-        onPageChange={setPage}
-        onSearch={(val) => {
-          setSearch(val);
-          setPage(1);
-        }}
-        isFetching={isFetching}
-      />
+
+      {viewMode === 'table' ? (
+        <DataTableWithPagination
+          columns={columns}
+          data={faqsData?.data || []}
+          pagination={faqsData?.pagination}
+          page={page}
+          limit={limit}
+          totalPage={faqsData?.pagination?.totalPage}
+          total={faqsData?.pagination?.total}
+          onPageChange={setPage}
+          onSearch={(val) => {
+            setSearch(val);
+            setPage(1);
+          }}
+          isFetching={isFetching}
+        />
+      ) : (
+        <DraggableFaqList
+          faqs={allFaqsData?.data || []}
+          onReorderSuccess={() => {
+            refetchAllFaqsData();
+            refetchFaqData();
+          }}
+        />
+      )}
     </>
   );
 }
