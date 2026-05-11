@@ -1,6 +1,6 @@
 import MainLayout from '@/components/main/common/layout';
 import React from 'react';
-import Faqs from './_components/Faqs';
+import FaqTabs from './_components/FaqTabs';
 import SectionHeading from '@/components/main/home/SectionHeading';
 import { clientsfaqsData, lawyerfaqsData } from '@/data/data';
 import HomeCTA from '@/components/main/home/HomeCTA';
@@ -76,19 +76,11 @@ export default async function FaqPage() {
             className="mb-10"
           />
 
-          <section className="my-16">
-            <h3 className="text-2xl font-semibold  border-b border-gray-300 pb-3">
-              For Clients
-            </h3>
-            <Faqs data={clientsfaqsData} />
-          </section>
-
-          <section>
-            <h3 className="text-2xl font-semibold  border-b border-gray-300 pb-3">
-              For Lawyers
-            </h3>
-            <Faqs data={lawyerfaqsData} />
-          </section>
+          <FaqTabs
+            clientsData={clientsfaqsData}
+            lawyersData={lawyerfaqsData}
+            generalData={[]}
+          />
         </div>
         <HomeCTA />
       </MainLayout>
