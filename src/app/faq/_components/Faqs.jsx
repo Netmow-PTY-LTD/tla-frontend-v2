@@ -16,7 +16,7 @@ export default function Faqs({ data }) {
     <div className="tla-faq-accordion">
       {data.length > 0 &&
         data?.map((faq, index) => (
-          <div className="tla-faq-accordion-item" key={faq?.id}>
+          <div className="tla-faq-accordion-item" key={faq?._id}>
             <div
               className="tla-faq-accordion-header"
               onClick={() => toggleAccordion(index)}
