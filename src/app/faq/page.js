@@ -1,14 +1,46 @@
 import MainLayout from '@/components/main/common/layout';
 import React from 'react';
-import Faqs from './_components/Faqs';
+import FaqTabs from './_components/FaqTabs';
 import SectionHeading from '@/components/main/home/SectionHeading';
-import { clientsfaqsData, lawyerfaqsData } from '@/data/data';
 import HomeCTA from '@/components/main/home/HomeCTA';
-import Link from 'next/link';
 import PageBanner from '@/components/common/PageBanner';
 import { getSeoData } from '@/helpers/getSeoData';
 import { generateSchemaBySlug } from '@/helpers/generateSchemaBySlug';
 import seoData from '@/data/seoData';
+
+async function getFaqData() {
+  try {
+    const categories = ['general', 'client', 'lawyer'];
+    const result = { general: [], client: [], lawyer: [] };
+
+    for (const category of categories) {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/website-faq/public?category=${category}&limit=1000`,
+        { next: { revalidate: 3600 } }
+      );
+
+      if (res.ok) {
+        const data = await res.json();
+        // Handle different response formats
+        if (data?.data) {
+          // Check if data.data is an array (paginated) or object (grouped)
+          if (Array.isArray(data.data)) {
+            result[category] = data.data;
+          } else if (typeof data.data === 'object') {
+            result[category] = data.data;
+          }
+        } else if (Array.isArray(data)) {
+          result[category] = data;
+        }
+      }
+    }
+
+    return result;
+  } catch (error) {
+    console.error('Error fetching FAQ data:', error);
+    return { general: [], clients: [], lawyers: [] };
+  }
+}
 
 export async function generateMetadata() {
   const slug = 'faq';
@@ -54,6 +86,7 @@ export async function generateMetadata() {
 export default async function FaqPage() {
   const seo = await getSeoData(seoData, 'faq');
   const schema = await generateSchemaBySlug('faq', seo);
+  const faqData = await getFaqData();
   return (
     <>
       <script
@@ -76,19 +109,11 @@ export default async function FaqPage() {
             className="mb-10"
           />
 
-          <section className="my-16">
-            <h3 className="text-2xl font-semibold  border-b border-gray-300 pb-3">
-              For Clients
-            </h3>
-            <Faqs data={clientsfaqsData} />
-          </section>
-
-          <section>
-            <h3 className="text-2xl font-semibold  border-b border-gray-300 pb-3">
-              For Lawyers
-            </h3>
-            <Faqs data={lawyerfaqsData} />
-          </section>
+          <FaqTabs
+            clientsData={faqData.client || []}
+            lawyersData={faqData.lawyer || []}
+            generalData={faqData.general || []}
+          />
         </div>
         <HomeCTA />
       </MainLayout>
