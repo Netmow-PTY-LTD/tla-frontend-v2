@@ -1,9 +1,6 @@
 'use client';
 import { useState } from 'react';
 
-import { clientsfaqsData } from '@/data/data';
-import SectionHeading from '@/components/main/home/SectionHeading';
-
 export default function Faqs({ data }) {
   const [activeIndex, setActiveIndex] = useState(null);
 
@@ -42,9 +39,8 @@ export default function Faqs({ data }) {
               </svg>
             </div>
             <div
-              className={`tla-faq-accordion-body ${
-                index === activeIndex ? 'active' : ''
-              }`}
+              className={`tla-faq-accordion-body ${index === activeIndex ? 'active' : ''
+                }`}
               dangerouslySetInnerHTML={{ __html: faq?.answer }}
             />
           </div>

@@ -7,11 +7,19 @@ export async function generateMetadata() {
   const slug =
     seoData.find((item) => item.pageKey.toLowerCase() === 'pricing')?.slug ||
     'pricing';
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/seo/by-slug/${slug}`
-  );
-  const seoMetadata = await res.json();
-  const seo = seoMetadata?.data || {};
+  let seo = {};
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/seo/by-slug/${slug}`
+    );
+    if (res.ok) {
+      const seoMetadata = await res.json();
+      seo = seoMetadata?.data || {};
+    }
+  } catch (error) {
+    console.warn('Error fetching SEO metadata for Pricing:', error.message);
+  }
 
   const metaTitle = seo.metaTitle || 'About TheLawApp | Our Mission and Vision';
   const metaDescription =
@@ -31,11 +39,11 @@ export async function generateMetadata() {
     },
     openGraph: {
       title: metaTitle,
-      description: metaDescription, // ✔ fixed
+      description: metaDescription,
       images: [{ url: metaImage }],
     },
     twitter: {
-      card: 'summary_large_image', // ✔ fixed
+      card: 'summary_large_image',
       title: metaTitle,
       description: metaDescription,
       images: [metaImage],

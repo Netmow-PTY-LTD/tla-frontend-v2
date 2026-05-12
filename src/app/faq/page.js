@@ -38,29 +38,32 @@ async function getFaqData() {
     return result;
   } catch (error) {
     console.error('Error fetching FAQ data:', error);
-    return { general: [], clients: [], lawyers: [] };
+    return { general: [], client: [], lawyer: [] };
   }
 }
 
 export async function generateMetadata() {
   const slug = 'faq';
+  let seo = {};
 
-  // Fetch SEO data from your API
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/seo/by-slug/${slug}`
-  );
-  const seoMetadata = await res.json();
-  const seo = seoMetadata?.data || {};
+  try {
+    // Fetch SEO data from your API
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/seo/by-slug/${slug}`
+    );
+    if (res.ok) {
+      const seoMetadata = await res.json();
+      seo = seoMetadata?.data || {};
+    }
+  } catch (error) {
+    console.warn('Error fetching SEO metadata for FAQ:', error.message);
+  }
 
   const metaTitle = seo.metaTitle || 'FAQ | TheLawApp';
   const metaDescription =
     seo.metaDescription ||
     'Frequently Asked Questions about TheLawApp — learn how to get started, find lawyers, and navigate the legal marketplace.';
-  const metaKeywords = seo.metaKeywords || [
-    'FAQ',
-    'TheLawApp',
-    'legal questions',
-  ];
+  const metaKeywords = seo.metaKeywords || ['FAQ', 'TheLawApp', 'legal questions'];
   const metaImage =
     seo.metaImage ||
     'https://thelawapp.syd1.digitaloceanspaces.com/thelawapp/seo/metaimages/faq.webp';
