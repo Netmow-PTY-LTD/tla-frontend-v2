@@ -77,6 +77,13 @@ export const MarketingSidebarItems = {
         
       ],
     },
+     {
+      title: 'Website FAQ',
+      url: '/marketing/website-faq',
+      icon: List,
+      isActive: true,
+     
+    },
     // {
     //   title: 'Services',
     //   url: '/marketing/services/list',

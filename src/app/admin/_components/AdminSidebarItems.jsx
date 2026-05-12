@@ -405,6 +405,12 @@ export const AdminSidebarItems = {
       icon: Kanban,
       isActive: true,
     },
+    {
+      title: 'Website FAQ',
+      url: '/admin/website-faq',
+      icon: Kanban,
+      isActive: true,
+    },
 
 
   ],
