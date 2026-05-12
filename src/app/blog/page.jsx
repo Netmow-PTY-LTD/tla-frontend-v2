@@ -7,12 +7,20 @@ import MainLayout from '@/components/main/common/layout';
 
 export async function generateMetadata() {
   const slug = 'blog';
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/seo/by-slug/${slug}`
-  );
-  const seoMetadata = await res.json();
-  const data = seoMetadata?.data || {};
-  const seo = data.seo || data; // Robust check for nested seo object
+  let seo = {};
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/seo/by-slug/${slug}`
+    );
+    if (res.ok) {
+      const seoMetadata = await res.json();
+      const data = seoMetadata?.data || {};
+      seo = data.seo || data; // Robust check for nested seo object
+    }
+  } catch (error) {
+    console.warn('Error fetching SEO metadata for Blog:', error.message);
+  }
 
   const metaTitle = seo.metaTitle || 'Blog Page | TheLawApp';
   const metaDescription =
