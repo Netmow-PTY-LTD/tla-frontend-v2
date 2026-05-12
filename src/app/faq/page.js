@@ -10,8 +10,8 @@ import seoData from '@/data/seoData';
 
 async function getFaqData() {
   try {
-    const categories = ['general', 'clients', 'lawyers'];
-    const result = { general: [], clients: [], lawyers: [] };
+    const categories = ['general', 'client', 'lawyer'];
+    const result = { general: [], client: [], lawyer: [] };
 
     for (const category of categories) {
       const res = await fetch(
@@ -110,8 +110,8 @@ export default async function FaqPage() {
           />
 
           <FaqTabs
-            clientsData={faqData.clients || []}
-            lawyersData={faqData.lawyers || []}
+            clientsData={faqData.client || []}
+            lawyersData={faqData.lawyer || []}
             generalData={faqData.general || []}
           />
         </div>
