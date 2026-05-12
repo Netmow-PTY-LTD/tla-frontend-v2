@@ -7,12 +7,29 @@ export async function generateMetadata() {
   const slug = seoData.find(
     (item) => item.pageKey.toLowerCase() === 'register'
   )?.slug;
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/seo/by-slug/${slug}`,
-    { cache: 'no-store' }
-  );
-  const seoMetadata = await res.json();
-  const seo = seoMetadata?.data || {};
+  let seo = {};
+  let favicon = '/assets/img/favicon.ico';
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/seo/by-slug/${slug}`,
+      { cache: 'no-store' }
+    );
+    if (res.ok) {
+      const seoMetadata = await res.json();
+      seo = seoMetadata?.data || {};
+    }
+
+    const settingsRes = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/admin/settings`
+    );
+    if (settingsRes.ok) {
+      const setting = await settingsRes.json();
+      favicon = setting?.data?.favicon || '/assets/img/favicon.ico';
+    }
+  } catch (error) {
+    console.warn('Error fetching SEO metadata for Register:', error.message);
+  }
 
   const metaTitle = seo.metaTitle || 'Register | TheLawApp';
   const metaDescription =
@@ -22,12 +39,6 @@ export async function generateMetadata() {
   const metaImage =
     seo.metaImage ||
     'https://thelawapp.syd1.digitaloceanspaces.com/thelawapp/seo/metaimages/about.webp';
-
-  const result = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/admin/settings`
-  );
-  const setting = await result.json();
-  const favicon = setting?.data?.favicon || '/assets/img/favicon.ico';
 
   return {
     title: metaTitle,

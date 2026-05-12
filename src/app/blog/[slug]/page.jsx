@@ -26,12 +26,21 @@ export async function generateMetadata({ params }) {
   }
 
   // Fetch blog data for slug
-  const result = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/blog/${slug}`
-  );
-  const blogData = await result.json();
-  const post = blogData?.data || {};
-  const seo = post?.seo || {};
+  let post = {};
+  let seo = {};
+
+  try {
+    const result = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/blog/${slug}`
+    );
+    if (result.ok) {
+      const blogData = await result.json();
+      post = blogData?.data || {};
+      seo = post?.seo || {};
+    }
+  } catch (error) {
+    console.warn(`Error fetching SEO metadata for Blog post ${slug}:`, error.message);
+  }
 
   const title = seo.metaTitle || post.title || 'Blog Post | TheLawApp';
   const description =
