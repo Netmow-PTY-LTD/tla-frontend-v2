@@ -15,7 +15,7 @@ import AddFaqModal from './_components/AddFaqModal';
 import EditFaqModal from './_components/EditFaqModal';
 import DraggableFaqList from './_components/DraggableFaqList';
 import { showErrorToast, showSuccessToast } from '@/components/common/toasts';
-import { ConfirmationModal } from '@/components/uiComponents/ConfirmationModal';
+import { ConfirmationModal } from '@/components/UIComponents/ConfirmationModal';
 import { DataTableWithPagination } from '@/app/admin/_components/DataTableWithPagination';
 import {
   useDeleteWebsiteFaqMutation,
