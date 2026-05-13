@@ -46,6 +46,7 @@ export default function WebsiteFaqManagement() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [viewMode, setViewMode] = useState('table');
+  const [websiteTypeFilter, setWebsiteTypeFilter] = useState('all');
 
   const limit = 10;
 
@@ -57,6 +58,7 @@ export default function WebsiteFaqManagement() {
     search,
     page,
     limit,
+    websiteType: websiteTypeFilter === 'all' ? undefined : websiteTypeFilter,
   });
 
   // Fetch all FAQs for drag-and-drop (without pagination)
@@ -66,6 +68,7 @@ export default function WebsiteFaqManagement() {
   } = useGetAllWebsiteFaqsQuery({
     page: 1,
     limit: 1000,
+    websiteType: websiteTypeFilter === 'all' ? undefined : websiteTypeFilter,
   });
 
   const handleEditFaqModalOpen = (id) => {
@@ -216,7 +219,16 @@ export default function WebsiteFaqManagement() {
   return (
     <>
       <div className="mb-2 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h2 className="text-2xl font-bold">Website FAQs</h2>
+        <div>
+          <h2 className="text-2xl font-bold">Website FAQs</h2>
+          <Tabs value={websiteTypeFilter} onValueChange={(val) => { setWebsiteTypeFilter(val); setPage(1); }} className="w-auto mt-2">
+            <TabsList>
+              <TabsTrigger value="all">All</TabsTrigger>
+              <TabsTrigger value="tla_main">TLA Main</TabsTrigger>
+              <TabsTrigger value="company">Company</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
         <div className="flex justify-end gap-2">
           <Tabs value={viewMode} onValueChange={setViewMode} className="w-auto">
             <TabsList>
