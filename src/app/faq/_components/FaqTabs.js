@@ -7,7 +7,7 @@ export default function FaqTabs({ clientsData, lawyersData, generalData = [] }) 
   const [activeTab, setActiveTab] = useState('clients');
 
   const tabs = [
-    { id: 'general', label: 'General', data: generalData },
+    // { id: 'general', label: 'General', data: generalData },
     { id: 'clients', label: 'For Clients', data: clientsData },
     { id: 'lawyers', label: 'For Lawyers', data: lawyersData },
   ];
