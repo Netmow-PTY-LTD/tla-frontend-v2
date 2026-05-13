@@ -12,12 +12,12 @@ const websiteFaqApiService = baseApi.injectEndpoints({
       invalidatesTags: ['website-faq', 'website-faq-list'],
     }),
 
-    // 2️ Get All Website FAQs (with pagination + search + category filter)
+    // 2️ Get All Website FAQs (with pagination + search + category filter + websiteType filter)
     getAllWebsiteFaqs: builder.query({
-      query: ({ search = '', category = '', page = 1, limit = 10, isActive }) => ({
+      query: ({ search = '', category = '', websiteType, page = 1, limit = 10, isActive }) => ({
         url: '/website-faq/list',
         method: 'GET',
-        params: { search, category, page, limit, isActive },
+        params: { search, category, websiteType, page, limit, isActive },
       }),
       providesTags: ['website-faq-list'],
     }),
