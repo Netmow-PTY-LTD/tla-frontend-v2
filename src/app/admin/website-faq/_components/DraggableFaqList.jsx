@@ -29,6 +29,11 @@ const FAQ_CATEGORY_LABELS = {
   general: 'General',
 };
 
+const WEBSITE_TYPE_LABELS = {
+  tla_main: 'TLA Main',
+  company: 'Company',
+};
+
 function SortableFaqItem({ faq }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: faq._id,
@@ -57,6 +62,10 @@ function SortableFaqItem({ faq }) {
         <div className="font-medium text-gray-900">{faq.question}</div>
         <div className="text-sm text-gray-500 mt-1 line-clamp-1">{faq.answer}</div>
       </div>
+
+      <Badge variant="outline" className="shrink-0 capitalize">
+        {WEBSITE_TYPE_LABELS[faq.websiteType] || faq.websiteType}
+      </Badge>
 
       <Badge variant={faq.isActive ? 'default' : 'secondary'} className="shrink-0">
         {faq.isActive ? 'Active' : 'Inactive'}
