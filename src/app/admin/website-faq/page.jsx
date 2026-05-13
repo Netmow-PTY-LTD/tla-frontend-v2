@@ -32,6 +32,11 @@ const FAQ_CATEGORY_LABELS = {
   general: 'General',
 };
 
+const WEBSITE_TYPE_LABELS = {
+  tla_main: 'TLA Main',
+  company: 'Company',
+};
+
 export default function WebsiteFaqManagement() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -119,6 +124,18 @@ export default function WebsiteFaqManagement() {
         return (
           <Badge variant="outline" className="capitalize">
             {FAQ_CATEGORY_LABELS[category] || category}
+          </Badge>
+        );
+      },
+    },
+    {
+      accessorKey: 'websiteType',
+      header: 'Website',
+      cell: ({ row }) => {
+        const websiteType = row.getValue('websiteType');
+        return (
+          <Badge variant="secondary" className="capitalize">
+            {WEBSITE_TYPE_LABELS[websiteType] || websiteType}
           </Badge>
         );
       },
