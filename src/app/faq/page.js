@@ -13,16 +13,23 @@ async function getFaqData() {
     const categories = ['general', 'client', 'lawyer'];
     const result = { general: [], client: [], lawyer: [] };
 
+    // Add cache busting timestamp to force fresh data
+    const cacheBuster = Date.now();
+
     for (const category of categories) {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/website-faq/public?category=${category}&limit=1000`,
-        { next: { revalidate: 3600 } }
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/website-faq/public?category=${category}&_t=${cacheBuster}`,
+        { next: { revalidate: 60 } }
       );
+
+    
 
       if (res.ok) {
         const data = await res.json();
+        
         // Handle different response formats
         if (data?.data) {
+       
           // Check if data.data is an array (paginated) or object (grouped)
           if (Array.isArray(data.data)) {
             result[category] = data.data;
@@ -34,6 +41,9 @@ async function getFaqData() {
         }
       }
     }
+
+
+console.log('result',result)
 
     return result;
   } catch (error) {
@@ -51,6 +61,8 @@ export async function generateMetadata() {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/seo/by-slug/${slug}`
     );
+
+   
     if (res.ok) {
       const seoMetadata = await res.json();
       seo = seoMetadata?.data || {};

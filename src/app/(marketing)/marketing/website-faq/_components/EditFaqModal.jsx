@@ -19,10 +19,16 @@ const FAQ_CATEGORIES = [
   { label: 'General', value: 'general' },
 ];
 
+const WEBSITE_TYPES = [
+  { label: 'TLA Main Website', value: 'tla_main' },
+  { label: 'Company Website', value: 'company' },
+];
+
 const faqSchema = z.object({
   question: z.string().min(1, { message: 'Question is required' }),
   answer: z.string().min(1, { message: 'Answer is required' }),
   category: z.string().min(1, { message: 'Category is required' }),
+  websiteType: z.string().min(1, { message: 'Website type is required' }),
   order: z.number().optional(),
   isActive: z.boolean().optional(),
 });
@@ -37,6 +43,7 @@ export default function EditFaqModal({
     question: '',
     answer: '',
     category: 'general',
+    websiteType: 'tla_main',
     order: 0,
     isActive: true,
   });
@@ -61,6 +68,7 @@ export default function EditFaqModal({
         question: faq.question ?? '',
         answer: faq.answer ?? '',
         category: faq.category ?? 'general',
+        websiteType: faq.websiteType ?? 'tla_main',
         order: faq.order ?? 0,
         isActive: faq.isActive ?? true,
       };
@@ -97,6 +105,7 @@ export default function EditFaqModal({
           question: '',
           answer: '',
           category: 'general',
+          websiteType: 'tla_main',
           order: 0,
           isActive: true,
         });
@@ -112,6 +121,12 @@ export default function EditFaqModal({
         ref={formRef}
       >
         <div className="grid grid-cols-1 gap-5">
+          <SelectInput
+            name="websiteType"
+            label="Website Type"
+            options={WEBSITE_TYPES}
+            placeholder="Select website type"
+          />
           <TextInput
             name="question"
             label="Question"
