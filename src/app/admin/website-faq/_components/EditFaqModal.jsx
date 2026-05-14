@@ -12,6 +12,7 @@ import {
 } from '@/store/features/admin/websiteFaqApiService';
 import { z } from 'zod';
 import { useEffect, useRef, useState } from 'react';
+import { Loader2 } from 'lucide-react';
 
 const FAQ_CATEGORIES = [
   { label: 'Client', value: 'client' },
@@ -153,7 +154,7 @@ export default function EditFaqModal({
 
         <div className="text-center mt-6">
           <Button type="submit" disabled={isUpdateFaqLoading}>
-            {isUpdateFaqLoading ? 'Updating...' : 'Update FAQ'}
+            {isUpdateFaqLoading ? <div className='flex items-center gap-2'><Loader2 className="w-4 h-4 animate-spin" /> Updating...</div> : 'Update FAQ'}
           </Button>
         </div>
       </FormWrapper>

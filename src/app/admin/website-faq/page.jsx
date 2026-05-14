@@ -191,6 +191,7 @@ export default function WebsiteFaqManagement() {
                   Edit
                 </button>
               </DropdownMenuItem>
+              <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <button
                   onClick={() => handleToggleStatus(item?._id)}
