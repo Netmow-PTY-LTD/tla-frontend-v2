@@ -39,6 +39,7 @@ export default function EditFaqModal({
   setOpen,
   faqId,
   refetchFaqData,
+  refetchAllFaqsData,
 }) {
   const [defaultValues, setDefaultValues] = useState({
     question: '',
@@ -90,6 +91,7 @@ export default function EditFaqModal({
       if (res?.success) {
         showSuccessToast(res?.message || 'FAQ updated successfully');
         refetchFaqData();
+        refetchAllFaqsData();
         setOpen(false);
       }
     } catch (error) {

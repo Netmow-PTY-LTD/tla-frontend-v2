@@ -9,17 +9,36 @@ const websiteFaqApiService = baseApi.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['website-faq', 'website-faq-list'],
+      invalidatesTags: [
+        { type: 'website-faq-list', id: 'LIST' },
+        { type: 'website-faq-public', id: 'LIST' },
+      ],
     }),
 
     // 2️ Get All Website FAQs (with pagination + search + category filter + websiteType filter)
     getAllWebsiteFaqs: builder.query({
-      query: ({ search = '', category = '', websiteType, page = 1, limit = 10, isActive }) => ({
+      query: ({
+        search = '',
+        category = '',
+        websiteType = '',
+        page = 1,
+        limit = 10,
+        isActive,
+      }) => ({
         url: '/website-faq/list',
         method: 'GET',
         params: { search, category, websiteType, page, limit, isActive },
       }),
-      providesTags: ['website-faq-list'],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.data.map(({ _id }) => ({
+                type: 'website-faq',
+                id: _id,
+              })),
+              { type: 'website-faq-list', id: 'LIST' },
+            ]
+          : [{ type: 'website-faq-list', id: 'LIST' }],
     }),
 
     // 3️ Get Public FAQs (for clients/lawyers)
@@ -29,7 +48,16 @@ const websiteFaqApiService = baseApi.injectEndpoints({
         method: 'GET',
         params: { search, category, page, limit },
       }),
-      providesTags: ['website-faq-public'],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.data.map(({ _id }) => ({
+                type: 'website-faq-public',
+                id: _id,
+              })),
+              { type: 'website-faq-public', id: 'LIST' },
+            ]
+          : [{ type: 'website-faq-public', id: 'LIST' }],
     }),
 
     // 4️ Get FAQ by ID
@@ -38,7 +66,7 @@ const websiteFaqApiService = baseApi.injectEndpoints({
         url: `/website-faq/${id}`,
         method: 'GET',
       }),
-      providesTags: ['website-faq'],
+      providesTags: (result, error, id) => [{ type: 'website-faq', id }],
     }),
 
     // 5️ Update FAQ
@@ -48,7 +76,11 @@ const websiteFaqApiService = baseApi.injectEndpoints({
         method: 'PATCH',
         body: data,
       }),
-      invalidatesTags: ['website-faq', 'website-faq-list', 'website-faq-public'],
+      invalidatesTags: (result, error, { id }) => [
+        { type: 'website-faq', id },
+        { type: 'website-faq-list', id: 'LIST' },
+        { type: 'website-faq-public', id: 'LIST' },
+      ],
     }),
 
     // 6️ Delete FAQ
@@ -57,7 +89,11 @@ const websiteFaqApiService = baseApi.injectEndpoints({
         url: `/website-faq/${id}/delete`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['website-faq', 'website-faq-list', 'website-faq-public'],
+      invalidatesTags: (result, error, id) => [
+        { type: 'website-faq', id },
+        { type: 'website-faq-list', id: 'LIST' },
+        { type: 'website-faq-public', id: 'LIST' },
+      ],
     }),
 
     // 7️ Toggle Active Status
@@ -66,7 +102,11 @@ const websiteFaqApiService = baseApi.injectEndpoints({
         url: `/website-faq/${id}/toggle`,
         method: 'PATCH',
       }),
-      invalidatesTags: ['website-faq', 'website-faq-list', 'website-faq-public'],
+      invalidatesTags: (result, error, id) => [
+        { type: 'website-faq', id },
+        { type: 'website-faq-list', id: 'LIST' },
+        { type: 'website-faq-public', id: 'LIST' },
+      ],
     }),
 
     // 8️ Bulk Update Order
@@ -76,7 +116,7 @@ const websiteFaqApiService = baseApi.injectEndpoints({
         method: 'POST',
         body: { updates },
       }),
-      invalidatesTags: ['website-faq', 'website-faq-list', 'website-faq-public'],
+      invalidatesTags: [{ type: 'website-faq-list', id: 'LIST' }],
     }),
   }),
 });

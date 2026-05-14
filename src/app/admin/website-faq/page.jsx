@@ -58,7 +58,7 @@ export default function WebsiteFaqManagement() {
     search,
     page,
     limit,
-    websiteType: websiteTypeFilter === 'all' ? undefined : websiteTypeFilter,
+    websiteType: websiteTypeFilter === 'all' ? '' : websiteTypeFilter,
   });
 
   // Fetch all FAQs for drag-and-drop (without pagination)
@@ -68,7 +68,7 @@ export default function WebsiteFaqManagement() {
   } = useGetAllWebsiteFaqsQuery({
     page: 1,
     limit: 1000,
-    websiteType: websiteTypeFilter === 'all' ? undefined : websiteTypeFilter,
+    websiteType: websiteTypeFilter === 'all' ? '' : websiteTypeFilter,
   });
 
   const handleEditFaqModalOpen = (id) => {
@@ -83,6 +83,7 @@ export default function WebsiteFaqManagement() {
       if (res?.success) {
         showSuccessToast(res?.message || 'FAQ deleted successfully');
         refetchFaqData();
+        refetchAllFaqsData();
       }
     } catch (error) {
       showErrorToast(error?.data?.message || 'Failed to delete FAQ');
@@ -96,6 +97,7 @@ export default function WebsiteFaqManagement() {
       if (res?.success) {
         showSuccessToast(res?.message || 'Status updated successfully');
         refetchFaqData();
+        refetchAllFaqsData();
       }
     } catch (error) {
       showErrorToast(error?.data?.message || 'Failed to update status');
@@ -261,12 +263,14 @@ export default function WebsiteFaqManagement() {
         open={isModalOpen}
         setOpen={setIsModalOpen}
         refetchFaqData={refetchFaqData}
+        refetchAllFaqsData={refetchAllFaqsData}
       />
       <EditFaqModal
         open={isEditModalOpen}
         setOpen={setIsEditModalOpen}
         faqId={faqId}
         refetchFaqData={refetchFaqData}
+        refetchAllFaqsData={refetchAllFaqsData}
       />
 
       {viewMode === 'table' ? (
