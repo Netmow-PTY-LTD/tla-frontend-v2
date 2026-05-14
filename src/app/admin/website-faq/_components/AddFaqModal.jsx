@@ -30,7 +30,12 @@ const faqSchema = z.object({
   isActive: z.boolean().optional(),
 });
 
-export default function AddFaqModal({ open, setOpen, refetchFaqData }) {
+export default function AddFaqModal({
+  open,
+  setOpen,
+  refetchFaqData,
+  refetchAllFaqsData,
+}) {
   const defaultValues = {
     question: '',
     answer: '',
@@ -48,6 +53,7 @@ export default function AddFaqModal({ open, setOpen, refetchFaqData }) {
       if (res?.success) {
         showSuccessToast(res?.message || 'FAQ added successfully');
         refetchFaqData();
+        refetchAllFaqsData();
         setOpen(false);
       }
     } catch (error) {
