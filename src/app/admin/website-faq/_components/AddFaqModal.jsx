@@ -8,6 +8,7 @@ import { Modal } from '@/components/UIComponents/Modal';
 import { showSuccessToast } from '@/components/common/toasts';
 import { useCreateWebsiteFaqMutation } from '@/store/features/admin/websiteFaqApiService';
 import { z } from 'zod';
+import { Loader2 } from 'lucide-react';
 
 const FAQ_CATEGORIES = [
   { label: 'Client', value: 'client' },
@@ -39,7 +40,7 @@ export default function AddFaqModal({ open, setOpen, refetchFaqData }) {
     isActive: true,
   };
 
-  const [createFaq] = useCreateWebsiteFaqMutation();
+  const [createFaq, { isLoading: isCreatingFaq }] = useCreateWebsiteFaqMutation();
 
   const handleAddFaq = async (values) => {
     try {
@@ -93,7 +94,9 @@ export default function AddFaqModal({ open, setOpen, refetchFaqData }) {
         </div>
 
         <div className="text-center mt-6">
-          <Button type="submit">Add FAQ</Button>
+          <Button type="submit" disabled={isCreatingFaq}>
+            {isCreatingFaq ? <div className='flex items-center gap-2'><Loader2 className="w-4 h-4 animate-spin" /> Adding...</div> : 'Add FAQ'}
+          </Button>
         </div>
       </FormWrapper>
     </Modal>
