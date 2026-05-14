@@ -1,7 +1,7 @@
 import FormWrapper from '@/components/form/FromWrapper';
 import TextInput from '@/components/form/TextInput';
 import SelectInput from '@/components/form/SelectInput';
-import TextArea from '@/components/form/TextArea';
+import EditorInput from '@/components/form/EditorInput';
 import CheckboxInput from '@/components/form/CheckboxInput';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/UIComponents/Modal';
@@ -55,7 +55,7 @@ export default function AddFaqModal({ open, setOpen, refetchFaqData }) {
   };
 
   return (
-    <Modal open={open} onOpenChange={setOpen}>
+    <Modal open={open} onOpenChange={setOpen} width="max-w-[800px]" >
       <h3 className="text-lg font-semibold mb-6">Add FAQ</h3>
       <FormWrapper
         onSubmit={handleAddFaq}
@@ -74,11 +74,11 @@ export default function AddFaqModal({ open, setOpen, refetchFaqData }) {
             label="Question"
             placeholder="Enter the question"
           />
-          <TextArea
+          <EditorInput
             name="answer"
             label="Answer"
             placeholder="Enter the answer"
-            rows={4}
+            height={200}
           />
           <SelectInput
             name="category"
